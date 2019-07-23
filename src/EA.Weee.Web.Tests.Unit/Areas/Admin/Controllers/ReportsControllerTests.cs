@@ -870,9 +870,11 @@
             List<int> years = new List<int>() { 2001, 2002 };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
-            List<SchemeData> schemes = new List<SchemeData>();
-            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
-            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            List<SchemeData> schemes = new List<SchemeData>
+            {
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
@@ -958,9 +960,11 @@
             List<int> years = new List<int>() { 2001, 2002 };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
-            List<SchemeData> schemes = new List<SchemeData>();
-            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
-            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            List<SchemeData> schemes = new List<SchemeData>
+            {
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
@@ -1815,9 +1819,11 @@
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
-            List<SchemeData> schemes = new List<SchemeData>();
-            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
-            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            List<SchemeData> schemes = new List<SchemeData>
+            {
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
@@ -1903,9 +1909,11 @@
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
-            List<SchemeData> schemes = new List<SchemeData>();
-            schemes.Add(new SchemeData() { Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" });
-            schemes.Add(new SchemeData() { Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" });
+            List<SchemeData> schemes = new List<SchemeData>
+            {
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(

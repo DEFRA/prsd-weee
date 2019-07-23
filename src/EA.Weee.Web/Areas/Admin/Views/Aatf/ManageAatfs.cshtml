@@ -62,7 +62,7 @@
 
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
 {
-<fieldset style="border: none; margin-left: 0; padding: 0">
+<fieldset class="prsd-table-fieldset">
     <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")</legend>
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
