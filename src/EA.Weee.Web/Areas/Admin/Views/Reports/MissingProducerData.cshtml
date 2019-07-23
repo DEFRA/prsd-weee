@@ -7,7 +7,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Download missing producer data</h1>
+        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -15,7 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>Filter the report to download entries that match your criteria.</p>
+        <p>Filter the report to download entries that match your criteria</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
