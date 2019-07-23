@@ -117,7 +117,6 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
             int complianceYear = 2019;
                 
-          //string obligationType, string aatfName, Guid? authority, Guid? panArea
             var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, string.Empty, string.Empty, null, null);
 
