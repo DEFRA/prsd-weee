@@ -40,8 +40,8 @@
             var csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Category", i => i.Category);
-            csvWriter.DefineColumn(@"Total non-obligated WEEE received (total tonnes)", i => i.TotalNonObligatedWeeeReceived);
-            csvWriter.DefineColumn(@"Non-obligated WEEE received from DCFs (total tonnes)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
+            csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
+            csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
             string fileContent = csvWriter.Write(items);
 
             string fileName = string.Format("{0}_UK non-obligated WEEE_{1:ddMMyyyy_HHmm}.csv",
