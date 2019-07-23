@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.Lookup
 {
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core.Domain;
 
     public enum WeeeCategory
     {
@@ -11,7 +10,7 @@
         [Display(Name = "Small Household Appliances")]
         SmallHouseholdAppliances = 2,
 
-        [Display(Name = "IT and Telecomms Equipment")]
+        [Display(Name = "IT and Telecommunications Equipment")]
         ITAndTelecommsEquipment = 3,
 
         [Display(Name = "Consumer Equipment")]
@@ -23,7 +22,7 @@
         [Display(Name = "Electrical and Electronic Tools")]
         ElectricalAndElectronicTools = 6,
 
-        [Display(Name = "Toys, Leisure and Sports")]
+        [Display(Name = "Toys, Leisure and Sports Equipment")]
         ToysLeisureAndSports = 7,
 
         [Display(Name = "Medical Devices")]
@@ -38,13 +37,13 @@
         [Display(Name = "Display Equipment")]
         DisplayEquipment = 11,
 
-        [Display(Name = "Cooling Appliances Containing Refrigerants")]
+        [Display(Name = "Appliances Containing Refrigerants")]
         CoolingApplicancesContainingRefrigerants = 12,
 
-        [Display(Name = "Gas Discharge Lamps and LED light sources")]
+        [Display(Name = "Gas Discharge Lamps and LED Light Sources")]
         GasDischargeLampsAndLedLightSources = 13,
 
         [Display(Name = "Photovoltaic Panels")]
-        PhotovoltaicPanels = 14,
+        PhotovoltaicPanels = 14
     }
 }
