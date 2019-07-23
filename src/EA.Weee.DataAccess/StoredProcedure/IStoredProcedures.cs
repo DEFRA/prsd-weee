@@ -27,7 +27,7 @@
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
-        Task<List<UkNonObligatedWeeeReceivedData>> UKUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
+        Task<List<UkNonObligatedWeeeReceivedData>> UkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
 
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
