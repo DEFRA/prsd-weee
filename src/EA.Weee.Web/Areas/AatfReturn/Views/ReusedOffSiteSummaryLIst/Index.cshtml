@@ -37,7 +37,7 @@
                     @Model.B2bTotal
                 </div>
                 <div class="govuk-grid-column-one-third">
-                    <span class="govuk-visually-hidden">Change WEEE re-used</span>@Html.RouteLink("Change", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
+                    @Html.NavigationRouteLink("Change", "Change WEEE re-used", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
                                 @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
                             </div>
                             <div style="padding-top: 10px;">
-                                @Html.NavigationRouteLink("Remove", "Remove " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
+                                @Html.NavigationRouteLink("Remove", "Remove site address " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
                             </div>
                         </div>
                     </div>
