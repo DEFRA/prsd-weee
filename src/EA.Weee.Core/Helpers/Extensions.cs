@@ -153,7 +153,7 @@
 
         public static string ToReadableDateTime(this DateTime date)
         {
-            var monthYear = date.ToString(" MMMM yyyy");
+            var monthYear = date.ToString("MMMM yyyy");
             var day = date.ToString("d ").Trim();
 
             switch (date.Day)
