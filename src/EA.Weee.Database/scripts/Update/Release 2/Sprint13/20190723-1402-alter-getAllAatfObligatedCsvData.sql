@@ -1,3 +1,4 @@
+
 -- Description:	This stored procedure is used to provide the data for the admin report of obligatde data
 --				that have/haven't submitted a data return within
 --				the limits of the specified parameters.Get the latest submitted return
@@ -216,7 +217,8 @@ FROM (
 
 -------------End of Total Obligated data by AATF-----------------------------
 --Insert for nil and no data submitted return
-
+IF EXISTS(SELECT * FROM @SUBMITTEDRETURN) 
+BEGIN
 INSERT INTO @ObligatedData (AatfId, ReturnId, [Quarter], CategoryId, TonnageType)
 SELECT s.AatfId, s.ReturnId, s.[Quarter], c.Id,'HouseholdTonnage'
 FROM [Lookup].WeeeCategory c 
@@ -229,6 +231,7 @@ FROM [Lookup].WeeeCategory c
 LEFT JOIN @SUBMITTEDRETURN s
 ON 1=1 
 WHERE s.AatfId NOT IN (SELECT DISTINCT AatfId FROM @ObligatedData)
+END
 -----------------------------------------------------------------------------------
 
 DECLARE @COUNT INT
@@ -287,7 +290,7 @@ SELECT
 ,a.PanArea AS 'WROS pan area team'
 ,a.LocalArea AS 'EA Area'
 ,@ComplianceYear AS 'Year'
-,a.[Quarter] AS 'Quarter'
+,CONCAT('Q', a.[Quarter]) AS 'Quarter'
 ,a.SubmittedBy AS 'Submitted by'
 ,a.SubmittedDate AS 'Date submitted (GMT)'
 ,a.OrganisationName AS 'Organisation name'
@@ -332,7 +335,7 @@ ELSE
 		,a.PanArea AS 'WROS pan area team'
 		,a.LocalArea AS 'EA Area'
 		,@ComplianceYear AS 'Year'
-		,a.[Quarter] AS 'Quarter'
+		,CONCAT('Q', a.[Quarter]) AS 'Quarter'
 		,a.SubmittedBy AS 'Submitted by'
 		,a.SubmittedDate AS 'Date submitted (GMT)'
 		,a.OrganisationName AS 'Organisation name'
@@ -365,6 +368,7 @@ DROP Table #TotalReceivedByScheme
 
 
 END
+
 
 
 
