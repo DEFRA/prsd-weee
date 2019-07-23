@@ -7,6 +7,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using EA.Weee.Requests.Admin.Aatf;
     using Prsd.Core.Mediator;
     using Security;
@@ -34,19 +35,18 @@
                 throw new ArgumentException(message);
             }
 
-            List<UkNonObligatedWeeeReceivedData> items = await context.StoredProcedures.UKUkNonObligatedWeeeReceivedByComplianceYear(
-                       request.ComplianceYear);
+            var items = await context.StoredProcedures.UkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
 
-            CsvWriter<UkNonObligatedWeeeReceivedData> csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
+            var csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Category", i => i.Category);
             csvWriter.DefineColumn(@"Total non-obligated WEEE received (total tonnes)", i => i.TotalNonObligatedWeeeReceived);
             csvWriter.DefineColumn(@"Non-obligated WEEE received from DCFs (total tonnes)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
             string fileContent = csvWriter.Write(items);
 
-            string fileName = string.Format("{0}_UK_NON_OBLIGATED_WEEE_{1:ddMMyyyy_HHmm}.csv",
+            string fileName = string.Format("{0}_UK non-obligated WEEE_{1:ddMMyyyy_HHmm}.csv",
                 request.ComplianceYear,
-                DateTime.UtcNow);
+                SystemTime.UtcNow);
 
             return new CSVFileData
             {
