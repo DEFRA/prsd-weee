@@ -58,12 +58,12 @@
 
             csvWriter.DefineColumn("Quarter", x => x.TimePeriod);
             csvWriter.DefineColumn("Category", x => ReportHelper.CategoryDisplayNames[x.Category]);
-            csvWriter.DefineColumn("B2C received for treatment (total tonnes)", x => x.B2cForTreatment);
-            csvWriter.DefineColumn("B2C for reuse (total tonnes)", x => x.B2cForReuse);
-            csvWriter.DefineColumn("B2C sent to AATF/ATF (total tonnes)", x => x.B2cForAatf);
-            csvWriter.DefineColumn("B2B received for treatment (total tonnes)", x => x.B2bForTreatment);
-            csvWriter.DefineColumn("B2B for reuse (total tonnes)", x => x.B2bForReuse);
-            csvWriter.DefineColumn("B2B sent to AATF/ATF (total tonnes)", x => x.B2bForAatf);
+            csvWriter.DefineColumn("B2C received for treatment (t)", x => x.B2cForTreatment);
+            csvWriter.DefineColumn("B2C for reuse (t)", x => x.B2cForReuse);
+            csvWriter.DefineColumn("B2C sent to AATF/ATF (t)", x => x.B2cForAatf);
+            csvWriter.DefineColumn("B2B received for treatment (t)", x => x.B2bForTreatment);
+            csvWriter.DefineColumn("B2B for reuse (t)", x => x.B2bForReuse);
+            csvWriter.DefineColumn("B2B sent to AATF/ATF (t)", x => x.B2bForAatf);
 
             return csvWriter;
         }
