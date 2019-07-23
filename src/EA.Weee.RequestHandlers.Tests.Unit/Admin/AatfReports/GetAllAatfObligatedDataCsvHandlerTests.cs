@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
@@ -105,6 +106,46 @@
 
             // Assert
             Assert.NotEmpty(data.FileContent);
+        }
+
+        [Fact]
+        public async Task GetAllAatfObligatedDataCsvHandler_MandatoryParameters_ReturnsFileName()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var commanDataAccess = A.Fake<ICommonDataAccess>();
+            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            int complianceYear = 2019;
+                
+          //string obligationType, string aatfName, Guid? authority, Guid? panArea
+            var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, string.Empty, string.Empty, null, null);
+
+            // Act
+            CSVFileData data = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Contains("2019_AA", data.FileName);
+        }
+
+        [Fact]
+        public async Task GetAllAatfObligatedDataCsvHandler_StringParameters_ReturnsFileName()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var commanDataAccess = A.Fake<ICommonDataAccess>();
+            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            int complianceYear = 2019;
+            string obligationType = "B2C";
+            string aatfName = "A1";
+            var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, obligationType, aatfName, null, null);
+
+            // Act
+            CSVFileData data = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Contains("2019_AA_A1_B2C", data.FileName);
         }
     }
 }
