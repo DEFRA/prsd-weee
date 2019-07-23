@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
+    using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -15,7 +16,7 @@
 
     public class GetAllAatfObligatedCsvDataTests
     {
-        [Ignore]
+        [Fact]
         public async Task Execute_GivenWeeeReceivedData_ReturnsWeeeReceivedAatfDataShouldBeCorrect()
         {
             using (var db = new DatabaseWrapper())
@@ -23,6 +24,8 @@
                 var @return = CreateSubmittedReturn(db);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(@return.Organisation);
+                scheme.UpdateScheme("TestScheme", "WEE/AB1234CD/SCH", string.Empty, null, aatf.CompetentAuthority);
+
                 var weeeReceived = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
 
                 var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
@@ -44,17 +47,17 @@
                var data = from x in results.AsEnumerable() 
                           where x.Field<string>("Name of AATF") == aatf.Name
                           select x;
-                data.AsEnumerable().Count().Equals(4);
+                data.AsQueryable().Count().Should().Be(4);
 
                 var dataB2B = from x in results.AsEnumerable()
                            where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
                            select x;
-                dataB2B.AsEnumerable().Count().Equals(2);
+                dataB2B.AsQueryable().Count().Should().Be(2);
 
                 var dataB2C = from x in results.AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2C"
                               select x;
-                dataB2C.AsEnumerable().Count().Equals(2);
+                dataB2C.AsQueryable().Count().Should().Be(2);
             }
         }
 
@@ -73,7 +76,7 @@
 
                 var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1);
 
-                results.AsEnumerable().Count().Equals(0);
+                results.Rows.Count.Equals(0);
             }
         }
 

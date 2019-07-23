@@ -67,9 +67,8 @@
                 }
             }
 
-           var fileName = string.Format("{0}_AA_{1:ddMMyyyy_HHmm}",
-                request.ComplianceYear,
-                DateTime.UtcNow);
+           var fileName = string.Format("{0}_AA",
+                request.ComplianceYear);
             if (request.PanArea != null)
             {
                 fileName += "_" + panArea.Name;
@@ -83,7 +82,8 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += ".csv";
+            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
+                                DateTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(dlist);
 
