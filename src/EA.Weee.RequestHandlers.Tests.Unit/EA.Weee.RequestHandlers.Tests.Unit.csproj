@@ -103,6 +103,7 @@
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
