@@ -269,7 +269,7 @@
 
             SystemTime.Unfreeze();
 
-            Assert.Equal($"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on 1st October 2019.", result.ErrorMessageForNotAllowingCreateReturn);
+            Assert.Equal($"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q3 returns on 1st October.", result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
@@ -300,7 +300,7 @@
             SystemTime.Unfreeze();
 
             Assert.Equal(
-                $"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q1 returns on 1st April 2020.", result.ErrorMessageForNotAllowingCreateReturn);
+                $"Returns have been started or submitted for all open quarters. You can start submitting your 2019 Q1 returns on 1st April.", result.ErrorMessageForNotAllowingCreateReturn);
         }
 
         [Fact]
