@@ -94,7 +94,7 @@
                     return RedirectToAction(nameof(UkWeeeData));
 
                 case Reports.UkWeeeDataAtAatfs:
-                    return RedirectToAction(nameof(UkWeeeDataAtAatfs));
+                    return RedirectToAction("UkWeeeDataAtAatfs", "AatfReports");
 
                 case Reports.ProducerEeeData:
                     return RedirectToAction(nameof(ProducerEeeData));
@@ -112,13 +112,13 @@
                     return RedirectToAction(nameof(MissingProducerData));
 
                 case Reports.AatfAeReturnData:
-                    return RedirectToAction("AatfAeReturnData");
+                    return RedirectToAction("AatfAeReturnData", "AatfReports");
 
                 case Reports.AatfObligatedData:
-                    return RedirectToAction(nameof(AatfObligatedData));
+                    return RedirectToAction("AatfObligatedData", "AatfReports");
 
                 case Reports.UkNonObligatedWeeeData:
-                    return RedirectToAction(nameof(UkNonObligatedWeeeReceived));
+                    return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
 
                 default:
                     throw new NotSupportedException();
@@ -347,44 +347,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UkWeeeDataAtAatfs()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            var model = new UkWeeeDataAtAatfViewModel();
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkWeeeDataAtAatfs(UkWeeeDataAtAatfViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadUkWeeeDataAtAatfsCsv(int complianceYear)
-        {
-            FileInfo file;
-
-            var request = new GetUkWeeeAtAatfsCsv(complianceYear);
-            using (var client = apiClient())
-            {
-                file = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            return File(file.Data, "text/csv", file.FileName);
-        }
-
-        [HttpGet]
         public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
@@ -417,42 +379,6 @@
                     new GetUkEeeDataCsv(complianceYear));
                 byte[] data = new UTF8Encoding().GetBytes(ukEeeCsvData.FileContent);
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukEeeCsvData.FileName));
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> UkNonObligatedWeeeReceived()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            UkNonObligatedWeeeReceivedViewModel model = new UkNonObligatedWeeeReceivedViewModel();
-            await PopulateFilters(model);
-
-            return View("UkNonObligatedWeeeReceived", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkNonObligatedWeeeReceived(UkNonObligatedWeeeReceivedViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadUkNonObligatedWeeeReceivedCsv(int complianceYear)
-        {
-            using (IWeeeClient client = apiClient())
-            {
-                CSVFileData ukNonObligatedWeeeReceivedCsvData = await client.SendAsync(User.GetAccessToken(),
-                    new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear));
-                byte[] data = new UTF8Encoding().GetBytes(ukNonObligatedWeeeReceivedCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukNonObligatedWeeeReceivedCsvData.FileName));
             }
         }
 
@@ -532,100 +458,6 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> AatfAeReturnData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            AatfAeReturnDataViewModel model = new AatfAeReturnDataViewModel();
-            await PopulateFilters(model);
-
-            return View("AatfAeReturnData", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfAeReturnData(AatfAeReturnDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
-          int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
-        {
-            CSVFileData fileData;
-            var aatfDataUrl = AatfDataUrl();
-
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
-
-            using (var client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
-        private string AatfDataUrl()
-        {
-            if (HttpContext.Request.Url != null)
-            {
-               var url = Flurl.Url.Combine(HttpContext.Request.Url.Authority, HttpContext.Request.ApplicationPath, "/admin/aatf/details/");
-
-               return $"{HttpContext.Request.Url.Scheme}://{url}";
-            }
-
-            return string.Empty;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> AatfObligatedData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            AatfObligatedDataViewModel model = new AatfObligatedDataViewModel();
-            await PopulateFilters(model);
-
-            return View("AatfObligatedData", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfObligatedData(AatfObligatedDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadAatfObligatedDataCsv(int complianceYear, int columnType,
-           string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
-        {
-            CSVFileData fileData;
-
-            GetAllAatfObligatedDataCsv request = new GetAllAatfObligatedDataCsv(complianceYear, columnType, obligationType, aatfName, authorityId, panArea);
-            using (IWeeeClient client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
@@ -641,24 +473,6 @@
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
 
-            model.ComplianceYears = new SelectList(years);
-        }
-
-        private async Task PopulateFilters(UkWeeeDataAtAatfViewModel model)
-        {
-            var years = await FetchComplianceYearsForAatfReturns();
-            model.ComplianceYears = new SelectList(years);
-        }
-
-        private async Task PopulateFilters(UkEeeDataViewModel model)
-        {
-            List<int> years = await FetchComplianceYearsForDataReturns();
-            model.ComplianceYears = new SelectList(years);
-        }
-
-        private async Task PopulateFilters(UkNonObligatedWeeeReceivedViewModel model)
-        {
-            List<int> years = await FetchComplianceYearsForAatfReturns();
             model.ComplianceYears = new SelectList(years);
         }
         
@@ -688,41 +502,6 @@
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");
         }
 
-        private async Task PopulateFilters(AatfAeReturnDataViewModel model)
-        {
-            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
-            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
-            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
-            using (var client = apiClient())
-            {
-                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name"); 
-                model.LocalAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetLocalAreas()), "Id", "Name");
-            }
-        }
-
-        private async Task PopulateFilters(AatfObligatedDataViewModel model)
-        {
-            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
-            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
-            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
-            using (var client = apiClient())
-            {
-                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
-            }
-        }
-
-        /// <summary>
-        /// Return all years from 2019 to the current year in descending order
-        /// </summary>
-        /// <returns>descending list of aatf/ae compliance years</returns>
-        private List<int> FetchAllAATFComplianceYears()
-        {
-            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
-                .OrderByDescending(year => year)
-                .ToList();
-        }
-
         /// <summary>
         /// Return all years from 2016 to the current year in descending order
         /// </summary>
@@ -746,14 +525,10 @@
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
-
-        private async Task<List<int>> FetchComplianceYearsForAatfReturns()
+        private async Task PopulateFilters(UkEeeDataViewModel model)
         {
-            var request = new GetAatfReturnsActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
+            List<int> years = await FetchComplianceYearsForDataReturns();
+            model.ComplianceYears = new SelectList(years);
         }
 
         private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()
