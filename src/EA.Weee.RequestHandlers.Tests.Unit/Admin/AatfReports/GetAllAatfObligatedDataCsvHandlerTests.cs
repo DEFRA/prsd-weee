@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports;
@@ -60,12 +56,12 @@
             await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
-        [Fact]
-        public async Task GetAllAatfObligatedDataCsvHandler_NoColumnName_ReturnsFileContent()
+        [Theory]
+        [InlineData(2019)]
+        [InlineData(2020)]
+        [InlineData(2021)]
+        public async Task GetAllAatfObligatedDataCsvHandler_NoColumnName_ReturnsFileContent(int complianceYear)
         {
-            // Arrange
-            var complianceYear = 2019;
-
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var commanDataAccess = A.Fake<ICommonDataAccess>();
@@ -124,7 +120,7 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019_AA", data.FileName);
+            Assert.Contains("2019", data.FileName);
         }
 
         [Fact]
@@ -144,7 +140,7 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019_AA_A1_B2C", data.FileName);
+            Assert.Contains("2019_A1_B2C", data.FileName);
         }
     }
 }

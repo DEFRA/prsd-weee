@@ -1,18 +1,19 @@
--- Description:	This stored procedure is used to provide the data for the Download link in the aatf data tab
+-- Description:	This stored procedure is used to provide the data for the admin report of obligatde data
 --				that have/haven't submitted a data return within
---				the limits of the specified parameters.
--- =============================================
-CREATE PROCEDURE [AATF].[getAatfObligatedCsvData]
-	@ComplianceYear INT,
-	@Quarter INT,
-	@ReturnId UNIQUEIDENTIFIER,
-	@AatfId UNIQUEIDENTIFIER
+--				the limits of the specified parameters.Get the latest submitted return
 
+-- =============================================
+ALTER PROCEDURE [AATF].[getAllAatfObligatedCsvData]
+	@ComplianceYear INT,
+	@AatfName nvarchar(256),
+	@ObligationType nvarchar(3),
+	@CA UNIQUEIDENTIFIER,
+	@PanArea UNIQUEIDENTIFIER,
+	@ColumnType INT
 AS
 BEGIN
 
 SET NOCOUNT ON;
-
 
 DECLARE @SUBMITTEDRETURN TABLE
 (
@@ -24,7 +25,11 @@ DECLARE @SUBMITTEDRETURN TABLE
 	SubmittedDate			DATETIME NULL,
 	SubmittedBy				NVARCHAR(70) NULL,
 	Name					NVARCHAR(256) NOT NULL,
-	ApprovalNumber			NVARCHAR(20) NOT NULL
+	ApprovalNumber			NVARCHAR(20) NOT NULL,	
+	OrganisationName		NVARCHAR(256) NOT NULL,
+	CompetentAuthorityAbbr	NVARCHAR(65) NOT NULL,
+	PanArea					NVARCHAR(200) NULL,
+	LocalArea				NVARCHAR(1024) NULL
 )
 
 
@@ -73,17 +78,43 @@ DECLARE @ColumnName nvarchar(25)
 
 --Get the latest submitted returns for the compliance year
 INSERT INTO @SUBMITTEDRETURN
+SELECT X.AatfId, X.ReturnId, X.ComplianceYear, X.[Quarter], X.CreatedDate, X.SubmittedDate,
+	   X.SubmittedBy, X.Name, X.ApprovalNumber,X.OrgName,
+	    X.Abbreviation, X.PName, X.LaName FROM
+(
 SELECT ra.AatfId, ra.ReturnId, r.ComplianceYear, r.[Quarter], r.CreatedDate, r.SubmittedDate,
-	   CONCAT (u.FirstName, ' ', u.Surname) as SubmittedBy, a.Name, a.ApprovalNumber
+	   CONCAT (u.FirstName, ' ', u.Surname) as SubmittedBy, a.Name, a.ApprovalNumber, CASE 
+		WHEN o.Name IS NULL
+			THEN o.TradingName
+		ELSE o.Name
+		END as OrgName, ca.Abbreviation, pa.Name as PName, la.Name as LaName,ROW_NUMBER() OVER
+						(
+							PARTITION BY ra.AatfId, r.[Quarter]
+							ORDER BY r.[Quarter],r.SubmittedDate desc
+						) AS RowNumber
 FROM
  [AATF].[ReturnAatf] ra
 INNER JOIN [AATF].[Return] r ON r.Id = ra.ReturnId
-AND ra.ReturnId = @ReturnId AND ra.AatfId = @AatfId
 INNER JOIN AATF.AATF a ON a.Id = ra.AatfId  AND a.FacilityType = r.FacilityType
+INNER JOIN Organisation.Organisation o ON a.OrganisationId = o.Id
+INNER JOIN [Lookup].CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
 INNER JOIN [Identity].[AspNetUsers] u ON u.id = r.SubmittedById
+LEFT JOIN [Lookup].[LocalArea] la ON la.Id = a.LocalAreaId
+LEFT JOIN [Lookup].[PanArea] pa ON pa.Id = a.PanAreaId
 WHERE r.ComplianceYear = @ComplianceYear
-	AND r.[Quarter] = @Quarter
 	AND r.ReturnStatus = 2  -- submitted
+	AND a.FacilityType = 1  --aatf
+	AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
+	AND (
+		@PanArea IS NULL
+		OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId)
+		)
+	AND (
+		@AatfName IS NULL
+		OR a.Name LIKE '%' + COALESCE(@AatfName, a.Name) + '%'
+		)
+) X
+WHERE X.RowNumber = 1
 
 --Total Sent to another AATF / ATF (t)
 
@@ -134,9 +165,9 @@ INNER JOIN @TotalReused x ON x.AatfId = o.AatfId
 
 --Insert for non-matched records
 INSERT INTO @ObligatedData (AatfId, ReturnId, [Quarter], CategoryId, TonnageType, TotalReused)
-SELECT *
-FROM @TotalReused
-WHERE AatfId NOT IN (SELECT DISTINCT AatfId FROM @ObligatedData)
+SELECT * FROM @TotalReused
+EXCEPT
+SELECT AatfId, ReturnId, [Quarter], CategoryId, TonnageType, TotalReused FROM @ObligatedData
 
 
 --Total received from PCS (t)
@@ -144,8 +175,8 @@ INSERT INTO #TotalReceivedByScheme
 SELECT u.AatfId, u.ReturnId, u.[Quarter], u.CategoryId, u.SchemeId, u.Tonnage, SUM(u.value) AS VALUE, u.SchemeName, u.ApprovalNumber
 FROM (
 	SELECT wr.SchemeId, r.AatfId, r.ReturnId, r.[Quarter], wra.CategoryId,
-	 wra.HouseholdTonnage ,
-	 wra.NonHouseholdTonnage, s.SchemeName, s.ApprovalNumber
+	 COALESCE(wra.HouseholdTonnage, 0) HouseholdTonnage,
+	 COALESCE(wra.NonHouseholdTonnage, 0) NonHouseholdTonnage, s.SchemeName, s.ApprovalNumber
 	FROM @SUBMITTEDRETURN r
 	INNER JOIN [AATF].WeeeReceived wr ON r.ReturnId = wr.ReturnId
 		AND wr.AatfId = r.AatfId
@@ -179,12 +210,29 @@ SELECT *
 FROM (
 	SELECT AatfId, ReturnId, [Quarter], CategoryId, TonnageType, SUM(tonnage) AS Tonnage
 	FROM #TotalReceivedByScheme
-	WHERE AatfId NOT IN (SELECT DISTINCT AatfId FROM @ObligatedData)
 	GROUP BY AatfId, ReturnId, [Quarter], TonnageType, CategoryId
 	) y
+EXCEPT
+SELECT AatfId, ReturnId, [Quarter], CategoryId, TonnageType, TotalReceived FROM @ObligatedData
 
 -------------End of Total Obligated data by AATF-----------------------------
-
+--Insert for nil and no data submitted return
+IF EXISTS(SELECT * FROM @SUBMITTEDRETURN) 
+BEGIN
+INSERT INTO @ObligatedData (AatfId, ReturnId, [Quarter], CategoryId, TonnageType)
+SELECT s.AatfId, s.ReturnId, s.[Quarter], c.Id,'HouseholdTonnage'
+FROM [Lookup].WeeeCategory c 
+LEFT JOIN @SUBMITTEDRETURN s
+ON 1=1 
+WHERE s.AatfId NOT IN (SELECT DISTINCT AatfId FROM @ObligatedData)
+UNION ALL
+SELECT s.AatfId, s.ReturnId, s.[Quarter], c.Id,'NonHouseholdTonnage'
+FROM [Lookup].WeeeCategory c 
+LEFT JOIN @SUBMITTEDRETURN s
+ON 1=1 
+WHERE s.AatfId NOT IN (SELECT DISTINCT AatfId FROM @ObligatedData)
+END
+-----------------------------------------------------------------------------------
 
 DECLARE @COUNT INT
 
@@ -194,12 +242,26 @@ IF @COUNT > 0
 BEGIN
 
 ------------- Obligated data by schemes
+IF @ColumnType = 1
+	BEGIN
 
-SELECT @ColumnNames = ISNULL(@ColumnNames + ',', '') + QUOTENAME(SchemeName)
-FROM (
-	SELECT DISTINCT SchemeName
-	FROM #TotalReceivedByScheme
-	) A
+	SET @ColumnName = 'SchemeName'
+
+	SELECT @ColumnNames = ISNULL(@ColumnNames + ',', '') + QUOTENAME(SchemeName)
+	FROM (
+		SELECT DISTINCT SchemeName
+		FROM #TotalReceivedByScheme
+		) A
+	END
+ELSE
+	BEGIN
+	SET @ColumnName = 'SchemeApprovalNumber'
+	SELECT @ColumnNames = ISNULL(@ColumnNames + ',', '') + QUOTENAME(SchemeApprovalNumber)
+	FROM (
+		SELECT DISTINCT SchemeApprovalNumber
+		FROM #TotalReceivedByScheme
+		) A
+	END
 
 SET @DynamicPivotQuery = N'
 
@@ -210,8 +272,8 @@ SELECT * into ##Results
 FROM
 	(
 	SELECT AatfId,ReturnId,[Quarter] AS ''Q'',CategoryId,TonnageType, ' + @ColumnNames + '
-	FROM (SELECT AatfId,ReturnId,[Quarter],CategoryId,TonnageType,Tonnage,SchemeName FROM #TotalReceivedByScheme) as t
-	PIVOT (MAX(Tonnage) FOR SchemeName in (' + @ColumnNames + ')) AS PVTTable
+	FROM (SELECT AatfId,ReturnId,[Quarter],CategoryId,TonnageType,Tonnage,'+ @ColumnName +' FROM #TotalReceivedByScheme) as t
+	PIVOT (MAX(Tonnage) FOR '+ @ColumnName +' in (' + @ColumnNames + ')) AS PVTTable
 	)a'
 
 EXEC sp_executesql @DynamicPivotQuery; 
@@ -224,12 +286,16 @@ select * into #temp from ##Results;
 DROP TABLE ##Results;
 
 SELECT 
-@ComplianceYear AS 'Year'
-,a.[Quarter] AS 'Quarter'
-,a.Name AS 'Name of AATF'
-,a.ApprovalNumber AS 'Approval number'
+ a.CompetentAuthorityAbbr AS 'Appropriate authority'
+,a.PanArea AS 'WROS pan area team'
+,a.LocalArea AS 'EA Area'
+,@ComplianceYear AS 'Year'
+,CONCAT('Q', a.[Quarter]) AS 'Quarter'
 ,a.SubmittedBy AS 'Submitted by'
 ,a.SubmittedDate AS 'Date submitted (GMT)'
+,a.OrganisationName AS 'Organisation name'
+,a.Name AS 'Name of AATF'
+,a.ApprovalNumber AS 'Approval number'
 ,CONCAT(c.Id, '.', c.Name) AS Category
 ,a.Obligation
 ,a.TotalSent AS 'Total sent to another AATF / ATF (t)'
@@ -239,7 +305,8 @@ SELECT
 FROM
 	(
 	SELECT
-	 o.AatfId, r.[Quarter], r.SubmittedBy, r.SubmittedDate, r.Name, r.ApprovalNumber, o.CategoryId, o.returnId,o.TonnageType,
+	 o.AatfId, r.CompetentAuthorityAbbr, r.PanArea,  r.[Quarter], r.SubmittedBy, r.SubmittedDate,r.LocalArea,
+	 r.OrganisationName, r.Name, r.ApprovalNumber, o.CategoryId, o.returnId,o.TonnageType,
 	 CASE WHEN o.TonnageType = 'HouseholdTonnage' THEN 'B2C'
 	 ELSE 'B2B' END AS Obligation,
 	 o.TotalSent, o.TotalReused, o.TotalReceived
@@ -254,7 +321,8 @@ FROM
 		AND x.Q = a.[Quarter]
 		AND x.CategoryId = a.CategoryId
 		AND x.TonnageType = a.TonnageType
-ORDER BY a.[Quarter], a.SubmittedDate, a.TonnageType, a.CategoryId
+WHERE (@ObligationType IS NULL OR a.Obligation like '%' + COALESCE(@ObligationType, a.Obligation) + '%')
+ORDER BY a.CompetentAuthorityAbbr, a.[Quarter], a.Name, a.SubmittedDate, a.TonnageType, a.CategoryId
 
 
 DROP Table #temp
@@ -263,12 +331,16 @@ ELSE
 	BEGIN
 
 		SELECT 
-		@ComplianceYear AS 'Year'
-		,a.[Quarter] AS 'Quarter'
-		,a.Name AS 'Name of AATF'
-		,a.ApprovalNumber AS 'Approval number'
+		 a.CompetentAuthorityAbbr AS 'Appropriate authority'
+		,a.PanArea AS 'WROS pan area team'
+		,a.LocalArea AS 'EA Area'
+		,@ComplianceYear AS 'Year'
+		,CONCAT('Q', a.[Quarter]) AS 'Quarter'
 		,a.SubmittedBy AS 'Submitted by'
 		,a.SubmittedDate AS 'Date submitted (GMT)'
+		,a.OrganisationName AS 'Organisation name'
+		,a.Name AS 'Name of AATF'
+		,a.ApprovalNumber AS 'Approval number'
 		,CONCAT(c.Id, '.', c.Name) AS Category
 		,a.Obligation
 		,a.TotalSent AS 'Total sent to another AATF / ATF (t)'
@@ -277,7 +349,8 @@ ELSE
 		FROM
 			(
 			SELECT
-			 o.AatfId, r.[Quarter], r.SubmittedBy, r.SubmittedDate, r.Name, r.ApprovalNumber, o.CategoryId, o.returnId,o.TonnageType,
+			 o.AatfId, r.CompetentAuthorityAbbr, r.PanArea,  r.[Quarter], r.SubmittedBy, r.SubmittedDate,r.LocalArea,
+			 r.OrganisationName, r.Name, r.ApprovalNumber, o.CategoryId, o.returnId,o.TonnageType,
 			 CASE WHEN o.TonnageType = 'HouseholdTonnage' THEN 'B2C'
 			 ELSE 'B2B' END AS Obligation,
 			 o.TotalSent, o.TotalReused, o.TotalReceived
@@ -287,13 +360,16 @@ ELSE
 				AND R.ReturnId = o.ReturnId
 			) a
 			INNER JOIN [Lookup].WeeeCategory c ON a.CategoryId = c.Id
-		ORDER BY a.[Quarter], a.SubmittedDate, a.TonnageType, a.CategoryId
+		WHERE (@ObligationType IS NULL OR a.Obligation like '%' + COALESCE(@ObligationType, a.Obligation) + '%')
+		ORDER BY a.CompetentAuthorityAbbr, a.[Quarter], a.Name, a.SubmittedDate, a.TonnageType, a.CategoryId
 	END
 
 DROP Table #TotalReceivedByScheme
 
 
 END
+
+
 
 
 

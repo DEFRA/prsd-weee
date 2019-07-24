@@ -112,7 +112,7 @@
                     return RedirectToAction(nameof(MissingProducerData));
 
                 case Reports.AatfAeReturnData:
-                    return RedirectToAction("AatfAeReturnData");
+                    return RedirectToAction(nameof(AatfAeReturnData));
 
                 case Reports.AatfObligatedData:
                     return RedirectToAction(nameof(AatfObligatedData));
@@ -704,7 +704,7 @@
 
         private async Task PopulateFilters(AatfObligatedDataViewModel model)
         {
-            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
             IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
             model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
             using (var client = apiClient())

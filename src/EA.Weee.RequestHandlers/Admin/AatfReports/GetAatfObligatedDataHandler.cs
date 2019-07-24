@@ -38,30 +38,30 @@
 
             var aatf = await aatfDataAccess.GetAatfById(request.AatfId);
 
-            var dlist = await weeContext.StoredProcedures.GetAatfObligatedCsvData(request.ReturnId, request.ComplianceYear, request.Quarter, request.AatfId);
+            var obligatedData = await weeContext.StoredProcedures.GetAatfObligatedCsvData(request.ReturnId, request.ComplianceYear, request.Quarter, request.AatfId);
 
             //Remove the Id columns
-            if (dlist != null)
+            if (obligatedData != null)
             {
-                if (dlist.Columns.Contains("AatfId"))
+                if (obligatedData.Columns.Contains("AatfId"))
                 {
-                    dlist.Columns.Remove("AatfId");
+                    obligatedData.Columns.Remove("AatfId");
                 }
-                if (dlist.Columns.Contains("ReturnId"))
+                if (obligatedData.Columns.Contains("ReturnId"))
                 {
-                    dlist.Columns.Remove("ReturnId");
+                    obligatedData.Columns.Remove("ReturnId");
                 }
-                if (dlist.Columns.Contains("Q"))
+                if (obligatedData.Columns.Contains("Q"))
                 {
-                    dlist.Columns.Remove("Q");
+                    obligatedData.Columns.Remove("Q");
                 }
-                if (dlist.Columns.Contains("CategoryId"))
+                if (obligatedData.Columns.Contains("CategoryId"))
                 {
-                    dlist.Columns.Remove("CategoryId");
+                    obligatedData.Columns.Remove("CategoryId");
                 }
-                if (dlist.Columns.Contains("TonnageType"))
+                if (obligatedData.Columns.Contains("TonnageType"))
                 {
-                    dlist.Columns.Remove("TonnageType");
+                    obligatedData.Columns.Remove("TonnageType");
                 }
             }
 
@@ -69,7 +69,7 @@
                  aatf.Name, request.ComplianceYear, (QuarterType)request.Quarter,
                  DateTime.UtcNow);
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(dlist);
+            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
 
             return new CSVFileData
             {
