@@ -107,6 +107,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConstraintTests.cs" />
+    <Compile Include="StoredProcedure\GetAatfObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetAeSubmissionsTests.cs" />
     <Compile Include="StoredProcedure\GetAatfAeReturnDataCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetAllAatfObligatedCsvDataTests.cs" />

@@ -2264,6 +2264,9 @@
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
             IList<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+            // Arrange
+            var years = new List<int>() { 2019 };
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -2349,6 +2352,10 @@
         public async Task PostAatfObligatedData_WithInvalidViewModel_ReturnsAatfObligatedDataViewModel()
         {
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            // Arrange
+            var years = new List<int>() { 2019};
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
