@@ -31,7 +31,7 @@
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
             {
-                string message = string.Format("Compliance year cannot be \"{0}\".", request.ComplianceYear);
+                var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
 
@@ -42,11 +42,9 @@
             csvWriter.DefineColumn(@"Category", i => i.Category);
             csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
             csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
-            string fileContent = csvWriter.Write(items);
+            var fileContent = csvWriter.Write(items);
 
-            string fileName = string.Format("{0}_UK non-obligated WEEE_{1:ddMMyyyy_HHmm}.csv",
-                request.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{request.ComplianceYear}_UK non-obligated WEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {
