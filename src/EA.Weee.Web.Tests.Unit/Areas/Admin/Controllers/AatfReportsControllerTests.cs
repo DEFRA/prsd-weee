@@ -536,6 +536,9 @@
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
             IList<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+            // Arrange
+            var years = new List<int>() { 2019 };
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
 
             // Act
             var result = await controller.AatfObligatedData();
@@ -604,6 +607,10 @@
         [Fact]
         public async Task PostAatfObligatedData_WithInvalidViewModel_ReturnsAatfObligatedDataViewModel()
         {
+            // Arrange
+            var years = new List<int>() { 2019 };
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
+
             // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.AatfObligatedData(new AatfObligatedDataViewModel());

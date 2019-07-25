@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
@@ -34,7 +35,12 @@
                 var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
-            PanArea panArea = new PanArea();
+            PanArea panArea = null;
+            UKCompetentAuthority authority = null;
+            if (request.AuthorityId != null)
+            {
+                authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
+            }
             if (request.PanArea != null)
             {
                 panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
@@ -67,8 +73,11 @@
                 }
             }
 
-           var fileName = string.Format("{0}_AA",
-                request.ComplianceYear);
+           var fileName = string.Format("{0}", request.ComplianceYear);
+            if (request.AuthorityId != null)
+            {
+                fileName += "_" + authority.Abbreviation;
+            }
             if (request.PanArea != null)
             {
                 fileName += "_" + panArea.Name;
