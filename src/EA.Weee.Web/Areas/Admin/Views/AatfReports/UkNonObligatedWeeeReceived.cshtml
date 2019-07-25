@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.UkWeeeDataAtAatfViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.UkNonObligatedWeeeReceivedViewModel
 @{
-    ViewBag.Title = "Download UK WEEE received at AATFs";
+    ViewBag.Title = "Download UK non-obligated WEEE received at AATFs";
 }
 
 @section main_content
@@ -15,8 +15,8 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>Filter the report to download entries that match your criteria.</p>
-        <p>All data is reported in tonnes (t) to three decimal places.</p>
+        <p>Filter the report to download entries that match your criteria</p>
+        <p>All data is reported in tonnes (t) to three decimal places</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
@@ -27,7 +27,7 @@
             If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
         </p>
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "UK WEEE received at AATFs", new Dictionary<string, object> { { "class", "button" } }))
+           "Report download", "UK non-obligated WEEE received at AATFs", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -43,7 +43,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadUkWeeeDataAtAatfsCsv", new { complianceYear = Model.SelectedYear }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadUkNonObligatedWeeeReceivedCsv", new { complianceYear = Model.SelectedYear }))";
         </script>
     }
 }
