@@ -225,7 +225,7 @@
 
         private async Task PopulateFilters(AatfObligatedDataViewModel model)
         {
-            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
             var authorities = await FetchAuthorities();
             model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
             using (var client = apiClient())
