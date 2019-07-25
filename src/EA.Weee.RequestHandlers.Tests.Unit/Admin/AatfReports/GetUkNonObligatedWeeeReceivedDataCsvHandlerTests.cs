@@ -13,6 +13,7 @@
     using EA.Weee.Requests.Admin.Aatf;
     using FakeItEasy;
     using FluentAssertions;
+    using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 
