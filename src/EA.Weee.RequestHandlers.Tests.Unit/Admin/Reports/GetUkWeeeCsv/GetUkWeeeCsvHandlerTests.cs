@@ -14,6 +14,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports.GetUKWeeeCsv;
+    using Requests.Admin.AatfReports;
     using Xunit;
     using DomainObligationType = Domain.Obligation.ObligationType;
 

@@ -20,6 +20,7 @@
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
@@ -119,6 +120,9 @@
 
                 case Reports.UkNonObligatedWeeeData:
                     return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
+
+                case Reports.AatfNonObligatedData:
+                    return RedirectToAction("AatfNonObligatedData", "AatfReports");
 
                 default:
                     throw new NotSupportedException();

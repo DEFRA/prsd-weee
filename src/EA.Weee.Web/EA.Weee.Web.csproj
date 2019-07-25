@@ -330,6 +330,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
@@ -337,10 +338,10 @@
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkWeeeDataAtAatfViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\AatfAeReturnDataViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkNonObligatedWeeeReceivedViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\AatfObligatedDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\UkWeeeDataAtAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -973,6 +974,7 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfAeReturnData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfObligatedData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\UkNonObligatedWeeeReceived.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\AatfNonObligatedData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

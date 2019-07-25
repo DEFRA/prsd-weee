@@ -14,5 +14,6 @@
         public const string MissingProducerData = "Missing producer data";
         public const string AatfAeReturnData = "Summary of AATF / AE returns to date";
         public const string AatfObligatedData = "AATF obligated WEEE data";
+        public const string AatfNonObligatedData = "AATF non-obligated WEEE data";
     }
 }
