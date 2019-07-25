@@ -10,6 +10,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess.StoredProcedure;
     using FakeItEasy;
+    using FluentAssertions;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.Reports;
     using Weee.Tests.Core;
@@ -21,7 +22,7 @@
         public async Task GetAatfAeReturnDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
-            var complianceYear = 2019;
+            const int complianceYear = 2019;
 
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
@@ -41,7 +42,7 @@
         public async Task GetAatfAeReturnDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
         {
             // Arrange
-            var complianceYear = 0;
+            const int complianceYear = 0;
 
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
@@ -61,7 +62,7 @@
         public async Task GetAatfAeReturnDataCsvHandler_NoQuarter_ReturnsFileContent()
         {
             // Arrange
-            var complianceYear = 2019;
+            const int complianceYear = 2019;
 
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
@@ -71,7 +72,7 @@
             var request = new GetAatfAeReturnDataCsv(complianceYear, 0, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);
@@ -81,7 +82,7 @@
         public async Task GetAatfAeReturnDataCsvHandler_ComplianceYear_ReturnsFileContent()
         {
             // Arrange
-            var complianceYear = 2019;
+            const int complianceYear = 2019;
 
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
@@ -91,7 +92,7 @@
             var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);
@@ -123,7 +124,7 @@
             var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, returnStatus, null, null, null, string.Empty);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);
@@ -132,9 +133,9 @@
         [Fact]
         public async Task GetAatfAeReturnDataCSVHandler_Returns_MatchingFileContent()
         {
-            var complianceYear = 2019;
-            int quarter = 1;
-            FacilityType facilityType = FacilityType.Aatf;
+            const int complianceYear = 2019;
+            const int quarter = 1;
+            const FacilityType facilityType = FacilityType.Aatf;
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var storedProcedures = A.Fake<IStoredProcedures>();
@@ -172,17 +173,17 @@
 
             // Act
             var data = await handler.HandleAsync(request);
-            data.FileContent.Contains("aatf1,WEE/EE1234RR/ATF,Test Org,,,,,");
-            data.FileContent.Contains("aatf12,WEE/EE1234RR/ATF,Test Org,,,,,");
-            data.FileContent.Contains("aatf3,WEE/EE1234RR/ATF,Test Org,,,,,");
+            data.FileContent.Should().Contain("aatf1,WEE/EE1234RR/ATF,Test Org,,,,,");
+            data.FileContent.Should().Contain("aatf12,WEE/EE1234RR/ATF,Test Org,,,,,");
+            data.FileContent.Should().Contain("aatf3,WEE/EE1234RR/ATF,Test Org,,,,,");
         }
 
         [Fact]
         public async Task GetAatfAeReturnDataCSVHandler_Sets_URL()
         {
-            var complianceYear = 2019;
-            int quarter = 1;
-            FacilityType facilityType = FacilityType.Aatf;
+            const int complianceYear = 2019;
+            const int quarter = 1;
+            const FacilityType facilityType = FacilityType.Aatf;
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var storedProcedures = A.Fake<IStoredProcedures>();
@@ -205,7 +206,7 @@
             var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
             var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null, "https://localhost:44300/admin/aatf/details/");
 
-            var url1 = string.Format(@" =HYPERLINK(""""{0}{1}#data"""", """"View AATF data"""")", request.AatfDataUrl, csvData1.AatfId);
+            var url1 = $@" =HYPERLINK(""""{request.AatfDataUrl}{csvData1.AatfId}#data"""", """"View AATF data"""")";
             var data = await handler.HandleAsync(request);
             data.FileContent.Contains(url1);
         }
