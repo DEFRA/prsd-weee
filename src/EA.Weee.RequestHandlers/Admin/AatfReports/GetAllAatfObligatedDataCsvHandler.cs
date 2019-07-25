@@ -5,9 +5,10 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.Domain.Lookup;
+    using Domain.Lookup;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Security;
 

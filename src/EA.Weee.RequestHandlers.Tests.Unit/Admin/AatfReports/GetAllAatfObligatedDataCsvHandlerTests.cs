@@ -13,6 +13,7 @@
     using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Weee.Tests.Core;
     using Xunit;

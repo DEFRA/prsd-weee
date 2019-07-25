@@ -12,6 +12,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.Reports;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Weee.Tests.Core;
     using Xunit;

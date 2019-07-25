@@ -23,6 +23,7 @@
     using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
@@ -170,6 +171,7 @@
         [InlineData(Reports.AatfObligatedData, "AatfObligatedData", "AatfReports")]
         [InlineData(Reports.UkWeeeDataAtAatfs, "UkWeeeDataAtAatfs", "AatfReports")]
         [InlineData(Reports.UkNonObligatedWeeeData, "UkNonObligatedWeeeReceived", "AatfReports")]
+        [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData", "AatfReports")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
         {
             // Arrange

@@ -8,6 +8,7 @@
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core.Helpers;
     using Prsd.Core.Mediator;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Security;
 
