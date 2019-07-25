@@ -66,7 +66,7 @@
             SystemTime.Unfreeze();
 
             // Assert
-            Assert.Equal("UK WEEE received report 2016.csv", result.FileName);
+            Assert.Equal("2016_UK WEEE received at AATFs_31122016_2359.csv", result.FileName);
         }
 
         [Fact]
@@ -85,12 +85,12 @@
             Assert.Collection(result.ColumnTitles,
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
-                title => Assert.Equal("B2C received for treatment (total tonnes)", title),
-                title => Assert.Equal("B2C for reuse (total tonnes)", title),
-                title => Assert.Equal("B2C sent to AATF/ATF (total tonnes)", title),
-                title => Assert.Equal("B2B received for treatment (total tonnes)", title),
-                title => Assert.Equal("B2B for reuse (total tonnes)", title),
-                title => Assert.Equal("B2B sent to AATF/ATF (total tonnes)", title));
+                title => Assert.Equal("B2C received for treatment (t)", title),
+                title => Assert.Equal("B2C for reuse (t)", title),
+                title => Assert.Equal("B2C sent to AATF/ATF (t)", title),
+                title => Assert.Equal("B2B received for treatment (t)", title),
+                title => Assert.Equal("B2B for reuse (t)", title),
+                title => Assert.Equal("B2B sent to AATF/ATF (t)", title));
         }
 
         [Fact]

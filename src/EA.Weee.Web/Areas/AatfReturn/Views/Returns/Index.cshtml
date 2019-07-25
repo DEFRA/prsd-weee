@@ -79,30 +79,34 @@
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                             @{
+                                var continueMessage = "Continue return for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+                                var editMessage = "Edit return for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+
                                 if (item.ReturnsListDisplayOptions.DisplayContinue)
                                 {
                                     if (item.ReturnsListRedirectOptions.RedirectTaskList)
                                     {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
+                                        @Html.NavigationRouteLink("Continue", @continueMessage, AatfRedirect.Default, new { action = "Index", controller = "AatfTaskList", returnId = @item.ReturnViewModel.ReturnId }, null)
                                     }
                                     else if (item.ReturnsListRedirectOptions.RedirectSelectYourPcs)
                                     {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
+                                        @Html.NavigationRouteLink("Continue", @continueMessage, AatfRedirect.SelectPcsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
                                     }
                                     else if (item.ReturnsListRedirectOptions.RedirectReportingOptions)
                                     {
-                                        @Html.NavigationRouteLink("Continue", "Continue return", AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
+                                        @Html.NavigationRouteLink("Continue", @continueMessage, AatfRedirect.SelectReportOptionsRouteName, new { action = "Index", returnId = @item.ReturnViewModel.ReturnId, organisationId = Model.OrganisationId }, null)
                                     }
                                 }
                                 if (item.ReturnsListDisplayOptions.DisplayEdit)
                                 {
+
                                     using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
                                     {
                                         @Html.AntiForgeryToken()
                                         @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
                                         @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
 
-                                        <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit"><span class="govuk-visually-hidden">Edit return</span><div> Edit</div></button>
+                                        <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit"><span class="govuk-visually-hidden">@editMessage</span><div> Edit</div></button>
                                     }
                                 }
                             }
@@ -110,7 +114,9 @@
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                             @if (item.ReturnsListDisplayOptions.DisplaySummary)
                             {
-                                @Html.NavigationRouteLink("Summary", "Return summary", AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
+                                var summaryMessage = "Return summary for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+
+                                @Html.NavigationRouteLink("Summary", summaryMessage, AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
                             }
                         </td>
                     </tr>

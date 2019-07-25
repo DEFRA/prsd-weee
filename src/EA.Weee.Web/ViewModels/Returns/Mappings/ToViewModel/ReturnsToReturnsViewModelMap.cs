@@ -86,7 +86,8 @@
         {
             if (!WindowHelper.IsThereAnOpenWindow(source.CurrentDate))
             {
-                return string.Format("The {0} compliance period has closed. You can start submitting your {1} Q1 returns on 1st April.", source.CurrentDate.AddYears(-1).Year, source.CurrentDate.Year);
+                return
+                    $"The {source.CurrentDate.AddYears(-1).Year} compliance period has closed. You can start submitting your {source.CurrentDate.Year} Q1 returns on 1st April.";
             }
             foreach (Quarter q in source.OpenQuarters)
             {
@@ -94,7 +95,8 @@
                 {
                     QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
-                    return string.Format("Returns have been started or submitted for all open quarters. You can start submitting your {0} {1} returns on {2}.", source.CurrentDate.Year, nextQuarter, source.NextWindow.WindowOpenDate.ToShortDateString());
+                    return
+                        $"Returns have been started or submitted for all open quarters. You can start submitting your {source.CurrentDate.Year} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
                 }
             }
             return notExpectedError;
