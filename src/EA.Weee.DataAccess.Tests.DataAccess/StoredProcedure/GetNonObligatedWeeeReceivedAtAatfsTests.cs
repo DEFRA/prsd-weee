@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -7,6 +8,7 @@
     using Core.AatfReturn;
     using Domain.DataReturns;
     using FluentAssertions;
+    using Prsd.Core;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -160,10 +162,14 @@
         {
             using (var db = new DatabaseWrapper())
             {
-                var organisation = new OrganisationHelper().GetOrganisationWithName("Name");
+                var organisation = new OrganisationHelper().GetOrganisationWithName(fixture.Create<string>());
                 var @return1 = CreateSubmittedReturn(db, organisation);
-                var @return2 = CreateSubmittedReturn(db, organisation);
 
+                SystemTime.Freeze(DateTime.Now.AddDays(1));
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
+                @return2.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
+                SystemTime.Unfreeze();
+                
                 db.WeeeContext.Returns.Add(@return1);
                 db.WeeeContext.Returns.Add(@return2);
 

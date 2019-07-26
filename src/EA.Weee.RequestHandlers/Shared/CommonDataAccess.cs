@@ -12,6 +12,7 @@
     using Domain.Charges;
     using Domain.Lookup;
     using Domain.Scheme;
+    using EA.Weee.Core.Shared;
 
     public class CommonDataAccess : ICommonDataAccess
     {
@@ -47,7 +48,7 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
-        public async Task<UKCompetentAuthority> FetchCompetentAuthority(Guid id)
+        public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid id)
         {
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == id);
         }

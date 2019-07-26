@@ -8,6 +8,7 @@
     using DataAccess.StoredProcedure;
     using Domain.Lookup;
     using EA.Prsd.Core;
+    using EA.Weee.Requests.Admin.AatfReports;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
@@ -59,7 +60,7 @@
             var fileNameParameters = string.Empty;
             if (request.AuthorityId.HasValue)
             {
-                var authority = await commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value);
+                var authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
                 fileNameParameters += $"_{authority.Abbreviation}";
             }
 

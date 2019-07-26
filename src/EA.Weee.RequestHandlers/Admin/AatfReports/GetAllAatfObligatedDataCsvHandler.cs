@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using Domain;
     using Domain.Lookup;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
