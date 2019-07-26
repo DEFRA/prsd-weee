@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
     using System;
     using System.Threading.Tasks;
@@ -6,10 +6,8 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
-    using EA.Prsd.Core.Helpers;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
-    using Requests.Admin.Reports;
     using Security;
 
     internal class GetAatfAeReturnDataCsvHandler : IRequestHandler<GetAatfAeReturnDataCsv, CSVFileData>
