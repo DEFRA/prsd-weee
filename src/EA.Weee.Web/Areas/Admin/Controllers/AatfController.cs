@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -17,18 +23,10 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Core.Shared;
-    using EA.Weee.Web.Filters;
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -270,6 +268,21 @@
 
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
+        {
+            CSVFileData fileData;
+            
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), new GetAatfObligatedData(complianceYear, quarter, returnId, aatfId));
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
         private async Task<List<AatfDataList>> GetAatfs(FacilityType facilityType, FilteringViewModel filter = null)
