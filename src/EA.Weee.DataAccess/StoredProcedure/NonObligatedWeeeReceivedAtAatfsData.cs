@@ -17,12 +17,16 @@
 
         public DateTime SubmittedDate { get; set; }
 
-        public string Aatf { get; set; }
+        public string OrganisationName { get; set; }
 
         public string Category { get; set; }
 
         public decimal? TotalNonObligatedWeeeReceived { get; set; }
 
         public decimal? TotalNonObligatedWeeeReceivedFromDcf { get; set; }
+
+        public Guid ReturnId { get; set; }
+
+        public int CategoryId { get; set; }
     }
 }

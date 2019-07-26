@@ -462,10 +462,10 @@
 
             return await context.Database
                 .SqlQuery<NonObligatedWeeeReceivedAtAatfsData>(
-                    "[AATF].[getNonObligatedWeeeReceivedAtAatfs] @ComplianceYear, @CA, @PanArea, @AatfName",
+                    "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @CA, @AatfName",
                     complianceYearParameter,
                     authorityParameter,
-                    panAreaParameter, 
+                    //panAreaParameter, 
                     aatfNameParameter)
                 .ToListAsync();
         }
