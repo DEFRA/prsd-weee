@@ -27,7 +27,7 @@
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
-        Task<List<UkNonObligatedWeeeReceivedData>> UkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
+        Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
 
         Task<List<NonObligatedWeeeReceivedAtAatfsData>> GetNonObligatedWeeeReceivedAtAatfs(int complianceYear, Guid? authority, Guid? patArea, string aatf);
 
