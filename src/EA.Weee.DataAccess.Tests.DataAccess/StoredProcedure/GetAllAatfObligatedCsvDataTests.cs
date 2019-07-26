@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
