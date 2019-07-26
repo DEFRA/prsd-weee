@@ -247,7 +247,7 @@
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[UkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
+            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[getUkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
                 complianceYearParameter).ToListAsync();
         }
 
