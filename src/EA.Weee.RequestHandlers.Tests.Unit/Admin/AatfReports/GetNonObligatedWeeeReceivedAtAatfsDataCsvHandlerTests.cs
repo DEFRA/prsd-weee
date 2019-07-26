@@ -147,7 +147,7 @@
 
             var ca = new UKCompetentAuthority(fixture.Create<Guid>(), null, "CA", new Country(fixture.Create<Guid>(), null), null, null);
 
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value)).Returns(ca);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
 
             var data = await handler.HandleAsync(request);
 
@@ -166,7 +166,7 @@
             var ca = new UKCompetentAuthority(fixture.Create<Guid>(), null, "CA", new Country(fixture.Create<Guid>(), null), null, null);
             var patArea = fixture.Build<PanArea>().With(p => p.Name, "PAT").Create();
 
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value)).Returns(ca);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PatAreaId.Value)).Returns(patArea);
 
             var data = await handler.HandleAsync(request);
@@ -186,7 +186,7 @@
             var ca = new UKCompetentAuthority(fixture.Create<Guid>(), null, "CA", new Country(fixture.Create<Guid>(), null), null, null);
             var patArea = fixture.Build<PanArea>().With(p => p.Name, "PAT").Create();
 
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value)).Returns(ca);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PatAreaId.Value)).Returns(patArea);
 
             var data = await handler.HandleAsync(request);
@@ -205,7 +205,7 @@
 
             var ca = new UKCompetentAuthority(fixture.Create<Guid>(), null, "CA", new Country(fixture.Create<Guid>(), null), null, null);
 
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value)).Returns(ca);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
 
             var data = await handler.HandleAsync(request);
 

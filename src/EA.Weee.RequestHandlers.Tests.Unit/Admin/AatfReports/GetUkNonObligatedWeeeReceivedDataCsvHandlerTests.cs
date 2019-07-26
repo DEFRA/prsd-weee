@@ -7,6 +7,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
     using EA.Weee.RequestHandlers.Security;
