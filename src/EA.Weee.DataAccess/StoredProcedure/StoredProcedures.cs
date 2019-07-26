@@ -495,5 +495,27 @@
             }
             return table;
         }
+
+        public async Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
+            SqlParameter returnIdParameter = new SqlParameter("@ReturnId", returnId);
+            SqlParameter aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+
+            var table = new DataTable();
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAatfObligatedCsvData] @ComplianceYear, @Quarter, @ReturnId, @AatfId";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(quarterParameter);
+                cmd.Parameters.Add(returnIdParameter);
+                cmd.Parameters.Add(aatfIdParameter);
+                await cmd.Connection.OpenAsync();
+                table.Load(await cmd.ExecuteReaderAsync());
+            }
+            return table;
+        }
     }
 }

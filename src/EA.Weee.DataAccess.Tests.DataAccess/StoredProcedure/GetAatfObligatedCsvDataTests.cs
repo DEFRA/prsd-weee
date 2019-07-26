@@ -13,7 +13,7 @@
     using Return = Domain.AatfReturn.Return;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
 
-    public class GetAllAatfObligatedCsvDataTests
+    public class GetAatfObligatedCsvDataTests
     {
         [Fact]
         public async Task Execute_GivenWeeeReceivedData_ReturnsWeeeReceivedAatfDataShouldBeCorrect()
@@ -40,17 +40,17 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1); 
+                var results = await db.StoredProcedures.GetAatfObligatedCsvData(@return.Id, 2019, 1, aatf.Id);
 
                 Assert.NotNull(results);
-               var data = from x in results.AsEnumerable() 
-                          where x.Field<string>("Name of AATF") == aatf.Name
-                          select x;
+                var data = from x in results.AsEnumerable()
+                           where x.Field<string>("Name of AATF") == aatf.Name
+                           select x;
                 data.AsQueryable().Count().Should().Be(28);
 
                 var dataB2B = from x in results.AsEnumerable()
-                           where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
-                           select x;
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
+                              select x;
                 dataB2B.AsQueryable().Count().Should().Be(14);
 
                 var dataB2C = from x in results.AsEnumerable()
@@ -73,7 +73,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1);
+                var results = await db.StoredProcedures.GetAatfObligatedCsvData(@return.Id, 2019, 1, aatf.Id);
 
                 results.Rows.Count.Equals(0);
             }
