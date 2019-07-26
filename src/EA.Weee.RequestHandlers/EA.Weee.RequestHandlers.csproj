@@ -88,7 +88,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
-    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkNonObligatedWeeeReceivedDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\PartialAatfReturn.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandler.cs" />
