@@ -50,7 +50,7 @@
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Date submitted", i => i.SubmittedDate);
-            csvWriter.DefineColumn(@"Organisation name", i => i.Aatf);
+            csvWriter.DefineColumn(@"Organisation name", i => i.OrganisationName);
             csvWriter.DefineColumn(@"Category", i => i.Category);
             csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
             csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);

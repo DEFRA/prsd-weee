@@ -91,7 +91,7 @@
                 Quarter = fixture.Create<string>(),
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
-                Aatf = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
                 Category = fixture.Create<string>(),
                 TotalNonObligatedWeeeReceived = fixture.Create<decimal>(),
                 TotalNonObligatedWeeeReceivedFromDcf = fixture.Create<decimal>()
@@ -106,7 +106,7 @@
                 Quarter = fixture.Create<string>(),
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
-                Aatf = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
                 Category = fixture.Create<string>(),
                 TotalNonObligatedWeeeReceived = fixture.Create<decimal>(),
                 TotalNonObligatedWeeeReceivedFromDcf = fixture.Create<decimal>()
@@ -121,8 +121,8 @@
             data.FileContent.Should()
                 .Contain(
                     "Authority,Pat Area,Area,Year,Quarter,Submitted by,Date submitted,Organisation name,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
-            data.FileContent.Should().Contain($"{csvData1.Authority},{csvData1.PatArea},{csvData1.Area},{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.Aatf},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived},{csvData1.TotalNonObligatedWeeeReceivedFromDcf}");
-            data.FileContent.Should().Contain($"{csvData2.Authority},{csvData2.PatArea},{csvData2.Area},{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.Aatf},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived},{csvData2.TotalNonObligatedWeeeReceivedFromDcf}");
+            data.FileContent.Should().Contain($"{csvData1.Authority},{csvData1.PatArea},{csvData1.Area},{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrganisationName},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived},{csvData1.TotalNonObligatedWeeeReceivedFromDcf}");
+            data.FileContent.Should().Contain($"{csvData2.Authority},{csvData2.PatArea},{csvData2.Area},{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrganisationName},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived},{csvData2.TotalNonObligatedWeeeReceivedFromDcf}");
         }
 
         [Fact]
