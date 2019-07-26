@@ -18,6 +18,8 @@
         /// <returns></returns>
         Task<UKCompetentAuthority> FetchCompetentAuthority(CompetentAuthority authority);
 
+        Task<UKCompetentAuthority> FetchCompetentAuthority(Guid id);
+
         /// <summary>
         /// Returns all member uploads for the specified authority which are submitted and not yet
         /// assigned to an invoice run.

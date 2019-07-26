@@ -6,23 +6,28 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.Lookup;
     using EA.Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
+    using Shared;
 
     internal class GetNonObligatedWeeeReceivedDataAtAatfsCsvHandler : IRequestHandler<GetUkNonObligatedWeeeReceivedAtAatfsDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly ICommonDataAccess commonDataAccess;
 
         public GetNonObligatedWeeeReceivedDataAtAatfsCsvHandler(IWeeeAuthorization authorization, WeeeContext context,
-            CsvWriterFactory csvWriterFactory)
+            CsvWriterFactory csvWriterFactory, 
+            ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
             this.context = context;
             this.csvWriterFactory = csvWriterFactory;
+            this.commonDataAccess = commonDataAccess;
         }
 
         public async Task<CSVFileData> HandleAsync(GetUkNonObligatedWeeeReceivedAtAatfsDataCsv request)
@@ -51,7 +56,25 @@
             csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
             var fileContent = csvWriter.Write(items);
 
-            var fileName = $"{request.ComplianceYear}_UK non-obligated WEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+            var fileNameParameters = string.Empty;
+            if (request.AuthorityId.HasValue)
+            {
+                var authority = await commonDataAccess.FetchCompetentAuthority(request.AuthorityId.Value);
+                fileNameParameters += $"_{authority.Abbreviation}";
+            }
+
+            if (request.PatAreaId.HasValue)
+            {
+                var patArea = await commonDataAccess.FetchLookup<PanArea>(request.PatAreaId.Value);
+                fileNameParameters += $"_{patArea.Name}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.AatfName))
+            {
+                fileNameParameters += $"_{request.AatfName}";
+            }
+
+            var fileName = $"{request.ComplianceYear}{fileNameParameters}_AATF non-obligated WEEE data_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {
