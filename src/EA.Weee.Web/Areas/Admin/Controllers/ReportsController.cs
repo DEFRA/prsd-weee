@@ -120,6 +120,9 @@
                 case Reports.UkNonObligatedWeeeData:
                     return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
 
+                case Reports.AatfSentOnData:
+                    return RedirectToAction("AatfSentOnData", "AatfReports");
+
                 default:
                     throw new NotSupportedException();
             }
