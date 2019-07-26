@@ -46,17 +46,17 @@
                 var data = from x in results.AsEnumerable()
                            where x.Field<string>("Name of AATF") == aatf.Name
                            select x;
-                data.AsQueryable().Count().Should().Be(4);
+                data.AsQueryable().Count().Should().Be(28);
 
                 var dataB2B = from x in results.AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
                               select x;
-                dataB2B.AsQueryable().Count().Should().Be(2);
+                dataB2B.AsQueryable().Count().Should().Be(14);
 
                 var dataB2C = from x in results.AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2C"
                               select x;
-                dataB2C.AsQueryable().Count().Should().Be(2);
+                dataB2C.AsQueryable().Count().Should().Be(14);
             }
         }
 
