@@ -18,6 +18,7 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
@@ -1189,12 +1190,29 @@
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
+        [InlineData("Download")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
             var methods = typeof(AatfController).GetMethods();
             var methodInfo = methods.Where(method =>
                     Attribute.GetCustomAttribute(method, typeof(HttpGetAttribute)) != null).Where(method => method.Name == methodName);
             methodInfo.FirstOrDefault().Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public async void AatfReturnData_OnDownload_ReturnsCsv()
+        {
+            CSVFileData file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).Returns(file);
+
+            ActionResult result = await controller.Download(A.Dummy<Guid>(), 2019, 1, A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).MustHaveHappened(Repeated.Exactly.Once);
+
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         private void ContactDataAccessSetup(bool canEdit)
