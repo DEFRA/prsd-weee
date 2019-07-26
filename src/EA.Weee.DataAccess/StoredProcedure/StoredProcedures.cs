@@ -243,7 +243,7 @@
                     complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<UkNonObligatedWeeeReceivedData>> UkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
+        public async Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 

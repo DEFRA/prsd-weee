@@ -34,7 +34,7 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.UkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
+            var items = await context.StoredProcedures.GetUkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
 
             var csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
