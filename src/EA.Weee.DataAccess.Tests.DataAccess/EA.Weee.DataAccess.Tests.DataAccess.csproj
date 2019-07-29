@@ -111,6 +111,7 @@
     <Compile Include="StoredProcedure\GetAeSubmissionsTests.cs" />
     <Compile Include="StoredProcedure\GetAatfAeReturnDataCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetAllAatfObligatedCsvDataTests.cs" />
+    <Compile Include="StoredProcedure\GetAllAatfSentOnDataCsvTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthorityTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataByOrganisationIdAndComplianceYearTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

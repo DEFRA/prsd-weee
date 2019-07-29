@@ -48,7 +48,7 @@
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfSentOnDataCsv(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea);
 
             //Remove the Id columns
-            if (obligatedData.Tables[0] != null)
+            if (obligatedData.Tables.Count > 0 && obligatedData.Tables[0] != null)
             {
                 if (obligatedData.Tables[0].Columns.Contains("AatfId"))
                 {
@@ -90,10 +90,14 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
+            fileName += string.Format("_AATF WEEE sent on for treatment_{0:ddMMyyyy_HHmm}.csv",
                                 DateTime.UtcNow);
 
-            string fileContent = DataTableCsvHelper.DataSetSentOnToCSV(obligatedData.Tables[0], obligatedData.Tables[1]);
+            string fileContent = string.Empty;
+            if (obligatedData.Tables.Count > 0)
+            {
+                fileContent = DataTableCsvHelper.DataSetSentOnToCSV(obligatedData.Tables[0], obligatedData.Tables[1]);
+            }
 
             return new CSVFileData
             {

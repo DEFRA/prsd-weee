@@ -126,7 +126,7 @@ SET SiteOperatorData = x.SiteOperator
 FROM #AatfSentOnData a
 INNER JOIN (
 	SELECT o.AatfId, o.ReturnId, o.[Quarter], o.CategoryId, o.TonnageType, 
-	CONCAT (sa.Name, ',', sa.Address1, ',', COALESCE(',' + NULLIF(sa.Address2, ''), ''), sa.TownOrCity, ':', COALESCE(',' + NULLIF(sa.CountyOrRegion, ''), ''),
+	CONCAT (sa.Name, ',', sa.Address1, ',', COALESCE(',' + NULLIF(sa.Address2, ''), ''), sa.TownOrCity, ',', COALESCE(',' + NULLIF(sa.CountyOrRegion, ''), ''),
 	COALESCE(',' + NULLIF(sa.Postcode, ''), ''), ',', sc.Name, ',', pa.Name, ',', pa.Address1, ',', COALESCE(',' + NULLIF(pa.Address2, ''), ''), pa.TownOrCity, ',', 
 	COALESCE(',' + NULLIF(pa.CountyOrRegion, ''), ''), COALESCE(',' + NULLIF(pa.Postcode, ''), ''), ',', oc.Name) AS SiteOperator
 	FROM #AatfSentOnData o
