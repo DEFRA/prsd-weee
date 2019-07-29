@@ -126,8 +126,8 @@ SET SiteOperatorData = x.SiteOperator
 FROM #AatfSentOnData a
 INNER JOIN (
 	SELECT o.AatfId, o.ReturnId, o.[Quarter], o.CategoryId, o.TonnageType, 
-	CONCAT (sa.Name, ',', sa.Address1, ',', COALESCE(',' + NULLIF(sa.Address2, ''), ''), sa.TownOrCity, ',', COALESCE(',' + NULLIF(sa.CountyOrRegion, ''), ''),
-	COALESCE(',' + NULLIF(sa.Postcode, ''), ''), ',', sc.Name, ',', pa.Name, ',', pa.Address1, ',', COALESCE(',' + NULLIF(pa.Address2, ''), ''), pa.TownOrCity, ',', 
+	CONCAT (sa.Name, ',', sa.Address1, COALESCE(',' + NULLIF(sa.Address2, ''), ''), ',', sa.TownOrCity, COALESCE(',' + NULLIF(sa.CountyOrRegion, ''), ''),
+	COALESCE(',' + NULLIF(sa.Postcode, ''), ''), ',', sc.Name, ',', pa.Name, ',', pa.Address1, COALESCE(',' + NULLIF(pa.Address2, ''), ''), ',', pa.TownOrCity,  
 	COALESCE(',' + NULLIF(pa.CountyOrRegion, ''), ''), COALESCE(',' + NULLIF(pa.Postcode, ''), ''), ',', oc.Name) AS SiteOperator
 	FROM #AatfSentOnData o
 	LEFT JOIN AATF.[Address] pa ON pa.Id = o.OperatorAddressId
@@ -140,9 +140,6 @@ INNER JOIN (
 	AND X.CategoryId = a.CategoryId
 	AND X.TonnageType = a.TonnageType
 
-
-UPDATE #AatfSentOnData
-SET SiteOperatorData = REPLACE(SiteOperatorData, ',,', ',')
 
 
 INSERT INTO @SiteOperator(SiteOperatorData)
