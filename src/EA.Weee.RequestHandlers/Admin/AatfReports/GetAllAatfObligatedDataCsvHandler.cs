@@ -43,7 +43,7 @@
             }
             if (request.PanArea != null)
             {
-                panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
+                panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
             }
 
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
