@@ -162,7 +162,7 @@
         {
             using (var db = new DatabaseWrapper())
             {
-                var organisation = new OrganisationHelper().GetOrganisationWithName(fixture.Create<string>());
+                var organisation = Organisation.CreateRegisteredCompany(fixture.Create<string>(), "1234567", null);
                 var @return1 = CreateSubmittedReturn(db, organisation);
 
                 SystemTime.Freeze(DateTime.Now.AddDays(1));
@@ -187,7 +187,7 @@
         {
             using (var db = new DatabaseWrapper())
             {
-                var organisation = new OrganisationHelper().GetOrganisationWithName(fixture.Create<string>());
+                var organisation = Organisation.CreateRegisteredCompany(fixture.Create<string>(), "1234567", null);
                 var @return1 = CreateSubmittedReturn(db, organisation);
 
                 db.WeeeContext.Returns.Add(@return1);
@@ -205,7 +205,7 @@
         {
             using (var db = new DatabaseWrapper())
             {
-                var organisation = new OrganisationHelper().GetOrganisationWithName(fixture.Create<string>());
+                var organisation = Organisation.CreateRegisteredCompany(fixture.Create<string>(), "1234567", null);
                 var @return1 = CreateSubmittedReturn(db, organisation);
 
                 db.WeeeContext.Returns.Add(@return1);
