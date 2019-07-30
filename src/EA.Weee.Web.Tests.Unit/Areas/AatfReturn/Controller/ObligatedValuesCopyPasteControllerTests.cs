@@ -178,7 +178,7 @@
             httpContext.RouteData.Values.Add("returnId", returnId);
             httpContext.RouteData.Values.Add("aatfId", aatfId);
 
-            RedirectToRouteResult result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedReceived");
@@ -208,7 +208,7 @@
             httpContext.RouteData.Values.Add("returnId", returnId);
             httpContext.RouteData.Values.Add("aatfId", aatfId);
 
-            RedirectToRouteResult result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedReused");
@@ -236,7 +236,7 @@
                 B2cPastedValues = pastedValues
             };
 
-            await controller.Index(viewModel, null);
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -260,7 +260,7 @@
                 B2cPastedValues = new String[1]
             };
 
-            await controller.Index(viewModel, null);
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -284,32 +284,7 @@
                 B2cPastedValues = new String[1]
             };
 
-            await controller.Index(viewModel, null);
-
-            controller.TempData["pastedValues"].Should().BeNull();
-        }
-
-        [Fact]
-        public async void IndexPost_OnCancelWithBothPastedValues_TempDataShouldNotBeAttached()
-        {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            var schemeId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var pastedValues = new String[1] { "2\n" };
-
-            var viewModel = new ObligatedValuesCopyPasteViewModel
-            {
-                SchemeId = schemeId,
-                ReturnId = returnId,
-                AatfId = aatfId,
-                B2bPastedValues = pastedValues,
-                B2cPastedValues = pastedValues
-            };
-
-            await controller.Index(viewModel, "cancel");
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().BeNull();
         }
