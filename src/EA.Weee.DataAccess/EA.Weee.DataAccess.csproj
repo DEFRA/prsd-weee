@@ -176,7 +176,7 @@
     <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="StoredProcedure\SubmissionChangesCsvData.cs" />
     <Compile Include="StoredProcedure\UkEeeCsvData.cs" />
-    <Compile Include="StoredProcedure\NonObligatedWeeeReceivedAtAatfsData.cs" />
+    <Compile Include="StoredProcedure\NonObligatedWeeeReceivedAtAatfData.cs" />
     <Compile Include="StoredProcedure\UkNonObligatedWeeeReceivedData.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
