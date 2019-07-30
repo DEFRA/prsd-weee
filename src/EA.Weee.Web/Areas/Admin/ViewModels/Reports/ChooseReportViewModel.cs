@@ -20,7 +20,7 @@
                 Reports.MissingProducerData,
                 Reports.AatfAeReturnData,
                 Reports.AatfObligatedData,
-                Reports.AatfNonObligatedData
+                Reports.AatfNonObligatedData,
                 Reports.AatfSentOnData
             })
         {
