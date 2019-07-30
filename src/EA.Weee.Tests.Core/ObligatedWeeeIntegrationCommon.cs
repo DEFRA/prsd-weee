@@ -27,6 +27,11 @@
             return new Return(organisation, new Quarter(2019, QuarterType.Q1), createdById, facilityType);
         }
 
+        public static Return CreateReturn(Organisation organisation, string createdById, FacilityType facilityType, int year, QuarterType quarter)
+        {
+            return new Return(organisation, new Quarter(year, quarter), createdById, facilityType);
+        }
+
         public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation)
         {
             return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());

@@ -1,18 +1,18 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Admin;
+    using Core.AatfReturn;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess.StoredProcedure;
+    using DataAccess.StoredProcedure;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Admin.AatfReports;
     using RequestHandlers.Admin.Reports;
-    using Requests.Admin.Reports;
+    using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 

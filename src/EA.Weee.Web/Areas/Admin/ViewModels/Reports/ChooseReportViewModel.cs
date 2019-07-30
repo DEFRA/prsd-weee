@@ -20,8 +20,9 @@
                 Reports.MissingProducerData,
                 Reports.AatfAeReturnData,
                 Reports.AatfObligatedData,               
+                Reports.AatfNonObligatedData,
                 Reports.AatfSentOnData,
-                Reports.AatfReuseSitesData
+                Reports.AatfReuseSitesData                
             })
         {
         }
