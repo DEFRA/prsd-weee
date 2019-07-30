@@ -11,6 +11,7 @@
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Requests.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
@@ -817,6 +818,24 @@
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfSentOnDataCsv_ReturnsFileResultWithContentTypeOfTextCsv()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>._)).Returns(new CSVFileData
+            {
+                FileContent = "AatfSentOnDataCsv",
+                FileName = "test.csv"
+            });
+
+            var result = await controller.DownloadAatfSentOnDataCsv(2015, string.Empty, string.Empty, null, null);
+
+            var fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+            Assert.Equal("text/csv", fileResult.ContentType);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

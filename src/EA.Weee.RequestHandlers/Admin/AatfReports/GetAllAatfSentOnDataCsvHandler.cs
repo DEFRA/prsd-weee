@@ -81,11 +81,11 @@
             {
                 fileName += "_" + panArea.Name;
             }
-            if (request.AATFName != null)
+            if (!string.IsNullOrEmpty(request.AATFName))
             {
                 fileName += "_" + request.AATFName;
             }
-            if (request.ObligationType != null)
+            if (!string.IsNullOrEmpty(request.ObligationType))
             {
                 fileName += "_" + request.ObligationType;
             }
