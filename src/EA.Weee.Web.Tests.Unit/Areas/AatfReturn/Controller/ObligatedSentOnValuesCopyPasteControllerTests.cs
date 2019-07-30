@@ -140,7 +140,7 @@
             httpContext.RouteData.Values.Add("returnId", returnId);
             httpContext.RouteData.Values.Add("aatfId", aatfId);
 
-            RedirectToRouteResult result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedSentOn");
@@ -168,7 +168,7 @@
                 B2cPastedValues = pastedValues
             };
 
-            await controller.Index(viewModel, null);
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -192,7 +192,7 @@
                 B2cPastedValues = new string[1]
             };
 
-            await controller.Index(viewModel, null);
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -216,32 +216,7 @@
                 B2cPastedValues = new string[1]
             };
 
-            await controller.Index(viewModel, null);
-
-            controller.TempData["pastedValues"].Should().BeNull();
-        }
-
-        [Fact]
-        public async void IndexPost_OnCancelWithBothPastedValues_TempDataShouldNotBeAttached()
-        {
-            HttpContextMocker httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            Guid returnId = Guid.NewGuid();
-            Guid aatfId = Guid.NewGuid();
-            string[] pastedValues = new string[1] { "2\n" };
-            string siteName = "site name";
-
-            ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel
-            {
-                SiteName = siteName,
-                ReturnId = returnId,
-                AatfId = aatfId,
-                B2bPastedValues = pastedValues,
-                B2cPastedValues = pastedValues
-            };
-
-            await controller.Index(viewModel, "cancel");
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().BeNull();
         }
