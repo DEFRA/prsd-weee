@@ -20,14 +20,10 @@
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
-    using Web.Areas.Admin.ViewModels.AatfReports;
     using Web.Areas.Admin.ViewModels.Reports;
     using Web.Infrastructure;
     using Weee.Requests.Admin;
-    using Weee.Requests.Admin.Aatf;
-    using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
-    using Weee.Requests.Admin.Reports;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -790,23 +786,42 @@
         }
 
         [Fact]
-        public async Task PostAatfNonObligatedData_WithInvalidViewModel_ReturnsAatfAeReturnDataViewModel()
+        public async Task PostAatfNonObligatedData_WithInvalidViewModel_ReturnsNonObligatedWeeeReceivedAtAatfViewModel()
         {
-            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var panAreas = fixture.CreateMany<PanAreaData>().ToList();
-            var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
             var years = fixture.CreateMany<int>().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfViewModel());
 
             // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeNullOrEmpty();
+
+            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfViewModel;
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfNonObligatedDataCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            const int complianceYear = 2019;
+            const string aatName = "aatf";
+
+            var fileData = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkNonObligatedWeeeReceivedAtAatfsDataCsv>.That.Matches(g =>
+                g.AatfName.Equals(aatName)))).Returns(fileData);
+
+            var result = await controller.DownloadAatfNonObligatedDataCsv(complianceYear, aatName) as FileContentResult;
+
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
         }
 
         [Fact]
@@ -892,32 +907,6 @@
 
             // Assert
             var viewResult = result as ViewResult;
-
-            viewResult.ViewName.Should().BeNullOrEmpty();
-
-            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfViewModel;
-
-            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
-        }
-
-        [Fact]
-        public async Task GetDownloadAatfNonObligatedDataCsv_GivenActionParameters_CsvShouldBeReturned()
-        {
-            const int complianceYear = 2019;
-            var authorityId = Guid.NewGuid();
-            var patAreaId = Guid.NewGuid();
-            const string aatName = "aatf";
-
-            var fileData = fixture.Create<CSVFileData>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkNonObligatedWeeeReceivedAtAatfsDataCsv>.That.Matches(g =>
-                g.AatfName.Equals(aatName)))).Returns(fileData);
-
-            var result = await controller.DownloadAatfNonObligatedDataCsv(complianceYear, aatName) as FileContentResult;
-
-            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
-            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
-            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfSentOnData");
 
@@ -980,19 +969,25 @@
         [Fact]
         public async Task GetDownloadAatfSentOnDataCsv_ReturnsFileResultWithContentTypeOfTextCsv()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>._)).Returns(new CSVFileData
+            const int complianceYear = 2015;
+            const string obligation = "b2c";
+            const string aatf = "aatf";
+            var authority = fixture.Create<Guid>();
+            var panArea = fixture.Create<Guid>();
+            var csvData = new CSVFileData
             {
                 FileContent = "AatfSentOnDataCsv",
                 FileName = "test.csv"
-            });
+            };
 
-            var result = await controller.DownloadAatfSentOnDataCsv(2015, string.Empty, string.Empty, null, null);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>.That.Matches(g => g.AATFName.Equals(aatf)
+            && g.AuthorityId.Equals(authority) && g.ComplianceYear.Equals(complianceYear) && g.ObligationType.Equals(obligation) && g.PanArea.Equals(panArea)))).Returns(csvData);
 
-            var fileResult = result as FileResult;
-            Assert.NotNull(fileResult);
-            Assert.Equal("text/csv", fileResult.ContentType);
+            var fileResult = await controller.DownloadAatfSentOnDataCsv(complianceYear, obligation, aatf, authority, panArea) as FileContentResult;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>._)).MustHaveHappened(Repeated.Exactly.Once);
+            fileResult.ContentType.Should().Be("text/csv");
+            fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
+            fileResult.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvData.FileName));
         }
     }
 }
