@@ -1,4 +1,7 @@
-﻿@using EA.Weee.Web.Infrastructure
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedSentOnValuesCopyPasteViewModel
 
 @{
@@ -41,10 +44,7 @@
             <button type="submit" class="govuk-button" id="aatf-task-list">
                 Continue
             </button>
-
-            <button type="submit" name="cancel" value="cancel" class="govuk-button grey-cancel-button">
-                Cancel
-            </button>
         </form>
+        <a href="@(Url.UrlFor<ObligatedSentOnController>(u => u.Index(Model.ReturnId, Model.OrganisationId, Model.WeeeSentOnId, Model.AatfId, Model.SiteName)))">Cancel</a>
     }
 </section>
