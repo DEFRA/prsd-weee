@@ -4,14 +4,10 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Aatf;
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin.AatfReports;
