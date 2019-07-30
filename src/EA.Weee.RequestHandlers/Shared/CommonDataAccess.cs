@@ -5,7 +5,6 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Charges;
     using Core.Shared;
     using DataAccess;
     using Domain;
@@ -47,9 +46,9 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
-        public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid authorityId)
+        public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid id)
         {
-            return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == authorityId);
+            return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == id);
         }
 
         public async Task<T> FetchLookup<T>(Guid id) where T : AreaBase

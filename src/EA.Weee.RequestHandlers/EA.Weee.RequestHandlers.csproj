@@ -78,6 +78,7 @@
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\IGetUkWeeeAtAatfsCsvDataAccess.cs" />
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
-    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsvHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkNonObligatedWeeeReceivedDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\PartialAatfReturn.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandler.cs" />
