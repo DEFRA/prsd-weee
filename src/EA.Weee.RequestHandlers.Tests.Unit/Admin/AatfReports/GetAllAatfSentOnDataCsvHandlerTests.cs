@@ -3,6 +3,7 @@
     using System;
     using System.Data;
     using System.Security;
+    using System.Text;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -11,6 +12,7 @@
     using EA.Weee.RequestHandlers.Admin.AatfReports;
     using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
+    using FluentAssertions;
     using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
@@ -109,16 +111,18 @@
             Assert.Contains("2019", data.FileName);
         }
 
-        [Fact]
-        public async Task GetAllAatfSentOnDataCsvHandler_StringParameters_ReturnsFileName()
+        [Theory]
+        [InlineData(2019, "", "")]
+        [InlineData(2019, "B2C", "")]
+        [InlineData(2019, "", "A")]
+        public async Task GetAllAatfSentOnDataCsvHandler_StringParameters_ReturnsFileName(int complianceYear,
+           string obligationType, string aatfName)
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var commanDataAccess = A.Fake<ICommonDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
-            int complianceYear = 2019;
-            string obligationType = "B2C";
-            string aatfName = "A1";
+
             var handler = new GetAllAatfSentOnDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
             var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, aatfName, null, null);
 
@@ -126,7 +130,39 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019_A1_B2C", data.FileName);
+            StringBuilder filename = new StringBuilder();
+            filename.Append(complianceYear.ToString());
+           
+            if (aatfName != string.Empty)
+            {
+                filename.Append("_");
+                filename.Append(aatfName);
+            }
+            if (obligationType != string.Empty)
+            {
+                filename.Append("_");
+                filename.Append(obligationType);
+            }
+            Assert.Contains(filename.ToString(), data.FileName);
+        }
+
+        [Fact]
+        public async Task GetAllAatfSentOnDataCsvHandler_ReturnsEmptyFileContent()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var commanDataAccess = A.Fake<ICommonDataAccess>();
+            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            int complianceYear = 2020;
+
+            var handler = new GetAllAatfSentOnDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            var request = new GetAllAatfSentOnDataCsv(complianceYear, string.Empty, string.Empty, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            // Act
+            CSVFileData data = await handler.HandleAsync(request);
+
+            // Assert
+            data.FileContent.Should().Be(string.Empty);
         }
 
         [Fact]
