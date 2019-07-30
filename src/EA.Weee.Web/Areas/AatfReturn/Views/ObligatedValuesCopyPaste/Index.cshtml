@@ -1,4 +1,7 @@
-﻿@using EA.Weee.Web.Infrastructure
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Core.AatfReturn
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedValuesCopyPasteViewModel
 
@@ -58,10 +61,14 @@
             <button type="submit" class="govuk-button" id="aatf-task-list">
                 Continue
             </button>
-
-            <button type="submit" name="cancel" value="cancel" class="govuk-button grey-cancel-button">
-                Cancel
-            </button>
         </form>
+        if (Model.Type == ObligatedType.Reused)
+        {
+            <a href="@(Url.UrlFor<ObligatedReusedController>(u => u.Index(Model.ReturnId, Model.AatfId)))">Cancel</a>
+        }
+        else
+        {
+            <a href="@(Url.UrlFor<ObligatedReceivedController>(u => u.Index(Model.ReturnId, Model.AatfId, Model.SchemeId)))">Cancel</a>
+        }
     }
 </section>

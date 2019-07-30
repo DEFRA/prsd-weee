@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Reports
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AatfReports
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
+    using Core.DataStandards;
+    using Core.Shared;
 
     public class AatfObligatedDataViewModel
     {

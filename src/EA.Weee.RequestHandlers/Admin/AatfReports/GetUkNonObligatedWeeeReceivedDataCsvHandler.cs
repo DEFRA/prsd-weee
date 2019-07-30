@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
-    using EA.Weee.Requests.Admin.Aatf;
     using Prsd.Core.Mediator;
+    using Requests.Admin.AatfReports;
     using Security;
 
     internal class GetUkNonObligatedWeeeReceivedDataCsvHandler : IRequestHandler<GetUkNonObligatedWeeeReceivedDataCsv, CSVFileData>
@@ -35,7 +34,7 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.UkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
+            var items = await context.StoredProcedures.GetUkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
 
             var csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
