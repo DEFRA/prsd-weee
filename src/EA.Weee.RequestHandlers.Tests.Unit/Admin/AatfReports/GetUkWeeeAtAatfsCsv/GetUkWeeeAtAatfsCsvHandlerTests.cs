@@ -16,6 +16,7 @@
     using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using Requests.Admin.AatfReports;
     using Xunit;
 
     public class GetUkWeeeAtAatfsCsvHandlerTests

@@ -88,6 +88,7 @@
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="AatfReturn\RemoveReturnScheme.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
+    <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsv.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsv.cs" />
     <Compile Include="Admin\Aatf\GetAatfObligatedData.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
@@ -109,14 +110,14 @@
     <Compile Include="Admin\GetSubmissionChanges\GetSubmissionChangesCsv.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
-    <Compile Include="Admin\Reports\GetAatfAeReturnDataCsv.cs" />
-    <Compile Include="Admin\Reports\GetAllAatfObligatedDataCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsv.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
-    <Compile Include="Admin\Aatf\GetUkNonObligatedWeeeReceivedDataCsv.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeAtAatfsCsv.cs" />
-    <Compile Include="Admin\Reports\GetUkWeeeCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetUkNonObligatedWeeeReceivedDataCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetUkWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
     <Compile Include="Admin\SendTestEmail.cs" />

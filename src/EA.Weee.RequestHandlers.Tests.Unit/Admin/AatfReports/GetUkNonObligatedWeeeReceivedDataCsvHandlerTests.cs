@@ -4,15 +4,13 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Aatf;
     using FakeItEasy;
     using FluentAssertions;
+    using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -106,7 +104,7 @@
             };
 
             A.CallTo(() => storedProcedures
-            .UkNonObligatedWeeeReceivedByComplianceYear(A<int>._))
+            .GetUkNonObligatedWeeeReceivedByComplianceYear(A<int>._))
             .Returns(new List<UkNonObligatedWeeeReceivedData> { csvData1, csvData2, csvData3 });
 
             var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());

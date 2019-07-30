@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.UkWeeeDataAtAatfViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.UkWeeeDataAtAatfViewModel
 @{
     ViewBag.Title = "Download UK WEEE received at AATFs";
 }
@@ -35,7 +35,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport", "Reports")
+        @Html.ActionLink("Back","ChooseReport", "Reports")
     </p>
 }
 
