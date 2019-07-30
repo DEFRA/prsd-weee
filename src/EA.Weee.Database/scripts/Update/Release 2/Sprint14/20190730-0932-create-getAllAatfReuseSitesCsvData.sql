@@ -15,12 +15,12 @@ SET NOCOUNT ON;
 
 ---Get reuse sites for the latest submitted return for the compliance year
 
-SELECT X.ComplianceYear, X.[Quarter], X.CreatedDate, X.SubmittedDate, X.SubmittedBy,
+SELECT X.ComplianceYear, CONCAT('Q',X.[Quarter]) AS [Quarter], X.CreatedDate, X.SubmittedDate, X.SubmittedBy,
 	   X.Name, X.ApprovalNumber, X.OrgName,
 	   X.Abbreviation, X.PanName, X.LaName, wrs.AddressId, ad.Name AS SiteName,
 	   CONCAT (ad.Address1, COALESCE(',' + NULLIF(ad.Address2, ''), ''), ',', ad.TownOrCity,
 	   COALESCE(',' + NULLIF(ad.CountyOrRegion, ''), ''), COALESCE(',' + NULLIF(ad.Postcode, ''), ''), ',', c.Name) AS SiteAddress,
-	   X.AatfId, X.ReturnId
+	   X.AatfId, X.ReturnId, X.[Quarter] as QuarterValue
 FROM (
 	SELECT ra.AatfId, ra.ReturnId, r.ComplianceYear, r.[Quarter], r.CreatedDate, r.SubmittedDate, CONCAT (u.FirstName, ' ', u.Surname) AS SubmittedBy, a.Name, a.ApprovalNumber, CASE 
 			WHEN o.Name IS NULL
@@ -59,6 +59,6 @@ INNER JOIN [AATF].WeeeReusedSite wrs ON wrs.WeeeReusedId = wr.Id
 INNER JOIN [AATF].[Address] Ad ON ad.Id = wrs.AddressId
 LEFT JOIN [Lookup].[Country] c ON c.Id = ad.CountryId
 WHERE X.RowNumber = 1
-
+ORDER BY QuarterValue
 
 END
