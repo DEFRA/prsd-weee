@@ -12,9 +12,10 @@
     using EA.Weee.RequestHandlers.Admin.Helpers;
     using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
+    using Requests.Admin.AatfReports;
     using Security;
 
-    public class GetUkWeeeCsvHandler : IRequestHandler<Requests.Admin.Reports.GetUkWeeeCsv, FileInfo>
+    public class GetUkWeeeCsvHandler : IRequestHandler<GetUkWeeeCsv, FileInfo>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetUkWeeeCsvDataAccess dataAccess;

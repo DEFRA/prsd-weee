@@ -117,7 +117,7 @@
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteName.Should().Be("aatf-non-obligated");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -156,7 +156,7 @@
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteName.Should().Be("aatf-non-obligated-dcf");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -174,7 +174,7 @@
 
             var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = pastedValues};
 
-            await controller.Index(viewModel, null);
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -189,23 +189,7 @@
 
             var viewModel = new NonObligatedValuesCopyPasteViewModel { ReturnId = returnId, PastedValues = new string[1] };
 
-            await controller.Index(viewModel, null);
-
-            controller.TempData["pastedValues"].Should().BeNull();
-        }
-
-        [Fact]
-        public async void IndexPost_OnCancelWithPastedValues_TempDataShouldNotBeAttached()
-        {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            var returnId = Guid.NewGuid();
-            var pastedValues = new string[1] { "2\n" };
-
-            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = pastedValues};
-
-            await controller.Index(viewModel, "cancel");
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().BeNull();
         }

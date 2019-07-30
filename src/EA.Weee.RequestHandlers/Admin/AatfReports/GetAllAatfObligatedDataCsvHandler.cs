@@ -5,10 +5,11 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Lookup;
+    using Domain;
+    using Domain.Lookup;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Security;
 
@@ -43,7 +44,7 @@
             }
             if (request.PanArea != null)
             {
-                panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
+                panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
             }
 
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
@@ -82,11 +83,11 @@
             {
                 fileName += "_" + panArea.Name;
             }
-            if (request.AATFName != null)
+            if (!string.IsNullOrEmpty(request.AATFName))
             {
                 fileName += "_" + request.AATFName;
             }
-            if (request.ObligationType != null)
+            if (!string.IsNullOrEmpty(request.ObligationType))
             {
                 fileName += "_" + request.ObligationType;
             }
