@@ -2,13 +2,8 @@
 {
     using System;
 
-    public class NonObligatedWeeeReceivedAtAatfsData
+    public class NonObligatedWeeeReceivedAtAatfData
     {
-        public string Authority { get; set; }
-
-        public string PatArea { get; set; }
-        public string Area { get; set; }
-
         public int Year { get; set; }
 
         public string Quarter { get; set; }

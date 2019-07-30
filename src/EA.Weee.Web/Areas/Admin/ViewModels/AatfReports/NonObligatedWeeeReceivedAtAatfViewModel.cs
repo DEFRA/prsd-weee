@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     using Core.DataStandards;
 
-    public class NonObligatedWeeeReceivedAtAatfsViewModel
+    public class NonObligatedWeeeReceivedAtAatfViewModel
     {
         [Required]
         [DisplayName("Compliance year")]
@@ -15,17 +15,8 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Display(Name = "Appropriate authority")]
-        public Guid? CompetentAuthorityId { get; set; }
-
-        public IEnumerable<SelectListItem> CompetentAuthoritiesList { get; set; }
-
-        [Display(Name = "WROS Pan area team")]
-        public Guid? PatAreaId { get; set; }
-        public IEnumerable<SelectListItem> PatAreaList { get; set; }
-
         [DisplayName("AATF name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public string AatfName { get; set; }
+        public string OrganisationName { get; set; }
     }
 }

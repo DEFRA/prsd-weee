@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.NonObligatedWeeeReceivedAtAatfsViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.NonObligatedWeeeReceivedAtAatfViewModel
 
 @{
     ViewBag.Title = "Download AATF non-obligated WEEE data - GOV.UK";
@@ -27,21 +27,9 @@
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
-            @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
-            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
-        </div>
-
-        <div class="govuk-form-group competent-authority-hidden">
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PatAreaId)">
-                @Html.Gds().LabelFor(m => m.PatAreaId)
-                @Html.Gds().DropDownListFor(m => m.PatAreaId, Model.PatAreaList, string.Empty, new { autocomplete = "false" })
-            </div>
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AatfName)">
-            @Html.Gds().LabelFor(m => m.AatfName)
-            @Html.Gds().TextBoxFor(m => m.AatfName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.OrganisationName)">
+            @Html.Gds().LabelFor(m => m.OrganisationName)
+            @Html.Gds().TextBoxFor(m => m.OrganisationName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <p>
@@ -59,37 +47,13 @@
     </p>
 }
 @section scripts {
-    <script type="text/javascript">
-        function competentAuthoritySelection() {
-            var competentAuthority = $("#CompetentAuthorityId option:selected").html();
-
-            if (competentAuthority === "EA") {
-                $(".competent-authority-hidden").css("display", "block");
-
-                $('a[href*="PatAreaId"]').parent().css("display", "");
-            }
-            else {
-                $(".competent-authority-hidden").css("display", "none");
-                $(".competent-authority-hidden").find("select").val('');
-
-                $('a[href*="PatAreaId"]').parent().css("display", "none");
-            }
-        }
-        competentAuthoritySelection();
-
-        $("#CompetentAuthorityId").change(function () {
-            competentAuthoritySelection();
-        });
-    </script>
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadAatfNonObligatedDataCsv", new
                           {
                               complianceYear = Model.SelectedYear,
-                              authorityId = Model.CompetentAuthorityId,
-                              patAreaId = Model.PatAreaId,
-                              aatfName = Model.AatfName
+                              aatfName = Model.OrganisationName
                           }))";
         </script>
     }

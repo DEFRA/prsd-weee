@@ -453,19 +453,15 @@
                 .ToListAsync();
         }
 
-        public async Task<List<NonObligatedWeeeReceivedAtAatfsData>> GetNonObligatedWeeeReceivedAtAatfs(int complianceYear, Guid? authority, Guid? patArea, string aatf)
+        public async Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
-            var panAreaParameter = new SqlParameter("@PanArea", (object)patArea ?? DBNull.Value);
             var aatfNameParameter = new SqlParameter("@AatfName", (object)aatf ?? DBNull.Value);
 
             return await context.Database
-                .SqlQuery<NonObligatedWeeeReceivedAtAatfsData>(
-                    "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @CA, @AatfName",
+                .SqlQuery<NonObligatedWeeeReceivedAtAatfData>(
+                    "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @AatfName",
                     complianceYearParameter,
-                    authorityParameter,
-                    //panAreaParameter, 
                     aatfNameParameter)
                 .ToListAsync();
         }

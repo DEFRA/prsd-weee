@@ -714,24 +714,17 @@
         [Fact]
         public async Task PostAatfObligatedData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            // Act
             await controller.AatfObligatedData(A.Dummy<AatfObligatedDataViewModel>());
 
-            // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         [Fact]
         public async Task GetAatfNonObligatedData_Always_ReturnsAatfAeReturnDataViewModel()
         {
-            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var panAreas = fixture.CreateMany<PanAreaData>().ToList();
-            var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
             var years = fixture.CreateMany<int>().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
 
             var result = await controller.AatfNonObligatedData();
 
@@ -739,16 +732,10 @@
 
             viewResult.ViewName.Should().BeNullOrEmpty();
 
-            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfsViewModel;
+            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfViewModel;
 
             model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
-            model.PatAreaList.Select(c => c.Text).Should().BeEquivalentTo(panAreas.Select(y => y.Name.ToString()));
-            model.PatAreaList.Select(c => c.Value).Should().BeEquivalentTo(panAreas.Select(y => y.Id.ToString()));
-            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
-            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -768,7 +755,7 @@
         [Fact]
         public async Task GetAatfNonObligatedData_GivenModelStateIsValid_SetsTriggerDownloadToTrue()
         {
-            var result = await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfsViewModel()
+            var result = await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfViewModel()
             {
                 SelectedYear = 2019
             });
@@ -790,7 +777,7 @@
         [Fact]
         public async Task PostAatfNonObligatedData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfsViewModel()
+            await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfViewModel()
             {
                 SelectedYear = 2019
             });
@@ -814,20 +801,16 @@
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            var result = await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfsViewModel());
+            var result = await controller.AatfNonObligatedData(new NonObligatedWeeeReceivedAtAatfViewModel());
 
             // Assert
             var viewResult = result as ViewResult;
 
             viewResult.ViewName.Should().BeNullOrEmpty();
 
-            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfsViewModel;
+            var model = viewResult.Model as NonObligatedWeeeReceivedAtAatfViewModel;
 
             model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
-            model.PatAreaList.Select(c => c.Text).Should().BeEquivalentTo(panAreas.Select(y => y.Name.ToString()));
-            model.PatAreaList.Select(c => c.Value).Should().BeEquivalentTo(panAreas.Select(y => y.Id.ToString()));
-            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
-            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
         }
 
         [Fact]
@@ -841,10 +824,9 @@
             var fileData = fixture.Create<CSVFileData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkNonObligatedWeeeReceivedAtAatfsDataCsv>.That.Matches(g =>
-                g.AatfName.Equals(aatName)
-                && g.AuthorityId.Equals(authorityId) && g.ComplianceYear.Equals(complianceYear) && g.PatAreaId.Equals(patAreaId)))).Returns(fileData);
+                g.AatfName.Equals(aatName)))).Returns(fileData);
 
-            var result = await controller.DownloadAatfNonObligatedDataCsv(complianceYear, authorityId, patAreaId, aatName) as FileContentResult;
+            var result = await controller.DownloadAatfNonObligatedDataCsv(complianceYear, aatName) as FileContentResult;
 
             result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
