@@ -1,13 +1,13 @@
-﻿namespace EA.Weee.Requests.Admin.Reports
+﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
     using Core.Shared;
     using Prsd.Core.Mediator;
 
-    public class GetUkWeeeAtAatfsCsv : IRequest<FileInfo>
+    public class GetUkWeeeCsv : IRequest<FileInfo>
     {
         public int ComplianceYear { get; private set; }
 
-        public GetUkWeeeAtAatfsCsv(int complianceYear)
+        public GetUkWeeeCsv(int complianceYear)
         {
             ComplianceYear = complianceYear;
         }

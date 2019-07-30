@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using FluentAssertions;
+    using Web.Areas.Admin.ViewModels.AatfReports;
     using Web.Areas.Admin.ViewModels.Reports;
     using Xunit;
     public class AatfObligatedDataViewModelTests
