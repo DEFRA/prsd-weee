@@ -16,14 +16,9 @@
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Services;
-    using ViewModels.AatfReports;
     using ViewModels.Home;
-    using ViewModels.Reports;
     using Weee.Requests.Admin;
-    using Weee.Requests.Admin.Aatf;
-    using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
-    using Weee.Requests.Admin.Reports;
     using Weee.Requests.Shared;
 
     public class AatfReportsController : AdminController
