@@ -339,7 +339,7 @@
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\AatfReuseSitesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfReuseSitesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkWeeeDataAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
