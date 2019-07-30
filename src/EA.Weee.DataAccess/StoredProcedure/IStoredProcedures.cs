@@ -49,5 +49,7 @@
         Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType);
 
         Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId);
+
+        Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, string aatfName, Guid? authority, Guid? panArea);
     }
 }
