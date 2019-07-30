@@ -19,7 +19,8 @@
                 Reports.SchemeObligationData,
                 Reports.MissingProducerData,
                 Reports.AatfAeReturnData,
-                Reports.AatfObligatedData,
+                Reports.AatfObligatedData,               
+                Reports.AatfSentOnData,
                 Reports.AatfReuseSitesData
             })
         {
