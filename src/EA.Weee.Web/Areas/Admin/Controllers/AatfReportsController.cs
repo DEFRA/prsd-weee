@@ -11,6 +11,8 @@
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Requests.Admin.AatfReports;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Services;
@@ -256,6 +258,57 @@
 
                 var data = new UTF8Encoding().GetBytes(fileData.FileContent);
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> AatfSentOnData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new AatfSentOnDataViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfSentOnData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfSentOnData(AatfSentOnDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfSentOnDataCsv(int complianceYear,
+            string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+        {
+            CSVFileData fileData;
+
+            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, aatfName, authorityId, panArea);
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
+        private async Task PopulateFilters(AatfSentOnDataViewModel model)
+        {
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
+            var authorities = await FetchAuthorities();
+            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
+            using (var client = apiClient())
+            {
+                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
 

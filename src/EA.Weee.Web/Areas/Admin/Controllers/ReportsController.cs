@@ -124,6 +124,9 @@
                 case Reports.AatfNonObligatedData:
                     return RedirectToAction("AatfNonObligatedData", "AatfReports");
 
+                case Reports.AatfSentOnData:
+                    return RedirectToAction("AatfSentOnData", "AatfReports");
+
                 default:
                     throw new NotSupportedException();
             }

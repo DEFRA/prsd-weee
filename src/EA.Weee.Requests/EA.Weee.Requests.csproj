@@ -89,6 +89,7 @@
     <Compile Include="AatfReturn\RemoveReturnScheme.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsv.cs" />
     <Compile Include="Admin\Aatf\GetAatfObligatedData.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
     <Compile Include="Admin\AddAatf.cs" />

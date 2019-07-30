@@ -21,6 +21,7 @@
                 Reports.AatfAeReturnData,
                 Reports.AatfObligatedData,
                 Reports.AatfNonObligatedData
+                Reports.AatfSentOnData
             })
         {
         }
