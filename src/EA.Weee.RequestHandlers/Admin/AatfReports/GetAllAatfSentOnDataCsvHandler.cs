@@ -1,26 +1,24 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
     using System;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using Domain;
-    using Domain.Lookup;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
-    using Requests.Admin.Reports;
     using Security;
-
-    public class GetAllAatfObligatedDataCsvHandler : IRequestHandler<GetAllAatfObligatedDataCsv, CSVFileData>
+    public class GetAllAatfSentOnDataCsvHandler : IRequestHandler<GetAllAatfSentOnDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext weeContext;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly ICommonDataAccess commonDataAccess;
 
-        public GetAllAatfObligatedDataCsvHandler(IWeeeAuthorization authorization, WeeeContext weeContext,
+        public GetAllAatfSentOnDataCsvHandler(IWeeeAuthorization authorization, WeeeContext weeContext,
           CsvWriterFactory csvWriterFactory, ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
@@ -28,7 +26,7 @@
             this.commonDataAccess = commonDataAccess;
             this.csvWriterFactory = csvWriterFactory;
         }
-        public async Task<CSVFileData> HandleAsync(GetAllAatfObligatedDataCsv request)
+        public async Task<CSVFileData> HandleAsync(GetAllAatfSentOnDataCsv request)
         {
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
@@ -47,34 +45,34 @@
                 panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
             }
 
-            var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
- 
+            var obligatedData = await weeContext.StoredProcedures.GetAllAatfSentOnDataCsv(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea);
+
             //Remove the Id columns
-            if (obligatedData != null)
+            if (obligatedData.Tables.Count > 0 && obligatedData.Tables[0] != null)
             {
-                if (obligatedData.Columns.Contains("AatfId"))
+                if (obligatedData.Tables[0].Columns.Contains("AatfId"))
                 {
-                    obligatedData.Columns.Remove("AatfId");
+                    obligatedData.Tables[0].Columns.Remove("AatfId");
                 }
-                if (obligatedData.Columns.Contains("ReturnId"))
+                if (obligatedData.Tables[0].Columns.Contains("ReturnId"))
                 {
-                    obligatedData.Columns.Remove("ReturnId");
+                    obligatedData.Tables[0].Columns.Remove("ReturnId");
                 }
-                if (obligatedData.Columns.Contains("Q"))
+                if (obligatedData.Tables[0].Columns.Contains("Q"))
                 {
-                    obligatedData.Columns.Remove("Q");
+                    obligatedData.Tables[0].Columns.Remove("Q");
                 }
-                if (obligatedData.Columns.Contains("CategoryId"))
+                if (obligatedData.Tables[0].Columns.Contains("CategoryId"))
                 {
-                    obligatedData.Columns.Remove("CategoryId");
+                    obligatedData.Tables[0].Columns.Remove("CategoryId");
                 }
-                if (obligatedData.Columns.Contains("TonnageType"))
+                if (obligatedData.Tables[0].Columns.Contains("TonnageType"))
                 {
-                    obligatedData.Columns.Remove("TonnageType");
+                    obligatedData.Tables[0].Columns.Remove("TonnageType");
                 }
             }
 
-           var fileName = string.Format("{0}", request.ComplianceYear);
+            var fileName = string.Format("{0}", request.ComplianceYear);
             if (request.AuthorityId != null)
             {
                 fileName += "_" + authority.Abbreviation;
@@ -92,10 +90,14 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
-                                DateTime.UtcNow);           
+            fileName += string.Format("_AATF WEEE sent on for treatment_{0:ddMMyyyy_HHmm}.csv",
+                                DateTime.UtcNow);
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
+            string fileContent = string.Empty;
+            if (obligatedData.Tables.Count > 0)
+            {
+                fileContent = DataTableCsvHelper.DataSetSentOnToCSV(obligatedData.Tables[0], obligatedData.Tables[1]);
+            }
 
             return new CSVFileData
             {
@@ -103,5 +105,5 @@
                 FileName = fileName
             };
         }
-    }   
+    }
 }
