@@ -245,6 +245,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\NonObligatedWeeeReceivedAtAatfDataTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\RegisteredCompanyDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\PartnershipDetailsViewModelTests.cs" />
     <Compile Include="Areas\AeReturn\Controller\ReturnsControllerTests.cs" />

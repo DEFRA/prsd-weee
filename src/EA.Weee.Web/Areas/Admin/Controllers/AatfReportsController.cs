@@ -100,13 +100,11 @@
             }
         }
 
-        private async Task PopulateFilters(NonObligatedWeeeReceivedAtAatfsViewModel model)
+        private async Task PopulateFilters(NonObligatedWeeeReceivedAtAatfViewModel model)
         {
             using (var client = apiClient())
             {
                 model.ComplianceYears = await ComplianceYears();
-                model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
-                model.PatAreaList = await PatAreaList();
             }
         }
 
@@ -229,7 +227,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            var model = new NonObligatedWeeeReceivedAtAatfsViewModel();
+            var model = new NonObligatedWeeeReceivedAtAatfViewModel();
             await PopulateFilters(model);
 
             return View(model);
@@ -237,7 +235,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfNonObligatedData(NonObligatedWeeeReceivedAtAatfsViewModel model)
+        public async Task<ActionResult> AatfNonObligatedData(NonObligatedWeeeReceivedAtAatfViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -248,11 +246,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadAatfNonObligatedDataCsv(int complianceYear, Guid? authorityId, Guid? patAreaId, string aatfName)
+        public async Task<ActionResult> DownloadAatfNonObligatedDataCsv(int complianceYear, string aatfName)
         {
             using (var client = apiClient())
             {
-                var request = new GetUkNonObligatedWeeeReceivedAtAatfsDataCsv(complianceYear, authorityId, patAreaId, aatfName);
+                var request = new GetUkNonObligatedWeeeReceivedAtAatfsDataCsv(complianceYear, aatfName);
 
                 var fileData = await client.SendAsync(User.GetAccessToken(), request);
 

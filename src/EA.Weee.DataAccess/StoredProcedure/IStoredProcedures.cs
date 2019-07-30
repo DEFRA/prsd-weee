@@ -29,7 +29,7 @@
 
         Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
 
-        Task<List<NonObligatedWeeeReceivedAtAatfsData>> GetNonObligatedWeeeReceivedAtAatfs(int complianceYear, Guid? authority, Guid? patArea, string aatf);
+        Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf);
 
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 

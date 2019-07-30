@@ -47,7 +47,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 foreach (var nonObligatedCategoryValue in CategoryValues())
                 {
@@ -74,7 +74,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 var return1Results = results.Where(r => r.ReturnId.Equals(@return1.Id));
                 foreach (var nonObligatedWeeeReceivedAtAatfsData in return1Results)
@@ -109,7 +109,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 foreach (var nonObligatedCategoryValue in CategoryValues())
                 {
@@ -142,7 +142,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 results.Count(r => r.ReturnId.Equals(@return1.Id)).Should().Be(CategoryValues().Count);
                 results.Count(r => r.ReturnId.Equals(@return2.Id)).Should().Be(CategoryValues().Count);
@@ -175,7 +175,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 results.Count(r => r.ReturnId.Equals(@return1.Id)).Should().Be(0);
                 results.Count(r => r.ReturnId.Equals(@return2.Id)).Should().Be(CategoryValues().Count);
@@ -194,7 +194,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, organisation.OrganisationName);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, organisation.OrganisationName);
 
                 results.Count(r => r.OrganisationName.Equals(organisation.OrganisationName)).Should().Be(CategoryValues().Count);
             }
@@ -212,7 +212,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, organisation.OrganisationName.Substring(0, 5));
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, organisation.OrganisationName.Substring(0, 5));
 
                 results.Count(r => r.OrganisationName.Equals(organisation.OrganisationName)).Should().Be(CategoryValues().Count);
             }
@@ -229,7 +229,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatfs(2019, null, null, null);
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, null);
 
                 results.Count(r => r.ReturnId.Equals(@return.Id)).Should().Be(CategoryValues().Count);
                 foreach (var nonObligatedWeeeReceivedAtAatfsData in results.Where(r => r.ReturnId.Equals(@return.Id)))
