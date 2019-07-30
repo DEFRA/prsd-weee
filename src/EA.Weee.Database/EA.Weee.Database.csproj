@@ -281,6 +281,9 @@
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-0933-alter-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-1030-create-getAllAatfSentOnCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-0936-alter-getAatfObligatedCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20190726_1045-rename-UkNonObligatedWeeeReceivedByComplianceYear-storedproc.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20193007-1043-alter-getNonObligatedWeeeReceived.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20192607-1302-create-getNonObligatedWeeeReceived.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190729-1532-alter-getAatfObligatedCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
