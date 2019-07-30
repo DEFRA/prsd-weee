@@ -96,7 +96,7 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019Q1", data.FileName);
+            Assert.Contains("2019_Q1", data.FileName);
         }
 
         [Fact]
