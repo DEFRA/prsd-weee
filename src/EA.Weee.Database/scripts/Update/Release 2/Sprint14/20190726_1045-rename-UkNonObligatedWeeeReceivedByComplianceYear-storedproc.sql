@@ -1,1 +1,0 @@
-﻿EXEC sp_rename '[AATF].UkNonObligatedWeeeReceivedByComplianceYear', 'getUkNonObligatedWeeeReceivedByComplianceYear'
