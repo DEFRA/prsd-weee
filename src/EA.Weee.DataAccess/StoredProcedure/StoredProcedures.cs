@@ -500,8 +500,35 @@
             }
             return table;
         }
+        
+        public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
 
-        public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, string aatfName, Guid? authority, Guid? panArea)
+            var dataSet = new DataSet();
+            DataTable sentOnData = new DataTable();
+            DataTable addressData = new DataTable();
+            dataSet.Tables.Add(sentOnData);
+            dataSet.Tables.Add(addressData);
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(aatfNameParameter);
+                cmd.Parameters.Add(obligationTypeParameter);
+                cmd.Parameters.Add(authorityParameter);
+                cmd.Parameters.Add(panAreaParameter);
+                await cmd.Connection.OpenAsync();
+                dataSet.Load(await cmd.ExecuteReaderAsync(), LoadOption.OverwriteChanges, sentOnData, addressData);
+            }
+            return dataSet;
+        }
+         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, string aatfName, Guid? authority, Guid? panArea)
         {
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             SqlParameter aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
@@ -514,6 +541,6 @@
                     complianceYearParameter, aatfNameParameter,
                     authorityParameter,  panAreaParameter)
                 .ToListAsync();
-        }
+        }   
     }
 }

@@ -107,6 +107,7 @@
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandlerTests.cs" />
+    <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />

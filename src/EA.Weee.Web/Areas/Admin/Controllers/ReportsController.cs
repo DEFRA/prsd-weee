@@ -120,6 +120,9 @@
                 case Reports.UkNonObligatedWeeeData:
                     return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
 
+                case Reports.AatfSentOnData:
+                    return RedirectToAction("AatfSentOnData", "AatfReports");
+                    
                 case Reports.AatfReuseSitesData:
                     return RedirectToAction("AatfReuseSites", "AatfReports");
 
