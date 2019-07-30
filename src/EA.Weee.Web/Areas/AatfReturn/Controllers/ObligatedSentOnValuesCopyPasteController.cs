@@ -49,17 +49,14 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ObligatedSentOnValuesCopyPasteViewModel viewModel, string cancel)
+        public virtual async Task<ActionResult> Index(ObligatedSentOnValuesCopyPasteViewModel viewModel)
         {
-            if (string.IsNullOrEmpty(cancel))
-            {
-                string b2bContent = viewModel.B2bPastedValues.First();
-                string b2cContent = viewModel.B2cPastedValues.First();
+            string b2bContent = viewModel.B2bPastedValues.First();
+            string b2cContent = viewModel.B2cPastedValues.First();
 
-                if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
-                {
-                    TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
-                }
+            if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
+            {
+                TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
             }
 
             return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.SiteName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId));

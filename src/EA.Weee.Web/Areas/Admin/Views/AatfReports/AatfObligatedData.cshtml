@@ -17,6 +17,7 @@
 
         <p>Filter the report to download entries that match your criteria</p>
         <p>All data is reported in tonnes (t) to three decimal places</p>
+        <p>Only data from the most recent “submitted” returns are included (anything that is in progress, but not submitted by an operator is omitted)</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
@@ -57,7 +58,7 @@
 
 
         <p>
-            If there is a large amount of returns data for your selected criteria, it may take a while to download your results.
+            If there is a large amount of returns data for your selected criteria, it may take a while to download your results
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports", "Report download", "AATF obligated WEEE data", new Dictionary<string, object> { { "class", "button" } }))
