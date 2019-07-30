@@ -91,7 +91,7 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
+            fileName += string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
                                 DateTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);

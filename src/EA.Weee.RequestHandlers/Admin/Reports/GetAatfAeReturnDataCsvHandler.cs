@@ -57,11 +57,9 @@
 
             //Trim the space before equals in  =Hyperlink
             fileContent = fileContent.Replace(" =HYPERLINK", "=HYPERLINK");
-
-            var fileName = string.Format("{0}_{2}_RETURN_{1:ddMMyyyy_HHmm}_Q{3}.csv",
+              var fileName = string.Format("{0}_Q{2}_Summary_of_AATF-AE returns to date_{1:ddMMyyyy}_{1:HHmm}.csv",
                 request.ComplianceYear,
                 DateTime.UtcNow,
-                request.FacilityType.ToString().ToUpper(),
                 request.Quarter);
 
             return new CSVFileData
