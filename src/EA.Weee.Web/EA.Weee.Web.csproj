@@ -331,6 +331,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
@@ -975,6 +976,7 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfObligatedData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\UkNonObligatedWeeeReceived.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfNonObligatedData.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\AatfSentOnData.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
