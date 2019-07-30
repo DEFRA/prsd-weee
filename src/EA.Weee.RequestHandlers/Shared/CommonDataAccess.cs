@@ -5,14 +5,12 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Charges;
     using Core.Shared;
     using DataAccess;
     using Domain;
     using Domain.Charges;
     using Domain.Lookup;
     using Domain.Scheme;
-    using EA.Weee.Core.Shared;
 
     public class CommonDataAccess : ICommonDataAccess
     {
