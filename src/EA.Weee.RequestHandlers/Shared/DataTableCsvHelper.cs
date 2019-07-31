@@ -45,7 +45,14 @@
         {
             NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
             char seperator = ',';
-            StringBuilder sb = new StringBuilder();           
+            StringBuilder sb = new StringBuilder();  
+            
+            //Remove Column 0 from table for nil returns
+            if (datatable.Columns.Contains("0"))
+            {
+                datatable.Columns.Remove("0");
+            }
+
             for (int i = 0; i < datatable.Columns.Count; i++)
             {
                 //Replace columnnames from number 1 starting from 14th column
