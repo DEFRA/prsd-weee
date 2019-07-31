@@ -181,6 +181,45 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> AatfReuseSites()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new AatfReuseSitesViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfReuseSites", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfReuseSites(AatfReuseSitesViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfReuseSitesCsv(int complianceYear, Guid? authorityId, Guid? panArea)
+        {
+            CSVFileData fileData;
+
+            var request = new GetAllAatfReuseSitesCsv(complianceYear, authorityId, panArea);
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
+        [HttpGet]
         public async Task<ActionResult> AatfObligatedData()
         {
             SetBreadcrumb();
@@ -306,6 +345,16 @@
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
+         private async Task PopulateFilters(AatfReuseSitesViewModel model)
+        {
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
+            var authorities = await FetchAuthorities();
+            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
+            using (var client = apiClient())
+            {
+                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
+            }
+        } 
 
         private async Task PopulateFilters(AatfObligatedDataViewModel model)
         {
