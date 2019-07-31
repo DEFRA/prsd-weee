@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Lookup;
@@ -74,7 +75,7 @@
                 fileName += "_" + panArea.Name;
             }
             fileName += string.Format("_AATF using reuse sites_{0:ddMMyyyy_HHmm}.csv",
-                               DateTime.UtcNow);
+                               SystemTime.UtcNow);
 
             return new CSVFileData
             {

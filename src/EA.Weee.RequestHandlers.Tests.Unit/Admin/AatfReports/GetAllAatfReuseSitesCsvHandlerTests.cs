@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
     using EA.Weee.RequestHandlers.Shared;
@@ -76,9 +77,13 @@
         {
             var request = new GetAllAatfReuseSitesCsv(2019, null, null);
 
+            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
+
             var data = await handler.HandleAsync(request);
 
-            data.FileName.Contains("2019_AATF using reuse sites_");
+            data.FileName.Should().Be("2019_AATF using reuse sites_01022019_1101.csv");
+
+            SystemTime.Unfreeze();
         }
 
         [Fact]
