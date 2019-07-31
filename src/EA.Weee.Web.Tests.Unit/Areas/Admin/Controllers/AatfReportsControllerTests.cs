@@ -222,29 +222,58 @@
         }
 
         [Fact]
+        public async Task GetDownloadAatfAeDataCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            SetupDefaultUrl();
+
+            var complianceYear = fixture.Create<int>();
+            var quarter = fixture.Create<int>();
+            var facilityType = fixture.Create<FacilityType>();
+            var submissionStatus = fixture.Create<int?>();
+            var authority = fixture.Create<Guid?>();
+            var pat = fixture.Create<Guid?>();
+            var area = fixture.Create<Guid?>();
+            var includeReSubmissions = fixture.Create<bool>();
+            var fileData = fixture.Create<CSVFileData>();
+            var url = fixture.Create<string>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(g =>
+                g.ComplianceYear.Equals(complianceYear) && g.Quarter.Equals(quarter) && g.FacilityType.Equals(facilityType)
+                && g.ReturnStatus.Equals(submissionStatus) && g.AuthorityId.Equals(authority) && g.PanArea.Equals(pat) && g.LocalArea.Equals(area)
+                && g.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")
+                && g.IncludeReSubmissions.Equals(includeReSubmissions)))).Returns(fileData);
+
+            var result = await controller.DownloadAatfAeDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, area, includeReSubmissions) as FileContentResult;
+
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
+        }
+
+        [Fact]
         public async void PostAatfAeReturnData_OnDownload_SetsURL()
         {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-            var httpRequest = A.Fake<HttpRequestBase>();
-
             var file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
 
-            var uri = new Uri("https://localhost:44300");
-            A.CallTo(() => controller.HttpContext.Request).Returns(httpRequest);
-            A.CallTo(() => controller.HttpContext.Request.Url).Returns(uri);
+            SetupDefaultUrl();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
             var result = await controller.DownloadAatfAeDataCsv(2019, 1,
                 FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
-                A.Dummy<Guid?>());
+                A.Dummy<Guid?>(), A.Dummy<bool>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")))).MustHaveHappened();
+        }
 
-            var fileResult = result as FileResult;
-            Assert.NotNull(fileResult);
-            Assert.Equal("text/csv", fileResult.ContentType);
+        private void SetupDefaultUrl()
+        {
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(controller);
+            var httpRequest = A.Fake<HttpRequestBase>();
+            var uri = new Uri("https://localhost:44300");
+            A.CallTo(() => controller.HttpContext.Request).Returns(httpRequest);
+            A.CallTo(() => controller.HttpContext.Request.Url).Returns(uri);
         }
 
         [Fact]
@@ -265,13 +294,9 @@
 
             var result = await controller.DownloadAatfAeDataCsv(2019, 1,
                 FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
-                A.Dummy<Guid?>());
+                A.Dummy<Guid?>(), A.Dummy<bool>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/weeerelease/admin/aatf/details/")))).MustHaveHappened();
-
-            var fileResult = result as FileResult;
-            Assert.NotNull(fileResult);
-            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         /// <summary>

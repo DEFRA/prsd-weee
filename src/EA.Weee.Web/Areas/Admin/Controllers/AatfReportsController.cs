@@ -58,13 +58,13 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
-            int quarter, FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
+            int quarter, FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea, bool includeResubmissions)
         {
             using (var client = apiClient())
             {
                 var aatfDataUrl = AatfDataUrl();
 
-                var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
+                var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl, includeResubmissions);
 
                 var fileData = await client.SendAsync(User.GetAccessToken(), request);
 
