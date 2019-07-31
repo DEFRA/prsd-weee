@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Shared;
@@ -69,7 +70,7 @@
                  aatf.Name, 
                  request.ComplianceYear, 
                  (QuarterType)request.Quarter,
-                 DateTime.UtcNow,
+                 SystemTime.UtcNow,
                  aatf.ApprovalNumber);
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);

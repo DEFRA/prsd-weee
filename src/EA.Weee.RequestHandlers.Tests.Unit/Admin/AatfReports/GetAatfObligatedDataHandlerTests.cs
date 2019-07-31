@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.Core.Admin;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
@@ -88,6 +89,7 @@
             var aatfDataAccess = A.Fake<IGetAatfsDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
             int complianceYear = 2019;
+            var datetime = SystemTime.UtcNow.ToString("ddMMyyyy") + "_" + SystemTime.UtcNow.ToString("HHmm");
 
             var handler = new GetAatfObligatedDataHandler(authorization, context, csvWriterFactory, aatfDataAccess);
             var request = new GetAatfObligatedData(complianceYear, 1, A.Dummy<Guid>(), A.Dummy<Guid>());
@@ -97,6 +99,7 @@
 
             // Assert
             Assert.Contains("2019_Q1", data.FileName);
+            Assert.Contains(datetime, data.FileName);
         }
 
         [Fact]
