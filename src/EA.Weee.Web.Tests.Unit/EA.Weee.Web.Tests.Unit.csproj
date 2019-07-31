@@ -243,6 +243,7 @@
     <Compile Include="Areas\Admin\Mapping\AatfSubmissionHistoryDataToViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfAeReturnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReuseSitesViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfSentOnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditPartnershipOrganisationDetailsViewModelTests.cs" />
