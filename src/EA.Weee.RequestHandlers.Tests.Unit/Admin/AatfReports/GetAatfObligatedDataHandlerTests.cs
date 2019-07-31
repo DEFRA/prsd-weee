@@ -6,13 +6,18 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
+    using Domain.AatfReturn;
     using EA.Prsd.Core;
     using EA.Weee.Core.Admin;
     using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.Requests.Admin.Aatf;
     using FakeItEasy;
+    using FluentAssertions;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -89,17 +94,19 @@
             var aatfDataAccess = A.Fake<IGetAatfsDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
             int complianceYear = 2019;
-            var datetime = SystemTime.UtcNow.ToString("ddMMyyyy") + "_" + SystemTime.UtcNow.ToString("HHmm");
+            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
+            Aatf aatf = new Aatf("Company Aatf", A.Dummy<UKCompetentAuthority>(), "1234", Domain.AatfReturn.AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), Domain.AatfReturn.AatfSize.Large, DateTime.Now, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
 
             var handler = new GetAatfObligatedDataHandler(authorization, context, csvWriterFactory, aatfDataAccess);
             var request = new GetAatfObligatedData(complianceYear, 1, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            A.CallTo(() => aatfDataAccess.GetAatfById(request.AatfId)).Returns(aatf);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019_Q1", data.FileName);
-            Assert.Contains(datetime, data.FileName);
+            data.FileName.Should().Be("2019_Q1_1234_Full data_01022019_1101.csv");
         }
 
         [Fact]
