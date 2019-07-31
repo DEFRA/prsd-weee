@@ -6,6 +6,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
@@ -58,7 +59,7 @@
             fileContent = fileContent.Replace(" =HYPERLINK", "=HYPERLINK");
               var fileName = string.Format("{0}_Q{2}_Summary_of_AATF-AE returns to date_{1:ddMMyyyy}_{1:HHmm}.csv",
                 request.ComplianceYear,
-                DateTime.UtcNow,
+                SystemTime.UtcNow,
                 request.Quarter);
 
             return new CSVFileData
