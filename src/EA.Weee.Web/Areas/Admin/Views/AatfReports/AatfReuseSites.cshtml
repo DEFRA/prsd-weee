@@ -1,7 +1,7 @@
 ﻿
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfReuseSitesViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.AatfReuseSitesViewModel
 @{
     ViewBag.Title = "Download AATF using reuse sites - GOV.UK";
 }
@@ -24,12 +24,6 @@
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AATFName)">
-            @Html.Gds().LabelFor(m => m.AATFName)
-            @Html.Gds().ValidationMessageFor(m => m.AATFName)
-            @Html.Gds().TextBoxFor(m => m.AATFName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
@@ -86,7 +80,6 @@
             window.location = "@Html.Raw(@Url.Action("DownloadAatfReuseSitesCsv", new
                           {
                               complianceYear = Model.SelectedYear,
-                              aatfName = Model.AATFName,
                               authorityId = Model.CompetentAuthorityId,
                               panArea = Model.PanAreaId
                           }))";

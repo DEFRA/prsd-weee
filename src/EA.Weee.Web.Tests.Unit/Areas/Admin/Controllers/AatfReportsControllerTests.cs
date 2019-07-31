@@ -989,5 +989,164 @@
             fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
             fileResult.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvData.FileName));
         }
+
+        [Fact]
+        public async Task GetAatfReuseSites_Always_ReturnsAatfReuseSitesViewModel()
+        {
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            // Arrange
+            var years = new List<int>() { 2019 };
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
+
+            // Act
+            var result = await controller.AatfReuseSites();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfReuseSites");
+
+            var model = viewResult.Model as AatfReuseSitesViewModel;
+            Assert.NotNull(model);
+
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2019", y1.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "AatfReuseSites" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAatfReuseSites_Always_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            var result = await controller.AatfReuseSites();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "AatfReuseSites" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAatfReuseSites_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfReuseSites();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfReuseSites" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "AatfReuseSites"
+        /// view with a AatfReuseSitesViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfReuseSites_WithInvalidViewModel_ReturnsAatfReuseSitesViewModel()
+        {
+            // Arrange
+            var years = new List<int>() { 2019 };
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfReturnsActiveComplianceYears>.Ignored)).Returns(years);
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.AatfReuseSites(new AatfReuseSitesViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfReuseSites");
+
+            var model = viewResult.Model as AatfReuseSitesViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2019", y1.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfReuseSites" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfReuseSites_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.AatfReuseSites(new AatfReuseSitesViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfReuseSites" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfReuseSites_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Act
+            var result = await controller.AatfReuseSites(new AatfReuseSitesViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "AatfReuseSites" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostAatfReuseSites_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfReuseSites(A.Dummy<AatfReuseSitesViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfReuseSitesCsv_ReturnsFileResultWithContentTypeOfTextCsv()
+        {
+            const int complianceYear = 2015;
+            var authority = fixture.Create<Guid>();
+            var panArea = fixture.Create<Guid>();
+            var csvData = new CSVFileData
+            {
+                FileContent = "AatfReuseSitesDataCsv",
+                FileName = "test.csv"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfReuseSitesCsv>.That.Matches(g => g.AuthorityId.Equals(authority) 
+            && g.ComplianceYear.Equals(complianceYear) && g.PanArea.Equals(panArea)))).Returns(csvData);
+
+            var fileResult = await controller.DownloadAatfReuseSitesCsv(complianceYear, authority, panArea) as FileContentResult;
+
+            fileResult.ContentType.Should().Be("text/csv");
+            fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
+            fileResult.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvData.FileName));
+        }
     }
 }
