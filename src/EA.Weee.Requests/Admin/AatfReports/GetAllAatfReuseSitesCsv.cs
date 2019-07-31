@@ -11,13 +11,9 @@
 
         public Guid? PanArea { get; private set; }
 
-        public string AATFName { get; private set; }
-
-        public GetAllAatfReuseSitesCsv(int complianceYear,
-           string aatfName, Guid? authorityId, Guid? panArea)
+        public GetAllAatfReuseSitesCsv(int complianceYear, Guid? authorityId, Guid? panArea)
         {
             ComplianceYear = complianceYear;
-            AATFName = aatfName;
             AuthorityId = authorityId;
             PanArea = panArea;
         }

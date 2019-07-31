@@ -45,7 +45,7 @@
                 panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
             }
 
-            var reuseSitesData = await weeContext.StoredProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AATFName, request.AuthorityId, request.PanArea);
+            var reuseSitesData = await weeContext.StoredProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AuthorityId, request.PanArea);
 
             var csvWriter = csvWriterFactory.Create<AatfReuseSitesData>();
 
@@ -72,10 +72,6 @@
             if (request.PanArea != null)
             {
                 fileName += "_" + panArea.Name;
-            }
-            if (!string.IsNullOrEmpty(request.AATFName))
-            {
-                fileName += "_" + request.AATFName;
             }
             fileName += string.Format("_AATF using reuse sites_{0:ddMMyyyy_HHmm}.csv",
                                DateTime.UtcNow);
