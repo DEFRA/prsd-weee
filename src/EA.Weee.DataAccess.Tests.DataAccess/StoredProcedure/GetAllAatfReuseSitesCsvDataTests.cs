@@ -45,7 +45,22 @@
                 await CreateWeeReusedData(db, aatf, @return);
                 var results = await db.StoredProcedures.GetAllAatfReuseSitesCsvData(2019, null, null);
 
-                results.Where(x => x.ApprovalNumber == aatf.ApprovalNumber).Count().Should().Be(2);
+                var filteredData = results.Where(x => x.ApprovalNumber == aatf.ApprovalNumber);
+
+                filteredData.Count().Should().Be(2);
+
+                filteredData.ElementAt(0).ComplianceYear.Should().Be(@return.Quarter.Year);
+                filteredData.ElementAt(0).Quarter.Should().Be(@return.Quarter.Q.ToString());
+                filteredData.ElementAt(0).SubmittedDate.Date.Should().Be(@return.SubmittedDate.Value.Date);
+                filteredData.ElementAt(0).SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
+                filteredData.ElementAt(0).Name.Should().Be(aatf.Name);
+                filteredData.ElementAt(0).ApprovalNumber.Should().Be(aatf.ApprovalNumber);
+                filteredData.ElementAt(0).OrgName.Should().Be(aatf.Organisation.Name);
+                filteredData.ElementAt(0).Abbreviation.Should().Be(aatf.CompetentAuthority.Abbreviation);
+                filteredData.ElementAt(0).PanName.Should().Be(aatf.PanArea.Name);
+                filteredData.ElementAt(0).LaName.Should().Be(aatf.LocalArea.Name);
+                filteredData.ElementAt(0).SiteName.Contains("name");
+                filteredData.ElementAt(0).SiteAddress.Should().Be(string.Concat("address,address2,town,county,postcode", ",", db.WeeeContext.Countries.First().Name));
             }
         }
 
