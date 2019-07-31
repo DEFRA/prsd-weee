@@ -54,6 +54,6 @@
 
         Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea);
         
-        Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, string aatfName, Guid? authority, Guid? panArea);
+        Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea);
     }
 }

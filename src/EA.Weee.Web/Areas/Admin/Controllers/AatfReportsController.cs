@@ -205,12 +205,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadAatfReuseSitesCsv(int complianceYear,
-            string aatfName, Guid? authorityId, Guid? panArea)
+        public async Task<ActionResult> DownloadAatfReuseSitesCsv(int complianceYear, Guid? authorityId, Guid? panArea)
         {
             CSVFileData fileData;
 
-            var request = new GetAllAatfReuseSitesCsv(complianceYear, aatfName, authorityId, panArea);
+            var request = new GetAllAatfReuseSitesCsv(complianceYear, authorityId, panArea);
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);

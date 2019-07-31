@@ -22,9 +22,5 @@
         [Display(Name = "WROS Pan area team")]
         public Guid? PanAreaId { get; set; }
         public IEnumerable<SelectListItem> PanAreaList { get; set; }
-
-        [DisplayName("AATF name")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public string AATFName { get; set; }
     }
 }

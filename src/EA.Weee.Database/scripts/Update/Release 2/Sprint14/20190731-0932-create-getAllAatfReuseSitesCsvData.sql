@@ -5,7 +5,6 @@
 -- =============================================
 CREATE PROCEDURE [AATF].[getAllAatfReuseSitesCsvData]
 	@ComplianceYear INT,
-	@AatfName nvarchar(256),
 	@CA UNIQUEIDENTIFIER,
 	@PanArea UNIQUEIDENTIFIER
 AS
@@ -47,11 +46,7 @@ FROM (
 		AND (
 			@PanArea IS NULL
 			OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId)
-			)
-		AND (
-			@AatfName IS NULL
-			OR a.Name LIKE '%' + COALESCE(@AatfName, a.Name) + '%'
-			)
+			)		
 	) X
 INNER JOIN [AATF].WeeeReused wr ON wr.ReturnId = X.ReturnId
 	AND wr.AatfId = X.AatfId
