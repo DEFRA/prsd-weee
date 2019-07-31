@@ -19,6 +19,7 @@
         private readonly WeeeContext weeContext;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly ICommonDataAccess commonDataAccess;
+
         public GetAllAatfReuseSitesCsvHandler(IWeeeAuthorization authorization, WeeeContext weeContext,
                  CsvWriterFactory csvWriterFactory, ICommonDataAccess commonDataAccess)
         {
