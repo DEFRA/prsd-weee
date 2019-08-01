@@ -9,6 +9,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.Lookup;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -176,7 +177,7 @@
         [Fact]
         public async Task HandleAsync_GivenMandatoryParameters_FileNameShouldBeCorrect()
         {
-            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), false);
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, null, fixture.Create<string>(), false);
 
             var date = new DateTime(2019, 05, 18, 11, 12, 0);
 
@@ -194,7 +195,7 @@
         [InlineData("Include resubmissions", true)]
         public async Task HandleAsync_GivenMandatoryParametersAndIncludeResubmissions_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
         {
-            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, null, fixture.Create<string>(), includeResubmissions);
 
             var date = new DateTime(2019, 05, 18, 11, 12, 0);
 
@@ -216,7 +217,7 @@
         [InlineData("Include resubmissions", true, ReportReturnStatus.Started)]
         public async Task HandleAsync_GivenMandatoryParametersAndSubmissionStatus_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions, ReportReturnStatus status)
         {
-            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), status, null, fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), status, null, null, null, fixture.Create<string>(), includeResubmissions);
 
             var date = new DateTime(2019, 05, 18, 11, 12, 0);
 
@@ -238,7 +239,7 @@
         [InlineData("Include resubmissions", true)]
         public async Task HandleAsync_GivenMandatoryParametersAndAuthority_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
         {
-            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), null, null, fixture.Create<string>(), includeResubmissions);
 
             var ca = fixture.Create<EA.Weee.Domain.UKCompetentAuthority>();
             A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
@@ -250,6 +251,56 @@
             var data = await handler.HandleAsync(request);
 
             data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{ca.Abbreviation}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndPanArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), null, fixture.Create<string>(), includeResubmissions);
+
+            var panArea = fixture.Create<PanArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Returns(panArea);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{panArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+
+            var localArea = fixture.Create<LocalArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Returns(localArea);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -268,13 +319,19 @@
             var ca = fixture.Create<EA.Weee.Domain.UKCompetentAuthority>();
             A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
 
+            var localArea = fixture.Create<LocalArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Returns(localArea);
+
+            var panArea = fixture.Create<PanArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Returns(panArea);
+
             var date = new DateTime(2019, 05, 18, 11, 12, 0);
 
             SystemTime.Freeze(date);
 
             var data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_{ca.Abbreviation}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
