@@ -13,12 +13,10 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    <h1 class="govuk-heading-l govuk-fieldset__heading">
+            <fieldset class="govuk-fieldset">  
+                    <h1 class="govuk-heading-l">
                         What do you need to report for @Model.Year @Model.Period?
-                    </h1>
-                </legend>
+                    </h1>              
                 <p id="all-apply-hint">
                     Select all that apply
                 </p>
@@ -42,8 +40,8 @@
                                 <input type="checkbox" name="ReportOnQuestions[@i].Selected" value="true" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption />
                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
                                     @Model.ReportOnQuestions[i].Description
-
-                                    <p class="govuk-body govuk-!-font-size-16" style="padding-top: 10px">
+                                    <br />
+                                    <span class="govuk-body govuk-!-font-size-16" style="padding-top: 10px">
                                         @switch (i)
                                         {
                                             case 0:
@@ -60,7 +58,7 @@
                                                 break;
                                         }
                                         @message
-                                    </p>
+                                    </span>
                                 </label>
                             </div>
                         }

@@ -20,8 +20,8 @@
 
     @Html.Partial("_SummaryPartial", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayEdit", false) })
 
-    <div class="govuk-!-padding-bottom-6" />
-    <div class="govuk-grid-row" />
+    <div class="govuk-!-padding-bottom-6"></div>
+    <div class="govuk-grid-row"></div>
     <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
 </section>
 
