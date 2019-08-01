@@ -80,12 +80,6 @@
             model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
             model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
 
-            Assert.Collection(model.Quarters,
-                s1 => Assert.Equal("1", s1.Text),
-                s2 => Assert.Equal("2", s2.Text),
-                s3 => Assert.Equal("3", s3.Text),
-                s4 => Assert.Equal("4", s4.Text));
-
             Assert.Collection(model.FacilityTypes,
                s1 => Assert.Equal("AATF", s1.Text),
                s2 => Assert.Equal("AE", s2.Text));
@@ -229,7 +223,7 @@
             var complianceYear = fixture.Create<int>();
             var quarter = fixture.Create<int>();
             var facilityType = fixture.Create<FacilityType>();
-            var submissionStatus = fixture.Create<int?>();
+            var submissionStatus = fixture.Create<ReportReturnStatus>();
             var authority = fixture.Create<Guid?>();
             var pat = fixture.Create<Guid?>();
             var area = fixture.Create<Guid?>();
@@ -239,7 +233,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(g =>
                 g.ComplianceYear.Equals(complianceYear) && g.Quarter.Equals(quarter) && g.FacilityType.Equals(facilityType)
-                && g.ReturnStatus.Equals(submissionStatus) && g.AuthorityId.Equals(authority) && g.PanArea.Equals(pat) && g.LocalArea.Equals(area)
+                && g.ReturnStatus.Equals(submissionStatus) && g.AuthorityId.Equals(authority)
                 && g.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")
                 && g.IncludeReSubmissions.Equals(includeReSubmissions)))).Returns(fileData);
 
@@ -260,7 +254,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
             var result = await controller.DownloadAatfAeDataCsv(2019, 1,
-                FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
+                FacilityType.Aatf, A.Dummy<ReportReturnStatus>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
                 A.Dummy<Guid?>(), A.Dummy<bool>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/admin/aatf/details/")))).MustHaveHappened();
@@ -293,7 +287,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>._)).Returns(file);
 
             var result = await controller.DownloadAatfAeDataCsv(2019, 1,
-                FacilityType.Aatf, A.Dummy<int?>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
+                FacilityType.Aatf, A.Dummy<ReportReturnStatus>(), A.Dummy<Guid?>(), A.Dummy<Guid?>(),
                 A.Dummy<Guid?>(), A.Dummy<bool>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeReturnDataCsv>.That.Matches(x => x.AatfDataUrl.Equals("https://localhost:44300/weeerelease/admin/aatf/details/")))).MustHaveHappened();
