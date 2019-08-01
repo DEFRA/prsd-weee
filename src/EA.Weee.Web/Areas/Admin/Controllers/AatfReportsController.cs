@@ -58,7 +58,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
-            int quarter, FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea, bool includeResubmissions)
+            int quarter, FacilityType facilityType, ReportReturnStatus? submissionStatus, Guid? authority, Guid? pat, Guid? localArea, bool includeResubmissions)
         {
             using (var client = apiClient())
             {
