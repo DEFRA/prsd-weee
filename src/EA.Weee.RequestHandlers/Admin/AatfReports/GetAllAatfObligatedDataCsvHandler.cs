@@ -7,6 +7,7 @@
     using DataAccess;
     using Domain;
     using Domain.Lookup;
+    using EA.Prsd.Core;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
@@ -92,8 +93,8 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
-                                DateTime.UtcNow);           
+            fileName += string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
+                                SystemTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
 

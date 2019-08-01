@@ -6,8 +6,10 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
+    using FluentAssertions;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
@@ -134,6 +136,8 @@
             int complianceYear = 2019;
             string obligationType = "B2C";
             string aatfName = "A1";
+            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
+
             var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, obligationType, aatfName, null, null);
 
@@ -141,7 +145,7 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Contains("2019_A1_B2C", data.FileName);
+            data.FileName.Should().Be("2019_A1_B2C_01022019_1101.csv");
         }
     }
 }
