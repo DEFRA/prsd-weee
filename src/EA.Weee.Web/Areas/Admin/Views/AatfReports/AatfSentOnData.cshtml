@@ -31,12 +31,6 @@
             @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AATFName)">
-            @Html.Gds().LabelFor(m => m.AATFName)
-            @Html.Gds().ValidationMessageFor(m => m.AATFName)
-            @Html.Gds().TextBoxFor(m => m.AATFName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
-        </div>
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
             @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
             @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
