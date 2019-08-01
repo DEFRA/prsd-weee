@@ -8,6 +8,8 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
+    using EA.Weee.Core.Admin;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.AatfReports;
@@ -76,6 +78,26 @@
 
             // Assert
             Assert.NotEmpty(data.FileContent);
+        }
+
+        [Fact]
+        public async Task GetAatfAeReturnDataCsvHandler_ReturnsFileName()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            int complianceYear = 2019;
+            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
+
+            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
+
+            // Act
+            CSVFileData data = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Contains("2019_Q1", data.FileName);
+            data.FileName.Should().Be("2019_Q1_Summary_of_AATF-AE returns to date_01022019_1101.csv");
         }
 
         [Fact]
