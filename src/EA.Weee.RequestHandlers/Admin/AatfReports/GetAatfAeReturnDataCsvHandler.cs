@@ -6,6 +6,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.Lookup;
     using Prsd.Core;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mediator;
@@ -73,10 +74,17 @@
             {
                 additionalParameters = $"_{EnumHelper.GetDisplayName(request.ReturnStatus.Value)}";
             }
-
             if (request.AuthorityId.HasValue)
             {
                 additionalParameters += $"_{(await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Abbreviation}";
+            }
+            if (request.PanArea.HasValue)
+            {
+                additionalParameters += $"_{(await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Name}";
+            }
+            if (request.LocalArea.HasValue)
+            {
+                additionalParameters += $"_{(await commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Name}";
             }
 
             var fileName =
