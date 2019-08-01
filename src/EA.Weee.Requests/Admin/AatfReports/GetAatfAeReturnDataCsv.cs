@@ -13,7 +13,7 @@
 
         public FacilityType FacilityType { get; private set; }
 
-        public int? ReturnStatus { get; private set; }
+        public ReportReturnStatus? ReturnStatus { get; private set; }
 
         public Guid? AuthorityId { get; private set; }
 
@@ -28,7 +28,7 @@
         public GetAatfAeReturnDataCsv(int complianceYear,
           int quarter, 
           FacilityType facilityType, 
-          int? returnStatus, 
+          ReportReturnStatus? returnStatus, 
           Guid? authorityId, 
           Guid? panArea, 
           Guid? localArea, 

@@ -6,23 +6,31 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Prsd.Core;
+    using Prsd.Core.Helpers;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
+    using Shared;
 
     internal class GetAatfAeReturnDataCsvHandler : IRequestHandler<GetAatfAeReturnDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly ICommonDataAccess commonDataAccess;
 
-        public GetAatfAeReturnDataCsvHandler(IWeeeAuthorization authorization, WeeeContext context,
-          CsvWriterFactory csvWriterFactory)
+        public GetAatfAeReturnDataCsvHandler(IWeeeAuthorization authorization, 
+            WeeeContext context,
+            CsvWriterFactory csvWriterFactory, 
+            ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
             this.context = context;
             this.csvWriterFactory = csvWriterFactory;
+            this.commonDataAccess = commonDataAccess;
         }
+
         public async Task<CSVFileData> HandleAsync(GetAatfAeReturnDataCsv request)
         {
             authorization.EnsureCanAccessInternalArea();
@@ -35,7 +43,7 @@
 
             var items = await context.StoredProcedures.GetAatfAeReturnDataCsvData(
                        request.ComplianceYear, request.Quarter, (int)request.FacilityType, 
-                       request.ReturnStatus, request.AuthorityId, request.LocalArea, request.PanArea);
+                       request.ReturnStatus.HasValue ? (int)request.ReturnStatus : (int?)null, request.AuthorityId, request.LocalArea, request.PanArea, request.IncludeReSubmissions);
 
             foreach (var item in items)
             {
@@ -51,17 +59,28 @@
             csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Appropriate authority", i => i.CompetentAuthorityAbbr);
+            csvWriter.DefineColumn(@"First submission / resubmission", i => i.IncludeResubmissions);
             csvWriter.DefineColumn(@" ", i => i.AatfDataUrl);
             var fileContent = csvWriter.Write(items);
 
             //Trim the space before equals in  =Hyperlink
             fileContent = fileContent.Replace(" =HYPERLINK", "=HYPERLINK");
 
-            var fileName = string.Format("{0}_{2}_RETURN_{1:ddMMyyyy_HHmm}_Q{3}.csv",
-                request.ComplianceYear,
-                DateTime.UtcNow,
-                request.FacilityType.ToString().ToUpper(),
-                request.Quarter);
+            var excludeResubmissions = request.IncludeReSubmissions ? "Include resubmissions" : "Exclude resubmissions";
+
+            var additionalParameters = string.Empty;
+            if (request.ReturnStatus.HasValue)
+            {
+                additionalParameters = $"_{EnumHelper.GetDisplayName(request.ReturnStatus.Value)}";
+            }
+
+            if (request.AuthorityId.HasValue)
+            {
+                additionalParameters += $"_{(await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Abbreviation}";
+            }
+
+            var fileName =
+                $"{request.ComplianceYear}_Q{request.Quarter}_{excludeResubmissions}_{request.FacilityType.ToString().ToUpper()}{additionalParameters}_Summary of AATF-AE returns to date_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {

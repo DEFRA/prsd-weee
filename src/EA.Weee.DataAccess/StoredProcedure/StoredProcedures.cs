@@ -434,7 +434,7 @@
         }
 
         public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
-           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
+           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea, bool includeResubmissions)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var quarterParameter = new SqlParameter("@Quarter", quarter);
@@ -443,13 +443,19 @@
             var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
             var areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
             var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var includeResubmissionsParameter = new SqlParameter("@IncludeResubmissions", (object)includeResubmissions);
 
             return await context.Database
                 .SqlQuery<AatfAeReturnData>(
-                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
+                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea, @IncludeResubmissions",
                     complianceYearParameter,                  
                     quarterParameter,
-                    facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)
+                    facilityTypeParameter, 
+                    returnStatusParameter,
+                    authorityParameter,
+                    areaParameter,
+                    panAreaParameter,
+                    includeResubmissionsParameter)
                 .ToListAsync();
         }
 
