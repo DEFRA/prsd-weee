@@ -104,7 +104,7 @@
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
                 CompetentAuthorityAbbr = fixture.Create<string>(),
-                IncludeResubmissions = fixture.Create<string>()
+                ReSubmission = fixture.Create<string>()
             };
 
             var csvData2 = new AatfAeReturnData
@@ -117,7 +117,7 @@
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
                 CompetentAuthorityAbbr = fixture.Create<string>(),
-                IncludeResubmissions = fixture.Create<string>()
+                ReSubmission = fixture.Create<string>()
             };
 
             var csvData3 = new AatfAeReturnData
@@ -130,7 +130,7 @@
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
                 CompetentAuthorityAbbr = fixture.Create<string>(),
-                IncludeResubmissions = fixture.Create<string>()
+                ReSubmission = fixture.Create<string>()
             };
 
             A.CallTo(() => storedProcedures.GetAatfAeReturnDataCsvData(complianceYear, quarter, (int)facilityType, (int)returnStatus, authority, area, pat, resubmission))
@@ -141,9 +141,9 @@
             var data = await handler.HandleAsync(request);
 
             data.FileContent.Should().Contain("Name of AATF / AE,Approval number,Organisation name,Submission status,Date created (GMT),Date submitted (GMT),Submitted by,Appropriate authority,First submission / resubmission,");
-            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.IncludeResubmissions}");
-            data.FileContent.Should().Contain($"{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.OrganisationName},{csvData2.ReturnStatus},{csvData2.CreatedDate},{csvData2.SubmittedDate},{csvData2.SubmittedBy},{csvData2.CompetentAuthorityAbbr},{csvData2.IncludeResubmissions}");
-            data.FileContent.Should().Contain($"{csvData3.Name},{csvData3.ApprovalNumber},{csvData3.OrganisationName},{csvData3.ReturnStatus},{csvData3.CreatedDate},{csvData3.SubmittedDate},{csvData3.SubmittedBy},{csvData3.CompetentAuthorityAbbr},{csvData3.IncludeResubmissions}");
+            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission}");
+            data.FileContent.Should().Contain($"{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.OrganisationName},{csvData2.ReturnStatus},{csvData2.CreatedDate},{csvData2.SubmittedDate},{csvData2.SubmittedBy},{csvData2.CompetentAuthorityAbbr},{csvData2.ReSubmission}");
+            data.FileContent.Should().Contain($"{csvData3.Name},{csvData3.ApprovalNumber},{csvData3.OrganisationName},{csvData3.ReturnStatus},{csvData3.CreatedDate},{csvData3.SubmittedDate},{csvData3.SubmittedBy},{csvData3.CompetentAuthorityAbbr},{csvData3.ReSubmission}");
         }
 
         [Fact]
@@ -159,7 +159,7 @@
                 SubmittedBy = fixture.Create<string>(),
                 SubmittedDate = fixture.Create<DateTime>(),
                 CompetentAuthorityAbbr = fixture.Create<string>(),
-                IncludeResubmissions = fixture.Create<string>()
+                ReSubmission = fixture.Create<string>()
             };
 
             A.CallTo(() => storedProcedures
@@ -171,7 +171,7 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.IncludeResubmissions},{url1}");
+            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission},{url1}");
         }
 
         [Fact]

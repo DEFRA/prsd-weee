@@ -134,7 +134,7 @@
                 var nonObligated = new List<NonObligatedWeee>();
                 foreach (var nonObligatedCategoryValue in CategoryValues())
                 {
-                    nonObligated.Add(new NonObligatedWeee(@return2, nonObligatedCategoryValue.CategoryId, false, nonObligatedCategoryValue.CategoryId));
+                    nonObligated.Add(new NonObligatedWeee(@return1, nonObligatedCategoryValue.CategoryId, false, nonObligatedCategoryValue.CategoryId));
                     nonObligated.Add(new NonObligatedWeee(@return2, nonObligatedCategoryValue.CategoryId, true, nonObligatedCategoryValue.CategoryId));
                 }
 
@@ -149,7 +149,7 @@
 
                 foreach (var nonObligatedCategoryValue in CategoryValues())
                 {
-                    results.First(r => r.ReturnId.Equals(@return2.Id) && r.CategoryId.Equals(nonObligatedCategoryValue.CategoryId))
+                    results.First(r => r.ReturnId.Equals(@return1.Id) && r.CategoryId.Equals(nonObligatedCategoryValue.CategoryId))
                         .TotalNonObligatedWeeeReceived.Should().Be(nonObligatedCategoryValue.CategoryId);
                     results.First(r => r.ReturnId.Equals(@return2.Id) && r.CategoryId.Equals(nonObligatedCategoryValue.CategoryId))
                         .TotalNonObligatedWeeeReceivedFromDcf.Should().Be(nonObligatedCategoryValue.CategoryId);
