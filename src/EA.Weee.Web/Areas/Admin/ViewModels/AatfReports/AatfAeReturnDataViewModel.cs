@@ -16,7 +16,7 @@
 
         [Required]
         [DisplayName("Quarter")]
-        public string Quarter { get; set; }
+        public int Quarter { get; set; }
 
         public IEnumerable<SelectListItem> Quarters
         {
