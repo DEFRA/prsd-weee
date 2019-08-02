@@ -19,16 +19,16 @@
 
         [Required]
         [DisplayName("Quarter")]
-        public int Quarter { get; set; }
+        public string Quarter { get; set; }
 
         public IEnumerable<SelectListItem> Quarters
         {
             get
             {
-                yield return new SelectListItem() { Text = "1" };
-                yield return new SelectListItem() { Text = "2" };
-                yield return new SelectListItem() { Text = "3" };
-                yield return new SelectListItem() { Text = "4" };
+                yield return new SelectListItem() { Text = "Q1", Value = "1" };
+                yield return new SelectListItem() { Text = "Q2", Value = "2" };
+                yield return new SelectListItem() { Text = "Q3", Value = "3" };
+                yield return new SelectListItem() { Text = "Q4", Value = "4" };
             }
         }
 
