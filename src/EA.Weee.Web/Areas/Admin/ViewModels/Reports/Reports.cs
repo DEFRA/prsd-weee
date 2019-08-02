@@ -16,5 +16,6 @@
         public const string AatfObligatedData = "AATF obligated WEEE data";
         public const string AatfNonObligatedData = "AATF non-obligated WEEE data";
         public const string AatfSentOnData = "AATF WEEE sent on for treatment";
+        public const string AatfReuseSitesData = "AATF using reuse sites";
     }
 }

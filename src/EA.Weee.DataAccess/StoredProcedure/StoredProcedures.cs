@@ -547,5 +547,17 @@
             }
             return dataSet;
         }
+         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<AatfReuseSitesData>(
+                    "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea",
+                    complianceYearParameter, authorityParameter,  panAreaParameter)
+                .ToListAsync();
+        }   
     }
 }
