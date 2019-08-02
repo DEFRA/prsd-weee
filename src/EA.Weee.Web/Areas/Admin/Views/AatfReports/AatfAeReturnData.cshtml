@@ -108,7 +108,7 @@
             window.location = "@Html.Raw(@Url.Action("DownloadAatfAeDataCsv", new
                           {
                               complianceYear = Model.SelectedYear,
-                              quarter = Model.Quarter,
+                              quarter = Model.Quarter.SingleOrDefault(),
                               facilityType = Model.SelectedFacilityType,
                               submissionStatus = Model.SelectedSubmissionStatus,
                               authority = Model.CompetentAuthorityId,
