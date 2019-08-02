@@ -126,6 +126,9 @@
 
                 case Reports.AatfSentOnData:
                     return RedirectToAction("AatfSentOnData", "AatfReports");
+                    
+                case Reports.AatfReuseSitesData:
+                    return RedirectToAction("AatfReuseSites", "AatfReports");
 
                 default:
                     throw new NotSupportedException();
