@@ -31,6 +31,12 @@
             @Html.Gds().DropDownListFor(m => m.Quarter, Model.Quarters, string.Empty, new { autocomplete = "false" })
         </div>
 
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeResubmissions)">
+            @Html.Gds().LabelFor(m => m.IncludeResubmissions)
+            @Html.Gds().ValidationMessageFor(m => m.IncludeResubmissions)
+            @Html.Gds().DropDownListFor(m => m.IncludeResubmissions, Model.IncludeResubmissionsOptions, string.Empty, new { autocomplete = "false" })
+        </div>
+
         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedFacilityType)">
             @Html.Gds().LabelFor(m => m.SelectedFacilityType)
             @Html.Gds().ValidationMessageFor(m => m.SelectedFacilityType)
@@ -106,15 +112,16 @@
     {
         <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadAatfAeDataCsv", new
-                          {
-                              complianceYear = Model.SelectedYear,
-                              quarter = Model.Quarter,
-                              facilityType = Model.SelectedFacilityType,
-                              submissionStatus = Model.SelectedSubmissionStatus,
-                              authority = Model.CompetentAuthorityId,
-                              pat = Model.PanAreaId,
-                              localArea = Model.LocalAreaId
-                          }))";
+                               {
+                                   complianceYear = Model.SelectedYear,
+                                   quarter = Model.Quarter,
+                                   facilityType = Model.SelectedFacilityType,
+                                   submissionStatus = Model.SelectedSubmissionStatus,
+                                   authority = Model.CompetentAuthorityId,
+                                   pat = Model.PanAreaId,
+                                   localArea = Model.LocalAreaId,
+                                   includeResubmissions = Model.IncludeResubmissions ?? false
+                               }))";
         </script>
     }
 }

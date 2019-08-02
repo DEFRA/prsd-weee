@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfReturn\ReportReturnStatus.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />
