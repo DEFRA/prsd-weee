@@ -57,18 +57,19 @@
             </div>
         </div>
 
-        <form method="post" class="form" style="display: inline">
-            <button type="submit" class="govuk-button" id="aatf-task-list">
-                Continue
-            </button>
-        </form>
-        if (Model.Type == ObligatedType.Reused)
-        {
+        <button type="submit" class="govuk-button" id="aatf-task-list">
+            Continue
+        </button>
+
+        <div>
+            @if (Model.Type == ObligatedType.Reused)
+            {
             <a href="@(Url.UrlFor<ObligatedReusedController>(u => u.Index(Model.ReturnId, Model.AatfId)))">Cancel</a>
-        }
-        else
-        {
+            }
+            else
+            {
             <a href="@(Url.UrlFor<ObligatedReceivedController>(u => u.Index(Model.ReturnId, Model.AatfId, Model.SchemeId)))">Cancel</a>
-        }
+            }
+        </div>
     }
 </section>
