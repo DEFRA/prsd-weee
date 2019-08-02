@@ -5,10 +5,12 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Lookup;
+    using Domain;
+    using Domain.Lookup;
+    using EA.Prsd.Core;
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
+    using Requests.Admin.AatfReports;
     using Requests.Admin.Reports;
     using Security;
 
@@ -43,7 +45,7 @@
             }
             if (request.PanArea != null)
             {
-                panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
+                panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
             }
 
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
@@ -82,17 +84,13 @@
             {
                 fileName += "_" + panArea.Name;
             }
-            if (request.AATFName != null)
-            {
-                fileName += "_" + request.AATFName;
-            }
-            if (request.ObligationType != null)
+            if (!string.IsNullOrEmpty(request.ObligationType))
             {
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy_HHmm}.csv",
-                                DateTime.UtcNow);           
+            fileName += string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
+                                SystemTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
 

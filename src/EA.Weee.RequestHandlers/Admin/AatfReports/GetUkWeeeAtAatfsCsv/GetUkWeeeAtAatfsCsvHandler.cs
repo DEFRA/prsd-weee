@@ -13,6 +13,7 @@
     using EA.Weee.RequestHandlers.Admin.Helpers;
     using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
+    using Requests.Admin.AatfReports;
     using Security;
 
     public class GetUkWeeeAtAatfsCsvHandler : IRequestHandler<GetUkWeeeAtAatfsCsv, FileInfo>
