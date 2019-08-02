@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.Requests.Admin.Reports
+﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
     using System;
+    using Core.AatfReturn;
     using Core.Admin;
-    using Core.Shared;
-    using EA.Weee.Core.AatfReturn;
     using Prsd.Core.Mediator;
 
     public class GetAatfAeReturnDataCsv : IRequest<CSVFileData>

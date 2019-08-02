@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Shared;
@@ -65,9 +66,12 @@
                 }
             }
 
-            var fileName = string.Format("{0}-{1}{2}-{3:ddMMyyyy_HHmm}.csv",
-                 aatf.Name, request.ComplianceYear, (QuarterType)request.Quarter,
-                 DateTime.UtcNow);
+            var fileName = string.Format("{1}_{2}_{4}_Full data_{3:ddMMyyyy}_{3:HHmm}.csv",
+                 aatf.Name, 
+                 request.ComplianceYear, 
+                 (QuarterType)request.Quarter,
+                 SystemTime.UtcNow,
+                 aatf.ApprovalNumber);
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
 
