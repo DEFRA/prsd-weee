@@ -27,6 +27,6 @@
 
         public string AatfDataUrl { get; set; }
 
-        public string IncludeResubmissions { get; set; }
+        public string ReSubmission { get; set; }
     }
 }

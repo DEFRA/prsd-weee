@@ -60,7 +60,7 @@
             csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Appropriate authority", i => i.CompetentAuthorityAbbr);
-            csvWriter.DefineColumn(@"First submission / resubmission", i => i.IncludeResubmissions);
+            csvWriter.DefineColumn(@"First submission / resubmission", i => i.ReSubmission);
             csvWriter.DefineColumn(@" ", i => i.AatfDataUrl);
             var fileContent = csvWriter.Write(items);
 
