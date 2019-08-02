@@ -81,10 +81,10 @@
             model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
 
             Assert.Collection(model.Quarters,
-                s1 => Assert.Equal("1", s1.Text),
-                s2 => Assert.Equal("2", s2.Text),
-                s3 => Assert.Equal("3", s3.Text),
-                s4 => Assert.Equal("4", s4.Text));
+                s1 => Assert.Equal("1", s1.Value),
+                s2 => Assert.Equal("2", s2.Value),
+                s3 => Assert.Equal("3", s3.Value),
+                s4 => Assert.Equal("4", s4.Value));
 
             Assert.Collection(model.FacilityTypes,
                s1 => Assert.Equal("AATF", s1.Text),
