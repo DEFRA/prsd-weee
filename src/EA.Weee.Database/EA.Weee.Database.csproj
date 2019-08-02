@@ -278,6 +278,7 @@
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-1625-alter-nonObligatedWeeeStoredProcedure.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190731-1430-alter-getAllAatfSentOnCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20193107-0935-alter-getAatfAeReturnDataCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20190802-0947-alter-getNonObligatedWeeeReceived.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20193007-1541-alter-nonObligatedWeeeStoredProcedure.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190725-0900-alter-nonObligatedWeeeStoredProcedure.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-0933-alter-getAllAatfObligatedCsvData.sql" />
