@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DataStandards
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfObligatedDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.AatfObligatedDataViewModel
 @{
     ViewBag.Title = "Download AATF obligated WEEE data - GOV.UK";
 }
@@ -36,12 +36,6 @@
             @Html.Gds().LabelFor(m => m.SelectedObligationType)
             @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)
             @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AATFName)">
-            @Html.Gds().LabelFor(m => m.AATFName)
-            @Html.Gds().ValidationMessageFor(m => m.AATFName)
-            @Html.Gds().TextBoxFor(m => m.AATFName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">

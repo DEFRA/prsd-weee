@@ -1,8 +1,7 @@
-﻿namespace EA.Weee.Requests.Admin.Reports
+﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
     using System;
     using Core.Admin;
-    using Core.Shared;
     using Prsd.Core.Mediator;
 
     public class GetAllAatfObligatedDataCsv : IRequest<CSVFileData>
