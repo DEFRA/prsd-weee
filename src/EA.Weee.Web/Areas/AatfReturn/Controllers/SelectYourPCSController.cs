@@ -108,8 +108,12 @@
                     Reselect = true,
                     SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
                 };
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+
+                TempData["currentQuarter"] = @return.Quarter;
+                TempData["currentQuarterWindow"] = @return.QuarterWindow;
 
                 return View(nameof(Index), viewModel);
             }
@@ -170,6 +174,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PcsRemoved(PcsRemovedViewModel viewModel)
         {
+            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
