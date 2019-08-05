@@ -145,7 +145,7 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
-            data.FileName.Should().Be("2019_B2C_01022019_1101.csv");
+            data.FileName.Should().Be("2019 B2C View obligated WEEE data 01022019 1101.csv");
         }
     }
 }
