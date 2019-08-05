@@ -40,7 +40,7 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString };
+                yield return new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString, Selected = true };
                 yield return new SelectListItem() { Text = "Include resubmissions", Value = bool.TrueString };
             }
         }
