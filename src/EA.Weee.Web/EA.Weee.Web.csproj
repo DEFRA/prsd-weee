@@ -324,7 +324,9 @@
     <Compile Include="Areas\AatfReturn\Controllers\NonObligatedController.cs" />
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AatfReturn\Controllers\ViewAATFContactDetailsListController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\ViewAATFContactDetailsListViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
@@ -979,6 +981,7 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfNonObligatedData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfSentOnData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfReuseSites.cshtml" />
+    <Content Include="Areas\AatfReturn\Views\ViewAATFContactDetailsList\Index.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

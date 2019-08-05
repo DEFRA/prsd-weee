@@ -12,5 +12,7 @@
         public static string ManageAatfReturns = "Manage AATF returns";
         public static string ManageAeReturns = "Manage AE returns";
         public static string ViewOrganisationDetails = "View organisation details";
+        public static string ViewAATFContactDetails = "View AATF contact details";
+        public static string ViewAEContactDetails = "View AE contact details";
     }
 }
