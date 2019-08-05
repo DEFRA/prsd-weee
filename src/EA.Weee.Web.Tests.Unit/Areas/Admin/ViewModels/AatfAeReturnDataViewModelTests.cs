@@ -52,7 +52,7 @@
         [Fact]
         public void AatfAeReturnDataViewModel_IncludeResubmissionsOptions_ShouldHaveValidValues()
         {
-            model.IncludeResubmissionsOptions.ElementAt(0).Should().BeEquivalentTo(new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString });
+            model.IncludeResubmissionsOptions.ElementAt(0).Should().BeEquivalentTo(new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString, Selected = true });
             model.IncludeResubmissionsOptions.ElementAt(1).Should().BeEquivalentTo(new SelectListItem() { Text = "Include resubmissions", Value = bool.TrueString });
         }
 
