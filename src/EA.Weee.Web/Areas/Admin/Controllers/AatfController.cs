@@ -233,7 +233,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.NotAllowed)]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
             var aatfData = await cache.FetchAatfData(organisationId, id);
