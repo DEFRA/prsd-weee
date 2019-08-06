@@ -15,11 +15,11 @@
         <div class="govuk-!-padding-bottom-5"></div>
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    <h1 class="govuk-heading-l govuk-fieldset__heading">
+
+                    <h1 class="govuk-heading-l">
                         Select all the PCSs that you received WEEE from
                     </h1>
-                </legend>
+             
                 <h2 class="govuk-heading-m">These PCSs will be available to all of your AATFs</h2>
                 <div class="govuk-checkboxes">
                     @for (var i = 0; i < Model.SchemeList.Count; i++)
@@ -32,8 +32,8 @@
                                     selectedOption = Model.SelectedSchemes.Count(p => p == Model.SchemeList[i].Id) > 0 ? "checked" : "";
                                 }
                             }
-                            <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id" @selectedOption />
-                            <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Name-@Model.SchemeList[i].Id">
+                            <input type="checkbox" name="SelectedSchemes" value="@Model.SchemeList[i].Id" class="govuk-checkboxes__input" id="@Model.SchemeList[i].Id" @selectedOption />
+                            <label class="govuk-label govuk-checkboxes__label" for="@Model.SchemeList[i].Id">
                                 @Model.SchemeList[i].SchemeName - @Model.SchemeList[i].ApprovalName
                             </label>
                         </div>

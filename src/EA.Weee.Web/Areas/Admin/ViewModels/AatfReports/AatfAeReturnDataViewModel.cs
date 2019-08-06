@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
+    using Core.AatfReturn;
+    using Extensions;
 
     public class AatfAeReturnDataViewModel
     {
@@ -22,10 +25,23 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "1" };
-                yield return new SelectListItem() { Text = "2" };
-                yield return new SelectListItem() { Text = "3" };
-                yield return new SelectListItem() { Text = "4" };
+                yield return new SelectListItem() { Text = "Q1", Value = "1" };
+                yield return new SelectListItem() { Text = "Q2", Value = "2" };
+                yield return new SelectListItem() { Text = "Q3", Value = "3" };
+                yield return new SelectListItem() { Text = "Q4", Value = "4" };
+            }
+        }
+
+        [Required]
+        [DisplayName("Include resubmissions?")]
+        public bool? IncludeResubmissions { get; set; }
+
+        public IEnumerable<SelectListItem> IncludeResubmissionsOptions
+        {
+            get
+            {
+                yield return new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString };
+                yield return new SelectListItem() { Text = "Include resubmissions", Value = bool.TrueString };
             }
         }
 
@@ -42,9 +58,9 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "Submitted", Value = "2" };
-                yield return new SelectListItem() { Text = "Started", Value = "1" };
-                yield return new SelectListItem() { Text = "Not Started", Value = "0" };
+                yield return new SelectListItem() { Text = ReportReturnStatus.Submitted.ToDisplayString<ReportReturnStatus>(), Value = ((int)ReportReturnStatus.Submitted).ToString() };
+                yield return new SelectListItem() { Text = ReportReturnStatus.Started.ToDisplayString<ReportReturnStatus>(), Value = ((int)ReportReturnStatus.Started).ToString() };
+                yield return new SelectListItem() { Text = ReportReturnStatus.NotStarted.ToDisplayString<ReportReturnStatus>(), Value = ((int)ReportReturnStatus.NotStarted).ToString() };
             }
         }
 
