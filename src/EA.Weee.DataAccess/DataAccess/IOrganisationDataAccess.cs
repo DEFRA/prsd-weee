@@ -9,5 +9,7 @@
         Task<Organisation> GetBySchemeId(Guid schemeId);
 
         Task<Organisation> GetById(Guid organisationId);
+
+        Task Delete(Guid organisationId);
     }
 }

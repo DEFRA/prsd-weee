@@ -50,7 +50,7 @@
         </div>
         @if (Model.CanEdit)
         {
-            <div style="float:right" hidden="hidden">
+            <div style="float:right">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
             </div>
         }

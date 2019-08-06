@@ -31,5 +31,19 @@
 
             return organisation;
         }
+
+        public async Task Delete(Guid organisationId)
+        {
+            var organisation = await context.Organisations.FirstOrDefaultAsync(p => p.Id == organisationId);
+
+            if (organisation == null)
+            {
+                throw new ArgumentException($"Organisation not found with id {organisationId}");
+            }
+
+            context.Organisations.Remove(organisation);
+
+            await context.SaveChangesAsync();
+        }
     }
 }
