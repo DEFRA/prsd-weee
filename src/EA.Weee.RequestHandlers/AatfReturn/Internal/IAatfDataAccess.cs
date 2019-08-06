@@ -24,8 +24,6 @@
 
         Task<bool> DoesAatfOrganisationHaveActiveUsers(Guid aatfId);
 
-        Task DeleteAatf(Guid aatfId);
-
-        Task DeleteOrganisation(Guid organisationId);
+        Task RemoveAatf(Guid aatfId);
     }
 }

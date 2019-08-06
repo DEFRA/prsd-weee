@@ -386,6 +386,14 @@ p.important {
     min-height: 35px;
 }
 
+p.important-large {
+    @include govuk-font(19, $weight: bold);
+    padding-left: 50px;
+    background: url(govuk_frontend/images/icon-important.png) no-repeat 0% 50%;
+    background-size: 42px 42px;
+    min-height: 42px;
+}
+
 // 5. Data
 // ==========================================================================
 
