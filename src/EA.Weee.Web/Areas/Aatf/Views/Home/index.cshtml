@@ -1,9 +1,10 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ViewAATFContactDetailsListViewModel
-@{
-    ViewBag.Title = "Choose Activity - GOV.UK";
-}
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.HomeViewModel
 
 @section main_content
 {
@@ -13,17 +14,18 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "Index", controllerName: "ViewAATFContactDetailsList", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "Index", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAatfId)" id="ActivityOptions">
             @this.WeeeGds().RadioButtonsFor(
-                m => m.SelectedValue,
-                Model.PossibleValues,
-                "Which AATF would you like to view?",
+                m => m.SelectedAatfId,
+                Model.AatfList,
+                o => o.Id,
+                o => o.AatfContactDetailsName,
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>

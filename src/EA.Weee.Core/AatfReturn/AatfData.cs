@@ -55,5 +55,7 @@
         public Int16 ComplianceYear { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public string AatfContactDetailsName { get; set; }
     }
 }
