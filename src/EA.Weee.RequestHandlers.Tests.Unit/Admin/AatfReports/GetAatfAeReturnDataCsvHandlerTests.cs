@@ -4,233 +4,336 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Core.AatfReturn;
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
-    using EA.Prsd.Core;
-    using EA.Weee.Core.Admin;
+    using Domain.Lookup;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
+    using Prsd.Core.Helpers;
     using RequestHandlers.Admin.AatfReports;
     using RequestHandlers.Admin.Reports;
+    using RequestHandlers.Shared;
     using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 
     public class GetAatfAeReturnDataCsvHandlerTests
     {
-        [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_NotInternalUser_ThrowsSecurityException()
+        private readonly GetAatfAeReturnDataCsvHandler handler;
+        private readonly WeeeContext context;
+        private readonly CsvWriterFactory csvWriterFactory;
+        private readonly Fixture fixture;
+        private readonly IStoredProcedures storedProcedures;
+        private readonly ICommonDataAccess commonDataAccess;
+
+        public GetAatfAeReturnDataCsvHandlerTests()
         {
-            // Arrange
-            const int complianceYear = 2019;
+            context = A.Fake<WeeeContext>();
+            csvWriterFactory = A.Fake<CsvWriterFactory>();
+            fixture = new Fixture();
+            storedProcedures = A.Fake<IStoredProcedures>();
+            commonDataAccess = A.Fake<ICommonDataAccess>();
 
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+
+            handler = new GetAatfAeReturnDataCsvHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
+                context,
+                csvWriterFactory,
+                commonDataAccess);
+        }
+
+        [Fact]
+        public async Task HandleAsync_NotInternalUser_ThrowsSecurityException()
+        {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
+            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), fixture.Create<bool>());
 
-            // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
 
-            // Assert
             await Assert.ThrowsAsync<SecurityException>(action);
         }
 
         [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task HandleAsync_NoComplianceYear_ThrowsArgumentException()
         {
-            // Arrange
             const int complianceYear = 0;
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            var request = new GetAatfAeReturnDataCsv(complianceYear, fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), fixture.Create<bool>());
 
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
-
-            // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
 
-            // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_NoQuarter_ReturnsFileContent()
+        public async Task HandleAsync_VariousParameters_ReturnsFileContent()
         {
-            // Arrange
-            const int complianceYear = 2019;
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), fixture.Create<bool>());
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 0, FacilityType.Aatf, null, null, null, null, string.Empty);
-
-            // Act
             var data = await handler.HandleAsync(request);
 
-            // Assert
-            Assert.NotEmpty(data.FileContent);
+            data.FileContent.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_ReturnsFileName()
+        public async Task HandleAsync_GivenStoredProcedureReturnItems_MatchingFileContent()
         {
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-            int complianceYear = 2019;
-            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
-
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
-
-            // Act
-            CSVFileData data = await handler.HandleAsync(request);
-
-            // Assert
-            Assert.Contains("2019_Q1", data.FileName);
-            data.FileName.Should().Be("2019_Q1_Summary_of_AATF-AE returns to date_01022019_1101.csv");
-        }
-
-        [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_ComplianceYear_ReturnsFileContent()
-        {
-            // Arrange
-            const int complianceYear = 2019;
-
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, 1, FacilityType.Aatf, null, null, null, null, string.Empty);
-
-            // Act
-            var data = await handler.HandleAsync(request);
-
-            // Assert
-            Assert.NotEmpty(data.FileContent);
-        }
-
-        [Theory]
-        [InlineData(2019, 1, FacilityType.Aatf, null, null, null, null)]
-        [InlineData(2019, 2, FacilityType.Aatf, null, null, null, null)]
-        [InlineData(2019, 3, FacilityType.Aatf, null, null, null, null)]
-        [InlineData(2019, 4, FacilityType.Aatf, null, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Ae, null, null, null, null)]
-        [InlineData(2019, 2, FacilityType.Ae, null, null, null, null)]
-        [InlineData(2019, 3, FacilityType.Ae, null, null, null, null)]
-        [InlineData(2019, 4, FacilityType.Ae, null, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Aatf, 2, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Aatf, 1, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Aatf, 0, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Ae, 2, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Ae, 1, null, null, null)]
-        [InlineData(2019, 1, FacilityType.Ae, 0, null, null, null)]
-        public async Task GetAatfAeReturnDataCsvHandler_VariousParameters_ReturnsFileContent(int complianceYear, int quarter,
-            FacilityType facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
-        {
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, returnStatus, null, null, null, string.Empty);
-
-            // Act
-            var data = await handler.HandleAsync(request);
-
-            // Assert
-            Assert.NotEmpty(data.FileContent);
-        }
-
-        [Fact]
-        public async Task GetAatfAeReturnDataCSVHandler_Returns_MatchingFileContent()
-        {
-            const int complianceYear = 2019;
-            const int quarter = 1;
-            const FacilityType facilityType = FacilityType.Aatf;
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var storedProcedures = A.Fake<IStoredProcedures>();
-           
-            A.CallTo(() => context.StoredProcedures)
-                .Returns(storedProcedures);
+            var complianceYear = fixture.Create<int>();
+            var quarter = fixture.Create<int>();
+            var facilityType = fixture.Create<FacilityType>();
+            var returnStatus = fixture.Create<ReportReturnStatus>();
+            var authority = fixture.Create<Guid>();
+            var area = fixture.Create<Guid>();
+            var pat = fixture.Create<Guid>();
+            var resubmission = fixture.Create<bool>();
+            var aatf = fixture.Create<string>();
 
             var csvData1 = new AatfAeReturnData
             {
-                Name = "aatf1",
-                ApprovalNumber = "WEE/EE1234RR/ATF",
-                OrganisationName = "Test Org"
+                Name = fixture.Create<string>(),
+                ApprovalNumber = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
+                ReturnStatus = fixture.Create<string>(),
+                CreatedDate = fixture.Create<DateTime>(),
+                SubmittedBy = fixture.Create<string>(),
+                SubmittedDate = fixture.Create<DateTime>(),
+                CompetentAuthorityAbbr = fixture.Create<string>(),
+                ReSubmission = fixture.Create<string>()
             };
 
             var csvData2 = new AatfAeReturnData
             {
-                Name = "aatf12",
-                ApprovalNumber = "WEE/EE1234RR/ATF",
-                OrganisationName = "Test Org"
+                Name = fixture.Create<string>(),
+                ApprovalNumber = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
+                ReturnStatus = fixture.Create<string>(),
+                CreatedDate = fixture.Create<DateTime>(),
+                SubmittedBy = fixture.Create<string>(),
+                SubmittedDate = fixture.Create<DateTime>(),
+                CompetentAuthorityAbbr = fixture.Create<string>(),
+                ReSubmission = fixture.Create<string>()
             };
 
             var csvData3 = new AatfAeReturnData
             {
-                Name = "aatf3",
-                ApprovalNumber = "WEE/EE1234RR/ATF",
-                OrganisationName = "Test Org"
+                Name = fixture.Create<string>(),
+                ApprovalNumber = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
+                ReturnStatus = fixture.Create<string>(),
+                CreatedDate = fixture.Create<DateTime>(),
+                SubmittedBy = fixture.Create<string>(),
+                SubmittedDate = fixture.Create<DateTime>(),
+                CompetentAuthorityAbbr = fixture.Create<string>(),
+                ReSubmission = fixture.Create<string>()
             };
 
-            A.CallTo(() => storedProcedures
-            .GetAatfAeReturnDataCsvData(A<int>._, A<int>._, A<int>._, null, null, null, null))
+            A.CallTo(() => storedProcedures.GetAatfAeReturnDataCsvData(complianceYear, quarter, (int)facilityType, (int)returnStatus, authority, area, pat, resubmission))
             .Returns(new List<AatfAeReturnData> { csvData1, csvData2, csvData3 });
 
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null, string.Empty);
+            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, returnStatus, authority, pat, area, aatf, resubmission);
 
-            // Act
             var data = await handler.HandleAsync(request);
-            data.FileContent.Should().Contain("aatf1,WEE/EE1234RR/ATF,Test Org,,,,,");
-            data.FileContent.Should().Contain("aatf12,WEE/EE1234RR/ATF,Test Org,,,,,");
-            data.FileContent.Should().Contain("aatf3,WEE/EE1234RR/ATF,Test Org,,,,,");
+
+            data.FileContent.Should().Contain("Name of AATF / AE,Approval number,Organisation name,Submission status,Date created (GMT),Date submitted (GMT),Submitted by,Appropriate authority,First submission / resubmission,");
+            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission}");
+            data.FileContent.Should().Contain($"{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.OrganisationName},{csvData2.ReturnStatus},{csvData2.CreatedDate},{csvData2.SubmittedDate},{csvData2.SubmittedBy},{csvData2.CompetentAuthorityAbbr},{csvData2.ReSubmission}");
+            data.FileContent.Should().Contain($"{csvData3.Name},{csvData3.ApprovalNumber},{csvData3.OrganisationName},{csvData3.ReturnStatus},{csvData3.CreatedDate},{csvData3.SubmittedDate},{csvData3.SubmittedBy},{csvData3.CompetentAuthorityAbbr},{csvData3.ReSubmission}");
         }
 
         [Fact]
         public async Task GetAatfAeReturnDataCSVHandler_Sets_URL()
         {
-            const int complianceYear = 2019;
-            const int quarter = 1;
-            const FacilityType facilityType = FacilityType.Aatf;
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var storedProcedures = A.Fake<IStoredProcedures>();
-
-            A.CallTo(() => context.StoredProcedures)
-                .Returns(storedProcedures);
-
             var csvData1 = new AatfAeReturnData
             {
-                AatfId = new Guid(),
-                Name = "aatf1",
-                ApprovalNumber = "WEE/EE1234RR/ATF",
-                OrganisationName = "Test Org"
+                Name = fixture.Create<string>(),
+                ApprovalNumber = fixture.Create<string>(),
+                OrganisationName = fixture.Create<string>(),
+                ReturnStatus = fixture.Create<string>(),
+                CreatedDate = fixture.Create<DateTime>(),
+                SubmittedBy = fixture.Create<string>(),
+                SubmittedDate = fixture.Create<DateTime>(),
+                CompetentAuthorityAbbr = fixture.Create<string>(),
+                ReSubmission = fixture.Create<string>()
             };
 
             A.CallTo(() => storedProcedures
-            .GetAatfAeReturnDataCsvData(A<int>._, A<int>._, A<int>._, null, null, null, null))
-            .Returns(new List<AatfAeReturnData> { csvData1 });
+            .GetAatfAeReturnDataCsvData(A<int>._, A<int>._, A<int>._, A<int>._, A<Guid>._, A<Guid>._, A<Guid>._, A<bool>._)).Returns(new List<AatfAeReturnData> { csvData1 });
 
-            var handler = new GetAatfAeReturnDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
-            var request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, null, null, null, null, "https://localhost:44300/admin/aatf/details/");
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), "https://localhost:44300/admin/aatf/details/", fixture.Create<bool>());
 
-            var url1 = $@" =HYPERLINK(""""{request.AatfDataUrl}{csvData1.AatfId}#data"""", """"View AATF data"""")";
+            var url1 = $@"""=HYPERLINK(""""{request.AatfDataUrl}{csvData1.AatfId}#data"""", """"View AATF / AE data"""")";
+
             var data = await handler.HandleAsync(request);
-            data.FileContent.Contains(url1);
+
+            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission},{url1}");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMandatoryParameters_FileNameShouldBeCorrect()
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, null, fixture.Create<string>(), false);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_Exclude resubmissions_{request.FacilityType.ToString().ToUpper()}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndIncludeResubmissions_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, null, fixture.Create<string>(), includeResubmissions);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.Submitted)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.Submitted)]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.NotStarted)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.NotStarted)]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.Started)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.Started)]
+        public async Task HandleAsync_GivenMandatoryParametersAndSubmissionStatus_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions, ReportReturnStatus status)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), status, null, null, null, fixture.Create<string>(), includeResubmissions);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndAuthority_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), null, null, fixture.Create<string>(), includeResubmissions);
+
+            var ca = fixture.Create<EA.Weee.Domain.UKCompetentAuthority>();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{ca.Abbreviation}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndPanArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), null, fixture.Create<string>(), includeResubmissions);
+
+            var panArea = fixture.Create<PanArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Returns(panArea);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{panArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        [InlineData("Exclude resubmissions", false)]
+        [InlineData("Include resubmissions", true)]
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+
+            var localArea = fixture.Create<LocalArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Returns(localArea);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.Submitted)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.Submitted)]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.NotStarted)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.NotStarted)]
+        [InlineData("Exclude resubmissions", false, ReportReturnStatus.Started)]
+        [InlineData("Include resubmissions", true, ReportReturnStatus.Started)]
+        public async Task HandleAsync_GivenMandatoryParametersAndAllOptionalParameters_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions, ReportReturnStatus status)
+        {
+            var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), status, fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
+
+            var ca = fixture.Create<EA.Weee.Domain.UKCompetentAuthority>();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
+
+            var localArea = fixture.Create<LocalArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Returns(localArea);
+
+            var panArea = fixture.Create<PanArea>();
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Returns(panArea);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
         }
     }
 }
