@@ -201,7 +201,7 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewAATFContactDetails)
                 {
-                    return AatfRedirect.AatfContactDetails(viewModel.OrganisationId);
+                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId });
                 }
             }
 

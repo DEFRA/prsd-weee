@@ -1,8 +1,7 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
+﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using EA.Weee.Api.Client;
-    using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -14,13 +13,13 @@
     using System.Web;
     using System.Web.Mvc;
 
-    public class ViewAATFContactDetailsListController : AatfReturnBaseController
+    public class ViewAatfContactDetails : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ViewAATFContactDetailsListController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
+        public ViewAatfContactDetails(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
@@ -28,25 +27,11 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
-                var aatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-
-                if (aatfs.Count > 1)
-                {
-                    // Redirect to view contact details
-                }
-
-                var activities = new List<string>();
-
-                foreach (var aatf in aatfs)
-                {
-                    activities.Add(aatf.Name + "(" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus);
-                }
-
-                var model = new ViewAATFContactDetailsListViewModel(activities) { OrganisationId = organisationId, AatfList = aatfs };
+                var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId };
 
                 await SetBreadcrumb(model.OrganisationId, null, false);
 
@@ -56,7 +41,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ViewAATFContactDetailsListViewModel model)
+        public virtual async Task<ActionResult> Index(ViewAatfContactDetailsViewModel model)
         {
             if (ModelState.IsValid)
             {

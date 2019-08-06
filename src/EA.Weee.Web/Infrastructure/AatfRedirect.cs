@@ -20,7 +20,6 @@
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
         public static string OrganisationRouteName = "aatf-organisation";
-        public static string AatfContactDetailsRoute = "aatf-contact-details";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -120,11 +119,6 @@
         public static RedirectToRouteResult NonObligated(Guid returnId, bool dcf)
         {
             return new RedirectToRouteResult((dcf) ? NonObligatedDcfRouteName : NonObligatedRouteName, new RouteValueDictionary(new { returnId = returnId, dcf = dcf }));
-        }
-
-        public static RedirectToRouteResult AatfContactDetails(Guid organisationId)
-        {
-            return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "ViewAATFContactDetailsList", action = "Index", organisationId = organisationId }));
         }
     }
 }
