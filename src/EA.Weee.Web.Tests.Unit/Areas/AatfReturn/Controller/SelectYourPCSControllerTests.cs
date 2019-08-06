@@ -120,6 +120,30 @@
         }
 
         [Fact]
+        public async void IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+            await controller.Index(organisationId, returnId, true);
+            SystemTime.Unfreeze();
+
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
+        }
+    
+        [Fact]
         public async void IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
         {
             Guid returnId = Guid.NewGuid();
