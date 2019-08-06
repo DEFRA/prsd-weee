@@ -78,18 +78,18 @@
            var fileName = string.Format("{0}", request.ComplianceYear);
             if (request.AuthorityId != null)
             {
-                fileName += " " + authority.Abbreviation;
+                fileName += "_" + authority.Abbreviation;
             }
             if (request.PanArea != null)
             {
-                fileName += " " + panArea.Name;
+                fileName += "_" + panArea.Name;
             }
             if (!string.IsNullOrEmpty(request.ObligationType))
             {
-                fileName += " " + request.ObligationType;
+                fileName += "_" + request.ObligationType;
             }
 
-            fileName += " View obligated WEEE data" + string.Format(" {0:ddMMyyyy} {0:HHmm}.csv",
+            fileName += "_View obligated WEEE data" + string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
                                 SystemTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
