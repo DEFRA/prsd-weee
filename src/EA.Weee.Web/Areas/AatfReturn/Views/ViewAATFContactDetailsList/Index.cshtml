@@ -1,1 +1,33 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.ViewAATFContactDetailsListViewModel
+@{
+    ViewBag.Title = "Choose Activity - GOV.UK";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Which AATF would you like to view?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "Index", controllerName: "ViewAATFContactDetailsList", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Which AATF would you like to view?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}
