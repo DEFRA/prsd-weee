@@ -69,7 +69,8 @@
             {
                 Contact = contact,
                 Organisation = organisation,
-                FacilityType = facilityType
+                FacilityType = facilityType,
+                AatfId = source.AatfId
             };
         }
     }

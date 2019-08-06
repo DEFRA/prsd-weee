@@ -12,6 +12,8 @@
     {
         public Guid Id { get; set; }
 
+        public Guid AatfId { get; set; }
+
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public abstract string Name { get; set; }
