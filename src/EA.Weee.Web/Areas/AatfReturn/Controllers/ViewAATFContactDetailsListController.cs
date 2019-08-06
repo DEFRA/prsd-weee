@@ -14,18 +14,25 @@
     using System.Web;
     using System.Web.Mvc;
 
-    public class ViewAATFContactDetailsListController : ExternalSiteController
+    public class ViewAATFContactDetailsListController : AatfReturnBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
+        public ViewAATFContactDetailsListController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
+        {
+            this.apiClient = client;
+            this.breadcrumb = breadcrumb;
+            this.cache = cache;
+        }
+
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid orgId)
+        public virtual async Task<ActionResult> Index(Guid organisationId)
         {
             using (var client = apiClient())
             {
-                var aatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(orgId));
+                var aatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
                 if (aatfs.Count > 1)
                 {
@@ -39,7 +46,7 @@
                     activities.Add(aatf.Name + "(" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus);
                 }
 
-                var model = new ViewAATFContactDetailsListViewModel(activities) { OrganisationId = orgId, AatfList = aatfs };
+                var model = new ViewAATFContactDetailsListViewModel(activities) { OrganisationId = organisationId, AatfList = aatfs };
 
                 await SetBreadcrumb(model.OrganisationId, null, false);
 
