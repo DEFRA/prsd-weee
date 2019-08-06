@@ -42,11 +42,9 @@
         {
             if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.HasActiveUsers))
             {
-                <div>
-                    <p>
-                        There are active users associated with @Model.AatfName. By continuing, you will be removing all record of this @facilityType, including contact details and entries in the return tasklist.
-                    </p>
-                </div>
+                <p class="important-large">
+                    Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
+                </p>
             }
 
             if (Model.CanDeleteFlags.HasFlag(CanAatfBeDeletedFlags.OrganisationHasMoreAatfs))

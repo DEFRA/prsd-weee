@@ -15,17 +15,23 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Xunit;
 
     public class DeleteAatfHandlerTests
     {
-        private readonly IAatfDataAccess dataAccess;
-        private readonly IWeeeAuthorization authorization;
+        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
+        private readonly DeleteAatfHandler handler;
 
         public DeleteAatfHandlerTests()
         {
-            this.authorization = A.Fake<IWeeeAuthorization>();
-            this.dataAccess = A.Fake<IAatfDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+
+            handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
+                aatfDataAccess,
+                organisationDataAccess);
         }
 
         [Theory]
@@ -34,10 +40,10 @@
         [InlineData(AuthorizationBuilder.UserType.External)]
         public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
-            UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
+            var authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            var userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
+            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -47,14 +53,13 @@
         [Fact]
         public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
         {
-            IWeeeAuthorization authorization = new AuthorizationBuilder()
+            var authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
 
-            UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
-
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
+            var userManager = A.Fake<UserManager<ApplicationUser>>();
+            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -66,24 +71,22 @@
         [InlineData(false)]
         public async void HandleAsync_DeletesAatfAndOrgIfNoOtherAatfsOnOrg(bool orgHasOtherAatfs)
         {
-            Guid aatfId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => dataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(orgHasOtherAatfs);
-
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
+            A.CallTo(() => aatfDataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(orgHasOtherAatfs);
 
             await handler.HandleAsync(new DeleteAnAatf(aatfId, organisationId));
 
-            A.CallTo(() => dataAccess.DeleteAatf(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => aatfDataAccess.RemoveAatf(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
 
             if (!orgHasOtherAatfs)
             {
-                A.CallTo(() => dataAccess.DeleteOrganisation(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => organisationDataAccess.Delete(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
             }
             else
             {
-                A.CallTo(() => dataAccess.DeleteOrganisation(organisationId)).MustNotHaveHappened();
+                A.CallTo(() => organisationDataAccess.Delete(organisationId)).MustNotHaveHappened();
             }
         }
     }

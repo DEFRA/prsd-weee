@@ -24,16 +24,16 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            CanAatfBeDeletedFlags result = new CanAatfBeDeletedFlags();
+            var result = new CanAatfBeDeletedFlags();
 
-            bool hasData = await dataAccess.DoesAatfHaveData(message.AatfId);
+            var hasData = await dataAccess.DoesAatfHaveData(message.AatfId);
 
             if (hasData)
             {
                 result |= CanAatfBeDeletedFlags.HasData;
             }
 
-            bool orgHasMoreAatfs = await dataAccess.DoesAatfOrganisationHaveMoreAatfs(message.AatfId);
+            var orgHasMoreAatfs = await dataAccess.DoesAatfOrganisationHaveMoreAatfs(message.AatfId);
 
             if (orgHasMoreAatfs)
             {
@@ -45,7 +45,7 @@
                 result |= CanAatfBeDeletedFlags.Yes;
             }
 
-            bool orgHasActiveUsers = await dataAccess.DoesAatfOrganisationHaveActiveUsers(message.AatfId);
+            var orgHasActiveUsers = await dataAccess.DoesAatfOrganisationHaveActiveUsers(message.AatfId);
 
             if (orgHasActiveUsers)
             {

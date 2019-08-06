@@ -86,18 +86,18 @@
 
         public async Task<bool> DoesAatfOrganisationHaveActiveUsers(Guid aatfId)
         {
-            Aatf aatf = await this.GetAatfById(aatfId);
+            var aatf = await this.GetAatfById(aatfId);
 
-            Guid organisationId = aatf.Organisation.Id;
+            var organisationId = aatf.Organisation.Id;
 
             return await context.OrganisationUsers.CountAsync(p => p.OrganisationId == organisationId) > 0;
         }
 
         public async Task<bool> DoesAatfOrganisationHaveMoreAatfs(Guid aatfId)
         {
-            Aatf aatf = await this.GetAatfById(aatfId);
+            var aatf = await this.GetAatfById(aatfId);
 
-            Guid organisationId = aatf.Organisation.Id;
+            var organisationId = aatf.Organisation.Id;
 
             return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId) > 1;
         }
@@ -107,20 +107,11 @@
             return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task DeleteAatf(Guid aatfId)
+        public async Task RemoveAatf(Guid aatfId)
         {
-            Aatf aatf = await this.GetAatfById(aatfId);
+            var aatf = await this.GetAatfById(aatfId);
 
             context.Aatfs.Remove(aatf);
-
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeleteOrganisation(Guid organisationId)
-        {
-            Organisation organisation = await context.Organisations.FirstOrDefaultAsync(p => p.Id == organisationId);
-
-            context.Organisations.Remove(organisation);
 
             await context.SaveChangesAsync();
         }
