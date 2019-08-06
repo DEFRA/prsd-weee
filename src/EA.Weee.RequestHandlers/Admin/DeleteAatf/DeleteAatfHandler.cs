@@ -10,16 +10,21 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class DeleteAatfHandler : IRequestHandler<DeleteAnAatf, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfDataAccess dataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public DeleteAatfHandler(IWeeeAuthorization authorization, IAatfDataAccess dataAccess)
+        public DeleteAatfHandler(IWeeeAuthorization authorization, 
+            IAatfDataAccess aatfDataAccess, 
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
-            this.dataAccess = dataAccess;
+            this.aatfDataAccess = aatfDataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
         public async Task<bool> HandleAsync(DeleteAnAatf message)
@@ -27,13 +32,13 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            bool deleteOrganisation = await dataAccess.DoesAatfOrganisationHaveMoreAatfs(message.AatfId);
+            var deleteOrganisation = await aatfDataAccess.DoesAatfOrganisationHaveMoreAatfs(message.AatfId);
 
-            await dataAccess.DeleteAatf(message.AatfId);
+            await aatfDataAccess.RemoveAatf(message.AatfId);
 
             if (!deleteOrganisation)
             {
-                await dataAccess.DeleteOrganisation(message.OrganisationId);
+                await organisationDataAccess.Delete(message.OrganisationId);
             }
 
             return true;
