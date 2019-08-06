@@ -589,7 +589,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
     <Content Include="Content\remove-site.css" />
-    <Content Include="Content\Site.css" />
+    <None Include="Content\weee-returns-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -1467,6 +1467,7 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-mobile.scss &gt; Content\weee-returns-mobile.css" />
     <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
@@ -1479,6 +1480,9 @@
     </CreateItem>
     <CreateItem Include="Content\weee-page-ie8.css">
       <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-returns-mobile.css">
+        <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
   <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
