@@ -8,6 +8,7 @@
     using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using Domain.Scheme;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
@@ -16,6 +17,10 @@
     using Xunit;
     using Contact = Domain.Organisation.Contact;
     using Organisation = Domain.Organisation.Organisation;
+    using Scheme = Domain.Scheme.Scheme;
+    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
+    using WeeeReused = Domain.AatfReturn.WeeeReused;
+    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
 
     public class GetAatfAeReturnDataCsvDataTests
     {
@@ -71,7 +76,7 @@
                 record.ReturnStatus.Should().Be("Not Started");
                 record.SubmittedBy.Should().BeNullOrWhiteSpace();
                 record.SubmittedDate.Should().BeNull();
-                record.ReSubmission.Should().Be("first submission");
+                record.ReSubmission.Should().Be("First submission");
             }
         }
 
@@ -114,7 +119,7 @@
                 initialSubmission.ReturnStatus.Should().Be("Submitted");
                 initialSubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                 initialSubmission.SubmittedDate.Should().Be(date);
-                initialSubmission.ReSubmission.Should().Be("first submission");
+                initialSubmission.ReSubmission.Should().Be("First submission");
 
                 var resubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(1);
                 resubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
@@ -125,12 +130,79 @@
                 resubmission.ReturnStatus.Should().Be("Started");
                 resubmission.SubmittedBy.Should().BeNullOrWhiteSpace();
                 resubmission.SubmittedDate.Should().BeNull();
-                resubmission.ReSubmission.Should().Be("resubmission");
+                resubmission.ReSubmission.Should().Be("Resubmission");
 
                 SystemTime.Unfreeze();
             }
         }
 
+        [Fact]
+        public async Task Execute_GivenAatfWithApprovalDateExpectedToReportAndResubmissionCreatedAndResubmissionsRequestedWithReturnsWithVarietyOfData_RecordDataIsAsExpected()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var date = new DateTime(2019, 1, 1, 11, 10, 1);
+                SystemTime.Freeze(date);
+
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var aatf = new Aatf(fixture.Create<string>(), GetAuthority(db), fixture.Create<string>().Substring(0, 10), AatfStatus.Approved, organisation, ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), AatfSize.Large, Convert.ToDateTime("01/02/2019"), ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, db.WeeeContext.LocalAreas.First(), db.WeeeContext.PanAreas.First());
+
+                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf, 2019,
+                    QuarterType.Q1);
+
+                db.WeeeContext.WeeeSentOn.Add(new WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db),
+                    ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return));
+                db.WeeeContext.WeeeReceived.Add(new WeeeReceived(new Scheme(organisation), aatf, @return));
+                db.WeeeContext.WeeeReused.Add(new WeeeReused(aatf, @return));
+
+                @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
+
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf, 2019,
+                    QuarterType.Q1);
+
+                db.WeeeContext.WeeeSentOn.Add(new WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db),
+                    ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return2));
+                db.WeeeContext.WeeeReceived.Add(new WeeeReceived(new Scheme(organisation), aatf, @return2));
+                db.WeeeContext.WeeeReused.Add(new WeeeReused(aatf, @return2));
+
+                @return2.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
+
+                db.WeeeContext.Aatfs.Add(aatf);
+                db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.Returns.Add(@return2);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetAatfAeReturnDataCsvData(2019, 1,
+                    1, null, null, null, null, true);
+
+                var initialSubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(0);
+                initialSubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
+                initialSubmission.CompetentAuthorityAbbr.Should().Be("EA");
+                initialSubmission.Name.Should().Be(aatf.Name);
+                initialSubmission.OrganisationName.Should().Be(organisation.OrganisationName);
+                initialSubmission.CreatedDate.Should().Be(date);
+                initialSubmission.ReturnStatus.Should().Be("Submitted");
+                initialSubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
+                initialSubmission.SubmittedDate.Should().Be(date);
+                initialSubmission.ReSubmission.Should().Be("First submission");
+
+                var resubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(1);
+                resubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
+                resubmission.CompetentAuthorityAbbr.Should().Be("EA");
+                resubmission.Name.Should().Be(aatf.Name);
+                resubmission.OrganisationName.Should().Be(organisation.OrganisationName);
+                resubmission.CreatedDate.Should().Be(date);
+                resubmission.ReturnStatus.Should().Be("Submitted");
+                resubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
+                resubmission.SubmittedDate.Should().Be(date);
+                resubmission.ReSubmission.Should().Be("Resubmission");
+
+                SystemTime.Unfreeze();
+            }
+        }
         [Fact]
         public async Task Execute_GivenAatfWithApprovalDateExpectedToReportAndResubmissionSubmittedAndResubmissionsRequested_RecordDataIsAsExpected()
         {
@@ -174,7 +246,7 @@
                 initialSubmission.ReturnStatus.Should().Be("Submitted");
                 initialSubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                 initialSubmission.SubmittedDate.Should().Be(date1);
-                initialSubmission.ReSubmission.Should().Be("first submission");
+                initialSubmission.ReSubmission.Should().Be("First submission");
 
                 var resubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(1);
                 resubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
@@ -185,7 +257,7 @@
                 resubmission.ReturnStatus.Should().Be("Submitted");
                 resubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                 resubmission.SubmittedDate.Should().Be(date2);
-                resubmission.ReSubmission.Should().Be("resubmission");
+                resubmission.ReSubmission.Should().Be("Resubmission");
 
                 SystemTime.Unfreeze();
             }
@@ -229,7 +301,7 @@
                 initialSubmission.ReturnStatus.Should().Be("Submitted");
                 initialSubmission.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                 initialSubmission.SubmittedDate.Should().Be(date);
-                initialSubmission.ReSubmission.Should().Be("first submission");
+                initialSubmission.ReSubmission.Should().Be("First submission");
 
                 SystemTime.Unfreeze();
             }
@@ -267,7 +339,7 @@
                 record.ReturnStatus.Should().Be("Started");
                 record.SubmittedBy.Should().BeNullOrWhiteSpace();
                 record.SubmittedDate.Should().BeNull();
-                record.ReSubmission.Should().Be("first submission");
+                record.ReSubmission.Should().Be("First submission");
 
                 SystemTime.Unfreeze();
             }
@@ -308,7 +380,7 @@
                 record.ReturnStatus.Should().Be("Submitted");
                 record.SubmittedBy.Should().Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                 record.SubmittedDate.Should().Be(date);
-                record.ReSubmission.Should().Be("first submission");
+                record.ReSubmission.Should().Be("First submission");
 
                 SystemTime.Unfreeze();
             }
