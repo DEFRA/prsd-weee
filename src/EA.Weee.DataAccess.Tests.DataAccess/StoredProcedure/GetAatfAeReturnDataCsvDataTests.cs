@@ -97,8 +97,12 @@
 
                 @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
 
+                SystemTime.Unfreeze();
+
+                SystemTime.Freeze(date.Date.AddDays(1));
                 var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf, 2019,
                     QuarterType.Q1);
+                SystemTime.Unfreeze();
 
                 db.WeeeContext.Aatfs.Add(aatf);
                 db.WeeeContext.Returns.Add(@return);
@@ -111,6 +115,7 @@
                     1, null, null, null, null, true);
 
                 var initialSubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(0);
+                
                 initialSubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
                 initialSubmission.CompetentAuthorityAbbr.Should().Be("EA");
                 initialSubmission.Name.Should().Be(aatf.Name);
@@ -122,17 +127,16 @@
                 initialSubmission.ReSubmission.Should().Be("First submission");
 
                 var resubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(1);
+                
                 resubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
                 resubmission.CompetentAuthorityAbbr.Should().Be("EA");
                 resubmission.Name.Should().Be(aatf.Name);
                 resubmission.OrganisationName.Should().Be(organisation.OrganisationName);
-                resubmission.CreatedDate.Should().Be(date);
+                resubmission.CreatedDate.Should().Be(date.Date.AddDays(1));
                 resubmission.ReturnStatus.Should().Be("Started");
                 resubmission.SubmittedBy.Should().BeNullOrWhiteSpace();
                 resubmission.SubmittedDate.Should().BeNull();
                 resubmission.ReSubmission.Should().Be("Resubmission");
-
-                SystemTime.Unfreeze();
             }
         }
 
