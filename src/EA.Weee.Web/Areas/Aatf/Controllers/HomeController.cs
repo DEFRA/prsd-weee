@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
@@ -28,25 +29,47 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, bool isAE)
         {
             using (var client = apiClient())
             {
-                var aatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                var selectedAatfsOrAes = new List<AatfData>();
 
-                if (aatfs.Count == 1)
+                if (isAE)
                 {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = aatfs[0].Id });
+                    foreach (var aatf in allAatfsAndAes)
+                    {
+                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
+                        {
+                            selectedAatfsOrAes.Add(aatf);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var aatf in allAatfsAndAes)
+                    {
+                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
+                        {
+                            selectedAatfsOrAes.Add(aatf);
+                        }
+                    }
+                }
+
+                if (selectedAatfsOrAes.Count == 1)
+                {
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = selectedAatfsOrAes[0].Id });
                 }
 
                 var activities = new List<string>();
 
-                foreach (var aatf in aatfs)
+                foreach (var aatf in selectedAatfsOrAes)
                 {
                     aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
                 }
 
-                var model = new HomeViewModel() { OrganisationId = organisationId, AatfList = aatfs };
+                var model = new HomeViewModel() { OrganisationId = organisationId, AatfList = selectedAatfsOrAes };
 
                 await SetBreadcrumb(model.OrganisationId, null, false);
 
@@ -60,7 +83,7 @@
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = model.OrganisationId});
+                return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId});
             }
 
             await SetBreadcrumb(model.OrganisationId, null, false);

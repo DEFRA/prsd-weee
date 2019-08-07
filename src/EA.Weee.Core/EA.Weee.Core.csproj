@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
+    <Compile Include="Aatf\AatfDataExternal.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />

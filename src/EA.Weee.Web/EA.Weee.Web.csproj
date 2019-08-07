@@ -327,7 +327,7 @@
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Aatf\Controllers\ViewAatfContactDetails.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ViewAatfContactDetailsController.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewAatfContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />

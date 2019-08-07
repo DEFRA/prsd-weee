@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Aatf;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
@@ -13,13 +15,13 @@
     using System.Web;
     using System.Web.Mvc;
 
-    public class ViewAatfContactDetails : ExternalSiteController
+    public class ViewAatfContactDetailsController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public ViewAatfContactDetails(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
+        public ViewAatfContactDetailsController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
@@ -31,7 +33,9 @@
         {
             using (var client = apiClient())
             {
-                var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId };
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
+
+                var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId, Contact = aatf.Contact, AatfName = aatf.Name };
 
                 await SetBreadcrumb(model.OrganisationId, null, false);
 
