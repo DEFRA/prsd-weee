@@ -15,6 +15,7 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess;
     using DataAccess.DataAccess;
     using Xunit;
 
@@ -23,15 +24,18 @@
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly DeleteAatfHandler handler;
+        private readonly WeeeContext weeeContext;
 
         public DeleteAatfHandlerTests()
         {
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+            weeeContext = A.Fake<WeeeContext>();
 
             handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
                 aatfDataAccess,
-                organisationDataAccess);
+                organisationDataAccess,
+                weeeContext);
         }
 
         [Theory]
@@ -43,7 +47,7 @@
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
             var userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess);
+            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess, weeeContext);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -59,7 +63,7 @@
                 .Build();
 
             var userManager = A.Fake<UserManager<ApplicationUser>>();
-            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess);
+            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess, weeeContext);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -74,7 +78,7 @@
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => aatfDataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(orgHasOtherAatfs);
+            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId)).Returns(orgHasOtherAatfs);
 
             await handler.HandleAsync(new DeleteAnAatf(aatfId, organisationId));
 
