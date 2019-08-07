@@ -11,5 +11,9 @@
         Task<Organisation> GetById(Guid organisationId);
 
         Task Delete(Guid organisationId);
+
+        Task<bool> HasActiveUsers(Guid organisationId);
+
+        Task<bool> HasReturns(Guid organisationId, int year);
     }
 }

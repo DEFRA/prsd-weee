@@ -4,12 +4,12 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Organisation;
-
+    
     public class AatfDataAccess : IAatfDataAccess
     {
         private readonly WeeeContext context;
@@ -77,43 +77,40 @@
             return context.SaveChangesAsync();
         }
 
-        public async Task<bool> DoesAatfHaveData(Guid aatfId)
+        public async Task<bool> HasAatfData(Guid aatfId)
         {
             return await context.WeeeSentOn.CountAsync(p => p.AatfId == aatfId) > 0
                 || await context.WeeeReused.CountAsync(p => p.AatfId == aatfId) > 0
                 || await context.WeeeReceived.CountAsync(p => p.AatfId == aatfId) > 0;
         }
 
-        public async Task<bool> DoesAatfOrganisationHaveActiveUsers(Guid aatfId)
+        public async Task<bool> HasAatfOrganisationOtherEntities(Guid aatfId)
         {
-            var aatf = await this.GetAatfById(aatfId);
+            var aatf = await GetAatfById(aatfId);
 
             var organisationId = aatf.Organisation.Id;
 
-            return await context.OrganisationUsers.CountAsync(p => p.OrganisationId == organisationId) > 0;
-        }
-
-        public async Task<bool> DoesAatfOrganisationHaveMoreAatfs(Guid aatfId)
-        {
-            var aatf = await this.GetAatfById(aatfId);
-
-            var organisationId = aatf.Organisation.Id;
-
-            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId) > 1;
+            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId) > 1
+                || await context.Schemes.CountAsync(s => s.OrganisationId == organisationId) > 0;
         }
 
         private async Task<Aatf> GetAatfById(Guid id)
         {
+            var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
+            
+            if (aatf == null)
+            {
+                throw new ArgumentException($"Aatf with id {id} not found");
+            }
+
             return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task RemoveAatf(Guid aatfId)
         {
-            var aatf = await this.GetAatfById(aatfId);
+            var aatf = await GetAatfById(aatfId);
 
             context.Aatfs.Remove(aatf);
-
-            await context.SaveChangesAsync();
         }
     }
 }

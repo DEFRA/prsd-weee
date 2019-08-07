@@ -1117,7 +1117,7 @@
         [Fact]
         public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
         {
-            CanAatfBeDeletedFlags canDelete = CanAatfBeDeletedFlags.HasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasMoreAatfs;
+            CanAatfBeDeletedFlags canDelete = CanAatfBeDeletedFlags.OrganisationHasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasOtherEntities;
             Guid aatfId = Guid.NewGuid();
             Guid organisationId = Guid.NewGuid();
             FacilityType facilityType = FacilityType.Aatf;
@@ -1137,7 +1137,7 @@
             Assert.Equal(aatfId, viewModel.AatfId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(facilityType, viewModel.FacilityType);
-            Assert.Equal(canDelete, viewModel.CanDeleteFlags);
+            Assert.Equal(canDelete, viewModel.DeletionData);
             Assert.Equal(orgName, viewModel.OrganisationName);
             Assert.Equal(aatfName, viewModel.AatfName);
 
@@ -1174,7 +1174,7 @@
                 AatfId = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
                 FacilityType = FacilityType.Aatf,
-                CanDeleteFlags = CanAatfBeDeletedFlags.HasActiveUsers
+                DeletionData = CanAatfBeDeletedFlags.OrganisationHasActiveUsers
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId)));
