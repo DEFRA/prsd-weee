@@ -167,42 +167,11 @@
             A.CallTo(() => context.WeeeReused).Returns(dbContextHelper.GetAsyncEnabledDbSet(weeeReused));
             A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(weeeSentOn));
 
-            var result = await dataAccess.DoesAatfHaveData(aatfId);
+            var result = await dataAccess.HasAatfData(aatfId);
 
             Assert.Equal(expectedResult, result);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void DoesAatfOrganisationHaveActiveUsers_ReturnsResultBasedOnActiveUsers(bool hasActiveUsers)
-        {
-            var aatfId = Guid.NewGuid();
-            var organisationId = Guid.NewGuid();
-
-            var organisation = A.Fake<Organisation>();
-            A.CallTo(() => organisation.Id).Returns(organisationId);
-
-            var aatf = A.Fake<Aatf>();
-            A.CallTo(() => aatf.Id).Returns(aatfId);
-            A.CallTo(() => aatf.Organisation).Returns(organisation);
-
-            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
-
-            var organisationUsers = new List<OrganisationUser>();
-            if (hasActiveUsers)
-            {
-                var user = A.Fake<OrganisationUser>();
-                A.CallTo(() => user.OrganisationId).Returns(organisationId);
-                organisationUsers.Add(user);
-            }
-
-            A.CallTo(() => context.OrganisationUsers).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisationUsers));
-
-            var result = await dataAccess.DoesAatfOrganisationHaveActiveUsers(aatfId);
-
-            Assert.Equal(hasActiveUsers, result);
-        }
 
         [Theory]
         [InlineData(true)]
@@ -233,7 +202,7 @@
 
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
 
-            var result = await dataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId);
+            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
 
             Assert.Equal(hasOtherAatfs, result);
         }

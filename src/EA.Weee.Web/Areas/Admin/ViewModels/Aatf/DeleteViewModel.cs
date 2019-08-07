@@ -10,7 +10,7 @@
 
         public Guid OrganisationId { get; set; }
 
-        public CanAatfBeDeletedFlags CanDeleteFlags { get; set; }
+        public AatfDeletionData DeletionData { get; set; }
 
         public FacilityType FacilityType { get; set; }
 
