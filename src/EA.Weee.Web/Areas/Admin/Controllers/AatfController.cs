@@ -241,7 +241,7 @@
 
             using (var client = apiClient())
             {
-                var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id, organisationId));
+                var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
 
                 var viewModel = new DeleteViewModel()
                 {

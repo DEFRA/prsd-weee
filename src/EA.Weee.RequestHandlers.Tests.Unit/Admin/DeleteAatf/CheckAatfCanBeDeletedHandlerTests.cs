@@ -22,15 +22,18 @@
         private readonly IGetAatfDeletionStatus aatfDeletionStatus;
         private readonly IGetOrganisationDeletionStatus organisationDeletionStatus;
         private readonly CheckAatfCanBeDeletedHandler handler;
+        private readonly IAatfDataAccess aatfDataAccess;
 
         public CheckAatfCanBeDeletedHandlerTests()
         {
             aatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
             organisationDeletionStatus = A.Fake<IGetOrganisationDeletionStatus>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
 
             handler = new CheckAatfCanBeDeletedHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
                 aatfDeletionStatus,
-                organisationDeletionStatus);
+                organisationDeletionStatus,
+                aatfDataAccess);
         }
 
         [Theory]
@@ -39,7 +42,7 @@
         [InlineData(AuthorizationBuilder.UserType.External)]
         public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
-            var handler = new CheckAatfCanBeDeletedHandler(AuthorizationBuilder.CreateFromUserType(userType), aatfDeletionStatus, organisationDeletionStatus);
+            var handler = new CheckAatfCanBeDeletedHandler(AuthorizationBuilder.CreateFromUserType(userType), aatfDeletionStatus, organisationDeletionStatus, aatfDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CheckAatfCanBeDeleted>());
 
