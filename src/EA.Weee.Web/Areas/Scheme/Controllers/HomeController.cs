@@ -201,7 +201,11 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewAATFContactDetails)
                 {
-                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = false });
+                }
+                if (viewModel.SelectedValue == PcsAction.ViewAEContactDetails)
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = true });
                 }
             }
 

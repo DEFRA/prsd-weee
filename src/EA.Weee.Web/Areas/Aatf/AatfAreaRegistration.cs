@@ -18,6 +18,12 @@
                 url: "Aatf/{organisationId}/{controller}/{action}/",
                 defaults: new { action = "Index", controller = "Home"},
                 namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "Aatf_ContactDetails",
+                url: "Aatf/{organisationId}/{controller}/{action}/{aatfId}",
+                defaults: new { action = "Index", controller = "ViewAatfContactDetails" },
+                namespaces: new[] { typeof(ViewAatfContactDetailsController).Namespace });
         }
     }
 }
