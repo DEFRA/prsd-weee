@@ -17,6 +17,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
+    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
     using Xunit;
 
     public class DeleteAatfHandlerTests
@@ -25,17 +26,23 @@
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly DeleteAatfHandler handler;
         private readonly WeeeContext weeeContext;
+        private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
+        private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
 
         public DeleteAatfHandlerTests()
         {
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            getAatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
+            getOrganisationDeletionStatus = A.Fake<IGetOrganisationDeletionStatus>();
 
             handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
                 aatfDataAccess,
                 organisationDataAccess,
-                weeeContext);
+                weeeContext,
+                getAatfDeletionStatus,
+                getOrganisationDeletionStatus);
         }
 
         [Theory]
@@ -47,7 +54,12 @@
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
             var userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess, weeeContext);
+            var handler = new DeleteAatfHandler(authorization, 
+                aatfDataAccess, 
+                organisationDataAccess, 
+                weeeContext,
+                getAatfDeletionStatus,
+                getOrganisationDeletionStatus);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -63,7 +75,12 @@
                 .Build();
 
             var userManager = A.Fake<UserManager<ApplicationUser>>();
-            var handler = new DeleteAatfHandler(authorization, aatfDataAccess, organisationDataAccess, weeeContext);
+            var handler = new DeleteAatfHandler(authorization, 
+                aatfDataAccess, 
+                organisationDataAccess, 
+                weeeContext,
+                getAatfDeletionStatus,
+                getOrganisationDeletionStatus);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
