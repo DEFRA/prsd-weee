@@ -16,59 +16,68 @@
         ViewBag.Title = "Unable to delete this " + @facilityType + "- GOV.UK";
     }
 }
+    <section id="main-content">
 
-<section id="main-content">
-
-    @if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
-    {
-        <header class="hgroup">
-            <div>
-                <h1 class="govuk-heading-l">Unable to delete this @facilityType</h1>
-            </div>
-        </header>
-        <div>
-            <p>
-                This @facilityType can't be deleted because there is other data associated with it or the organisation that operates it
-            </p>
-
-            <p>
-                <a class="govuk-button" href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Continue</a>
-            </p>
-        </div>
-
-    }
-    else
-    {
-        <header class="hgroup">
-            <div>
-                <h1 class="govuk-heading-l">Are you sure you want to delete this @facilityType?</h1>
-            </div>
-        </header>
-        using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
+        @if (!Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
         {
-            if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
-            {
-                <p class="important-large">
-                    Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
-                </p>
-            }
-
-            if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
-            {
+            <header class="hgroup">
                 <div>
-                    <p>
-                        The  @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs (or compliance years), AEs or PCSs.
-                    </p>
+                    <h1 class="govuk-heading-l">Unable to delete this @facilityType</h1>
                 </div>
-            }
+            </header>
+            <div>
+                <p>
+                    This @facilityType can't be deleted because there is other data associated with it or the organisation that operates it
+                </p>
 
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.AatfId)
-            @Html.HiddenFor(m => m.OrganisationId)
-            @Html.HiddenFor(m => m.DeletionData)
-            @Html.HiddenFor(m => m.FacilityType)
+                <p>
+                    <a class="govuk-button" href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId)))">Continue</a>
+                </p>
+            </div>
 
-            @(this.WeeeGds().Submit("Delete and continue"))
         }
-    }
-</section>
+        else
+        {
+            <header class="hgroup">
+                <div>
+                    <h1 class="govuk-heading-l">Are you sure you want to delete this @facilityType?</h1>
+                </div>
+            </header>
+            using (Html.BeginForm(actionName: "Delete", controllerName: "Aatf", method: FormMethod.Post))
+            {
+                if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
+                {
+                    <p class="important-large">
+                        Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
+                    </p>
+                }
+
+                if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete)
+                && Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
+                {
+                    <div>
+                        <p>
+                            The @facilityType The AATF and the organisation that operates it will be deleted
+                        </p>
+                    </div>
+                }
+                else if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
+                {
+                    <div>
+                        <p>
+                            The  @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs (or compliance years), AEs or PCSs.
+                        </p>
+                    </div>
+                }
+
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.AatfId)
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.DeletionData)
+                @Html.HiddenFor(m => m.FacilityType)
+
+                @(this.WeeeGds().Submit("Delete and continue"))
+            }
+        }
+    </section>
