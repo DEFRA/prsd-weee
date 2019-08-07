@@ -33,7 +33,7 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "PCS names", Value = "1"};
+                yield return new SelectListItem() { Text = "PCS names", Value = "1" };
                 yield return new SelectListItem() { Text = "Approval numbers", Value = "2" };
             }
         }
