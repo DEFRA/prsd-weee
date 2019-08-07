@@ -172,7 +172,6 @@
             Assert.Equal(expectedResult, result);
         }
 
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
