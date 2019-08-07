@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Organisation;
+    using Domain.User;
 
     public class OrganisationDataAccess : IOrganisationDataAccess
     {
@@ -44,6 +45,17 @@
             context.Organisations.Remove(organisation);
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasActiveUsers(Guid organisationId)
+        {
+            return await context.OrganisationUsers
+                .AnyAsync(p => p.OrganisationId == organisationId && p.UserStatus.Value == UserStatus.Active.Value);
+        }
+
+        public async Task<bool> HasReturns(Guid organisationId, int year)
+        {
+            return await context.Returns.AnyAsync(r => r.Organisation.Id == organisationId && r.Quarter.Year == year);
         }
     }
 }

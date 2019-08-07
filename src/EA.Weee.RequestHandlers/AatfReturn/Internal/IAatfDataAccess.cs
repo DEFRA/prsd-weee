@@ -18,11 +18,9 @@
 
         Task UpdateContact(AatfContact oldDetails, AatfContactData newDetails, Country country);
 
-        Task<bool> DoesAatfHaveData(Guid aatfId);
+        Task<bool> HasAatfData(Guid aatfId);
 
-        Task<bool> DoesAatfOrganisationHaveMoreAatfs(Guid aatfId);
-
-        Task<bool> DoesAatfOrganisationHaveActiveUsers(Guid aatfId);
+        Task<bool> HasAatfOrganisationOtherEntities(Guid aatfId);
 
         Task RemoveAatf(Guid aatfId);
     }
