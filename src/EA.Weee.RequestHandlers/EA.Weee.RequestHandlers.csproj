@@ -87,6 +87,10 @@
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteValidation\GetAatfDeletionStatus.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteValidation\GetOrganisationDeletionStatus.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteValidation\IGetAatfDeletionStatus.cs" />
+    <Compile Include="Admin\DeleteAatf\DeleteValidation\IGetOrganisationDeletionStatus.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
