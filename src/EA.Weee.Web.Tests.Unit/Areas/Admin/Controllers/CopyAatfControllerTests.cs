@@ -4,36 +4,27 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Web.Script.Serialization;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Infrastructure;
     using Xunit;
-    using AddressData = Core.Shared.AddressData;
+
     public class CopyAatfControllerTests
     {
         private readonly Fixture fixture;
@@ -64,11 +55,10 @@
 
         [Theory]
         [InlineData(FacilityType.Aatf, "Copy AATF for new compliance year")]
-        public async Task CopyGet_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
+        public async Task CopyGet_CanEdit_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
-            var aatf = fixture.Create<AatfData>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create(); 
             aatf.FacilityType = facilityType;
-            aatf.CanEdit = true;
 
             var aatfViewModel = fixture.Create<CopyAatfViewModel>();
 
@@ -79,15 +69,16 @@
             await controller.CopyAatfDetails(aatf.Id);
 
             Assert.Equal(expectedBreadcrumb, breadcrumbService.InternalActivity);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
         [InlineData(FacilityType.Ae, "Copy AE for new compliance year")]
-        public async Task CopyGetAe_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
+        public async Task CopyGetAe_CanEdit_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
-            var aatf = fixture.Create<AatfData>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
             aatf.FacilityType = facilityType;
-            aatf.CanEdit = true;
 
             var aatfViewModel = fixture.Create<CopyAeViewModel>();
 
@@ -98,6 +89,8 @@
             await controller.CopyAatfDetails(aatf.Id);
 
             Assert.Equal(expectedBreadcrumb, breadcrumbService.InternalActivity);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -141,6 +134,145 @@
             Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
             Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
             Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async void CopyAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
+        {
+            var id = fixture.Create<Guid>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, false).Create();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
+            clientCall.Returns(aatf);
+
+            var result = await controller.CopyAatfDetails(id);
+
+            Assert.IsType<HttpForbiddenResult>(result);
+            clientCall.MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CopyAatfPost_ValidViewModel_ReturnsRedirect()
+        {
+            Guid orgId = Guid.NewGuid();
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = CreateCopyAatfViewModel();
+
+            viewModel.StatusValue = 1;
+            viewModel.SizeValue = 1;
+            viewModel.ComplianceYear = 2019;
+            viewModel.Name = "Name";
+            viewModel.ApprovalNumber = "WEE/AB1234CD/ATF";
+
+            var request = fixture.Create<CopyAatf>();
+
+            var aatf = new AatfData()
+            {
+                Id = viewModel.Id,
+
+                Organisation = new OrganisationData() { Id = viewModel.OrganisationId }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatf.Id))).Returns(aatf);
+
+            A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
+
+            var result = await controller.CopyAatfDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["controller"].Should().Be("Aatf");
+        }
+
+        [Fact]
+        public async Task CopyAatfPost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            Guid orgId = Guid.NewGuid();
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = CreateCopyAatfViewModel();
+
+            viewModel.StatusValue = 1;
+            viewModel.SizeValue = 1;
+            viewModel.ComplianceYear = 2019;
+            viewModel.Name = "Name";
+            viewModel.ApprovalNumber = "WEE/AB1234CD/ATF";
+
+            var request = fixture.Create<CopyAatf>();
+
+            var aatf = new AatfData()
+            {
+                Id = viewModel.Id,
+
+                Organisation = new OrganisationData() { Id = viewModel.OrganisationId }
+            };
+
+            A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
+
+            var result = await controller.CopyAatfDetails(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CopyAePost_ValidViewModel_ReturnsRedirect()
+        {
+            Guid orgId = Guid.NewGuid();
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = CreateCopyAeViewModel();
+
+            viewModel.StatusValue = 1;
+            viewModel.SizeValue = 1;
+            viewModel.ComplianceYear = 2019;
+            viewModel.Name = "Name";
+
+            var request = fixture.Create<CopyAatf>();
+
+            var aatf = new AatfData()
+            {
+                Id = viewModel.Id,
+
+                Organisation = new OrganisationData() { Id = viewModel.OrganisationId }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatf.Id))).Returns(aatf);
+
+            A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
+
+            var result = await controller.CopyAeDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfs");
+            result.RouteValues["controller"].Should().Be("Aatf");
+        }
+
+        [Fact]
+        public async Task CopyAePost_ValidViewModel_CacheShouldBeInvalidated()
+        {
+            Guid orgId = Guid.NewGuid();
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var viewModel = CreateCopyAeViewModel();
+
+            viewModel.StatusValue = 1;
+            viewModel.SizeValue = 1;
+            viewModel.ComplianceYear = 2019;
+            viewModel.Name = "Name";
+
+            var request = fixture.Create<CopyAatf>();
+
+            var aatf = new AatfData()
+            {
+                Id = viewModel.Id,
+
+                Organisation = new OrganisationData() { Id = viewModel.OrganisationId }
+            };
+
+            A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
+
+            var result = await controller.CopyAeDetails(viewModel);
+
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         private CopyAatfViewModel CreateCopyAatfViewModel()
