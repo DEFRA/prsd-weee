@@ -89,7 +89,7 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
+            fileName += "_View obligated WEEE data" + string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
                                 SystemTime.UtcNow);           
 
             string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
