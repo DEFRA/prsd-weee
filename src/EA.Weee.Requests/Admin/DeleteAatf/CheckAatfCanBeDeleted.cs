@@ -6,14 +6,11 @@
 
     public class CheckAatfCanBeDeleted : IRequest<AatfDeletionData>
     {
-        public Guid AatfId { get; set; }
+        public Guid AatfId { get; private set; }
 
-        public Guid OrganisationId { get; set; }
-
-        public CheckAatfCanBeDeleted(Guid aatfId, Guid organisationId)
+        public CheckAatfCanBeDeleted(Guid aatfId)
         {
             AatfId = aatfId;
-            OrganisationId = organisationId;
         }
     }
 }
