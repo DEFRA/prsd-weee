@@ -10,8 +10,10 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.Admin;
     using DataAccess;
     using DataAccess.DataAccess;
+    using DeleteValidation;
 
     public class DeleteAatfHandler : IRequestHandler<DeleteAnAatf, bool>
     {
@@ -19,16 +21,22 @@
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly WeeeContext context;
+        private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
+        private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
 
         public DeleteAatfHandler(IWeeeAuthorization authorization, 
             IAatfDataAccess aatfDataAccess, 
             IOrganisationDataAccess organisationDataAccess, 
-            WeeeContext context)
+            WeeeContext context, 
+            IGetAatfDeletionStatus getAatfDeletionStatus, 
+            IGetOrganisationDeletionStatus getOrganisationDeletionStatus)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
             this.organisationDataAccess = organisationDataAccess;
             this.context = context;
+            this.getAatfDeletionStatus = getAatfDeletionStatus;
+            this.getOrganisationDeletionStatus = getOrganisationDeletionStatus;
         }
 
         public async Task<bool> HandleAsync(DeleteAnAatf message)
@@ -40,23 +48,19 @@
             {
                 try
                 {
+                    var aatfDeletionStatus = await getAatfDeletionStatus.Validate(message.AatfId);
+
                     var deleteOrganisation = await aatfDataAccess.HasAatfOrganisationOtherEntities(message.AatfId);
 
-                    if (await aatfDataAccess.HasAatfData(message.AatfId))
+                    if (!aatfDeletionStatus.HasFlag(CanAatfBeDeletedFlags.CanDelete))
                     {
                         throw new InvalidOperationException();
                     }
 
                     await aatfDataAccess.RemoveAatf(message.AatfId);
 
-                    if (!deleteOrganisation)
+                    if (aatfDeletionStatus.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
                     {
-                        // FIX THIS
-                        if (await organisationDataAccess.HasReturns(message.OrganisationId, 2020))
-                        {
-                            throw new InvalidOperationException();
-                        }
-
                         await organisationDataAccess.Delete(message.OrganisationId);
                     }
 

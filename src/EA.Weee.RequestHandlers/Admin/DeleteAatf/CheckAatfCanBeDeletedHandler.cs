@@ -15,14 +15,17 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
         private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
+        private readonly IAatfDataAccess aatfDataAccess;
 
         public CheckAatfCanBeDeletedHandler(IWeeeAuthorization authorization, 
             IGetAatfDeletionStatus getAatfDeletionStatus, 
-            IGetOrganisationDeletionStatus getOrganisationDeletionStatus)
+            IGetOrganisationDeletionStatus getOrganisationDeletionStatus, 
+            IAatfDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
             this.getAatfDeletionStatus = getAatfDeletionStatus;
             this.getOrganisationDeletionStatus = getOrganisationDeletionStatus;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<AatfDeletionData> HandleAsync(CheckAatfCanBeDeleted message)
@@ -32,8 +35,9 @@
 
             var aatfDeletion = await getAatfDeletionStatus.Validate(message.AatfId);
 
-            // FIX THIS YEAR
-            var organisationDeletion = await getOrganisationDeletionStatus.Validate(message.OrganisationId, 2019);
+            var aatf = await aatfDataAccess.GetDetails(message.AatfId);
+
+            var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
             return new AatfDeletionData(organisationDeletion, aatfDeletion);
         }
