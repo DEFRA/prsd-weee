@@ -40,7 +40,7 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString };
+                yield return new SelectListItem() { Text = "Exclude resubmissions", Value = bool.FalseString, Selected = true };
                 yield return new SelectListItem() { Text = "Include resubmissions", Value = bool.TrueString };
             }
         }
@@ -69,7 +69,7 @@
 
         public IEnumerable<SelectListItem> CompetentAuthoritiesList { get; set; }
 
-        [Display(Name = "WROS PAT")]
+        [Display(Name = "WROS Pan area team ")]
         public Guid? PanAreaId { get; set; }
         public IEnumerable<SelectListItem> PanAreaList { get; set; }
 

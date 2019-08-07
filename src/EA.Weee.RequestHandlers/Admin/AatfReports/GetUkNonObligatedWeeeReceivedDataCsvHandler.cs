@@ -43,7 +43,7 @@
             csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
             var fileContent = csvWriter.Write(items);
 
-            var fileName = $"{request.ComplianceYear}_UK non-obligated WEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+            var fileName = $"{request.ComplianceYear}_UK non-obligated WEEE received at AATFs_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {
