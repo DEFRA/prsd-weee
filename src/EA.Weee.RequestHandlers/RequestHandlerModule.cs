@@ -58,6 +58,10 @@
                 .Where(t => t.Name.Contains("DataProcessor"))
                 .AsImplementedInterfaces();
 
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => !string.IsNullOrWhiteSpace(t.Namespace) && t.Namespace.Contains("DeleteValidation"))
+                .AsImplementedInterfaces();
+
             // Register singleton types relating to PCS member upload testing.
             builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
             builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
