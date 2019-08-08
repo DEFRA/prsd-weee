@@ -284,9 +284,9 @@
     <Content Include="scripts\Update\Release 2\Sprint14\20190726-0936-alter-getAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190729-1532-alter-getAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint14\20190731-0932-create-getAllAatfReuseSitesCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint14\20190808-1128-alter-getAllAatfReuseSitesCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint14\20190808-1256-alter-getAllAatfSentOnCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint14\20190909-1258-alter-getAllAatfObligatedCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20190808-1401-alter-getAllAatfReuseSitesCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20190808-1402-alter-getAllAatfSentOnCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint14\20190909-1403-alter-getAllAatfObligatedCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
