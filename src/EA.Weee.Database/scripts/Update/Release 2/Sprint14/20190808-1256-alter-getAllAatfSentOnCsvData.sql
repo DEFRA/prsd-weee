@@ -268,7 +268,7 @@ BEGIN
 
 	SELECT 
 		a.CompetentAuthorityAbbr AS 'Appropriate authority',
-		a.PanArea AS 'WROS pan area team',
+		a.PanArea AS 'WROS Pan Area Team',
 		a.LocalArea AS 'EA Area',
 		@ComplianceYear AS 'Year',
 		CONCAT('Q', a.[Quarter]) AS 'Quarter',
@@ -344,7 +344,7 @@ ELSE
 BEGIN
 	SELECT 
 		a.CompetentAuthorityAbbr AS 'Appropriate authority',
-		a.PanArea AS 'WROS pan area team',
+		a.PanArea AS 'WROS Pan Area Team',
 		a.LocalArea AS 'EA Area',
 		@ComplianceYear AS 'Year',
 		CONCAT ('Q', a.[Quarter]) AS 'Quarter',
