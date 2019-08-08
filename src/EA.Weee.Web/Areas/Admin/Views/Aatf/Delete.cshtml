@@ -47,11 +47,21 @@
             {
                 if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
                 {
-                    <p class="important-large">
-                        Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
-                    </p>
+                    if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
+                    {
+    <p class="important-large">
+        Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see the @facilityType or the organisation.
+    </p>
+                    }
+                    else
+                    {
+                        <p class="important-large">
+                            Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
+                        </p>
+                    }
                 }
 
+               
                 if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete)
                 && Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
                 {

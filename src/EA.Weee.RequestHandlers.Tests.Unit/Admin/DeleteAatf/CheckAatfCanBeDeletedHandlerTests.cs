@@ -52,6 +52,8 @@
         [Fact]
         public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
         {
+            var handler = new CheckAatfCanBeDeletedHandler(new AuthorizationBuilder().DenyRole(Roles.InternalAdmin).Build(), aatfDeletionStatus, organisationDeletionStatus, aatfDataAccess);
+
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CheckAatfCanBeDeleted>());
 
             await Assert.ThrowsAsync<SecurityException>(action);

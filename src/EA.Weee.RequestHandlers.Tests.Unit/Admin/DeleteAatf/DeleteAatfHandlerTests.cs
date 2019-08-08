@@ -27,7 +27,6 @@
         private readonly DeleteAatfHandler handler;
         private readonly WeeeContext weeeContext;
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
-        private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
 
         public DeleteAatfHandlerTests()
         {
@@ -35,14 +34,12 @@
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             getAatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
-            getOrganisationDeletionStatus = A.Fake<IGetOrganisationDeletionStatus>();
 
             handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
                 aatfDataAccess,
                 organisationDataAccess,
                 weeeContext,
-                getAatfDeletionStatus,
-                getOrganisationDeletionStatus);
+                getAatfDeletionStatus);
         }
 
         [Theory]
@@ -58,8 +55,7 @@
                 aatfDataAccess, 
                 organisationDataAccess, 
                 weeeContext,
-                getAatfDeletionStatus,
-                getOrganisationDeletionStatus);
+                getAatfDeletionStatus);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -75,40 +71,15 @@
                 .Build();
 
             var userManager = A.Fake<UserManager<ApplicationUser>>();
-            var handler = new DeleteAatfHandler(authorization, 
-                aatfDataAccess, 
-                organisationDataAccess, 
+            var handler = new DeleteAatfHandler(authorization,
+                aatfDataAccess,
+                organisationDataAccess,
                 weeeContext,
-                getAatfDeletionStatus,
-                getOrganisationDeletionStatus);
+                getAatfDeletionStatus);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
             await Assert.ThrowsAsync<SecurityException>(action);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void HandleAsync_DeletesAatfAndOrgIfNoOtherAatfsOnOrg(bool orgHasOtherAatfs)
-        {
-            var aatfId = Guid.NewGuid();
-            var organisationId = Guid.NewGuid();
-
-            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId)).Returns(orgHasOtherAatfs);
-
-            await handler.HandleAsync(new DeleteAnAatf(aatfId, organisationId));
-
-            A.CallTo(() => aatfDataAccess.RemoveAatf(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
-
-            if (!orgHasOtherAatfs)
-            {
-                A.CallTo(() => organisationDataAccess.Delete(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
-            }
-            else
-            {
-                A.CallTo(() => organisationDataAccess.Delete(organisationId)).MustNotHaveHappened();
-            }
         }
     }
 }
