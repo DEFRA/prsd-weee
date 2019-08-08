@@ -42,6 +42,8 @@
                 throw new ArgumentException($"Organisation not found with id {organisationId}");
             }
 
+            context.OrganisationUsers.RemoveRange(context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id));
+
             context.Organisations.Remove(organisation);
 
             await context.SaveChangesAsync();

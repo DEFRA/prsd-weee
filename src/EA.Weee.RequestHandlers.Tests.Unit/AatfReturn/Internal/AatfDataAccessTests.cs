@@ -175,7 +175,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void DoesAatfOrganisationHaveMoreAatfs_ReturnsResultBasedOnOtherAatfs(bool hasOtherAatfs)
+        public async void HasAatfOrganisationOtherEntities_HasAaatf_ShouldBeExpectedResult(bool hasOtherAatfs)
         {
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -187,9 +187,7 @@
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
-            var aatfs = new List<Aatf>();
-
-            aatfs.Add(aatf);
+            var aatfs = new List<Aatf> {aatf};
 
             if (hasOtherAatfs)
             {
@@ -200,10 +198,84 @@
             }
 
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<EA.Weee.Domain.Scheme.Scheme>()));
 
             var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
 
             Assert.Equal(hasOtherAatfs, result);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void HasAatfOrganisationOtherEntities_HasScheme_ShouldBeExpectedResult(bool hasScheme)
+        {
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+
+            var aatfs = new List<Aatf> { aatf };
+            var schemes = new List<Domain.Scheme.Scheme>();
+
+            if (hasScheme)
+            {
+                var scheme = A.Fake<Domain.Scheme.Scheme>();
+                A.CallTo(() => scheme.Organisation).Returns(organisation);
+
+                schemes.Add(scheme);
+            }
+
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
+
+            Assert.Equal(hasScheme, result);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void HasAatfOrganisationOtherEntities_HasSchemeAndAatf_ShouldBeExpectedResult(bool hasScheme)
+        {
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+
+            var aatfs = new List<Aatf> { aatf };
+            var schemes = new List<Domain.Scheme.Scheme>();
+
+            if (hasScheme)
+            {
+                var scheme = A.Fake<Domain.Scheme.Scheme>();
+                A.CallTo(() => scheme.Organisation).Returns(organisation);
+
+                schemes.Add(scheme);
+
+                var otherAatf = A.Fake<Aatf>();
+                A.CallTo(() => otherAatf.Organisation).Returns(organisation);
+
+                aatfs.Add(otherAatf);
+            }
+
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
+
+            Assert.Equal(hasScheme, result);
         }
 
         [Fact]

@@ -29,42 +29,28 @@
             if (hasData)
             {
                 result |= CanAatfBeDeletedFlags.HasData;
-            }
-
-            if (await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
-            {
-                result |= CanAatfBeDeletedFlags.OrganisationHasOtherRelations;
+                return result;
             }
 
             var organisationDeletionStatus = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
-            bool canDelete = false;
-
-            //if (!hasData && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-            //    await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
-            //{
-            //    result |= CanAatfBeDeletedFlags.CanDelete;
-            //}
-
-            if (!hasData)
+            if (organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
+                await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
             {
-                if (organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                    await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
-                {
-                    result |= CanAatfBeDeletedFlags.CanDelete;
-                }
-                else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                         await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
-                {
-                    result |= CanAatfBeDeletedFlags.CanDelete;
-                }
-                else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                         !await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
-                {
-                    result |= CanAatfBeDeletedFlags.CanDelete;
-                }
+                result |= CanAatfBeDeletedFlags.CanDelete;
             }
-            
+            else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
+                     await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
+            {
+                result |= CanAatfBeDeletedFlags.CanDelete;
+            }
+            else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
+                     !await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
+            {
+                result |= CanAatfBeDeletedFlags.CanDelete;
+                result |= CanAatfBeDeletedFlags.CanDeleteOrganisation;
+            }
+
             return result;
         }
     }
