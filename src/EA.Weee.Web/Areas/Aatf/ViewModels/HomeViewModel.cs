@@ -13,6 +13,8 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public bool IsAE { get; set; }
+
         [DisplayName("Which organisation would you like to perform activities for?")]
         [Required(ErrorMessage = "Select an organisation to perform activities")]
         public Guid? SelectedAatfId { get; set; }
