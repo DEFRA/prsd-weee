@@ -135,7 +135,7 @@
                 Assert.NotNull(results);
 
                 var data = from x in results.Tables[0].AsEnumerable()
-                           where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("WROS pan area team") == filter.Name
+                           where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("WROS Pan Area Team") == filter.Name
                            select x;
                 data.AsQueryable().Count().Should().Be(28);
             }
