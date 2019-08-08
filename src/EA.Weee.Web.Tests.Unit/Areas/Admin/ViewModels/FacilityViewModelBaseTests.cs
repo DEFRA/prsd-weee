@@ -57,7 +57,7 @@
             var validationResult = model.Validate(new ValidationContext(model));
 
             validationResult.Count().Should().Be(1);
-            validationResult.First().ErrorMessage.Should().Be("Enter WROS pan area team");
+            validationResult.First().ErrorMessage.Should().Be("Enter WROS Pan Area Team");
         }
 
         [Fact]
