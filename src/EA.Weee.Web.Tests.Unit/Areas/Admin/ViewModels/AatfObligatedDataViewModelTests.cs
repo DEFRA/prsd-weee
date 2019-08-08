@@ -32,7 +32,7 @@
         [Fact]
         public void AatfObligatedDataViewModel_PanArea_ShouldHaveDisplayAttribute()
         {
-            typeof(AatfObligatedDataViewModel).GetProperty("PanAreaId").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("WROS Pan area team");
+            typeof(AatfObligatedDataViewModel).GetProperty("PanAreaId").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("WROS Pan Area Team");
         }
 
         [Fact]
