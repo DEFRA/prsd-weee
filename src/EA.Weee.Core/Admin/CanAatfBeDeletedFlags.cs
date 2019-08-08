@@ -7,8 +7,7 @@
     {
         HasData = 1,
         OrganisationHasActiveUsers = 2,
-        OrganisationHasOtherRelations = 4,
-        CanDelete = 6,
+        CanDelete = 4,
         CanDeleteOrganisation = 8
     }
 }

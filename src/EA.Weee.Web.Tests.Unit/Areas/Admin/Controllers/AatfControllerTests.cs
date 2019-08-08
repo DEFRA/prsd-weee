@@ -738,9 +738,7 @@
         {
             var approvalNumber = "test";
 
-            var viewModel = new AatfEditDetailsViewModel();
-            viewModel.Id = Guid.NewGuid();
-            viewModel.ApprovalNumber = approvalNumber;
+            var viewModel = new AatfEditDetailsViewModel {Id = Guid.NewGuid(), ApprovalNumber = approvalNumber};
 
             var aatf = new AatfData()
             {
@@ -1117,7 +1115,7 @@
         [Fact]
         public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
         {
-            var aatfDeletionFlags = CanAatfBeDeletedFlags.OrganisationHasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasOtherRelations;
+            var aatfDeletionFlags = CanAatfBeDeletedFlags.OrganisationHasActiveUsers | CanAatfBeDeletedFlags.CanDelete;
             var organisationDeletionFlags = CanOrganisationBeDeletedFlags.HasActiveUsers | CanOrganisationBeDeletedFlags.HasReturns;
             var aatfDeletionData = new AatfDeletionData(organisationDeletionFlags, aatfDeletionFlags);
             var aatfId = Guid.NewGuid();

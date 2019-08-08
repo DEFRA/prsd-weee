@@ -91,7 +91,7 @@
             var organisationId = aatf.Organisation.Id;
 
             return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId) > 1
-                || await context.Schemes.CountAsync(s => s.OrganisationId == organisationId) > 0;
+                || await context.Schemes.CountAsync(s => s.Organisation.Id == organisationId) > 0;
         }
 
         private async Task<Aatf> GetAatfById(Guid id)

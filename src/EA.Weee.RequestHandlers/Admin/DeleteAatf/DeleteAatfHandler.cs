@@ -22,21 +22,18 @@
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly WeeeContext context;
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
-        private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
 
         public DeleteAatfHandler(IWeeeAuthorization authorization, 
             IAatfDataAccess aatfDataAccess, 
             IOrganisationDataAccess organisationDataAccess, 
             WeeeContext context, 
-            IGetAatfDeletionStatus getAatfDeletionStatus, 
-            IGetOrganisationDeletionStatus getOrganisationDeletionStatus)
+            IGetAatfDeletionStatus getAatfDeletionStatus)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
             this.organisationDataAccess = organisationDataAccess;
             this.context = context;
             this.getAatfDeletionStatus = getAatfDeletionStatus;
-            this.getOrganisationDeletionStatus = getOrganisationDeletionStatus;
         }
 
         public async Task<bool> HandleAsync(DeleteAnAatf message)
@@ -49,8 +46,6 @@
                 try
                 {
                     var aatfDeletionStatus = await getAatfDeletionStatus.Validate(message.AatfId);
-
-                    var deleteOrganisation = await aatfDataAccess.HasAatfOrganisationOtherEntities(message.AatfId);
 
                     if (!aatfDeletionStatus.HasFlag(CanAatfBeDeletedFlags.CanDelete))
                     {
@@ -66,9 +61,14 @@
 
                     transaction.Commit();
                 }
-                catch
+                catch (Exception ex)
                 {
                     transaction.Rollback();
+
+                    if (ex.InnerException != null)
+                    {
+                        throw ex.InnerException;
+                    }
 
                     throw;
                 }
