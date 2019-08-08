@@ -44,7 +44,7 @@
 
             context.OrganisationUsers.RemoveRange(context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id));
 
-            context.Organisations.Remove(organisation);
+            context.Entry(organisation).State = EntityState.Deleted;
 
             await context.SaveChangesAsync();
         }
