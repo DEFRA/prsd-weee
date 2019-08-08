@@ -50,7 +50,7 @@
                 {
                     foreach (var aatf in allAatfsAndAes)
                     {
-                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
+                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
                         {
                             selectedAatfsOrAes.Add(aatf);
                         }
@@ -59,7 +59,7 @@
 
                 if (selectedAatfsOrAes.Count == 1)
                 {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = selectedAatfsOrAes[0].Id });
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = selectedAatfsOrAes[0].Id, isAE = isAE });
                 }
 
                 var activities = new List<string>();
@@ -69,7 +69,7 @@
                     aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
                 }
 
-                var model = new HomeViewModel() { OrganisationId = organisationId, AatfList = selectedAatfsOrAes };
+                var model = new HomeViewModel() { OrganisationId = organisationId, AatfList = selectedAatfsOrAes, IsAE = isAE };
 
                 await SetBreadcrumb(model.OrganisationId, null, false);
 
@@ -83,7 +83,7 @@
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId});
+                return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId, isAE = model.IsAE});
             }
 
             await SetBreadcrumb(model.OrganisationId, null, false);

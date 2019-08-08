@@ -29,15 +29,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid aatfId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid aatfId, bool isAE)
         {
             using (var client = apiClient())
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
 
-                var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId, Contact = aatf.Contact, AatfName = aatf.Name };
+                var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId, Contact = aatf.Contact, AatfName = aatf.Name, IsAE = isAE };
 
-                await SetBreadcrumb(model.OrganisationId, null, false);
+                await SetBreadcrumb(model.OrganisationId, "AATF contact details", true);
 
                 return View(model);
             }
@@ -52,7 +52,7 @@
                 return RedirectToAction("Index", "ViewAATFContactDetailsList", new { });
             }
 
-            await SetBreadcrumb(model.OrganisationId, null, false);
+            await SetBreadcrumb(model.OrganisationId, "AATF contact details", true);
 
             return View(model);
         }
