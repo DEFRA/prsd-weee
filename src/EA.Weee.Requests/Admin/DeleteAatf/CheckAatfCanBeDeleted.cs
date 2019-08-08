@@ -4,13 +4,13 @@
     using EA.Weee.Core.Admin;
     using System;
 
-    public class CheckAatfCanBeDeleted : IRequest<CanAatfBeDeletedFlags>
+    public class CheckAatfCanBeDeleted : IRequest<AatfDeletionData>
     {
-        public Guid AatfId { get; set; }
+        public Guid AatfId { get; private set; }
 
-        public CheckAatfCanBeDeleted(Guid id)
+        public CheckAatfCanBeDeleted(Guid aatfId)
         {
-            this.AatfId = id;
+            AatfId = aatfId;
         }
     }
 }
