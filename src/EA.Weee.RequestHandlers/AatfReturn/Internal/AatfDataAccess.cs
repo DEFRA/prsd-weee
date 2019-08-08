@@ -111,6 +111,8 @@
             var aatf = await GetAatfById(aatfId);
 
             context.Aatfs.Remove(aatf);
+
+            await context.SaveChangesAsync();
         }
     }
 }
