@@ -82,10 +82,6 @@
             {
                 additionalParameters += $"_{(await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Name}";
             }
-            if (request.LocalArea.HasValue)
-            {
-                additionalParameters += $"_{(await commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Name}";
-            }
 
             var fileName =
                 $"{request.ComplianceYear}_Q{request.Quarter}_{excludeResubmissions}_{request.FacilityType.ToString().ToUpper()}{additionalParameters}_Summary of AATF-AE returns to date_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
