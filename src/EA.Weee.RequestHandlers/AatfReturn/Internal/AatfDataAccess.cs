@@ -13,10 +13,13 @@
     public class AatfDataAccess : IAatfDataAccess
     {
         private readonly WeeeContext context;
+        private readonly IGenericDataAccess genericDataAccess;
 
-        public AatfDataAccess(WeeeContext context)
+        public AatfDataAccess(WeeeContext context, 
+            IGenericDataAccess genericDataAccess)
         {
             this.context = context;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<Aatf> GetDetails(Guid id)
@@ -103,14 +106,14 @@
                 throw new ArgumentException($"Aatf with id {id} not found");
             }
 
-            return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
+            return aatf;
         }
 
         public async Task RemoveAatf(Guid aatfId)
         {
             var aatf = await GetAatfById(aatfId);
 
-            context.Aatfs.Remove(aatf);
+            genericDataAccess.Remove(aatf);
 
             await context.SaveChangesAsync();
         }

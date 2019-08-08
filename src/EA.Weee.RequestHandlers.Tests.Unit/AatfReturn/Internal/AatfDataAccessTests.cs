@@ -11,6 +11,7 @@
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using Weee.Tests.Core;
     using Xunit;
@@ -21,14 +22,16 @@
         private readonly WeeeContext context;
         private readonly AatfDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public AatfDataAccessTests()
         {
             fixture = new Fixture();
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
 
-            dataAccess = new AatfDataAccess(context);
+            dataAccess = new AatfDataAccess(context, genericDataAccess);
         }
 
         [Fact]
@@ -169,7 +172,7 @@
 
             var result = await dataAccess.HasAatfData(aatfId);
 
-            Assert.Equal(expectedResult, result);
+            expectedResult.Should().Be(result);
         }
 
         [Theory]
@@ -202,7 +205,7 @@
 
             var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
 
-            Assert.Equal(hasOtherAatfs, result);
+            hasOtherAatfs.Should().Be(result);
         }
 
         [Theory]
@@ -236,13 +239,13 @@
 
             var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
 
-            Assert.Equal(hasScheme, result);
+            hasScheme.Should().Be(result);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void HasAatfOrganisationOtherEntities_HasSchemeAndAatf_ShouldBeExpectedResult(bool hasScheme)
+        public async void HasAatfOrganisationOtherEntities_HasSchemeAndAatf_ShouldBeExpectedResult(bool hasOtherEntity)
         {
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -257,7 +260,7 @@
             var aatfs = new List<Aatf> { aatf };
             var schemes = new List<Domain.Scheme.Scheme>();
 
-            if (hasScheme)
+            if (hasOtherEntity)
             {
                 var scheme = A.Fake<Domain.Scheme.Scheme>();
                 A.CallTo(() => scheme.Organisation).Returns(organisation);
@@ -275,22 +278,20 @@
 
             var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
 
-            Assert.Equal(hasScheme, result);
+            hasOtherEntity.Should().Be(result);
         }
 
         [Fact]
         public async void DeleteAatf_DeletesAatf()
         {
             var aatfId = Guid.NewGuid();
-
             var aatf = A.Fake<Aatf>();
             A.CallTo(() => aatf.Id).Returns(aatfId);
-
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
 
             await dataAccess.RemoveAatf(aatfId);
 
-            A.CallTo(() => context.Aatfs.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
+            A.CallTo(() => genericDataAccess.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
             .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
