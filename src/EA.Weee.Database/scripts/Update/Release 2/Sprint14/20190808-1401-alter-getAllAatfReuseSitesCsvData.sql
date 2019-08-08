@@ -12,7 +12,7 @@ CREATE PROCEDURE [AATF].[getAllAatfReuseSitesCsvData]
 	@PanArea UNIQUEIDENTIFIER
 AS
 BEGIN
-w
+
 SET NOCOUNT ON;
 
 ---Get reuse sites for the latest submitted return for the compliance year
