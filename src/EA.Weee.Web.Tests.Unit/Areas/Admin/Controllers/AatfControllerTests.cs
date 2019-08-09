@@ -1186,6 +1186,22 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public async void PostDelete_GivenAatfToDelete_CacheShouldBeInvalidated()
+        {
+            var viewModel = new DeleteViewModel()
+            {
+                AatfId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
+                FacilityType = FacilityType.Aatf,
+            };
+
+            var result = await controller.Delete(viewModel) as RedirectToRouteResult;
+
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.AatfId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+        }
+
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
