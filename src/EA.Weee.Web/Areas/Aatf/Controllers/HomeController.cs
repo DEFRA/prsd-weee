@@ -62,8 +62,6 @@
                     return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = selectedAatfsOrAes[0].Id, isAE = isAE });
                 }
 
-                var activities = new List<string>();
-
                 foreach (var aatf in selectedAatfsOrAes)
                 {
                     aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
