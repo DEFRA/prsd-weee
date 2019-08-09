@@ -71,6 +71,9 @@
             bundles.Add(new StyleBundle("~/Content/remove-site").Include(
                 "~/Content/remove-site.css"));
 
+            bundles.Add(new StyleBundle("~/Content/weee-returns-mobile").Include(
+                "~/Content/weee-returns-mobile.css"));
+
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
             BundleTable.EnableOptimizations = true;

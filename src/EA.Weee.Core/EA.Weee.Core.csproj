@@ -80,8 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
+    <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Aatf\AatfDataExternal.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
+    <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />

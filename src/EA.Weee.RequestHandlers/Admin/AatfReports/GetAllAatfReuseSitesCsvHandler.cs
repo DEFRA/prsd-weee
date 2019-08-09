@@ -52,7 +52,7 @@
             var csvWriter = csvWriterFactory.Create<AatfReuseSitesData>();
 
             csvWriter.DefineColumn(@"Appropriate authority", i => i.Abbreviation);
-            csvWriter.DefineColumn(@"WROS pan area team", i => i.PanName);
+            csvWriter.DefineColumn(@"WROS Pan Area Team", i => i.PanName);
             csvWriter.DefineColumn(@"EA area", i => i.LaName);
             csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);

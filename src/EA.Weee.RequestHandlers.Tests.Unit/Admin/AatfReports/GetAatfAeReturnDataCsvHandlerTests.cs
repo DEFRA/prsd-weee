@@ -287,7 +287,7 @@
         [InlineData("Include resubmissions", true)]
         [InlineData("Exclude resubmissions", false)]
         [InlineData("Include resubmissions", true)]
-        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldNotContainLocalArea(string expectedText, bool includeResubmissions)
         {
             var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, fixture.Create<Guid>(), fixture.Create<string>(), includeResubmissions);
 
@@ -300,7 +300,7 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -331,7 +331,7 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_Q{request.Quarter}_{expectedText}_{request.FacilityType.ToString().ToUpper()}_{EnumHelper.GetDisplayName(status)}_{ca.Abbreviation}_{panArea.Name}_Summary of AATF-AE returns to date_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
