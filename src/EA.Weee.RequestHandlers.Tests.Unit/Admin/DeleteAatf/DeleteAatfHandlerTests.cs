@@ -15,17 +15,31 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess;
+    using DataAccess.DataAccess;
+    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
     using Xunit;
 
     public class DeleteAatfHandlerTests
     {
-        private readonly IAatfDataAccess dataAccess;
-        private readonly IWeeeAuthorization authorization;
+        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
+        private readonly DeleteAatfHandler handler;
+        private readonly WeeeContext weeeContext;
+        private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
 
         public DeleteAatfHandlerTests()
         {
-            this.authorization = A.Fake<IWeeeAuthorization>();
-            this.dataAccess = A.Fake<IAatfDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+            weeeContext = A.Fake<WeeeContext>();
+            getAatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
+
+            handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
+                aatfDataAccess,
+                organisationDataAccess,
+                weeeContext,
+                getAatfDeletionStatus);
         }
 
         [Theory]
@@ -34,10 +48,14 @@
         [InlineData(AuthorizationBuilder.UserType.External)]
         public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
-            UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
+            var authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            var userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
+            var handler = new DeleteAatfHandler(authorization, 
+                aatfDataAccess, 
+                organisationDataAccess, 
+                weeeContext,
+                getAatfDeletionStatus);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
@@ -47,44 +65,21 @@
         [Fact]
         public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
         {
-            IWeeeAuthorization authorization = new AuthorizationBuilder()
+            var authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
 
-            UserManager<ApplicationUser> userManager = A.Fake<UserManager<ApplicationUser>>();
+            var userManager = A.Fake<UserManager<ApplicationUser>>();
+            var handler = new DeleteAatfHandler(authorization,
+                aatfDataAccess,
+                organisationDataAccess,
+                weeeContext,
+                getAatfDeletionStatus);
 
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
-
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
+                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
             await Assert.ThrowsAsync<SecurityException>(action);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void HandleAsync_DeletesAatfAndOrgIfNoOtherAatfsOnOrg(bool orgHasOtherAatfs)
-        {
-            Guid aatfId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
-
-            A.CallTo(() => dataAccess.DoesAatfOrganisationHaveMoreAatfs(aatfId)).Returns(orgHasOtherAatfs);
-
-            DeleteAatfHandler handler = new DeleteAatfHandler(authorization, dataAccess);
-
-            await handler.HandleAsync(new DeleteAnAatf(aatfId, organisationId));
-
-            A.CallTo(() => dataAccess.DeleteAatf(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
-
-            if (!orgHasOtherAatfs)
-            {
-                A.CallTo(() => dataAccess.DeleteOrganisation(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
-            }
-            else
-            {
-                A.CallTo(() => dataAccess.DeleteOrganisation(organisationId)).MustNotHaveHappened();
-            }
         }
     }
 }

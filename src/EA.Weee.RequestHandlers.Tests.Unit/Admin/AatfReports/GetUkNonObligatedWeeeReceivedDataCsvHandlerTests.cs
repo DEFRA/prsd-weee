@@ -4,26 +4,47 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 
     public class GetUkNonObligatedWeeeReceivedDataCsvHandlerTests
     {
+        private readonly WeeeContext context;
+        private readonly CsvWriterFactory csvWriterFactory;
+        private readonly IStoredProcedures storedProcedures;
+        private readonly GetUkNonObligatedWeeeReceivedDataCsvHandler handler;
+        private readonly Fixture fixture;
+
+        public GetUkNonObligatedWeeeReceivedDataCsvHandlerTests()
+        {
+            context = A.Fake<WeeeContext>();
+            csvWriterFactory = A.Fake<CsvWriterFactory>();
+            storedProcedures = A.Fake<IStoredProcedures>();
+            fixture = new Fixture();
+
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+
+            handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(
+                new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
+                context,
+                csvWriterFactory);
+        }
+
         [Fact]
-        public async Task GetUkNonObligatedWeeeReceivedDataCsvHandler_NotInternalUser_ThrowsSecurityException()
+        public async Task HandleAsync_NotInternalUser_ThrowsSecurityException()
         {
             const int complianceYear = 2016;
 
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
@@ -34,15 +55,10 @@
         }
 
         [Fact]
-        public async Task GetUkNonObligatedWeeeReceivedDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task HandleAsync_NoComplianceYear_ThrowsArgumentException()
         {
             const int complianceYear = 0;
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
 
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -51,15 +67,10 @@
         }
 
         [Fact]
-        public async Task GetUkNonObligatedWeeeReceivedDataCsvHandler_ComplianceYear_ReturnsFileContent()
+        public async Task HandleAsync_ComplianceYear_ReturnsFileContent()
         {
             const int complianceYear = 2016;
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
 
             var data = await handler.HandleAsync(request);
@@ -68,16 +79,10 @@
         }
 
         [Fact]
-        public async Task GetUkNonObligatedWeeeReceivedDataCsvHandler_Returns_MatchingFileContent()
+        public async Task HandleAsync_Returns_MatchingFileContent()
         {
             const int complianceYear = 2019;
             const string quarter = "Q1";
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var storedProcedures = A.Fake<IStoredProcedures>();
-
-            A.CallTo(() => context.StoredProcedures)
-                .Returns(storedProcedures);
 
             var csvData1 = new UkNonObligatedWeeeReceivedData
             {
@@ -107,7 +112,6 @@
             .GetUkNonObligatedWeeeReceivedByComplianceYear(A<int>._))
             .Returns(new List<UkNonObligatedWeeeReceivedData> { csvData1, csvData2, csvData3 });
 
-            var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, A.Dummy<CsvWriterFactory>());
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
 
             // Act
@@ -121,13 +125,8 @@
         [InlineData(2019)]
         [InlineData(2020)]
         [InlineData(2021)]
-        public async Task GetUkNonObligatedWeeeReceivedDataCsvHandler_PassVariousComplianceYears_ReturnsFileContent(int complianceYear)
+        public async Task HandleAsync_PassVariousComplianceYears_ReturnsFileContent(int complianceYear)
         {
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
-
-            var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
 
             // Act
@@ -137,24 +136,19 @@
             Assert.NotEmpty(data.FileContent);
         }
 
-        [Fact]
-        public async Task GetAatfAeReturnDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
         {
-            // Arrange
-            const int complianceYear = 0;
+            var request = new GetUkNonObligatedWeeeReceivedDataCsv(fixture.Create<int>());
 
-            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
-            var context = A.Fake<WeeeContext>();
-            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
 
-            var handler = new GetUkNonObligatedWeeeReceivedDataCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetUkNonObligatedWeeeReceivedDataCsv(complianceYear);
+            SystemTime.Freeze(date);
 
-            // Act
-            Func<Task> action = async () => await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
-            // Assert
-            await Assert.ThrowsAsync<ArgumentException>(action);
+            data.FileName.Should().Be($"{ request.ComplianceYear}_UK non-obligated WEEE received at AATFs__{ date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
         }
     }
 }
