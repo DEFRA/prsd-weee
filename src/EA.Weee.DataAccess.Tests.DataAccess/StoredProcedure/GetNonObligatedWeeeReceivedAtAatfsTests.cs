@@ -201,6 +201,24 @@
         }
 
         [Fact]
+        public async Task Execute_GivenOrganisationNameParameterAndOrganisationIsPartnership_ReturnsMatchingOrganisationTradingNameShouldBeReturned()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var organisationPartnership = Organisation.CreatePartnership(fixture.Create<string>());
+                var @return = CreateSubmittedReturn(db, organisationPartnership);
+
+                db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(2019, organisationPartnership.TradingName);
+
+                results.Where(r => r.OrganisationName.Equals(organisationPartnership.TradingName)).Should().NotBeEmpty();
+            }
+        }
+
+        [Fact]
         public async Task Execute_GivenOrganisationNameParameter_OnlyReturnsPartiallyMatchingOrganisationShouldBeReturned()
         {
             using (var db = new DatabaseWrapper())

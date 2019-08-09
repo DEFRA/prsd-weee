@@ -59,8 +59,8 @@
                 filteredData.ElementAt(0).Abbreviation.Should().Be(aatf.CompetentAuthority.Abbreviation);
                 filteredData.ElementAt(0).PanName.Should().Be(aatf.PanArea.Name);
                 filteredData.ElementAt(0).LaName.Should().Be(aatf.LocalArea.Name);
-                filteredData.ElementAt(0).SiteName.Contains("name");
-                filteredData.ElementAt(0).SiteAddress.Should().Be(string.Concat("address,address2,town,county,postcode", ",", db.WeeeContext.Countries.First().Name));
+                filteredData.ElementAt(0).SiteName.Should().Contain("name");
+                filteredData.ElementAt(0).SiteAddress.Should().Be(string.Concat("address, address2, town, county, postcode", ", ", db.WeeeContext.Countries.First().Name));
             }
         }
 

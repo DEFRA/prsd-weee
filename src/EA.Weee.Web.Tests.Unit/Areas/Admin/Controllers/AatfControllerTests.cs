@@ -171,11 +171,11 @@
             SetUpControllerContext(userHasInternalAdminClaims);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ManageAatfsViewModel viewModel = new ManageAatfsViewModel();
+            var viewModel = new ManageAatfsViewModel();
 
-            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
+            var result = await controller.ManageAatfs(viewModel) as ViewResult;
 
-            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+            var resultViewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanAddAatf);
         }
@@ -200,14 +200,14 @@
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ManageAatfsViewModel viewModel = new ManageAatfsViewModel()
+            var viewModel = new ManageAatfsViewModel()
             {
                 FacilityType = type
             };
 
-            ViewResult result = await controller.ManageAatfs(viewModel) as ViewResult;
+            var result = await controller.ManageAatfs(viewModel) as ViewResult;
 
-            ManageAatfsViewModel resultViewModel = result.Model as ManageAatfsViewModel;
+            var resultViewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(type, resultViewModel.FacilityType);
         }
@@ -230,7 +230,7 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
 
-            ViewResult result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
+            var result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
 
             var viewModel = result.Model as ManageAatfsViewModel;
 
@@ -243,9 +243,9 @@
         {
             SetUpControllerContext(false);
 
-            ViewResult result = await controller.ManageAatfs(facilityType) as ViewResult;
+            var result = await controller.ManageAatfs(facilityType) as ViewResult;
 
-            ManageAatfsViewModel viewModel = result.Model as ManageAatfsViewModel;
+            var viewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(facilityType, viewModel.FacilityType);
         }
@@ -317,7 +317,7 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData
+            var contactData = new AatfContactData
             {
                 AddressData = new AatfContactAddressData()
                 {
@@ -365,7 +365,7 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData
+            var contactData = new AatfContactData
             {
                 AddressData = new AatfContactAddressData()
                 {
@@ -419,7 +419,7 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData
+            var contactData = new AatfContactData
             {
                 AddressData = new AatfContactAddressData()
                 {
@@ -468,7 +468,7 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData
+            var contactData = new AatfContactData
             {
                 AddressData = new AatfContactAddressData()
                 {
@@ -519,7 +519,7 @@
                 }
             };
 
-            AatfContactData contactData = new AatfContactData
+            var contactData = new AatfContactData
             {
                 AddressData = new AatfContactAddressData()
                 {
@@ -710,20 +710,20 @@
         [Fact]
         public async void ManageAatfDetailsPost_ApprovalNumberAlreadyExists_ReturnsViewWithViewModelAndErrorMessage()
         {
-            string approvalNumber = "test";
+            var approvalNumber = "test";
 
-            AatfEditDetailsViewModel viewModel = A.Fake<AatfEditDetailsViewModel>();
+            var viewModel = A.Fake<AatfEditDetailsViewModel>();
             A.CallTo(() => viewModel.ApprovalNumber).Returns(approvalNumber);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
                  p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
 
-            ViewResult result = await controller.ManageAatfDetails(viewModel) as ViewResult;
-            AatfEditDetailsViewModel resultViewModel = result.Model as AatfEditDetailsViewModel;
+            var result = await controller.ManageAatfDetails(viewModel) as ViewResult;
+            var resultViewModel = result.Model as AatfEditDetailsViewModel;
 
-            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+            var allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
 
-            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
+            var error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
             Assert.NotNull(error);
 
             result.ViewName.Should().Be("ManageAatfDetails");
@@ -736,13 +736,11 @@
         [Fact]
         public async void ManageAatfDetailsPost_ApprovalNumberIsSameAsSavedData_CheckForUniqueApprovalNumberMustNotHaveHappened()
         {
-            string approvalNumber = "test";
+            var approvalNumber = "test";
 
-            AatfEditDetailsViewModel viewModel = new AatfEditDetailsViewModel();
-            viewModel.Id = Guid.NewGuid();
-            viewModel.ApprovalNumber = approvalNumber;
+            var viewModel = new AatfEditDetailsViewModel {Id = Guid.NewGuid(), ApprovalNumber = approvalNumber};
 
-            AatfData aatf = new AatfData()
+            var aatf = new AatfData()
             {
                 Id = viewModel.Id,
                 ApprovalNumber = approvalNumber,
@@ -890,12 +888,12 @@
         [MemberData("FacilityTypeEnumValues")]
         public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
-            string activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
+            var activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
 
             var aatfId = Guid.NewGuid();
             ContactDataAccessSetup(true);
 
-            AatfData aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
 
@@ -1117,27 +1115,29 @@
         [Fact]
         public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
         {
-            CanAatfBeDeletedFlags canDelete = CanAatfBeDeletedFlags.HasActiveUsers | CanAatfBeDeletedFlags.OrganisationHasMoreAatfs;
-            Guid aatfId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
-            FacilityType facilityType = FacilityType.Aatf;
+            var aatfDeletionFlags = CanAatfBeDeletedFlags.OrganisationHasActiveUsers | CanAatfBeDeletedFlags.CanDelete;
+            var organisationDeletionFlags = CanOrganisationBeDeletedFlags.HasActiveUsers | CanOrganisationBeDeletedFlags.HasReturns;
+            var aatfDeletionData = new AatfDeletionData(organisationDeletionFlags, aatfDeletionFlags);
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var facilityType = FacilityType.Aatf;
 
             var organisationData = A.Fake<OrganisationData>();
             const string orgName = "orgName";
             const string aatfName = "aatfName";
-            AatfData aatfData = A.Dummy<AatfData>();
+            var aatfData = A.Dummy<AatfData>();
             aatfData.Name = aatfName;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(canDelete);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfDeletionData);
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
-            ViewResult result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
+            var result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
 
-            DeleteViewModel viewModel = result.Model as DeleteViewModel;
+            var viewModel = result.Model as DeleteViewModel;
             Assert.Equal(aatfId, viewModel.AatfId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(facilityType, viewModel.FacilityType);
-            Assert.Equal(canDelete, viewModel.CanDeleteFlags);
+            Assert.Equal(aatfDeletionData, viewModel.DeletionData);
             Assert.Equal(orgName, viewModel.OrganisationName);
             Assert.Equal(aatfName, viewModel.AatfName);
 
@@ -1149,11 +1149,11 @@
         public async void GetDelete_EnsureBreadcrumbIsSet()
         {
             const string orgName = "orgName";
-            Guid aatfId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
-            FacilityType facilityType = FacilityType.Aatf;
+            var aatfId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var facilityType = FacilityType.Aatf;
 
-            AatfData aatfData = A.Dummy<AatfData>();
+            var aatfData = A.Dummy<AatfData>();
             aatfData.Name = "Name";
             aatfData.Id = aatfId;
 
@@ -1169,17 +1169,16 @@
         [Fact]
         public async void PostDelete_DeleteAnAatfHandlerIsCalled_ReturnsRedirectToManageAatf()
         {
-            DeleteViewModel viewModel = new DeleteViewModel()
+            var viewModel = new DeleteViewModel()
             {
                 AatfId = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
                 FacilityType = FacilityType.Aatf,
-                CanDeleteFlags = CanAatfBeDeletedFlags.HasActiveUsers
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId)));
 
-            RedirectToRouteResult result = await controller.Delete(viewModel) as RedirectToRouteResult;
+            var result = await controller.Delete(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ManageAatfs");
             result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
@@ -1202,15 +1201,15 @@
         [Fact]
         public async void AatfReturnData_OnDownload_ReturnsCsv()
         {
-            CSVFileData file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
+            var file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).Returns(file);
 
-            ActionResult result = await controller.Download(A.Dummy<Guid>(), 2019, 1, A.Dummy<Guid>());
+            var result = await controller.Download(A.Dummy<Guid>(), 2019, 1, A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).MustHaveHappened(Repeated.Exactly.Once);
 
-            FileResult fileResult = result as FileResult;
+            var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
             Assert.Equal("text/csv", fileResult.ContentType);
         }
@@ -1228,9 +1227,9 @@
 
         private void SetUpControllerContext(bool hasInternalAdminUserClaims)
         {
-            HttpContextBase httpContextBase = A.Fake<HttpContextBase>();
-            ClaimsPrincipal principal = new ClaimsPrincipal(httpContextBase.User);
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+            var httpContextBase = A.Fake<HttpContextBase>();
+            var principal = new ClaimsPrincipal(httpContextBase.User);
+            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
 
             if (hasInternalAdminUserClaims)
             {
