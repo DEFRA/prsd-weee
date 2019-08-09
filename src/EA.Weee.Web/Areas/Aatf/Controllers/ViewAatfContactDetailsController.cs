@@ -2,17 +2,13 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Aatf;
-    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
 
     public class ViewAatfContactDetailsController : ExternalSiteController
@@ -37,21 +33,20 @@
 
                 var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId, Contact = aatf.Contact, AatfName = aatf.Name, IsAE = isAE };
 
-                await SetBreadcrumb(model.OrganisationId, "AATF contact details", true);
+                await SetBreadcrumb(model.OrganisationId, "AATF contact details", aatf.Name, aatf.ApprovalNumber, aatf.FacilityType);
 
                 return View(model);
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity, bool setScheme = true)
+        private async Task SetBreadcrumb(Guid organisationId, string activity, string aatfName, string aatfApproval, string aatfFacility)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
-            if (setScheme)
-            {
-                breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-            }
+            breadcrumb.ExternalAatfName = aatfName;
+            breadcrumb.ExternalAatfApprovalNumber = aatfApproval;
+            breadcrumb.ExternalAatfFacilityType = aatfFacility;
         }
     }
 }
