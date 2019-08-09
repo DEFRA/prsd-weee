@@ -77,8 +77,6 @@
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandler.cs" />
-    <Compile Include="Aatf\GetAatfExternal\GetAatfExternalDataAccess.cs" />
-    <Compile Include="Aatf\GetAatfExternal\IGetAatfExternalDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandler.cs" />
