@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
@@ -18,12 +20,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel> mapper;
 
-        public HomeController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client)
+        public HomeController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel> mapper)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -65,7 +69,7 @@
                     aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
                 }
 
-                var model = new HomeViewModel() { OrganisationId = organisationId, AatfList = selectedAatfsOrAes, IsAE = isAE };
+                var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = selectedAatfsOrAes, OrganisationId = organisationId, IsAE = isAE });
 
                 await SetBreadcrumb(model.OrganisationId, "AATF return", false);
 
