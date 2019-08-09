@@ -15,6 +15,7 @@
     using RequestHandlers.AatfReturn.Internal;
     using Weee.Tests.Core;
     using Xunit;
+    using FacilityType = Domain.AatfReturn.FacilityType;
 
     public class AatfDataAccessTests
     {
@@ -137,7 +138,7 @@
         [InlineData(false, true, false, true)]
         [InlineData(false, false, true, true)]
         [InlineData(true, true, true, true)]
-        public async void DoesAatfHaveData_GivenId_ReturnsBasedOnData(bool hasReceived, bool hasReused, bool hasSentOn, bool expectedResult)
+        public async void HasAatfData_GivenId_ReturnsBasedOnData(bool hasReceived, bool hasReused, bool hasSentOn, bool expectedResult)
         {
             var weeeReceived = new List<WeeeReceived>();
             var weeeReused = new List<WeeeReused>();
@@ -169,17 +170,75 @@
             A.CallTo(() => context.WeeeReceived).Returns(dbContextHelper.GetAsyncEnabledDbSet(weeeReceived));
             A.CallTo(() => context.WeeeReused).Returns(dbContextHelper.GetAsyncEnabledDbSet(weeeReused));
             A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(weeeSentOn));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>()));
+            A.CallTo(() => context.Returns).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Return>()));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
 
             var result = await dataAccess.HasAatfData(aatfId);
 
             expectedResult.Should().Be(result);
         }
 
+        [Fact]
+        public async void HasAatfData_GiveAatfHasNilReturn_TrueShouldBeReturned()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var @return = A.Fake<Return>();
+            A.CallTo(() => @return.Id).Returns(returnId);
+            A.CallTo(() => @return.NilReturn).Returns(true);
+
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+
+            var returnAatf = new ReturnAatf(aatf, @return);
+
+            A.CallTo(() => context.WeeeReceived).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReceived>()));
+            A.CallTo(() => context.WeeeReused).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReused>()));
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>()));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() { returnAatf }));
+            A.CallTo(() => context.Returns).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Return>() { @return }));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+
+            var result = await dataAccess.HasAatfData(aatfId);
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async void HasAatfData_GiveAatfDoesNotHaveNilReturnAndNoOtherWeeeData_FalseShouldBeReturned()
+        {
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+
+            var @return = A.Fake<Return>();
+            A.CallTo(() => @return.Id).Returns(returnId);
+            A.CallTo(() => @return.NilReturn).Returns(false);
+
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+
+            var returnAatf = new ReturnAatf(aatf, @return);
+
+            A.CallTo(() => context.WeeeReceived).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReceived>()));
+            A.CallTo(() => context.WeeeReused).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReused>()));
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>()));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() { returnAatf }));
+            A.CallTo(() => context.Returns).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Return>() { @return }));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+
+            var result = await dataAccess.HasAatfData(aatfId);
+
+            result.Should().BeFalse();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void HasAatfOrganisationOtherEntities_HasAaatf_ShouldBeExpectedResult(bool hasOtherAatfs)
+        public async void HasAatfOrganisationOtherAeOrAatf_HasAatf_ShouldBeExpectedResult(bool hasOtherAatfs)
         {
+            const short complianceYear = 2019;
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
 
@@ -189,6 +248,8 @@
             var aatf = A.Fake<Aatf>();
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => aatf.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
             var aatfs = new List<Aatf> {aatf};
 
@@ -196,23 +257,25 @@
             {
                 var otherAatf = A.Fake<Aatf>();
                 A.CallTo(() => otherAatf.Organisation).Returns(organisation);
+                A.CallTo(() => otherAatf.ComplianceYear).Returns(complianceYear);
+                A.CallTo(() => otherAatf.FacilityType).Returns(FacilityType.Aatf);
 
                 aatfs.Add(otherAatf);
             }
 
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
-            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<EA.Weee.Domain.Scheme.Scheme>()));
 
-            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
+            var result = await dataAccess.HasAatfOrganisationOtherAeOrAatf(aatf);
 
             hasOtherAatfs.Should().Be(result);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void HasAatfOrganisationOtherEntities_HasScheme_ShouldBeExpectedResult(bool hasScheme)
+        [Fact]
+        public async void HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingComplianceYear_ShouldBeFalse()
         {
+            const short complianceYear = 2019;
+            const short nonMatchComplianceYear = 2020;
+
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
 
@@ -222,31 +285,29 @@
             var aatf = A.Fake<Aatf>();
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => aatf.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
-            var aatfs = new List<Aatf> { aatf };
-            var schemes = new List<Domain.Scheme.Scheme>();
+            var otherAatf = A.Fake<Aatf>();
+            A.CallTo(() => otherAatf.Organisation).Returns(organisation);
+            A.CallTo(() => otherAatf.ComplianceYear).Returns(nonMatchComplianceYear);
+            A.CallTo(() => otherAatf.FacilityType).Returns(FacilityType.Aatf);
 
-            if (hasScheme)
-            {
-                var scheme = A.Fake<Domain.Scheme.Scheme>();
-                A.CallTo(() => scheme.Organisation).Returns(organisation);
-
-                schemes.Add(scheme);
-            }
+            var aatfs = new List<Aatf> { aatf, otherAatf };
 
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
-            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
+            var result = await dataAccess.HasAatfOrganisationOtherAeOrAatf(aatf);
 
-            hasScheme.Should().Be(result);
+            result.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void HasAatfOrganisationOtherEntities_HasSchemeAndAatf_ShouldBeExpectedResult(bool hasOtherEntity)
+        [Fact]
+        public async void HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingFacilityType_ShouldBeFalse()
         {
+            const short complianceYear = 2019;
+            var nonMatchingFacilityType = FacilityType.Ae;
+
             var aatfId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
 
@@ -256,29 +317,21 @@
             var aatf = A.Fake<Aatf>();
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => aatf.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
-            var aatfs = new List<Aatf> { aatf };
-            var schemes = new List<Domain.Scheme.Scheme>();
+            var otherAatf = A.Fake<Aatf>();
+            A.CallTo(() => otherAatf.Organisation).Returns(organisation);
+            A.CallTo(() => otherAatf.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => otherAatf.FacilityType).Returns(nonMatchingFacilityType);
 
-            if (hasOtherEntity)
-            {
-                var scheme = A.Fake<Domain.Scheme.Scheme>();
-                A.CallTo(() => scheme.Organisation).Returns(organisation);
-
-                schemes.Add(scheme);
-
-                var otherAatf = A.Fake<Aatf>();
-                A.CallTo(() => otherAatf.Organisation).Returns(organisation);
-
-                aatfs.Add(otherAatf);
-            }
+            var aatfs = new List<Aatf> { aatf, otherAatf };
 
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
-            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var result = await dataAccess.HasAatfOrganisationOtherEntities(aatfId);
+            var result = await dataAccess.HasAatfOrganisationOtherAeOrAatf(aatf);
 
-            hasOtherEntity.Should().Be(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -286,13 +339,18 @@
         {
             var aatfId = Guid.NewGuid();
             var aatf = A.Fake<Aatf>();
+            var returnAatf = A.Fake<ReturnAatf>();
+
+            A.CallTo(() => returnAatf.Aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() {returnAatf}));
 
             await dataAccess.RemoveAatf(aatfId);
 
             A.CallTo(() => genericDataAccess.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
-            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                .Then(A.CallTo(() => genericDataAccess.Remove(returnAatf)).MustHaveHappened(Repeated.Exactly.Once))
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
         }
     }
 }

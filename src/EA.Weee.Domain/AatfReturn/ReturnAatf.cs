@@ -9,6 +9,10 @@
 
         public virtual Return Return { get; private set; }
 
+        public ReturnAatf()
+        {
+        }
+
         public ReturnAatf(Aatf aatf, Return @return)
         {
             Guard.ArgumentNotNull(() => aatf, aatf);

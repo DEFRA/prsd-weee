@@ -9,7 +9,7 @@
     using Domain.Organisation;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    
+
     public class AatfDataAccess : IAatfDataAccess
     {
         private readonly WeeeContext context;
@@ -82,19 +82,22 @@
 
         public async Task<bool> HasAatfData(Guid aatfId)
         {
-            return await context.WeeeSentOn.CountAsync(p => p.AatfId == aatfId) > 0
-                || await context.WeeeReused.CountAsync(p => p.AatfId == aatfId) > 0
-                || await context.WeeeReceived.CountAsync(p => p.AatfId == aatfId) > 0;
+            return await context.WeeeSentOn.AnyAsync(p => p.AatfId == aatfId)
+                   || await context.WeeeReused.AnyAsync(p => p.AatfId == aatfId)
+                   || await context.WeeeReceived.AnyAsync(p => p.AatfId == aatfId)
+                    || await context.ReturnAatfs.AnyAsync(r => r.Aatf.Id == aatfId && r.Return.NilReturn);
         }
 
-        public async Task<bool> HasAatfOrganisationOtherEntities(Guid aatfId)
+        public async Task<bool> HasAatfOrganisationOtherAeOrAatf(Aatf aatf)
         {
-            var aatf = await GetAatfById(aatfId);
+            var findAatf = await GetAatfById(aatf.Id);
 
             var organisationId = aatf.Organisation.Id;
 
-            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId) > 1
-                || await context.Schemes.CountAsync(s => s.Organisation.Id == organisationId) > 0;
+            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId 
+                                                       && p.ComplianceYear == findAatf.ComplianceYear 
+                                                       && p.FacilityType.Value == findAatf.FacilityType.Value
+                                                       && p.Id != findAatf.Id) > 0;
         }
 
         private async Task<Aatf> GetAatfById(Guid id)
@@ -114,6 +117,11 @@
             var aatf = await GetAatfById(aatfId);
 
             genericDataAccess.Remove(aatf);
+
+            foreach (var returnAatf in context.ReturnAatfs.Where(r => r.Aatf.Id == aatfId))
+            {
+                genericDataAccess.Remove(returnAatf);
+            }
 
             await context.SaveChangesAsync();
         }
