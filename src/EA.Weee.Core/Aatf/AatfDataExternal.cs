@@ -13,6 +13,10 @@
 
         public string AatfContactDetailsName { get; set; }
 
+        public string ApprovalNumber { get; set; }
+
+        public string FacilityType { get; set; }
+
         public AatfDataExternal(Guid id, string name)
         {
             this.Id = id;
