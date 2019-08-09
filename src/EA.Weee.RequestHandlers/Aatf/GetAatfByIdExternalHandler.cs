@@ -40,7 +40,9 @@
 
             var aatfData = new AatfDataExternal(aatf.Id, aatf.Name)
             {
-                Contact = aatfContactData
+                Contact = aatfContactData,
+                ApprovalNumber = aatf.ApprovalNumber,
+                FacilityType = aatf.FacilityType.DisplayName
             };
 
             return aatfData;
