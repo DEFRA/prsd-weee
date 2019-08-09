@@ -112,6 +112,7 @@
             aatf.SiteAddress.Should().Be(address);
             aatf.LocalArea.Should().Be(localArea);
             aatf.PanArea.Should().Be(panArea);
+            aatf.AatfId.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -156,6 +157,42 @@
             var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, address, size, date, contact, facilityType, complianceYear, localArea, panArea);
 
             aatf.PanArea.Should().Be(panArea);
+        }
+
+        [Fact]
+        public void Aatf_GivenValidParametersWithAatfId_AatfPropertiesShouldBeSet()
+        {
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var organisation = A.Fake<Organisation>();
+            const string name = "name";
+            const string approvalNumber = "approvalNumber";
+            var aatfStatus = AatfStatus.Approved;
+            var contact = A.Fake<AatfContact>();
+            var complianceYear = (Int16)2019;
+            var localArea = A.Fake<LocalArea>();
+            var panArea = A.Fake<PanArea>();
+            var facilityType = FacilityType.Aatf;
+            var date = DateTime.Now;
+            var address = A.Fake<AatfAddress>();
+            var size = AatfSize.Large;
+            var aatfId = Guid.NewGuid();
+
+            var aatf = new Aatf(name, competentAuthority, approvalNumber, aatfStatus, organisation, address, size, date, contact, facilityType, complianceYear, localArea, panArea, aatfId);
+
+            aatf.CompetentAuthority.Should().Be(competentAuthority);
+            aatf.ApprovalNumber.Should().Be(approvalNumber);
+            aatf.AatfStatus.Should().Be(aatfStatus);
+            aatf.Name.Should().Be(name);
+            aatf.Organisation.Should().Be(organisation);
+            aatf.Contact.Should().Be(contact);
+            aatf.ComplianceYear.Should().Be(complianceYear);
+            aatf.ApprovalDate.Should().Be(date);
+            aatf.Size.Should().Be(size);
+            aatf.FacilityType.Should().Be(facilityType);
+            aatf.SiteAddress.Should().Be(address);
+            aatf.LocalArea.Should().Be(localArea);
+            aatf.PanArea.Should().Be(panArea);
+            aatf.AatfId.Should().Be(aatfId);
         }
     }
 }
