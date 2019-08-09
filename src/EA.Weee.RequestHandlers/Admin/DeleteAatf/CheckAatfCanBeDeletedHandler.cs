@@ -7,52 +7,39 @@
     using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
+    using DeleteValidation;
 
-    public class CheckAatfCanBeDeletedHandler : IRequestHandler<CheckAatfCanBeDeleted, CanAatfBeDeletedFlags>
+    public class CheckAatfCanBeDeletedHandler : IRequestHandler<CheckAatfCanBeDeleted, AatfDeletionData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfDataAccess dataAccess;
+        private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
+        private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
+        private readonly IAatfDataAccess aatfDataAccess;
 
-        public CheckAatfCanBeDeletedHandler(IWeeeAuthorization authorization, IAatfDataAccess dataAccess)
+        public CheckAatfCanBeDeletedHandler(IWeeeAuthorization authorization, 
+            IGetAatfDeletionStatus getAatfDeletionStatus, 
+            IGetOrganisationDeletionStatus getOrganisationDeletionStatus, 
+            IAatfDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
-            this.dataAccess = dataAccess;
+            this.getAatfDeletionStatus = getAatfDeletionStatus;
+            this.getOrganisationDeletionStatus = getOrganisationDeletionStatus;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
-        public async Task<CanAatfBeDeletedFlags> HandleAsync(CheckAatfCanBeDeleted message)
+        public async Task<AatfDeletionData> HandleAsync(CheckAatfCanBeDeleted message)
         {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            CanAatfBeDeletedFlags result = new CanAatfBeDeletedFlags();
+            var aatfDeletion = await getAatfDeletionStatus.Validate(message.AatfId);
 
-            bool hasData = await dataAccess.DoesAatfHaveData(message.AatfId);
+            var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
-            if (hasData)
-            {
-                result |= CanAatfBeDeletedFlags.HasData;
-            }
+            var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
-            bool orgHasMoreAatfs = await dataAccess.DoesAatfOrganisationHaveMoreAatfs(message.AatfId);
-
-            if (orgHasMoreAatfs)
-            {
-                result |= CanAatfBeDeletedFlags.OrganisationHasMoreAatfs;
-            }
-
-            if (!orgHasMoreAatfs && !hasData)
-            {
-                result |= CanAatfBeDeletedFlags.Yes;
-            }
-
-            bool orgHasActiveUsers = await dataAccess.DoesAatfOrganisationHaveActiveUsers(message.AatfId);
-
-            if (orgHasActiveUsers)
-            {
-                result |= CanAatfBeDeletedFlags.HasActiveUsers;
-            }
-
-            return result;
+            return new AatfDeletionData(organisationDeletion, aatfDeletion);
         }
     }
 }

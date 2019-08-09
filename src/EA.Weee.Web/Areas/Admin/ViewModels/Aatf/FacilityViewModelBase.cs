@@ -124,7 +124,7 @@
                     if (instance.PanAreaId == null)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Enter WROS pan area team", new List<string> { nameof(instance.PanAreaId) }));
+                            new ValidationResult($"Enter WROS Pan Area Team", new List<string> { nameof(instance.PanAreaId) }));
                     }
                 }
             }

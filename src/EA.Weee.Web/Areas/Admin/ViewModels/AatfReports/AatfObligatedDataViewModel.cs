@@ -21,7 +21,7 @@
 
         public IEnumerable<SelectListItem> CompetentAuthoritiesList { get; set; }
 
-        [Display(Name = "WROS Pan area team")]
+        [Display(Name = "WROS Pan Area Team")]
         public Guid? PanAreaId { get; set; }
         public IEnumerable<SelectListItem> PanAreaList { get; set; }
 
@@ -33,7 +33,7 @@
         {
             get
             {
-                yield return new SelectListItem() { Text = "PCS names", Value = "1"};
+                yield return new SelectListItem() { Text = "PCS names", Value = "1" };
                 yield return new SelectListItem() { Text = "Approval numbers", Value = "2" };
             }
         }
