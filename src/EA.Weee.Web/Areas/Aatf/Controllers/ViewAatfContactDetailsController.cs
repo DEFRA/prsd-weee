@@ -43,20 +43,6 @@
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ViewAatfContactDetailsViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Index", "ViewAATFContactDetailsList", new { });
-            }
-
-            await SetBreadcrumb(model.OrganisationId, "AATF contact details", true);
-
-            return View(model);
-        }
-
         private async Task SetBreadcrumb(Guid organisationId, string activity, bool setScheme = true)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
