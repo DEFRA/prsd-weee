@@ -50,7 +50,7 @@
         </div>
         @if (Model.CanEdit)
         {
-            <div style="float:right" hidden="hidden">
+            <div style="float:right">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
             </div>
         }
@@ -83,7 +83,7 @@
                 @if (Model.HasPatArea)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">WROS pan area team</th>
+                        <th class="govuk-table__header" scope="col">WROS Pan Area Team</th>
                         <td class="govuk-table__cell">
                             @Model.PanArea.Name <br />
                         </td>

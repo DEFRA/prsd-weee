@@ -15,7 +15,7 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [DisplayName("AATF name")]
+        [DisplayName("Organisation name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string OrganisationName { get; set; }
     }

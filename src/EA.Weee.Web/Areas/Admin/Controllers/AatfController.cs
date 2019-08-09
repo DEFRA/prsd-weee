@@ -117,7 +117,7 @@
 
         private bool IsUserInternalAdmin()
         {
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+            var claimsPrincipal = new ClaimsPrincipal(this.User);
 
             return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
@@ -233,7 +233,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.NotAllowed)]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
             var aatfData = await cache.FetchAatfData(organisationId, id);
@@ -242,14 +241,14 @@
 
             using (var client = apiClient())
             {
-                CanAatfBeDeletedFlags canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
+                var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
 
-                DeleteViewModel viewModel = new DeleteViewModel()
+                var viewModel = new DeleteViewModel()
                 {
                     AatfId = id,
                     OrganisationId = organisationId,
                     FacilityType = facilityType,
-                    CanDeleteFlags = canDelete,
+                    DeletionData = canDelete,
                     AatfName = aatfData.Name,
                     OrganisationName = await cache.FetchOrganisationName(organisationId)
                 };
@@ -281,7 +280,7 @@
                 fileData = await client.SendAsync(User.GetAccessToken(), new GetAatfObligatedData(complianceYear, quarter, returnId, aatfId));
             }
 
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
@@ -315,7 +314,7 @@
 
             using (var client = apiClient())
             {
-                bool doesApprovalNumberExist = false;
+                var doesApprovalNumberExist = false;
 
                 var existingAatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
 
