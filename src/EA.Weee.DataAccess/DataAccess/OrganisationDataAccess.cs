@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Organisation;
+    using Domain.User;
 
     public class OrganisationDataAccess : IOrganisationDataAccess
     {
@@ -30,6 +31,33 @@
                 .SingleAsync(c => c.Id == organisationId);
 
             return organisation;
+        }
+
+        public async Task Delete(Guid organisationId)
+        {
+            var organisation = await context.Organisations.FirstOrDefaultAsync(p => p.Id == organisationId);
+
+            if (organisation == null)
+            {
+                throw new ArgumentException($"Organisation not found with id {organisationId}");
+            }
+
+            context.OrganisationUsers.RemoveRange(context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id));
+
+            context.Organisations.Remove(organisation);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasActiveUsers(Guid organisationId)
+        {
+            return await context.OrganisationUsers
+                .AnyAsync(p => p.OrganisationId == organisationId && p.UserStatus.Value == UserStatus.Active.Value);
+        }
+
+        public async Task<bool> HasReturns(Guid organisationId, int year)
+        {
+            return await context.Returns.AnyAsync(r => r.Organisation.Id == organisationId && r.Quarter.Year == year);
         }
     }
 }

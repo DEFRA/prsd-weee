@@ -11,7 +11,6 @@
         Manage AATF returns
     </h1>
 
-
     @if (Model.DisplayCreateReturn)
     {
         <div class="govuk-grid-row">
@@ -79,8 +78,8 @@
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                             @{
-                                var continueMessage = "Continue return for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
-                                var editMessage = "Edit return for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+                                var continueMessage = "Continue return for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+                                var editMessage = "Edit return for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
 
                                 if (item.ReturnsListDisplayOptions.DisplayContinue)
                                 {
@@ -100,13 +99,12 @@
                                 if (item.ReturnsListDisplayOptions.DisplayEdit)
                                 {
 
-                                    using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId }, FormMethod.Post, null))
+                                    using (Html.BeginForm("Copy", "Returns", new { returnId = @item.ReturnViewModel.ReturnId, organisationId = @item.ReturnViewModel.Organisation.Id }, FormMethod.Post, null))
                                     {
                                         @Html.AntiForgeryToken()
-                                        @Html.Hidden("returnId", @item.ReturnViewModel.ReturnId)
-                                        @Html.Hidden("organisationId", @item.ReturnViewModel.OrganisationId)
 
-                                        <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit"><span class="govuk-visually-hidden">@editMessage</span> Edit</button>
+                                        <span class="govuk-visually-hidden" id="edit-message-@item.ReturnViewModel.ReturnId">@editMessage</span>
+                                        <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit" aria-describedby="edit-message-@item.ReturnViewModel.ReturnId">Edit</button>
                                     }
                                 }
                             }
@@ -114,7 +112,7 @@
                         <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
                             @if (item.ReturnsListDisplayOptions.DisplaySummary)
                             {
-                                var summaryMessage = "Return summary for quarter "  + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
+                                var summaryMessage = "Return summary for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
 
                                 @Html.NavigationRouteLink("Summary", summaryMessage, AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
                             }
@@ -135,42 +133,7 @@
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, new { title = "Perform another activity page navigation" })
     </p>
- 
-        <style type="text/css">
 
-            @@media only screen and (max-width: 1020px) {
-                td:nth-of-type(1):before {
-                    content: "Year";
-                }
-
-                td:nth-of-type(2):before {
-                    content: "Quarter";
-                }
-
-                td:nth-of-type(3):before {
-                    content: "Total obligated (tonnes)";
-                }
-
-                td:nth-of-type(4):before {
-                    content: "Total non-obligated (tonnes)";
-                }
-
-                td:nth-of-type(5):before {
-                    content: "Created by";
-                }
-
-                td:nth-of-type(6):before {
-                    content: "Submitted date (GMT)";
-                }
-
-                td:nth-of-type(7):before {
-                    content: "Submitted by";
-                }
-
-                td:nth-of-type(8):before {
-                    content: "Status";
-                }
-            }
-        </style>
-    
 </section>
+
+@Styles.Render("~/Content/weee-returns-mobile")

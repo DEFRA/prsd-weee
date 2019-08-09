@@ -23,7 +23,7 @@
         [Fact]
         public void NonObligatedWeeeReceivedAtAatfViewModel_OrganisationName_ShouldHaveDisplayAttribute()
         {
-            typeof(NonObligatedWeeeReceivedAtAatfViewModel).GetProperty("OrganisationName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("AATF name");
+            typeof(NonObligatedWeeeReceivedAtAatfViewModel).GetProperty("OrganisationName").Should().BeDecoratedWith<DisplayNameAttribute>().Which.DisplayName.Should().Be("Organisation name");
         }
     }
 }
