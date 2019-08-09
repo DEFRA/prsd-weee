@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -101,12 +99,7 @@
                 var countries = await client.SendAsync(accessToken, new GetCountries(false));
 
                 viewModel.ContactData.AddressData.Countries = countries;
-                viewModel.SiteAddressData.Countries = countries;
-                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
-                viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
-                viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
-                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
-                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
+                viewModel = await AddAatfController.PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
             }
 
             return viewModel;
@@ -134,7 +127,7 @@
                 {
                     var request = new CopyAatf()
                     {
-                        Aatf = CreateFacilityData(viewModel),
+                        Aatf = AddAatfController.CreateFacilityData(viewModel),
                         OrganisationId = viewModel.OrganisationId,
                         AatfId = viewModel.AatfId,
                         AatfContact = viewModel.ContactData
@@ -147,26 +140,6 @@
 
                 return RedirectToAction("ManageAatfs", "Aatf", new { viewModel.FacilityType });
             }
-        }
-
-        private AatfData CreateFacilityData<T>(T viewModel)
-            where T : CopyFacilityViewModelBase
-        {
-            var data = new AatfData(
-                Guid.NewGuid(),
-                viewModel.Name,
-                viewModel.ApprovalNumber,
-                viewModel.ComplianceYear,
-                viewModel.CompetentAuthoritiesList.FirstOrDefault(p => p.Abbreviation == viewModel.CompetentAuthorityId),
-                Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
-                viewModel.SiteAddressData,
-                Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault(),
-                viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
-                viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId))
-            { FacilityType = viewModel.FacilityType };
-           
-            return data;
         }
 
         private void SetBreadcrumb(FacilityType type, string name)
