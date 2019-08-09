@@ -328,6 +328,8 @@
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ViewAatfContactDetailsController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewAatfContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
@@ -1408,7 +1410,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Aatf\Mappings\ToViewModel\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>

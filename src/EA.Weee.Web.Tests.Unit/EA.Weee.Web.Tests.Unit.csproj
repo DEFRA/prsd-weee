@@ -225,6 +225,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ViewAatfContactDetailsControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />

@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.Controllers;
+    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -26,14 +28,16 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly HomeController controller;
+        private readonly IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel> mapper;
 
         public HomeControllerTests()
         {
             this.apiClient = A.Fake<IWeeeClient>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
+            this.mapper = A.Fake<IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>>();
 
-            controller = new HomeController(cache, breadcrumb, () => apiClient);
+            controller = new HomeController(cache, breadcrumb, () => apiClient, mapper);
         }
 
         [Fact]
@@ -83,6 +87,16 @@
             await controller.Index(organisationId, false);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenOrganisationId_MapperShouldBeCalled()
+        {
+            var organisationId = Guid.NewGuid();
+
+            await controller.Index(organisationId, false);
+
+            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>.That.Matches(a => a.IsAE == false && a.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Theory]
