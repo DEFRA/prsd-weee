@@ -6,35 +6,31 @@
     using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Aatf.GetAatfExternal;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Aatf;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class GetAatfByIdExternalHandler : IRequestHandler<GetAatfByIdExternal, AatfDataExternal>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IUserContext context;
-        private readonly IGetAatfExternalDataAccess dataAccess;
+        private readonly IFetchAatfDataAccess fetchDataAccess;
         private readonly IMap<AatfContact, AatfContactData> mapper;
 
-        public GetAatfByIdExternalHandler(IWeeeAuthorization authorization, IUserContext context, IMap<AatfContact, AatfContactData> mapper, IGetAatfExternalDataAccess dataAccess)
+        public GetAatfByIdExternalHandler(IWeeeAuthorization authorization, IUserContext context, IMap<AatfContact, AatfContactData> mapper, IFetchAatfDataAccess fetchDataAccess)
         {
             this.authorization = authorization;
             this.context = context;
             this.mapper = mapper;
-            this.dataAccess = dataAccess;
+            this.fetchDataAccess = fetchDataAccess;
         }
 
         public async Task<AatfDataExternal> HandleAsync(GetAatfByIdExternal message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatf = await dataAccess.GetAatfById(message.AatfId);
+            var aatf = await fetchDataAccess.FetchById(message.AatfId);
 
             var aatfContactData = mapper.Map(aatf.Contact);
 
