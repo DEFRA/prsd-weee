@@ -12,7 +12,7 @@
         <h1 class="govuk-heading-l">
             @if (Model.IsAE)
             {
-                @:View AE contact details             
+                @:View AE contact details
             }
             else
             {
@@ -110,10 +110,6 @@
             </tbody>
         </table>
 
-        <p>
-            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
-        </p>
-
         <div>
             @this.WeeeGds().CreateProgressiveDisclosure(" I would like to change my details",
            "<br><div class='govuk-body govuk-!-font-size-16'>Contact your environmental regulator to change these details</div>",
@@ -121,5 +117,9 @@
            "Progressive disclosure",
            "I would like to change my details")
         </div>
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
+        </p>
     }
 }

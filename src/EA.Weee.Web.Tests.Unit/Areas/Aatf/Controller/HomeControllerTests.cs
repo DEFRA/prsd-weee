@@ -55,6 +55,19 @@
         }
 
         [Fact]
+        public async void IndexPost_GivenInValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationName = "organisation";
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+
+            await controller.Index(new HomeViewModel());
+
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+        }
+
+        [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), false) as ViewResult;
@@ -158,6 +171,60 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
             result.RouteValues["organisationId"].Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async void IndexGet_HomeViewModelShouldBeBuilt()
+        {
+            var organisationId = Guid.NewGuid();
+
+            var aatfList = new List<AatfData>();
+
+            var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                   A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf
+            };
+
+            var aatfData2 = new AatfData(Guid.NewGuid(), "AATF2", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+               Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+               A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf
+            };
+
+            aatfList.Add(aatfData);
+            aatfList.Add(aatfData2);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
+
+            var result = await controller.Index(organisationId, false) as ViewResult;
+
+            var model = result.Model as HomeViewModel;
+
+            model.IsAE.Should().Be(false);
+            model.AatfList.Should().BeEquivalentTo(aatfList);
+            model.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async void IndexPost_ValidViewModel_PageRedirectsContactDetails()
+        {
+            var model = new HomeViewModel()
+            {
+                OrganisationId = Guid.NewGuid(),
+                SelectedAatfId = Guid.NewGuid(),
+                IsAE = false
+            };
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
+            result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
+            result.RouteValues["aatfId"].Should().Be(model.SelectedAatfId);
+            result.RouteValues["isAE"].Should().Be(model.IsAE);
         }
     }
 }
