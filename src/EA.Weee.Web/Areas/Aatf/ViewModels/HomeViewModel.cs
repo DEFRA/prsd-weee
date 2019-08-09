@@ -19,8 +19,6 @@
         [Required(ErrorMessage = "Select an organisation to perform activities")]
         public Guid? SelectedAatfId { get; set; }
 
-        //public List<AatfData> AatfList { get; set; }
-
         public IReadOnlyList<AatfData> AatfList { get; set; }
 
         public HomeViewModel()
