@@ -4,6 +4,7 @@
     using System.Linq;
     using AutoFixture;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using Domain.Scheme;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
@@ -45,6 +46,41 @@
 
                 databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatf.Id).Should().BeEmpty();
                 databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatfDoNotDelete.Id).Should().NotBeEmpty();
+            }
+        }
+
+        [Fact]
+        public async void RemoveAatf_GivenAatfWithReturnAatfEntries_AatfShouldShouldBeRemoved()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper));
+
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
+                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
+                    FacilityType.Aatf, 2019, QuarterType.Q1);
+
+                var aatfDoNotDelete = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
+                
+                databaseWrapper.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
+                databaseWrapper.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatfDoNotDelete, @return));
+                databaseWrapper.WeeeContext.Aatfs.Add(aatf);
+                databaseWrapper.WeeeContext.Aatfs.Add(aatfDoNotDelete);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatf.Id).Should().NotBeEmpty();
+                databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatfDoNotDelete.Id).Should().NotBeEmpty();
+                databaseWrapper.WeeeContext.ReturnAatfs.Where(o => o.Aatf.Id == aatf.Id).Should().NotBeEmpty();
+                databaseWrapper.WeeeContext.ReturnAatfs.Where(o => o.Aatf.Id == aatfDoNotDelete.Id).Should().NotBeEmpty();
+
+                await aatfDataAccess.RemoveAatf(aatf.Id);
+
+                databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatf.Id).Should().BeEmpty();
+                databaseWrapper.WeeeContext.Aatfs.Where(o => o.Id == aatfDoNotDelete.Id).Should().NotBeEmpty();
+                databaseWrapper.WeeeContext.ReturnAatfs.Where(o => o.Aatf.Id == aatf.Id).Should().BeEmpty();
+                databaseWrapper.WeeeContext.ReturnAatfs.Where(o => o.Aatf.Id == aatfDoNotDelete.Id).Should().NotBeEmpty();
             }
         }
 

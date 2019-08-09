@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Core.Admin;
     using DataAccess.DataAccess;
+    using Domain.AatfReturn;
 
     public class GetOrganisationDeletionStatus : IGetOrganisationDeletionStatus
     {
@@ -18,9 +19,7 @@
         {
             var result = new CanOrganisationBeDeletedFlags();
 
-            var organisationHasReturns = await organisationDataAccess.HasReturns(organisationId, year);
-
-            if (organisationHasReturns)
+            if (await organisationDataAccess.HasReturns(organisationId, year))
             {
                 result |= CanOrganisationBeDeletedFlags.HasReturns;
             }
@@ -28,6 +27,21 @@
             if (await organisationDataAccess.HasActiveUsers(organisationId))
             {
                 result |= CanOrganisationBeDeletedFlags.HasActiveUsers;
+            }
+
+            if (await organisationDataAccess.HasScheme(organisationId))
+            {
+                result |= CanOrganisationBeDeletedFlags.HasScheme;
+            }
+
+            if (await organisationDataAccess.HasFacility(organisationId, FacilityType.Aatf))
+            {
+                result |= CanOrganisationBeDeletedFlags.HasAatf;
+            }
+
+            if (await organisationDataAccess.HasFacility(organisationId, FacilityType.Ae))
+            {
+                result |= CanOrganisationBeDeletedFlags.HasAe;
             }
 
             return result;

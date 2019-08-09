@@ -8,6 +8,7 @@
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
+    using Domain.Scheme;
     using Domain.User;
     using FluentAssertions;
     using Weee.DataAccess.DataAccess;
@@ -199,6 +200,127 @@
                 var result = await organisationDataAccess.HasReturns(organisation.Id, 2019);
 
                 result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasFacility_GivenOrganisationDoesNotHaveAatf_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var ae = ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, organisation);
+
+                databaseWrapper.WeeeContext.Aatfs.Add(ae);
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasFacility(organisation.Id, FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasFacility_GivenOrganisationHasAatf_TrueShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
+
+                databaseWrapper.WeeeContext.Aatfs.Add(aatf);
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasFacility(organisation.Id, FacilityType.Aatf);
+
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async void HasFacility_GivenOrganisationHasAe_TrueShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var ae = ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, organisation);
+
+                databaseWrapper.WeeeContext.Aatfs.Add(ae);
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasFacility(organisation.Id, FacilityType.Ae);
+
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async void HasFacility_GivenOrganisationDoesNotHavAe_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
+
+                databaseWrapper.WeeeContext.Aatfs.Add(aatf);
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasFacility(organisation.Id, FacilityType.Ae);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasScheme_GivenOrganisationDoesNotHaveScheme_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasScheme(organisation.Id);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasScheme_GivenOrganisationDoesHasScheme_TrueShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Schemes.Add(new Domain.Scheme.Scheme(organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasScheme(organisation.Id);
+
+                result.Should().BeTrue();
             }
         }
     }
