@@ -1408,6 +1408,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Aatf\Mappings\ToViewModel\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
@@ -1493,7 +1494,7 @@
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
     <CreateItem Include="Content\weee-returns-mobile.css">
-        <Output ItemName="Content" TaskParameter="Include" />
+      <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
   <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
