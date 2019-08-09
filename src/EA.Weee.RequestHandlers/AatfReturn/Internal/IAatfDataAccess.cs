@@ -5,7 +5,6 @@
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
-
     public interface IAatfDataAccess
     {
         Task<Aatf> GetDetails(Guid id);
@@ -20,7 +19,7 @@
 
         Task<bool> HasAatfData(Guid aatfId);
 
-        Task<bool> HasAatfOrganisationOtherEntities(Guid aatfId);
+        Task<bool> HasAatfOrganisationOtherAeOrAatf(Aatf aatf);
 
         Task RemoveAatf(Guid aatfId);
     }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using Domain.Organisation;
 
     public interface IOrganisationDataAccess
@@ -15,5 +16,9 @@
         Task<bool> HasActiveUsers(Guid organisationId);
 
         Task<bool> HasReturns(Guid organisationId, int year);
+
+        Task<bool> HasScheme(Guid organisationId);
+
+        Task<bool> HasFacility(Guid organisationId, FacilityType facilityType);
     }
 }

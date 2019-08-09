@@ -265,6 +265,10 @@
             {
                 await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
 
+                await cache.InvalidateOrganisationSearch();
+
+                await cache.InvalidateAatfCache(viewModel.AatfId);
+
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }
         }
