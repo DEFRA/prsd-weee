@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Requests.Admin.DeleteAatf
+﻿namespace EA.Weee.Requests.Admin.Aatf
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Admin;
     using System;
+    using Core.Admin;
+    using Prsd.Core.Mediator;
 
     public class CheckAatfCanBeDeleted : IRequest<AatfDeletionData>
     {

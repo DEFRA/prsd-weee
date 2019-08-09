@@ -1,19 +1,19 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System;
     using System.Threading.Tasks;
+    using AatfReturn;
+    using AatfReturn.Internal;
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
     using Domain.Lookup;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Internal;
-    using EA.Weee.Security;
+    using Organisations;
+    using Prsd.Core.Domain;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
+    using Requests.Admin.Aatf;
+    using Security;
     using Shared;
+    using Weee.Security;
     using PanArea = Domain.Lookup.PanArea;
 
     internal class EditAatfDetailsRequestHandler : IRequestHandler<EditAatfDetails, bool>

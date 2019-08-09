@@ -1,20 +1,21 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Internal;
-    using EA.Weee.Security;
-    using EA.Weee.Tests.Core;
+    using Core.AatfReturn;
+    using Domain;
+    using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Admin.Aatf;
+    using RequestHandlers.Organisations;
+    using RequestHandlers.Security;
+    using Requests.Admin.Aatf;
+    using Weee.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class EditAatfContactHandlerTests

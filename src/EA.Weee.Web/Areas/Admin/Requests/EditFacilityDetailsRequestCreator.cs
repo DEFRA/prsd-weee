@@ -4,8 +4,8 @@
     using Core.Shared;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using Weee.Requests.Admin.Aatf;
 
     public class EditFacilityDetailsRequestCreator : IEditFacilityDetailsRequestCreator
     {

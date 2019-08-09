@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.DeleteAatf.DeleteValidation
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
     using System;
     using System.Threading.Tasks;

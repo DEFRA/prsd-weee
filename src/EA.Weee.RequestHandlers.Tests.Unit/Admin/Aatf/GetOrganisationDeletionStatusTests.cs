@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.DeleteAatf
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
     using System;
     using System.Threading.Tasks;
@@ -7,7 +7,7 @@
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
+    using RequestHandlers.Admin.Aatf;
     using Xunit;
 
     public class GetOrganisationDeletionStatusTests

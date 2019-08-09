@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Requests
 {
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Requests.Admin.Aatf;
     using Xunit;
 
     public class EditAatfContactRequestCreatorTests

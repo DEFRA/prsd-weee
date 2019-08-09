@@ -6,6 +6,11 @@
     ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
 }
 
+@if (Model.DisplayAatApprovalDateMessage)
+{
+    <p>Hello</p>
+}
+
 <section id="main-content">
     <h1 class="govuk-heading-l">Manage @Model.FacilityType.ToDisplayString() details</h1>
     @using (Html.BeginForm(actionName: Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf ? "ManageAatfDetails" : "ManageAeDetails", controllerName: "Aatf", method: FormMethod.Post))

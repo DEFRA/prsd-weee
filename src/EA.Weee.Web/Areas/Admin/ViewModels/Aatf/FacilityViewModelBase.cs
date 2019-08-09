@@ -132,5 +132,7 @@
             ModelValidated = true;
             return validationResults;
         }
+
+        public bool DisplayAatApprovalDateMessage { get; set; }
     }
 }

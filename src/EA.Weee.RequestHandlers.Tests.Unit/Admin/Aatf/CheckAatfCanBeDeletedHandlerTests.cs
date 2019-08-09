@@ -1,20 +1,15 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.DeleteAatf
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using EA.Weee.Core.Admin;
-    using EA.Weee.DataAccess.Identity;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Admin.DeleteAatf;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.DeleteAatf;
-    using EA.Weee.Security;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
-    using Microsoft.AspNet.Identity;
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
-    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
+    using FakeItEasy;
+    using FluentAssertions;
+    using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Admin.Aatf;
+    using Requests.Admin.Aatf;
+    using Weee.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class CheckAatfCanBeDeletedHandlerTests
@@ -57,6 +52,14 @@
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CheckAatfCanBeDeleted>());
 
             await Assert.ThrowsAsync<SecurityException>(action);
+        }
+
+        [Fact]
+        public async Task ImplementOtherTests()
+        {
+            // check the returns
+            // check that the other checks are called
+            true.Should().BeFalse();
         }
     }
 }

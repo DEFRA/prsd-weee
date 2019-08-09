@@ -12,9 +12,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -319,6 +317,7 @@
             using (var client = apiClient())
             {
                 var doesApprovalNumberExist = false;
+                viewModel.DisplayAatApprovalDateMessage = true;
 
                 var existingAatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
 
@@ -327,7 +326,7 @@
                     doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
                 }
 
-                if (ModelState.IsValid && !doesApprovalNumberExist)
+                if (ModelState.IsValid && !doesApprovalNumberExist && !viewModel.DisplayAatApprovalDateMessage)
                 {
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                     viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
@@ -361,6 +360,7 @@
                 {
                     ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                 }
+
                 return View(nameof(ManageAatfDetails), viewModel);
             }
         }

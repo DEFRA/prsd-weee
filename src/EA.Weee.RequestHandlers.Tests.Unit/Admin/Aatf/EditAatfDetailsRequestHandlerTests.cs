@@ -1,26 +1,27 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
     using System;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Admin;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Lookup;
-    using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Internal;
-    using EA.Weee.Security;
-    using EA.Weee.Tests.Core;
+    using Core.AatfReturn;
+    using Core.Admin;
+    using Core.Shared;
+    using Domain;
+    using Domain.AatfReturn;
+    using Domain.Lookup;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Admin.Aatf;
+    using RequestHandlers.Organisations;
+    using RequestHandlers.Security;
     using RequestHandlers.Shared;
+    using Requests.Admin.Aatf;
+    using Weee.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class EditAatfDetailsRequestHandlerTests
