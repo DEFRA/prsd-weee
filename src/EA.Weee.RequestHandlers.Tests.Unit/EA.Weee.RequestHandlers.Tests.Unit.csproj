@@ -112,6 +112,7 @@
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
+    <Compile Include="Admin\CopyAatfHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandlerTests.cs" />
