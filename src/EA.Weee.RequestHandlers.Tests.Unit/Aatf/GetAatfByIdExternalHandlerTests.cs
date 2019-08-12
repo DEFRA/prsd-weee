@@ -6,7 +6,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Aatf;
-    using EA.Weee.RequestHandlers.Aatf.GetAatfExternal;
+    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Aatf;
     using FakeItEasy;
@@ -22,7 +22,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IUserContext context;
-        private readonly IGetAatfExternalDataAccess dataAccess;
+        private readonly IFetchAatfDataAccess dataAccess;
         private readonly IMap<AatfContact, AatfContactData> mapper;
         private readonly GetAatfByIdExternalHandler handler;
 
@@ -30,7 +30,7 @@
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
             this.context = A.Fake<IUserContext>();
-            this.dataAccess = A.Fake<IGetAatfExternalDataAccess>();
+            this.dataAccess = A.Fake<IFetchAatfDataAccess>();
             this.mapper = A.Fake<IMap<AatfContact, AatfContactData>>();
 
             this.handler = new GetAatfByIdExternalHandler(authorization, context, mapper, dataAccess);
@@ -43,7 +43,7 @@
 
             await handler.HandleAsync(new GetAatfByIdExternal(id));
 
-            A.CallTo(() => dataAccess.GetAatfById(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchById(id)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -51,7 +51,7 @@
         {
             var aatf = A.Fake<Aatf>();
 
-            A.CallTo(() => dataAccess.GetAatfById(A<Guid>._)).Returns(aatf);
+            A.CallTo(() => dataAccess.FetchById(A<Guid>._)).Returns(aatf);
 
             await handler.HandleAsync(A.Dummy<GetAatfByIdExternal>());
 
@@ -64,7 +64,7 @@
             var aatf = A.Fake<Aatf>();
             var aatfContactData = A.Fake<AatfContactData>();
 
-            A.CallTo(() => dataAccess.GetAatfById(A<Guid>._)).Returns(aatf);
+            A.CallTo(() => dataAccess.FetchById(A<Guid>._)).Returns(aatf);
             A.CallTo(() => mapper.Map(aatf.Contact)).Returns(aatfContactData);
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfByIdExternal>());
