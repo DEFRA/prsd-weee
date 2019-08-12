@@ -36,40 +36,13 @@
             using (var client = apiClient())
             {
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-                var selectedAatfsOrAes = new List<AatfData>();
 
-                if (isAE)
-                {
-                    foreach (var aatf in allAatfsAndAes)
-                    {
-                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
-                        {
-                            selectedAatfsOrAes.Add(aatf);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var aatf in allAatfsAndAes)
-                    {
-                        if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
-                        {
-                            selectedAatfsOrAes.Add(aatf);
-                        }
-                    }
-                }
+                var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, IsAE = isAE });
 
-                if (selectedAatfsOrAes.Count == 1)
+                if (model.AatfList.Count == 1)
                 {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = selectedAatfsOrAes[0].Id, isAE = isAE });
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = model.AatfList[0].Id, isAE = isAE });
                 }
-
-                foreach (var aatf in selectedAatfsOrAes)
-                {
-                    aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
-                }
-
-                var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = selectedAatfsOrAes, OrganisationId = organisationId, IsAE = isAE });
 
                 await SetBreadcrumb(model.OrganisationId, "AATF return", false);
 
