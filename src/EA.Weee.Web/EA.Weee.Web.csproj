@@ -333,8 +333,11 @@
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewAatfContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAatfViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAeViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
@@ -345,6 +348,9 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfReuseSitesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkWeeeDataAtAatfViewModel.cs" />
@@ -596,6 +602,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
     <Content Include="Content\remove-site.css" />
+    <Content Include="Areas\Admin\Views\Shared\_AatfDetails.cshtml" />
     <None Include="Content\weee-returns-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -986,6 +993,7 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfNonObligatedData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfSentOnData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfReuseSites.cshtml" />
+    <Content Include="Areas\Admin\Views\CopyAatf\Copy.cshtml" />
     <Content Include="Areas\Aatf\Views\web.config">
       <SubType>Designer</SubType>
     </Content>

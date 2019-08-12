@@ -33,7 +33,7 @@
 
                 var aatfAddress = new AatfContact("FirstName", "LastName", "Position", "Address1", "Address2", "Town", "County", "PO12ST34", country, "Telephone", "Email");
 
-                var dataAccess = new AatfDataAccess(context);
+                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext));
 
                 var aatfId = await CreateContact(database, aatfAddress);
 

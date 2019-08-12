@@ -1,0 +1,9 @@
+ALTER TABLE [AATF].[AATF] ADD AatfId [uniqueidentifier] NULL;
+
+GO
+UPDATE [AATF].[AATF] SET AatfId = NEWID() WHERE AatfId IS NULL;
+
+GO
+ALTER TABLE [AATF].[AATF] ALTER COLUMN AatfId [uniqueidentifier] NOT NULL;
+
+

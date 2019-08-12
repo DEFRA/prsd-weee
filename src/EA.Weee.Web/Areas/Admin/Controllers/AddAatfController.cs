@@ -17,6 +17,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
@@ -355,15 +356,23 @@
                 var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
                 viewModel.ContactData.AddressData.Countries = countries;
-                viewModel.SiteAddressData.Countries = countries;
-                viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-                viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
-                viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
-                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
-                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
                 viewModel.OrganisationName = organisation.OrganisationName;
+                viewModel = await PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
             }
 
+            return viewModel;
+        }
+
+        public static async Task<T> PopulateFacilityViewModelLists<T>(T viewModel, IList<CountryData> countries, IWeeeClient client, string accessToken)
+           where T : FacilityViewModelBase
+        {          
+                viewModel.SiteAddressData.Countries = countries;
+                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
+                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
+                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
+          
             return viewModel;
         }
 
@@ -420,8 +429,8 @@
             }
         }
 
-        private AatfData CreateFacilityData<T>(T viewModel)
-            where T : AddFacilityViewModelBase
+        public static AatfData CreateFacilityData<T>(T viewModel)
+            where T : FacilityViewModelBase
         {
             var data = new AatfData(
                 Guid.NewGuid(),
