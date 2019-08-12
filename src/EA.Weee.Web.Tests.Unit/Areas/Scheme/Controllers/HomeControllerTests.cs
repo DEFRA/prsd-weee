@@ -251,6 +251,40 @@
         }
 
         [Fact]
+        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsToHomeControllerWithAESetToFalse()
+        { 
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewAATFContactDetails
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+            Assert.Equal(false, routeValues["isAE"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ViewAEContactDetails_RedirectsToHomeControllerWithAESetToTrue()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewAEContactDetails
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+            Assert.Equal(true, routeValues["isAE"]);
+        }
+
+        [Fact]
         public async void PostChooseActivity_ManagePcsMembersPendingStatus_RedirectsToAuthorisationRequired()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
