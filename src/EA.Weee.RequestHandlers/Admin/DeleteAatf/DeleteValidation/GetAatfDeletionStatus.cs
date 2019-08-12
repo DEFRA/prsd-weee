@@ -5,6 +5,7 @@
     using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess.DataAccess;
+    using Domain.AatfReturn;
 
     public class GetAatfDeletionStatus : IGetAatfDeletionStatus
     {
@@ -23,7 +24,6 @@
             var result = new CanAatfBeDeletedFlags();
 
             var aatf = await aatfDataAccess.GetDetails(aatfId);
-
             var hasData = await aatfDataAccess.HasAatfData(aatfId);
 
             if (hasData)
@@ -35,20 +35,25 @@
             var organisationDeletionStatus = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
             if (organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
+                await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
             {
                 result |= CanAatfBeDeletedFlags.CanDelete;
             }
             else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                     await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
+                     await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
             {
                 result |= CanAatfBeDeletedFlags.CanDelete;
             }
             else if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
-                     !await aatfDataAccess.HasAatfOrganisationOtherEntities(aatfId))
+                     !await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
             {
                 result |= CanAatfBeDeletedFlags.CanDelete;
-                result |= CanAatfBeDeletedFlags.CanDeleteOrganisation;
+
+                if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasScheme)
+                && (aatf.FacilityType == FacilityType.Aatf && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAe) || (aatf.FacilityType == FacilityType.Ae && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAatf))))
+                {
+                    result |= CanAatfBeDeletedFlags.CanDeleteOrganisation;
+                }
             }
 
             return result;

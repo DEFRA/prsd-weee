@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.User;
 
@@ -42,9 +43,12 @@
                 throw new ArgumentException($"Organisation not found with id {organisationId}");
             }
 
-            context.OrganisationUsers.RemoveRange(context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id));
+            foreach (var organisationUser in context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id))
+            {
+                context.Entry(organisationUser).State = EntityState.Deleted;
+            }
 
-            context.Organisations.Remove(organisation);
+            context.Entry(organisation).State = EntityState.Deleted;
 
             await context.SaveChangesAsync();
         }
@@ -53,6 +57,18 @@
         {
             return await context.OrganisationUsers
                 .AnyAsync(p => p.OrganisationId == organisationId && p.UserStatus.Value == UserStatus.Active.Value);
+        }
+
+        public async Task<bool> HasScheme(Guid organisationId)
+        {
+            return await context.Schemes
+                .AnyAsync(p => p.OrganisationId == organisationId);
+        }
+
+        public async Task<bool> HasFacility(Guid organisationId, FacilityType facilityType)
+        {
+            return await context.Aatfs
+                .AnyAsync(p => p.Organisation.Id == organisationId && p.FacilityType.Value == facilityType.Value);
         }
 
         public async Task<bool> HasReturns(Guid organisationId, int year)
