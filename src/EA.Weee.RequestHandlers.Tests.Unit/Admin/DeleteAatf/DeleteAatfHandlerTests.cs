@@ -15,8 +15,11 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using Core.Admin;
     using DataAccess;
     using DataAccess.DataAccess;
+    using FluentAssertions;
     using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
     using Xunit;
 
@@ -24,7 +27,6 @@
     {
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
-        private readonly DeleteAatfHandler handler;
         private readonly WeeeContext weeeContext;
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
 
@@ -34,12 +36,6 @@
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             getAatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
-
-            handler = new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
-                aatfDataAccess,
-                organisationDataAccess,
-                weeeContext,
-                getAatfDeletionStatus);
         }
 
         [Theory]
