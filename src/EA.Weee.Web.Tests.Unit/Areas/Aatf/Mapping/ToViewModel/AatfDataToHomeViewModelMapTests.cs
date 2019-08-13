@@ -53,6 +53,44 @@
             }
         }
 
+        [Fact]
+        public void Map_GivenListOfAatfs_ListIdOrderedByName()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfList = new List<AatfData>();
+
+            var aatfData = new AatfData(Guid.NewGuid(), "Banana", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                   A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf
+            };
+
+            var aatfData2 = new AatfData(Guid.NewGuid(), "Carrot", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+               Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+               A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf
+            };
+
+            var aatfData3 = new AatfData(Guid.NewGuid(), "Apple", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+               Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+               A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf
+            };
+
+            aatfList.Add(aatfData);
+            aatfList.Add(aatfData2);
+            aatfList.Add(aatfData3);
+
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = false };
+
+            var result = map.Map(transfer);
+
+            result.AatfList.Should().BeInAscendingOrder(z => z.Name);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
