@@ -22,7 +22,7 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ComplianceYear)">
             @Html.Gds().LabelFor(m => m.ComplianceYear)
             @Html.Gds().ValidationMessageFor(m => m.ComplianceYear)
-            @Html.Gds().DropDownListFor(m => m.ComplianceYear, Model.ComplianceYearList, string.Empty, new { @class = "govuk-!-width-one-third govuk-input", autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.ComplianceYear, Model.ComplianceYearList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
