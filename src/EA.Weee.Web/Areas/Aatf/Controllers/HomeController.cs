@@ -88,7 +88,14 @@
 
             ModelState.ApplyCustomValidationSummaryOrdering(HomeViewModel.ValidationMessageDisplayOrder);
 
-            await SetBreadcrumb(model.OrganisationId, "AATF return", false);
+            if (model.IsAE)
+            {
+                await SetBreadcrumb(model.OrganisationId, "View AE contact details", false);
+            }
+            else
+            {
+                await SetBreadcrumb(model.OrganisationId, "View AATF contact details", false);
+            }
 
             return View(model);
         }
