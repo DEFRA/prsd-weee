@@ -5,7 +5,16 @@
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.HomeViewModel
-
+@{
+    if (Model.IsAE)
+    {
+        ViewBag.Title = "Which AE would you like to view - GOV.UK";
+    }
+    else
+    {
+        ViewBag.Title = "Which AATF would you like to view - GOV.UK";
+    }
+}
 @section main_content
 {
     <header class="hgroup">

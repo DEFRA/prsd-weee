@@ -9,11 +9,13 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Aatf;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Text;
     using System.Threading.Tasks;
     using Xunit;
@@ -24,7 +26,7 @@
         private readonly IUserContext context;
         private readonly IFetchAatfDataAccess dataAccess;
         private readonly IMap<AatfContact, AatfContactData> mapper;
-        private readonly GetAatfByIdExternalHandler handler;
+        private GetAatfByIdExternalHandler handler;
 
         public GetAatfByIdExternalHandlerTests()
         {
@@ -37,13 +39,28 @@
         }
 
         [Fact]
+        public async Task HandleAsync_NoOrganisationAccess_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+
+            handler = new GetAatfByIdExternalHandler(authorization,
+                A.Dummy<IUserContext>(),
+                A.Dummy<IMap<AatfContact, AatfContactData>>(),
+                A.Dummy<IFetchAatfDataAccess>());
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfByIdExternal>());
+
+            await action.Should().ThrowAsync<SecurityException>();
+        }
+
+        [Fact]
         public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
-            var id = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
 
-            await handler.HandleAsync(new GetAatfByIdExternal(id));
+            await handler.HandleAsync(new GetAatfByIdExternal(aatfId, Guid.NewGuid()));
 
-            A.CallTo(() => dataAccess.FetchById(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchById(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
