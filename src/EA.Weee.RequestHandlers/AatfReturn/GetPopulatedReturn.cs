@@ -10,6 +10,7 @@
     using Domain.AatfReturn;
     using Factories;
     using NonObligated;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Security;
     using Specification;
@@ -26,6 +27,7 @@
         private readonly IFetchAatfDataAccess aatfDataAccess;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetPopulatedReturn(IWeeeAuthorization authorization, 
             IReturnDataAccess returnDataAccess,  
@@ -35,7 +37,7 @@
             IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess, 
             IFetchAatfDataAccess aatfDataAccess, 
             IReturnSchemeDataAccess returnSchemeDataAccess,
-            IGenericDataAccess genericDataAccess)
+            IGenericDataAccess genericDataAccess, ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
@@ -46,6 +48,7 @@
             this.aatfDataAccess = aatfDataAccess;
             this.returnSchemeDataAccess = returnSchemeDataAccess;
             this.genericDataAccess = genericDataAccess;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<ReturnData> GetReturnData(Guid returnId, bool forSummary)
@@ -61,7 +64,7 @@
 
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
-            var annualQuarterWindow = await quarterWindowFactory.GetAnnualQuarter(@return.Quarter);
+            var annualQuarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
 
             var returnNonObligatedValues = await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(returnId);
 
@@ -85,6 +88,14 @@
 
             var returnReportsOn = await genericDataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
 
+            var currentDate = SystemTime.Now;
+            var systemSettings = await systemDataDataAccess.Get();
+
+            if (systemSettings.UseFixedCurrentDate)
+            {
+                currentDate = systemSettings.FixedCurrentDate;
+            }
+
             var returnQuarterWindow = new ReturnQuarterWindow(@return,
                 annualQuarterWindow,
                 aatfs,
@@ -94,7 +105,8 @@
                 @return.Organisation,
                 sentOn,
                 returnSchemeList,
-                returnReportsOn);
+                returnReportsOn,
+                currentDate);
 
             return mapper.Map(returnQuarterWindow);
         }

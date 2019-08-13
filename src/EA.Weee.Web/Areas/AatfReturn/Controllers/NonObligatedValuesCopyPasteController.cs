@@ -45,23 +45,20 @@
                     TypeHeading = typeHeading
                 };
 
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(NonObligatedValuesCopyPasteViewModel viewModel, string cancel)
+        public virtual async Task<ActionResult> Index(NonObligatedValuesCopyPasteViewModel viewModel)
         {
-            if (string.IsNullOrEmpty(cancel))
-            {
-                var pastedContent = viewModel.PastedValues.First();
+            var pastedContent = viewModel.PastedValues.First();
 
-                if (!string.IsNullOrEmpty(pastedContent))
-                {
-                    TempData["pastedValues"] = pastedContent;
-                }
+            if (!string.IsNullOrEmpty(pastedContent))
+            {
+                TempData["pastedValues"] = pastedContent;
             }
 
             return await Task.Run<ActionResult>(() => AatfRedirect.NonObligated(viewModel.ReturnId, viewModel.Dcf));

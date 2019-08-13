@@ -10,7 +10,6 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Scheme;
 
     public class FetchOrganisationSearchResultsForCacheDataAccess : IFetchOrganisationSearchResultsForCacheDataAccess
     {
@@ -36,15 +35,6 @@
                 .ToListAsync();
 
             var schemes = await context.Schemes.ToListAsync();
-
-            foreach (Scheme scheme in schemes)
-            {
-                if (scheme.SchemeStatus.Value == Domain.Scheme.SchemeStatus.Rejected.Value)
-                {
-                    organisations.Remove(scheme.Organisation);
-                }
-            }
-
             var aatfs = await context.Aatfs.ToListAsync();
 
             return organisations.Select(r => new OrganisationSearchResult()
@@ -56,6 +46,7 @@
                 AatfCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Aatf),
                 AeCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Ae)
             })
+                .Where(r => r.PcsCount > 0 || r.AatfCount > 0 || r.AeCount > 0)
                 .OrderBy(r => r.Name)
                 .ToList();
         }

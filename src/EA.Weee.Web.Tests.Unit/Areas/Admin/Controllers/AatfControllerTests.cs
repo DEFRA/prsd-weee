@@ -18,6 +18,7 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
@@ -707,6 +708,72 @@
         }
 
         [Fact]
+        public async void ManageAatfDetailsPost_ApprovalNumberAlreadyExists_ReturnsViewWithViewModelAndErrorMessage()
+        {
+            string approvalNumber = "test";
+
+            AatfEditDetailsViewModel viewModel = A.Fake<AatfEditDetailsViewModel>();
+            A.CallTo(() => viewModel.ApprovalNumber).Returns(approvalNumber);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+
+            ViewResult result = await controller.ManageAatfDetails(viewModel) as ViewResult;
+            AatfEditDetailsViewModel resultViewModel = result.Model as AatfEditDetailsViewModel;
+
+            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
+            Assert.NotNull(error);
+
+            result.ViewName.Should().Be("ManageAatfDetails");
+            result.Model.Should().Be(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ManageAatfDetailsPost_ApprovalNumberIsSameAsSavedData_CheckForUniqueApprovalNumberMustNotHaveHappened()
+        {
+            string approvalNumber = "test";
+
+            AatfEditDetailsViewModel viewModel = new AatfEditDetailsViewModel();
+            viewModel.Id = Guid.NewGuid();
+            viewModel.ApprovalNumber = approvalNumber;
+
+            AatfData aatf = new AatfData()
+            {
+                Id = viewModel.Id,
+                ApprovalNumber = approvalNumber,
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(
+                 p => p.AatfId == viewModel.Id))).Returns(aatf);
+
+            IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
+
+            var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
+            clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+            var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
+            clientCallCountries.Returns(Task.FromResult(countries));
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
+            helperCall.Returns(url);
+
+            await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustNotHaveHappened();
+        }
+
+        [Fact]
         public async void ManageAatfDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
         {
             var viewModel = new AatfEditDetailsViewModel() { Id = Guid.NewGuid() };
@@ -1089,7 +1156,7 @@
             AatfData aatfData = A.Dummy<AatfData>();
             aatfData.Name = "Name";
             aatfData.Id = aatfId;
-            
+
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
@@ -1123,12 +1190,29 @@
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
+        [InlineData("Download")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
             var methods = typeof(AatfController).GetMethods();
             var methodInfo = methods.Where(method =>
                     Attribute.GetCustomAttribute(method, typeof(HttpGetAttribute)) != null).Where(method => method.Name == methodName);
             methodInfo.FirstOrDefault().Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public async void AatfReturnData_OnDownload_ReturnsCsv()
+        {
+            CSVFileData file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).Returns(file);
+
+            ActionResult result = await controller.Download(A.Dummy<Guid>(), 2019, 1, A.Dummy<Guid>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).MustHaveHappened(Repeated.Exactly.Once);
+
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         private void ContactDataAccessSetup(bool canEdit)

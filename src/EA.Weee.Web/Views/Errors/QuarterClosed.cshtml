@@ -1,0 +1,13 @@
+﻿@{
+    Page.Title = "Reporting Window Closed";
+    Response.TrySkipIisCustomErrors = true;
+    Response.StatusCode = 403;
+}
+
+<h1 class="govuk-heading-l">@Page.Title</h1>
+
+<p>Sorry, the reporting window for this quarter has closed.</p>
+
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = ""})" class="govuk-button">Continue</a>
+</p>

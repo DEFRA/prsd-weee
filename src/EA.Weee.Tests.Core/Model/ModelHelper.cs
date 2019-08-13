@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Domain.DataReturns;
     using Domain.Error;
     using Domain.Lookup;
     using Domain.Obligation;
@@ -646,6 +645,26 @@
             model.DataReturns.Add(dataReturn);
 
             return dataReturn;
+        }
+
+        public Return CreateAatfReturn(Organisation organisation, int complianceYear, int quarter, string userId)
+        {
+            int dataReturnId = GetNextId();
+
+            var aatfReturn = new Return
+            {
+                Id = IntegerToGuid(dataReturnId),
+                Quarter = quarter,
+                ComplianceYear = complianceYear,
+                SubmittedDate = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                CreatedById = userId,
+                Organisation = organisation,
+                OrganisationId = organisation.Id
+            };
+            model.Returns.Add(aatfReturn);
+
+            return aatfReturn;
         }
 
         public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true, DataReturn dataReturn = null, WeeeCollectedReturnVersion weeeCollectedReturnVersion = null)

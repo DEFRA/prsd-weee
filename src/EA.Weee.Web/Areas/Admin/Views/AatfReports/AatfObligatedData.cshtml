@@ -1,0 +1,105 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.AatfObligatedDataViewModel
+@{
+    ViewBag.Title = "Download AATF obligated WEEE data - GOV.UK";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download AATF obligated WEEE data</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria</p>
+        <p>All data is reported in tonnes (t) to three decimal places</p>
+        <p>Only data from the most recent “submitted” returns are included (anything that is in progress, but not submitted by an operator is omitted)</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedColumn)">
+            @Html.Gds().LabelFor(m => m.SelectedColumn)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedColumn)
+            @Html.Gds().DropDownListFor(m => m.SelectedColumn, Model.SchemeColumnPossibleValues, string.Empty, new { autocomplete = "false" })
+
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationType)">
+            @Html.Gds().LabelFor(m => m.SelectedObligationType)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)
+            @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+            @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group competent-authority-hidden">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                @Html.Gds().LabelFor(m => m.PanAreaId)
+                @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { autocomplete = "false" })
+            </div>
+        </div>
+
+
+        <p>
+            If there is a large amount of returns data for your selected criteria, it may take a while to download your results
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports", "Report download", "AATF obligated WEEE data", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "Reports")
+    </p>
+}
+@section scripts {
+    <script type="text/javascript">
+        function competentAuthoritySelection() {
+            var competentAuthority = $("#CompetentAuthorityId option:selected").html();
+
+            if (competentAuthority === "EA") {
+                $(".competent-authority-hidden").css("display", "block");
+
+                $('a[href*="PanAreaId"]').parent().css("display", "");
+            }
+            else {
+                $(".competent-authority-hidden").css("display", "none");
+                $(".competent-authority-hidden").find("select").val('');
+
+                $('a[href*="PanAreaId"]').parent().css("display", "none");
+            }
+        }
+        competentAuthoritySelection();
+
+        $("#CompetentAuthorityId").change(function () {
+            competentAuthoritySelection();
+        });
+    </script>
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadAatfObligatedDataCsv", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              columnType = Model.SelectedColumn,
+                              obligationType = Model.SelectedObligationType,
+                              aatfName = Model.AATFName,
+                              authorityId = Model.CompetentAuthorityId,
+                              panArea = Model.PanAreaId
+                          }))";
+        </script>
+    }
+}

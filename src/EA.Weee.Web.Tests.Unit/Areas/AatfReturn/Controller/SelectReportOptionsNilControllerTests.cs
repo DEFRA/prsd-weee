@@ -19,6 +19,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class SelectReportOptionsNilControllerTests
@@ -75,7 +76,7 @@
             var @return = A.Fake<ReturnData>();
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             const string reportingPeriod = "2019 Q1 Jan - Mar";
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;
@@ -96,7 +97,7 @@
 
             var returnData = new ReturnData()
             {
-                QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 12, 31)),
+                QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow(),
                 Quarter = new Quarter(2019, QuarterType.Q1)
             };
 

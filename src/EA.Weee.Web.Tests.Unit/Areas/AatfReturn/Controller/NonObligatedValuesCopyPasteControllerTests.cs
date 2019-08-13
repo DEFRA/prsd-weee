@@ -16,6 +16,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.Attributes;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class NonObligatedValuesCopyPasteControllerTests
@@ -85,7 +86,7 @@
             const string orgName = "orgName";
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             const string reportingPeriod = "2019 Q1 Jan - Mar";
             @return.Quarter = quarterData;
             @return.QuarterWindow = quarterWindow;
@@ -110,18 +111,13 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var schemeId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.PastedValues = new String[1];
-            viewModel.Dcf = false;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = new string[1], Dcf = false};
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteName.Should().Be("aatf-non-obligated");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -154,18 +150,13 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var schemeId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.PastedValues = new String[1];
-            viewModel.Dcf = true;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = new string[1], Dcf = true};
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            var result = await controller.Index(viewModel) as RedirectToRouteResult;
 
             result.RouteName.Should().Be("aatf-non-obligated-dcf");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -178,16 +169,12 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var schemeId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var pastedValues = new String[1] { "2\n" };
+            var pastedValues = new string[1] { "2\n" };
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.PastedValues = pastedValues;
-            
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
+            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = pastedValues};
+
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
@@ -198,35 +185,11 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var schemeId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.PastedValues = new String[1];
+            var viewModel = new NonObligatedValuesCopyPasteViewModel { ReturnId = returnId, PastedValues = new string[1] };
 
-            var result = await controller.Index(viewModel, null) as RedirectToRouteResult;
-
-            controller.TempData["pastedValues"].Should().BeNull();
-        }
-
-        [Fact]
-        public async void IndexPost_OnCancelWithPastedValues_TempDataShouldNotBeAttached()
-        {
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(controller);
-
-            var schemeId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var pastedValues = new String[1] { "2\n" };
-
-            var viewModel = new NonObligatedValuesCopyPasteViewModel();
-            viewModel.ReturnId = returnId;
-            viewModel.PastedValues = pastedValues;
-
-            var result = await controller.Index(viewModel, "cancel") as RedirectToRouteResult;
+            await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().BeNull();
         }

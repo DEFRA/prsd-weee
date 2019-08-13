@@ -8,6 +8,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
+    using Infrastructure;
 
     public class ReturnViewModel : ReturnViewModelBase
     {
@@ -32,7 +33,7 @@
         public string OrganisationName { get; set; }
 
         [Display(Name = "Reporting period")]
-        public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
+        public override string Period => DisplayHelper.QuarterPeriodFormat(this.Quarter, this.QuarterWindow);
 
         [Display(Name = "Compliance year")]
         public override string Year { get; }

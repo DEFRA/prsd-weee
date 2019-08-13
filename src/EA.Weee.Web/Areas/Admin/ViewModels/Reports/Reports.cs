@@ -9,7 +9,13 @@
         public const string SchemeWeeeData = "PCS WEEE data";
         public const string UkEeeData = "UK EEE data";
         public const string UkWeeeData = "UK WEEE data";
+        public const string UkWeeeDataAtAatfs = "UK WEEE received at AATFs";
+        public const string UkNonObligatedWeeeData = "UK non-obligated WEEE received at AATFs";
         public const string MissingProducerData = "Missing producer data";
         public const string AatfAeReturnData = "Summary of AATF / AE returns to date";
+        public const string AatfObligatedData = "AATF obligated WEEE data";
+        public const string AatfNonObligatedData = "AATF non-obligated WEEE data";
+        public const string AatfSentOnData = "AATF WEEE sent on for treatment";
+        public const string AatfReuseSitesData = "AATF using reuse sites";
     }
 }

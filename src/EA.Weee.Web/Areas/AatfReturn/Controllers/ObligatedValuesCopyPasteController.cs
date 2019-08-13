@@ -49,24 +49,21 @@
                     viewModel.SchemeId = schemeId;
                     viewModel.SchemeName = Task.Run(() => cache.FetchSchemePublicInfoBySchemeId(schemeId)).Result.Name;
                 }
-                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.FormatQuarter(@return.Quarter, @return.QuarterWindow));
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 return View(viewModel);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel, string cancel)
+        public virtual async Task<ActionResult> Index(ObligatedValuesCopyPasteViewModel viewModel)
         {
-            if (string.IsNullOrEmpty(cancel))
-            {
-                var b2bContent = viewModel.B2bPastedValues.First();
-                var b2cContent = viewModel.B2cPastedValues.First();
+            var b2bContent = viewModel.B2bPastedValues.First();
+            var b2cContent = viewModel.B2cPastedValues.First();
 
-                if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
-                {
-                    TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
-                }
+            if (!string.IsNullOrEmpty(b2bContent) || !string.IsNullOrEmpty(b2cContent))
+            {
+                TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
             }
 
             if (viewModel.Type == ObligatedType.Reused)

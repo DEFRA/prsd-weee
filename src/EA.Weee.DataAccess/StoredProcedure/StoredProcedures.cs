@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
     using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
@@ -62,10 +61,10 @@
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
-            SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
-            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
-            SqlParameter includeBrandNamesParameter = new SqlParameter("@IncludeBrandNames", includeBrandNames);
+            var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+            var competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
+            var includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
+            var includeBrandNamesParameter = new SqlParameter("@IncludeBrandNames", includeBrandNames);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCsvData>(
@@ -133,25 +132,25 @@
 
         public async Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, Guid? schemeId, string obligationType)
         {
-            SpgSchemeWeeeCsvResult result = new SpgSchemeWeeeCsvResult();
+            var result = new SpgSchemeWeeeCsvResult();
 
             var command = context.Database.Connection.CreateCommand();
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.CommandText = "[PCS].[SpgSchemeWeeeCsv]";
 
-            DbParameter complianceYearParameter = command.CreateParameter();
+            var complianceYearParameter = command.CreateParameter();
             complianceYearParameter.DbType = System.Data.DbType.Int32;
             complianceYearParameter.Value = complianceYear;
             complianceYearParameter.ParameterName = "@ComplianceYear";
             command.Parameters.Add(complianceYearParameter);
 
-            DbParameter schemeIdParameter = command.CreateParameter();
+            var schemeIdParameter = command.CreateParameter();
             schemeIdParameter.DbType = System.Data.DbType.Guid;
             schemeIdParameter.Value = schemeId;
             schemeIdParameter.ParameterName = "@SchemeId";
             command.Parameters.Add(schemeIdParameter);
 
-            DbParameter obligationTypeParameter = command.CreateParameter();
+            var obligationTypeParameter = command.CreateParameter();
             obligationTypeParameter.DbType = System.Data.DbType.String;
             obligationTypeParameter.Value = obligationType;
             obligationTypeParameter.ParameterName = "@ObligationType";
@@ -159,13 +158,13 @@
 
             await context.Database.Connection.OpenAsync();
 
-            DbDataReader dataReader = await command.ExecuteReaderAsync();
+            var dataReader = await command.ExecuteReaderAsync();
 
             while (await dataReader.ReadAsync())
             {
-                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("Id"));
-                string schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
-                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+                var id = dataReader.GetGuid(dataReader.GetOrdinal("Id"));
+                var schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
+                var approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
 
                 result.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
                 {
@@ -179,11 +178,11 @@
 
             while (await dataReader.ReadAsync())
             {
-                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
-                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
-                int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
-                int sourceType = dataReader.GetInt32(dataReader.GetOrdinal("SourceType"));
-                decimal tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
+                var id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                var weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
+                var sourceType = dataReader.GetInt32(dataReader.GetOrdinal("SourceType"));
+                var tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
 
                 result.CollectedAmounts.Add(new SpgSchemeWeeeCsvResult.CollectedAmountResult()
                 {
@@ -199,12 +198,12 @@
 
             while (await dataReader.ReadAsync())
             {
-                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
-                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
-                int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
-                int locationType = dataReader.GetInt32(dataReader.GetOrdinal("LocationType"));
-                string locationApprovalNumber = dataReader.GetString(dataReader.GetOrdinal("LocationApprovalNumber"));
-                decimal tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
+                var id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                var weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
+                var locationType = dataReader.GetInt32(dataReader.GetOrdinal("LocationType"));
+                var locationApprovalNumber = dataReader.GetString(dataReader.GetOrdinal("LocationApprovalNumber"));
+                var tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
 
                 result.DeliveredAmounts.Add(new SpgSchemeWeeeCsvResult.DeliveredAmountResult()
                 {
@@ -222,9 +221,9 @@
 
         public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationtype)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
-            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
 
             return await context.Database
                 .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType",
@@ -244,15 +243,23 @@
                     complianceYearParameter).ToListAsync();
         }
 
+        public async Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[getUkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
+                complianceYearParameter).ToListAsync();
+        }
+
         public async Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn)
         {
-            ProducerEeeHistoryCsvData result = new ProducerEeeHistoryCsvData();
+            var result = new ProducerEeeHistoryCsvData();
 
             var command = context.Database.Connection.CreateCommand();
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.CommandText = "[Producer].[spgProducerEeeHistoryCsvDataByPRN]";
 
-            DbParameter prnParameter = command.CreateParameter();
+            var prnParameter = command.CreateParameter();
             prnParameter.DbType = System.Data.DbType.String;
             prnParameter.Value = prn;
             prnParameter.ParameterName = "@PRN";
@@ -260,47 +267,47 @@
 
             await context.Database.Connection.OpenAsync();
 
-            DbDataReader dataReader = await command.ExecuteReaderAsync();
+            var dataReader = await command.ExecuteReaderAsync();
 
             while (await dataReader.ReadAsync())
             {
-                string prnValue = dataReader.GetString(dataReader.GetOrdinal("PRN"));
-                string schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
-                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
-                int year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
-                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
-                DateTime date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
-                string latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
+                var prnValue = dataReader.GetString(dataReader.GetOrdinal("PRN"));
+                var schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
+                var approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+                var year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
+                var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                var date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
+                var latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
                 //B2C categories
-                decimal? cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
-                decimal? cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
-                decimal? cat3b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
-                decimal? cat4b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2C"));
-                decimal? cat5b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2C"));
-                decimal? cat6b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2C"));
-                decimal? cat7b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2C"));
-                decimal? cat8b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2C"));
-                decimal? cat9b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2C"));
-                decimal? cat10b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2C"));
-                decimal? cat11b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2C"));
-                decimal? cat12b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2C"));
-                decimal? cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
-                decimal? cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
+                var cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
+                var cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
+                var cat3b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
+                var cat4b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2C"));
+                var cat5b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2C"));
+                var cat6b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2C"));
+                var cat7b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2C"));
+                var cat8b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2C"));
+                var cat9b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2C"));
+                var cat10b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2C"));
+                var cat11b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2C"));
+                var cat12b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2C"));
+                var cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
+                var cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
                 //B2B categories
-                decimal? cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
-                decimal? cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
-                decimal? cat3b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2B"));
-                decimal? cat4b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2B"));
-                decimal? cat5b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2B"));
-                decimal? cat6b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2B"));
-                decimal? cat7b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2B"));
-                decimal? cat8b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2B"));
-                decimal? cat9b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2B"));
-                decimal? cat10b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2B"));
-                decimal? cat11b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2B"));
-                decimal? cat12b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2B"));
-                decimal? cat13b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2B"));
-                decimal? cat14b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2B"));
+                var cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
+                var cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
+                var cat3b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2B"));
+                var cat4b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2B"));
+                var cat5b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2B"));
+                var cat6b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2B"));
+                var cat7b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2B"));
+                var cat8b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2B"));
+                var cat9b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2B"));
+                var cat10b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2B"));
+                var cat11b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2B"));
+                var cat12b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2B"));
+                var cat13b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2B"));
+                var cat14b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2B"));
 
                 result.ProducerReturnsHistoryData.Add(new ProducerEeeHistoryCsvData.ProducerInReturnsResult()
                 {
@@ -346,10 +353,10 @@
 
             while (await dataReader.ReadAsync())
             {
-                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
-                int year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
-                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
-                DateTime date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
+                var approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+                var year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
+                var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                var date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
 
                 result.ProducerRemovedFromReturnsData.Add(new ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult()
                 {
@@ -374,8 +381,8 @@
 
         public async Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear)
         {
-            SqlParameter schemeIdParameter = new SqlParameter("@SchemeID", schemeId);
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var schemeIdParameter = new SqlParameter("@SchemeID", schemeId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             return await context.Database
                 .SqlQuery<DataReturnSummaryCsvData>(
@@ -387,7 +394,7 @@
 
         public async Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             return await context.Database
                 .SqlQuery<SchemeObligationCsvData>(
@@ -401,10 +408,10 @@
             int? quarter,
             Guid? schemeId)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
-            SqlParameter quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? DBNull.Value);
-            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
+            var quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? DBNull.Value);
+            var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
 
             return await context.Database
                 .SqlQuery<MissingProducerDataCsvData>(
@@ -418,7 +425,7 @@
 
         public async Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId)
         {
-            SqlParameter memberUploadIdParameter = new SqlParameter("@MemberUploadId", memberUploadId);
+            var memberUploadIdParameter = new SqlParameter("@MemberUploadId", memberUploadId);
 
             return await context.Database
                 .SqlQuery<SubmissionChangesCsvData>(
@@ -427,23 +434,130 @@
         }
 
         public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
-           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea)
+           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea, bool includeResubmissions)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
-            SqlParameter facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
-            SqlParameter returnStatusParameter = new SqlParameter("@ReturnStatus", (object)returnStatus ?? DBNull.Value);
-            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
-            SqlParameter areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
-            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var quarterParameter = new SqlParameter("@Quarter", quarter);
+            var facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
+            var returnStatusParameter = new SqlParameter("@ReturnStatus", (object)returnStatus ?? DBNull.Value);
+            var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            var areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
+            var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var includeResubmissionsParameter = new SqlParameter("@IncludeResubmissions", (object)includeResubmissions);
 
             return await context.Database
                 .SqlQuery<AatfAeReturnData>(
-                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea",
+                    "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea, @IncludeResubmissions",
                     complianceYearParameter,                  
                     quarterParameter,
-                    facilityTypeParameter, returnStatusParameter, authorityParameter, areaParameter, panAreaParameter)
+                    facilityTypeParameter, 
+                    returnStatusParameter,
+                    authorityParameter,
+                    areaParameter,
+                    panAreaParameter,
+                    includeResubmissionsParameter)
                 .ToListAsync();
         }
+
+        public async Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var aatfNameParameter = new SqlParameter("@AatfName", (object)aatf ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<NonObligatedWeeeReceivedAtAatfData>(
+                    "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @AatfName",
+                    complianceYearParameter,
+                    aatfNameParameter)
+                .ToListAsync();
+        }
+
+        public async Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+            var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var columnTypeParameter = new SqlParameter("@ColumnType", columnType);
+
+            var table = new DataTable();
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea, @ColumnType";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(aatfNameParameter);
+                cmd.Parameters.Add(obligationTypeParameter);
+                cmd.Parameters.Add(authorityParameter);
+                cmd.Parameters.Add(panAreaParameter);
+                cmd.Parameters.Add(columnTypeParameter);
+                await cmd.Connection.OpenAsync();
+                table.Load(await cmd.ExecuteReaderAsync());
+            }
+            return table;
+        }
+
+        public async Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
+            SqlParameter returnIdParameter = new SqlParameter("@ReturnId", returnId);
+            SqlParameter aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+
+            var table = new DataTable();
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAatfObligatedCsvData] @ComplianceYear, @Quarter, @ReturnId, @AatfId";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(quarterParameter);
+                cmd.Parameters.Add(returnIdParameter);
+                cmd.Parameters.Add(aatfIdParameter);
+                await cmd.Connection.OpenAsync();
+                table.Load(await cmd.ExecuteReaderAsync());
+            }
+            return table;
+        }
+        
+        public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+
+            var dataSet = new DataSet();
+            DataTable sentOnData = new DataTable();
+            DataTable addressData = new DataTable();
+            dataSet.Tables.Add(sentOnData);
+            dataSet.Tables.Add(addressData);
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea";
+                cmd.Parameters.Add(complianceYearParameter);
+                cmd.Parameters.Add(aatfNameParameter);
+                cmd.Parameters.Add(obligationTypeParameter);
+                cmd.Parameters.Add(authorityParameter);
+                cmd.Parameters.Add(panAreaParameter);
+                await cmd.Connection.OpenAsync();
+                dataSet.Load(await cmd.ExecuteReaderAsync(), LoadOption.OverwriteChanges, sentOnData, addressData);
+            }
+            return dataSet;
+        }
+         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<AatfReuseSitesData>(
+                    "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea",
+                    complianceYearParameter, authorityParameter,  panAreaParameter)
+                .ToListAsync();
+        }   
     }
 }

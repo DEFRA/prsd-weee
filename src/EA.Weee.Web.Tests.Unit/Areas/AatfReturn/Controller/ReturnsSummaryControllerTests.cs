@@ -15,6 +15,7 @@
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnsSummaryControllerTests
@@ -44,7 +45,11 @@
         [Fact]
         public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
@@ -56,7 +61,11 @@
         public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(returnId);
@@ -68,7 +77,11 @@
         [Fact]
         public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeBuilt()
         {
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>());
@@ -80,7 +93,11 @@
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(returnId);
@@ -92,7 +109,11 @@
         public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
@@ -106,7 +127,11 @@
         public async void IndexGet_GivenReturnWithoutSubmittedDate_ShouldBeRedirectedToSummaryScreen()
         {
             var model = A.Fake<ReturnViewModel>();
-            var @return = fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1)).Without(r => r.SubmittedDate).Create();
+            var @return = fixture.Build<ReturnData>()
+                .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
+                .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
+                .Without(r => r.SubmittedDate)                
+                .Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             A.CallTo(() => mapper.Map<ReturnViewModel>(A<ReturnData>._)).Returns(model);
