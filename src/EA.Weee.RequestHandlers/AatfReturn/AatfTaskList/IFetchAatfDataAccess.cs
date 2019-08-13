@@ -12,5 +12,7 @@
         Task<List<Aatf>> FetchAatfByReturnId(Guid returnId);
 
         Task<Aatf> FetchByApprovalNumber(string approvalNumber);
+
+        Task<Aatf> FetchById(Guid id);
     }
 }

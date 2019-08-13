@@ -52,6 +52,12 @@
 
         public Guid OrganisationId { get; set; }
 
+        public string ExternalAatfName { get; set; }
+
+        public string ExternalAatfApprovalNumber { get; set; }
+
+        public string ExternalAatfFacilityType { get; set; }
+
         /// <summary>
         /// The activity currently in scope when accessing the test area.
         /// </summary>
