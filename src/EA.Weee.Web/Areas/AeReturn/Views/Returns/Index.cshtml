@@ -38,6 +38,13 @@
             </div>
         </div>
     }
+    else
+    {
+        <p>
+            @Model.ErrorMessageForNotAllowingCreateReturn
+        </p>
+    }
+
     @if (Model.Returns.Count > 0)
     {
 
@@ -82,14 +89,14 @@
             </tbody>
         </table>
     }
-    else
+    else if (Model.NotStartedAnySubmissionsYet)
     {
         <p>
             You have not yet started any AE returns
         </p>
     }
     <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, null)
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, new { title = "Perform another activity page navigation" })
     </p>
     <style type="text/css">
 

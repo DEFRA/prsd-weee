@@ -28,6 +28,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Infrastructure;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
 
@@ -303,6 +304,40 @@
             Assert.Equal(viewModel.ContactData.AddressData.Countries, resultViewModel.ContactData.AddressData.Countries);
             Assert.Equal(viewModel.SiteAddressData.Countries, resultViewModel.SiteAddressData.Countries);
             Assert.Equal(viewModel.OrganisationId, resultViewModel.OrganisationId);
+        }
+
+        [Fact]
+        public async Task AddAatfPost_ApprovalNumberExists_ReturnsViewWithViewModelAndErrorMessage()
+        {
+            AddAatfViewModel viewModel = CreateAddAatfViewModel();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+
+            ViewResult result = await controller.AddAatf(viewModel) as ViewResult;
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
+            Assert.NotNull(error);
+        }
+
+        [Fact]
+        public async Task AddAePost_ApprovalNumberExists_ReturnsViewWithViewModelAndErrorMessage()
+        {
+            AddAeViewModel viewModel = CreateAddAeViewModel();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
+                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+
+            ViewResult result = await controller.AddAe(viewModel) as ViewResult;
+            AddAatfViewModel resultViewModel = result.Model as AddAatfViewModel;
+
+            IEnumerable<ModelError> allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
+
+            ModelError error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
+            Assert.NotNull(error);
         }
 
         [Fact]

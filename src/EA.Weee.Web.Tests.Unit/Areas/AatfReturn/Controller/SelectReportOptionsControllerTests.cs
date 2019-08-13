@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using Core.Scheme;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -23,6 +24,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class SelectReportOptionsControllerTests
@@ -82,8 +84,10 @@
             const string reportingPeriod = "2019 Q1 Jan - Mar";
             var viewModel = CreateInitialViewModel();
             A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
-           
-            await controller.Index(organisationId, returnId);
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+            var result = await controller.Index(organisationId, returnId);
+            SystemTime.Unfreeze();
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
 
@@ -310,7 +314,7 @@
             {
                 OrganisationId = A.Dummy<Guid>(),
                 ReturnId = A.Dummy<Guid>(),
-                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30)) }
+                ReturnData = new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() }
             };
 
             return model;

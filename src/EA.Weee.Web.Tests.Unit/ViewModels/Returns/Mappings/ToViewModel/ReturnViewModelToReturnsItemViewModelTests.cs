@@ -2,11 +2,14 @@
 {
     using System;
     using Core.AatfReturn;
+    using Core.DataReturns;
+    using EA.Prsd.Core;
     using EA.Weee.Web.ViewModels.Returns;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnViewModelToReturnsItemViewModelTests
@@ -49,24 +52,28 @@
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now};
 
-            var result = mapper.Map(returnViewModel);
+            var result = mapper.Map(returnData);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(returnViewModel.ReturnStatus)).MustHaveHappened(Repeated.Exactly.Once);
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
+            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Map_GivenSource_ReturnDisplayOptionsListAndReturned()
         {
-            var returnViewModel = new ReturnData() { ReturnStatus = ReturnStatus.Created };
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now };
             var returnsListDisplayOptions = new ReturnsListDisplayOptions();
+            var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(returnViewModel.ReturnStatus)).Returns(returnsListDisplayOptions);
+            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).Returns(returnsListDisplayOptions);
 
-            var result = mapper.Map(returnViewModel);
+            var result = mapper.Map(returnData);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(returnViewModel.ReturnStatus)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
             result.ReturnsListDisplayOptions.Should().Be(returnsListDisplayOptions);
         }
 

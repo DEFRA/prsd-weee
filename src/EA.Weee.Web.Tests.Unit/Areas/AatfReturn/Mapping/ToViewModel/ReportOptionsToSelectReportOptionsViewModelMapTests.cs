@@ -9,12 +9,13 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.AatfReturn.ViewModels;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReportOptionsToSelectReportOptionsViewModelMapTests
     {
         private readonly ReportOptionsToSelectReportOptionsViewModelMap map;
-        private static string dcfNoValue = "No";
+        private const string DcfNoValue = "No";
 
         public ReportOptionsToSelectReportOptionsViewModelMapTests()
         {
@@ -52,7 +53,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -72,7 +73,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 5; i++)
             {
@@ -95,7 +96,7 @@
 
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
-            @return.QuarterWindow = A.Fake<QuarterWindow>();
+            @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
             for (var i = 0; i < 4; i++)
             {
@@ -116,7 +117,7 @@
             result.ReportOnQuestions.ElementAt(2).Selected.Should().Be(true);
             result.ReportOnQuestions.ElementAt(3).Id.Should().Be(4);
             result.ReportOnQuestions.ElementAt(3).Selected.Should().Be(true);
-            result.DcfSelectedValue = dcfNoValue;
+            result.DcfSelectedValue = DcfNoValue;
         }
 
         private static void AssertValues(SelectReportOptionsViewModel result, bool selected)

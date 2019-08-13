@@ -33,6 +33,15 @@
                 .MustNotHaveHappened();
         }
 
+        [Fact]
+        public async Task HandleAsync_UserIsAuthorized_UsesDataAccess()
+        {
+            await Handler().HandleAsync(A.Dummy<GetMemberRegistrationsActiveComplianceYears>());
+
+            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => dataAccess.Get()).MustHaveHappenedOnceExactly();
+        }
+
         private GetMemberRegistrationsActiveComplianceYearsHandler Handler()
         {
             return new GetMemberRegistrationsActiveComplianceYearsHandler(authorization, dataAccess);

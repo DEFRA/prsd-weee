@@ -6,6 +6,7 @@
     using Core.Organisations;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ReturnToSubmittedReturnViewModelMapTests
@@ -30,7 +31,7 @@
         {
             var id = Guid.NewGuid();
 
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 31));
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var returnData = new ReturnData() { Id = id, Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = quarterWindow, OrganisationData = new OrganisationData() { Id = Guid.NewGuid(), Name = "operator" } };
 
             var result = map.Map(returnData);

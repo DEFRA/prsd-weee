@@ -50,7 +50,7 @@
 
                                         <div>
                                             @this.WeeeGds().ActionLinkWithEventTracking("Organisation",
-                                                null,
+                                                "Organisation link",
                                                 Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index()),
                                                 "Navigation",
                                                 "Organisation",
@@ -70,21 +70,21 @@
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          null,
+                                          "External activity link",
                                           Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
                                           "Navigation",
                                           "External activity",
                                           null,
-                                          null)):
-                                    @Model.Breadcrumb.ExternalActivity
-                                </li>
+                                             new Dictionary<string, object>{ {"title", "External activity link"} })) :
+                                        @Model.Breadcrumb.ExternalActivity
+</li>
                             }
 
                             @if (Model.Breadcrumb.InternalActivity != null)
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          null,
+                                          "Internal activity link",
                                           Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
                                           "Navigation",
                                           "Internal activity",

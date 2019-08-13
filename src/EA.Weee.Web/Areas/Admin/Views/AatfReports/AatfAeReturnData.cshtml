@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfAeReturnDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.AatfAeReturnDataViewModel
 @{
     /**/
 
@@ -16,7 +16,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>This report includes all AATFs / AEs that are expected to provide data for the selected year and quarter (based on their approval date), regardless of the status of the AATF / AE. It does not include details of any resubmitted returns.</p>
+<p>This report includes all AATFs / AEs that are expected to provide data for the selected year and quarter (based on their approval date), regardless of the status of the AATF / AE. If you choose to exclude resubmissions, then only details of first submissions will be included.</p>
         <p>Filter the report to download entries that match your criteria</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
@@ -29,6 +29,12 @@
             @Html.Gds().LabelFor(m => m.Quarter)
             @Html.Gds().ValidationMessageFor(m => m.Quarter)
             @Html.Gds().DropDownListFor(m => m.Quarter, Model.Quarters, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeResubmissions)">
+            @Html.Gds().LabelFor(m => m.IncludeResubmissions)
+            @Html.Gds().ValidationMessageFor(m => m.IncludeResubmissions)
+            @Html.Gds().DropDownListFor(m => m.IncludeResubmissions, Model.IncludeResubmissionsOptions, string.Empty, new { autocomplete = "false" })
         </div>
 
         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedFacilityType)">
@@ -44,25 +50,25 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
             @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
-            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
         </div>
 
         <div class="govuk-form-group competent-authority-hidden">
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
                 @Html.Gds().LabelFor(m => m.PanAreaId)
-                @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+                @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { autocomplete = "false" })
             </div>
         </div>
 
         <div class="govuk-form-group competent-authority-hidden">
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
                 @Html.Gds().LabelFor(m => m.LocalAreaId)
-                @Html.Gds().DropDownListFor(m => m.LocalAreaId, Model.LocalAreaList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+                @Html.Gds().DropDownListFor(m => m.LocalAreaId, Model.LocalAreaList, string.Empty, new { autocomplete = "false" })
             </div>
         </div>
 
         <p>
-            If there is a large amount of data for your selected criteria, it may take a while to download your results.
+            If there is a large amount of data for your selected criteria, it may take a while to download your results
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
@@ -73,7 +79,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "Reports")
     </p>
 }
 @section scripts {
@@ -106,15 +112,16 @@
     {
         <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadAatfAeDataCsv", new
-                          {
-                              complianceYear = Model.SelectedYear,
-                              quarter = Model.Quarter,
-                              facilityType = Model.SelectedFacilityType,
-                              submissionStatus = Model.SelectedSubmissionStatus,
-                              authority = Model.CompetentAuthorityId,
-                              pat = Model.PanAreaId,
-                              localArea = Model.LocalAreaId
-                          }))";
+                               {
+                                   complianceYear = Model.SelectedYear,
+                                   quarter = Model.Quarter,
+                                   facilityType = Model.SelectedFacilityType,
+                                   submissionStatus = Model.SelectedSubmissionStatus,
+                                   authority = Model.CompetentAuthorityId,
+                                   pat = Model.PanAreaId,
+                                   localArea = Model.LocalAreaId,
+                                   includeResubmissions = Model.IncludeResubmissions ?? false
+                               }))";
         </script>
     }
 }

@@ -150,5 +150,32 @@
 
             return (T)property.GetValue(obj, null);
         }
+
+        public static string ToReadableDateTime(this DateTime date)
+        {
+            var monthYear = date.ToString("MMMM");
+            var day = date.ToString("d ").Trim();
+
+            switch (date.Day)
+            {
+                case 1:
+                case 21:
+                case 31:
+                    day += "st";
+                    break;
+                case 2:
+                case 22:
+                    day += "nd";
+                    break;
+                case 3:
+                case 23:
+                    day += "rd";
+                    break;
+                default:
+                    day += "th";
+                    break;
+            }
+            return day + " " + monthYear;
+        }
     }
 }

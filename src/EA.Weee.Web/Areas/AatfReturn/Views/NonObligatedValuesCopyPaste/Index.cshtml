@@ -1,4 +1,7 @@
-﻿@using EA.Weee.Web.Infrastructure
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
+@using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesCopyPasteViewModel
 
 @{
@@ -8,8 +11,8 @@
 <section id="main-content">
     <header class="hgroup">
         <div>
-            @{  
-            <h1 id="data-entry-label" class="govuk-heading-l">@Model.TypeHeading</h1>
+            @{
+                <h1 id="data-entry-label" class="govuk-heading-l">@Model.TypeHeading</h1>
             }
         </div>
     </header>
@@ -17,6 +20,7 @@
         Provide tonnage to 3 decimal places for 14 categories. For example 1.238
     </p>
     <p class="govuk-body">
+        dc
         You can copy the WEEE in tonnes from an Excel spreadsheet
     </p>
     <p class="govuk-body">
@@ -38,12 +42,9 @@
 
         <form method="post" class="form" style="display: inline">
             <button type="submit" class="govuk-button" id="aatf-task-list">
-                Save and continue
-            </button>
-
-            <button type="submit" name="cancel" value="cancel" class="govuk-button grey-cancel-button">
-                Cancel
+                Continue
             </button>
         </form>
+        <a href="@(Url.UrlFor<NonObligatedController>(u => u.Index(Model.ReturnId, Model.Dcf)))">Cancel</a>
     }
 </section>

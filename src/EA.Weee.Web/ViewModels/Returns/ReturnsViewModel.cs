@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Core.DataReturns;
+    using EA.Prsd.Core;
+    using EA.Weee.Core.Helpers;
 
     public class ReturnsViewModel
     {
@@ -22,5 +25,9 @@
         {
             Returns = new List<ReturnsItemViewModel>();
         }
+
+        public string ErrorMessageForNotAllowingCreateReturn { get; set; }
+
+        public bool NotStartedAnySubmissionsYet { get; set; }
     }
 }

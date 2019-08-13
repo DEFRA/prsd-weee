@@ -10,6 +10,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.AatfReturn.Controllers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
@@ -90,7 +91,7 @@
             const string orgName = "orgName";
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
-            var quarterWindow = new QuarterWindow(new DateTime(2019, 1, 1), new DateTime(2019, 3, 30));
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
             var aatfInfo = A.Fake<AatfData>();
             var aatfId = Guid.NewGuid();
 

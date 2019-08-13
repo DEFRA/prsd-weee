@@ -61,10 +61,5 @@
         {
             return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", MakeCountry(), "12345678", "test@co.uk");
         }
-
-        private Contact GetContact()
-        {
-            return new Contact("Test first name", "Test last name", "Test position");
-        }
     }
 }
