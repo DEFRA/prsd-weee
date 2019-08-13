@@ -7,6 +7,7 @@
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -44,7 +45,14 @@
                     return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = model.AatfList[0].Id, isAE = isAE });
                 }
 
-                await SetBreadcrumb(model.OrganisationId, "AATF return", false);
+                if (isAE)
+                {
+                    await SetBreadcrumb(model.OrganisationId, "View AE contact details", false);
+                }
+                else
+                {
+                    await SetBreadcrumb(model.OrganisationId, "View AATF contact details", false);
+                }
 
                 return View(model);
             }
@@ -56,8 +64,29 @@
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId, isAE = model.IsAE});
+                if (model.IsAE)
+                {
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAeId, isAE = model.IsAE });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId, isAE = model.IsAE });
+                }
             }
+
+            using (var client = apiClient())
+            {
+                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(model.OrganisationId));
+
+                model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, IsAE = model.IsAE });
+            }
+
+            if (!model.ModelValidated)
+            {
+                ModelState.RunCustomValidation(model);
+            }
+
+            ModelState.ApplyCustomValidationSummaryOrdering(HomeViewModel.ValidationMessageDisplayOrder);
 
             await SetBreadcrumb(model.OrganisationId, "AATF return", false);
 
