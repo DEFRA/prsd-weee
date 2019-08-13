@@ -1,0 +1,40 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.HomeViewModel
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Which AATF would you like to view?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "Index", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.IsAE)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAatfId)" id="ActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedAatfId,
+                Model.AatfList,
+                o => o.Id,
+                o => o.AatfContactDetailsName,
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
+        </p>
+    }
+}

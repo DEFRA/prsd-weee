@@ -136,6 +136,36 @@
         }
 
         [Fact]
+        public async Task FetchById_GivenAatfId_CorrectAatfShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf, @return));
+
+                var aatf2 = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return2 = new EA.Weee.Domain.AatfReturn.Return(aatf2.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf2, @return2));
+
+                var returnedAatf = await dataAccess.FetchById(aatf.Id);
+
+                returnedAatf.Should().BeEquivalentTo(aatf);
+            }
+        }
+
+        [Fact]
         public async Task FetchAatfByReturnId_GivenReturnId_ReturnedListShouldOnlyContainReturnRelatedAatfs()
         {
             using (var database = new DatabaseWrapper())

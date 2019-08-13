@@ -42,5 +42,10 @@
         {
             return await context.Aatfs.FirstOrDefaultAsync(p => p.ApprovalNumber == approvalNumber);
         }
+
+        public async Task<Aatf> FetchById(Guid id)
+        {
+            return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }
