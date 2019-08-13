@@ -1,26 +1,31 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
+    using System;
     using Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using Prsd.Core.Mapper;
 
-    public class ReturnStatusToReturnDisplayOptionsMap : IMap<ReturnStatus, ReturnsListDisplayOptions>
+    public class ReturnStatusToReturnDisplayOptionsMap : IMap<(ReturnStatus status, QuarterWindow quarterWindow, DateTime systemDateTime), ReturnsListDisplayOptions>
     {
-        public ReturnsListDisplayOptions Map(ReturnStatus source)
+        public ReturnsListDisplayOptions Map((ReturnStatus status, QuarterWindow quarterWindow, DateTime systemDateTime) source)
         {
             var options = new ReturnsListDisplayOptions();
 
-            if (source == ReturnStatus.Created)
+            switch (source.status)
             {
-                options.DisplayContinue = true;
-            }
-            else
-            {
-                options.DisplayEdit = true;
+                case ReturnStatus.Created:
+                    options.DisplayContinue = source.quarterWindow.IsOpen(source.systemDateTime);
+                    break;
+                case ReturnStatus.Submitted:
+                    options.DisplayEdit = source.quarterWindow.IsOpen(source.systemDateTime);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            options.DisplaySummary = source == ReturnStatus.Submitted;
+            options.DisplaySummary = source.status == ReturnStatus.Submitted;
 
-            return options;
+            return options;                                         
         }
     }
 }

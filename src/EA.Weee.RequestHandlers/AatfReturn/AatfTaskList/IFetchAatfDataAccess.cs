@@ -10,5 +10,7 @@
         Task<List<Aatf>> FetchAatfByReturnQuarterWindow(Return @return);
 
         Task<List<Aatf>> FetchAatfByReturnId(Guid returnId);
+
+        Task<Aatf> FetchByApprovalNumber(string approvalNumber);
     }
 }

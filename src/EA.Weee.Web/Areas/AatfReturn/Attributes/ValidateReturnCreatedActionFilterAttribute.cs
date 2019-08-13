@@ -6,6 +6,7 @@
     using Api.Client;
     using Core.AatfReturn;
     using Core.Shared;
+    using EA.Weee.Core.Helpers;
     using Infrastructure;
     using Services;
     using Weee.Requests.AatfReturn;
@@ -18,11 +19,16 @@
         {
             using (var client = Client())
             {
-                var @returnStatus = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturnStatus(returnId));
+                var @return = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetReturn(returnId, false));
 
-                if (@returnStatus.ReturnStatus != ReturnStatus.Created)
+                if (@return.ReturnStatus != ReturnStatus.Created)
                 {
-                    filterContext.Result = AatfRedirect.ReturnsList(@returnStatus.OrganisationId);
+                    filterContext.Result = AatfRedirect.ReturnsList(@return.OrganisationId);
+                }
+                
+                if (!@return.QuarterWindow.IsOpen(@return.SystemDateTime))
+                {
+                    filterContext.Result = new RedirectResult("~/errors/QuarterClosed");
                 }
             }
         }

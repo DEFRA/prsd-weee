@@ -12,6 +12,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using Factories;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
@@ -34,7 +35,9 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            return await getPopulatedReturn.GetReturnData(message.ReturnId, message.ForSummary);
+            var returnData = await getPopulatedReturn.GetReturnData(message.ReturnId, message.ForSummary);
+
+            return returnData;
         }
     }
 }

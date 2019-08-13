@@ -12,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Requests.Admin.Aatf;
     using Infrastructure;
     using Prsd.Core;
     using Prsd.Core.Helpers;
@@ -19,6 +20,7 @@
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
@@ -84,31 +86,49 @@
             switch (model.SelectedValue)
             {
                 case Reports.ProducerDetails:
-                    return RedirectToAction("ProducerDetails");
+                    return RedirectToAction(nameof(ProducerDetails));
 
                 case Reports.ProducerPublicRegister:
-                    return RedirectToAction("ProducerPublicRegister");
+                    return RedirectToAction(nameof(ProducerPublicRegister));
 
                 case Reports.UkWeeeData:
-                    return RedirectToAction("UkWeeeData");
+                    return RedirectToAction(nameof(UkWeeeData));
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction("UkWeeeDataAtAatfs", "AatfReports");
 
                 case Reports.ProducerEeeData:
-                    return RedirectToAction("ProducerEeeData");
+                    return RedirectToAction(nameof(ProducerEeeData));
 
                 case Reports.SchemeWeeeData:
-                    return RedirectToAction("SchemeWeeeData");
+                    return RedirectToAction(nameof(SchemeWeeeData));
 
                 case Reports.UkEeeData:
-                    return RedirectToAction("UkEeeData");
+                    return RedirectToAction(nameof(UkEeeData));
 
                 case Reports.SchemeObligationData:
-                    return RedirectToAction("SchemeObligationData");
+                    return RedirectToAction(nameof(SchemeObligationData));
 
                 case Reports.MissingProducerData:
-                    return RedirectToAction("MissingProducerData");
+                    return RedirectToAction(nameof(MissingProducerData));
 
                 case Reports.AatfAeReturnData:
-                    return RedirectToAction("AatfAeReturnData");
+                    return RedirectToAction("AatfAeReturnData", "AatfReports");
+
+                case Reports.AatfObligatedData:
+                    return RedirectToAction("AatfObligatedData", "AatfReports");
+
+                case Reports.UkNonObligatedWeeeData:
+                    return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
+
+                case Reports.AatfNonObligatedData:
+                    return RedirectToAction("AatfNonObligatedData", "AatfReports");
+
+                case Reports.AatfSentOnData:
+                    return RedirectToAction("AatfSentOnData", "AatfReports");
+                    
+                case Reports.AatfReuseSitesData:
+                    return RedirectToAction("AatfReuseSites", "AatfReports");
 
                 default:
                     throw new NotSupportedException();
@@ -448,46 +468,6 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> AatfAeReturnData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            AatfAeReturnDataViewModel model = new AatfAeReturnDataViewModel();
-            await PopulateFilters(model);
-
-            return View("AatfAeReturnData", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfAeReturnData(AatfAeReturnDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadAatfAeDataCsv(int complianceYear,
-          int quarter,  FacilityType facilityType, int? submissionStatus, Guid? authority, Guid? pat, Guid? localArea)
-        {
-            CSVFileData fileData;
-            string aatfDataUrl = (HttpContext.Request != null && HttpContext.Request.Url != null) ? string.Concat(HttpContext.Request.Url.Scheme, "://", HttpContext.Request.Url.Authority, "/admin/aatf/details/") : string.Empty;
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(complianceYear, quarter, facilityType, submissionStatus, authority, pat, localArea, aatfDataUrl);
-            using (IWeeeClient client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             List<int> years = await FetchComplianceYearsForMemberRegistrations();
@@ -505,13 +485,7 @@
 
             model.ComplianceYears = new SelectList(years);
         }
-
-        private async Task PopulateFilters(UkEeeDataViewModel model)
-        {
-            List<int> years = await FetchComplianceYearsForDataReturns();
-            model.ComplianceYears = new SelectList(years);
-        }
-
+        
         private void PopulateFilters(SchemeObligationDataViewModel model)
         {
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());
@@ -538,30 +512,6 @@
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");
         }
 
-        private async Task PopulateFilters(AatfAeReturnDataViewModel model)
-        {
-            model.ComplianceYears = new SelectList(FetchAllAATFComplianceYears());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
-            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
-            model.CompetentAuthoritiesList = new SelectList(authorities, "Id", "Abbreviation");
-            using (var client = apiClient())
-            {
-                model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name"); 
-                model.LocalAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetLocalAreas()), "Id", "Name");
-            }
-        }
-
-        /// <summary>
-        /// Return all years from 2019 to the current year in descending order
-        /// </summary>
-        /// <returns>descending list of aatf/ae compliance years</returns>
-        private List<int> FetchAllAATFComplianceYears()
-        {
-            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
-                .OrderByDescending(year => year)
-                .ToList();
-        }
-
         /// <summary>
         /// Return all years from 2016 to the current year in descending order
         /// </summary>
@@ -584,6 +534,11 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
+        }
+        private async Task PopulateFilters(UkEeeDataViewModel model)
+        {
+            List<int> years = await FetchComplianceYearsForDataReturns();
+            model.ComplianceYears = new SelectList(years);
         }
 
         private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()

@@ -52,7 +52,7 @@
                     ReturnId = returnId
                 });
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.FormatQuarter(returnData.Quarter, returnData.QuarterWindow));
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(returnData.Quarter, returnData.QuarterWindow));
 
                 return View("Index", viewModel);
             }

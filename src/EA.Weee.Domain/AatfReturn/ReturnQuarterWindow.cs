@@ -31,14 +31,18 @@
 
         public List<ReturnReportOn> ReturnReportOns { get; private set; }
 
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow,
+        public virtual DateTime SystemDateTime { get; private set; }
+
+        public ReturnQuarterWindow(Return @return, 
+            QuarterWindow quarterWindow,
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,
             List<WeeeReceivedAmount> obligatedReceivedList,
             List<WeeeReusedAmount> obligatedReusedList,
             Organisation organisation,
             List<WeeeSentOnAmount> obligatedSentOnList,
             List<ReturnScheme> returnSchemes,
-            List<ReturnReportOn> returnReportOns)
+            List<ReturnReportOn> returnReportOns,
+            DateTime systemDateTime)
         {
             Guard.ArgumentNotNull(() => @return, @return);
             Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
@@ -54,15 +58,7 @@
             this.ObligatedWeeeSentOnList = obligatedSentOnList;
             this.ReturnSchemes = returnSchemes;
             this.ReturnReportOns = returnReportOns;
-        }
-
-        public ReturnQuarterWindow(Return @return, QuarterWindow quarterWindow)
-        {
-            Guard.ArgumentNotNull(() => @return, @return);
-            Guard.ArgumentNotNull(() => quarterWindow, quarterWindow);
-
-            this.Return = @return;
-            this.QuarterWindow = quarterWindow;
+            this.SystemDateTime = systemDateTime;
         }
     }
 }

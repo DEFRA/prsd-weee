@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.DataReturns;
+    using EA.Weee.Domain.Lookup;
 
     public class QuarterWindowFactory : IQuarterWindowFactory
     {
@@ -24,6 +25,18 @@
             var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);
 
             return new QuarterWindow(startDate, endDate, quarter.Q);
+        }
+
+        public async Task<QuarterWindow> GetNextQuarterWindow(QuarterType q, int year)
+        {
+            int next = q == QuarterType.Q4 ? 1 : (int)q + 1;
+
+            QuarterWindowTemplate quarterWindowTemplate = await dataAccess.GetByQuarter(next);
+
+            DateTime startDate = new DateTime(year + quarterWindowTemplate.AddStartYears, quarterWindowTemplate.StartMonth, quarterWindowTemplate.StartDay);
+            DateTime endDate = new DateTime(year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);
+
+            return new QuarterWindow(startDate, endDate, (QuarterType)next);
         }
 
         public async Task<QuarterWindow> GetAnnualQuarter(Quarter quarter)

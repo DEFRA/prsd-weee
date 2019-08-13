@@ -4,6 +4,7 @@
     using System.Globalization;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Returns;
+    using Infrastructure;
 
     public class SelectReportOptionsNilViewModel : ReturnViewModelBase
     {
@@ -17,6 +18,6 @@
 
         public Guid OrganisationId { get; set; }
 
-        public override string Period => $"{Quarter} {QuarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {QuarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}";
+        public override string Period => DisplayHelper.QuarterPeriodFormat(this.Quarter, this.QuarterWindow);
     }
 }

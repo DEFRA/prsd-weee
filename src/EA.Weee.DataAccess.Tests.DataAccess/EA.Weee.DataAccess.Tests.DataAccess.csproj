@@ -70,6 +70,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -106,8 +107,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConstraintTests.cs" />
+    <Compile Include="StoredProcedure\GetNonObligatedWeeeReceivedAtAatfsTests.cs" />
+    <Compile Include="StoredProcedure\GetAatfObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetAeSubmissionsTests.cs" />
     <Compile Include="StoredProcedure\GetAatfAeReturnDataCsvDataTests.cs" />
+    <Compile Include="StoredProcedure\GetAllAatfObligatedCsvDataTests.cs" />
+    <Compile Include="StoredProcedure\GetAllAatfSentOnDataCsvTests.cs" />
+    <Compile Include="StoredProcedure\GetAllAatfReuseSitesCsvDataTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthorityTests.cs" />
     <Compile Include="StoredProcedure\SpgCSVDataByOrganisationIdAndComplianceYearTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -34,7 +34,7 @@
             mapperTestId = Guid.NewGuid();
             mapperTestYear = 2019;
             mapperTestQuarter = new Quarter(mapperTestYear, QuarterType.Q1);
-            mapperTestQuarterWindow = new QuarterWindow(new DateTime(mapperTestYear, 1, 1), new DateTime(mapperTestYear, 3, 31));
+            mapperTestQuarterWindow = new QuarterWindow(new DateTime(mapperTestYear, 4, 1), new DateTime(mapperTestYear + 1, 3, 31), QuarterType.Q1);
             mapperTestPeriod = "Q1 Jan - Mar";
             mapperTestNonObligatedData = new List<NonObligatedData>();
             mapperTestObligatedReceivedData = new List<WeeeObligatedData>();

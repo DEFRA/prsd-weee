@@ -17,9 +17,15 @@
             return value;
         }
 
-        public static string FormatQuarter(Quarter quarter, QuarterWindow quarterWindow)
+        public static string YearQuarterPeriodFormat(Quarter quarter, QuarterWindow quarterWindow)
         {
-            return quarter != null & quarterWindow != null ? $"{string.Concat(quarter.Year, " ", quarter.Q)} {quarterWindow.StartDate.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.EndDate.ToString("MMM", CultureInfo.CurrentCulture)}" : string.Empty;
+            return quarter != null & quarterWindow != null ? $"{string.Concat(quarter.Year, " ", quarter.Q)} {quarterWindow.QuarterStart.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)}" : string.Empty;
+        }
+
+        public static string QuarterPeriodFormat(string quarter, QuarterWindow quarterWindow)
+        {
+            return
+                $"{quarter} {quarterWindow.QuarterStart.ToString("MMM", CultureInfo.CurrentCulture)} - {quarterWindow.QuarterEnd.ToString("MMM", CultureInfo.CurrentCulture)}";
         }
     }
 }
