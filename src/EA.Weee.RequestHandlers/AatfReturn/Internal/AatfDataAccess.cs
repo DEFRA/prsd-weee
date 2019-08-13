@@ -25,7 +25,7 @@
 
         public async Task<Aatf> GetDetails(Guid id)
         {
-            return await context.Aatfs.FirstOrDefaultAsync(c => c.Id == id);
+            return await GetAatfById(id);
         }
 
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)

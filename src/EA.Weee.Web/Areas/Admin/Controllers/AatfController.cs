@@ -163,6 +163,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -170,6 +171,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAeDetails(AeEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -255,6 +257,58 @@
             }
         }
 
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> UpdateApproval(Guid id, Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var aatfData = await cache.FetchAatfData(organisationId, id);
+
+                SetBreadcrumb(aatfData.FacilityType, aatfData.Name);
+
+                var existingModel = (FacilityViewModelBase)TempData["facilityViewModel"];
+
+                var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, existingModel.ApprovalDate.Value));
+
+                var viewModel = new UpdateApprovalViewModel()
+                {
+                    AatfId = id,
+                    OrganisationId = organisationId,
+                    UpdateApprovalDateData = approvalDateFlags,
+                    OrganisationName = await cache.FetchOrganisationName(organisationId),
+                    FacilityType = aatfData.FacilityType,
+                    AatfName = aatfData.Name,
+                    ExisistingViewModel = existingModel
+                };
+
+                TempData["facilityViewModel"] = existingModel;
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateApproval(UpdateApprovalViewModel model)
+        {
+            SetBreadcrumb(model.FacilityType, model.AatfName);
+            //var existingModel = (FacilityViewModelBase)TempData["facilityViewModel"];
+
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    return View(model);
+                }
+            }
+
+            //TempData["facilityViewModel"] = existingModel;
+
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(DeleteViewModel viewModel)
@@ -317,7 +371,6 @@
             using (var client = apiClient())
             {
                 var doesApprovalNumberExist = false;
-                viewModel.DisplayAatApprovalDateMessage = true;
 
                 var existingAatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
 
@@ -326,8 +379,21 @@
                     doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
                 }
 
-                if (ModelState.IsValid && !doesApprovalNumberExist && !viewModel.DisplayAatApprovalDateMessage)
+                if (ModelState.IsValid && !doesApprovalNumberExist)
                 {
+                    if (existingAatf.ApprovalDate != viewModel.ApprovalDate)
+                    {
+                        var approvalDateFlags = await client.SendAsync(User.GetAccessToken(),
+                            new CheckAatfApprovalDateChange(existingAatf.Id, viewModel.ApprovalDate.Value));
+
+                        if (approvalDateFlags.HasFlag(CanApprovalDateBeChangedFlags.DateChanged))
+                        {
+                            TempData["facilityViewModel"] = viewModel;
+
+                            return RedirectToAction(nameof(UpdateApproval), new { id = existingAatf.Id, organisationId = existingAatf.Organisation.Id });
+                        }
+                    }
+
                     viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
                     viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
                     viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());

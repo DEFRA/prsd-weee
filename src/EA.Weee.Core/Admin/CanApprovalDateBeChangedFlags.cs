@@ -8,6 +8,7 @@
         DateChanged = 1,
         HasStartedReturn = 2,
         HasSubmittedReturn = 8,
-        HasMultipleFacility = 16
+        HasMultipleFacility = 16,
+        HasResubmission = 32
     }
 }

@@ -12,12 +12,15 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus;
 
         public CheckAatfApprovalDateChangeHandler(IWeeeAuthorization authorization, 
-            IAatfDataAccess aatfDataAccess)
+            IAatfDataAccess aatfDataAccess, 
+            IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
+            this.getAatfApprovalDateChangeStatus = getAatfApprovalDateChangeStatus;
         }
 
         public async Task<CanApprovalDateBeChangedFlags> HandleAsync(CheckAatfApprovalDateChange message)
@@ -25,9 +28,9 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var aatf = aatfDataAccess.GetDetails(message.AatfId);
+            var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
-            return new CanApprovalDateBeChangedFlags();
+            return await getAatfApprovalDateChangeStatus.Validate(aatf, message.NewApprovalDate);
         }
     }
 }

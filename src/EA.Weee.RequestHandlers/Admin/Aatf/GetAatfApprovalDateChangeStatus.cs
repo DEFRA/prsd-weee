@@ -54,6 +54,12 @@
                         result |= CanApprovalDateBeChangedFlags.HasSubmittedReturn;
                     }
 
+                    if (returns.Any(r => ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)
+                    || ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)))
+                    {
+                        result |= CanApprovalDateBeChangedFlags.HasSubmittedReturn;
+                    }
+
                     if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
                     {
                         result |= CanApprovalDateBeChangedFlags.HasMultipleFacility;

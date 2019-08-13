@@ -85,7 +85,7 @@
             nameof(ApprovalDate)
         };
 
-        public FacilityViewModelBase()
+        protected FacilityViewModelBase()
         {
             SiteAddressData = new AatfAddressData();
         }
@@ -132,7 +132,5 @@
             ModelValidated = true;
             return validationResults;
         }
-
-        public bool DisplayAatApprovalDateMessage { get; set; }
     }
 }

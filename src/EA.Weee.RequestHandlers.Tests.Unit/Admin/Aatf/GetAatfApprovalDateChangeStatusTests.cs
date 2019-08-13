@@ -187,6 +187,33 @@
         }
 
         [Fact]
+        public async Task Validate_GivenAatfOrganisationasResubmissionReturn_ShouldHaveReSubmissionReturnFlag()
+        {
+            var currentApprovalDate = fixture.Create<DateTime>();
+            var newApprovalDate = fixture.Create<DateTime>();
+            var aatf = A.Fake<Aatf>();
+            var organisation = A.Fake<Organisation>();
+            var resubmission = A.Fake<Return>();
+
+            A.CallTo(() => resubmission.ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => resubmission.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
+            A.CallTo(() => resubmission.ParentId).Returns(Guid.NewGuid());
+
+            var returns = new List<Return>()
+            {
+                resubmission
+            };
+
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
+
+            var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
+
+            result.Should().HaveFlag(CanApprovalDateBeChangedFlags.HasResubmission);
+        }
+
+        [Fact]
         public async Task Validate_GivenAatfOrganisationHasNotStartedReturn_ShouldNotHaveStartedReturnFlag()
         {
             var currentApprovalDate = fixture.Create<DateTime>();
