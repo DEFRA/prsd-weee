@@ -57,5 +57,7 @@
         public bool CanEdit { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public string AatfContactDetailsName { get; set; }
     }
 }
