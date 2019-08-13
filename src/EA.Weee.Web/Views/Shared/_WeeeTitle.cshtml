@@ -175,9 +175,9 @@
         <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
     }
 
-    if (Model.Breadcrumb.ExternalAatfName != null && Model.Breadcrumb.ExternalAatfApprovalNumber != null && Model.Breadcrumb.ExternalAatfFacilityType != null)
+    if (Model.Breadcrumb.ExternalAatf != null)
     {
-        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatfFacilityType) details: @(Model.Breadcrumb.ExternalAatfName) (@(Model.Breadcrumb.ExternalAatfApprovalNumber))</div>
+        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.FacilityType) details: @(Model.Breadcrumb.ExternalAatf.Name) (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) @Model.Breadcrumb.ExternalAatf.Status</div>
     }
 
     if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
