@@ -20,6 +20,7 @@
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -36,6 +37,7 @@
         private readonly IList<CountryData> countries;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
         private readonly CopyAatfController controller;
 
         public CopyAatfControllerTests()
@@ -46,8 +48,9 @@
             countries = A.Dummy<IList<CountryData>>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
-            controller = new CopyAatfController(() => weeeClient, breadcrumbService, mapper, cache);
+            controller = new CopyAatfController(() => weeeClient, breadcrumbService, mapper, cache, validationWrapper);
         }
 
         [Fact]
