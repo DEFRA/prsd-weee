@@ -87,6 +87,9 @@
             var result = await handler.HandleAsync(A.Dummy<GetAatfByIdExternal>());
 
             result.Contact.Should().BeEquivalentTo(aatfContactData);
+            result.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
+            result.FacilityType.Should().Be(aatf.FacilityType.DisplayName);
+            result.Status.Should().Be(aatf.AatfStatus.DisplayName);
         }
     }
 }

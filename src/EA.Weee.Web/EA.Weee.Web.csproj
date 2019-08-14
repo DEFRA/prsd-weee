@@ -998,8 +998,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Aatf\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Aatf\Views\Home\index.cshtml" />
-    <Content Include="Areas\Aatf\Views\ViewAatfContactDetails\index.cshtml" />
+    <Content Include="Areas\Aatf\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\ViewAatfContactDetails\Index.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
