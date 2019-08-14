@@ -187,7 +187,7 @@
         }
 
         [Fact]
-        public async Task Validate_GivenAatfOrganisationasResubmissionReturn_ShouldHaveReSubmissionReturnFlag()
+        public async Task Validate_GivenAatfOrganisationHasResubmissionReturn_ShouldHaveReSubmissionReturnFlag()
         {
             var currentApprovalDate = fixture.Create<DateTime>();
             var newApprovalDate = fixture.Create<DateTime>();

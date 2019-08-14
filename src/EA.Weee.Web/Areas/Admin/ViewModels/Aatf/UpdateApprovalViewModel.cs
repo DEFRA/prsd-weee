@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
+    using Weee.Requests.Admin.Aatf;
 
     public class UpdateApprovalViewModel : RadioButtonStringCollectionViewModel
     {
@@ -21,7 +22,9 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public FacilityViewModelBase ExisistingViewModel { get; set; }
+        public UpdateAatfDetailsTransferViewModel ExistingViewModel { get; set; }
+
+        public EditAatfDetails Request { get; set; }
 
         [Required(ErrorMessage = "You must select an option")]
         public override string SelectedValue { get; set; }

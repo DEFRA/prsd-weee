@@ -245,6 +245,7 @@
     <Compile Include="Areas\Admin\Mapping\CopyAatfDataToCopyAatfViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\CopyAatfDataToCopyAeViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\MappingHelperTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\UpdateApprovalDateViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfAeReturnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReuseSitesViewModelTests.cs" />

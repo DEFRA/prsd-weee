@@ -31,10 +31,10 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var aatfDeletion = await getAatfDeletionStatus.Validate(message.AatfId);
-
             var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
+            var aatfDeletion = await getAatfDeletionStatus.Validate(aatf.Id);
+            
             var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
             return new AatfDeletionData(organisationDeletion, aatfDeletion);

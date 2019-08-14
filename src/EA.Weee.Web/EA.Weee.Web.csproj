@@ -333,10 +333,13 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAeViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateAatfDetailsTransferViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateApprovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />

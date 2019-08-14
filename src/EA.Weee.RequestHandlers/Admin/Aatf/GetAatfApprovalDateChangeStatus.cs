@@ -57,7 +57,7 @@
                     if (returns.Any(r => ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)
                     || ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)))
                     {
-                        result |= CanApprovalDateBeChangedFlags.HasSubmittedReturn;
+                        result |= CanApprovalDateBeChangedFlags.HasResubmission;
                     }
 
                     if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))

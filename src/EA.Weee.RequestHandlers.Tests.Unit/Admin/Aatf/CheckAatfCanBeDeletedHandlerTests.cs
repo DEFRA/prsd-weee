@@ -3,6 +3,9 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using Core.Admin;
+    using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.Internal;
@@ -18,12 +21,14 @@
         private readonly IGetOrganisationDeletionStatus organisationDeletionStatus;
         private readonly CheckAatfCanBeDeletedHandler handler;
         private readonly IAatfDataAccess aatfDataAccess;
+        private readonly Fixture fixture;
 
         public CheckAatfCanBeDeletedHandlerTests()
         {
             aatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
             organisationDeletionStatus = A.Fake<IGetOrganisationDeletionStatus>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
+            fixture = new Fixture();
 
             handler = new CheckAatfCanBeDeletedHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
                 aatfDeletionStatus,
@@ -55,11 +60,56 @@
         }
 
         [Fact]
-        public async Task ImplementOtherTests()
+        public async Task HandleAsync_GivenMessage_AatfShouldBeRetrieved()
         {
-            // check the returns
-            // check that the other checks are called
-            true.Should().BeFalse();
+            var message = fixture.Create<CheckAatfCanBeDeleted>();
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessage_AatfDeleteFlagsShouldBeValidated()
+        {
+            var message = fixture.Create<CheckAatfCanBeDeleted>();
+            var aatf = fixture.Create<Aatf>();
+
+            A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => aatfDeletionStatus.Validate(aatf.Id)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessage_OrganisationDeleteFlagsShouldBeValidated()
+        {
+            var message = fixture.Create<CheckAatfCanBeDeleted>();
+            var aatf = fixture.Create<Aatf>();
+
+            A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessage_ReturnObjectShouldContainValidatedFlags()
+        {
+            var message = fixture.Create<CheckAatfCanBeDeleted>();
+            var aatf = fixture.Create<Aatf>();
+            var aatfFlags = fixture.Create<CanAatfBeDeletedFlags>();
+            var organisationFlags = fixture.Create<CanOrganisationBeDeletedFlags>();
+
+            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(organisationFlags);
+            A.CallTo(() => aatfDeletionStatus.Validate(aatf.Id)).Returns(aatfFlags);
+
+            var result = await handler.HandleAsync(message);
+
+            result.CanOrganisationBeDeletedFlags.Should().Be(organisationDeletionStatus);
+            result.CanAatfBeDeletedFlags.Should().Be(aatfFlags);
         }
     }
 }

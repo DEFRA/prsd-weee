@@ -57,5 +57,9 @@
         public bool CanEdit { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public int AatfStatusValue { get; set; }
+
+        public int AatfSizeValue { get; set; }
     }
 }

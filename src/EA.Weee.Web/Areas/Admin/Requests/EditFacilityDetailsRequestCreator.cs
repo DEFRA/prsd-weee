@@ -20,7 +20,7 @@
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault());
+                viewModel.ApprovalDate.GetValueOrDefault()) {AatfSizeValue = viewModel.SizeValue, AatfStatusValue = viewModel.StatusValue};
 
             if (viewModel.CompetentAuthorityId != UKCompetentAuthorityAbbreviationType.EA)
             {

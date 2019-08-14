@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -267,22 +268,11 @@
 
                 SetBreadcrumb(aatfData.FacilityType, aatfData.Name);
 
-                var existingModel = (FacilityViewModelBase)TempData["facilityViewModel"];
+                var request = (EditAatfDetails)TempData["aatfRequest"];
 
-                var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, existingModel.ApprovalDate.Value));
+                var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, request.Data.ApprovalDate.Value));
 
-                var viewModel = new UpdateApprovalViewModel()
-                {
-                    AatfId = id,
-                    OrganisationId = organisationId,
-                    UpdateApprovalDateData = approvalDateFlags,
-                    OrganisationName = await cache.FetchOrganisationName(organisationId),
-                    FacilityType = aatfData.FacilityType,
-                    AatfName = aatfData.Name,
-                    ExisistingViewModel = existingModel
-                };
-
-                TempData["facilityViewModel"] = existingModel;
+                var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatfData, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
 
                 return View(viewModel);
             }
@@ -294,17 +284,25 @@
         public async Task<ActionResult> UpdateApproval(UpdateApprovalViewModel model)
         {
             SetBreadcrumb(model.FacilityType, model.AatfName);
-            //var existingModel = (FacilityViewModelBase)TempData["facilityViewModel"];
 
             if (ModelState.IsValid)
             {
-                using (var client = apiClient())
+                if (model.SelectedValue.Equals("Yes"))
                 {
-                    return View(model);
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), model.Request);
+
+                        await cache.InvalidateAatfCache(model.OrganisationId);
+
+                        return Redirect(Url.Action("Details", new { id = model.AatfId }));
+                    }
+                }
+                else
+                {
+                    return RedirectToAction(nameof(ManageAatfDetails), new {id = model.AatfId});
                 }
             }
-
-            //TempData["facilityViewModel"] = existingModel;
 
             return View(model);
         }
@@ -381,6 +379,12 @@
 
                 if (ModelState.IsValid && !doesApprovalNumberExist)
                 {
+                    viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                    viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
+                    viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
+
+                    var request = detailsRequestCreator.ViewModelToRequest(viewModel);
+
                     if (existingAatf.ApprovalDate != viewModel.ApprovalDate)
                     {
                         var approvalDateFlags = await client.SendAsync(User.GetAccessToken(),
@@ -388,17 +392,11 @@
 
                         if (approvalDateFlags.HasFlag(CanApprovalDateBeChangedFlags.DateChanged))
                         {
-                            TempData["facilityViewModel"] = viewModel;
+                            TempData["aatfRequest"] = request;
 
                             return RedirectToAction(nameof(UpdateApproval), new { id = existingAatf.Id, organisationId = existingAatf.Organisation.Id });
                         }
                     }
-
-                    viewModel.CompetentAuthoritiesList = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-                    viewModel.PanAreaList = await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
-                    viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
-
-                    var request = detailsRequestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
