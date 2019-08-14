@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
@@ -9,13 +11,16 @@
     using Core.Shared;
     using Domain;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using Domain.Lookup;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
+    using RequestHandlers.Factories;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
@@ -27,25 +32,28 @@
     public class EditAatfDetailsRequestHandlerTests
     {
         private readonly Fixture fixture;
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly EditAatfDetailsRequestHandler handler;
         private readonly ICommonDataAccess commonDataAccess;
+        private readonly IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public EditAatfDetailsRequestHandlerTests()
         {
             fixture = new Fixture();
-            authorization = A.Fake<IWeeeAuthorization>();
+            var authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             addressMapper = A.Fake<IMap<AatfAddressData, AatfAddress>>();
             organisationDetailsDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
             commonDataAccess = A.Fake<ICommonDataAccess>();
+            getAatfApprovalDateChangeStatus = A.Fake<IGetAatfApprovalDateChangeStatus>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
 
-            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
+            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
         }
 
         [Fact]
@@ -53,7 +61,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -65,7 +73,7 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess);
+            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -167,19 +175,107 @@
 
             A.CallTo(() => aatfDataAccess.UpdateAddress(A<AatfAddress>._, siteAddress, A<Country>._)).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessage_AatfApprovalFlagsShouldBeCalculated()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+            var existingAatf = GetAatf();
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
+
+            var result = await handler.HandleAsync(updateRequest);
+
+            A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessageAndAatfApprovalDateHasChanged_QuartersForDatesShouldBeRetrieved()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+            var existingAatf = GetAatf();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
+            A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
+
+            var result = await handler.HandleAsync(updateRequest);
+
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(data.ApprovalDate.Value)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessageAndAatfApprovalDateHasNotChanged_AatfDataShouldNotBeRemoved()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+            var existingAatf = GetAatf();
+            var flags = new CanApprovalDateBeChangedFlags();
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
+            A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
+
+            var result = await handler.HandleAsync(updateRequest);
+
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(A<Aatf>._, A<IEnumerable<int>>._, A<CanApprovalDateBeChangedFlags>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMessageAndAatfApprovalDateHasChanged_AatfDataShouldBeRemoved()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+            var existingAatf = GetAatf();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
+            A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).Returns(QuarterType.Q1);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(data.ApprovalDate.Value)).Returns(QuarterType.Q4);
+
+            var result = await handler.HandleAsync(updateRequest);
+
+            var range = Enumerable.Range(1, 3);
+
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>.That.IsSameSequenceAs(range), flags))
+                .MustHaveHappenedOnceExactly();
+        }
+
         private AatfData CreateAatfData(out UKCompetentAuthorityData competentAuthority)
         {
             competentAuthority = fixture.Create<UKCompetentAuthorityData>();
             var localArea = fixture.Create<LocalAreaData>();
-            var panarea = fixture.Create<PanAreaData>();
+            var panAreaData = fixture.Create<PanAreaData>();
+
             var data = fixture.Build<AatfData>()
                 .With(e => e.CompetentAuthority, competentAuthority)
                 .With(e => e.AatfStatus, Core.AatfReturn.AatfStatus.Approved)
                 .With(e => e.Size, Core.AatfReturn.AatfSize.Large)
                 .With(e => e.LocalAreaData, localArea)
-                .With(e => e.PanAreaData, panarea)
+                .With(e => e.PanAreaData, panAreaData)
+                .With(e => e.AatfSizeValue, Core.AatfReturn.AatfSize.Large.Value)
+                .With(e => e.AatfStatusValue, Core.AatfReturn.AatfStatus.Approved.Value)
                 .Create();
+
             return data;
+        }
+
+        private Aatf GetAatf()
+        {
+            var organisation = Organisation.CreatePartnership("trading");
+
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.ApprovalDate).Returns(new DateTime(2019, 1, 1));
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+
+            return aatf;
         }
     }
 }

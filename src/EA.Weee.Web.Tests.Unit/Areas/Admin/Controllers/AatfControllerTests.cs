@@ -1311,7 +1311,7 @@
 
             var result = await controller.Delete(viewModel) as RedirectToRouteResult;
 
-            A.CallTo(() => cache.InvalidateAatfCache(viewModel.AatfId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
@@ -1438,7 +1438,7 @@
 
             await controller.UpdateApproval(model);
 
-            A.CallTo(() => cache.InvalidateAatfCache(model.AatfId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfCache(model.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

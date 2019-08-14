@@ -6,6 +6,7 @@
     using AutoFixture;
     using Core.Admin;
     using Domain.AatfReturn;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.Internal;
@@ -73,7 +74,7 @@
         public async Task HandleAsync_GivenMessage_AatfDeleteFlagsShouldBeValidated()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = fixture.Create<Aatf>();
+            var aatf = GetAatf();
 
             A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
 
@@ -86,7 +87,7 @@
         public async Task HandleAsync_GivenMessage_OrganisationDeleteFlagsShouldBeValidated()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = fixture.Create<Aatf>();
+            var aatf = GetAatf();
 
             A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
 
@@ -99,7 +100,7 @@
         public async Task HandleAsync_GivenMessage_ReturnObjectShouldContainValidatedFlags()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = fixture.Create<Aatf>();
+            var aatf = GetAatf();
             var aatfFlags = fixture.Create<CanAatfBeDeletedFlags>();
             var organisationFlags = fixture.Create<CanOrganisationBeDeletedFlags>();
 
@@ -108,8 +109,19 @@
 
             var result = await handler.HandleAsync(message);
 
-            result.CanOrganisationBeDeletedFlags.Should().Be(organisationDeletionStatus);
+            result.CanOrganisationBeDeletedFlags.Should().Be(organisationFlags);
             result.CanAatfBeDeletedFlags.Should().Be(aatfFlags);
+        }
+
+        private Aatf GetAatf()
+        {
+            var organisation = Organisation.CreatePartnership("trading");
+
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Organisation).Returns(organisation);
+
+            return aatf;
         }
     }
 }

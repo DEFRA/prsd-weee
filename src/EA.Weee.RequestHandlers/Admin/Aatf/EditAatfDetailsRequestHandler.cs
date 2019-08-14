@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using AatfReturn;
     using AatfReturn.Internal;
     using Core.AatfReturn;
+    using Core.Admin;
     using Domain.AatfReturn;
     using Domain.Lookup;
+    using Factories;
     using Organisations;
     using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
@@ -24,6 +27,8 @@
         private readonly IMap<AatfAddressData, AatfAddress> addressMapper;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly ICommonDataAccess commonDataAccess;
+        private readonly IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public EditAatfDetailsRequestHandler(
             IWeeeAuthorization authorization,
@@ -31,7 +36,9 @@
             IGenericDataAccess genericDataAccess,
             IMap<AatfAddressData, AatfAddress> addressMapper,
             IOrganisationDetailsDataAccess organisationDetailsDataAccess, 
-            ICommonDataAccess commonDataAccess)
+            ICommonDataAccess commonDataAccess, 
+            IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus, 
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
@@ -39,6 +46,8 @@
             this.addressMapper = addressMapper;
             this.organisationDetailsDataAccess = organisationDetailsDataAccess;
             this.commonDataAccess = commonDataAccess;
+            this.getAatfApprovalDateChangeStatus = getAatfApprovalDateChangeStatus;
+            this.quarterWindowFactory = quarterWindowFactory;
         }
 
         public async Task<bool> HandleAsync(EditAatfDetails message)
@@ -88,6 +97,22 @@
 
             await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf);
 
+            if (message.Data.ApprovalDate.HasValue && existingAatf.ApprovalDate.HasValue)
+            {
+                var flags = await getAatfApprovalDateChangeStatus.Validate(existingAatf, message.Data.ApprovalDate.Value);
+
+                if (flags.HasFlag(CanApprovalDateBeChangedFlags.DateChanged))
+                {
+                    var existingQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value);
+
+                    var newQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(message.Data.ApprovalDate.Value);
+
+                    var range = Enumerable.Range((int)existingQuarter, (int)newQuarter - 1);
+
+                    await aatfDataAccess.RemoveAatfData(existingAatf, range, flags);
+                }
+            }
+            
             return true;
         }
     }

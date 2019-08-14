@@ -274,6 +274,8 @@
 
                 var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatfData, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
 
+                TempData["aatfRequest"] = request;
+
                 return View(viewModel);
             }
         }
@@ -317,7 +319,7 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                await cache.InvalidateAatfCache(viewModel.AatfId);
+                await cache.InvalidateAatfCache(viewModel.OrganisationId);
 
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }

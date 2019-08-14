@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
+    using Core.Admin;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
@@ -125,6 +127,44 @@
             }
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags)
+        {
+            var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == aatf.Organisation.Id && a.ComplianceYear == aatf.ComplianceYear);
+
+            foreach (var quarter in quarters)
+            {
+                if (!flags.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility)
+                    && aatfCount == 1)
+                {
+                    var returns = context.Returns.Where(r =>
+                        r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear);
+
+                    context.Returns.RemoveRange(returns);
+                }
+                else
+                {
+                    var weeeSentOn = context.WeeeSentOn.Where(Predicate(aatf, quarter)).Cast<WeeeSentOn>();
+                    var weeeReused = context.WeeeReused.Where(Predicate(aatf, quarter)).Cast<WeeeReused>();
+                    var weeeReceived = context.WeeeReceived.Where(Predicate(aatf, quarter)).Cast<WeeeReceived>();
+                    var returnAatfs = context.ReturnAatfs.Where(r =>
+                        r.Aatf.Id == aatf.Id && r.Return.Organisation.Id == aatf.Organisation.Id && r.Return.Quarter.Year == aatf.ComplianceYear &&
+                        (int)r.Return.Quarter.Q == quarter);
+
+                    context.WeeeSentOn.RemoveRange(weeeSentOn);
+                    context.WeeeReused.RemoveRange(weeeReused);
+                    context.WeeeReceived.RemoveRange(weeeReceived);
+                    context.ReturnAatfs.RemoveRange(returnAatfs);
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        private static Expression<Func<AatfEntity, bool>> Predicate(Aatf aatf, int quarter)
+        {
+            return w => w.AatfId == aatf.Id && w.Return.Quarter.Year == aatf.ComplianceYear && (int)w.Return.Quarter.Q == quarter;
         }
     }
 }
