@@ -5,6 +5,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class AatfDataToHomeViewModelMap : IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>
     {
@@ -48,7 +49,7 @@
 
             Model.IsAE = source.IsAE;
             Model.OrganisationId = source.OrganisationId;
-            Model.AatfList = selectedAatfsOrAes;
+            Model.AatfList = selectedAatfsOrAes.OrderBy(o => o.Name).ToList();
 
             return Model;
         }

@@ -5,12 +5,28 @@
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.HomeViewModel
-
+@{
+    if (Model.IsAE)
+    {
+        ViewBag.Title = "Which AE would you like to view - GOV.UK";
+    }
+    else
+    {
+        ViewBag.Title = "Which AATF would you like to view - GOV.UK";
+    }
+}
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            Which AATF would you like to view?
+            @if (Model.IsAE)
+            {
+                @:Which AE would you like to view?
+            }
+            else
+            {
+                @:Which AATF would you like to view ?
+            }
         </h1>
     </header>
 
@@ -21,15 +37,30 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.IsAE)
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAatfId)" id="ActivityOptions">
-            @this.WeeeGds().RadioButtonsFor(
-                m => m.SelectedAatfId,
-                Model.AatfList,
-                o => o.Id,
-                o => o.AatfContactDetailsName,
-                RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Stacked)
-        </div>
+        if (Model.IsAE)
+        {
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAeId)" id="ActivityOptions">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedAeId,
+                    Model.AatfList,
+                    o => o.Id,
+                    o => o.AatfContactDetailsName,
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Stacked)
+            </div>
+        }
+        else
+        {
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAatfId)" id="ActivityOptions">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedAatfId,
+                    Model.AatfList,
+                    o => o.Id,
+                    o => o.AatfContactDetailsName,
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Stacked)
+            </div>
+        }
 
         @(this.WeeeGds().Submit("Continue"))
 
