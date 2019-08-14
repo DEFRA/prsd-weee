@@ -13,6 +13,7 @@
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
@@ -26,17 +27,20 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IMapper mapper;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
 
         public CopyAatfController(
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IMapper mapper,
-            IWeeeCache cache)
+            IWeeeCache cache,
+            IFacilityViewModelBaseValidatorWrapper validationWrapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.mapper = mapper;
             this.cache = cache;
+            this.validationWrapper = validationWrapper;
         }
 
         [HttpGet]
@@ -108,7 +112,7 @@
         private async Task<ActionResult> CopyFacilityDetails(CopyFacilityViewModelBase viewModel)
         {
             PreventSiteAddressNameValidationErrors();
-            SetBreadcrumb(viewModel.FacilityType, null);
+            SetBreadcrumb(viewModel.FacilityType, viewModel.Name);
             viewModel = await PopulateViewModelLists(viewModel);
             using (var client = apiClient())
             {
@@ -120,6 +124,14 @@
                     }
 
                     ModelState.ApplyCustomValidationSummaryOrdering(CopyFacilityViewModelBase.ValidationMessageDisplayOrder);
+                    return View("Copy", viewModel);
+                }
+
+                var result = await validationWrapper.Validate(User.GetAccessToken(), viewModel);
+
+                if (!result.IsValid)
+                {
+                    ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                     return View("Copy", viewModel);
                 }
 

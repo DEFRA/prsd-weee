@@ -24,6 +24,7 @@
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -46,6 +47,7 @@
         private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
         private readonly AatfController controller;
 
         public AatfControllerTests()
@@ -57,8 +59,9 @@
             detailsRequestCreator = A.Fake<IEditFacilityDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
             cache = A.Fake<IWeeeCache>();
+            validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache, validationWrapper);
         }
 
         [Fact]
