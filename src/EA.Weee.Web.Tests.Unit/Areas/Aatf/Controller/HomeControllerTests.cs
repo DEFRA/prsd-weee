@@ -46,34 +46,63 @@
             typeof(HomeController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
-        [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void IndexGet_GivenValidViewModelAndIsAE_BreadcrumbShouldBeSet(bool isAE)
         {
             var organisationName = "Organisation";
             var model = new HomeViewModel()
             {
-                AatfList = A.Fake<List<AatfData>>()
+                AatfList = A.Fake<List<AatfData>>(),
+                IsAE = isAE
             };
 
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
-            await controller.Index(A.Dummy<Guid>(), false);
+            await controller.Index(A.Dummy<Guid>(), isAE);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+
+            if (isAE)
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AE contact details");
+            }
+            else
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AATF contact details");
+            }
         }
 
-        [Fact]
-        public async void IndexPost_GivenInValidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void IndexPost_GivenInValidViewModelAndIsAE_BreadcrumbShouldBeSet(bool isAE)
         {
             var organisationName = "organisation";
+            var model = new HomeViewModel()
+            {
+                IsAE = isAE
+            };
+
             controller.ModelState.AddModelError("error", "error");
 
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            await controller.Index(new HomeViewModel());
+            await controller.Index(new HomeViewModel() { IsAE = isAE });
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+
+            if (isAE)
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AE contact details");
+            }
+            else
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AATF contact details");
+            }
         }
 
         [Fact]

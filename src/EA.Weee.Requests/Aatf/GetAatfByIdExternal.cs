@@ -8,9 +8,12 @@
     {
         public Guid AatfId { get; set; }
 
-        public GetAatfByIdExternal(Guid id)
+        public Guid OrganisationId { get; set; }
+
+        public GetAatfByIdExternal(Guid aatfId, Guid orgId)
         {
-            AatfId = id;
+            AatfId = aatfId;
+            OrganisationId = orgId;
         }
     }
 }
