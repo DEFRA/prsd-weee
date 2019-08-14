@@ -22,6 +22,7 @@
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
@@ -37,6 +38,7 @@
         private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
 
         public AatfController(
             Func<IWeeeClient> apiClient,
@@ -44,7 +46,8 @@
             IMapper mapper,
             IEditFacilityDetailsRequestCreator detailsRequestCreator,
             IEditAatfContactRequestCreator contactRequestCreator,
-            IWeeeCache cache)
+            IWeeeCache cache,
+            IFacilityViewModelBaseValidatorWrapper validationWrapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -52,6 +55,7 @@
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
             this.cache = cache;
+            this.validationWrapper = validationWrapper;
         }
 
         [HttpGet]
@@ -324,7 +328,12 @@
 
                 if (existingAatf.ApprovalNumber != viewModel.ApprovalNumber)
                 {
-                    doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+                    var result = await validationWrapper.Validate(User.GetAccessToken(), viewModel);
+
+                    if (!result.IsValid)
+                    {
+                        doesApprovalNumberExist = true;
+                    }
                 }
 
                 if (ModelState.IsValid && !doesApprovalNumberExist)

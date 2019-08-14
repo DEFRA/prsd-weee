@@ -358,6 +358,9 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
