@@ -22,6 +22,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
@@ -36,18 +37,21 @@
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
         private readonly int maximumSearchResults;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
 
         public AddAatfController(
             ISearcher<OrganisationSearchResult> organisationSearcher,
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService,
+            IFacilityViewModelBaseValidatorWrapper validationWrapper)
         {
             this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.validationWrapper = validationWrapper;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults;
         }
@@ -90,7 +94,7 @@
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
-
+            
             IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
@@ -350,6 +354,7 @@
         private async Task<T> PopulateViewModelLists<T>(T viewModel)
             where T : AddFacilityViewModelBase
         {
+            var test = User;
             using (var client = apiClient())
             {
                 var countries = await GetCountries();
@@ -403,14 +408,14 @@
 
             using (var client = apiClient())
             {
-                var doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+                var result = await validationWrapper.Validate(User.GetAccessToken(), viewModel);
 
-                if (doesApprovalNumberExist)
+                if (!result.IsValid)
                 {
                     ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                     return View(nameof(Add), viewModel);
                 }
-
+                
                 var request = new AddAatf()
                 {
                     Aatf = CreateFacilityData(viewModel),
