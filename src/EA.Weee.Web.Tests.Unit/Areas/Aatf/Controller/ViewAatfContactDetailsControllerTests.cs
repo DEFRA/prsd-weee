@@ -47,7 +47,8 @@
             var aatfDataExternal = new AatfDataExternal(Guid.NewGuid(), "AATF")
             {
                 ApprovalNumber = "Approval",
-                FacilityType = "AATF"
+                FacilityType = "AATF",
+                Status = "Approved"
             };
 
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
@@ -56,9 +57,7 @@
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), false);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalAatfApprovalNumber.Should().Be(aatfDataExternal.ApprovalNumber);
-            breadcrumb.ExternalAatfFacilityType.Should().Be(aatfDataExternal.FacilityType);
-            breadcrumb.ExternalAatfName.Should().Be(aatfDataExternal.Name);
+            breadcrumb.ExternalAatf.Should().BeEquivalentTo(aatfDataExternal);
         }
 
         [Fact]

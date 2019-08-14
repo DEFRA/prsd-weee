@@ -17,6 +17,8 @@
 
         public string FacilityType { get; set; }
 
+        public string Status { get; set; }
+
         public AatfDataExternal(Guid id, string name)
         {
             this.Id = id;

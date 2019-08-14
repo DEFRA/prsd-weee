@@ -29,6 +29,7 @@
         public async Task<AatfDataExternal> HandleAsync(GetAatfByIdExternal message)
         {
             authorization.EnsureCanAccessExternalArea();
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var aatf = await fetchDataAccess.FetchById(message.AatfId);
 
@@ -38,7 +39,8 @@
             {
                 Contact = aatfContactData,
                 ApprovalNumber = aatf.ApprovalNumber,
-                FacilityType = aatf.FacilityType.DisplayName
+                FacilityType = aatf.FacilityType.DisplayName,
+                Status = aatf.AatfStatus.DisplayName
             };
 
             return aatfData;
