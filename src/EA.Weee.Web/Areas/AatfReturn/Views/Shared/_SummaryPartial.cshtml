@@ -32,6 +32,10 @@
 
 <h2 class="govuk-heading-m">Obligated WEEE</h2>
 <div class="govuk-!-padding-bottom-4"></div>
+@if (Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedReused || Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+{
+    <a href="#" class="govuk-link govuk-body">Download all obligated data</a>
+}
 <div class="govuk-table govuk-grid-column-full">
     <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
         <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
