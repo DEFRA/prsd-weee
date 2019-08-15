@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
@@ -9,6 +10,7 @@
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using DataAccess;
     using Domain;
     using Domain.AatfReturn;
     using Domain.DataReturns;
@@ -40,6 +42,7 @@
         private readonly ICommonDataAccess commonDataAccess;
         private readonly IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IWeeeTransactionAdapter context;
 
         public EditAatfDetailsRequestHandlerTests()
         {
@@ -52,8 +55,17 @@
             commonDataAccess = A.Fake<ICommonDataAccess>();
             getAatfApprovalDateChangeStatus = A.Fake<IGetAatfApprovalDateChangeStatus>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-
-            handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
+            context = A.Fake<IWeeeTransactionAdapter>();
+            
+            handler = new EditAatfDetailsRequestHandler(authorization, 
+                aatfDataAccess, 
+                genericDataAccess, 
+                addressMapper, 
+                organisationDetailsDataAccess, 
+                commonDataAccess, 
+                getAatfApprovalDateChangeStatus, 
+                quarterWindowFactory,
+                context);
         }
 
         [Fact]
@@ -61,7 +73,15 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
+            var handler = new EditAatfDetailsRequestHandler(authorization, 
+                aatfDataAccess,
+                genericDataAccess,
+                addressMapper, 
+                organisationDetailsDataAccess, 
+                commonDataAccess, 
+                getAatfApprovalDateChangeStatus, 
+                quarterWindowFactory,
+                context);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -73,7 +93,15 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, aatfDataAccess, genericDataAccess, addressMapper, organisationDetailsDataAccess, commonDataAccess, getAatfApprovalDateChangeStatus, quarterWindowFactory);
+            var handler = new EditAatfDetailsRequestHandler(authorization, 
+                aatfDataAccess, 
+                genericDataAccess, 
+                addressMapper, 
+                organisationDetailsDataAccess, 
+                commonDataAccess, 
+                getAatfApprovalDateChangeStatus, 
+                quarterWindowFactory,
+                context);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<EditAatfDetails>());
 
@@ -236,7 +264,7 @@
 
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
             A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).Returns(QuarterType.Q1);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(data.ApprovalDate.Value)).Returns(QuarterType.Q4);
 
             var result = await handler.HandleAsync(updateRequest);
@@ -245,6 +273,24 @@
 
             A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>.That.IsSameSequenceAs(range), flags))
                 .MustHaveHappenedOnceExactly();
+        }
+        [Fact]
+        public async Task HandleAsync_GivenMessageAndAatfApprovalDateHasChanged_AatfDataShouldBeRemovedBeforeAatfIsUpdated()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+            var existingAatf = GetAatf();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns(existingAatf);
+            A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(A<Aatf>._, A<DateTime>._)).Returns(flags);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
+
+            var result = await handler.HandleAsync(updateRequest);
+
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>._, A<CanApprovalDateBeChangedFlags>._))
+                .MustHaveHappenedOnceExactly().Then(A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>._)).MustHaveHappenedOnceExactly());
         }
 
         private AatfData CreateAatfData(out UKCompetentAuthorityData competentAuthority)
