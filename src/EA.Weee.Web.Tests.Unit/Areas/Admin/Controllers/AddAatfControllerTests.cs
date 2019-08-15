@@ -29,6 +29,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Web.Infrastructure;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
@@ -231,6 +232,10 @@
                 StatusValue = 1
             };
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             RedirectToRouteResult result = await controller.AddAatf(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ManageAatfs");
@@ -271,6 +276,10 @@
                 viewModel.ApprovalDate.GetValueOrDefault(),
                 viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
                 viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId));
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAatf(viewModel);
 
@@ -353,6 +362,10 @@
                 OrganisationId = Guid.NewGuid()
             };
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             await controller.AddAatf(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
@@ -367,6 +380,10 @@
                 SizeValue = 1,
                 StatusValue = 1
             };
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.AddAe(viewModel) as RedirectToRouteResult;
 
@@ -402,6 +419,10 @@
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAe(viewModel);
 
@@ -447,6 +468,10 @@
                 StatusValue = 1,
                 OrganisationId = Guid.NewGuid()
             };
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAe(viewModel);
 
