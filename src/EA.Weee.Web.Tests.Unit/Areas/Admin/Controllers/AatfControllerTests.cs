@@ -23,7 +23,9 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -31,6 +33,7 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Requests;
@@ -46,6 +49,7 @@
         private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
         private readonly AatfController controller;
 
         public AatfControllerTests()
@@ -57,8 +61,9 @@
             detailsRequestCreator = A.Fake<IEditFacilityDetailsRequestCreator>();
             contactRequestCreator = A.Fake<IEditAatfContactRequestCreator>();
             cache = A.Fake<IWeeeCache>();
+            validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
-            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache);
+            controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache, validationWrapper);
         }
 
         [Fact]
@@ -650,13 +655,14 @@
         public async void ManageAatfDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.ApprovalNumber, "test").Create();
             var request = fixture.Create<EditAatfDetails>();
 
             var aatfData = new AatfData()
             {
                 Id = viewModel.Id,
-                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() },
+                ApprovalNumber = "test"
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
@@ -708,29 +714,21 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ApprovalNumberAlreadyExists_ReturnsViewWithViewModelAndErrorMessage()
+        public async void ManageAatfDetailsPost_ValidationWrapperMustHaveHappened()
         {
             var approvalNumber = "test";
+            var existingAatf = new AatfData()
+            {
+                ApprovalNumber = approvalNumber
+            };
 
-            var viewModel = A.Fake<AatfEditDetailsViewModel>();
-            A.CallTo(() => viewModel.ApprovalNumber).Returns(approvalNumber);
+            var viewModel = new AatfEditDetailsViewModel();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
-                 p => p.ApprovalNumber == viewModel.ApprovalNumber))).Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(existingAatf);
 
-            var result = await controller.ManageAatfDetails(viewModel) as ViewResult;
-            var resultViewModel = result.Model as AatfEditDetailsViewModel;
+            var result = await controller.ManageAatfDetails(viewModel);
 
-            var allErrors = controller.ModelState.Values.SelectMany(v => v.Errors);
-
-            var error = allErrors.FirstOrDefault(p => p.ErrorMessage == Constants.ApprovalNumberExistsError);
-            Assert.NotNull(error);
-
-            result.ViewName.Should().Be("ManageAatfDetails");
-            result.Model.Should().Be(viewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(
-                p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, A<AatfEditDetailsViewModel>.That.Matches(p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -801,13 +799,14 @@
         public async void ManageAeDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).Create();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.ApprovalNumber, "test").Create();
             var request = fixture.Create<EditAatfDetails>();
 
             var aatfData = new AatfData()
             {
                 Id = viewModel.Id,
-                Organisation = new OrganisationData() { Id = Guid.NewGuid() }
+                Organisation = new OrganisationData() { Id = Guid.NewGuid() },
+                ApprovalNumber = "test"
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfData.Id))).Returns(aatfData);
