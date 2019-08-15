@@ -58,7 +58,7 @@
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
                     <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Summary</span></th>
+                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">View data</span></th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body prsd-table-collapse">
@@ -114,7 +114,7 @@
                             {
                                 var summaryMessage = "Return summary for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
 
-                                @Html.NavigationRouteLink("Summary", summaryMessage, AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
+                                @Html.NavigationRouteLink("View data", summaryMessage, AatfRedirect.Default, new { action = "Index", controller = "ReturnsSummary", returnId = @item.ReturnViewModel.ReturnId }, null)
                             }
                         </td>
                     </tr>
