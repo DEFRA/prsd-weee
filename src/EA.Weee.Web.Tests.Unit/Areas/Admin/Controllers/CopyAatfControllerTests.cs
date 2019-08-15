@@ -26,6 +26,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Web.Infrastructure;
     using Xunit;
 
@@ -259,6 +260,10 @@
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             var result = await controller.CopyAatfDetails(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ManageAatfs");
@@ -290,6 +295,10 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             var result = await controller.CopyAatfDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
@@ -316,6 +325,10 @@
             };
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel) as RedirectToRouteResult;
 
@@ -347,6 +360,10 @@
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel);
 
@@ -419,6 +436,10 @@
             aatf.Contact = viewModel.ContactData;
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAatfDetails(viewModel);
 

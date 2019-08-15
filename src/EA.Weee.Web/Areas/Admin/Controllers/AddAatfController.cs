@@ -354,7 +354,6 @@
         private async Task<T> PopulateViewModelLists<T>(T viewModel)
             where T : AddFacilityViewModelBase
         {
-            var test = User;
             using (var client = apiClient())
             {
                 var countries = await GetCountries();
