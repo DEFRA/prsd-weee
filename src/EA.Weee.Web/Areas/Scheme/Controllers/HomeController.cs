@@ -107,11 +107,13 @@
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
                 {
                     activities.Add(PcsAction.ManageAatfReturns);
+                    activities.Add(PcsAction.ViewAATFContactDetails);
                 }
 
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
                 {
                     activities.Add(PcsAction.ManageAeReturns);
+                    activities.Add(PcsAction.ViewAEContactDetails);
                 }
 
                 activities.Add(PcsAction.ViewOrganisationDetails);
@@ -196,6 +198,14 @@
                 if (viewModel.SelectedValue == PcsAction.ManageAeReturns)
                 {
                     return AeRedirect.ReturnsList(viewModel.OrganisationId);
+                }
+                if (viewModel.SelectedValue == PcsAction.ViewAATFContactDetails)
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = false });
+                }
+                if (viewModel.SelectedValue == PcsAction.ViewAEContactDetails)
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = true });
                 }
             }
 

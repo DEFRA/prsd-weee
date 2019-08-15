@@ -211,6 +211,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Aatf\" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Admin\Aatf\" />
   </ItemGroup>
   <Choose>

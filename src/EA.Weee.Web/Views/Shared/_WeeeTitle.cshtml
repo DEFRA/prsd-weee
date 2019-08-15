@@ -70,26 +70,26 @@
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          "External activity link",
-                                          Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                          "Navigation",
-                                          "External activity",
-                                          null,
-                                             new Dictionary<string, object>{ {"title", "External activity link"} })) :
-                                        @Model.Breadcrumb.ExternalActivity
-</li>
+                                                  "External activity link",
+                                                  Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                                  "Navigation",
+                                                  "External activity",
+                                                  null,
+                                                     new Dictionary<string, object> { { "title", "External activity link" } })) :
+                                    @Model.Breadcrumb.ExternalActivity
+                                </li>
                             }
 
                             @if (Model.Breadcrumb.InternalActivity != null)
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          "Internal activity link",
-                                          Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                          "Navigation",
-                                          "Internal activity",
-                                          null,
-                                          null)):
+                                                  "Internal activity link",
+                                                  Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                                  "Navigation",
+                                                  "Internal activity",
+                                                  null,
+                                                  null)):
                                     @Model.Breadcrumb.InternalActivity
                                 </li>
                             }
@@ -173,6 +173,11 @@
     if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected") && Model.Breadcrumb.ExternalActivity != "AATF return")
     {
         <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
+    }
+
+    if (Model.Breadcrumb.ExternalAatf != null)
+    {
+        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.FacilityType) details: @(Model.Breadcrumb.ExternalAatf.Name) (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) @Model.Breadcrumb.ExternalAatf.Status</div>
     }
 
     if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")

@@ -325,6 +325,13 @@
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
+    <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
+    <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ViewAatfContactDetailsController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ViewAatfContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
@@ -355,6 +362,9 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
@@ -992,6 +1002,12 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfSentOnData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfReuseSites.cshtml" />
     <Content Include="Areas\Admin\Views\CopyAatf\Copy.cshtml" />
+    <Content Include="Areas\Aatf\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\Aatf\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Aatf\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\ViewAatfContactDetails\Index.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

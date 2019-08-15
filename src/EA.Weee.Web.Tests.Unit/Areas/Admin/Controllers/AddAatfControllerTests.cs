@@ -22,12 +22,14 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Web.Infrastructure;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
@@ -40,6 +42,7 @@
         private readonly IList<CountryData> countries;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
         private readonly AddAatfController controller;
 
         public AddAatfControllerTests()
@@ -51,10 +54,11 @@
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             var configurationService = A.Fake<ConfigurationService>();
+            validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults).Returns(5);
 
-            controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, configurationService);
+            controller = new AddAatfController(organisationSearcher, () => weeeClient, breadcrumbService, cache, configurationService, validationWrapper);
         }
 
         [Fact]
@@ -228,6 +232,10 @@
                 StatusValue = 1
             };
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             RedirectToRouteResult result = await controller.AddAatf(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ManageAatfs");
@@ -268,6 +276,10 @@
                 viewModel.ApprovalDate.GetValueOrDefault(),
                 viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId),
                 viewModel.LocalAreaList.FirstOrDefault(p => p.Id == viewModel.LocalAreaId));
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAatf(viewModel);
 
@@ -350,6 +362,10 @@
                 OrganisationId = Guid.NewGuid()
             };
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             await controller.AddAatf(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
@@ -364,6 +380,10 @@
                 SizeValue = 1,
                 StatusValue = 1
             };
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.AddAe(viewModel) as RedirectToRouteResult;
 
@@ -399,6 +419,10 @@
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
                 viewModel.ApprovalDate.GetValueOrDefault());
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAe(viewModel);
 
@@ -444,6 +468,10 @@
                 StatusValue = 1,
                 OrganisationId = Guid.NewGuid()
             };
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             await controller.AddAe(viewModel);
 
