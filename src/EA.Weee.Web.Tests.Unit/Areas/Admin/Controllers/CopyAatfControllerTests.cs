@@ -20,11 +20,13 @@
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using FluentValidation.Results;
     using Web.Infrastructure;
     using Xunit;
 
@@ -36,6 +38,7 @@
         private readonly IList<CountryData> countries;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
         private readonly CopyAatfController controller;
 
         public CopyAatfControllerTests()
@@ -46,8 +49,9 @@
             countries = A.Dummy<IList<CountryData>>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
-            controller = new CopyAatfController(() => weeeClient, breadcrumbService, mapper, cache);
+            controller = new CopyAatfController(() => weeeClient, breadcrumbService, mapper, cache, validationWrapper);
         }
 
         [Fact]
@@ -256,6 +260,10 @@
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             var result = await controller.CopyAatfDetails(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("ManageAatfs");
@@ -287,6 +295,10 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
 
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+
             var result = await controller.CopyAatfDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
@@ -313,6 +325,10 @@
             };
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel) as RedirectToRouteResult;
 
@@ -344,6 +360,10 @@
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(true);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel);
 
@@ -416,6 +436,10 @@
             aatf.Contact = viewModel.ContactData;
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(viewModel);
+
+            var validationResult = new ValidationResult();
+
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
 
             var result = await controller.CopyAatfDetails(viewModel);
 
