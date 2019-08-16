@@ -57,6 +57,16 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenMessage_AatfDetailsShouldBeRetrieved()
+        {
+            var message = fixture.Create<CheckAatfApprovalDateChange>();
+
+            var result = await handler.HandleAsync(message);
+
+            A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenMessage_ApprovalDateChangeStatusShouldBeValidatedAndReturned()
         {
             var message = fixture.Create<CheckAatfApprovalDateChange>();

@@ -157,10 +157,6 @@
                     weeeSentOn = context.WeeeSentOn.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeSentOn>();
                     weeeReused = context.WeeeReused.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReused>();
                     weeeReceived = context.WeeeReceived.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReceived>();
-                    //weeeReceivedAmounts = context.WeeeReceivedAmount.Where(w => weeeReceived.Select(wr => wr.Id).Contains(w.WeeeReceived.Id));
-                    //weeeReusedAmounts = context.WeeeReusedAmount.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
-                    //weeeReusedSites = context.WeeeReusedSite.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
-                    //weeeSentOnAmounts = context.WeeeSentOnAmount.Where(w => weeeSentOn.Select(wr => wr.Id).Contains(w.WeeeSentOn.Id));
 
                     foreach (var @return in returns)
                     {

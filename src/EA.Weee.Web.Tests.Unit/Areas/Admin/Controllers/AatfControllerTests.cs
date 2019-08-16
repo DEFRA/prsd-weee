@@ -895,7 +895,7 @@
             var viewModel = fixture.Build<AeEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
-
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult(new List<ValidationFailure>()));
             await controller.ManageAeDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -914,6 +914,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
 
             var result = await controller.ManageAeDetails(viewModel) as RedirectToRouteResult;
 
@@ -936,6 +937,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
             A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel)).Returns(request);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
 
             await controller.ManageAeDetails(viewModel);
 
@@ -955,6 +957,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
             A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel)).Returns(request);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
 
             await controller.ManageAatfDetails(viewModel);
 
@@ -972,6 +975,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
 
             var result = await controller.ManageAatfDetails(viewModel) as RedirectToRouteResult;
 
@@ -988,6 +992,7 @@
             var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
             await controller.ManageAatfDetails(viewModel);
 

@@ -293,6 +293,17 @@
                 .MustHaveHappenedOnceExactly().Then(A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>._)).MustHaveHappenedOnceExactly());
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenMessage_ExistingAatfShouldBeRetrieved()
+        {
+            var data = CreateAatfData(out var competentAuthority);
+            var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
+
+            await handler.HandleAsync(updateRequest);
+
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).MustHaveHappenedOnceExactly();
+        }
+
         private AatfData CreateAatfData(out UKCompetentAuthorityData competentAuthority)
         {
             competentAuthority = fixture.Create<UKCompetentAuthorityData>();
