@@ -83,6 +83,7 @@
     <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Aatf\AatfDataExternal.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
+    <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />

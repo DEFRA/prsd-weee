@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.Requests.Admin.DeleteAatf
+﻿namespace EA.Weee.Requests.Admin.Aatf
 {
-    using EA.Prsd.Core.Mediator;
     using System;
+    using Prsd.Core.Mediator;
 
     public class DeleteAnAatf : IRequest<bool>
     {
