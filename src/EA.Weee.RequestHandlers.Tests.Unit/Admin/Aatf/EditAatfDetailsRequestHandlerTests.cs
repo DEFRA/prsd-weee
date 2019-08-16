@@ -229,7 +229,7 @@
 
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
             A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType[] { QuarterType.Q1, QuarterType.Q2 });
 
             var result = await handler.HandleAsync(updateRequest);
 
@@ -264,7 +264,7 @@
 
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(existingAatf);
             A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(existingAatf, data.ApprovalDate.Value)).Returns(flags);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(existingAatf.ApprovalDate.Value)).ReturnsNextFromSequence(new QuarterType[] { QuarterType.Q1, QuarterType.Q2 });
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(data.ApprovalDate.Value)).Returns(QuarterType.Q4);
 
             var result = await handler.HandleAsync(updateRequest);
@@ -285,7 +285,7 @@
 
             A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns(existingAatf);
             A.CallTo(() => getAatfApprovalDateChangeStatus.Validate(A<Aatf>._, A<DateTime>._)).Returns(flags);
-            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType?[] { QuarterType.Q1, QuarterType.Q2 });
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(A<DateTime>._)).ReturnsNextFromSequence(new QuarterType[] { QuarterType.Q1, QuarterType.Q2 });
 
             var result = await handler.HandleAsync(updateRequest);
 

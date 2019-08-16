@@ -39,19 +39,21 @@
             return new QuarterWindow(startDate, endDate, (QuarterType)next);
         }
 
-        public async Task<QuarterType?> GetAnnualQuarterForDate(DateTime date)
+        public async Task<QuarterType> GetAnnualQuarterForDate(DateTime date)
         {
+            var quarterTypeReturn = QuarterType.Q1;
+
             foreach (var quarter in Enum.GetValues(typeof(QuarterType)))
             {
                 var quarterWindow = await GetAnnualQuarter(new Quarter(date.Year, (QuarterType)quarter));
 
                 if (quarterWindow.IsInWindow(date))
                 {
-                    return (QuarterType)quarter;
+                    quarterTypeReturn = (QuarterType)quarter;
                 }
             }
 
-            return null;
+            return quarterTypeReturn;
         }
 
         public async Task<QuarterWindow> GetAnnualQuarter(Quarter quarter)
