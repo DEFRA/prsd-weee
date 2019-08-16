@@ -16,10 +16,8 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.Aatf;
-    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -64,6 +62,12 @@
             validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
             controller = new AatfController(() => weeeClient, breadcrumbService, mapper, detailsRequestCreator, contactRequestCreator, cache, validationWrapper);
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+            var helperCall = A.CallTo(() => helper.Action("Details", A<object>._));
+            helperCall.Returns(url);
         }
 
         [Fact]
@@ -644,7 +648,7 @@
             var helperCall = A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.Id)));
             helperCall.Returns(url);
 
-            var result = await controller.ManageAatfDetails(viewModel);
+            await controller.ManageAatfDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
@@ -881,6 +885,120 @@
             await controller.ManageAeDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ManageAeDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_ShouldRetrievedApprovalDateChangeFlags()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult(new List<ValidationFailure>()));
+            await controller.ManageAeDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<CheckAatfApprovalDateChange>.That.Matches(a => a.AatfId == aatfData.Id && a.NewApprovalDate == date)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ManageAeDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_ShouldBeRedirectedToConfirmationScreen()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
+
+            var result = await controller.ManageAeDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("UpdateApproval");
+            result.RouteValues["id"].Should().Be(aatfData.Id);
+            result.RouteValues["organisationId"].Should().Be(aatfData.Organisation.Id);
+        }
+
+        [Fact]
+        public async Task ManageAeDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_TempDataShouldContainRequest()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AeEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+            var flags = new CanApprovalDateBeChangedFlags();
+            var request = fixture.Create<EditAatfDetails>();
+
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel)).Returns(request);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
+
+            await controller.ManageAeDetails(viewModel);
+
+            controller.TempData["aatfRequest"].Should().Be(request);
+        }
+
+        [Fact]
+        public async Task ManageAatfDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_TempDataShouldContainRequest()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+            var request = fixture.Create<EditAatfDetails>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => detailsRequestCreator.ViewModelToRequest(viewModel)).Returns(request);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
+
+            await controller.ManageAatfDetails(viewModel);
+
+            controller.TempData["aatfRequest"].Should().Be(request);
+        }
+
+        [Fact]
+        public async Task ManageAatfDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_ShouldBeRedirectedToConfirmationScreen()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+            var flags = new CanApprovalDateBeChangedFlags();
+            flags |= CanApprovalDateBeChangedFlags.DateChanged;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult());
+
+            var result = await controller.ManageAatfDetails(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("UpdateApproval");
+            result.RouteValues["id"].Should().Be(aatfData.Id);
+            result.RouteValues["organisationId"].Should().Be(aatfData.Organisation.Id);
+        }
+
+        [Fact]
+        public async Task ManageAatfDetailsPost_GivenModelStateIsValidAndApprovalDateHasChanged_ShouldRetrievedApprovalDateChangeFlags()
+        {
+            var date = fixture.Create<DateTime>();
+            var aatfData = fixture.Build<AatfData>().With(a => a.ApprovalDate, date.AddDays(1)).Create();
+            var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(m => m.ApprovalDate, date).Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == viewModel.Id))).Returns(aatfData);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(new ValidationResult(new List<ValidationFailure>()));
+
+            await controller.ManageAatfDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<CheckAatfApprovalDateChange>.That.Matches(a => a.AatfId == aatfData.Id && a.NewApprovalDate == date)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -1197,7 +1315,7 @@
 
             var result = await controller.Delete(viewModel) as RedirectToRouteResult;
 
-            A.CallTo(() => cache.InvalidateAatfCache(viewModel.AatfId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
@@ -1205,12 +1323,143 @@
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
         [InlineData("Download")]
+        [InlineData("UpdateApproval")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
             var methods = typeof(AatfController).GetMethods();
-            var methodInfo = methods.Where(method =>
-                    Attribute.GetCustomAttribute(method, typeof(HttpGetAttribute)) != null).Where(method => method.Name == methodName);
+            var methodInfo = methods.Where(method => method.Name == methodName);
             methodInfo.FirstOrDefault().Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_BreadCrumbShouldBeSet()
+        {
+            var aatfId = fixture.Create<Guid>();
+            var aatfData = fixture.Create<AatfData>();
+            var organisationId = fixture.Create<Guid>();
+
+            controller.TempData["aatfRequest"] = fixture.Create<EditAatfDetails>();
+
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+
+            await controller.UpdateApproval(aatfId, organisationId);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(aatfData.Name);
+        }
+
+        [Fact]
+        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_ApprovalDateFlagsShouldBeRetrieved()
+        {
+            var aatfId = fixture.Create<Guid>();
+            var aatfData = fixture.Create<AatfData>();
+            var organisationId = fixture.Create<Guid>();
+            var request = fixture.Create<EditAatfDetails>();
+
+            controller.TempData["aatfRequest"] = request;
+
+            await controller.UpdateApproval(aatfId, organisationId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<CheckAatfApprovalDateChange>.That.Matches(a => a.AatfId == aatfId && a.NewApprovalDate == request.Data.ApprovalDate)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_DefaultViewAndModelShouldBeReturned()
+        {
+            var aatfId = fixture.Create<Guid>();
+            var aatfData = fixture.Create<AatfData>();
+            var organisationId = fixture.Create<Guid>();
+            var request = fixture.Create<EditAatfDetails>();
+            var flags = fixture.Create<CanApprovalDateBeChangedFlags>();
+            var model = fixture.Create<UpdateApprovalViewModel>();
+            controller.TempData["aatfRequest"] = request;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
+            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => mapper.Map<UpdateApprovalViewModel>(A<UpdateApprovalDateViewModelMapTransfer>.That.Matches(s =>
+                s.AatfData == aatfData && s.CanApprovalDateBeChangedFlags == flags && s.Request == request))).Returns(model);
+
+            var result = await controller.UpdateApproval(aatfId, organisationId) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenViewModel_BreadcrumbShouldBeSet()
+        {
+            var model = fixture.Create<UpdateApprovalViewModel>();
+
+            await controller.UpdateApproval(model);
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
+            breadcrumbService.InternalAatf.Should().Be(model.AatfName);
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenViewModelAndModelStateIsNotValid_ViewModelShouldBeReturnedToDefaultView()
+        {
+            var model = fixture.Create<UpdateApprovalViewModel>();
+
+            controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.UpdateApproval(model) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsNo_ShouldBeRedirectedToManageAatfDetails()
+        {
+            var model = fixture.Build<UpdateApprovalViewModel>()
+                .With(s => s.SelectedValue, "No").Create();
+
+            var result = await controller.UpdateApproval(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("ManageAatfDetails");
+            result.RouteValues["id"].Should().Be(model.AatfId);
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_UpdateAatfDetailsRequestShouldBeMade()
+        {
+            var model = fixture.Build<UpdateApprovalViewModel>()
+                .With(s => s.SelectedValue, "Yes").Create();
+
+            await controller.UpdateApproval(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, model.Request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_AatfCacheShouldBeInValidated()
+        {
+            var model = fixture.Build<UpdateApprovalViewModel>()
+                .With(s => s.SelectedValue, "Yes").Create();
+
+            await controller.UpdateApproval(model);
+
+            A.CallTo(() => cache.InvalidateAatfCache(model.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_ShouldBeRedirectedToAatfDetails()
+        {
+            var model = fixture.Build<UpdateApprovalViewModel>()
+                .With(s => s.SelectedValue, "Yes").Create();
+
+            var helper = A.Fake<UrlHelper>();
+            controller.Url = helper;
+            var url = fixture.Create<string>();
+
+            A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<Guid>("id") == model.AatfId))).Returns(url);
+
+            var result = await controller.UpdateApproval(model) as RedirectResult;
+
+            result.Url.Should().Be(url);
         }
 
         [Fact]

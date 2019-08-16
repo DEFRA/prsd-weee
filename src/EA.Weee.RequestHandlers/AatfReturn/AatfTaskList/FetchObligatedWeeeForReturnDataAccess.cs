@@ -33,7 +33,7 @@
 
         public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturn(Guid weeeSentOnId)
         {
-            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOnId == weeeSentOnId).ToListAsync();
+            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOn.Id == weeeSentOnId).ToListAsync();
         }
 
         public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturnByReturn(Guid returnId)

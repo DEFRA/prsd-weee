@@ -1,14 +1,12 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.DeleteAatf
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Admin;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.DeleteAatf;
-    using EA.Weee.Security;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
-    using DeleteValidation;
+    using AatfReturn.Internal;
+    using Core.Admin;
+    using Prsd.Core.Mediator;
+    using Requests.Admin.Aatf;
+    using Security;
+    using Weee.Security;
 
     public class CheckAatfCanBeDeletedHandler : IRequestHandler<CheckAatfCanBeDeleted, AatfDeletionData>
     {
@@ -33,10 +31,10 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var aatfDeletion = await getAatfDeletionStatus.Validate(message.AatfId);
-
             var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
+            var aatfDeletion = await getAatfDeletionStatus.Validate(aatf.Id);
+            
             var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
 
             return new AatfDeletionData(organisationDeletion, aatfDeletion);

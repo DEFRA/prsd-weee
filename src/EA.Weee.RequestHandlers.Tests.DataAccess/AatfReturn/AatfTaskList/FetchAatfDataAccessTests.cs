@@ -256,32 +256,6 @@
             }
         }
 
-        private async Task CreateWeeeReceived(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
-        {
-            var scheme = new EA.Weee.Domain.Scheme.Scheme(aatf.Organisation);
-
-            var received = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
-
-            await genericDataAccess.Add<Domain.AatfReturn.WeeeReceived>(received);
-        }
-
-        private async Task CreateWeeeSentOn(DatabaseWrapper database, Aatf aatf, Return @return)
-        {
-            var genericDataAccess = new GenericDataAccess(database.WeeeContext);
-
-            var sentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database),
-                aatf, @return);
-
-            await genericDataAccess.Add(sentOn);
-        }
-
-        private async Task CreateWeeeReused(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
-        {
-            var reused = new EA.Weee.Domain.AatfReturn.WeeeReused(aatf, @return);
-
-            await genericDataAccess.Add<Domain.AatfReturn.WeeeReused>(reused);
-        }
-
         private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year, string approvalNumber = null)
         {
             var country = database.WeeeContext.Countries.First();

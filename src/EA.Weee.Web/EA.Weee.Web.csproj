@@ -340,10 +340,14 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAeViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateAatfDetailsTransferViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateApprovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
@@ -606,6 +610,7 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
     <Content Include="Content\remove-site.css" />
     <Content Include="Areas\Admin\Views\Shared\_AatfDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <None Include="Content\weee-returns-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />

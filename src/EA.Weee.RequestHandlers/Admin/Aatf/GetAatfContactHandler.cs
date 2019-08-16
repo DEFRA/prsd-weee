@@ -1,13 +1,14 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Internal;
-    using EA.Weee.Security;
+    using AatfReturn.Internal;
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
+    using Requests.Admin.Aatf;
+    using Security;
+    using Weee.Security;
 
     public class GetAatfContactHandler : IRequestHandler<GetAatfContact, AatfContactData>
     {

@@ -66,7 +66,7 @@
                 panArea = await commonDataAccess.FetchLookup<PanArea>(message.Aatf.PanAreaData.Id);
             }
 
-            var aatf = new Aatf(
+            var aatf = new Domain.AatfReturn.Aatf(
                 message.Aatf.Name,
                 competentAuthority,
                 message.Aatf.ApprovalNumber,
@@ -81,7 +81,7 @@
                 localArea,
                 panArea);
 
-            await dataAccess.Add<Aatf>(aatf);
+            await dataAccess.Add<Domain.AatfReturn.Aatf>(aatf);
 
             return true;
         }

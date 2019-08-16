@@ -1,19 +1,15 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.DeleteAatf
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.DeleteAatf;
-    using EA.Weee.Security;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess;
     using DataAccess.DataAccess;
-    using DeleteValidation;
+    using Prsd.Core.Mediator;
+    using Requests.Admin.Aatf;
+    using Security;
+    using Weee.Security;
 
     public class DeleteAatfHandler : IRequestHandler<DeleteAnAatf, bool>
     {

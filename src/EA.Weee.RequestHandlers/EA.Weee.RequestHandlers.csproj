@@ -84,15 +84,18 @@
     <Compile Include="Admin\AatfReports\GetAllAatfReuseSitesCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\IGetUkWeeeAtAatfsCsvDataAccess.cs" />
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
+    <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandler.cs" />
+    <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatus.cs" />
+    <Compile Include="Admin\Aatf\IGetAatfApprovalDateChangeStatus.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandler.cs" />
     <Compile Include="Admin\CopyAatfHandler.cs" />
-    <Compile Include="Admin\DeleteAatf\CheckAatfCanBeDeletedHandler.cs" />
-    <Compile Include="Admin\DeleteAatf\DeleteAatfHandler.cs" />
+    <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandler.cs" />
+    <Compile Include="Admin\Aatf\DeleteAatfHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandler.cs" />
-    <Compile Include="Admin\DeleteAatf\DeleteValidation\GetAatfDeletionStatus.cs" />
-    <Compile Include="Admin\DeleteAatf\DeleteValidation\GetOrganisationDeletionStatus.cs" />
-    <Compile Include="Admin\DeleteAatf\DeleteValidation\IGetAatfDeletionStatus.cs" />
-    <Compile Include="Admin\DeleteAatf\DeleteValidation\IGetOrganisationDeletionStatus.cs" />
+    <Compile Include="Admin\Aatf\GetAatfDeletionStatus.cs" />
+    <Compile Include="Admin\Aatf\GetOrganisationDeletionStatus.cs" />
+    <Compile Include="Admin\Aatf\IGetAatfDeletionStatus.cs" />
+    <Compile Include="Admin\Aatf\IGetOrganisationDeletionStatus.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
@@ -113,9 +116,9 @@
     <Compile Include="AatfReturn\CopyReturnHandler.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
     <Compile Include="AatfReturn\Internal\AatfDataAccess.cs" />
-    <Compile Include="AatfReturn\Internal\EditAatfDetailsRequestHandler.cs" />
-    <Compile Include="AatfReturn\Internal\EditAatfContactHandler.cs" />
-    <Compile Include="AatfReturn\Internal\GetAatfContactHandler.cs" />
+    <Compile Include="Admin\Aatf\EditAatfDetailsRequestHandler.cs" />
+    <Compile Include="Admin\Aatf\EditAatfContactHandler.cs" />
+    <Compile Include="Admin\Aatf\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />
     <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
@@ -526,9 +529,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AatfReturn\Factory\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
