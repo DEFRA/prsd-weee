@@ -40,8 +40,10 @@
             typeof(ViewAatfContactDetailsController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
-        [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet(bool isAE)
         {
             var organisationName = "Organisation";
             var aatfDataExternal = new AatfDataExternal(Guid.NewGuid(), "AATF")
@@ -54,10 +56,19 @@
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfDataExternal);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), false);
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), isAE);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalAatf.Should().BeEquivalentTo(aatfDataExternal);
+
+            if (isAE)
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AE contact details");
+            }
+            else
+            {
+                breadcrumb.ExternalActivity.Should().Be("View AATF contact details");
+            }
         }
 
         [Fact]
