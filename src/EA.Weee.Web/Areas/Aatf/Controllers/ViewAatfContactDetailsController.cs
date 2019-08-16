@@ -35,7 +35,14 @@
 
                 var model = new ViewAatfContactDetailsViewModel() { OrganisationId = organisationId, AatfId = aatfId, Contact = aatf.Contact, AatfName = aatf.Name, IsAE = isAE };
 
-                await SetBreadcrumb(model.OrganisationId, "AATF contact details", aatf.Name, aatf.ApprovalNumber, aatf.FacilityType, aatf);
+                if (isAE)
+                {
+                    await SetBreadcrumb(model.OrganisationId, "View AE contact details", aatf.Name, aatf.ApprovalNumber, aatf.FacilityType, aatf);
+                }
+                else
+                {
+                    await SetBreadcrumb(model.OrganisationId, "View AATF contact details", aatf.Name, aatf.ApprovalNumber, aatf.FacilityType, aatf);
+                }
 
                 return View(model);
             }
