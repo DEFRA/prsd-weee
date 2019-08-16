@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.Organisation;
@@ -20,5 +21,7 @@
         Task<bool> HasScheme(Guid organisationId);
 
         Task<bool> HasFacility(Guid organisationId, FacilityType facilityType);
+
+        Task<List<Return>> GetReturnsByComplianceYear(Guid organisationId, int year);
     }
 }

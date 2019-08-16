@@ -58,6 +58,10 @@
 
         public Guid AatfId { get; set; }
 
+        public int AatfStatusValue { get; set; }
+
+        public int AatfSizeValue { get; set; }
+
         public string AatfContactDetailsName { get; set; }
     }
 }

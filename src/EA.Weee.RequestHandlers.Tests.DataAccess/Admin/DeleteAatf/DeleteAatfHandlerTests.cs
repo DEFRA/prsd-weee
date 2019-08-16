@@ -9,9 +9,8 @@
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
-    using RequestHandlers.Admin.DeleteAatf;
-    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
-    using Requests.Admin.DeleteAatf;
+    using RequestHandlers.Admin.Aatf;
+    using Requests.Admin.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;

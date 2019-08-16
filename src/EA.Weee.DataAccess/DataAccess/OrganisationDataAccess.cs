@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -74,6 +75,11 @@
         public async Task<bool> HasReturns(Guid organisationId, int year)
         {
             return await context.Returns.AnyAsync(r => r.Organisation.Id == organisationId && r.Quarter.Year == year);
+        }
+
+        public async Task<List<Return>> GetReturnsByComplianceYear(Guid organisationId, int year)
+        {
+            return await context.Returns.Where(r => r.Quarter.Year == year && r.Organisation.Id == organisationId).ToListAsync();
         }
     }
 }

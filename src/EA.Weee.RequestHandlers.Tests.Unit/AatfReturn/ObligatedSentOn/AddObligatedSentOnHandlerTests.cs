@@ -16,6 +16,7 @@
     using System.Security;
     using System.Text;
     using System.Threading.Tasks;
+    using RequestHandlers.AatfReturn;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 
@@ -23,9 +24,11 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IObligatedSentOnDataAccess addObligatedSentOnDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public AddObligatedSentOnHandlerTests()
         {
+            genericDataAccess = A.Fake<IGenericDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
             addObligatedSentOnDataAccess = A.Dummy<IObligatedSentOnDataAccess>();
         }
@@ -35,7 +38,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess);
+            var handler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess, genericDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedSentOn>());
 
@@ -79,7 +82,7 @@
                 weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
-            var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess);
+            var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess, genericDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);
 

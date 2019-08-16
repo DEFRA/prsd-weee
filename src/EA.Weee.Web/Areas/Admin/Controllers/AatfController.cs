@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -12,9 +13,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -169,6 +168,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -176,6 +176,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAeDetails(AeEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -261,6 +262,57 @@
             }
         }
 
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> UpdateApproval(Guid id, Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var aatfData = await cache.FetchAatfData(organisationId, id);
+
+                SetBreadcrumb(aatfData.FacilityType, aatfData.Name);
+
+                var request = (EditAatfDetails)TempData["aatfRequest"];
+
+                var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, request.Data.ApprovalDate.Value));
+
+                var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatfData, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
+
+                TempData["aatfRequest"] = request;
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateApproval(UpdateApprovalViewModel model)
+        {
+            SetBreadcrumb(model.FacilityType, model.AatfName);
+
+            if (ModelState.IsValid)
+            {
+                if (model.SelectedValue.Equals("Yes"))
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), model.Request);
+
+                        await cache.InvalidateAatfCache(model.OrganisationId);
+
+                        return Redirect(Url.Action("Details", new { id = model.AatfId }));
+                    }
+                }
+                else
+                {
+                    return RedirectToAction(nameof(ManageAatfDetails), new {id = model.AatfId});
+                }
+            }
+
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(DeleteViewModel viewModel)
@@ -271,7 +323,7 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                await cache.InvalidateAatfCache(viewModel.AatfId);
+                await cache.InvalidateAatfCache(viewModel.OrganisationId);
 
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }
@@ -344,6 +396,19 @@
 
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
 
+                    if (existingAatf.ApprovalDate != viewModel.ApprovalDate)
+                    {
+                        var approvalDateFlags = await client.SendAsync(User.GetAccessToken(),
+                            new CheckAatfApprovalDateChange(existingAatf.Id, viewModel.ApprovalDate.Value));
+
+                        if (approvalDateFlags.HasFlag(CanApprovalDateBeChangedFlags.DateChanged))
+                        {
+                            TempData["aatfRequest"] = request;
+
+                            return RedirectToAction(nameof(UpdateApproval), new { id = existingAatf.Id, organisationId = existingAatf.Organisation.Id });
+                        }
+                    }
+
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     await cache.InvalidateAatfCache(existingAatf.Organisation.Id);
@@ -370,6 +435,7 @@
                 {
                     ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                 }
+
                 return View(nameof(ManageAatfDetails), viewModel);
             }
         }

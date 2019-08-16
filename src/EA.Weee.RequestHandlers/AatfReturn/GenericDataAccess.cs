@@ -44,9 +44,9 @@
             }
         }
 
-        public void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
+        public void RemoveMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            foreach (var amount in amounts)
+            foreach (var amount in entities)
             {
                 context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
             }

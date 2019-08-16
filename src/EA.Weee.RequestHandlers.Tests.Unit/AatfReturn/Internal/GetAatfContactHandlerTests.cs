@@ -9,11 +9,12 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Admin.Aatf;
+    using Requests.Admin.Aatf;
     using Xunit;
 
     public class GetAatfContactHandlerTests

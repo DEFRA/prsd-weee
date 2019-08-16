@@ -1,26 +1,18 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.DeleteAatf
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using EA.Weee.DataAccess.Identity;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Admin.DeleteAatf;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.DeleteAatf;
-    using EA.Weee.Security;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
-    using Microsoft.AspNet.Identity;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
-    using AutoFixture;
-    using Core.Admin;
     using DataAccess;
     using DataAccess.DataAccess;
-    using FluentAssertions;
-    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
+    using DataAccess.Identity;
+    using FakeItEasy;
+    using Microsoft.AspNet.Identity;
+    using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Admin.Aatf;
+    using Requests.Admin.Aatf;
+    using Weee.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class DeleteAatfHandlerTests
