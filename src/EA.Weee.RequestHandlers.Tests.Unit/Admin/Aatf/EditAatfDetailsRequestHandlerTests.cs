@@ -143,8 +143,8 @@
             A.CallTo(() => aatf.ComplianceYear).Returns((Int16)2019);
             A.CallTo(() => genericDataAccess.GetById<Aatf>(updateRequest.Data.Id)).Returns(aatf);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(updateRequest.Data.CompetentAuthority.Abbreviation)).Returns(competentAuthorityDomain);
-            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(updateRequest.Data.LocalAreaData.Id)).Returns(localAreaDomain);
-            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(updateRequest.Data.PanAreaData.Id)).Returns(panAreaDomain);
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(updateRequest.Data.LocalAreaDataId.Value)).Returns(localAreaDomain);
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(updateRequest.Data.PanAreaDataId.Value)).Returns(panAreaDomain);
 
             var result = await handler.HandleAsync(updateRequest);
 
@@ -163,7 +163,7 @@
         public async Task HandleAsync_GivenNoLocalArea_LocalAreaIsNull()
         {
             var data = CreateAatfData(out var competentAuthority);
-            data.LocalAreaData = null;
+            data.LocalAreaDataId = null;
             var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
 
             var result = await handler.HandleAsync(updateRequest);
@@ -176,7 +176,7 @@
         public async Task HandleAsync_GivenNoPanArea_LocalAreaIsNull()
         {
             var data = CreateAatfData(out var competentAuthority);
-            data.PanAreaData = null;
+            data.PanAreaDataId = null;
             var updateRequest = fixture.Build<EditAatfDetails>().With(e => e.Data, data).Create();
 
             var result = await handler.HandleAsync(updateRequest);
