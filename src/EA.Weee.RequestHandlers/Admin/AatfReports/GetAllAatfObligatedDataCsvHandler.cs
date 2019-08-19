@@ -92,7 +92,7 @@
             fileName += "_View obligated WEEE data" + string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
                                 SystemTime.UtcNow);           
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
+            string fileContent = DataTableCsvHelper.DataTableToCsv(obligatedData);
 
             return new CSVFileData
             {
