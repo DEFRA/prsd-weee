@@ -42,7 +42,7 @@
             var fileName =
                 $"{@return.Quarter.Year}_Q{@return.Quarter.Q}_{@return.Organisation.OrganisationName}_Obligated return data_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
-            var fileContent = obligatedData.DataSetSentOnToCSV(obligatedData);
+            var fileContent = obligatedData.DataTableToCsv();
 
             return new CSVFileData
             {
