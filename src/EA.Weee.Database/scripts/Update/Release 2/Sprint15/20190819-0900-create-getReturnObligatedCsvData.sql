@@ -17,9 +17,13 @@ CREATE PROCEDURE [AATF].[getReturnObligatedCsvData]
 AS
 BEGIN
 
-DECLARE @ReturnId UNIQUEIDENTIFIER
 DECLARE @DynamicPivotQuery AS NVARCHAR(MAX)
 DECLARE @ColumnName AS NVARCHAR(MAX)
+DECLARE @HasPcsData BIT
+DECLARE @HasSentOnData BIT
+
+SET @HasPcsData = 0
+SET @HasSentOnData = 0
 
 DECLARE @ObligationType TABLE
 (
@@ -28,22 +32,24 @@ DECLARE @ObligationType TABLE
 INSERT INTO @ObligationType SELECT 0 -- Household / B2C
 INSERT INTO @ObligationType SELECT 1 -- Non house hold / B2B
 
-DECLARE @FinalTable TABLE
+CREATE TABLE ##FinalTable
 (
 	ReturnId UNIQUEIDENTIFIER,
 	ComplianceYear INT,
-	[Quarter] INT,
+	[Quarter] CHAR(2),
 	AatfKey UNIQUEIDENTIFIER,
 	[AatfName] NVARCHAR(256),
 	[AatfApprovalNumber] NVARCHAR(20),
+	SubmittedBy NVARCHAR(500),
+	SubmittedDate DATETIME,
 	ObligationType INT,
+	Obligation CHAR(3),
 	CategoryId INT,
 	CategoryName NVARCHAR (60),
 	TotalSent				DECIMAL(35,3) NULL,
 	TotalReused				DECIMAL(35,3) NULL,
 	TotalReceived			DECIMAL(35,3) NULL
 )
-
 
 ;WITH ObligationData (ObligationType, CategoryId, CategoryName)
 AS (
@@ -54,17 +60,20 @@ SELECT
 FROM
 	[Lookup].WeeeCategory w, @ObligationType o
 )
-INSERT INTO @FinalTable
+INSERT INTO ##FinalTable
 SELECT
 	r.Id,
-	r.ComplianceYear,
-	r.Quarter,
+	r.ComplianceYear AS 'ComplianceYear',
+	CONCAT('Q', r.Quarter) AS [Quarter],
 	a.Id,
-	a.[Name],
-	a.ApprovalNumber,
+	a.[Name] AS 'Name of AATF',
+	a.ApprovalNumber AS 'AATF approval number',
+	CONCAT(u.FirstName,' ',u.Surname) as 'SubmittedBy',
+	r.SubmittedDate AS 'Submitted date (GMT)',
 	o.ObligationType,
+	CASE o.ObligationType WHEN 0 THEN 'B2C' ELSE 'B2B' END AS Obligation,
 	o.CategoryId,
-	o.CategoryName,
+	CONCAT(o.CategoryId,'. ', o.CategoryName) AS Category,
 	NULL,
 	NULL,
 	NULL
@@ -72,6 +81,7 @@ FROM
 	[AATF].[Return] r
 	INNER JOIN [AATF].ReturnAatf ra ON ra.ReturnId = r.Id
 	INNER JOIN [AATF].[AATF] a ON a.Id = ra.AatfId
+	LEFT JOIN  [Identity].[AspNetUsers] u ON u.id = r.SubmittedById
 	, ObligationData o
 WHERE
 	r.Id = @ReturnId
@@ -99,7 +109,7 @@ UPDATE
 SET
 	f.TotalReceived = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalReceivedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
 
 ;WITH TotalReceivedUpdate (AatfId, CategoryId, Tonnage)
@@ -123,7 +133,7 @@ UPDATE
 SET
 	f.TotalReceived = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalReceivedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
 
 -- TOTAL SENT ON PER OBLIGATION TYPE
@@ -148,7 +158,7 @@ UPDATE
 SET
 	f.TotalSent = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalSentOnUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
 
 ;WITH TotalSentOnUpdate (AatfId, CategoryId, Tonnage)
@@ -172,7 +182,7 @@ UPDATE
 SET
 	f.TotalSent = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalSentOnUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
 
 -- TOTAL REUSED PER OBLIGATION TYPE
@@ -194,7 +204,7 @@ UPDATE
 SET
 	f.TotalReused = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalReusedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
 
 ;WITH TotalReusedUpdate (AatfId, CategoryId, Tonnage)
@@ -215,15 +225,15 @@ UPDATE
 SET
 	f.TotalReused = t.Tonnage
 FROM
-	@FinalTable f
+	##FinalTable f
 	INNER JOIN TotalReusedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
 
 -- TOTAL RECEIVED PER PCS
-SELECT @ColumnName = ISNULL(@ColumnName + ',','') + QUOTENAME(SchemeName)
+SELECT @ColumnName = ISNULL(@ColumnName + ',','') + QUOTENAME(CONCAT('Obligated WEEE received on behalf of ', SchemeName, ' (t)'))
 FROM 
 (
 	SELECT DISTINCT
-		s.SchemeName
+		s.SchemeName As SchemeName
 	FROM
 		[AATF].WeeeReceived wr
 		INNER JOIN [PCS].Scheme s ON s.Id = wr.SchemeId
@@ -266,7 +276,7 @@ FROM
 	SELECT
 		CategoryId, AatfId, ' + @ColumnName + ', ObligationType
 	INTO 
-		##PcsObligatedHouseHold
+		##PcsObligated
 	FROM
 		pivotPcsObligated
 	PIVOT (MAX(Tonnage) FOR SchemeName IN (' + @ColumnName + ')) AS x'
@@ -274,7 +284,7 @@ FROM
 EXEC (@DynamicPivotQuery)
 
 -- TOTAL SENT ON TO SITE
-SELECT @ColumnName = ISNULL(@ColumnName + ',','') + QUOTENAME(SiteOperator)
+SELECT @ColumnName = ISNULL(@ColumnName + ',','') + QUOTENAME(CONCAT('Obligated WEEE sent to ', SiteOperator, ' (t)'))
 FROM 
 (
 	SELECT DISTINCT
@@ -329,17 +339,42 @@ SET @DynamicPivotQuery =
 PRINT @DynamicPivotQuery
 EXEC (@DynamicPivotQuery)
 
---SELECT * FROM ##SentOnObligated
-SELECT
-	f.*,
-	ph.*,
-	so.*
-FROM
-	@FinalTable f
-	LEFT JOIN ##PcsObligatedHouseHold ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType
-	LEFT JOIN ##SentOnObligated so ON so.CategoryId = f.CategoryId AND so.AatfId = f.AatfKey AND so.ObligationType = f.ObligationType
+IF OBJECT_ID('tempdb..##PcsObligated') IS NOT NULL
+	SET @HasPcsData = 1
 
-DROP TABLE ##PcsObligatedHouseHold
-DROP TABLE ##SentOnObligated
+IF OBJECT_ID('tempdb..##SentOnObligated') IS NOT NULL
+	SET @HasSentOnData = 1
+
+SET @DynamicPivotQuery = N'
+	SELECT
+		f.*'
+
+IF @HasPcsData = 1 BEGIN
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N', ph.*'
+END
+IF @HasSentOnData = 1 BEGIN
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N', so.*'
+END
+
+SET @DynamicPivotQuery = @DynamicPivotQuery + N'
+FROM
+	##FinalTable f '
+
+IF @HasPcsData = 1 BEGIN
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##PcsObligated ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType '
+END
+IF @HasSentOnData = 1 BEGIN
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##SentOnObligated so ON so.CategoryId = f.CategoryId AND so.AatfId = f.AatfKey AND so.ObligationType = f.ObligationType '
+END
+
+EXEC (@DynamicPivotQuery)
+
+IF @HasPcsData = 1 BEGIN
+	DROP TABLE ##PcsObligated
+END
+IF @HasSentOnData = 1 BEGIN
+	DROP TABLE ##SentOnObligated
+END
+DROP TABLE ##FinalTable
 
 END

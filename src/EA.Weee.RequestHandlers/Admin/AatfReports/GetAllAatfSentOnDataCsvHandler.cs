@@ -11,6 +11,7 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
+
     public class GetAllAatfSentOnDataCsvHandler : IRequestHandler<GetAllAatfSentOnDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
@@ -92,7 +93,7 @@
             string fileContent = string.Empty;
             if (obligatedData.Tables.Count > 0)
             {
-                fileContent = DataTableCsvHelper.DataSetSentOnToCSV(obligatedData.Tables[0], obligatedData.Tables[1]);
+                fileContent = DataTableCsvHelper.DataSetSentOnToCsv(obligatedData.Tables[0], obligatedData.Tables[1]);
             }
 
             return new CSVFileData

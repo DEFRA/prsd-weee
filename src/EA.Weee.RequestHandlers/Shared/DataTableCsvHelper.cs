@@ -8,7 +8,7 @@
 
     public static class DataTableCsvHelper
     {        
-        public static string DataTableToCSV(this DataTable datatable)
+        public static string DataTableToCsv(this DataTable datatable)
         {
             NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
             char seperator = ',';
@@ -41,7 +41,7 @@
             return sb.ToString();
         }
 
-        public static string DataSetSentOnToCSV(this DataTable datatable, DataTable columnNameDataTable)
+        public static string DataSetSentOnToCsv(this DataTable datatable, DataTable columnNameDataTable)
         {
             NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
             char seperator = ',';
