@@ -165,6 +165,44 @@
         }
 
         [Fact]
+        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterWithNonObligatedData_AatfDataAndStartedReturnShouldBeRemoved()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper));
+
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
+                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
+                    FacilityType.Aatf, 2019, QuarterType.Q1);
+
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
+                    FacilityType.Aatf, 2019, QuarterType.Q2);
+
+                var flags = new CanApprovalDateBeChangedFlags();
+
+                databaseWrapper.WeeeContext.NonObligatedWeee.Add(new Domain.AatfReturn.NonObligatedWeee(@return, 1, true, 1));
+                databaseWrapper.WeeeContext.NonObligatedWeee.Add(new Domain.AatfReturn.NonObligatedWeee(@return, 1, false, 1));
+                databaseWrapper.WeeeContext.NonObligatedWeee.Add(new Domain.AatfReturn.NonObligatedWeee(@return2, 1, true, 1));
+                databaseWrapper.WeeeContext.NonObligatedWeee.Add(new Domain.AatfReturn.NonObligatedWeee(@return2, 1, false, 1));
+
+                databaseWrapper.WeeeContext.Aatfs.Add(aatf);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                databaseWrapper.WeeeContext.NonObligatedWeee.Count(n => n.ReturnId == @return.Id).Should().Be(2);
+                databaseWrapper.WeeeContext.NonObligatedWeee.Count(n => n.ReturnId == @return2.Id).Should().Be(2);
+
+                await aatfDataAccess.RemoveAatfData(aatf, new List<int>() { 1 }, flags);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                databaseWrapper.WeeeContext.NonObligatedWeee.Count(n => n.ReturnId == @return.Id).Should().Be(0);
+                databaseWrapper.WeeeContext.NonObligatedWeee.Count(n => n.ReturnId == @return2.Id).Should().Be(2);
+            }
+        }
+
+        [Fact]
         public async void RemoveAatfData_GivenSingleAatfAndSingleQuarter_AatfDataAndStartedReturnShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
