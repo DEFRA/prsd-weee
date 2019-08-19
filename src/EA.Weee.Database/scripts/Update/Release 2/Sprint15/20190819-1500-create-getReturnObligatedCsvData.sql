@@ -35,20 +35,20 @@ INSERT INTO @ObligationType SELECT 1 -- Non house hold / B2B
 CREATE TABLE ##FinalTable
 (
 	ReturnId UNIQUEIDENTIFIER,
-	ComplianceYear INT,
+	[Compliance Year] INT,
 	[Quarter] CHAR(2),
 	AatfKey UNIQUEIDENTIFIER,
-	[AatfName] NVARCHAR(256),
-	[AatfApprovalNumber] NVARCHAR(20),
-	SubmittedBy NVARCHAR(500),
-	SubmittedDate DATETIME,
+	[Name of AATF] NVARCHAR(256),
+	[AATF approval number] NVARCHAR(20),
+	[Submitted by] NVARCHAR(500),
+	[Submitted date (GMT)] DATETIME,
 	ObligationType INT,
 	Obligation CHAR(3),
 	CategoryId INT,
-	CategoryName NVARCHAR (60),
-	TotalSent				DECIMAL(35,3) NULL,
-	TotalReused				DECIMAL(35,3) NULL,
-	TotalReceived			DECIMAL(35,3) NULL
+	[Category] NVARCHAR (60),
+	[Total obligated WEEE sent to another AATF / ATF for treatment (t)]				DECIMAL(35,3) NULL,
+	[Total obligated WEEE reused as a whole appliance (t)]				DECIMAL(35,3) NULL,
+	[Total obligated WEEE received on behalf of PCS(s) (t)]			DECIMAL(35,3) NULL
 )
 
 ;WITH ObligationData (ObligationType, CategoryId, CategoryName)
@@ -63,17 +63,17 @@ FROM
 INSERT INTO ##FinalTable
 SELECT
 	r.Id,
-	r.ComplianceYear AS 'ComplianceYear',
+	r.ComplianceYear,
 	CONCAT('Q', r.Quarter) AS [Quarter],
 	a.Id,
-	a.[Name] AS 'Name of AATF',
-	a.ApprovalNumber AS 'AATF approval number',
-	CONCAT(u.FirstName,' ',u.Surname) as 'SubmittedBy',
-	r.SubmittedDate AS 'Submitted date (GMT)',
+	a.[Name],
+	a.ApprovalNumber,
+	CONCAT(u.FirstName,' ',u.Surname),
+	r.SubmittedDate,
 	o.ObligationType,
 	CASE o.ObligationType WHEN 0 THEN 'B2C' ELSE 'B2B' END AS Obligation,
 	o.CategoryId,
-	CONCAT(o.CategoryId,'. ', o.CategoryName) AS Category,
+	CONCAT(o.CategoryId,'. ', o.CategoryName),
 	NULL,
 	NULL,
 	NULL
@@ -107,7 +107,7 @@ GROUP BY
 UPDATE
 	f
 SET
-	f.TotalReceived = t.Tonnage
+	f.[Total obligated WEEE received on behalf of PCS(s) (t)] = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalReceivedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
@@ -131,7 +131,7 @@ GROUP BY
 UPDATE
 	f
 SET
-	f.TotalReceived = t.Tonnage
+	f.[Total obligated WEEE received on behalf of PCS(s) (t)] = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalReceivedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
@@ -156,7 +156,7 @@ GROUP BY
 UPDATE
 	f
 SET
-	f.TotalSent = t.Tonnage
+	f.[Total obligated WEEE sent to another AATF / ATF for treatment (t)]	 = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalSentOnUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
@@ -180,7 +180,7 @@ GROUP BY
 UPDATE
 	f
 SET
-	f.TotalSent = t.Tonnage
+	f.[Total obligated WEEE sent to another AATF / ATF for treatment (t)]	 = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalSentOnUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
@@ -202,7 +202,7 @@ WHERE
 UPDATE
 	f
 SET
-	f.TotalReused = t.Tonnage
+	f.[Total obligated WEEE reused as a whole appliance (t)] = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalReusedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 0
@@ -223,7 +223,7 @@ WHERE
 UPDATE
 	f
 SET
-	f.TotalReused = t.Tonnage
+	f.[Total obligated WEEE reused as a whole appliance (t)] = t.Tonnage
 FROM
 	##FinalTable f
 	INNER JOIN TotalReusedUpdate t ON t.AatfId = f.AatfKey AND t.CategoryId = f.CategoryId AND f.ObligationType = 1
