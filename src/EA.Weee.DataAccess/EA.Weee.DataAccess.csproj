@@ -120,7 +120,6 @@
     <Compile Include="StoredProcedure\AatfAeReturnData.cs" />
     <Compile Include="StoredProcedure\AatfReuseSitesData.cs" />
     <Compile Include="StoredProcedure\DataReturnSummaryCsvData.cs" />
-    <Compile Include="StoredProcedure\GetReturnObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerEeeCsvData.cs" />
