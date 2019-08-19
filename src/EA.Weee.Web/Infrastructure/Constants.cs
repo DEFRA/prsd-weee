@@ -6,5 +6,6 @@
         public static readonly string AntiForgeryCookieName = "request_verification_token";
         public static readonly string ErrorOccurred = "errorOccurred";
         public static readonly string ApprovalNumberExistsError = "Approval number already exists";
+        public static readonly string ApprovalNumberExistsForCYError = "Approval number already exists for compliance year";
     }
 }

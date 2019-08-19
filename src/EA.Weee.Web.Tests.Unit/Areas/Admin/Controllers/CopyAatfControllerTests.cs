@@ -70,7 +70,7 @@
         [InlineData(FacilityType.Aatf, "Copy AATF for new compliance year")]
         public async Task CopyGet_CanEdit_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
-            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create(); 
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
             aatf.FacilityType = facilityType;
 
             var aatfViewModel = fixture.Create<CopyAatfViewModel>();
@@ -146,7 +146,7 @@
         public async Task CopyGetAe_CanEdit_ViewModelShouldBeReturned()
         {
             var aatf = fixture.Build<AatfData>()
-                .With(a => a.CanEdit, true)                
+                .With(a => a.CanEdit, true)
                 .Create();
             aatf.FacilityType = FacilityType.Ae;
             var aatfViewModel = fixture.Create<CopyAeViewModel>();
@@ -174,7 +174,7 @@
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(aatfViewModel);
 
-           await controller.CopyAatfDetails(aatf.Id);
+            await controller.CopyAatfDetails(aatf.Id);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).MustHaveHappenedOnceExactly();
@@ -262,7 +262,7 @@
 
             var validationResult = new ValidationResult();
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
 
             var result = await controller.CopyAatfDetails(viewModel) as RedirectToRouteResult;
 
@@ -297,7 +297,7 @@
 
             var validationResult = new ValidationResult();
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
 
             var result = await controller.CopyAatfDetails(viewModel);
 
@@ -328,7 +328,7 @@
 
             var validationResult = new ValidationResult();
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel) as RedirectToRouteResult;
 
@@ -363,7 +363,7 @@
 
             var validationResult = new ValidationResult();
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
 
             var result = await controller.CopyAeDetails(viewModel);
 
@@ -381,6 +381,7 @@
 
             var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
             clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
+
             var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
             clientCallCountries.Returns(Task.FromResult(countries));
 
@@ -439,7 +440,7 @@
 
             var validationResult = new ValidationResult();
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
 
             var result = await controller.CopyAatfDetails(viewModel);
 

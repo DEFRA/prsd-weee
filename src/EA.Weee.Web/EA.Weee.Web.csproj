@@ -342,6 +342,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Admin\Helper\AatfHelper.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
