@@ -153,6 +153,7 @@
                     returnAatfs = context.ReturnAatfs.Where(r => returnIds.Contains(r.Return.Id));
                     var returnReportsOn = context.ReturnReportOns.Where(r => returnIds.Contains(r.Return.Id));
                     var returnScheme = context.ReturnScheme.Where(r => returnIds.Contains(r.Return.Id));
+                    var nonObligated = context.NonObligatedWeee.Where(r => returnIds.Contains(r.Return.Id));
 
                     weeeSentOn = context.WeeeSentOn.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeSentOn>();
                     weeeReused = context.WeeeReused.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReused>();
@@ -169,6 +170,7 @@
                     context.ReturnScheme.RemoveRange(returnScheme);
                     context.ReturnReportOns.RemoveRange(returnReportsOn);
                     context.Returns.RemoveRange(returns);
+                    context.NonObligatedWeee.RemoveRange(nonObligated);
                 }
                 else
                 {
