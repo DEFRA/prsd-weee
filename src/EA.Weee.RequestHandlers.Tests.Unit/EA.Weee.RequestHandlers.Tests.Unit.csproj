@@ -105,6 +105,7 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
     <Compile Include="AatfReturn\Internal\AatfDataAccessTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandlerTests.cs" />

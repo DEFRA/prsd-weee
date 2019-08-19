@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
@@ -33,6 +34,45 @@
                         if (i < datatable.Columns.Count - 1)
                         {
                             sb.Append(seperator);
+                        }
+                    }
+                    sb.AppendLine();
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string DataTableToCsv(this DataTable datatable, List<string> columnsToRemove)
+        {
+            NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
+            char seperator = ',';
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < datatable.Columns.Count; i++)
+            {
+                if (!columnsToRemove.Contains(datatable.Columns[i].ColumnName))
+                {
+                    sb.Append(datatable.Columns[i]);
+                    if (i < datatable.Columns.Count - 1)
+                    {
+                        sb.Append(seperator);
+                    }
+                }
+            }
+            sb.AppendLine();
+            if (datatable.Rows.Count > 0)
+            {
+                foreach (DataRow dr in datatable.Rows)
+                {
+                    for (int i = 0; i < datatable.Columns.Count; i++)
+                    {
+                        if (!columnsToRemove.Contains(datatable.Columns[i].ColumnName))
+                        {
+                            sb.Append(EncodeAndCheck(dr[i].ToString(), excelSanitizer));
+
+                            if (i < datatable.Columns.Count - 1)
+                            {
+                                sb.Append(seperator);
+                            }
                         }
                     }
                     sb.AppendLine();

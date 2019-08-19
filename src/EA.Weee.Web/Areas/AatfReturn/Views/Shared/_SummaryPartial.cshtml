@@ -34,7 +34,7 @@
 <div class="govuk-!-padding-bottom-4"></div>
 @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedReused || Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
 {
-    @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", "Download", new { returnId = Model.ReturnId }, null)
+    @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
 }
 <div class="govuk-table govuk-grid-column-full">
     <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
