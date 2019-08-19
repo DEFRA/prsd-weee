@@ -22,8 +22,6 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public UpdateAatfDetailsTransferViewModel ExistingViewModel { get; set; }
-
         public EditAatfDetails Request { get; set; }
 
         [Required(ErrorMessage = "You must select an option")]
