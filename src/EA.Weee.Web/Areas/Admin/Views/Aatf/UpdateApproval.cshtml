@@ -87,6 +87,8 @@
             @Html.HiddenFor(m => m.Request.Data.SiteAddress.Postcode)
             @Html.HiddenFor(m => m.Request.Data.SiteAddress.CountryId)
             @Html.HiddenFor(m => m.Request.Data.CompetentAuthority.Abbreviation)
+            @Html.HiddenFor(m => m.Request.Data.LocalAreaData)
+            @Html.HiddenFor(m => m.Request.Data.PanAreaData)
             @Html.HiddenFor(m => m.Request.Data.LocalAreaData.Id)
             @Html.HiddenFor(m => m.Request.Data.PanAreaData.Id)
             @Html.HiddenFor(m => m.Request.Data.AatfStatusValue)
@@ -97,7 +99,7 @@
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedValue,
                     Model.PossibleValues,
-                    "a",
+                    "Select yes or no to update aatf approval date",
                     RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Inline)
             </div>
@@ -105,7 +107,4 @@
             @(this.WeeeGds().Submit("Save and continue"))
         }
 
-        @*<p>
-            <a href="@(Url.Action("ManageAatfDetails", new { area = "Admin", Id = Model.AatfId }))">Back</a>
-        </p>*@
     </section>
