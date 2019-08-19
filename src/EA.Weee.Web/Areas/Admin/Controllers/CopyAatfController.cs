@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -11,6 +12,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.Helper;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
@@ -103,7 +105,12 @@
                 var countries = await client.SendAsync(accessToken, new GetCountries(false));
 
                 viewModel.ContactData.AddressData.Countries = countries;
-                viewModel = await AddAatfController.PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
+                viewModel.SiteAddressData.Countries = countries;
+                viewModel.CompetentAuthoritiesList = await client.SendAsync(accessToken, new GetUKCompetentAuthorities());
+                viewModel.PanAreaList = await client.SendAsync(accessToken, new GetPanAreas());
+                viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
+                viewModel.SizeList = Enumeration.GetAll<AatfSize>();
+                viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
             }
 
             return viewModel;
@@ -127,11 +134,11 @@
                     return View("Copy", viewModel);
                 }
 
-                var result = await validationWrapper.Validate(User.GetAccessToken(), viewModel);
+                var result = await validationWrapper.ValidateByYear(User.GetAccessToken(), viewModel, viewModel.ComplianceYear);
 
                 if (!result.IsValid)
                 {
-                    ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
+                    ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsForCYError);
                     return View("Copy", viewModel);
                 }
 
@@ -139,7 +146,7 @@
                 {
                     var request = new CopyAatf()
                     {
-                        Aatf = AddAatfController.CreateFacilityData(viewModel),
+                        Aatf = AatfHelper.CreateFacilityData(viewModel),
                         OrganisationId = viewModel.OrganisationId,
                         AatfId = viewModel.AatfId,
                         AatfContact = viewModel.ContactData

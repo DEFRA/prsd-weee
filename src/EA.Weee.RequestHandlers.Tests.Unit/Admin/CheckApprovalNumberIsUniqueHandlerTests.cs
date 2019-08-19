@@ -68,7 +68,7 @@
             Domain.AatfReturn.Aatf aatf = A.Fake<Domain.AatfReturn.Aatf>();
             A.CallTo(() => aatf.ApprovalNumber).Returns(approvalNumber);
 
-            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber)).Returns(aatf);
+            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber, null)).Returns(aatf);
 
             bool result = await handler.HandleAsync(new CheckApprovalNumberIsUnique(approvalNumber));
 
@@ -82,9 +82,41 @@
 
             Domain.AatfReturn.Aatf aatf = null;
 
-            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber)).Returns(aatf);
+            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber, null)).Returns(aatf);
 
             bool result = await handler.HandleAsync(new CheckApprovalNumberIsUnique(approvalNumber));
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ApprovalNumberAlreadyExistsForCY_ReturnsTrue()
+        {
+            string approvalNumber = "app";
+            short year = 2019;
+
+            Domain.AatfReturn.Aatf aatf = A.Fake<Domain.AatfReturn.Aatf>();
+            A.CallTo(() => aatf.ApprovalNumber).Returns(approvalNumber);
+            A.CallTo(() => aatf.ComplianceYear).Returns(year);
+
+            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber, year)).Returns(aatf);
+
+            bool result = await handler.HandleAsync(new CheckApprovalNumberIsUnique(approvalNumber, year));
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ApprovalNumberDoesntExistsForCY_ReturnsFalse()
+        {
+            string approvalNumber = "app";
+            short year = 2019;
+
+            Domain.AatfReturn.Aatf aatf = null;
+
+            A.CallTo(() => dataAccess.FetchByApprovalNumber(approvalNumber, year)).Returns(aatf);
+
+            bool result = await handler.HandleAsync(new CheckApprovalNumberIsUnique(approvalNumber, year));
 
             Assert.False(result);
         }

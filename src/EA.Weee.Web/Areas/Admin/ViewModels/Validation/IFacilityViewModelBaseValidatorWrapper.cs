@@ -7,5 +7,7 @@
     public interface IFacilityViewModelBaseValidatorWrapper
     {
         Task<ValidationResult> Validate(string token, FacilityViewModelBase model);
+
+        Task<ValidationResult> ValidateByYear(string token, FacilityViewModelBase model, int year);
     }
 }
