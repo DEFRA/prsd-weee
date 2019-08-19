@@ -87,6 +87,7 @@
     <Compile Include="AatfReturn\Obligated\RemoveWeeeSentOn.cs" />
     <Compile Include="AatfReturn\Obligated\SentOnAatfSite.cs" />
     <Compile Include="AatfReturn\RemoveReturnScheme.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnObligatedCsv.cs" />
     <Compile Include="AatfReturn\SubmitReturn.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsv.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsv.cs" />
