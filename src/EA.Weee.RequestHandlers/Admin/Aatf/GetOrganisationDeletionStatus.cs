@@ -15,7 +15,7 @@
             this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<CanOrganisationBeDeletedFlags> Validate(Guid organisationId, int year)
+        public async Task<CanOrganisationBeDeletedFlags> Validate(Guid organisationId, int year, FacilityType facilityType)
         {
             var result = new CanOrganisationBeDeletedFlags();
 
@@ -42,6 +42,11 @@
             if (await organisationDataAccess.HasFacility(organisationId, FacilityType.Ae))
             {
                 result |= CanOrganisationBeDeletedFlags.HasAe;
+            }
+
+            if (await organisationDataAccess.HasMultipleOfEntityFacility(organisationId, facilityType))
+            {
+                result |= CanOrganisationBeDeletedFlags.HasMultipleOfFacility;
             }
 
             return result;
