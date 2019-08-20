@@ -330,7 +330,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
         {
             CSVFileData fileData;
