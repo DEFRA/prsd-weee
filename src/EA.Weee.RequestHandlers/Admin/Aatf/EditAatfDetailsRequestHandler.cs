@@ -38,9 +38,9 @@
             IAatfDataAccess aatfDataAccess,
             IGenericDataAccess genericDataAccess,
             IMap<AatfAddressData, AatfAddress> addressMapper,
-            IOrganisationDetailsDataAccess organisationDetailsDataAccess, 
-            ICommonDataAccess commonDataAccess, 
-            IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus, 
+            IOrganisationDetailsDataAccess organisationDetailsDataAccess,
+            ICommonDataAccess commonDataAccess,
+            IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus,
             IQuarterWindowFactory quarterWindowFactory,
             IWeeeTransactionAdapter context)
         {
@@ -123,8 +123,6 @@
                     await aatfDataAccess.UpdateDetails(existingAatf, updatedAatf);
 
                     context.Commit(transaction);
-
-                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -140,6 +138,8 @@
                     context.Dispose(transaction);
                 }
             }
+
+            return true;
         }
     }
 }
