@@ -111,6 +111,7 @@
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CopyReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
+    <Compile Include="Admin\Aatf\AddAatfHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\AatfDataAccessTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccessTests.cs" />
@@ -213,9 +214,7 @@
   <ItemGroup>
     <Folder Include="Aatf\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Admin\Aatf\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -144,7 +144,7 @@
 
                 if (ModelState.IsValid)
                 {
-                    var request = new CopyAatf()
+                    var request = new AddAatf()
                     {
                         Aatf = AatfHelper.CreateFacilityData(viewModel),
                         OrganisationId = viewModel.OrganisationId,
