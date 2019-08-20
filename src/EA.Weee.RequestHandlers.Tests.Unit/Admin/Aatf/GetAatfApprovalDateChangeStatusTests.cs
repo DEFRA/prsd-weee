@@ -22,6 +22,7 @@
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IOrganisationDataAccess organisationDataAccess;
+        private readonly QuarterWindow quarterWindow;
 
         private readonly Fixture fixture;
 
@@ -30,6 +31,7 @@
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+            quarterWindow = new QuarterWindow(DateTime.MaxValue, DateTime.MaxValue, QuarterType.Q1);
 
             getAatfApprovalDateChangeStatus = new GetAatfApprovalDateChangeStatus(aatfDataAccess, quarterWindowFactory, organisationDataAccess);
 
@@ -109,10 +111,11 @@
         {
             var currentApprovalDate = fixture.Create<DateTime>();
             var newApprovalDate = fixture.Create<DateTime>();
+            
             var aatf = A.Fake<Aatf>();
 
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
-            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf)).Returns(true);
+            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow)).Returns(true);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
 
@@ -127,7 +130,7 @@
             var aatf = A.Fake<Aatf>();
 
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
-            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf)).Returns(false);
+            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow)).Returns(false);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
 
@@ -270,6 +273,8 @@
             A.CallTo(() => aatf.ApprovalDate).Returns(currentApprovalDate);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(currentApprovalDate)).Returns(QuarterType.Q1);
             A.CallTo(() => quarterWindowFactory.GetAnnualQuarterForDate(newApprovalDate)).Returns(QuarterType.Q2);
+            A.CallTo(() => quarterWindowFactory.GetAnnualQuarter(A<Quarter>.That.Matches(x =>
+                x.Q.Equals(QuarterType.Q1) && x.Year.Equals(currentApprovalDate.Year)))).Returns(quarterWindow);
         }
     }
 }
