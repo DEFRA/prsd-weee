@@ -1246,7 +1246,7 @@
             aatfData.Name = aatfName;
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfDeletionData);
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
             var result = await controller.Delete(aatfId, organisationId, facilityType) as ViewResult;
 
@@ -1274,7 +1274,7 @@
             aatfData.Name = "Name";
             aatfData.Id = aatfId;
 
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(orgName);
 
             await controller.Delete(aatfId, organisationId, facilityType);
@@ -1322,7 +1322,6 @@
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
-        [InlineData("Download")]
         [InlineData("UpdateApproval")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
@@ -1336,13 +1335,12 @@
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
-            var organisationId = fixture.Create<Guid>();
 
             controller.TempData["aatfRequest"] = fixture.Create<EditAatfDetails>();
 
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
 
-            await controller.UpdateApproval(aatfId, organisationId);
+            await controller.UpdateApproval(aatfId);
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageAatfs);
             breadcrumbService.InternalAatf.Should().Be(aatfData.Name);
@@ -1353,12 +1351,11 @@
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
-            var organisationId = fixture.Create<Guid>();
             var request = fixture.Create<EditAatfDetails>();
 
             controller.TempData["aatfRequest"] = request;
 
-            await controller.UpdateApproval(aatfId, organisationId);
+            await controller.UpdateApproval(aatfId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<CheckAatfApprovalDateChange>.That.Matches(a => a.AatfId == aatfId && a.NewApprovalDate == request.Data.ApprovalDate)))
@@ -1370,18 +1367,17 @@
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
-            var organisationId = fixture.Create<Guid>();
             var request = fixture.Create<EditAatfDetails>();
             var flags = fixture.Create<CanApprovalDateBeChangedFlags>();
             var model = fixture.Create<UpdateApprovalViewModel>();
             controller.TempData["aatfRequest"] = request;
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfApprovalDateChange>._)).Returns(flags);
-            A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
             A.CallTo(() => mapper.Map<UpdateApprovalViewModel>(A<UpdateApprovalDateViewModelMapTransfer>.That.Matches(s =>
                 s.AatfData == aatfData && s.CanApprovalDateBeChangedFlags == flags && s.Request == request))).Returns(model);
 
-            var result = await controller.UpdateApproval(aatfId, organisationId) as ViewResult;
+            var result = await controller.UpdateApproval(aatfId) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
             result.Model.Should().Be(model);

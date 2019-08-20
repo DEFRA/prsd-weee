@@ -58,7 +58,7 @@
                     }
                     else
                     {
-                        <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete the entire return.If you proceed, you should inform the customer.</span>
+                        <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete the entire return. If you proceed, you should inform the customer.</span>
                     }
 
                 </p>
@@ -87,8 +87,8 @@
             @Html.HiddenFor(m => m.Request.Data.SiteAddress.Postcode)
             @Html.HiddenFor(m => m.Request.Data.SiteAddress.CountryId)
             @Html.HiddenFor(m => m.Request.Data.CompetentAuthority.Abbreviation)
-            @Html.HiddenFor(m => m.Request.Data.LocalAreaData.Id)
-            @Html.HiddenFor(m => m.Request.Data.PanAreaData.Id)
+            @Html.HiddenFor(m => m.Request.Data.LocalAreaDataId)
+            @Html.HiddenFor(m => m.Request.Data.PanAreaDataId)
             @Html.HiddenFor(m => m.Request.Data.AatfStatusValue)
             @Html.HiddenFor(m => m.Request.Data.AatfSizeValue)
             @Html.HiddenFor(m => m.FacilityType)
@@ -97,7 +97,7 @@
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedValue,
                     Model.PossibleValues,
-                    "a",
+                    "Select yes or no to update aatf approval date",
                     RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Inline)
             </div>
@@ -105,7 +105,4 @@
             @(this.WeeeGds().Submit("Save and continue"))
         }
 
-        @*<p>
-            <a href="@(Url.Action("ManageAatfDetails", new { area = "Admin", Id = Model.AatfId }))">Back</a>
-        </p>*@
     </section>

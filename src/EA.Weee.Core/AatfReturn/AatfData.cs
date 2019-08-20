@@ -63,5 +63,9 @@
         public int AatfSizeValue { get; set; }
 
         public string AatfContactDetailsName { get; set; }
+
+        public virtual Guid? PanAreaDataId { get; set; }
+
+        public virtual Guid? LocalAreaDataId { get; set; }
     }
 }

@@ -33,9 +33,9 @@
         }
 
         [Fact]
-        public async void HandleAsync_NoOrganisationAccess_ThrowsSecurityException()
+        public async void HandleAsync_NoOrganisationOrInternalAccess_ThrowsSecurityException()
         {
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
 
             handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<Aatf, AatfData>>(), A.Fake<IGenericDataAccess>(), authorization);
 
