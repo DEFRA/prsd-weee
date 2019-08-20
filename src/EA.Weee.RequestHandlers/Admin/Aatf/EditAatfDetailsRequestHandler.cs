@@ -73,14 +73,14 @@
                     LocalArea localArea = null;
                     PanArea panArea = null;
 
-                    if (message.Data.LocalAreaData != null)
+                    if (message.Data.LocalAreaDataId.HasValue)
                     {
-                        localArea = await commonDataAccess.FetchLookup<LocalArea>(message.Data.LocalAreaData.Id);
+                        localArea = await commonDataAccess.FetchLookup<LocalArea>(message.Data.LocalAreaDataId.Value);
                     }
 
-                    if (message.Data.PanAreaData != null)
+                    if (message.Data.PanAreaDataId.HasValue)
                     {
-                        panArea = await commonDataAccess.FetchLookup<PanArea>(message.Data.PanAreaData.Id);
+                        panArea = await commonDataAccess.FetchLookup<PanArea>(message.Data.PanAreaDataId.Value);
                     }
 
                     var updatedAatf = new Aatf(

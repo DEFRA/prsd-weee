@@ -240,12 +240,12 @@
         [HttpGet]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
-            var aatfData = await cache.FetchAatfData(organisationId, id);
-
-            SetBreadcrumb(facilityType, aatfData.Name);
-
             using (var client = apiClient())
             {
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                SetBreadcrumb(facilityType, aatf.Name);
+            
                 var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
 
                 var viewModel = new DeleteViewModel()
@@ -254,7 +254,7 @@
                     OrganisationId = organisationId,
                     FacilityType = facilityType,
                     DeletionData = canDelete,
-                    AatfName = aatfData.Name,
+                    AatfName = aatf.Name,
                     OrganisationName = await cache.FetchOrganisationName(organisationId)
                 };
 
@@ -264,19 +264,19 @@
 
         [HttpGet]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public async Task<ActionResult> UpdateApproval(Guid id, Guid organisationId)
+        public async Task<ActionResult> UpdateApproval(Guid id)
         {
             using (var client = apiClient())
             {
-                var aatfData = await cache.FetchAatfData(organisationId, id);
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                SetBreadcrumb(aatfData.FacilityType, aatfData.Name);
+                SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
                 var request = (EditAatfDetails)TempData["aatfRequest"];
 
                 var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, request.Data.ApprovalDate.Value));
 
-                var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatfData, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
+                var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatf, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
 
                 TempData["aatfRequest"] = request;
 
@@ -330,7 +330,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
         {
             CSVFileData fileData;
