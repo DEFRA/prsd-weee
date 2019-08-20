@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Reports
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -10,7 +11,6 @@
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.Reports;
-    
     using Security;
     using Shared;
 
@@ -40,9 +40,9 @@
             var obligatedData = await weeContext.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
 
             var fileName =
-                $"{@return.Quarter.Year}_Q{@return.Quarter.Q}_{@return.Organisation.OrganisationName}_Obligated return data_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+                $"{@return.Quarter.Year}_{@return.Quarter.Q}_{@return.Organisation.OrganisationName}_Obligated return data_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
-            var fileContent = obligatedData.DataTableToCsv();
+            var fileContent = obligatedData.DataTableToCsv(new List<string>(new string[] { "ReturnId", "AatfKey", "ObligationType", "CategoryId", "AatfId", "ObligationType1", "CategoryId1" }));
 
             return new CSVFileData
             {
