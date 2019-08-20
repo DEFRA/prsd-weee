@@ -131,7 +131,7 @@
 
         public async Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags)
         {
-            var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == aatf.Organisation.Id && a.ComplianceYear == aatf.ComplianceYear);
+            var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == aatf.Organisation.Id && a.ComplianceYear == aatf.ComplianceYear && a.FacilityType.Value == aatf.FacilityType.Value);
 
             foreach (var quarter in quarters)
             {
@@ -148,7 +148,7 @@
                     && aatfCount == 1)
                 {
                     var returns = context.Returns.Where(r =>
-                        r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear);
+                        r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear && r.FacilityType.Value == aatf.FacilityType.Value);
                     var returnIds = returns.Select(r => r.Id).ToList();
                     returnAatfs = context.ReturnAatfs.Where(r => returnIds.Contains(r.Return.Id));
                     var returnReportsOn = context.ReturnReportOns.Where(r => returnIds.Contains(r.Return.Id));

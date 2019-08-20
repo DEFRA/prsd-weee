@@ -35,7 +35,7 @@
 
             var aatfDeletion = await getAatfDeletionStatus.Validate(aatf.Id);
             
-            var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
+            var organisationDeletion = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
 
             return new AatfDeletionData(organisationDeletion, aatfDeletion);
         }

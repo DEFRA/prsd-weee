@@ -29,17 +29,18 @@
         }
 
         [Theory]
-        [InlineData(false, false, true, true, true, false, false)]
-        [InlineData(false, false, true, true, false, true, false)]
-        [InlineData(false, false, true, false, true, false, false)]
-        [InlineData(false, false, true, false, false, true, false)]
-        [InlineData(false, false, false, true, true, false, false)]
-        [InlineData(false, false, false, true, false, false, false)]
-        [InlineData(false, false, false, false, true, false, false)]
-        [InlineData(false, false, false, false, false, true, true)]
-        [InlineData(false, true, false, false, false, true, false)]
-        [InlineData(true, false, false, false, false, true, false)]
-        public async Task Validate_GivenScenario_ExpectedFlagsShouldBePresent(bool organisationHasOtherFacilityType, bool organisationHasAssociatedScheme,
+        [InlineData(false, false, false, true, true, true, false, false)]
+        [InlineData(false, false, false, true, true, false, true, false)]
+        [InlineData(false, false, false, true, false, true, false, false)]
+        [InlineData(false, false, false, true, false, false, true, false)]
+        [InlineData(false, false, false, false, true, true, false, false)]
+        [InlineData(false, false, false, false, true, false, false, false)]
+        [InlineData(false, false, false, false, false, true, false, false)]
+        [InlineData(false, false, false, false, false, false, true, true)]
+        [InlineData(false, false, true, false, false, false, true, false)]
+        [InlineData(false, true, false, false, false, false, true, false)]
+        [InlineData(true, false, false, false, false, false, true, false)]
+        public async Task Validate_GivenScenario_ExpectedFlagsShouldBePresent(bool hasMultipleOfFacility, bool organisationHasOtherFacilityType, bool organisationHasAssociatedScheme,
             bool organisationHasOtherEntityOfSameType, bool organisationHasReturns, bool aatfHasReturnData, bool expectedToDeleteAatf, bool expectedToDeleteOrganisation)
         {
             var organisation = Organisation.CreatePartnership("trading");
@@ -50,6 +51,11 @@
             A.CallTo(() => aatf.Id).Returns(aatfId);
 
             var canOrganisationBeDeletedFlags = new CanOrganisationBeDeletedFlags();
+
+            if (hasMultipleOfFacility)
+            {
+                canOrganisationBeDeletedFlags |= CanOrganisationBeDeletedFlags.HasMultipleOfFacility;
+            }
 
             if (organisationHasAssociatedScheme)
             {
@@ -68,7 +74,7 @@
 
             A.CallTo(() => aatfDataAccess.GetDetails(aatfId)).Returns(aatf);
             A.CallTo(() => aatfDataAccess.HasAatfData(aatfId)).Returns(aatfHasReturnData);
-            A.CallTo(() => getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(canOrganisationBeDeletedFlags);
+            A.CallTo(() => getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(canOrganisationBeDeletedFlags);
             A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf)).Returns(organisationHasOtherEntityOfSameType);
 
             var result = await getAatfDeletionStatus.Validate(aatfId);

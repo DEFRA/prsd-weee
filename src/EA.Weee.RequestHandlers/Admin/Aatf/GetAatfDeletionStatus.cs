@@ -31,7 +31,7 @@
                 return result;
             }
 
-            var organisationDeletionStatus = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear);
+            var organisationDeletionStatus = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
 
             if (organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
                 await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
@@ -48,8 +48,9 @@
             {
                 result |= CanAatfBeDeletedFlags.CanDelete;
 
-                if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasScheme)
-                && (aatf.FacilityType == FacilityType.Aatf && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAe) || (aatf.FacilityType == FacilityType.Ae && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAatf))))
+                if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasScheme) && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility)
+                && (aatf.FacilityType == FacilityType.Aatf && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAe) 
+                    || (aatf.FacilityType == FacilityType.Ae && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAatf))))
                 {
                     result |= CanAatfBeDeletedFlags.CanDeleteOrganisation;
                 }
