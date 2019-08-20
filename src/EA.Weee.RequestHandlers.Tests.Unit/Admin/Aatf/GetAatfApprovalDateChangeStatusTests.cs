@@ -115,7 +115,7 @@
             var aatf = A.Fake<Aatf>();
 
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
-            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow)).Returns(true);
+            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf)).Returns(true);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
 
@@ -130,7 +130,7 @@
             var aatf = A.Fake<Aatf>();
 
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
-            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow)).Returns(false);
+            A.CallTo(() => aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf)).Returns(false);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
 
