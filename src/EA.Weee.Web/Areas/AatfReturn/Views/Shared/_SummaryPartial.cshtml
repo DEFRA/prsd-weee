@@ -30,21 +30,24 @@
     </div>
 </div>
 
-<h2 class="govuk-heading-m">Obligated WEEE</h2>
-<div class="govuk-!-padding-bottom-4"></div>
-<div class="govuk-body" style="padding-left: 15px; margin-bottom: 0px;">
-    @if (Model.ShowDownloadObligatedData)
-    {
-        @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
-    }
-</div>
-<div class="govuk-table govuk-grid-column-full">
-    <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-        <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
-    </span>
-</div>
+@if (Model.AatfsData.Any())
+{
+    <h2 class="govuk-heading-m">Obligated WEEE</h2>
+    <div class="govuk-!-padding-bottom-4"></div>
+    <div class="govuk-body" style="padding-left: 15px; margin-bottom: 0px;">
+        @if (Model.ShowDownloadObligatedData)
+        {
+            @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
+        }
+    </div>
+    <div class="govuk-table govuk-grid-column-full">
+        <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
+            <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
+        </span>
+    </div>
+    <div class="govuk-!-padding-bottom-6"></div>
+}
 
-<div class="govuk-!-padding-bottom-6"></div>
 <div class="govuk-table govuk-grid-column-full">
     @for (var count = 0; count < Model.AatfsData.Count(); count++)
     {

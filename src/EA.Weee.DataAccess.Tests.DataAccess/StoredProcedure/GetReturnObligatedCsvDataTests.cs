@@ -37,7 +37,7 @@
         private const string Name = "Name of AATF";
         private const string Quarter = "Quarter";
         private const string ComplianceYear = "Compliance Year";
-        private Fixture fixture;
+        private readonly Fixture fixture;
 
         public GetReturnObligatedCsvDataTests()
         {
@@ -61,6 +61,7 @@
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
 
                 results.Rows.Count.Should().Be(0);
+                results.Dispose();
             }
         }
 
@@ -109,6 +110,8 @@
                 AssertRow(results, aatf, db, 25, "12. Appliances containing refrigerants", B2B);
                 AssertRow(results, aatf, db, 26, "13. Gas discharge lamps and LED light sources", B2B);
                 AssertRow(results, aatf, db, 27, "14. Photovoltaic panels", B2B);
+
+                results.Dispose();
             }
         }
 
@@ -171,6 +174,8 @@
                     nonHouseHoldResultAatf2[0][TotalReceivedHeading].Should().Be((categoryValue.CategoryId + 1)); // single schemes
                     nonHouseHoldResultAatf2[0]["Obligated WEEE received on behalf of scheme2 (t)"].Should().Be(categoryValue.CategoryId + 1);
                 }
+
+                results.Dispose();
             }
         }
 
@@ -234,6 +239,8 @@
                     nonHouseHoldResultAatf2[0][TotalSentOnHeading].Should().Be((categoryValue.CategoryId + 1));
                     nonHouseHoldResultAatf2[0][$"Obligated WEEE sent to {siteAddressAatf2Address1.Name} (t)"].Should().Be(categoryValue.CategoryId + 1);
                 }
+
+                results.Dispose();
             }
         }
 
@@ -281,6 +288,8 @@
                     houseHoldResultAatf2[0][TotalReusedHeading].Should().Be(categoryValue.CategoryId);
                     nonHouseHoldResultAatf2[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1)); 
                 }
+
+                results.Dispose();
             }
         }
 
@@ -304,8 +313,8 @@
             SystemTime.Freeze(date);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
             @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
-            return @return;
             SystemTime.Unfreeze();
+            return @return;
         }
 
         private CategoryValues<ObligatedCategoryValue> CategoryValues()
