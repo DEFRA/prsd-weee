@@ -13,6 +13,7 @@
     using Return = Domain.AatfReturn.Return;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
     using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
+
     public class GetAllAatfSentOnDataCsvTests
     {
         [Fact]
@@ -110,8 +111,8 @@
                 Assert.NotNull(results);
 
                 var data = from x in results.Tables[0].AsEnumerable()
-                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Appropriate authority") == filter.Abbreviation
-                              select x;
+                           where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Appropriate authority") == filter.Abbreviation
+                           select x;
                 data.AsQueryable().Count().Should().Be(28);
             }
         }

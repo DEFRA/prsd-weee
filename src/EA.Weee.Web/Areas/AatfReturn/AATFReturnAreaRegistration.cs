@@ -81,6 +81,12 @@
                 namespaces: new[] { typeof(ReturnsController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfRedirect.Download,
+                url: "aatf-return/returns-download/{returnId}/",
+                defaults: new { action = "DownloadAllObligatedData", controller = "ReturnsSummary" },
+                namespaces: new[] { typeof(ReturnsSummaryController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfRedirect.ReturnsRouteName,
                 url: "aatf-return/returns/{organisationId}/{action}",
                 defaults: new { action = "Index", controller = "Returns" },
