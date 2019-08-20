@@ -62,7 +62,7 @@
                         result |= CanApprovalDateBeChangedFlags.HasResubmission;
                     }
 
-                    if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow))
+                    if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
                     {
                         result |= CanApprovalDateBeChangedFlags.HasMultipleFacility;
                     }
