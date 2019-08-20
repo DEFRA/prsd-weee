@@ -4,14 +4,10 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
+    using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class FacilityViewModelBaseValidatorTests
@@ -25,7 +21,7 @@
             this.apiClient = A.Fake<IWeeeClient>();
             this.model = A.Fake<FacilityViewModelBase>();
 
-            validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model);
+            validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, null);
         }
 
         [Fact]
@@ -51,6 +47,41 @@
             {
                 ApprovalNumber = "WEE/AZ1234AZ/ATF"
             };
+
+            var validationResult = validator.Validate(viewModel);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void RuleFor_RequestReturnsTrueForCY_IsValidShouldBeFalse()
+        {
+            var exists = true;
+            var viewModel = new CopyAatfViewModel()
+            {
+                ApprovalNumber = "WEE/AZ1234AZ/ATF",
+                ComplianceYear = 2019
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).Returns(exists);
+
+            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, 2019);
+
+            var validationResult = validator.Validate(viewModel);
+
+            validationResult.IsValid.Should().Be(false);
+        }
+
+        [Fact]
+        public void RuleFor_ApiCallMustHaveHappened_ForCopyAatf()
+        {
+            var viewModel = new CopyAatfViewModel()
+            {
+                ApprovalNumber = "WEE/AZ1234AZ/ATF",
+                ComplianceYear = 2019
+            };
+
+            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, 2019);
 
             var validationResult = validator.Validate(viewModel);
 
