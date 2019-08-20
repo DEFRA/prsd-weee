@@ -32,10 +32,12 @@
 
 <h2 class="govuk-heading-m">Obligated WEEE</h2>
 <div class="govuk-!-padding-bottom-4"></div>
-@if (Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedReused || Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
-{
-    @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
-}
+<div class="govuk-body" style="padding-left: 15px; margin-bottom: 0px;">
+    @if (Model.ShowDownloadObligatedData)
+    {
+        @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
+    }
+</div>
 <div class="govuk-table govuk-grid-column-full">
     <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
         <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
@@ -124,12 +126,12 @@
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
                             {
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                              "change received for treatment relating to " + @item.Aatf.Name,
-                                                              Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
-                                                              "AATF return",
-                                                              "Check return changes",
-                                                              "Check return changes"
-                                                              ))
+                                                                      "change received for treatment relating to " + @item.Aatf.Name,
+                                                                      Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }),
+                                                                      "AATF return",
+                                                                      "Check return changes",
+                                                                      "Check return changes"
+                                                                      ))
                             }
                             else
                             {
@@ -184,12 +186,12 @@
                                     {
                                         <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
                                             @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                                          "change received for treatment relating to scheme " + pcsdata.Scheme.SchemeName,
-                                                                          Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
-                                                                          "AATF return",
-                                                                          "Check return changes",
-                                                                          "Check return changes"
-                                                                          ))
+                                                                                  "change received for treatment relating to scheme " + pcsdata.Scheme.SchemeName,
+                                                                                  Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
+                                                                                  "AATF return",
+                                                                                  "Check return changes",
+                                                                                  "Check return changes"
+                                                                                  ))
                                         </div>
                                     }
                                 </div>
@@ -235,12 +237,12 @@
                             @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
                             {
                                 @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                              "change sent to another AATF / ATF data relating to " + @item.Aatf.Name,
-                                                              Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" }),
-                                                              "AATF return",
-                                                              "Check return changes",
-                                                              "Check return changes"
-                                                              ))
+                                                                      "change sent to another AATF / ATF data relating to " + @item.Aatf.Name,
+                                                                      Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnSiteSummaryList" }),
+                                                                      "AATF return",
+                                                                      "Check return changes",
+                                                                      "Check return changes"
+                                                                      ))
                             }
                             else
                             {
@@ -290,22 +292,22 @@
                                 if (Equals(item.WeeeReused.B2B, "-") && Equals(item.WeeeReused.B2C, "-"))
                                 {
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                                   @message,
-                                                                  Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReused" }),
-                                                                  "AATF return",
-                                                                  "Check return changes",
-                                                                  "Check return changes"
-                                                                  ))
+                                                                           @message,
+                                                                          Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReused" }),
+                                                                          "AATF return",
+                                                                          "Check return changes",
+                                                                          "Check return changes"
+                                                                          ))
                                 }
                                 else
                                 {
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                                  @message,
-                                                                  Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }),
-                                                                  "AATF return",
-                                                                  "Check return changes",
-                                                                  "Check return changes"
-                                                                  ))
+                                                                          @message,
+                                                                          Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }),
+                                                                          "AATF return",
+                                                                          "Check return changes",
+                                                                          "Check return changes"
+                                                                          ))
                                 }
                             }
                             else
@@ -384,12 +386,12 @@
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
                         {
                             @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                          "Change non obligated",
-                                                          Url.RouteUrl(AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }),
-                                                          "AATF return",
-                                                          "Check return changes",
-                                                          "Check return changes"
-                                                          ))
+                                                                  "Change non obligated",
+                                                                  Url.RouteUrl(AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }),
+                                                                  "AATF return",
+                                                                  "Check return changes",
+                                                                  "Check return changes"
+                                                                  ))
                         }
                         else
                         {
@@ -431,12 +433,12 @@
                         @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
                         {
                             @(this.WeeeGds().ActionLinkWithEventTracking("Change",
-                                                          "Change non obligated DCF",
-                                                          Url.RouteUrl(AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }),
-                                                          "AATF return",
-                                                          "Check return changes",
-                                                          "Check return changes"
-                                                          ))
+                                                                  "Change non obligated DCF",
+                                                                  Url.RouteUrl(AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }),
+                                                                  "AATF return",
+                                                                  "Check return changes",
+                                                                  "Check return changes"
+                                                                  ))
                         }
                         else
                         {

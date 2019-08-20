@@ -52,6 +52,8 @@
 
         public TaskListDisplayOptions ReportOnDisplayOptions { get; set; }
 
+        public bool ShowDownloadObligatedData { get; set; }
+
         public string SchemeName { get; set; }
 
         public string ApprovalNumber { get; set; }
