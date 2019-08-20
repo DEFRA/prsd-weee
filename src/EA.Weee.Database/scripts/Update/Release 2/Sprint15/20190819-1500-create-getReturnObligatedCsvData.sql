@@ -85,7 +85,8 @@ FROM
 	, ObligationData o
 WHERE
 	r.Id = @ReturnId
-
+ORDER BY
+	a.[Name]
 
 -- TOTAL RECEIVED PER OBLIGATION TYPE
 ;WITH TotalReceivedUpdate (AatfId, CategoryId, Tonnage)
@@ -247,7 +248,7 @@ FROM
 	SELECT
 		CategoryId,
 		Tonnage,
-		SchemeName,
+		CONCAT(''Obligated WEEE received on behalf of '', SchemeName, '' (t)'') AS SchemeName,
 		AatfId,
 		CASE 
             WHEN Tonnages = ''HouseholdTonnage'' THEN 0
@@ -284,6 +285,7 @@ FROM
 EXEC (@DynamicPivotQuery)
 
 -- TOTAL SENT ON TO SITE
+SET @ColumnName = NULL
 SELECT @ColumnName = ISNULL(@ColumnName + ',','') + QUOTENAME(CONCAT('Obligated WEEE sent to ', SiteOperator, ' (t)'))
 FROM 
 (
@@ -302,7 +304,7 @@ SET @DynamicPivotQuery =
 	SELECT
 		CategoryId,
 		Tonnage,
-		SiteOperator,
+		CONCAT(''Obligated WEEE sent to '', SiteOperator, '' (t)'') AS SiteOperator,
 		AatfId,
 		CASE 
             WHEN Tonnages = ''HouseholdTonnage'' THEN 0
@@ -336,7 +338,7 @@ SET @DynamicPivotQuery =
 		pivotSentOnObligated
 	PIVOT (MAX(Tonnage) FOR SiteOperator IN (' + @ColumnName + ')) AS x'
 
-PRINT @DynamicPivotQuery
+	print @DynamicPivotQuery
 EXEC (@DynamicPivotQuery)
 
 IF OBJECT_ID('tempdb..##PcsObligated') IS NOT NULL
@@ -359,6 +361,7 @@ END
 SET @DynamicPivotQuery = @DynamicPivotQuery + N'
 FROM
 	##FinalTable f '
+
 
 IF @HasPcsData = 1 BEGIN
 	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##PcsObligated ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType '
