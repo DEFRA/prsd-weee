@@ -29,7 +29,7 @@
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].ParentId)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Id)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].OriginalSelected)
-                        @Html.HiddenFor(m => m.HasSelectedOptions)
+                        @Html.HiddenFor(m => m.HasSelectedOptions, new {id = i + "_HasSelectedOptions"}  )
 
                         if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
                         {
