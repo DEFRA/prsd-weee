@@ -99,6 +99,39 @@
             result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
             result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
             result.ReportOnDisplayOptions.DisplayObligatedReceived.Should().Be(true);
+            result.ShowDownloadObligatedData.Should().Be(true);
+        }
+
+        [Fact]
+        public void Map_GivenNoObligatedDisplayOptions_ShowDownloadObligatedShouldBeFalse()
+        {
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true, Guid.NewGuid()));
+
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            var schemeDataList = CreateSchemeDataItems();
+            var reportedOnList = new List<ReturnReportOn>();
+            reportedOnList.Add(new ReturnReportOn(4, Guid.NewGuid()));
+            reportedOnList.Add(new ReturnReportOn(5, Guid.NewGuid()));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList,
+                SchemeDataItems = schemeDataList,
+                ReturnReportOns = reportedOnList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedData.Should().Be(false);
         }
 
         [Fact]
