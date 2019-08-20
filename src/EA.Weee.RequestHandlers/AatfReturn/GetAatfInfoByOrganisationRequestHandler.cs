@@ -18,15 +18,19 @@
     {
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMap<Aatf, AatfData> mapper;
-  
-        public GetAatfInfoByOrganisationRequestHandler(IMap<Aatf, AatfData> mapper, IGenericDataAccess genericDataAccess)
+        private readonly IWeeeAuthorization authorization;
+
+        public GetAatfInfoByOrganisationRequestHandler(IMap<Aatf, AatfData> mapper, IGenericDataAccess genericDataAccess, IWeeeAuthorization authorization)
         {
             this.mapper = mapper;
             this.genericDataAccess = genericDataAccess;
+            this.authorization = authorization;
         }
 
         public async Task<List<AatfData>> HandleAsync(GetAatfByOrganisation message)
         {
+            authorization.EnsureInternalOrOrganisationAccess(message.OrganisationId);
+
             var aatfs = await genericDataAccess.GetManyByExpression(new AatfsByOrganisationSpecification(message.OrganisationId));
 
             return aatfs.Select(a => mapper.Map(a)).ToList();

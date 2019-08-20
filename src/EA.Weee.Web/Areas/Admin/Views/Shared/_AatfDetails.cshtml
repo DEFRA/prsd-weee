@@ -48,33 +48,33 @@
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
     @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
     @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
-    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Abbreviation", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+    @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthoritiesList, "Abbreviation", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-third" })
 </div>
 
 <div class="govuk-form-group competent-authority-hidden">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
         <label class="govuk-label form-label" for="PanAreaId">WROS pan area team</label>
         @Html.Gds().ValidationMessageFor(m => m.PanAreaId)
-        @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+        @Html.Gds().DropDownListFor(m => m.PanAreaId, new SelectList(Model.PanAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third" })
     </div>
 
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
         <label class="govuk-label form-label" for="LocalAreaId">EA area</label>
         @Html.Gds().ValidationMessageFor(m => m.LocalAreaId)
-        @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+        @Html.Gds().DropDownListFor(m => m.LocalAreaId, new SelectList(Model.LocalAreaList, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third" })
     </div>
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StatusValue)">
     @Html.Gds().LabelFor(m => m.StatusValue)
     @Html.Gds().ValidationMessageFor(m => m.StatusValue)
-    @Html.Gds().DropDownListFor(m => m.StatusValue, new SelectList(Model.StatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+    @Html.Gds().DropDownListFor(m => m.StatusValue, new SelectList(Model.StatusList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third" })
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SizeValue)">
     @Html.Gds().LabelFor(m => m.SizeValue)
     @Html.Gds().ValidationMessageFor(m => m.SizeValue)
-    @Html.Gds().DropDownListFor(m => m.SizeValue, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input" })
+    @Html.Gds().DropDownListFor(m => m.SizeValue, new SelectList(Model.SizeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-third" })
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalDate)">

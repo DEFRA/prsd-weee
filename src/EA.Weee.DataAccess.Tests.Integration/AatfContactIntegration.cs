@@ -13,6 +13,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
     using AatfContact = Domain.AatfReturn.AatfContact;
@@ -22,6 +23,12 @@
 
     public class AatfContactIntegration
     {
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        public AatfContactIntegration()
+        {
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+        }
+
         [Fact]
         public async void UpdateDetails_GivenDetailsToUpdate_ContextShouldContainUpdatedDetails()
         {
@@ -33,7 +40,7 @@
 
                 var aatfAddress = new AatfContact("FirstName", "LastName", "Position", "Address1", "Address2", "Town", "County", "PO12ST34", country, "Telephone", "Email");
 
-                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext), quarterWindowFactory);
 
                 var aatfId = await CreateContact(database, aatfAddress);
 

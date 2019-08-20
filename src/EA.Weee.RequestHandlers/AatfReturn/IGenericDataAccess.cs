@@ -26,6 +26,6 @@
 
         void Remove<TEntity>(TEntity entity) where TEntity : Entity;
 
-        void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity;
+        void RemoveMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity;
     }
 }

@@ -57,5 +57,15 @@
         public bool CanEdit { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public int AatfStatusValue { get; set; }
+
+        public int AatfSizeValue { get; set; }
+
+        public string AatfContactDetailsName { get; set; }
+
+        public virtual Guid? PanAreaDataId { get; set; }
+
+        public virtual Guid? LocalAreaDataId { get; set; }
     }
 }

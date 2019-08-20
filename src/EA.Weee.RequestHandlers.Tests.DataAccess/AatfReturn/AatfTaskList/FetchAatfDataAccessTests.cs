@@ -2,18 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using EA.Prsd.Core.Helpers;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
-    using EA.Weee.RequestHandlers.Charges;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
@@ -24,7 +18,6 @@
     using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
-    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
 
     public class FetchAatfDataAccessTests
     {
@@ -136,6 +129,36 @@
         }
 
         [Fact]
+        public async Task FetchById_GivenAatfId_CorrectAatfShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return = new EA.Weee.Domain.AatfReturn.Return(aatf.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf, @return));
+
+                var aatf2 = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                var @return2 = new EA.Weee.Domain.AatfReturn.Return(aatf2.Organisation, new Quarter(2019, QuarterType.Q1),
+                    database.WeeeContext.Users.First().Id, FacilityType.Aatf);
+
+                await genericDataAccess.Add(new ReturnAatf(aatf2, @return2));
+
+                var returnedAatf = await dataAccess.FetchById(aatf.Id);
+
+                returnedAatf.Should().BeEquivalentTo(aatf);
+            }
+        }
+
+        [Fact]
         public async Task FetchAatfByReturnId_GivenReturnId_ReturnedListShouldOnlyContainReturnRelatedAatfs()
         {
             using (var database = new DatabaseWrapper())
@@ -226,30 +249,48 @@
             }
         }
 
-        private async Task CreateWeeeReceived(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumberThatDoesntExistForCY_ReturnedShouldBeNull()
         {
-            var scheme = new EA.Weee.Domain.Scheme.Scheme(aatf.Organisation);
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
-            var received = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
+                string approvalNumber = "test";
 
-            await genericDataAccess.Add<Domain.AatfReturn.WeeeReceived>(received);
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await genericDataAccess.Add(aatf);
+
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber, 2019);
+
+                Assert.Null(result);
+            }
         }
 
-        private async Task CreateWeeeSentOn(DatabaseWrapper database, Aatf aatf, Return @return)
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumberThatExistForCY_ReturnedShouldNotBeNull()
         {
-            var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
-            var sentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(AddressHelper.GetAatfAddress(database), AddressHelper.GetAatfAddress(database),
-                aatf, @return);
+                string approvalNumber = "test";
 
-            await genericDataAccess.Add(sentOn);
-        }
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019, approvalNumber);
 
-        private async Task CreateWeeeReused(Aatf aatf, Return @return, GenericDataAccess genericDataAccess)
-        {
-            var reused = new EA.Weee.Domain.AatfReturn.WeeeReused(aatf, @return);
+                await genericDataAccess.Add(aatf);
 
-            await genericDataAccess.Add<Domain.AatfReturn.WeeeReused>(reused);
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber, 2019);
+
+                Assert.NotNull(result);
+            }
         }
 
         private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year, string approvalNumber = null)

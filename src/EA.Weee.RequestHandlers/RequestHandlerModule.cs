@@ -59,7 +59,7 @@
                 .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
-                .Where(t => !string.IsNullOrWhiteSpace(t.Namespace) && t.Namespace.Contains("DeleteValidation"))
+                .Where(t => !string.IsNullOrWhiteSpace(t.Namespace) && t.Namespace.Contains("Admin.Aatf"))
                 .AsImplementedInterfaces();
 
             // Register singleton types relating to PCS member upload testing.

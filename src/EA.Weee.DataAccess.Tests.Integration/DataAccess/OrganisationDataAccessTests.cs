@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using AutoFixture;
     using Domain.AatfReturn;
     using Domain.DataReturns;
@@ -321,6 +322,216 @@
                 var result = await organisationDataAccess.HasScheme(organisation.Id);
 
                 result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async void HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAatf_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, @organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasMultipleOfEntityFacility(organisation.Id, FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAe_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, @organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasMultipleOfEntityFacility(organisation.Id, FacilityType.Ae);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasMultipleFacility_GivenOrganisationDoesFacilityTypeDoesNotMatch_FalseShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, @organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasMultipleOfEntityFacility(organisation.Id, FacilityType.Aatf);
+
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async void HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAatf_TrueShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, @organisation));
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, @organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasMultipleOfEntityFacility(organisation.Id, FacilityType.Aatf);
+
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async void HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAe_TrueShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, @organisation));
+                databaseWrapper.WeeeContext.Aatfs.Add(ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, @organisation));
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.HasMultipleOfEntityFacility(organisation.Id, FacilityType.Ae);
+
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task GetReturnsByComplianceYear_GivenComplianceYearAndOrganisationAndFacilityType_ReturnsShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var @return1 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id);
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id);
+
+                databaseWrapper.WeeeContext.Returns.Add(@return1);
+                databaseWrapper.WeeeContext.Returns.Add(@return2);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetReturnsByComplianceYear(organisation.Id, 2019, FacilityType.Aatf);
+
+                result.Should().Contain(@return1);
+                result.Should().Contain(@return2);
+            }
+        }
+
+        [Fact]
+        public async Task GetReturnsByComplianceYear_GivenComplianceYearAndNonMatchingOrganisation_CorrectReturnsShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation1 = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+                var organisation2 = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var @return1 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation1, databaseWrapper.Model.AspNetUsers.First().Id);
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation2, databaseWrapper.Model.AspNetUsers.First().Id);
+
+                databaseWrapper.WeeeContext.Returns.Add(@return1);
+                databaseWrapper.WeeeContext.Returns.Add(@return2);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetReturnsByComplianceYear(organisation1.Id, 2019, FacilityType.Aatf);
+
+                result.Should().Contain(@return1);
+                result.Should().NotContain(@return2);
+            }
+        }
+
+        [Fact]
+        public async Task GetReturnsByComplianceYear_GivenNonMatchingComplianceYearAndOrganisation_CorrectReturnsShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var @return1 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id);
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id, FacilityType.Aatf, 2020, QuarterType.Q1);
+
+                databaseWrapper.WeeeContext.Returns.Add(@return1);
+                databaseWrapper.WeeeContext.Returns.Add(@return2);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetReturnsByComplianceYear(organisation.Id, 2019, FacilityType.Aatf);
+
+                result.Should().Contain(@return1);
+                result.Should().NotContain(@return2);
+            }
+        }
+
+        [Fact]
+        public async Task GetReturnsByComplianceYear_GivenNonMatchingFacilityType_CorrectReturnsShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var @return1 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id);
+                var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id, FacilityType.Ae, 2019, QuarterType.Q1);
+
+                databaseWrapper.WeeeContext.Returns.Add(@return1);
+                databaseWrapper.WeeeContext.Returns.Add(@return2);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetReturnsByComplianceYear(organisation.Id, 2019, FacilityType.Aatf);
+
+                result.Should().Contain(@return1);
+                result.Should().NotContain(@return2);
+            }
+        }
+
+        [Fact]
+        public async Task GetReturnsByComplianceYear_GivenNonMatchingParameters_EmptyShouldBeReturned()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
+
+                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id);
+
+                databaseWrapper.WeeeContext.Returns.Add(@return);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetReturnsByComplianceYear(Guid.NewGuid(), 2020, FacilityType.Ae);
+
+                result.Should().BeEmpty();
             }
         }
     }
