@@ -152,7 +152,7 @@
             };
             
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
@@ -178,7 +178,7 @@
             };
 
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
@@ -205,7 +205,7 @@
             };
 
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
@@ -231,7 +231,7 @@
             };
 
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
@@ -257,7 +257,7 @@
             };
 
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(returns);
+            A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
 
             var result = await getAatfApprovalDateChangeStatus.Validate(aatf, newApprovalDate);
