@@ -11,6 +11,7 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -93,6 +94,7 @@
             builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
             builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
+            builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
 
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
 

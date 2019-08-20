@@ -10,6 +10,8 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<WeeeContext>().AsSelf().InstancePerRequest();
+            builder.RegisterType<WeeeTransactionAdapter>().As<IWeeeTransactionAdapter>()
+                .InstancePerRequest();
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 

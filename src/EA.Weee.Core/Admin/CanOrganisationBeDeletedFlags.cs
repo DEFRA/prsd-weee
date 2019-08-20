@@ -9,6 +9,7 @@
         HasReturns = 2,
         HasScheme = 4,
         HasAatf = 8,
-        HasAe = 16
+        HasAe = 16,
+        HasMultipleOfFacility = 32
     }
 }

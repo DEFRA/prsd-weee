@@ -1,0 +1,108 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Admin;
+@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.UpdateApprovalViewModel
+@{
+    var facilityType = Model.FacilityType.ToDisplayString();
+    var facilityTypes = Model.FacilityType.ToDisplayString() + "s";
+
+    ViewBag.Title = "Change " + facilityType + " approval date - GOV.UK";
+}
+    <section id="main-content">
+
+        <h1 class="govuk-heading-l">
+            Are you sure you want to change the approval date for this @facilityType?
+        </h1>
+
+        @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasResubmission))
+        {
+            <div>
+                <p class="important-large">
+                    @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
+                    {
+                        <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete some of the data from that return and any resubmissions, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
+                    }
+                    else
+                    {
+                        <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete the entire return and any resubmissions. If you proceed, you should inform the customer.</span>
+                    }
+
+                </p>
+            </div>
+        }
+        else if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasSubmittedReturn))
+        {
+            <div>
+                <p class="important-large">
+                    @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
+                    {
+                        <span>A quarterly return has already been submitted for this @facilityTypes. Changing the approval date will delete some of the data from that return, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
+                    }
+                    else
+                    {
+                        <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete the entire return. If you proceed, you should inform the customer.</span>
+                    }
+
+                </p>
+            </div>
+        }
+        else if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasStartedReturn))
+        {
+            <div>
+                <p class="important-large">
+                    @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
+                    {
+                        <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete this data, but leave the remainder of the data for other @facilityTypes in the same return intact. If you proceed, you should inform the customer.</span>
+                    }
+                    else
+                    {
+                        <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete the entire return. If you proceed, you should inform the customer.</span>
+                    }
+
+                </p>
+            </div>
+        }
+
+        @using (Html.BeginForm("UpdateApproval", "Aatf", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationName)
+            @Html.HiddenFor(m => m.AatfName)
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.HiddenFor(m => m.UpdateApprovalDateData)
+            @Html.HiddenFor(m => m.Request.Data.Id)
+            @Html.HiddenFor(m => m.Request.Data.Name)
+            @Html.HiddenFor(m => m.Request.Data.ApprovalNumber)
+            @Html.HiddenFor(m => m.Request.Data.ComplianceYear)
+            @Html.HiddenFor(m => m.Request.Data.ApprovalDate)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.Name)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.Address1)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.Address2)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.TownOrCity)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.CountyOrRegion)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.Postcode)
+            @Html.HiddenFor(m => m.Request.Data.SiteAddress.CountryId)
+            @Html.HiddenFor(m => m.Request.Data.CompetentAuthority.Abbreviation)
+            @Html.HiddenFor(m => m.Request.Data.LocalAreaDataId)
+            @Html.HiddenFor(m => m.Request.Data.PanAreaDataId)
+            @Html.HiddenFor(m => m.Request.Data.AatfStatusValue)
+            @Html.HiddenFor(m => m.Request.Data.AatfSizeValue)
+            @Html.HiddenFor(m => m.FacilityType)
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedValue,
+                    Model.PossibleValues,
+                    "Select yes or no to update aatf approval date",
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Inline)
+            </div>
+
+            @(this.WeeeGds().Submit("Save and continue"))
+        }
+
+    </section>

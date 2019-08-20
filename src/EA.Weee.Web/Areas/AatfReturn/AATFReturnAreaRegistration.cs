@@ -96,7 +96,7 @@
                 name: AatfRedirect.Default,
                 url: "aatf-return/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "AatfTaskList" },
-                namespaces: new[] { typeof(AatfTaskListController).Namespace }); 
+                namespaces: new[] { typeof(AatfTaskListController).Namespace });
         }
     }
 }

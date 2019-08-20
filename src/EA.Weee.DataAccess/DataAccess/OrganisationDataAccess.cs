@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -45,10 +46,10 @@
 
             foreach (var organisationUser in context.OrganisationUsers.Where(o => o.OrganisationId == organisation.Id))
             {
-                context.Entry(organisationUser).State = EntityState.Deleted;
+                context.OrganisationUsers.Remove(organisationUser);
             }
 
-            context.Entry(organisation).State = EntityState.Deleted;
+            context.Organisations.Remove(organisation);
 
             await context.SaveChangesAsync();
         }
@@ -74,6 +75,16 @@
         public async Task<bool> HasReturns(Guid organisationId, int year)
         {
             return await context.Returns.AnyAsync(r => r.Organisation.Id == organisationId && r.Quarter.Year == year);
+        }
+
+        public async Task<bool> HasMultipleOfEntityFacility(Guid organisationId, FacilityType facilityType)
+        {
+            return await context.Aatfs.CountAsync(a => a.Organisation.Id == organisationId && a.FacilityType.Value == facilityType.Value) > 1;
+        }
+
+        public async Task<List<Return>> GetReturnsByComplianceYear(Guid organisationId, int year, FacilityType facilityType)
+        {
+            return await context.Returns.Where(r => r.Quarter.Year == year && r.Organisation.Id == organisationId && r.FacilityType.Value == facilityType.Value).ToListAsync();
         }
     }
 }
