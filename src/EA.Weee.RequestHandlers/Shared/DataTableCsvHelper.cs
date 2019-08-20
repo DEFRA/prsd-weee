@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
@@ -8,7 +9,7 @@
 
     public static class DataTableCsvHelper
     {        
-        public static string DataTableToCSV(this DataTable datatable)
+        public static string DataTableToCsv(this DataTable datatable)
         {
             NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
             char seperator = ',';
@@ -41,7 +42,46 @@
             return sb.ToString();
         }
 
-        public static string DataSetSentOnToCSV(this DataTable datatable, DataTable columnNameDataTable)
+        public static string DataTableToCsv(this DataTable datatable, List<string> columnsToRemove)
+        {
+            NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
+            char seperator = ',';
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < datatable.Columns.Count; i++)
+            {
+                if (!columnsToRemove.Contains(datatable.Columns[i].ColumnName))
+                {
+                    sb.Append(datatable.Columns[i]);
+                    if (i < datatable.Columns.Count - 1)
+                    {
+                        sb.Append(seperator);
+                    }
+                }
+            }
+            sb.AppendLine();
+            if (datatable.Rows.Count > 0)
+            {
+                foreach (DataRow dr in datatable.Rows)
+                {
+                    for (int i = 0; i < datatable.Columns.Count; i++)
+                    {
+                        if (!columnsToRemove.Contains(datatable.Columns[i].ColumnName))
+                        {
+                            sb.Append(EncodeAndCheck(dr[i].ToString(), excelSanitizer));
+
+                            if (i < datatable.Columns.Count - 1)
+                            {
+                                sb.Append(seperator);
+                            }
+                        }
+                    }
+                    sb.AppendLine();
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string DataSetSentOnToCsv(this DataTable datatable, DataTable columnNameDataTable)
         {
             NoFormulaeExcelSanitizer excelSanitizer = new NoFormulaeExcelSanitizer();
             char seperator = ',';
