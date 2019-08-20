@@ -126,11 +126,14 @@
 
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    context.Rollback(transaction);
+                    transaction.Rollback();
 
-                    throw;
+                    if (ex.InnerException != null)
+                    {
+                        throw ex.InnerException;
+                    }
                 }
                 finally
                 {
