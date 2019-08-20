@@ -13,6 +13,7 @@
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Factories;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
@@ -24,15 +25,16 @@
         private readonly AatfDataAccess dataAccess;
         private readonly DbContextHelper dbContextHelper;
         private readonly IGenericDataAccess genericDataAccess;
-
+        private readonly IQuarterWindowFactory quarterWindowFactory;
         public AatfDataAccessTests()
         {
             fixture = new Fixture();
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
             genericDataAccess = A.Fake<IGenericDataAccess>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
 
-            dataAccess = new AatfDataAccess(context, genericDataAccess);
+            dataAccess = new AatfDataAccess(context, genericDataAccess, quarterWindowFactory);
         }
 
         [Fact]

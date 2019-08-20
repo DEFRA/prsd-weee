@@ -1,0 +1,130 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.ViewAatfContactDetailsViewModel
+@{
+    if (Model.IsAE)
+    {
+        ViewBag.Title = "View AE contact details - GOV.UK";
+    }
+    else
+    {
+        ViewBag.Title = "View AATF contact details - GOV.UK";
+    }
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @if (Model.IsAE)
+            {
+                @:View AE contact details
+            }
+            else
+            {
+                @:View AATF contact details
+            }
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "Index", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        if (Model.IsAE)
+        {
+            <p class="govuk-body">AE name: @Model.AatfName</p>
+        }
+        else
+        {
+            <p class="govuk-body">AATF name: @Model.AatfName</p>
+        }
+
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">First name</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.FirstName
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Last name</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.LastName
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Position</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.Position
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address line 1</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.Address1
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address line 2</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.Address2
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Town or city</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.TownOrCity
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">County or region</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.CountyOrRegion
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Postcode</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.Postcode
+                    </td>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Country</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.AddressData.CountryName
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Phone</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.Telephone
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email</th>
+                    <td class="govuk-table__cell">
+                        @Model.Contact.Email
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div>
+            @this.WeeeGds().CreateProgressiveDisclosure(" I would like to change my details",
+           "Contact your environmental regulator to change these details",
+           "Hidden content",
+           "Progressive disclosure",
+           "I would like to change my details")
+        </div>
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
+        </p>
+    }
+}

@@ -40,6 +40,8 @@
             result.Data.Size.Should().Be(AatfSize.Large);
             result.Data.FacilityType.Should().Be(viewModel.FacilityType);
             result.Data.ApprovalDate.Should().Be(viewModel.ApprovalDate.GetValueOrDefault());
+            result.Data.AatfSizeValue.Should().Be(viewModel.SizeValue);
+            result.Data.AatfStatusValue.Should().Be(viewModel.StatusValue);
         }
     }
 }

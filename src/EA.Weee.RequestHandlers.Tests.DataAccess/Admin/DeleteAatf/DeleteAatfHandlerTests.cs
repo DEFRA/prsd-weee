@@ -9,9 +9,9 @@
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
-    using RequestHandlers.Admin.DeleteAatf;
-    using RequestHandlers.Admin.DeleteAatf.DeleteValidation;
-    using Requests.Admin.DeleteAatf;
+    using RequestHandlers.Admin.Aatf;
+    using RequestHandlers.Factories;
+    using Requests.Admin.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -20,11 +20,13 @@
     public class DeleteAatfHandlerTests
     {
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly Fixture fixture;
 
         public DeleteAatfHandlerTests()
         {
             getAatfDeletionStatus = A.Fake<IGetAatfDeletionStatus>();
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             fixture = new Fixture();
         }
 
@@ -106,7 +108,7 @@
         private DeleteAatfHandler Handler(DatabaseWrapper databaseWrapper)
         {
             return new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
-                new AatfDataAccess(databaseWrapper.WeeeContext, new GenericDataAccess(databaseWrapper.WeeeContext)), 
+                new AatfDataAccess(databaseWrapper.WeeeContext, new GenericDataAccess(databaseWrapper.WeeeContext), quarterWindowFactory), 
                 new OrganisationDataAccess(databaseWrapper.WeeeContext), 
                 databaseWrapper.WeeeContext,
                 getAatfDeletionStatus);

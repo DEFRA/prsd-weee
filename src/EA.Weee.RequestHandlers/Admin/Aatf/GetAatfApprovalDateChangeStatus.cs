@@ -1,0 +1,75 @@
+﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using AatfReturn.Internal;
+    using Core.Admin;
+    using DataAccess.DataAccess;
+    using Domain.AatfReturn;
+    using Domain.DataReturns;
+    using Factories;
+
+    public class GetAatfApprovalDateChangeStatus : IGetAatfApprovalDateChangeStatus
+    {
+        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IOrganisationDataAccess organisationDataAccess;
+
+        public GetAatfApprovalDateChangeStatus(IAatfDataAccess aatfDataAccess, 
+            IQuarterWindowFactory quarterWindowFactory, 
+            IOrganisationDataAccess organisationDataAccess)
+        {
+            this.aatfDataAccess = aatfDataAccess;
+            this.quarterWindowFactory = quarterWindowFactory;
+            this.organisationDataAccess = organisationDataAccess;
+        }
+
+        public async Task<CanApprovalDateBeChangedFlags> Validate(Aatf aatf, DateTime newApprovalDate)
+        {
+            var result = new CanApprovalDateBeChangedFlags();
+
+            if (aatf.ApprovalDate.HasValue)
+            {
+                var currentQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(aatf.ApprovalDate.Value);
+                var newQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(newApprovalDate);
+                var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(new Quarter(aatf.ApprovalDate.Value.Year, currentQuarter));
+
+                if (aatf.ApprovalDate.Equals(newApprovalDate))
+                {
+                    return result;
+                }
+
+                if ((int)newQuarter > (int)currentQuarter)
+                {
+                    result |= CanApprovalDateBeChangedFlags.DateChanged;
+
+                    var returns = await organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
+                    
+                    if (returns.Any(r => (int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Created.Value))
+                    {
+                        result |= CanApprovalDateBeChangedFlags.HasStartedReturn;
+                    }
+
+                    if (returns.Any(r => (int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value))
+                    {
+                        result |= CanApprovalDateBeChangedFlags.HasSubmittedReturn;
+                    }
+
+                    if (returns.Any(r => ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)
+                    || ((int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Submitted.Value && r.ParentId != null)))
+                    {
+                        result |= CanApprovalDateBeChangedFlags.HasResubmission;
+                    }
+
+                    if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow))
+                    {
+                        result |= CanApprovalDateBeChangedFlags.HasMultipleFacility;
+                    }
+                }
+            }
+           
+            return result;
+        }
+    }
+}

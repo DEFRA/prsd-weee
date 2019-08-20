@@ -38,9 +38,21 @@
             return await context.ReturnAatfs.Where(r => r.Return.Id.Equals(returnId)).Select(r => r.Aatf).ToListAsync();
         }
 
-        public async Task<Aatf> FetchByApprovalNumber(string approvalNumber)
+        public async Task<Aatf> FetchByApprovalNumber(string approvalNumber, int? year = null)
         {
-            return await context.Aatfs.FirstOrDefaultAsync(p => p.ApprovalNumber == approvalNumber);
+            if (year == null)
+            {
+                return await context.Aatfs.FirstOrDefaultAsync(p => p.ApprovalNumber == approvalNumber);
+            }
+            else
+            {
+                return await context.Aatfs.FirstOrDefaultAsync(p => p.ApprovalNumber == approvalNumber && p.ComplianceYear == year);
+            }
+        }
+
+        public async Task<Aatf> FetchById(Guid id)
+        {
+            return await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

@@ -65,24 +65,24 @@
             {
                 panArea = await commonDataAccess.FetchLookup<PanArea>(message.Aatf.PanAreaData.Id);
             }
+           
+            var aatf = new Domain.AatfReturn.Aatf(
+            message.Aatf.Name,
+            competentAuthority,
+            message.Aatf.ApprovalNumber,
+            Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Aatf.AatfStatus.Value),
+            organisation,
+            siteAddress,
+            Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
+            message.Aatf.ApprovalDate.GetValueOrDefault(),
+            contact,
+            message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
+            message.Aatf.ComplianceYear,
+            localArea,
+            panArea, message.AatfId);
 
-            var aatf = new Aatf(
-                message.Aatf.Name,
-                competentAuthority,
-                message.Aatf.ApprovalNumber,
-                Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Aatf.AatfStatus.Value),
-                organisation,
-                siteAddress,
-                Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
-                message.Aatf.ApprovalDate.GetValueOrDefault(),
-                contact,
-                message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
-                message.Aatf.ComplianceYear,
-                localArea,
-                panArea);
-
-            await dataAccess.Add<Aatf>(aatf);
-
+            await dataAccess.Add<Domain.AatfReturn.Aatf>(aatf);
+            
             return true;
         }
     }

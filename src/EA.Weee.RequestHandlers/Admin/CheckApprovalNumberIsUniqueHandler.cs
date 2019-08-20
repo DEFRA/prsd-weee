@@ -26,14 +26,9 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            Aatf existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber);
+            var existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber, message.ComplianceYear);
 
-            if (existing == null)
-            {
-                return false;
-            }
-
-            return true;
+            return existing != null;
         }
     }
 }

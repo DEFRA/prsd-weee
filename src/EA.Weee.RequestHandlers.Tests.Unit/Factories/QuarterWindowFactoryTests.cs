@@ -169,9 +169,65 @@
             Assert.Equal(QuarterType.Q1, result.QuarterType);
         }
 
-        private static QuarterWindowTemplate QuarterWindowTemplate(int startMonth, int startDay, int addStartYear, int addEndYear)
+        [Theory]
+        [InlineData("2019/01/01")]
+        [InlineData("2019/03/31")]
+        public async void GetAnnualQuarterForDate_GivenDateInFirstQuarter_QuarterShouldBeCorrect(DateTime date)
+        {
+            SetupQuarterWindowTemplates();
+
+            var result = await quarterWindowFactory.GetAnnualQuarterForDate(date);
+
+            result.Should().Be(QuarterType.Q1);
+        }
+
+        [Theory]
+        [InlineData("2019/04/01")]
+        [InlineData("2019/06/30")]
+        public async void GetAnnualQuarterForDate_GivenDateInSecondQuarter_QuarterShouldBeCorrect(DateTime date)
+        {
+            SetupQuarterWindowTemplates();
+
+            var result = await quarterWindowFactory.GetAnnualQuarterForDate(date);
+
+            result.Should().Be(QuarterType.Q2);
+        }
+
+        [Theory]
+        [InlineData("2019/07/01")]
+        [InlineData("2019/09/30")]
+        public async void GetAnnualQuarterForDate_GivenDateInThirdQuarter_QuarterShouldBeCorrect(DateTime date)
+        {
+            SetupQuarterWindowTemplates();
+
+            var result = await quarterWindowFactory.GetAnnualQuarterForDate(date);
+
+            result.Should().Be(QuarterType.Q3);
+        }
+
+        [Theory]
+        [InlineData("2019/10/01")]
+        [InlineData("2019/12/31")]
+        public async void GetAnnualQuarterForDate_GivenDateInFourthQuarter_QuarterShouldBeCorrect(DateTime date)
+        {
+            SetupQuarterWindowTemplates();
+
+            var result = await quarterWindowFactory.GetAnnualQuarterForDate(date);
+
+            result.Should().Be(QuarterType.Q4);
+        }
+
+        private QuarterWindowTemplate QuarterWindowTemplate(int startMonth, int startDay, int addStartYear, int addEndYear)
         {
             return new QuarterWindowTemplate() { StartMonth = startMonth, StartDay = startDay, AddStartYears = addStartYear, EndMonth = 3, AddEndYears = addEndYear, EndDay = 16 };
+        }
+
+        private void SetupQuarterWindowTemplates()
+        {
+            A.CallTo(() => dataAccess.GetByQuarter((int)QuarterType.Q1)).Returns(QuarterWindowTemplate(4, 1, 0, 1));
+            A.CallTo(() => dataAccess.GetByQuarter((int)QuarterType.Q2)).Returns(QuarterWindowTemplate(7, 1, 0, 1));
+            A.CallTo(() => dataAccess.GetByQuarter((int)QuarterType.Q3)).Returns(QuarterWindowTemplate(10, 1, 0, 1));
+            A.CallTo(() => dataAccess.GetByQuarter((int)QuarterType.Q4)).Returns(QuarterWindowTemplate(1, 1, 1, 1));
         }
     }
 }

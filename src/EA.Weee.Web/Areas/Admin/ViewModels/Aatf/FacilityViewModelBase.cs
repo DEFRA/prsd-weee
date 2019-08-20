@@ -85,7 +85,7 @@
             nameof(ApprovalDate)
         };
 
-        public FacilityViewModelBase()
+        protected FacilityViewModelBase()
         {
             SiteAddressData = new AatfAddressData();
         }

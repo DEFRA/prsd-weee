@@ -111,6 +111,7 @@
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CopyReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
+    <Compile Include="Admin\Aatf\AddAatfHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\AatfDataAccessTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccessTests.cs" />
@@ -209,6 +210,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Aatf\" />
   </ItemGroup>
   <ItemGroup />
   <Choose>

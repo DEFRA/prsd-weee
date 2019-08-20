@@ -14,5 +14,7 @@
         Task<QuarterWindow> GetAnnualQuarter(Quarter quarter);
 
         Task<QuarterWindow> GetNextQuarterWindow(QuarterType q, int year);
+
+        Task<QuarterType> GetAnnualQuarterForDate(DateTime date);
     }
 }
