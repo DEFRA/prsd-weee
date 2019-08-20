@@ -1322,7 +1322,6 @@
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
-        [InlineData("Download")]
         [InlineData("UpdateApproval")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
