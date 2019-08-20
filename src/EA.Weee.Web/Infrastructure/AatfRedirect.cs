@@ -20,7 +20,7 @@
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
         public static string OrganisationRouteName = "aatf-organisation";
-        public static string Download = "returns-summary";
+        public static string Download = "returns-download";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
