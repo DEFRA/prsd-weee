@@ -7,6 +7,7 @@
     using Core.Admin;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
+    using Domain.DataReturns;
     using Factories;
 
     public class GetAatfApprovalDateChangeStatus : IGetAatfApprovalDateChangeStatus
@@ -32,6 +33,7 @@
             {
                 var currentQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(aatf.ApprovalDate.Value);
                 var newQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(newApprovalDate);
+                var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(new Quarter(aatf.ApprovalDate.Value.Year, currentQuarter));
 
                 if (aatf.ApprovalDate.Equals(newApprovalDate))
                 {
@@ -60,7 +62,7 @@
                         result |= CanApprovalDateBeChangedFlags.HasResubmission;
                     }
 
-                    if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
+                    if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(aatf, quarterWindow))
                     {
                         result |= CanApprovalDateBeChangedFlags.HasMultipleFacility;
                     }
