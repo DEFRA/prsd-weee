@@ -54,7 +54,7 @@
                 <p class="important-large">
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
-                        <span>There is a quarterly return in progress for this @facilityTypes. Changing the approval date will delete this data, but leave the remainder of the data for other @facilityTypes in the same return intact. If you proceed, you should inform the customer.</span>
+                        <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete this data, but leave the remainder of the data for other @facilityTypes in the same return intact. If you proceed, you should inform the customer.</span>
                     }
                     else
                     {

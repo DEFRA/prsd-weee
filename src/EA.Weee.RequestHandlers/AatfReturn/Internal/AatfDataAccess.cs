@@ -9,20 +9,25 @@
     using Core.Admin;
     using DataAccess;
     using Domain;
+    using Domain.DataReturns;
     using Domain.Organisation;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using Factories;
 
     public class AatfDataAccess : IAatfDataAccess
     {
         private readonly WeeeContext context;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IQuarterWindowFactory quarterWindowFactory;
 
         public AatfDataAccess(WeeeContext context, 
-            IGenericDataAccess genericDataAccess)
+            IGenericDataAccess genericDataAccess, 
+            IQuarterWindowFactory quarterWindowFactory)
         {
             this.context = context;
             this.genericDataAccess = genericDataAccess;
+            this.quarterWindowFactory = quarterWindowFactory;
         }
 
         public async Task<Aatf> GetDetails(Guid id)
@@ -103,6 +108,19 @@
                                                        && p.Id != findAatf.Id) > 0;
         }
 
+        public async Task<bool> HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(Aatf aatf, Domain.DataReturns.QuarterWindow quarterWindow)
+        {
+            var findAatf = await GetAatfById(aatf.Id);
+
+            var organisationId = aatf.Organisation.Id;
+
+            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId
+                                                       && p.ComplianceYear == findAatf.ComplianceYear
+                                                       && p.FacilityType.Value == findAatf.FacilityType.Value
+                                                       && p.Id != findAatf.Id
+                                                       && (p.ApprovalDate.Value >= quarterWindow.StartDate && p.ApprovalDate.Value <= quarterWindow.EndDate)) > 0;
+        }
+
         private async Task<Aatf> GetAatfById(Guid id)
         {
             var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
@@ -131,10 +149,16 @@
 
         public async Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags)
         {
-            var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == aatf.Organisation.Id && a.ComplianceYear == aatf.ComplianceYear && a.FacilityType.Value == aatf.FacilityType.Value);
-
             foreach (var quarter in quarters)
             {
+                var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(new Quarter(aatf.ComplianceYear, (QuarterType)quarter));
+
+                var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == 
+                                                                    aatf.Organisation.Id 
+                                                                    && a.ComplianceYear == aatf.ComplianceYear
+                                                                    && a.FacilityType.Value == aatf.FacilityType.Value
+                                                                    && (a.ApprovalDate.Value >= quarterWindow.StartDate && a.ApprovalDate.Value <= quarterWindow.EndDate));
+
                 IEnumerable<WeeeSentOn> weeeSentOn;
                 IEnumerable<WeeeReused> weeeReused;
                 IEnumerable<WeeeReceived> weeeReceived;
@@ -144,8 +168,7 @@
                 var weeeReusedSites = new List<WeeeReusedSite>().AsEnumerable();
                 var weeeSentOnAmounts = new List<WeeeSentOnAmount>().AsEnumerable();
                 
-                if (!flags.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility)
-                    && aatfCount == 1)
+                if (aatfCount == 1)
                 {
                     var returns = context.Returns.Where(r =>
                         r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear && r.FacilityType.Value == aatf.FacilityType.Value);
