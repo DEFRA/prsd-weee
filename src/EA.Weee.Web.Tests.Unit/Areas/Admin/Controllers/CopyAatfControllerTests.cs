@@ -249,7 +249,7 @@
             viewModel.Name = "Name";
             viewModel.ApprovalNumber = "WEE/AB1234CD/ATF";
 
-            var request = fixture.Create<CopyAatf>();
+            var request = fixture.Create<AddAatf>();
 
             var aatf = new AatfData()
             {
@@ -282,7 +282,7 @@
             viewModel.Name = "Name";
             viewModel.ApprovalNumber = "WEE/AB1234CD/ATF";
 
-            var request = fixture.Create<CopyAatf>();
+            var request = fixture.Create<AddAatf>();
 
             var aatf = new AatfData()
             {
@@ -315,7 +315,7 @@
             viewModel.ComplianceYear = 2019;
             viewModel.Name = "Name";
 
-            var request = fixture.Create<CopyAatf>();
+            var request = fixture.Create<AddAatf>();
 
             var aatf = new AatfData()
             {
@@ -348,7 +348,7 @@
             viewModel.ComplianceYear = 2019;
             viewModel.Name = "Name";
 
-            var request = fixture.Create<CopyAatf>();
+            var request = fixture.Create<AddAatf>();
 
             var aatf = new AatfData()
             {
@@ -377,7 +377,7 @@
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
             var siteAddress = fixture.Build<AatfAddressData>().With(sa => sa.Countries, countries).Create();
             var viewModel = fixture.Build<CopyAatfViewModel>().Create();
-            var request = fixture.Create<CopyAatf>();
+            var request = fixture.Create<AddAatf>();
 
             var clientCallAuthorities = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetUKCompetentAuthorities>.Ignored));
             clientCallAuthorities.Returns(Task.FromResult(competentAuthorities));
@@ -395,7 +395,7 @@
             result.ViewName.Should().Be("Copy");
             result.Model.Should().Be(viewModel);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CopyAatf>.That.Matches(
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAatf>.That.Matches(
               p => p.AatfId == viewModel.AatfId))).MustNotHaveHappened();
         }
 
@@ -444,7 +444,7 @@
 
             var result = await controller.CopyAatfDetails(viewModel);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CopyAatf>.That.Matches(
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAatf>.That.Matches(
                p => p.OrganisationId == viewModel.OrganisationId
                && p.AatfId == viewModel.AatfId
                && p.Aatf.Name == aatf.Name
