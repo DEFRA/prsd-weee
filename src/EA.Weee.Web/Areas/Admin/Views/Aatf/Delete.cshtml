@@ -50,9 +50,12 @@
                 && Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
             {
                 <div>
-                    <p class="important-large">
-                        Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see the @facilityType or the organisation.
-                    </p>
+                    @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
+                    {
+                        <p class="important-large">
+                            Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see the @facilityType or the organisation.
+                        </p>
+                    }
                     <p>
                         The @facilityType and the organisation that operates it will be deleted
                     </p>
@@ -61,9 +64,12 @@
             else if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
             {
                 <div>
-                    <p class="important-large">
-                        Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
-                    </p>
+                    @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
+                    {
+                        <p class="important-large">
+                            Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
+                        </p>
+                    }
                     <p>
                         The @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs (or compliance years), AEs or PCSs.
                     </p>
