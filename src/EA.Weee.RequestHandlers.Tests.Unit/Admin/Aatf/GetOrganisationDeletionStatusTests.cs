@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Core.Admin;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -16,10 +17,12 @@
         private readonly GetOrganisationDeletionStatus getOrganisationDeletionStatus;
         private const int ComplianceYear = 2019;
         private readonly Guid organisationId = Guid.NewGuid();
+        private readonly Fixture fixture;
 
         public GetOrganisationDeletionStatusTests()
         {
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
+            fixture = new Fixture();
 
             getOrganisationDeletionStatus = new GetOrganisationDeletionStatus(organisationDataAccess);
         }
@@ -31,7 +34,7 @@
         {
             A.CallTo(() => organisationDataAccess.HasReturns(organisationId, ComplianceYear)).Returns(hasReturns);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             if (hasReturns)
             {
@@ -50,7 +53,7 @@
         {
             A.CallTo(() => organisationDataAccess.HasActiveUsers(organisationId)).Returns(hasActiveUsers);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             if (hasActiveUsers)
             {
@@ -69,7 +72,7 @@
         {
             A.CallTo(() => organisationDataAccess.HasScheme(organisationId)).Returns(hasScheme);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             if (hasScheme)
             {
@@ -88,7 +91,7 @@
         {
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Ae)).Returns(hasAe);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             if (hasAe)
             {
@@ -103,11 +106,11 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Validate_GivenHasFacilityaatfCheck_FlagsShouldBeValid(bool hasAatf)
+        public async Task Validate_GivenHasFacilityAatfCheck_FlagsShouldBeValid(bool hasAatf)
         {
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Aatf)).Returns(hasAatf);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             if (hasAatf)
             {
@@ -119,6 +122,25 @@
             }
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Validate_GivenHasMultipleOfFacilityCheck_FlagsShouldBeValid(bool hasMultipleOfFacility)
+        {
+            A.CallTo(() => organisationDataAccess.HasMultipleOfEntityFacility(organisationId, A<FacilityType>._)).Returns(hasMultipleOfFacility);
+
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
+
+            if (hasMultipleOfFacility)
+            {
+                result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility);
+            }
+            else
+            {
+                result.Should().NotHaveFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility);
+            }
+        }
+
         [Fact]
         public async Task Validate_GivenFalseForAllChecks_FlagsShouldBeEmpty()
         {
@@ -127,8 +149,9 @@
             A.CallTo(() => organisationDataAccess.HasScheme(organisationId)).Returns(false);
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Aatf)).Returns(false);
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Ae)).Returns(false);
+            A.CallTo(() => organisationDataAccess.HasMultipleOfEntityFacility(organisationId, A<FacilityType>._)).Returns(false);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             result.Should().Be(0);
         }
@@ -141,14 +164,16 @@
             A.CallTo(() => organisationDataAccess.HasScheme(organisationId)).Returns(true);
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Aatf)).Returns(true);
             A.CallTo(() => organisationDataAccess.HasFacility(organisationId, FacilityType.Ae)).Returns(true);
+            A.CallTo(() => organisationDataAccess.HasMultipleOfEntityFacility(organisationId, A<FacilityType>._)).Returns(true);
 
-            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear);
+            var result = await getOrganisationDeletionStatus.Validate(organisationId, ComplianceYear, FacilityType.Aatf);
 
             result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasScheme);
             result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasActiveUsers);
             result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasActiveUsers);
             result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasAe);
             result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasAatf);
+            result.Should().HaveFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility);
         }
     }
 }

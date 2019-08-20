@@ -74,7 +74,7 @@
         public async Task HandleAsync_GivenMessage_AatfDeleteFlagsShouldBeValidated()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = GetAatf();
+            var aatf = GetAatf(message.AatfId);
 
             A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
 
@@ -87,24 +87,26 @@
         public async Task HandleAsync_GivenMessage_OrganisationDeleteFlagsShouldBeValidated()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = GetAatf();
+            var aatf = GetAatf(message.AatfId);
 
             A.CallTo(() => aatfDataAccess.GetDetails(message.AatfId)).Returns(aatf);
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenMessage_ReturnObjectShouldContainValidatedFlags()
         {
             var message = fixture.Create<CheckAatfCanBeDeleted>();
-            var aatf = GetAatf();
+            var aatf = GetAatf(message.AatfId);
+
             var aatfFlags = fixture.Create<CanAatfBeDeletedFlags>();
             var organisationFlags = fixture.Create<CanOrganisationBeDeletedFlags>();
 
-            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear)).Returns(organisationFlags);
+            A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+            A.CallTo(() => organisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(organisationFlags);
             A.CallTo(() => aatfDeletionStatus.Validate(aatf.Id)).Returns(aatfFlags);
 
             var result = await handler.HandleAsync(message);
@@ -113,13 +115,15 @@
             result.CanAatfBeDeletedFlags.Should().Be(aatfFlags);
         }
 
-        private Aatf GetAatf()
+        private Aatf GetAatf(Guid id)
         {
             var organisation = Organisation.CreatePartnership("trading");
 
             var aatf = A.Fake<Aatf>();
 
+            A.CallTo(() => aatf.Id).Returns(id);
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
             return aatf;
         }

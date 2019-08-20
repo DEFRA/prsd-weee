@@ -42,8 +42,8 @@
                 {
                     result |= CanApprovalDateBeChangedFlags.DateChanged;
 
-                    var returns = await organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear);
-
+                    var returns = await organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
+                    
                     if (returns.Any(r => (int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Created.Value))
                     {
                         result |= CanApprovalDateBeChangedFlags.HasStartedReturn;
