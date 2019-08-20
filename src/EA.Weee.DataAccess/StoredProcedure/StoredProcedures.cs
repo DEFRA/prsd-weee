@@ -500,10 +500,10 @@
 
         public async Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter quarterParameter = new SqlParameter("@Quarter", quarter);
-            SqlParameter returnIdParameter = new SqlParameter("@ReturnId", returnId);
-            SqlParameter aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var quarterParameter = new SqlParameter("@Quarter", quarter);
+            var returnIdParameter = new SqlParameter("@ReturnId", returnId);
+            var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
 
             var table = new DataTable();
             using (context)
@@ -519,18 +519,35 @@
             }
             return table;
         }
-        
+
+        public async Task<DataTable> GetReturnObligatedCsvData(Guid returnId)
+        {
+            var returnIdParameter = new SqlParameter("@ReturnId", returnId);
+
+            var obligatedData = new DataTable();
+
+            using (context)
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "[AATF].[getReturnObligatedCsvData] @ReturnId";
+                cmd.Parameters.Add(returnIdParameter);
+                await cmd.Connection.OpenAsync();
+                obligatedData.Load(await cmd.ExecuteReaderAsync());
+            }
+            return obligatedData;
+        }
+
         public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
-            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
-            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
-            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+            var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
 
             var dataSet = new DataSet();
-            DataTable sentOnData = new DataTable();
-            DataTable addressData = new DataTable();
+            var sentOnData = new DataTable();
+            var addressData = new DataTable();
             dataSet.Tables.Add(sentOnData);
             dataSet.Tables.Add(addressData);
             using (context)
@@ -549,9 +566,9 @@
         }
          public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
         {
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
-            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
 
             return await context.Database
                 .SqlQuery<AatfReuseSitesData>(

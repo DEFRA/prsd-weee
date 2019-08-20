@@ -3,12 +3,14 @@
     using Api.Client;
     using Constant;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Reports;
     using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using System;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -49,6 +51,19 @@
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
 
                 return View("Index", viewModel);
+            }
+        }
+
+        [HttpGet]
+        public virtual async Task<ActionResult> DownloadAllObligatedData(Guid returnId)
+        {
+            using (var client = apiClient())
+            {
+                var fileData = await client.SendAsync(User.GetAccessToken(), new GetReturnObligatedCsv(returnId));
+
+                var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
             }
         }
 

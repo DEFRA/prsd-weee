@@ -73,7 +73,7 @@
                  SystemTime.UtcNow,
                  aatf.ApprovalNumber);
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
+            string fileContent = DataTableCsvHelper.DataTableToCsv(obligatedData);
 
             return new CSVFileData
             {

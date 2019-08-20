@@ -11,6 +11,7 @@
     {
         public List<AatfObligatedData> AatfObligatedData = new List<AatfObligatedData>();
         public TaskListDisplayOptions DisplayOptions = new TaskListDisplayOptions();
+        public bool ShowObligatedDataLink = false;
         private readonly ITonnageUtilities tonnageUtilities;
 
         public ReturnToReturnViewModelMap(ITonnageUtilities tonnageUtilities)
@@ -42,6 +43,11 @@
                 }
             }
 
+            if (DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn)
+            {
+                ShowObligatedDataLink = true;
+            }
+
             return new ReturnViewModel(
                 source,
                 AatfObligatedData,
@@ -51,7 +57,8 @@
                 NonObligatedTonnageTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
                 NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
-                ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source))
+                ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source)),
+                ShowDownloadObligatedData = ShowObligatedDataLink
             };
         }
 

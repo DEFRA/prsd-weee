@@ -20,6 +20,7 @@
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
         public static string OrganisationRouteName = "aatf-organisation";
+        public static string Download = "returns-download";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -99,6 +100,11 @@
         public static RedirectToRouteResult CheckReturn(Guid returnId)
         {
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "CheckYourReturn", action = "Index", returnId = returnId }));
+        }
+
+        public static RedirectToRouteResult ReturnsSummaryDownloadObligatedData(Guid returnId)
+        {
+            return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "ReturnsSummary", action = "DownloadAllObligatedData", returnId = returnId }));
         }
 
         public static RedirectToRouteResult SubmittedReturn(Guid returnId)
