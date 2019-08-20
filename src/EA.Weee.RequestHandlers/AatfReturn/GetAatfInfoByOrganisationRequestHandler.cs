@@ -29,7 +29,7 @@
 
         public async Task<List<AatfData>> HandleAsync(GetAatfByOrganisation message)
         {
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureInternalOrOrganisationAccess(message.OrganisationId);
 
             var aatfs = await genericDataAccess.GetManyByExpression(new AatfsByOrganisationSpecification(message.OrganisationId));
 
