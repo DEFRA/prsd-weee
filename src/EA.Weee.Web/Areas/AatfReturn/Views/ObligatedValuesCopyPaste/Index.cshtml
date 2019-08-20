@@ -9,67 +9,68 @@
     ViewBag.Title = "Copy and Paste Obligated WEEE - GOV.UK";
 }
 
-<section id="main-content">
-    <header class="hgroup">
+    <section id="main-content">
+        <header class="hgroup">
 
-        <div>
-            @{
-                var type = Model.Type == ObligatedType.Reused ? "reused as a whole appliance" : "received for treatment";
+            <div>
+                @{
+                    var type = Model.Type == ObligatedType.Reused ? "reused as a whole appliance" : "received for treatment";
 
-                if (Model.Type == ObligatedType.Reused)
-                {
-                    <h2 class="govuk-heading-l">
-                        WEEE that has been reused as a whole appliance
-                    </h2>
+                    if (Model.Type == ObligatedType.Reused)
+                    {
+                        <h2 class="govuk-heading-l">
+                            WEEE that has been reused as a whole appliance
+                        </h2>
+                    }
+                    else if (Model.Type == ObligatedType.Received)
+                    {
+                        <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+                    }
                 }
-                else if (Model.Type == ObligatedType.Received)
+
+            </div>
+        </header>
+        <p class="govuk-body">
+            Provide tonnage to 3 decimal places for 14 categories. For example 1.238
+        </p>
+        <p class="govuk-body">
+            You can copy the WEEE in tonnes from an Excel spreadsheet
+        </p>
+        <p class="govuk-body">
+            Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
+        </p>
+        @using (Html.BeginRouteForm(AatfRedirect.AatfSelectedRoute, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.Type)
+            @Html.HiddenFor(m => m.SchemeId)
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s" id="b2c-entry">B2C (tonnes)</h2>
+                    <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s" id="b2b-entry">B2B (tonnes)</h2>
+                    <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="govuk-button" id="aatf-task-list">
+                Continue
+            </button>
+
+            <div>
+                @if (Model.Type == ObligatedType.Reused)
                 {
-                    <h1 class="govuk-heading-l">WEEE that has been received for treatment at @Model.AatfName from @Model.SchemeName</h1>
+                    <a href="@(Url.UrlFor<ObligatedReusedController>(u => u.Index(Model.ReturnId, Model.AatfId)))">Cancel</a>
                 }
-            }
-
-        </div>
-    </header>
-    <p class="govuk-body">
-        Provide tonnage to 3 decimal places for 14 categories. For example 1.238
-    </p>
-    <p class="govuk-body">
-        You can copy the WEEE in tonnes from an Excel spreadsheet
-    </p>
-    <p class="govuk-body">
-        Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
-    </p>
-    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.Type)
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2c-entry">B2C (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
+                else
+                {
+                    <a href="@(Url.UrlFor<ObligatedReceivedController>(u => u.Index(Model.ReturnId, Model.AatfId, Model.SchemeId)))">Cancel</a>
+                }
             </div>
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2b-entry">B2B (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
-            </div>
-        </div>
-
-        <button type="submit" class="govuk-button" id="aatf-task-list">
-            Continue
-        </button>
-
-        <div>
-            @if (Model.Type == ObligatedType.Reused)
-            {
-            <a href="@(Url.UrlFor<ObligatedReusedController>(u => u.Index(Model.ReturnId, Model.AatfId)))">Cancel</a>
-            }
-            else
-            {
-            <a href="@(Url.UrlFor<ObligatedReceivedController>(u => u.Index(Model.ReturnId, Model.AatfId, Model.SchemeId)))">Cancel</a>
-            }
-        </div>
-    }
-</section>
+        }
+    </section>
