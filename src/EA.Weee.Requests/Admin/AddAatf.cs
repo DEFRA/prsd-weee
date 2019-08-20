@@ -9,5 +9,7 @@
         public AatfData Aatf { get; set; }
         public Guid OrganisationId { get; set; }
         public AatfContactData AatfContact { get; set; }
+
+        public Guid? AatfId { get; set; }
     }
 }

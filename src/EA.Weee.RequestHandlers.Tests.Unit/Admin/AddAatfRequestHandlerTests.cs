@@ -175,5 +175,110 @@
 
             result.Should().Be(true);
         }
+
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        public async Task HandleAsync_CopyAatf_WithNoLocalArea_LocalAreaIsNull(Core.AatfReturn.FacilityType facilityType)
+        {
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = facilityType
+            };
+
+            var aatfId = Guid.NewGuid();
+
+            var request = new AddAatf()
+            {
+                Aatf = aatf,
+                AatfContact = A.Dummy<AatfContactData>(),
+                OrganisationId = Guid.NewGuid(),
+                AatfId = aatfId
+            };
+
+            var result = await handler.HandleAsync(request);
+
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(A<Guid>._)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        public async Task HandleAsync_CopyAatf_WithNoPanArea_PanAreaIsNull(Core.AatfReturn.FacilityType facilityType)
+        {
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                null, A.Dummy<Core.Admin.LocalAreaData>())
+            {
+                FacilityType = facilityType
+            };
+
+            var aatfId = Guid.NewGuid();
+
+            var request = new AddAatf()
+            {
+                Aatf = aatf,
+                AatfContact = A.Dummy<AatfContactData>(),
+                OrganisationId = Guid.NewGuid(),
+                AatfId = aatfId
+            };
+
+            var result = await handler.HandleAsync(request);
+
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(A<Guid>._)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(Core.AatfReturn.FacilityType.Ae)]
+        [InlineData(Core.AatfReturn.FacilityType.Aatf)]
+        public async Task HandleAsync_CopyAatf_ValidInput_AddsAatf(Core.AatfReturn.FacilityType facilityType)
+        {
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var localarea = A.Fake<LocalArea>();
+            var panarea = A.Fake<PanArea>();
+
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), A.Dummy<Core.Admin.LocalAreaData>())
+            {
+                FacilityType = facilityType
+            };
+
+            var aatfId = Guid.NewGuid();
+
+            var request = new AddAatf()
+            {
+                Aatf = aatf,
+                AatfContact = A.Dummy<AatfContactData>(),
+                OrganisationId = Guid.NewGuid(),
+                AatfId = aatfId
+            };
+
+            var expectedFacilityType = facilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(aatf.CompetentAuthority.Abbreviation)).Returns(competentAuthority);
+            A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(aatf.LocalAreaData.Id)).Returns(localarea);
+            A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(aatf.PanAreaData.Id)).Returns(panarea);
+
+            var result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.Add<Domain.AatfReturn.Aatf>(A<Domain.AatfReturn.Aatf>.That.Matches(
+                c => c.Name == aatf.Name
+                    && c.ApprovalNumber == aatf.ApprovalNumber
+                    && c.CompetentAuthority.Equals(competentAuthority)
+                    && c.LocalArea.Equals(localarea)
+                    && c.PanArea.Equals(panarea)
+                    && c.Name == aatf.Name
+                    && c.SiteAddress.Id == aatf.SiteAddress.Id
+                    && Enumeration.FromValue<Domain.AatfReturn.AatfSize>(c.Size.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfSize>(aatf.Size.Value)
+                    && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
+                    && c.ApprovalDate == aatf.ApprovalDate
+                    && c.ComplianceYear == aatf.ComplianceYear
+                    && c.FacilityType == expectedFacilityType
+                    && c.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+
+            result.Should().Be(true);
+        }
     }
 }

@@ -1,15 +1,17 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using EA.Weee.Core.AatfReturn;
     using Prsd.Core.Mediator;
 
     public class CheckApprovalNumberIsUnique : IRequest<bool>
     {
         public string ApprovalNumber { get; private set; }
 
-        public CheckApprovalNumberIsUnique(string approvalNumber)
+        public int? ComplianceYear { get; private set; }
+
+        public CheckApprovalNumberIsUnique(string approvalNumber, int? complianceYear = null)
         {
-            this.ApprovalNumber = approvalNumber;
+            ApprovalNumber = approvalNumber;
+            ComplianceYear = complianceYear;
         }
     }
 }
