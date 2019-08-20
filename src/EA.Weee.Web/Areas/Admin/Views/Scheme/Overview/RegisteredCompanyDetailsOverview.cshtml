@@ -2,60 +2,65 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails.RegisteredCompanyDetailsOverviewViewModel
 <div class="govuk-!-padding-bottom-8"></div>
-@Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+<div class="govuk-tabs">
+    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-@section main_content {
-    <table id="pcs-details-table" class="govuk-table">
-        <thead class="govuk-table__head">
-            <tr class="govuk-visually-hidden">
-                <th colspan="2">Organisation details</th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Organisation type</th>
-                <td class="govuk-table__cell">Registered Company</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Company name</th>
-                <td class="govuk-table__cell">@Model.CompanyName</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                <td class="govuk-table__cell">@Model.CompanyRegistrationNumber</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Business trading name</th>
-                <td class="govuk-table__cell">@Model.BusinessTradingName</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Address</th>
-                <td class="govuk-table__cell">
-                    @Model.Address.Address.Address1<br />
-                    @Model.Address.Address.Address2<br />
-                    @Model.Address.Address.TownOrCity<br />
-                    @Model.Address.Address.CountyOrRegion<br />
-                    @Model.Address.Address.Postcode<br />
-                    @Model.Address.Address.CountryName<br />
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Telephone</th>
-                <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Email address</th>
-                <td class="govuk-table__cell">@Model.Address.Address.Email</td>
-            </tr>
-        </tbody>
-    </table>
-    @if (Model.CanEditOrganisation)
-    {
-        <br />
-        <p>
-            <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
-        </p>
-    }
+    <section class="govuk-tabs__panel" id="pcsDetails">
+        <div class="govuk-table__header--large">
+            Organisation details
+        </div>
+        <table id="pcs-details-table" class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-visually-hidden">
+                    <th colspan="2">Organisation details</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Organisation type</th>
+                    <td class="govuk-table__cell">Registered Company</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company name</th>
+                    <td class="govuk-table__cell">@Model.CompanyName</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                    <td class="govuk-table__cell">@Model.CompanyRegistrationNumber</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Business trading name</th>
+                    <td class="govuk-table__cell">@Model.BusinessTradingName</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell">
+                        @Model.Address.Address.Address1<br />
+                        @Model.Address.Address.Address2<br />
+                        @Model.Address.Address.TownOrCity<br />
+                        @Model.Address.Address.CountyOrRegion<br />
+                        @Model.Address.Address.Postcode<br />
+                        @Model.Address.Address.CountryName<br />
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <td class="govuk-table__cell">@Model.Address.Address.Email</td>
+                </tr>
+            </tbody>
+        </table>
+        @if (Model.CanEditOrganisation)
+        {
+            <br />
+            <p>
+                <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
+            </p>
+        }
 
-    @Html.Partial("Overview/_OverviewAvailableActions")
-}
+        @Html.Partial("Overview/_OverviewAvailableActions")
+    </section>
+</div>
