@@ -1190,7 +1190,6 @@
         [Theory]
         [InlineData("ManageAatfDetails")]
         [InlineData("ManageContactDetails")]
-        [InlineData("Download")]
         public void ActionMustHaveAuthorizeClaimsAttribute(string methodName)
         {
             var methods = typeof(AatfController).GetMethods();
