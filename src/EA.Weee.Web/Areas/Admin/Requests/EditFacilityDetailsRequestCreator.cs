@@ -24,13 +24,13 @@
 
             if (viewModel.CompetentAuthorityId != UKCompetentAuthorityAbbreviationType.EA)
             {
-                data.PanAreaData = null;
-                data.LocalAreaData = null;
+                data.PanAreaDataId = null;
+                data.LocalAreaDataId = null;
             }
             else
             {
-                data.PanAreaData = viewModel.PanAreaList.FirstOrDefault(p => p.Id == viewModel.PanAreaId);
-                data.LocalAreaData = viewModel.LocalAreaList.First(p => p.Id == viewModel.LocalAreaId);
+                data.PanAreaDataId = viewModel.PanAreaId;
+                data.LocalAreaDataId = viewModel.LocalAreaId;
             }
 
             data.FacilityType = viewModel.FacilityType;
