@@ -22,6 +22,8 @@
 
         Task<bool> HasFacility(Guid organisationId, FacilityType facilityType);
 
-        Task<List<Return>> GetReturnsByComplianceYear(Guid organisationId, int year);
+        Task<bool> HasMultipleOfEntityFacility(Guid organisationId, FacilityType facilityType);
+
+        Task<List<Return>> GetReturnsByComplianceYear(Guid organisationId, int year, FacilityType facilityType);
     }
 }

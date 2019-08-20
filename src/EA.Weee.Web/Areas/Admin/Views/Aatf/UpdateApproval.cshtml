@@ -13,7 +13,7 @@
     <section id="main-content">
 
         <h1 class="govuk-heading-l">
-            Are you sure you want to change the approval date for this AATF?
+            Are you sure you want to change the approval date for this @facilityType?
         </h1>
 
         @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasResubmission))
@@ -22,7 +22,7 @@
                 <p class="important-large">
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
-                        <span>A quarterly return has already been submitted for this @facilityTypes. Changing the approval date will delete some of the data from that return and any resubmissions, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
+                        <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete some of the data from that return and any resubmissions, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
                     }
                     else
                     {
