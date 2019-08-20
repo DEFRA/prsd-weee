@@ -98,7 +98,6 @@
     <Compile Include="Admin\AddAatf.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUnique.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />
-    <Compile Include="Admin\CopyAatf.cs" />
     <Compile Include="Admin\CreateOrganisationAdmin.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeleted.cs" />
     <Compile Include="Admin\Aatf\DeleteAatf.cs" />

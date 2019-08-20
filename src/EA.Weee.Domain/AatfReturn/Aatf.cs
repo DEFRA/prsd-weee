@@ -46,46 +46,6 @@
         {
         }
 
-        public Aatf(string name,
-            UKCompetentAuthority competentAuthority,
-            string approvalNumber,
-            AatfStatus aatfStatus,
-            Organisation organisation,
-            AatfAddress aatfSiteAddress,
-            AatfSize aatfSize,
-            DateTime approvalDate,
-            AatfContact contact,
-            FacilityType facilityType,
-            Int16 complianceYear,
-            LocalArea localArea,
-            PanArea panArea)
-        {
-            Guard.ArgumentNotNullOrEmpty(() => name, name);
-            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
-            Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
-            Guard.ArgumentNotNull(() => aatfStatus, aatfStatus);
-            Guard.ArgumentNotNull(() => organisation, organisation);
-            Guard.ArgumentNotNull(() => contact, contact);
-            Guard.ArgumentNotNull(() => aatfSize, aatfSize);
-            Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
-            Guard.ArgumentNotNull(() => facilityType, facilityType);
-
-            Name = name;
-            CompetentAuthority = competentAuthority;
-            ApprovalNumber = approvalNumber;
-            AatfStatus = aatfStatus;
-            Organisation = organisation;
-            Size = aatfSize;
-            SiteAddress = aatfSiteAddress;
-            ApprovalDate = approvalDate;
-            Contact = contact;
-            FacilityType = facilityType;
-            ComplianceYear = complianceYear;
-            LocalArea = localArea;
-            PanArea = panArea;
-            AatfId = Guid.NewGuid();
-        }
-
         public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate, LocalArea localArea, PanArea panArea)
         {
             Name = name;
@@ -120,7 +80,7 @@
            Int16 complianceYear,
            LocalArea localArea,
            PanArea panArea,
-           Guid aatfId)
+           Guid? aatfId = null)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -145,7 +105,7 @@
             ComplianceYear = complianceYear;
             LocalArea = localArea;
             PanArea = panArea;
-            AatfId = aatfId;
+            AatfId = aatfId == null ? Guid.NewGuid() : aatfId.Value;
         }
     }
 }

@@ -26,7 +26,7 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber);
+            var existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber, message.ComplianceYear);
 
             return existing != null;
         }

@@ -2,18 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using EA.Prsd.Core.Helpers;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
-    using EA.Weee.RequestHandlers.Charges;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
@@ -24,7 +18,6 @@
     using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
-    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
 
     public class FetchAatfDataAccessTests
     {
@@ -253,6 +246,50 @@
                 Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber);
 
                 Assert.Null(result);
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumberThatDoesntExistForCY_ReturnedShouldBeNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                string approvalNumber = "test";
+
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+
+                await genericDataAccess.Add(aatf);
+
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber, 2019);
+
+                Assert.Null(result);
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByApprovalNumber_GivenApprovalNumberThatExistForCY_ReturnedShouldNotBeNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+                FetchAatfDataAccess dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                GenericDataAccess genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                string approvalNumber = "test";
+
+                Aatf aatf = await CreateAatf(database, FacilityType.Aatf, DateTime.Now, 2019, approvalNumber);
+
+                await genericDataAccess.Add(aatf);
+
+                Aatf result = await dataAccess.FetchByApprovalNumber(approvalNumber, 2019);
+
+                Assert.NotNull(result);
             }
         }
 
