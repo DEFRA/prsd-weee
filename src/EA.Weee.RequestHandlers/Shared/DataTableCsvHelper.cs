@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
@@ -139,6 +140,16 @@
                 }
             }
             return sb.ToString();
+        }
+
+        public static void SetColumnsOrder(this DataTable datatable, params String[] columnNames)
+        {
+            int columnIndex = 0;
+            foreach (var columnName in columnNames)
+            {
+                datatable.Columns[columnName].SetOrdinal(columnIndex);
+                columnIndex++;
+            }
         }
 
         public static string EncodeAndCheck(string value, NoFormulaeExcelSanitizer excelSanitizer)
