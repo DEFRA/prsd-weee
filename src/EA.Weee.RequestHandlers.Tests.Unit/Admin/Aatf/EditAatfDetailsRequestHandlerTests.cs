@@ -250,7 +250,7 @@
 
             var result = await handler.HandleAsync(updateRequest);
 
-            A.CallTo(() => aatfDataAccess.RemoveAatfData(A<Aatf>._, A<IEnumerable<int>>._, A<CanApprovalDateBeChangedFlags>._)).MustNotHaveHappened();
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(A<Aatf>._, A<IEnumerable<int>>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -271,7 +271,7 @@
 
             var range = Enumerable.Range(1, 3);
 
-            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>.That.IsSameSequenceAs(range), flags))
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>.That.IsSameSequenceAs(range)))
                 .MustHaveHappenedOnceExactly();
         }
         [Fact]
@@ -289,7 +289,7 @@
 
             var result = await handler.HandleAsync(updateRequest);
 
-            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>._, A<CanApprovalDateBeChangedFlags>._))
+            A.CallTo(() => aatfDataAccess.RemoveAatfData(existingAatf, A<IEnumerable<int>>._))
                 .MustHaveHappenedOnceExactly().Then(A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>._)).MustHaveHappenedOnceExactly());
         }
 

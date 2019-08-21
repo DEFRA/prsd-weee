@@ -108,19 +108,6 @@
                                                        && p.Id != findAatf.Id) > 0;
         }
 
-        public async Task<bool> HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(Aatf aatf, Domain.DataReturns.QuarterWindow quarterWindow)
-        {
-            var findAatf = await GetAatfById(aatf.Id);
-
-            var organisationId = aatf.Organisation.Id;
-
-            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId
-                                                       && p.ComplianceYear == findAatf.ComplianceYear
-                                                       && p.FacilityType.Value == findAatf.FacilityType.Value
-                                                       && p.Id != findAatf.Id
-                                                       && (p.ApprovalDate.Value >= quarterWindow.StartDate && p.ApprovalDate.Value <= quarterWindow.EndDate)) > 0;
-        }
-
         private async Task<Aatf> GetAatfById(Guid id)
         {
             var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
@@ -147,7 +134,7 @@
             await context.SaveChangesAsync();
         }
 
-        public async Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags)
+        public async Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters)
         {
             foreach (var quarter in quarters)
             {
@@ -157,7 +144,7 @@
                                                                     aatf.Organisation.Id 
                                                                     && a.ComplianceYear == aatf.ComplianceYear
                                                                     && a.FacilityType.Value == aatf.FacilityType.Value
-                                                                    && a.ApprovalDate.Value <= quarterWindow.StartDate);
+                                                                    && a.ApprovalDate.Value <= quarterWindow.EndDate);
 
                 IEnumerable<WeeeSentOn> weeeSentOn;
                 IEnumerable<WeeeReused> weeeReused;
@@ -167,58 +154,61 @@
                 var weeeReusedAmounts = new List<WeeeReusedAmount>().AsEnumerable();
                 var weeeReusedSites = new List<WeeeReusedSite>().AsEnumerable();
                 var weeeSentOnAmounts = new List<WeeeSentOnAmount>().AsEnumerable();
-                
-                if (aatfCount == 1)
+
+                if (aatfCount > 0)
                 {
-                    var returns = context.Returns.Where(r =>
-                        r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear && r.FacilityType.Value == aatf.FacilityType.Value);
-                    var returnIds = returns.Select(r => r.Id).ToList();
-                    returnAatfs = context.ReturnAatfs.Where(r => returnIds.Contains(r.Return.Id));
-                    var returnReportsOn = context.ReturnReportOns.Where(r => returnIds.Contains(r.Return.Id));
-                    var returnScheme = context.ReturnScheme.Where(r => returnIds.Contains(r.Return.Id));
-                    var nonObligated = context.NonObligatedWeee.Where(r => returnIds.Contains(r.Return.Id));
-
-                    weeeSentOn = context.WeeeSentOn.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeSentOn>();
-                    weeeReused = context.WeeeReused.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReused>();
-                    weeeReceived = context.WeeeReceived.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReceived>();
-
-                    foreach (var @return in returns)
+                    if (aatfCount == 1)
                     {
-                        context.Entry(@return).Entity.ParentId = null;
-                        context.Entry(@return).State = EntityState.Modified;
+                        var returns = context.Returns.Where(r =>
+                            r.Organisation.Id == aatf.Organisation.Id && (int)r.Quarter.Q == quarter && r.Quarter.Year == aatf.ComplianceYear && r.FacilityType.Value == aatf.FacilityType.Value);
+                        var returnIds = returns.Select(r => r.Id).ToList();
+                        returnAatfs = context.ReturnAatfs.Where(r => returnIds.Contains(r.Return.Id));
+                        var returnReportsOn = context.ReturnReportOns.Where(r => returnIds.Contains(r.Return.Id));
+                        var returnScheme = context.ReturnScheme.Where(r => returnIds.Contains(r.Return.Id));
+                        var nonObligated = context.NonObligatedWeee.Where(r => returnIds.Contains(r.Return.Id));
+
+                        weeeSentOn = context.WeeeSentOn.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeSentOn>();
+                        weeeReused = context.WeeeReused.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReused>();
+                        weeeReceived = context.WeeeReceived.Where(w => returnIds.Contains(w.Return.Id)).Cast<WeeeReceived>();
+
+                        foreach (var @return in returns)
+                        {
+                            context.Entry(@return).Entity.ParentId = null;
+                            context.Entry(@return).State = EntityState.Modified;
+                        }
+
+                        await context.SaveChangesAsync();
+
+                        context.ReturnScheme.RemoveRange(returnScheme);
+                        context.ReturnReportOns.RemoveRange(returnReportsOn);
+                        context.Returns.RemoveRange(returns);
+                        context.NonObligatedWeee.RemoveRange(nonObligated);
+                    }
+                    else
+                    {
+                        weeeSentOn = context.WeeeSentOn.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeSentOn>();
+                        weeeReused = context.WeeeReused.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeReused>();
+                        weeeReceived = context.WeeeReceived.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeReceived>();
+
+                        returnAatfs = context.ReturnAatfs.Where(r =>
+                            r.Aatf.Id == aatf.Id && r.Return.Organisation.Id == aatf.Organisation.Id && r.Return.Quarter.Year == aatf.ComplianceYear &&
+                            (int)r.Return.Quarter.Q == quarter);
                     }
 
-                    await context.SaveChangesAsync();
-                   
-                    context.ReturnScheme.RemoveRange(returnScheme);
-                    context.ReturnReportOns.RemoveRange(returnReportsOn);
-                    context.Returns.RemoveRange(returns);
-                    context.NonObligatedWeee.RemoveRange(nonObligated);
-                }
-                else
-                {
-                    weeeSentOn = context.WeeeSentOn.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeSentOn>();
-                    weeeReused = context.WeeeReused.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeReused>();
-                    weeeReceived = context.WeeeReceived.Where(ObligatedByAatfComplianceYearAndQuarter(aatf, quarter)).Cast<WeeeReceived>();
-                    
-                    returnAatfs = context.ReturnAatfs.Where(r =>
-                        r.Aatf.Id == aatf.Id && r.Return.Organisation.Id == aatf.Organisation.Id && r.Return.Quarter.Year == aatf.ComplianceYear &&
-                        (int)r.Return.Quarter.Q == quarter);
-                }
+                    weeeReceivedAmounts = context.WeeeReceivedAmount.Where(w => weeeReceived.Select(wr => wr.Id).Contains(w.WeeeReceived.Id));
+                    weeeReusedAmounts = context.WeeeReusedAmount.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
+                    weeeReusedSites = context.WeeeReusedSite.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
+                    weeeSentOnAmounts = context.WeeeSentOnAmount.Where(w => weeeSentOn.Select(wr => wr.Id).Contains(w.WeeeSentOn.Id));
 
-                weeeReceivedAmounts = context.WeeeReceivedAmount.Where(w => weeeReceived.Select(wr => wr.Id).Contains(w.WeeeReceived.Id));
-                weeeReusedAmounts = context.WeeeReusedAmount.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
-                weeeReusedSites = context.WeeeReusedSite.Where(w => weeeReused.Select(wr => wr.Id).Contains(w.WeeeReused.Id));
-                weeeSentOnAmounts = context.WeeeSentOnAmount.Where(w => weeeSentOn.Select(wr => wr.Id).Contains(w.WeeeSentOn.Id));
-
-                context.WeeeSentOnAmount.RemoveRange(weeeSentOnAmounts);
-                context.WeeeReusedSite.RemoveRange(weeeReusedSites);
-                context.WeeeReusedAmount.RemoveRange(weeeReusedAmounts);
-                context.WeeeReceivedAmount.RemoveRange(weeeReceivedAmounts);
-                context.WeeeReceived.RemoveRange(weeeReceived);
-                context.WeeeReused.RemoveRange(weeeReused);
-                context.WeeeSentOn.RemoveRange(weeeSentOn);
-                context.ReturnAatfs.RemoveRange(returnAatfs);
+                    context.WeeeSentOnAmount.RemoveRange(weeeSentOnAmounts);
+                    context.WeeeReusedSite.RemoveRange(weeeReusedSites);
+                    context.WeeeReusedAmount.RemoveRange(weeeReusedAmounts);
+                    context.WeeeReceivedAmount.RemoveRange(weeeReceivedAmounts);
+                    context.WeeeReceived.RemoveRange(weeeReceived);
+                    context.WeeeReused.RemoveRange(weeeReused);
+                    context.WeeeSentOn.RemoveRange(weeeSentOn);
+                    context.ReturnAatfs.RemoveRange(returnAatfs);
+                }
             }
 
             await context.SaveChangesAsync();
