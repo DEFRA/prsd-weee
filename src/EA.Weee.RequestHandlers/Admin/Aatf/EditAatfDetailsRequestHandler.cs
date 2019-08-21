@@ -116,7 +116,7 @@
 
                             var range = Enumerable.Range((int)existingQuarter, (int)newQuarter - 1);
 
-                            await aatfDataAccess.RemoveAatfData(existingAatf, range, flags);
+                            await aatfDataAccess.RemoveAatfData(existingAatf, range);
                         }
                     }
 
