@@ -1,9 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Type
 {
     using System.ComponentModel.DataAnnotations;
+    using Core.AatfReturn;
     using Core.Organisations;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Core.Shared;
+    using Web.ViewModels.Shared;
 
     public class OrganisationTypeViewModel : RadioButtonStringCollectionViewModel
     {
@@ -12,17 +13,17 @@
         [Required(ErrorMessage = "Select organisation type")]
         public override string SelectedValue { get; set; }
 
-        public FacilityType FacilityType { get; set; }
+        public EntityType EntityType { get; set; }
 
         public OrganisationTypeViewModel()
             : base(CreateFromEnum<OrganisationType>().PossibleValues)
         {
         }
 
-        public OrganisationTypeViewModel(string searchText, FacilityType facilityType) : this()
+        public OrganisationTypeViewModel(string searchText, EntityType entityType) : this()
         {
             SearchedText = searchText;
-            FacilityType = facilityType;
+            EntityType = entityType;
         }
     }
 }
