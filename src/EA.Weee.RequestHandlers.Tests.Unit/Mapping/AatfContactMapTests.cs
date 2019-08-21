@@ -1,13 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Mappings;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class AatfContactMapTests
@@ -29,7 +27,7 @@
         public void Map_GivenSourceIsNull__BlankContactReturned()
         {
             var result = map.Map(null);
-            
+
             result.FirstName.Should().Be(null);
             result.LastName.Should().Be(null);
             result.Position.Should().Be(null);
@@ -57,7 +55,7 @@
                 country,
                 "01234 567890",
                 "email@email.com");
-         
+
             var result = map.Map(aatfContact);
 
             result.FirstName.Should().Be("First Name");

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
@@ -28,6 +24,10 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
@@ -94,7 +94,7 @@
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
-            
+
             IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
@@ -414,7 +414,7 @@
                     ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                     return View(nameof(Add), viewModel);
                 }
-                
+
                 var request = new AddAatf()
                 {
                     Aatf = AatfHelper.CreateFacilityData(viewModel),

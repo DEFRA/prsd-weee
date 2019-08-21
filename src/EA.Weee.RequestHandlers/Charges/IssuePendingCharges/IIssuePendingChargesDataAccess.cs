@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
     using Shared;
+    using System.Threading.Tasks;
 
     public interface IIssuePendingChargesDataAccess : ICommonDataAccess
     {

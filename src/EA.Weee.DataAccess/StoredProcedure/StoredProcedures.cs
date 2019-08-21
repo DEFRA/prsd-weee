@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
-    using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -448,9 +448,9 @@
             return await context.Database
                 .SqlQuery<AatfAeReturnData>(
                     "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea, @IncludeResubmissions",
-                    complianceYearParameter,                  
+                    complianceYearParameter,
                     quarterParameter,
-                    facilityTypeParameter, 
+                    facilityTypeParameter,
                     returnStatusParameter,
                     authorityParameter,
                     areaParameter,
@@ -564,7 +564,7 @@
             }
             return dataSet;
         }
-         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
+        public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
@@ -573,8 +573,8 @@
             return await context.Database
                 .SqlQuery<AatfReuseSitesData>(
                     "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea",
-                    complianceYearParameter, authorityParameter,  panAreaParameter)
+                    complianceYearParameter, authorityParameter, panAreaParameter)
                 .ToListAsync();
-        }   
+        }
     }
 }

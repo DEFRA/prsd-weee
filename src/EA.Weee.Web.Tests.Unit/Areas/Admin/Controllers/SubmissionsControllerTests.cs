@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Admin;
     using Core.Shared;
     using FakeItEasy;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Submissions;
@@ -27,7 +27,7 @@
         {
             weeeClient = A.Fake<IWeeeClient>();
         }
-        
+
         [Fact]
         public async void GetChooseSubmissionType_ReturnsView()
         {
@@ -218,7 +218,7 @@
         [Fact]
         public async Task GetDataReturnSubmissionResults_RequestsForSummaryData()
         {
-            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), 
+            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(),
                 A.Dummy<DataReturnSubmissionsHistoryOrderBy>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
@@ -229,7 +229,7 @@
         [Fact]
         public async Task GetDataReturnSubmissionResults_RequestsForEeeOutputDataComparison()
         {
-            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), 
+            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(),
                 A.Dummy<DataReturnSubmissionsHistoryOrderBy>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
@@ -240,7 +240,7 @@
         [Fact]
         public async Task GetDataReturnSubmissionResults_RequestsForDataSortedBySpecifiedValue()
         {
-            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), 
+            await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(),
                 DataReturnSubmissionsHistoryOrderBy.QuarterDescending);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
@@ -251,7 +251,7 @@
         [Fact]
         public async Task GetDataReturnSubmissionResults_ReturnsModelWithSpecifiedSortValue()
         {
-            var result = await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(), 
+            var result = await SubmissionsController().GetDataReturnSubmissionResults(A.Dummy<int>(), A.Dummy<Guid>(),
                 DataReturnSubmissionsHistoryOrderBy.QuarterDescending);
 
             Assert.IsType<PartialViewResult>(result);

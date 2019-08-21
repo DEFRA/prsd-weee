@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using System.Threading.Tasks;
     using Domain.Events;
     using Prsd.Core.Domain;
+    using System.Threading.Tasks;
 
     public class SchemeMemberSubmissionEventHandler : IEventHandler<SchemeMemberSubmissionEvent>
     {

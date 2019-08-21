@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
-    using System.Collections.Generic;
     using Core.Shared;
     using Domain.DataReturns;
+    using System.Collections.Generic;
 
     public class DataReturnVersionBuilderResult
     {

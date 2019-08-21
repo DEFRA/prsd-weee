@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Threading.Tasks;
     using Domain.Charges;
     using Ibis;
+    using System.Threading.Tasks;
 
     public interface IIbisFileGenerator<T> where T : IbisFile
     {

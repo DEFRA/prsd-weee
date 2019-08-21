@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
@@ -16,6 +12,10 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using ObligationType = Domain.Obligation.ObligationType;
     using SchemeStatus = Domain.Scheme.SchemeStatus;

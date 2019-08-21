@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Admin
 {
-    using System;
     using Domain.Admin;
     using FakeItEasy;
     using Security;
+    using System;
     using User;
     using Xunit;
 

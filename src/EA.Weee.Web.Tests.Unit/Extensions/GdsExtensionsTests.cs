@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Extensions
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using EA.Prsd.Core.Web.Mvc.RazorHelpers;
     using EA.Weee.Web.Tests.Unit.TestHelpers.Classes;
     using FakeItEasy;
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Web.Extensions;
     using Xunit;
 

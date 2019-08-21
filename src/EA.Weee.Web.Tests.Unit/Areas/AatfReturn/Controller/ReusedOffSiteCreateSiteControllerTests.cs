@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -22,6 +19,9 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -205,7 +205,7 @@
         {
             var model = new ReusedOffSiteCreateSiteViewModel() { AddressData = new SiteAddressData() };
             controller.ModelState.AddModelError("error", "error");
-            
+
             await controller.Index(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);

@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Data;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using Domain.Obligation;
     using FluentAssertions;
     using Prsd.Core;
+    using System;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -356,18 +356,18 @@
                     var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
                     var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
-                    houseHoldResultAatf1[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId * 2); 
+                    houseHoldResultAatf1[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId * 2);
                     houseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address1.Name} (t)"].Should().Be(categoryValue.CategoryId);
                     houseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address2.Name} (t)"].Should().Be(categoryValue.CategoryId);
 
-                    nonHouseHoldResultAatf1[0][TotalSentOnHeading].Should().Be((categoryValue.CategoryId + 1) * 2); 
+                    nonHouseHoldResultAatf1[0][TotalSentOnHeading].Should().Be((categoryValue.CategoryId + 1) * 2);
                     nonHouseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address1.Name} (t)"].Should().Be((categoryValue.CategoryId + 1));
                     nonHouseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address2.Name} (t)"].Should().Be(categoryValue.CategoryId + 1);
 
                     var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
                     var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
-                    houseHoldResultAatf2[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId); 
+                    houseHoldResultAatf2[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId);
                     houseHoldResultAatf2[0][$"Obligated WEEE sent to {siteAddressAatf2Address1.Name} (t)"].Should().Be(categoryValue.CategoryId);
                     nonHouseHoldResultAatf2[0][TotalSentOnHeading].Should().Be((categoryValue.CategoryId + 1));
                     nonHouseHoldResultAatf2[0][$"Obligated WEEE sent to {siteAddressAatf2Address1.Name} (t)"].Should().Be(categoryValue.CategoryId + 1);
@@ -473,13 +473,13 @@
                     var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf1[0][TotalReusedHeading].Should().Be(categoryValue.CategoryId);
-                    nonHouseHoldResultAatf1[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1)); 
+                    nonHouseHoldResultAatf1[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1));
 
                     var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
                     var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf2[0][TotalReusedHeading].Should().Be(categoryValue.CategoryId);
-                    nonHouseHoldResultAatf2[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1)); 
+                    nonHouseHoldResultAatf2[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1));
                 }
 
                 results.Dispose();

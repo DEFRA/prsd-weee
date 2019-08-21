@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Shared;
     using Web.Areas.Admin.ViewModels.Scheme;
     using Xunit;
 

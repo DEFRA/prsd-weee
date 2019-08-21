@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Security;
@@ -15,6 +11,9 @@
     using FluentAssertions;
     using RequestHandlers.Admin.Aatf;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfContactHandlerTests

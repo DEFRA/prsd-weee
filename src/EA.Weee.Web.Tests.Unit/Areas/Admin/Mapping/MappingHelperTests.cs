@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
+    using System;
     using Xunit;
 
     public class MappingHelperTests
@@ -54,7 +54,7 @@
 
         private T CreateCopyFacilityViewModel<T>(T viewModel, AatfData aatfData)
             where T : CopyFacilityViewModelBase
-        {          
+        {
             viewModel.ContactData = CreateAatfContactData();
             viewModel.SiteAddressData = CreateAatfAddressData();
             viewModel.SizeValue = aatfData.Size.Value;

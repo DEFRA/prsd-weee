@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.AatfReturn;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

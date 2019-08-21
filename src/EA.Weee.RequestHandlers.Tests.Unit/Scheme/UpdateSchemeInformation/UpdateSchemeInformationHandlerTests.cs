@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.UpdateSchemeInformation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Shared;
     using Domain;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Scheme.UpdateSchemeInformation;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;

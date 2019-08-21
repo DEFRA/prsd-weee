@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.FetchSummaryCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
-    using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
     using RequestHandlers.DataReturns.FetchSummaryCsv;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class QuarterWindowFactory : IQuarterWindowFactory
     {

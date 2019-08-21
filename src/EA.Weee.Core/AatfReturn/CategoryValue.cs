@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
     using DataReturns;
     using Helpers;
+    using System;
 
     public class CategoryValue
     {

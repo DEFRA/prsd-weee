@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
-    using System;
-    using System.Linq;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 

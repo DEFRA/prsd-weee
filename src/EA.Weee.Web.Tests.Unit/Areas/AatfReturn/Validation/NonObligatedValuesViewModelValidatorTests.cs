@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Validation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using FluentAssertions;
     using FluentValidation.Results;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class NonObligatedValuesViewModelValidatorTests

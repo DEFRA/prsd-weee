@@ -2,11 +2,9 @@
 {
     using Core.AatfReturn;
     using EA.Weee.Core.Helpers;
-    using FluentValidation.Attributes;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Validation;
 
     public class NonObligatedValuesViewModel
     {
@@ -24,7 +22,7 @@
         {
             this.categoryValueCalculator = new CategoryValueTotalCalculator();
         }
-        
+
         public NonObligatedValuesViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
             AddCategoryValues(new NonObligatedCategoryValues());

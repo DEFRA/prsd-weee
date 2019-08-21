@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System;
     using Core.AatfReturn;
     using Core.Organisations;
     using Domain.AatfReturn;

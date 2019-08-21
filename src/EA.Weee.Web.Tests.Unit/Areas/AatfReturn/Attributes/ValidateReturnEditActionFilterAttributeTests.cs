@@ -24,13 +24,13 @@
             client = A.Fake<IWeeeClient>();
             attribute = new ValidateReturnEditActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
-            
+
             var routeData = new RouteData();
             routeData.Values.Add("returnId", Guid.NewGuid());
             A.CallTo(() => context.RouteData).Returns(routeData);
             A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFReturns).Returns(true);
         }
-       
+
         [Fact]
         public async void OnActionExecuting_GivenAnotherReturnIsInProgress_ShouldBeRedirectedToTaskList()
         {

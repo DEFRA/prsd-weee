@@ -1,23 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Charges;
-    using Domain;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
-    using RequestHandlers.Organisations;
     using RequestHandlers.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
-    using CompetentAuthority = Core.Shared.CompetentAuthority;
     using Organisation = Domain.Organisation.Organisation;
 
     public class GenericDataAccessTests
@@ -28,7 +24,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                
+
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 
@@ -45,9 +41,9 @@
             {
                 var originalAatfCount = database.WeeeContext.Aatfs.Count();
                 var dataAccess = new GenericDataAccess(database.WeeeContext);
-                
+
                 var organisation = Organisation.CreateSoleTrader("Test Organisation");
-                
+
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
                 var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
 

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using Domain;
+    using System.Data.Entity.ModelConfiguration;
     internal class UKCompetentAuthorityMapping : EntityTypeConfiguration<UKCompetentAuthority>
     {
         public UKCompetentAuthorityMapping()

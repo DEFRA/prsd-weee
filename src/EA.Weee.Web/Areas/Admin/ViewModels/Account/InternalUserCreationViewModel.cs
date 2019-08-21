@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Account
 {
-    using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using Core.Validation;
+    using System.ComponentModel.DataAnnotations;
 
     public class InternalUserCreationViewModel
     {

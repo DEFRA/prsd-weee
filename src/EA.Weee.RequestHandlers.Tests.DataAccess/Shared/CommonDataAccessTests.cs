@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
-    using System;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
     using FluentAssertions;
-    using RequestHandlers.Scheme;
     using RequestHandlers.Shared;
+    using System;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
 

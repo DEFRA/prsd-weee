@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Charges;
     using Domain;
     using Domain.Charges;
@@ -10,6 +8,8 @@
     using EA.Prsd.Core.Mediator;
     using Security;
     using Shared.DomainUser;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class IssuePendingChargesHandler : IRequestHandler<Requests.Charges.IssuePendingCharges, IssuePendingChargesResult>

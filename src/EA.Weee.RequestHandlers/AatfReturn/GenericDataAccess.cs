@@ -2,14 +2,13 @@
 {
     using DataAccess;
     using Domain.AatfReturn;
+    using Prsd.Core.Domain;
+    using Specification;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Prsd.Core.Domain;
-    using Specification;
 
     public class GenericDataAccess : IGenericDataAccess
     {

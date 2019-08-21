@@ -47,7 +47,7 @@
         public string CSROAPostcode { get; set; }
 
         public string CSROACountry { get; set; }
-        
+
         public string OPNAName { get; set; }
 
         public string OPNAPrimaryName { get; set; }

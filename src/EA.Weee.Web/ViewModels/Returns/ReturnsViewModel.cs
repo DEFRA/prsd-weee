@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns
 {
+    using Core.DataReturns;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Core.DataReturns;
-    using EA.Prsd.Core;
-    using EA.Weee.Core.Helpers;
 
     public class ReturnsViewModel
     {

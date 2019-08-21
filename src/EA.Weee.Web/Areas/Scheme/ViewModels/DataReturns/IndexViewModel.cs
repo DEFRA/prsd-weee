@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns
 {
+    using Prsd.Core;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core;
 
     public class IndexViewModel
     {
@@ -18,4 +18,4 @@
             ComplianceYears = complianceYears;
         }
     }
-} 
+}

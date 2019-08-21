@@ -14,7 +14,7 @@ namespace EA.Weee.Database
         private static void Main()
         {
             Console.Title = "AliaSQL Database Migrations Visual Studio Runner";
-            
+
             var currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             var parentDirectory = currentDirectory.Parent.Parent.FullName;
             var scriptspath = parentDirectory + "\\Scripts\\";
@@ -27,7 +27,7 @@ namespace EA.Weee.Database
                 if (!string.IsNullOrEmpty(keySelection))
                 {
                     Console.WriteLine();
-                    var cmdArguments = string.Format("{0} {1} {2} \"{3}", keySelection, DbServer, DatabaseName, scriptspath); 
+                    var cmdArguments = string.Format("{0} {1} {2} \"{3}", keySelection, DbServer, DatabaseName, scriptspath);
                     p.StartInfo.FileName = deployerpath;
                     p.StartInfo.Arguments = cmdArguments;
                     p.StartInfo.UseShellExecute = false;

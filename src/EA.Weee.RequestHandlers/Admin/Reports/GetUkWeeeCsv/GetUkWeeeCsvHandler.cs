@@ -1,19 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUKWeeeCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Admin.Helpers;
-    using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Requests.Admin.AatfReports;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class GetUkWeeeCsvHandler : IRequestHandler<GetUkWeeeCsv, FileInfo>
     {

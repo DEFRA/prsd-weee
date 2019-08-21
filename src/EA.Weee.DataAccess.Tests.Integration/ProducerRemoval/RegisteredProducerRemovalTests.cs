@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.ProducerRemoval
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using FakeItEasy;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -98,7 +98,7 @@
 
         [Fact]
         public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemove_ProducerEntityNotInDbSet()
-        {   
+        {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
@@ -127,7 +127,7 @@
 
         [Fact]
         public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemoved_ThenReRegister_ReturnsNotRemovedProducer()
-        {   
+        {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;

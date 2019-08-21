@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.Tests.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.DataReturns;
     using Domain.Security;
     using EA.Weee.DataAccess;
+    using System;
+    using System.Linq;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DomainHelper

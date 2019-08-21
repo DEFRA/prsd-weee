@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
+    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Shared;
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Domain.Lookup;
-    using EA.Weee.RequestHandlers.Security;
 
     public class GetPanAreasHandler : IRequestHandler<GetPanAreas, IList<PanAreaData>>
     {

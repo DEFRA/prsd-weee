@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Runtime.InteropServices;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
-    using User;
+    using System;
     using Xunit;
 
     public class ReturnTests

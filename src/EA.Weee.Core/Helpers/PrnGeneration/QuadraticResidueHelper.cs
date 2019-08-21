@@ -17,7 +17,7 @@
         {
             return QuadraticResidue(value, CharRange);
         }
-        
+
         /// <summary>
         /// Takes an int x, where x is less than an int prime, and returns another value that is also less than prime.
         /// This second value is guaranteed to be unique to each x as long as x is between zero inclusive and prime

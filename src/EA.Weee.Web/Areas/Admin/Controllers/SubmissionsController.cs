@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Admin;
@@ -18,6 +12,12 @@
     using Scheme.ViewModels;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Submissions;
     using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -48,7 +48,7 @@
         public async Task<ActionResult> ChooseSubmissionType()
         {
             using (var client = apiClient())
-            {   
+            {
                 var model = new ChooseSubmissionTypeViewModel
                 {
                     PossibleValues = new List<string>
@@ -218,7 +218,7 @@
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
-        
+
         [HttpGet]
         public async Task<ActionResult> DownloadSubmissionChanges(Guid memberUploadId)
         {

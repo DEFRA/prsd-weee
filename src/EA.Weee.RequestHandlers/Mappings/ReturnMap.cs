@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Scheme;
@@ -11,6 +8,8 @@
     using EA.Weee.Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mapper;
+    using System.Collections.Generic;
+    using System.Linq;
     using Aatf = Core.AatfReturn.AatfData;
     using ReturnReportOn = Core.AatfReturn.ReturnReportOn;
     using ReturnStatus = Core.AatfReturn.ReturnStatus;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
-    using System.Collections.Generic;
     using EA.Weee.Domain.Producer;
+    using System.Collections.Generic;
     using Xunit;
 
     public class PartnershipTests

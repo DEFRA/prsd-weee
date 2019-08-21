@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
+    using System.ComponentModel.DataAnnotations;
 
     public class AeEditDetailsViewModel : FacilityViewModelBase
     {

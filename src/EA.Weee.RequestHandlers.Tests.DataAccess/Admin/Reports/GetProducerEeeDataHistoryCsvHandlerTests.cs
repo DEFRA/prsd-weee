@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
-    using System.Collections.Generic;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Admin;
+    using System.Collections.Generic;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

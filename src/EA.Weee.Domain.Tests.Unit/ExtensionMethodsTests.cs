@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit
 {
-    using System.Collections.Generic;
     using Domain.DataReturns;
     using Lookup;
     using Obligation;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ExtensionMethodsTests

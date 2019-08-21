@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Aatf
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -14,6 +10,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -37,7 +37,7 @@
             using (var databaseWrapper = new DatabaseWrapper())
             {
                 var organisation = EA.Weee.Domain.Organisation.Organisation.CreatePartnership("trading");
-               
+
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
 
                 var competentAuthority = new Core.Shared.UKCompetentAuthorityData()

@@ -1,20 +1,17 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.DataReturns;
+    using Domain.Lookup;
+    using Domain.Producer.Classification;
+    using EA.Weee.Core.Shared;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using Domain.Lookup;
-    using Domain.Obligation;
-    using Domain.Producer.Classification;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Domain.Organisation;
-    using FakeItEasy;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class SpgProducerEeeCsvDataTests
     {

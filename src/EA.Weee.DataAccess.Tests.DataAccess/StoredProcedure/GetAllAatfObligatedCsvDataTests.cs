@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.AatfReturn;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -40,17 +40,17 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1); 
+                var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1);
 
                 Assert.NotNull(results);
-               var data = from x in results.AsEnumerable() 
-                          where x.Field<string>("Name of AATF") == aatf.Name
-                          select x;
+                var data = from x in results.AsEnumerable()
+                           where x.Field<string>("Name of AATF") == aatf.Name
+                           select x;
                 data.AsQueryable().Count().Should().Be(28);
 
                 var dataB2B = from x in results.AsEnumerable()
-                           where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
-                           select x;
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
+                              select x;
                 dataB2B.AsQueryable().Count().Should().Be(14);
 
                 var dataB2C = from x in results.AsEnumerable()

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using System;
 
     /// <summary>
     /// A request to fetch the ZIP file continaing the 1B1S customer and transaction
@@ -10,7 +10,7 @@
     /// </summary>
     public class FetchInvoiceRunIbisZipFile : IRequest<FileInfo>
     {
-        public Guid InvoiceRunId{ get; private set; }
+        public Guid InvoiceRunId { get; private set; }
 
         public FetchInvoiceRunIbisZipFile(Guid invoiceRunId)
         {

@@ -20,7 +20,7 @@
         public string ApprovalNumber { get; set; }
 
         public string OrgName { get; set; }
-      
+
         public string Abbreviation { get; set; }
 
         public string PanName { get; set; }

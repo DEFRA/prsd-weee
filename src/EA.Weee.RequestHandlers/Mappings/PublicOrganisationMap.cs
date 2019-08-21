@@ -19,7 +19,7 @@
             {
                 Id = source.Id,
                 DisplayName = source.OrganisationType == Domain.Organisation.OrganisationType.RegisteredCompany || source.OrganisationType == Domain.Organisation.OrganisationType.SoleTraderOrIndividual
-                              ? source.Name 
+                              ? source.Name
                               : source.TradingName,
                 Address = source.BusinessAddress != null
                     ? addressMap.Map(source.BusinessAddress)

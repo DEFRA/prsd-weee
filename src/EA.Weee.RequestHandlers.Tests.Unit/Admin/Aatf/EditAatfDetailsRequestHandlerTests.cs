@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using Core.Admin;
@@ -27,6 +21,11 @@
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -56,14 +55,14 @@
             getAatfApprovalDateChangeStatus = A.Fake<IGetAatfApprovalDateChangeStatus>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
             context = A.Fake<IWeeeTransactionAdapter>();
-            
-            handler = new EditAatfDetailsRequestHandler(authorization, 
-                aatfDataAccess, 
-                genericDataAccess, 
-                addressMapper, 
-                organisationDetailsDataAccess, 
-                commonDataAccess, 
-                getAatfApprovalDateChangeStatus, 
+
+            handler = new EditAatfDetailsRequestHandler(authorization,
+                aatfDataAccess,
+                genericDataAccess,
+                addressMapper,
+                organisationDetailsDataAccess,
+                commonDataAccess,
+                getAatfApprovalDateChangeStatus,
                 quarterWindowFactory,
                 context);
         }
@@ -73,13 +72,13 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, 
+            var handler = new EditAatfDetailsRequestHandler(authorization,
                 aatfDataAccess,
                 genericDataAccess,
-                addressMapper, 
-                organisationDetailsDataAccess, 
-                commonDataAccess, 
-                getAatfApprovalDateChangeStatus, 
+                addressMapper,
+                organisationDetailsDataAccess,
+                commonDataAccess,
+                getAatfApprovalDateChangeStatus,
                 quarterWindowFactory,
                 context);
 
@@ -93,13 +92,13 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().DenyRole(Roles.InternalAdmin).Build();
 
-            var handler = new EditAatfDetailsRequestHandler(authorization, 
-                aatfDataAccess, 
-                genericDataAccess, 
-                addressMapper, 
-                organisationDetailsDataAccess, 
-                commonDataAccess, 
-                getAatfApprovalDateChangeStatus, 
+            var handler = new EditAatfDetailsRequestHandler(authorization,
+                aatfDataAccess,
+                genericDataAccess,
+                addressMapper,
+                organisationDetailsDataAccess,
+                commonDataAccess,
+                getAatfApprovalDateChangeStatus,
                 quarterWindowFactory,
                 context);
 
