@@ -75,7 +75,9 @@
 
                 var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1);
 
-                results.Rows.Count.Equals(0);
+                results.Rows.Count.Should().Be(0);
+
+                results.Dispose();
             }
         }
 
