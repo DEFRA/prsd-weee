@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using EA.Weee.Core.Shared;
 
     public static class DataTableCsvHelper
@@ -49,7 +50,7 @@
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < datatable.Columns.Count; i++)
             {
-                if (!columnsToRemove.Contains(datatable.Columns[i].ColumnName))
+                if (!columnsToRemove.Any(s => datatable.Columns[i].ColumnName.Contains(s)))
                 {
                     sb.Append(datatable.Columns[i]);
                     if (i < datatable.Columns.Count - 1)
