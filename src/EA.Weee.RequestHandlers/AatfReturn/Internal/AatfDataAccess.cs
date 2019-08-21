@@ -157,7 +157,7 @@
                                                                     aatf.Organisation.Id 
                                                                     && a.ComplianceYear == aatf.ComplianceYear
                                                                     && a.FacilityType.Value == aatf.FacilityType.Value
-                                                                    && (a.ApprovalDate.Value >= quarterWindow.StartDate && a.ApprovalDate.Value <= quarterWindow.EndDate));
+                                                                    && a.ApprovalDate.Value <= quarterWindow.StartDate);
 
                 IEnumerable<WeeeSentOn> weeeSentOn;
                 IEnumerable<WeeeReused> weeeReused;
