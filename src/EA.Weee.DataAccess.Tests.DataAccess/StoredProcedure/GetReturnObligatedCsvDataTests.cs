@@ -121,7 +121,7 @@
             using (var db = new DatabaseWrapper())
             {
                 var @return = SetupCreatedReturn(db);
-                var aatf = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAA");
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
 
                 db.WeeeContext.Aatfs.Add(aatf);
                 db.WeeeContext.Returns.Add(@return);
@@ -131,34 +131,34 @@
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(28);
 
-                AssertCreatedRow(results, aatf, db, 0, "1. Large household appliances", B2C);
-                AssertCreatedRow(results, aatf, db, 1, "2. Small household appliances", B2C);
-                AssertCreatedRow(results, aatf, db, 2, "3. IT and telecommunications equipment", B2C);
-                AssertCreatedRow(results, aatf, db, 3, "4. Consumer equipment", B2C);
-                AssertCreatedRow(results, aatf, db, 4, "5. Lighting equipment", B2C);
-                AssertCreatedRow(results, aatf, db, 5, "6. Electrical and electronic tools", B2C);
-                AssertCreatedRow(results, aatf, db, 6, "7. Toys, leisure and sports equipment", B2C);
-                AssertCreatedRow(results, aatf, db, 7, "8. Medical devices", B2C);
-                AssertCreatedRow(results, aatf, db, 8, "9. Monitoring and control instruments", B2C);
-                AssertCreatedRow(results, aatf, db, 9, "10. Automatic dispensers", B2C);
-                AssertCreatedRow(results, aatf, db, 10, "11. Display equipment", B2C);
-                AssertCreatedRow(results, aatf, db, 11, "12. Appliances containing refrigerants", B2C);
-                AssertCreatedRow(results, aatf, db, 12, "13. Gas discharge lamps and LED light sources", B2C);
-                AssertCreatedRow(results, aatf, db, 13, "14. Photovoltaic panels", B2C);
-                AssertCreatedRow(results, aatf, db, 14, "1. Large household appliances", B2B);
-                AssertCreatedRow(results, aatf, db, 15, "2. Small household appliances", B2B);
-                AssertCreatedRow(results, aatf, db, 16, "3. IT and telecommunications equipment", B2B);
-                AssertCreatedRow(results, aatf, db, 17, "4. Consumer equipment", B2B);
-                AssertCreatedRow(results, aatf, db, 18, "5. Lighting equipment", B2B);
-                AssertCreatedRow(results, aatf, db, 19, "6. Electrical and electronic tools", B2B);
-                AssertCreatedRow(results, aatf, db, 20, "7. Toys, leisure and sports equipment", B2B);
-                AssertCreatedRow(results, aatf, db, 21, "8. Medical devices", B2B);
-                AssertCreatedRow(results, aatf, db, 22, "9. Monitoring and control instruments", B2B);
-                AssertCreatedRow(results, aatf, db, 23, "10. Automatic dispensers", B2B);
-                AssertCreatedRow(results, aatf, db, 24, "11. Display equipment", B2B);
-                AssertCreatedRow(results, aatf, db, 25, "12. Appliances containing refrigerants", B2B);
-                AssertCreatedRow(results, aatf, db, 26, "13. Gas discharge lamps and LED light sources", B2B);
-                AssertCreatedRow(results, aatf, db, 27, "14. Photovoltaic panels", B2B);
+                AssertCreatedRow(results, aatf, 0, "1. Large household appliances", B2C);
+                AssertCreatedRow(results, aatf, 1, "2. Small household appliances", B2C);
+                AssertCreatedRow(results, aatf, 2, "3. IT and telecommunications equipment", B2C);
+                AssertCreatedRow(results, aatf, 3, "4. Consumer equipment", B2C);
+                AssertCreatedRow(results, aatf, 4, "5. Lighting equipment", B2C);
+                AssertCreatedRow(results, aatf, 5, "6. Electrical and electronic tools", B2C);
+                AssertCreatedRow(results, aatf, 6, "7. Toys, leisure and sports equipment", B2C);
+                AssertCreatedRow(results, aatf, 7, "8. Medical devices", B2C);
+                AssertCreatedRow(results, aatf, 8, "9. Monitoring and control instruments", B2C);
+                AssertCreatedRow(results, aatf, 9, "10. Automatic dispensers", B2C);
+                AssertCreatedRow(results, aatf, 10, "11. Display equipment", B2C);
+                AssertCreatedRow(results, aatf, 11, "12. Appliances containing refrigerants", B2C);
+                AssertCreatedRow(results, aatf, 12, "13. Gas discharge lamps and LED light sources", B2C);
+                AssertCreatedRow(results, aatf, 13, "14. Photovoltaic panels", B2C);
+                AssertCreatedRow(results, aatf, 14, "1. Large household appliances", B2B);
+                AssertCreatedRow(results, aatf, 15, "2. Small household appliances", B2B);
+                AssertCreatedRow(results, aatf, 16, "3. IT and telecommunications equipment", B2B);
+                AssertCreatedRow(results, aatf, 17, "4. Consumer equipment", B2B);
+                AssertCreatedRow(results, aatf, 18, "5. Lighting equipment", B2B);
+                AssertCreatedRow(results, aatf, 19, "6. Electrical and electronic tools", B2B);
+                AssertCreatedRow(results, aatf, 20, "7. Toys, leisure and sports equipment", B2B);
+                AssertCreatedRow(results, aatf, 21, "8. Medical devices", B2B);
+                AssertCreatedRow(results, aatf, 22, "9. Monitoring and control instruments", B2B);
+                AssertCreatedRow(results, aatf, 23, "10. Automatic dispensers", B2B);
+                AssertCreatedRow(results, aatf, 24, "11. Display equipment", B2B);
+                AssertCreatedRow(results, aatf, 25, "12. Appliances containing refrigerants", B2B);
+                AssertCreatedRow(results, aatf, 26, "13. Gas discharge lamps and LED light sources", B2B);
+                AssertCreatedRow(results, aatf, 27, "14. Photovoltaic panels", B2B);
 
                 results.Dispose();
             }
@@ -170,8 +170,8 @@
             using (var db = new DatabaseWrapper())
             {
                 var @return = SetupCreatedReturn(db);
-                var aatf = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAA");
-                var aatfNotReporting = SetupAatfWithApprovalDate(db, @return, DateTime.MaxValue, "AAA");
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+                var aatfNotReporting = SetupAatfWithApprovalDate(db, DateTime.MaxValue, "AAA");
 
                 db.WeeeContext.Aatfs.Add(aatf);
                 db.WeeeContext.Aatfs.Add(aatfNotReporting);
@@ -259,8 +259,8 @@
             using (var db = new DatabaseWrapper())
             {
                 var @return = SetupCreatedReturn(db);
-                var aatf = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAA");
-                var aatf2 = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAB");
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+                var aatf2 = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAB");
 
                 var scheme1 = new Scheme(organisation);
                 scheme1.UpdateScheme("scheme1", "1111", "1111", fixture.Create<ObligationType>(), db.WeeeContext.UKCompetentAuthorities.First());
@@ -383,8 +383,8 @@
             using (var db = new DatabaseWrapper())
             {
                 var @return = SetupCreatedReturn(db);
-                var aatf = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAA");
-                var aatf2 = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAB");
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+                var aatf2 = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAB");
 
                 var siteAddressAatf1Address1 = ObligatedWeeeIntegrationCommon.CreateAatfAddress(db);
                 var siteAddressAatf1Address2 = ObligatedWeeeIntegrationCommon.CreateAatfAddress(db);
@@ -492,8 +492,8 @@
             using (var db = new DatabaseWrapper())
             {
                 var @return = SetupCreatedReturn(db);
-                var aatf = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAA");
-                var aatf2 = SetupAatfWithApprovalDate(db, @return, DateTime.MinValue, "AAB");
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+                var aatf2 = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAB");
 
                 var weeeReused1Aatf1 = new WeeeReused(aatf, @return);
                 var weeeReused1Aatf2 = new WeeeReused(aatf2, @return);
@@ -545,7 +545,7 @@
             results.Rows[row][TotalSentOnHeading].ToString().Should().BeEmpty();
         }
 
-        private void AssertCreatedRow(DataTable results, Aatf aatf, DatabaseWrapper db, int row, string category, string obligation)
+        private void AssertCreatedRow(DataTable results, Aatf aatf, int row, string category, string obligation)
         {
             results.Rows[row][ComplianceYear].Should().Be(2019);
             results.Rows[row][Quarter].Should().Be("Q1");
@@ -577,7 +577,7 @@
             return @return;
         }
 
-        private Aatf SetupAatfWithApprovalDate(DatabaseWrapper db, Return @return, DateTime date, string name)
+        private Aatf SetupAatfWithApprovalDate(DatabaseWrapper db, DateTime date, string name)
         {
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation);
             aatf.UpdateDetails(name, aatf.CompetentAuthority, aatf.ApprovalNumber, aatf.AatfStatus, aatf.Organisation, aatf.Size, date, aatf.LocalArea, aatf.PanArea);

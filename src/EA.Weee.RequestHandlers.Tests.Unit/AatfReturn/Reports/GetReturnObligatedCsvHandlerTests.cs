@@ -28,20 +28,33 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext weeContext;
-        private readonly CsvWriterFactory csvWriterFactory;
-        private readonly ICommonDataAccess commonDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
-        private GetReturnObligatedCsvHandler handler;
+        private readonly GetReturnObligatedCsvHandler handler;
 
         public GetReturnObligatedCsvHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
             this.weeContext = A.Fake<WeeeContext>();
-            this.csvWriterFactory = A.Fake<CsvWriterFactory>();
-            this.commonDataAccess = A.Fake<ICommonDataAccess>();
             this.returnDataAccess = A.Fake<IReturnDataAccess>();
 
-            this.handler = new GetReturnObligatedCsvHandler(authorization, weeContext, csvWriterFactory, commonDataAccess, returnDataAccess);
+            this.handler = new GetReturnObligatedCsvHandler(authorization, weeContext, returnDataAccess);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOrganisationAccess_SecurityExceptionExpected()
+        {
+            var handler = new GetReturnObligatedCsvHandler(new AuthorizationBuilder().DenyOrganisationAccess().Build(), weeContext, returnDataAccess);
+
+            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => @return.Id).Returns(returnId);
+            A.CallTo(() => @return.Organisation).Returns(organisation);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+
+            var result = await Xunit.Record.ExceptionAsync(() => handler.HandleAsync(new GetReturnObligatedCsv(returnId)));
+
+            result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
@@ -77,7 +90,7 @@
 
             A.CallTo(() => weeContext.StoredProcedures).Returns(storedProcedures);
 
-            DataTable obligatedDataTable = CreateDummyDatatable();
+            var obligatedDataTable = CreateDummyDataTable();
 
             var request = new GetReturnObligatedCsv(Guid.NewGuid());
 
@@ -85,14 +98,14 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileContent.Contains("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,B2C,1. Large Household Appliances,33,15,2,88");
+            data.FileContent.Should().Contain("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,B2C,1. Large Household Appliances,33,15,2,88");
             data.FileContent.Should().NotContain("ReturnId");
             data.FileContent.Should().NotContain("AatfKey");
         }
 
-        internal DataTable CreateDummyDatatable()
+        internal DataTable CreateDummyDataTable()
         {
-            DataTable obligatedDataTable = new DataTable();
+            var obligatedDataTable = new DataTable();
             obligatedDataTable.Columns.Add("ComplianceYear");
             obligatedDataTable.Columns.Add("Quarter");
             obligatedDataTable.Columns.Add("AATFName");
@@ -108,9 +121,9 @@
             obligatedDataTable.Columns.Add("ReturnId");
             obligatedDataTable.Columns.Add("AatfKey");
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                DataRow row = obligatedDataTable.NewRow();
+                var row = obligatedDataTable.NewRow();
                 row[0] = 2019;
                 row[1] = "Q1";
                 row[2] = "TestAatf" + i;
