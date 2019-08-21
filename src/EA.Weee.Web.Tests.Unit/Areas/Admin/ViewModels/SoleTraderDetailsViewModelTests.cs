@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
     using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using Xunit;
 
     public class SoleTraderDetailsViewModelTests
