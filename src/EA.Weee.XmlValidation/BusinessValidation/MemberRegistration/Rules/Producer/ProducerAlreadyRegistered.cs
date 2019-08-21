@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
     using BusinessValidation;
-    using Domain;
     using Domain.Obligation;
     using QuerySets;
+    using System;
     using Xml.MemberRegistration;
 
     public class ProducerAlreadyRegistered : IProducerAlreadyRegistered
@@ -32,7 +31,7 @@
                     {
                         schemeName = existingProducer.RegisteredProducer.Scheme.SchemeName;
                     }
-           
+
                     var errorMessage = string.Format(
                         "{0} {1} is already registered with {2} with obligation type: {3}. Review your file.",
                         producer.GetProducerName(),
@@ -41,7 +40,7 @@
                         (ObligationType)existingProducer.ObligationType);
                     return RuleResult.Fail(errorMessage);
                 }
-        
+
                 return RuleResult.Pass();
             }
 

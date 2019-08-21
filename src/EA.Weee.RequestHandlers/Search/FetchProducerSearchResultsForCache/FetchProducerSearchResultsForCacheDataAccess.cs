@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache
 {
+    using EA.Weee.Core.Search;
+    using EA.Weee.DataAccess;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.Search;
-    using EA.Weee.DataAccess;
 
     public class FetchProducerSearchResultsForCacheDataAccess : IFetchProducerSearchResultsForCacheDataAccess
     {
@@ -42,10 +42,10 @@
                 .ToListAsync();
 
             return results.Select(r => new ProducerSearchResult()
-                {
-                    RegistrationNumber = r.ProducerRegistrationNumber,
-                    Name = r.CurrentSubmission.OrganisationName
-                })
+            {
+                RegistrationNumber = r.ProducerRegistrationNumber,
+                Name = r.CurrentSubmission.OrganisationName
+            })
                 .ToList();
         }
     }

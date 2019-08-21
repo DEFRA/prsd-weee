@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
+    using Microsoft.Owin.Security.Cookies;
+    using Prsd.Core;
+    using Prsd.Core.Web;
+    using Prsd.Core.Web.Mvc.Owin;
     using System;
     using System.Globalization;
     using System.IO;
     using System.Net;
     using System.Web;
     using System.Web.Routing;
-    using Microsoft.Owin.Security.Cookies;
-    using Prsd.Core;
-    using Prsd.Core.Web;
-    using Prsd.Core.Web.Mvc.Owin;
 
     /// <summary>
     /// This cookie authentication provider overrides the default "redirect to login page" behaviour.
@@ -80,9 +80,9 @@
                 string adminLoginPathString = VirtualPathUtility.ToAbsolute(AdminLoginPath);
 
                 Uri currentUri = new Uri(context.RedirectUri);
-                
+
                 UriBuilder uriBuilder = new UriBuilder(currentUri);
-                
+
                 if (string.Equals(uriBuilder.Path, standardLoginPathString, StringComparison.OrdinalIgnoreCase))
                 {
                     uriBuilder.Path = adminLoginPathString;
@@ -108,7 +108,7 @@
             string area = routeData.DataTokens["area"] as string;
 
             bool userWasAccessingInternalArea = string.Equals(area, AdminAreaName, StringComparison.OrdinalIgnoreCase);
-            
+
             return userWasAccessingInternalArea;
         }
 

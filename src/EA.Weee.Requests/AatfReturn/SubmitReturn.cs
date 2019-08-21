@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using System;
     using Prsd.Core.Mediator;
+    using System;
 
     public class SubmitReturn : IRequest<bool>
     {

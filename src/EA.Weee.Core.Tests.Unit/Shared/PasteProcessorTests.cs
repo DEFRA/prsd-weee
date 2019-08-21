@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
-    using System;
-    using System.Linq;
     using AutoFixture;
     using Core.AatfReturn;
     using Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class PasteProcessorTests

@@ -31,7 +31,7 @@
             BrandNames = new List<string>();
             ProducerBusiness = new ProducerBusiness();
         }
-        
+
         public static Producer Create(ProducerSettings settings, bool noCompany)
         {
             Producer producer = new Producer();

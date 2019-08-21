@@ -1,17 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using DataAccess;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetLocalAreasHandler : IRequestHandler<GetLocalAreas, List<LocalAreaData>>
     {

@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Web.Mvc;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -15,6 +13,8 @@
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -130,7 +130,7 @@
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
                 .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
-                .Without(r => r.SubmittedDate)                
+                .Without(r => r.SubmittedDate)
                 .Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 

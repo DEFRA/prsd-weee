@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
     internal class GetReturnStatusHandler : IRequestHandler<GetReturnStatus, ReturnStatusData>
@@ -16,8 +16,8 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IMapper mapper;
 
-        public GetReturnStatusHandler(IWeeeAuthorization authorization, 
-            IReturnDataAccess returnDataAccess, 
+        public GetReturnStatusHandler(IWeeeAuthorization authorization,
+            IReturnDataAccess returnDataAccess,
             IMapper mapper)
         {
             this.authorization = authorization;
@@ -30,7 +30,7 @@
             authorization.EnsureCanAccessExternalArea();
 
             var @return = await returnDataAccess.GetById(message.ReturnId);
-            
+
             if (@return == null)
             {
                 throw new ArgumentException($"No return was found with id {message.ReturnId}.");

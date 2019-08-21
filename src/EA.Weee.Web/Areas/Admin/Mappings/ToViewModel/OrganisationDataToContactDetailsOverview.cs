@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
-    using Core.Organisations;
     using Core.Scheme;
     using Prsd.Core.Mapper;
     using ViewModels.Scheme.Overview.ContactDetails;
-    using Web.ViewModels.OrganisationRegistration;
     using Web.ViewModels.Shared;
 
     public class OrganisationDataToContactDetailsOverview : IMap<SchemeData, ContactDetailsOverviewViewModel>

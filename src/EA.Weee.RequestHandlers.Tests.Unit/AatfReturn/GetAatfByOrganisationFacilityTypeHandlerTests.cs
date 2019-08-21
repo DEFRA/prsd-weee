@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using EA.Weee.Domain;
@@ -14,6 +11,9 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Specification;
     using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class GetAatfByOrganisationFacilityTypeHandlerTests
@@ -84,7 +84,7 @@
               A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = Weee.Core.AatfReturn.FacilityType.Ae
-        };
+            };
 
             var aatfDatas = new List<AatfData>()
             {

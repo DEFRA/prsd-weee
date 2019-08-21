@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Attributes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.AatfReturn.Attributes;
     using Xunit;
 
@@ -23,9 +22,9 @@
         public ValidateOrganisationActionFilterAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
-            attribute = new ValidateOrganisationActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client, FacilityType = FacilityType.Aatf};
+            attribute = new ValidateOrganisationActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client, FacilityType = FacilityType.Aatf };
             context = A.Fake<ActionExecutingContext>();
-            
+
             var routeData = new RouteData();
             routeData.Values.Add("organisationId", Guid.NewGuid());
             A.CallTo(() => context.RouteData).Returns(routeData);

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
     using Obligation;
+    using System;
+    using System.Diagnostics.CodeAnalysis;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]

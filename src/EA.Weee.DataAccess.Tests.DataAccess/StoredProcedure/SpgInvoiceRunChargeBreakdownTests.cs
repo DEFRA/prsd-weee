@@ -1,13 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Domain;
-    using FakeItEasy;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -345,7 +339,7 @@
                 producer.ChargeBandAmount = helper.FetchChargeBandAmount(Domain.Lookup.ChargeBand.E);
                 producer.ChargeThisUpdate = 10;
                 producer.Invoiced = true;
-                
+
                 db.Model.SaveChanges();
 
                 var result = await db.StoredProcedures.SpgInvoiceRunChargeBreakdown(invoiceRun.Id);

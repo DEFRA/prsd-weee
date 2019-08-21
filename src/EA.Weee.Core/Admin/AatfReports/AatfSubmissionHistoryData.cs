@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin.AatfReports
 {
-    using System;
     using DataReturns;
-    using Shared;
+    using System;
 
     public class AatfSubmissionHistoryData
     {

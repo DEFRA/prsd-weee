@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System.Linq;
     using Prsd.Core;
     using Requests.DataReturns;
+    using System.Linq;
     using Xml;
     using Xml.Converter;
     using Xml.Deserialization;

@@ -241,7 +241,7 @@
         [InlineData("2016")]
         public void IsMatch_GivenSchemeIs2018OrBeforeAndProducerInsert_TrueShouldBeReturned(string year)
         {
-            var scheme = new schemeType() {complianceYear = year };
+            var scheme = new schemeType() { complianceYear = year };
             var producer = new producerType { status = statusType.I };
 
             var result = producerChargeBandCalculator.IsMatch(scheme, producer);

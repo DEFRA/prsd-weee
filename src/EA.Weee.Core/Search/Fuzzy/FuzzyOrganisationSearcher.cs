@@ -34,7 +34,7 @@
         {
             return Split(result.Name);
         }
-        
+
         public override IEnumerable<string> Split(string phrase)
         {
             IEnumerable<string> words = phrase

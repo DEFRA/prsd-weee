@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using System.Collections.Generic;
     using System.Linq;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using Xunit;
 
     public class AddFacilityViewModelBaseTests

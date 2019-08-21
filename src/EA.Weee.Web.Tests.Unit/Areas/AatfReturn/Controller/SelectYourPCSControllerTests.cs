@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Web.Mvc;
     using EA.Prsd.Core;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -21,6 +16,10 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -142,7 +141,7 @@
 
             Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
-    
+
         [Fact]
         public async void IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
         {

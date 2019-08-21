@@ -1,24 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Shared
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
-    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -78,7 +72,7 @@
 
             result.Should().BeInAscendingOrder(x => x.Name);
         }
-        
+
         [Fact]
         public async Task HandleAsync_GivenMessage_ResultShouldBeListOfPanAreaData()
         {
@@ -91,7 +85,7 @@
                 panarea.Should().BeOfType(typeof(PanAreaData));
             }
         }
-        
+
         [Fact]
         public async Task HandleAsync_GivenMessage_PanAreasShouldBeMapped()
         {

@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Migration.Organisation
 {
+    using ExcelDataReader;
+    using Model;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -7,8 +9,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using ExcelDataReader;
-    using Model;
 
     public static class XlsxOrganisationDataReader
     {

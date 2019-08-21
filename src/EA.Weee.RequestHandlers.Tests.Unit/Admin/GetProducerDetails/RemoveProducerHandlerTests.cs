@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Scheme;
@@ -11,6 +8,9 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

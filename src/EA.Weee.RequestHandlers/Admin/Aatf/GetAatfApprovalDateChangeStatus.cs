@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
-    using Domain.DataReturns;
     using Factories;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetAatfApprovalDateChangeStatus : IGetAatfApprovalDateChangeStatus
     {
@@ -16,8 +15,8 @@
         private readonly IQuarterWindowFactory quarterWindowFactory;
         private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public GetAatfApprovalDateChangeStatus(IAatfDataAccess aatfDataAccess, 
-            IQuarterWindowFactory quarterWindowFactory, 
+        public GetAatfApprovalDateChangeStatus(IAatfDataAccess aatfDataAccess,
+            IQuarterWindowFactory quarterWindowFactory,
             IOrganisationDataAccess organisationDataAccess)
         {
             this.aatfDataAccess = aatfDataAccess;
@@ -44,7 +43,7 @@
                     result |= CanApprovalDateBeChangedFlags.DateChanged;
 
                     var returns = await organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
-                    
+
                     if (returns.Any(r => (int)r.Quarter.Q == (int)currentQuarter && r.ReturnStatus.Value == ReturnStatus.Created.Value))
                     {
                         result |= CanApprovalDateBeChangedFlags.HasStartedReturn;
@@ -67,7 +66,7 @@
                     }
                 }
             }
-           
+
             return result;
         }
     }

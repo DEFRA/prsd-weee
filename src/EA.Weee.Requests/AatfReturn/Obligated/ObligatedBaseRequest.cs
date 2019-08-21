@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.Obligated
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
+    using System.Collections.Generic;
 
     public abstract class ObligatedBaseRequest : IRequest<bool>
     {

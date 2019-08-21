@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetDataReturnSubmissionChanges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Admin.GetDataReturnSubmissionChanges;
     using Requests.Admin.GetDataReturnSubmissionChanges;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

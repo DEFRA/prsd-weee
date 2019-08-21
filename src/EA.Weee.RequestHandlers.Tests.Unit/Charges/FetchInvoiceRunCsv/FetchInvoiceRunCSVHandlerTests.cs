@@ -1,17 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchInvoiceRunCsv
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
     using Domain.Charges;
     using FakeItEasy;
-    using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchInvoiceRunCsv;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using FetchInvoiceRunCsv = Requests.Charges.FetchInvoiceRunCsv;

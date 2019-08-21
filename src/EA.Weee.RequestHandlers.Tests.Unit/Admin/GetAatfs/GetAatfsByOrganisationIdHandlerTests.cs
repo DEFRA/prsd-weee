@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -19,6 +14,11 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfsByOrganisationIdHandlerTests

@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
@@ -15,6 +10,11 @@
     using EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetUkWeeeAtAatfsCsvDataAccessTests

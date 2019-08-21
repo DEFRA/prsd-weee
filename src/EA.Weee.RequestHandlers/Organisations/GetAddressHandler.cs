@@ -1,22 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Threading.Tasks;
     using AatfReturn;
     using Core.Shared;
-    using DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class GetAddressHandler : IRequestHandler<GetAddress, AddressData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
         private readonly IMap<Address, AddressData> mapper;
-        
+
         public GetAddressHandler(IWeeeAuthorization authorization, IGenericDataAccess dataAccess, IMap<Address, AddressData> mapper)
         {
             this.authorization = authorization;

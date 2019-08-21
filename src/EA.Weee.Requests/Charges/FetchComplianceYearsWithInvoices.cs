@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This request returns each compliance year that has at least one invoiced member upload

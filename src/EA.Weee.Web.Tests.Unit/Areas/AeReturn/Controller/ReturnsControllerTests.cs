@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AeReturn.Controller
 {
+    using Core.DataReturns;
+    using Core.Organisations;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -16,8 +18,6 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using Core.DataReturns;
-    using Core.Organisations;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -161,7 +161,7 @@
             var result = await controller.ExportedWholeWeee(organisationId, viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be(action);
-            result.RouteValues["controller"].Should().Be("Returns");    
+            result.RouteValues["controller"].Should().Be("Returns");
             result.RouteName.Should().Be(AeRedirect.ReturnsRouteName);
 
             if (selectedValue == YesNoEnum.No)
@@ -291,7 +291,7 @@
             var returnData = new ReturnData()
             {
                 Id = Guid.NewGuid(),
-                OrganisationData = new OrganisationData() {Id = organisationId}
+                OrganisationData = new OrganisationData() { Id = organisationId }
             };
 
             var result = await controller.Confirmation(returnData.Id) as ViewResult;

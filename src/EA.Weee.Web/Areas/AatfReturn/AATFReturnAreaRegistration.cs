@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
-    using System.Security.Policy;
-    using Areas.AatfReturn;
     using Controllers;
     using Infrastructure;
     using System.Web.Mvc;

@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
     using DataAccess.Identity;
@@ -11,6 +8,9 @@
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -39,9 +39,9 @@
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
             var userManager = A.Fake<UserManager<ApplicationUser>>();
 
-            var handler = new DeleteAatfHandler(authorization, 
-                aatfDataAccess, 
-                organisationDataAccess, 
+            var handler = new DeleteAatfHandler(authorization,
+                aatfDataAccess,
+                organisationDataAccess,
                 weeeContext,
                 getAatfDeletionStatus);
 
@@ -65,7 +65,7 @@
                 weeeContext,
                 getAatfDeletionStatus);
 
-                Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<DeleteAnAatf>());
 
             await Assert.ThrowsAsync<SecurityException>(action);
         }

@@ -1,20 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Admin.Helpers;
-    using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Requests.Admin.AatfReports;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class GetUkWeeeAtAatfsCsvHandler : IRequestHandler<GetUkWeeeAtAatfsCsv, FileInfo>
     {

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain.Organisation;
@@ -12,6 +8,10 @@
     using RequestHandlers.Mappings;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -130,7 +130,7 @@
             Guid otherUserID = new Guid("4462D664-5286-4332-8628-AAE13FD984CA");
 
             return helper.GetAsyncEnabledDbSet(new[]
-            {   
+            {
                 orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Active),
                 orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Pending),
                 orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Rejected),

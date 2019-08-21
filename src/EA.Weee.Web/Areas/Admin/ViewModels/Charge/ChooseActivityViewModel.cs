@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Charge
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web;
-    using EA.Weee.Core.Shared;
 
     public class ChooseActivityViewModel
     {

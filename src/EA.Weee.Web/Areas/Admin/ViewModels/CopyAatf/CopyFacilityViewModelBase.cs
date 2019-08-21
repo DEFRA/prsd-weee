@@ -1,19 +1,19 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf
 {
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
 
     public abstract class CopyFacilityViewModelBase : FacilityViewModelBase
-    {        
+    {
         public IEnumerable<SelectListItem> ComplianceYearList
         {
             get
             {
                 yield return new SelectListItem() { Text = "2020" };
-                yield return new SelectListItem() { Text = "2021" };                
+                yield return new SelectListItem() { Text = "2021" };
             }
         }
 
@@ -37,7 +37,7 @@
             nameof(LocalAreaId),
             nameof(StatusValue),
             nameof(SizeValue),
-            nameof(ApprovalDate),            
+            nameof(ApprovalDate),
             $"{nameof(ContactData)}.{nameof(AatfContactData.FirstName)}",
             $"{nameof(ContactData)}.{nameof(AatfContactData.LastName)}",
             $"{nameof(ContactData)}.{nameof(AatfContactData.Position)}",

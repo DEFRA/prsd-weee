@@ -2,7 +2,6 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Aatf;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;

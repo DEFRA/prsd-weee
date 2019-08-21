@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Linq;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
+    using System.Linq;
 
     public class SchemeDataAvailabilityMap : IMap<SchemeDataAvailability, Core.Scheme.SchemeDataAvailability>
     {

@@ -2,7 +2,6 @@
 {
     using EA.Weee.Core.AatfReturn;
     using System;
-    using System.ComponentModel;
 
     public class SentOnCreateSiteViewModel
     {

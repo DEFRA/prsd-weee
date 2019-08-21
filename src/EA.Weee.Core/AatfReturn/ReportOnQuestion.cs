@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-
     public class ReportOnQuestion
     {
         public ReportOnQuestion(int id, string question, string description, int? parentId, string alternativeDescription)

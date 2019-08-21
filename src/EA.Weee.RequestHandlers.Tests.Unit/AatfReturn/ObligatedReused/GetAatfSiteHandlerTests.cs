@@ -1,13 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReused
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedGeneric;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -15,6 +10,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfSiteHandlerTests

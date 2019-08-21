@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
-    using System;
     using Core.AatfReturn;
-    
+    using System;
+
     public class ReusedOffSiteCreateSiteViewModel
     {
         public Guid OrganisationId { get; set; }

@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.Lookup;
+    using System.Threading.Tasks;
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
         private readonly IFetchProducerCharge fetchProducerCharge;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
-        
-        public ProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge, 
+
+        public ProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge,
             IRegisteredProducerDataAccess registeredProducerDataAccess)
         {
             this.fetchProducerCharge = fetchProducerCharge;

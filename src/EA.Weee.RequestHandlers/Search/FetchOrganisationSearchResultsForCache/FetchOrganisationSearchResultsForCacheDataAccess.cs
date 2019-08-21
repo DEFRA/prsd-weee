@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class FetchOrganisationSearchResultsForCacheDataAccess : IFetchOrganisationSearchResultsForCacheDataAccess
     {

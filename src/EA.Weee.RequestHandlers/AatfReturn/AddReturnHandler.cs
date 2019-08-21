@@ -1,24 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
-    using System.Threading.Tasks;
-    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
-    using Domain.User;
     using Factories;
-    using NonObligated;
-    using Organisations;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
-    using Requests.AatfReturn.NonObligated;
     using Security;
-    using Specification;
-    using FacilityType = Core.AatfReturn.FacilityType;
+    using System;
+    using System.Threading.Tasks;
 
     internal class AddReturnHandler : IRequestHandler<AddReturn, Guid>
     {
@@ -29,11 +20,11 @@
         private readonly IReturnFactoryDataAccess returnFactoryDataAccess;
         private readonly IReturnFactory returnFactory;
 
-        public AddReturnHandler(IWeeeAuthorization authorization, 
-            IReturnDataAccess returnDataAccess, 
-            IGenericDataAccess genericDataAccess, 
-            IUserContext userContext, 
-            IReturnFactoryDataAccess returnFactoryDataAccess, 
+        public AddReturnHandler(IWeeeAuthorization authorization,
+            IReturnDataAccess returnDataAccess,
+            IGenericDataAccess genericDataAccess,
+            IUserContext userContext,
+            IReturnFactoryDataAccess returnFactoryDataAccess,
             IReturnFactory returnFactory)
         {
             this.authorization = authorization;

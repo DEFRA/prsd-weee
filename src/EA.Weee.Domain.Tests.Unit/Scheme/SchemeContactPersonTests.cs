@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
-    using System;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
+    using System;
     using Xunit;
 
     public class SchemeContactPersonTests
@@ -17,7 +17,7 @@
             scheme.AddOrUpdateMainContactPerson(contact);
 
             Assert.Same(contact, scheme.Contact);
-            
+
             Assert.Equal(scheme.Contact.FirstName, contact.FirstName);
             Assert.Equal(scheme.Contact.LastName, contact.LastName);
             Assert.Equal(scheme.Contact.Position, contact.Position);

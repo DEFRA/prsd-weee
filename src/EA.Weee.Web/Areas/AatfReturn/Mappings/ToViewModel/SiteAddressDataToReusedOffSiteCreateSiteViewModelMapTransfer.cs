@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
+    using System;
+    using System.Collections.Generic;
 
     public class SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer
     {

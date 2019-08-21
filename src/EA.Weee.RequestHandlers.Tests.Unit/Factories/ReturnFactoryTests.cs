@@ -1,18 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Factories
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain;
-    using Domain.AatfReturn;
     using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using Prsd.Core;
     using RequestHandlers.Factories;
-    using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
     using FacilityType = Core.AatfReturn.FacilityType;
 

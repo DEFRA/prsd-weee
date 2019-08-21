@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.Identity;

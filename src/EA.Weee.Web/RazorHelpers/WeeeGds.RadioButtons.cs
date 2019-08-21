@@ -24,7 +24,7 @@
 
                 string key = keySelector(possibleValue).ToString();
                 string value = valueSelector(possibleValue).ToString();
-                
+
                 string id = string.Format("{0}-{1}", name, key);
 
                 var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>";
@@ -70,14 +70,14 @@
             {
                 var idForThisButton = string.Format("{0}-{1}", HtmlHelper.NameFor(expression), i);
 
-                var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>"; 
+                var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>";
 
                 var radioButton = HtmlHelper.RadioButtonFor(expression,
                     possibleValues[i], new { id = idForThisButton, @class = "govuk-radios__input" }).ToString();
 
                 var display = HtmlHelper.DisplayFor(m => possibleValues[i]);
 
-                var label = string.Format("<label for=\"{0}\" class=\"govuk-label govuk-radios__label\">{1}</label>", idForThisButton,  display);
+                var label = string.Format("<label for=\"{0}\" class=\"govuk-label govuk-radios__label\">{1}</label>", idForThisButton, display);
 
                 radioButtonDiv = string.Format(radioButtonDiv, HtmlHelper.HiddenFor(m => possibleValues[i]) + radioButton + label);
 

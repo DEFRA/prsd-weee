@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using System.Threading.Tasks;
 
     internal class EditObligatedReusedHandler : IRequestHandler<EditObligatedReused, bool>
     {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.DataAccess;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
 
     public class GetUkWeeeAtAatfsCsvDataAccess : IGetUkWeeeAtAatfsCsvDataAccess
     {

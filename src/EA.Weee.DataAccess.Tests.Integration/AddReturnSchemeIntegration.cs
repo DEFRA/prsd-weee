@@ -29,7 +29,7 @@
                 const string crn = "ABC12345";
 
                 var organisation = Organisation.Organisation.CreateRegisteredCompany(name, crn, tradingName);
-                
+
                 context.Organisations.Add(organisation);
                 await context.SaveChangesAsync();
 

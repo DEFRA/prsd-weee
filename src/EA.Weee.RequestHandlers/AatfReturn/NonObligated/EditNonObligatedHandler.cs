@@ -2,7 +2,6 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using System.Threading.Tasks;

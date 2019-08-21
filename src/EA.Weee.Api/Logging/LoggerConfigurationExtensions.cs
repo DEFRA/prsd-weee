@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Api.Logging
 {
-    using System;
     using Prsd.Core;
     using Serilog;
     using Serilog.Configuration;
     using Serilog.Formatting.Display;
+    using System;
 
     internal static class LoggerConfigurationExtensions
     {

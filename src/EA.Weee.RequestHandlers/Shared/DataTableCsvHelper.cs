@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
-    using EA.Weee.Core.Shared;
 
     public static class DataTableCsvHelper
-    {        
+    {
         public static string DataTableToCsv(this DataTable dataTable)
         {
             var excelSanitizer = new NoFormulaeExcelSanitizer();
@@ -30,7 +29,7 @@
                 foreach (DataRow dr in dataTable.Rows)
                 {
                     for (var i = 0; i < dataTable.Columns.Count; i++)
-                    {                       
+                    {
                         sb.Append(EncodeAndCheck(dr[i].ToString(), excelSanitizer));
 
                         if (i < dataTable.Columns.Count - 1)
@@ -48,7 +47,7 @@
         {
             foreach (var columnName in columnsToRemove)
             {
-                for (var columnCount = dataTable.Columns.Count - 1; columnCount >= 0; columnCount--) 
+                for (var columnCount = dataTable.Columns.Count - 1; columnCount >= 0; columnCount--)
                 {
                     if (dataTable.Columns[columnCount].ColumnName.Contains(columnName))
                     {
@@ -92,8 +91,8 @@
         {
             var excelSanitizer = new NoFormulaeExcelSanitizer();
             var seperator = ',';
-            var sb = new StringBuilder();  
-            
+            var sb = new StringBuilder();
+
             //Remove Column 0 from table for nil returns
             if (datatable.Columns.Contains("0"))
             {
@@ -158,7 +157,7 @@
         }
 
         public static string EncodeAndCheck(string value, NoFormulaeExcelSanitizer excelSanitizer)
-        {                       
+        {
             string result;
             if (value == null)
             {
