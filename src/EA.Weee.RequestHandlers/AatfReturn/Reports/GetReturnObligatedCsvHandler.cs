@@ -39,8 +39,6 @@
            
             var obligatedData = await weeContext.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
 
-            obligatedData.SetColumnsOrder("Compliance Year", "Quarter", "Name of AATF", "AATF approval number", "Submitted by", "Submitted date (GMT)", "Category", "Obligation");
-
             var fileName =
                 $"{@return.Quarter.Year}_{@return.Quarter.Q}_{@return.Organisation.OrganisationName}_Obligated return data_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 

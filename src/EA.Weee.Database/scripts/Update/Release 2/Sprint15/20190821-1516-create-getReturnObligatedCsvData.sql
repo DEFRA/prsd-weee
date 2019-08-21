@@ -21,6 +21,8 @@ DECLARE @DynamicPivotQuery AS NVARCHAR(MAX)
 DECLARE @ColumnName AS NVARCHAR(MAX)
 DECLARE @HasPcsData BIT
 DECLARE @HasSentOnData BIT
+DECLARE @AatfReportDate DATETIME
+DECLARE @Status INT
 
 SET @HasPcsData = 0
 SET @HasSentOnData = 0
@@ -31,6 +33,45 @@ DECLARE @ObligationType TABLE
 )
 INSERT INTO @ObligationType SELECT 0 -- Household / B2C
 INSERT INTO @ObligationType SELECT 1 -- Non house hold / B2B
+
+SELECT
+	@AatfReportDate = DATEFROMPARTS(r.ComplianceYear, l.StartMonth, l.StartDay),
+	@Status = r.ReturnStatus
+FROM
+	[Lookup].QuarterWindowTemplate l
+	INNER JOIN [AATF].[Return] r ON r.[Quarter] = l.[Quarter]
+WHERE
+	r.Id = @ReturnId
+
+DECLARE @ReturnAatf TABLE
+(
+	AatfId UNIQUEIDENTIFIER,
+	ReturnId UNIQUEIDENTIFIER
+)
+
+IF @Status = 2 BEGIN
+INSERT INTO @ReturnAatf (AatfId, ReturnId)
+	SELECT	
+		AatfId,
+		ReturnId
+	FROM
+		[AATF].ReturnAatf ra
+	WHERE
+		ra.ReturnId = @ReturnId
+END
+
+IF @Status = 1 BEGIN
+INSERT INTO @ReturnAatf (AatfId, ReturnId)
+	SELECT
+		a.Id,
+		@ReturnId
+	FROM
+		[AATF].AATF a 
+		INNER JOIN [AATF].[Return] r ON r.OrganisationId = a.OrganisationId
+	WHERE
+		r.Id = @ReturnId
+		AND (a.ApprovalDate IS NOT NULL AND a.ApprovalDate < @AatfReportDate)
+END
 
 CREATE TABLE ##FinalTable
 (
@@ -46,9 +87,9 @@ CREATE TABLE ##FinalTable
 	ObligationType INT,
 	[Obligation type] CHAR(3),
 	CategoryId INT,	
+	[Total obligated WEEE received on behalf of PCS(s) (t)]			DECIMAL(35,3) NULL,
 	[Total obligated WEEE sent to another AATF / ATF for treatment (t)]				DECIMAL(35,3) NULL,
-	[Total obligated WEEE reused as a whole appliance (t)]				DECIMAL(35,3) NULL,
-	[Total obligated WEEE received on behalf of PCS(s) (t)]			DECIMAL(35,3) NULL
+	[Total obligated WEEE reused as a whole appliance (t)]				DECIMAL(35,3) NULL
 )
 
 ;WITH ObligationData (ObligationType, CategoryId, CategoryName)
@@ -79,7 +120,7 @@ SELECT
 	NULL
 FROM
 	[AATF].[Return] r
-	INNER JOIN [AATF].ReturnAatf ra ON ra.ReturnId = r.Id
+	INNER JOIN @ReturnAatf ra ON ra.ReturnId = r.Id
 	INNER JOIN [AATF].[AATF] a ON a.Id = ra.AatfId
 	LEFT JOIN  [Identity].[AspNetUsers] u ON u.id = r.SubmittedById
 	, ObligationData o
@@ -349,19 +390,33 @@ IF OBJECT_ID('tempdb..##SentOnObligated') IS NOT NULL
 
 SET @DynamicPivotQuery = N'
 	SELECT
-		f.*'
+		f.AatfKey,
+		f.CategoryId,
+		f.[Compliance year],
+		f.[Quarter],
+		f.[Name of AATF],
+		f.[AATF approval number],
+		f.[Submitted by],
+		f.[Submitted date (GMT)],
+		f.Category,
+		f.[Obligation type],
+		f.[Total obligated WEEE received on behalf of PCS(s) (t)],'
 
 IF @HasPcsData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N', ph.*'
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N'ph.*,'
 END
+
+SET @DynamicPivotQuery = @DynamicPivotQuery + N'f.[Total obligated WEEE sent to another AATF / ATF for treatment (t)],'
+
 IF @HasSentOnData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N', so.*'
+	SET @DynamicPivotQuery = @DynamicPivotQuery + N'so.*,'
 END
+
+SET @DynamicPivotQuery = @DynamicPivotQuery + N'f.[Total obligated WEEE reused as a whole appliance (t)]'
 
 SET @DynamicPivotQuery = @DynamicPivotQuery + N'
 FROM
 	##FinalTable f '
-
 
 IF @HasPcsData = 1 BEGIN
 	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##PcsObligated ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType '
