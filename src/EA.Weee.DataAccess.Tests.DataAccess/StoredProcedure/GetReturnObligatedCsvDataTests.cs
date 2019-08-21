@@ -30,7 +30,7 @@
         private const string TotalReusedHeading = "Total obligated WEEE reused as a whole appliance (t)";
         private const string TotalSentOnHeading = "Total obligated WEEE sent to another AATF / ATF for treatment (t)";
         private const string Category = "Category";
-        private const string Obligation = "Obligation";
+        private const string Obligation = "Obligation Type";
         private const string SubmittedDate = "Submitted date (GMT)";
         private const string SubmittedBy = "Submitted by";
         private const string ApprovalNumber = "AATF approval number";
@@ -155,8 +155,8 @@
 
                 foreach (var categoryValue in CategoryValues())
                 {
-                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf1[0][TotalReceivedHeading].Should().Be(categoryValue.CategoryId * 2); // two schemes
                     houseHoldResultAatf1[0]["Obligated WEEE received on behalf of scheme1 (t)"].Should().Be(categoryValue.CategoryId);
@@ -166,8 +166,8 @@
                     nonHouseHoldResultAatf1[0]["Obligated WEEE received on behalf of scheme1 (t)"].Should().Be((categoryValue.CategoryId + 1));
                     nonHouseHoldResultAatf1[0]["Obligated WEEE received on behalf of scheme2 (t)"].Should().Be(categoryValue.CategoryId + 1);
 
-                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf2[0][TotalReceivedHeading].Should().Be(categoryValue.CategoryId); //  single scheme
                     houseHoldResultAatf2[0]["Obligated WEEE received on behalf of scheme2 (t)"].Should().Be(categoryValue.CategoryId);
@@ -220,8 +220,8 @@
 
                 foreach (var categoryValue in CategoryValues())
                 {
-                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf1[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId * 2); 
                     houseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address1.Name} (t)"].Should().Be(categoryValue.CategoryId);
@@ -231,8 +231,8 @@
                     nonHouseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address1.Name} (t)"].Should().Be((categoryValue.CategoryId + 1));
                     nonHouseHoldResultAatf1[0][$"Obligated WEEE sent to {siteAddressAatf1Address2.Name} (t)"].Should().Be(categoryValue.CategoryId + 1);
 
-                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf2[0][TotalSentOnHeading].Should().Be(categoryValue.CategoryId); 
                     houseHoldResultAatf2[0][$"Obligated WEEE sent to {siteAddressAatf2Address1.Name} (t)"].Should().Be(categoryValue.CategoryId);
@@ -276,14 +276,14 @@
 
                 foreach (var categoryValue in CategoryValues())
                 {
-                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf1 = results.Select($"AatfKey='{aatf.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf1[0][TotalReusedHeading].Should().Be(categoryValue.CategoryId);
                     nonHouseHoldResultAatf1[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1)); 
 
-                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2C}'");
-                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND Obligation='{B2B}'");
+                    var houseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2C}'");
+                    var nonHouseHoldResultAatf2 = results.Select($"AatfKey='{aatf2.Id}' AND CategoryId={categoryValue.CategoryId} AND [Obligation Type]='{B2B}'");
 
                     houseHoldResultAatf2[0][TotalReusedHeading].Should().Be(categoryValue.CategoryId);
                     nonHouseHoldResultAatf2[0][TotalReusedHeading].Should().Be((categoryValue.CategoryId + 1)); 
