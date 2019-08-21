@@ -2,30 +2,36 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData.MembersDataOverviewViewModel
 <div class="govuk-!-padding-bottom-8"></div>
-@Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
-@section main_content {
+<div class="govuk-tabs">
+    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
+    <section class="govuk-tabs__panel" id="pcsDetails">
+        <div class="govuk-table__header--large">
+            Members and data
+        </div>
 
-    @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
-    {
-        <h2 class="govuk-heading-m">@yearlyDownloads.Year</h2>
-
-        if (yearlyDownloads.IsMembersDownloadAvailable)
+        @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
         {
-            <p>
-                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCsv(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">Members overview.csv</a>
-                <span style="color: #6f777b"> (less than 500KB).</span>
-            </p>
+            <h2 class="govuk-heading-m">@yearlyDownloads.Year</h2>
+
+            if (yearlyDownloads.IsMembersDownloadAvailable)
+            {
+                <p>
+                    <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCsv(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">Members overview.csv</a>
+                    <span style="color: #6f777b"> (less than 500KB).</span>
+                </p>
+            }
+
+            if (yearlyDownloads.IsDataReturnsDownloadAvailable)
+            {
+                <p>
+                    <a href="@(Url.UrlFor<SchemeController>(a => a.GetEeeWeeeCsv(Model.OrganisationId, yearlyDownloads.Year)))">EEE/WEEE data overview.csv</a>
+                    <span style="color: #6f777b"> (less than 25KB).</span>
+                </p>
+            }
         }
 
-        if (yearlyDownloads.IsDataReturnsDownloadAvailable)
-        {
-            <p>
-                <a href="@(Url.UrlFor<SchemeController>(a => a.GetEeeWeeeCsv(Model.OrganisationId, yearlyDownloads.Year)))">EEE/WEEE data overview.csv</a>
-                <span style="color: #6f777b"> (less than 25KB).</span>
-            </p>
-        }
-    }
+        @Html.Partial("Overview/_OverviewAvailableActions")
+    </section>
 
-    @Html.Partial("Overview/_OverviewAvailableActions")
-}
+</div>
