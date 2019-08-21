@@ -33,7 +33,6 @@
             {
                 var currentQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(aatf.ApprovalDate.Value);
                 var newQuarter = await quarterWindowFactory.GetAnnualQuarterForDate(newApprovalDate);
-                var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(new Quarter(aatf.ApprovalDate.Value.Year, currentQuarter));
 
                 if (aatf.ApprovalDate.Equals(newApprovalDate))
                 {

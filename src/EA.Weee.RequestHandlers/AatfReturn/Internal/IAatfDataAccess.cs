@@ -23,10 +23,8 @@
 
         Task<bool> HasAatfOrganisationOtherAeOrAatf(Aatf aatf);
 
-        Task<bool> HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(Aatf aatf, EA.Weee.Domain.DataReturns.QuarterWindow quarterWindow);
-
         Task RemoveAatf(Guid aatfId);
 
-        Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags);
+        Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters);
     }
 }
