@@ -38,7 +38,7 @@
                 <p class="important-large">
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
-                        <span>A quarterly return has already been submitted for this @facilityTypes. Changing the approval date will delete some of the data from that return, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
+                        <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete some of the data from that return, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
                     }
                     else
                     {
