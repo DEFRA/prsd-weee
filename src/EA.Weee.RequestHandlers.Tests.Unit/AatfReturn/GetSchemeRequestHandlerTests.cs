@@ -1,14 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
-    using Core.AatfReturn;
     using Core.Organisations;
     using Core.Scheme;
-    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Organisation;
     using FakeItEasy;
@@ -17,6 +10,11 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.Security;
     using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
@@ -24,9 +22,9 @@
     public class GetSchemeRequestHandlerTests
     {
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
-        private readonly IReturnDataAccess returnDataAccess; 
+        private readonly IReturnDataAccess returnDataAccess;
         private readonly GetSchemeRequestHandler handler;
-        private readonly IMapper mapper;        
+        private readonly IMapper mapper;
         private SchemeData schemeData1;
         private SchemeData schemeData2;
 
@@ -47,7 +45,7 @@
             var handlerLocal = new GetSchemeRequestHandler(authorization, returnSchemeDataAccess, mapper);
 
             Func<Task> action = async () => await handlerLocal.HandleAsync(A.Dummy<GetReturnScheme>());
-            
+
             await action.Should().ThrowAsync<SecurityException>();
         }
 
@@ -126,7 +124,7 @@
             var @return = A.Dummy<Return>();
             var returnScheme = new List<ReturnScheme>()
             {
-                new ReturnScheme(scheme1, @return), 
+                new ReturnScheme(scheme1, @return),
                 new ReturnScheme(scheme2, @return)
             };
 
@@ -140,7 +138,7 @@
             schemeData2.SchemeStatus = Core.Shared.SchemeStatus.Approved;
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme2)).Returns(schemeData2);
 
-            var schemeList = new List<SchemeData> {schemeData1, schemeData2 };
+            var schemeList = new List<SchemeData> { schemeData1, schemeData2 };
 
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._)).Returns(organisationData);
             A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(A<Guid>._)).Returns(returnScheme);

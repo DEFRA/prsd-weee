@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetSchemeObligationDataCsv
 {
-    using System;
+    using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.StoredProcedure;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.StoredProcedure;
 
     public class GetSchemeObligationCsvDataProcessor : IGetSchemeObligationCsvDataProcessor
     {

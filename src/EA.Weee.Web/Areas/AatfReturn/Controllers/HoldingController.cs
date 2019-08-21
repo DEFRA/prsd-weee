@@ -2,7 +2,6 @@
 {
     using System;
     using System.Web.Mvc;
-    using Web.Controllers.Base;
 
     public class HoldingController : AatfReturnBaseController
     {

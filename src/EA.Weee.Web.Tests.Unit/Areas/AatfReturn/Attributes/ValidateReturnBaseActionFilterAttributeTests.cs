@@ -1,17 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Attributes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
-    using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
-    using Infrastructure;
     using Services;
-    using Web.Areas.AatfReturn.Attributes;
-    using Weee.Requests.AatfReturn;
+    using System;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Xunit;
 
     public class ValidateReturnBaseActionFilterAttributeTests
@@ -25,7 +20,7 @@
             client = A.Fake<IWeeeClient>();
             attribute = new ValidateReturnTestActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
-            
+
             var routeData = new RouteData();
             routeData.Values.Add("returnId", Guid.NewGuid());
             A.CallTo(() => context.RouteData).Returns(routeData);

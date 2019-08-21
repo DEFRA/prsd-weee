@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
+    using System;
+    using System.ComponentModel.DataAnnotations;
 
     public class AatfContactData
     {

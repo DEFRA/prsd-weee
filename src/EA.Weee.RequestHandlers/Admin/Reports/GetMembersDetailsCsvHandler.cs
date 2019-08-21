@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
     using Prsd.Core.Mediator;
-    using Requests.Admin; 
+    using Requests.Admin;
     using Security;
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetMembersDetailsCsvHandler : IRequestHandler<GetMemberDetailsCsv, CSVFileData>
     {
@@ -46,7 +46,7 @@
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);
             csvWriter.DefineColumn(@"Trading name", i => i.TradingName);
-            csvWriter.DefineColumn(@"PRN", i => i.PRN);           
+            csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Date & time (GMT) registered", i => i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
@@ -63,7 +63,7 @@
             csvWriter.DefineColumn(@"Correspondent for notices title", i => i.CNTitle);
             csvWriter.DefineColumn(@"Correspondent for notices forename", i => i.CNForename);
             csvWriter.DefineColumn(@"Correspondent for notices surname", i => i.CNSurname);
-            
+
             csvWriter.DefineColumn(@"Correspondent for notices telephone", i => i.CNTelephone, true);
             csvWriter.DefineColumn(@"Correspondent for notices mobile", i => i.CNMobile, true);
             csvWriter.DefineColumn(@"Correspondent for notices fax", i => i.CNFax, true);
@@ -78,7 +78,7 @@
             csvWriter.DefineColumn(@"Correspondent for notices administrative area", i => i.CNAdministrativeArea);
             csvWriter.DefineColumn(@"Correspondent for notices post code", i => i.CNPostcode);
             csvWriter.DefineColumn(@"Correspondent for notices country", i => i.CNCountry);
-            
+
             //company or partnership details based on organisation type
             csvWriter.DefineColumn(@"Reg. Off. or PPoB title", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactTitle : i.PPOBContactTitle);
             csvWriter.DefineColumn(@"Reg. Off. or PPoB forename", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactForename : i.PPOBContactForename);
@@ -101,7 +101,7 @@
 
             //overseas producer details
             csvWriter.DefineColumn(@"Overseas producer name", i => i.OverseasProducerName);
-      
+
             csvWriter.DefineColumn(@"Overseas producer title", i => i.OverseasContactTitle);
             csvWriter.DefineColumn(@"Overseas producer forename", i => i.OverseasContactForename);
             csvWriter.DefineColumn(@"Overseas producer surname", i => i.OverseasContactSurname);

@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using AatfReturn;
     using DataAccess;
     using Domain.Organisation;
@@ -10,6 +7,8 @@
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     internal class AddContactPersonHandler : IRequestHandler<AddContactPerson, Guid>
     {
@@ -43,7 +42,7 @@
             {
                 id = await dataAccess.Add<Contact>(contactPerson);
             }
-            
+
             await db.SaveChangesAsync();
 
             return id;

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Xunit;
 
     public class ReusedOffSiteViewModelTests

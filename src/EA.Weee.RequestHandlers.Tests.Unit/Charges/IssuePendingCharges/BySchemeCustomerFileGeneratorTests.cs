@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
     using Domain.Obligation;
@@ -10,8 +7,10 @@
     using Domain.Scheme;
     using Domain.User;
     using FakeItEasy;
-    using Ibis;
     using RequestHandlers.Charges.IssuePendingCharges;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
     using Address = Domain.Organisation.Address;
     using Organisation = Domain.Organisation.Organisation;
@@ -103,7 +102,7 @@
             var contact = new Contact("John", "Smith", "Manager");
 
             var organisation = Organisation.CreateSoleTrader("Test organisation");
-            
+
             var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -258,7 +257,7 @@
                 "someone@domain.com");
 
             var organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
-            
+
             var scheme1 = new Scheme(organisation1);
             scheme1.UpdateScheme(
                 "Test scheme 2",
@@ -295,7 +294,7 @@
                 "someone@domain.com");
 
             var organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
-            
+
             var scheme2 = new Scheme(organisation2);
             scheme2.UpdateScheme(
                 "Test scheme 2",
@@ -351,7 +350,7 @@
             var authority = A.Dummy<UKCompetentAuthority>();
 
             var organisation = Organisation.CreateSoleTrader("Test organisation");
-            
+
             var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",
@@ -408,7 +407,7 @@
             var contact = new Contact("John", "Smith", "Manager");
 
             var organisation = Organisation.CreateSoleTrader("Test organisation");
-            
+
             var scheme = new Scheme(organisation);
             scheme.UpdateScheme(
                 "Test scheme",

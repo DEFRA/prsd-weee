@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AatfReturn;
     using AatfReturn.Internal;
     using Core.AatfReturn;
@@ -18,6 +15,9 @@
     using Requests.Admin.Aatf;
     using Security;
     using Shared;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Security;
     using PanArea = Domain.Lookup.PanArea;
 

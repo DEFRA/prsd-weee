@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using Domain.AatfReturn;
+    using System.Data.Entity.ModelConfiguration;
 
     public class AatfReturnAmountsMapping : ComplexTypeConfiguration<AatfReturnAmounts>
     {

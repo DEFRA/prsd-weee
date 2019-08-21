@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mediator;
     using Services;
+    using System;
+    using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
     using Web.ViewModels.Shared;

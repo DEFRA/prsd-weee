@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Data;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -14,6 +9,11 @@
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Data;
+    using System.Security;
+    using System.Text;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     public class GetAllAatfSentOnDataCsvHandlerTests
@@ -64,7 +64,7 @@
         [InlineData(2019, "", "", null, null)]
         [InlineData(2019, "B2C", "", null, null)]
         [InlineData(2019, "", "A", null, null)]
-        public async Task GetAllAatfSentOnDataCsvHandler_VariousParameters_ReturnsFileContent(int complianceYear, 
+        public async Task GetAllAatfSentOnDataCsvHandler_VariousParameters_ReturnsFileContent(int complianceYear,
            string obligationType, string aatfName, Guid? authority, Guid? panArea)
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
@@ -132,7 +132,7 @@
             // Assert
             StringBuilder filename = new StringBuilder();
             filename.Append(complianceYear.ToString());
-           
+
             if (aatfName != string.Empty)
             {
                 filename.Append("_");
@@ -178,9 +178,9 @@
 
             A.CallTo(() => context.StoredProcedures)
                 .Returns(storedProcedures);
-            
+
             DataSet sentOnDataSet = CreateDummyDataSet();
-            
+
             A.CallTo(() => storedProcedures
             .GetAllAatfSentOnDataCsv(A<int>._, string.Empty, string.Empty, A.Dummy<Guid>(), A.Dummy<Guid>()))
             .Returns(sentOnDataSet);

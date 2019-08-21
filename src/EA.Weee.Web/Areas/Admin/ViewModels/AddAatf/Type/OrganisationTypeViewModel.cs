@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type
 {
-    using System.ComponentModel.DataAnnotations;
     using Core.Organisations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Shared;
+    using System.ComponentModel.DataAnnotations;
 
     public class OrganisationTypeViewModel : RadioButtonStringCollectionViewModel
     {

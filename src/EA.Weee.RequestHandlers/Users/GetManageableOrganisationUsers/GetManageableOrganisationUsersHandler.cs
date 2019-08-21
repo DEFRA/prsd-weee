@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.GetManageableOrganisationUsers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Users.GetManageableOrganisationUsers;
     using Security;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetManageableOrganisationUsersHandler : IRequestHandler<GetManageableOrganisationUsers, List<OrganisationUserData>>
     {

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Tests.Core
 {
-    using System.Linq;
     using Domain.AatfReturn;
     using Model;
+    using System.Linq;
 
     public static class AddressHelper
     {

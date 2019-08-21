@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.FindMatchingOrganisations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core;
@@ -11,6 +7,10 @@
     using RequestHandlers.Organisations.FindMatchingOrganisations;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Requests.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -206,7 +206,7 @@
             var handler = FindMatchingOrganisationsHandler();
 
             var orgs = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
-           
+
             // handler sorts by distance
             Assert.Equal(IdenticalToQuery, orgs.Results[0].DisplayName);
             Assert.Equal(CloseToQuery, orgs.Results[1].DisplayName);

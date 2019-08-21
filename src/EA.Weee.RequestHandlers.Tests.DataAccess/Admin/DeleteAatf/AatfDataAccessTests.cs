@@ -1,25 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.DeleteAatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
-    using Core.Admin;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Factories;
-    using Weee.DataAccess.DataAccess;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
@@ -76,7 +72,7 @@
                     FacilityType.Aatf, 2019, QuarterType.Q1);
 
                 var aatfDoNotDelete = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
-                
+
                 databaseWrapper.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 databaseWrapper.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatfDoNotDelete, @return));
                 databaseWrapper.WeeeContext.Aatfs.Add(aatf);
@@ -331,7 +327,7 @@
 
                 AssertAllTrue(databaseWrapper, @return, received, sentOn, reused, aatf);
 
-                await aatfDataAccess.RemoveAatfData(aatf, new List<int>() {1});
+                await aatfDataAccess.RemoveAatfData(aatf, new List<int>() { 1 });
 
                 await databaseWrapper.WeeeContext.SaveChangesAsync();
 

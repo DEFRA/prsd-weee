@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
+    using DataAccess;
+    using Domain.DataReturns;
+    using Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -7,9 +10,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.DataReturns;
-    using Domain.Producer;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilderDataAccess : IDataReturnVersionBuilderDataAccess

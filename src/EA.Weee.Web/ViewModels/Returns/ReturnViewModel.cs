@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Globalization;
-    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
     using Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     public class ReturnViewModel : ReturnViewModelBase
     {

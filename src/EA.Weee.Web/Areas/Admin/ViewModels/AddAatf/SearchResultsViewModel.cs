@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Search;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Search;
 
     public class SearchResultsViewModel
     {

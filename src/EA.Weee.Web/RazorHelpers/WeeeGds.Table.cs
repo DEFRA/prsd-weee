@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
+    using Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Mvc;
-    using Extensions;
 
     public class TableBuilder<TModel, TDataset> : IDisposable
     {
@@ -16,8 +16,8 @@
         private readonly TagBuilder captionTagBuilder;
         private readonly object htmlAttributes;
 
-        public TableBuilder(WeeeGds<TModel> gdsHelper, 
-            IEnumerable<TDataset> dataset, 
+        public TableBuilder(WeeeGds<TModel> gdsHelper,
+            IEnumerable<TDataset> dataset,
             string caption,
             object htmlAttributes = null)
         {

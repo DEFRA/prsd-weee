@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using Core.AatfReturn;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DataReturns;
@@ -18,6 +15,9 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Weee.Requests.AatfReturn;
@@ -85,7 +85,7 @@
 
             A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(r => r.ReturnData.Equals(@return) && r.AatfId.Equals(aatfId) && r.OrganisationId.Equals(organisationId) && r.ReturnId.Equals(returnId) && r.SchemeId.Equals(schemeId)))).MustHaveHappened(Repeated.Exactly.Once);
         }
-        
+
         [Fact]
         public async void IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
         {
@@ -168,7 +168,7 @@
 
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
             A.CallTo(() => aatfInfo.Name).Returns(aatfName);
-           
+
             await controller.Index(A.Dummy<Guid>(), aatfId, A.Dummy<Guid>());
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);

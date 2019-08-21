@@ -1,14 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
-    using DataReturns.ProcessDataReturnXmlFile;
     using Domain.Error;
     using Domain.Producer;
     using Domain.Scheme;
@@ -18,6 +11,12 @@
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xml.Converter;
     using ErrorLevel = Domain.Error.ErrorLevel;
 
@@ -33,8 +32,8 @@
         private readonly ITotalChargeCalculator totalChargeCalculator;
         private readonly ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess;
 
-        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
-            IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
+        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization,
+            IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter,
             IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess, ITotalChargeCalculator totalChargeCalculator, ITotalChargeCalculatorDataAccess totalChargeCalculatorDataAccess)
         {
             this.context = context;
@@ -64,7 +63,7 @@
 
             Dictionary<string, ProducerCharge> producerCharges = null;
             int deserializedcomplianceYear = 0;
-            
+
             decimal? totalChargesCalculated = 0;
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);

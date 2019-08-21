@@ -1,9 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
     using AutoFixture;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Core.Helpers;
@@ -13,6 +10,9 @@
     using FluentAssertions.Common;
     using Prsd.Core.Mapper;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
 

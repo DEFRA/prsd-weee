@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData
 {
-    using System;
-    using System.Collections.Generic;
     using Core.Scheme;
+    using System;
 
     public class MembersDataOverviewViewModel : OverviewViewModel
     {

@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
+    using DataAccess;
+    using Domain;
+    using Domain.DataReturns;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain.AatfReturn;
+    using Factories;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Core.Admin;
-    using DataAccess;
-    using Domain;
-    using Domain.DataReturns;
-    using Domain.Organisation;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
-    using Factories;
 
     public class AatfDataAccess : IAatfDataAccess
     {
@@ -21,8 +19,8 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
 
-        public AatfDataAccess(WeeeContext context, 
-            IGenericDataAccess genericDataAccess, 
+        public AatfDataAccess(WeeeContext context,
+            IGenericDataAccess genericDataAccess,
             IQuarterWindowFactory quarterWindowFactory)
         {
             this.context = context;
@@ -102,8 +100,8 @@
 
             var organisationId = aatf.Organisation.Id;
 
-            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId 
-                                                       && p.ComplianceYear == findAatf.ComplianceYear 
+            return await context.Aatfs.CountAsync(p => p.Organisation.Id == organisationId
+                                                       && p.ComplianceYear == findAatf.ComplianceYear
                                                        && p.FacilityType.Value == findAatf.FacilityType.Value
                                                        && p.Id != findAatf.Id) > 0;
         }
@@ -111,7 +109,7 @@
         private async Task<Aatf> GetAatfById(Guid id)
         {
             var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.Id == id);
-            
+
             if (aatf == null)
             {
                 throw new ArgumentException($"Aatf with id {id} not found");
@@ -140,8 +138,8 @@
             {
                 var quarterWindow = await quarterWindowFactory.GetAnnualQuarter(new Quarter(aatf.ComplianceYear, (QuarterType)quarter));
 
-                var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id == 
-                                                                    aatf.Organisation.Id 
+                var aatfCount = await context.Aatfs.CountAsync(a => a.Organisation.Id ==
+                                                                    aatf.Organisation.Id
                                                                     && a.ComplianceYear == aatf.ComplianceYear
                                                                     && a.FacilityType.Value == aatf.FacilityType.Value
                                                                     && a.ApprovalDate.Value <= quarterWindow.EndDate);

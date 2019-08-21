@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
+    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using System.Collections.Generic;
-    using Core.Admin;
-    using Core.Admin.AatfReports;
 
     public class AatfDataToAatfDetailsViewModelMapTransfer
     {

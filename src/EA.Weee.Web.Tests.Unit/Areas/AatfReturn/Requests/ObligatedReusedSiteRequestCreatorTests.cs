@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class ObligatedReusedSiteRequestCreatorTests

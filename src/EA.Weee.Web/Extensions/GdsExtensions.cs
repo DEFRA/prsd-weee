@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
+    using EA.Prsd.Core.Web.Mvc.RazorHelpers;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Web.Mvc.RazorHelpers;
 
     public static class GdsExtensions
     {

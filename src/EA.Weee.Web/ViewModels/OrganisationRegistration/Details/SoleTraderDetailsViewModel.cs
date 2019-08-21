@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
 {
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details.Base;
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     public class SoleTraderDetailsViewModel : OrganisationViewModel
     {

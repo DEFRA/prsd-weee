@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
-    using EA.Prsd.Core;
     using FluentAssertions;
+    using System;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Weee.Tests.Core;
     using Xunit;
@@ -21,7 +20,7 @@
         public void Map_GivenReturnStatusIsCreated_QuarterOpen_DisplayOptionsShouldBeSet()
         {
             var displayOptions = mapper.Map((ReturnStatus.Created, QuarterWindowTestHelper.GetDefaultQuarterWindow(), new DateTime(2019, 04, 01)));
-            
+
             displayOptions.DisplayContinue.Should().BeTrue();
             displayOptions.DisplayEdit.Should().BeFalse();
             displayOptions.DisplaySummary.Should().BeFalse();

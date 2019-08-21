@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.UpdateOrganisationUserStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Organisation;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IUpdateOrganisationUserStatusDataAccess
     {

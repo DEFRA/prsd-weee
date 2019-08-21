@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Web.Mvc;
     using AutoFixture;
     using Core.DataReturns;
     using EA.Prsd.Core;
@@ -16,6 +14,8 @@
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -64,7 +64,7 @@
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
         }
-        
+
         [Fact]
         public async void IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
         {

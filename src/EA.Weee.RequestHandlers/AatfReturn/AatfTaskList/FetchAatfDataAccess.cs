@@ -1,21 +1,20 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.AatfTaskList
 {
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
+    using Factories;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
-    using Factories;
 
     public class FetchAatfDataAccess : IFetchAatfDataAccess
     {
         private readonly WeeeContext context;
         private readonly IQuarterWindowFactory quarterWindowFactory;
 
-        public FetchAatfDataAccess(WeeeContext context, 
+        public FetchAatfDataAccess(WeeeContext context,
             IQuarterWindowFactory quarterWindowFactory)
         {
             this.context = context;
@@ -26,7 +25,7 @@
         {
             var quarterWindow = await quarterWindowFactory.GetQuarterWindow(@return.Quarter);
 
-            return await context.Aatfs.Where(a => a.Organisation.Id == @return.Organisation.Id 
+            return await context.Aatfs.Where(a => a.Organisation.Id == @return.Organisation.Id
                                                   && a.FacilityType.Value == @return.FacilityType.Value
                                                   && a.ComplianceYear == @return.Quarter.Year
                                                   && a.ApprovalDate.HasValue

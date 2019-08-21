@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System.Threading.Tasks;
     using Domain.Lookup;
+    using System.Threading.Tasks;
 
     public interface IFetchProducerCharge
     {

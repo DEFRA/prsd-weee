@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Filters
 {
-    using System;
-    using System.Web.Mvc;
     using Infrastructure;
+    using System.Web.Mvc;
 
     public class RenderActionErrorAttribute : HandleErrorAttribute
     {

@@ -1,18 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Reports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Shared;
     using DataAccess;
-    using Domain;
-    using Domain.Lookup;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.Reports;
     using Security;
     using Shared;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class GetReturnObligatedCsvHandler : IRequestHandler<GetReturnObligatedCsv, CSVFileData>
     {
@@ -20,7 +16,7 @@
         private readonly WeeeContext weeContext;
         private readonly IReturnDataAccess returnDataAccess;
 
-        public GetReturnObligatedCsvHandler(IWeeeAuthorization authorization, 
+        public GetReturnObligatedCsvHandler(IWeeeAuthorization authorization,
             WeeeContext weeContext,
             IReturnDataAccess returnDataAccess)
         {
@@ -34,7 +30,7 @@
             var @return = await returnDataAccess.GetById(request.ReturnId);
 
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
-           
+
             var obligatedData = await weeContext.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
 
             var fileName =

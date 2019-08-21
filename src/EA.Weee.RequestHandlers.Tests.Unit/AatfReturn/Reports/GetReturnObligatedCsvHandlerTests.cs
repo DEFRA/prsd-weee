@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Reports
 {
     using EA.Prsd.Core;
-    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Domain.AatfReturn;
@@ -10,17 +9,13 @@
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Reports;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.AatfReturn.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
     using System.Data;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 

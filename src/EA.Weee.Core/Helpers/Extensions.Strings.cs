@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Core.Helpers
 {
-    using System;
-    using System.Linq;
-    using System.Text.RegularExpressions;
     public partial class Extensions
     {
         public static string HardTrim(this string str, int maxLength)
@@ -21,7 +18,7 @@
         /// <param name="str"></param>
         /// <returns></returns>
         public static string ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace(this string str)
-        {            
+        {
             return str.Replace("  ", "&nbsp;&nbsp;").Replace("&nbsp; ", "&nbsp;&nbsp;");
         }
 
@@ -45,4 +42,4 @@
             return $"{tonnage:#,##0.000}";
         }
     }
-} 
+}

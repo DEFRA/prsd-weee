@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
     using Domain.Scheme;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class ProcessDataReturnXmlFileDataAccess : IProcessDataReturnXmlFileDataAccess
     {

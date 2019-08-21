@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
@@ -14,6 +10,10 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;

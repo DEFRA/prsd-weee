@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
+    using IdentityModel;
     using System.Security.Claims;
     using System.Security.Principal;
-    using IdentityModel;
 
     public static class PrincipalExtensions
     {

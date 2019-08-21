@@ -164,7 +164,7 @@
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
-                
+
                 Assert.Equal(producer1.Business.Company.Name, results[0].ProducerName);
             }
         }
@@ -195,7 +195,7 @@
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
-                
+
                 Assert.Equal(producer1.Business.Partnership.Name, results[0].ProducerName);
             }
         }
@@ -232,14 +232,14 @@
                 memberUpload3.SubmittedDate = new DateTime(2015, 1, 3);
 
                 ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload3, "WEE/99ZZZZ99");
-                
+
                 MemberUpload memberUpload4 = helper.CreateMemberUpload(scheme1);
                 memberUpload4.ComplianceYear = 2016;
                 memberUpload4.IsSubmitted = true;
                 memberUpload4.SubmittedDate = new DateTime(2015, 1, 4);
 
                 ProducerSubmission producerSubmission4 = helper.CreateProducerAsCompany(memberUpload4, "WEE/99ZZZZ99");
-                
+
                 db.Model.SaveChanges();
 
                 // Act

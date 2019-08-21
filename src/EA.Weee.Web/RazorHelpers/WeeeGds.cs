@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
+    using Prsd.Core.Web.Mvc.RazorHelpers;
     using System.Collections.Generic;
     using System.Web;
     using System.Web.Mvc;
-    using Prsd.Core.Web.Mvc.RazorHelpers;
 
     public partial class WeeeGds<TModel>
     {

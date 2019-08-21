@@ -13,9 +13,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -88,7 +86,7 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            
+
             var sentOnList = new List<WeeeSentOn>();
             var operatorAddress = new AatfAddress("OpName", "OpAdd1", "OpAdd2", "OpTown", "OpCounty", "PostOp", A.Fake<Country>());
             var siteAddress = new AatfAddress("SiteName", "SiteAdd1", "SiteAdd2", "SiteTown", "SiteCounty", "PostSite", A.Fake<Country>());

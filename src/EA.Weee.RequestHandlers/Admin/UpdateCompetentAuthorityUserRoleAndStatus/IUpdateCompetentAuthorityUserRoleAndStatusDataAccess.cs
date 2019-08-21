@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Admin;
     using Domain.Security;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IUpdateCompetentAuthorityUserRoleAndStatusDataAccess
     {

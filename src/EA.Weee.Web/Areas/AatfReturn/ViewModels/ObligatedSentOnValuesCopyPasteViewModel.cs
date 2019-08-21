@@ -10,7 +10,7 @@
 
         public String SiteName { get; set; }
 
-        public Guid WeeeSentOnId {get; set; }
+        public Guid WeeeSentOnId { get; set; }
 
         public Guid ReturnId { get; set; }
 

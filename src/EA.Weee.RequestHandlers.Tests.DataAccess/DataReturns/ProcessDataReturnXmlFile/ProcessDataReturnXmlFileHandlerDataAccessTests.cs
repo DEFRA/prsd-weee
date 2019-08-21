@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.ProcessDataReturnXmlFile
 {
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

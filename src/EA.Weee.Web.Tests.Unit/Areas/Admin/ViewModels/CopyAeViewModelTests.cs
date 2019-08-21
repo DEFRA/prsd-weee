@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Xunit;
 
     public class CopyAeViewModelTests

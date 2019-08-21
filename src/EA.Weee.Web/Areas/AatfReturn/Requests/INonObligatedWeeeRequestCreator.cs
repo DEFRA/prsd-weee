@@ -5,6 +5,6 @@
     using Weee.Requests.AatfReturn.NonObligated;
 
     public interface INonObligatedWeeeRequestCreator : IRequestCreator<NonObligatedValuesViewModel, NonObligated>
-    { 
+    {
     }
 }

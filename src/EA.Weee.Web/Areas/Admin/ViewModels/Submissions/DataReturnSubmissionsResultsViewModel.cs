@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Submissions
 {
+    using Core.DataReturns;
     using System;
     using System.Collections.Generic;
-    using Core.DataReturns;
     using Weee.Requests.Shared;
 
     public class DataReturnSubmissionsResultsViewModel

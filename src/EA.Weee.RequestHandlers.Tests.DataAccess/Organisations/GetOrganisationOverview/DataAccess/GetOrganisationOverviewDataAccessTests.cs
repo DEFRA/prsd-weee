@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Organisations.GetOrganisationOverview.DataAccess
 {
-    using System.Threading.Tasks;
     using EA.Weee.Tests.Core.Model;
     using RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetOrganisationOverviewDataAccessTests

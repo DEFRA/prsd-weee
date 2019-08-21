@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Admin.GetActiveComplianceYears
 {
-    using System.Collections.Generic;
     using Prsd.Core.Mediator;
+    using System.Collections.Generic;
 
     public class GetAatfReturnsActiveComplianceYears : IRequest<List<int>>
     {

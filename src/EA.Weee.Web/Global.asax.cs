@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web
 {
-    using System;
-    using System.Web;
     using Elmah;
     using Logging;
+    using System;
+    using System.Web;
 
     public class Global : HttpApplication
     {

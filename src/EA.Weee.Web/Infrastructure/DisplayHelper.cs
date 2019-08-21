@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
-    using System.Globalization;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
+    using System.Globalization;
 
     public static class DisplayHelper
     {
         public static string ReportingOnValue(string name, string number)
         {
             string value = string.Empty;
-           
+
             if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(number))
             {
                 return value + name + " " + "(" + number + ")";

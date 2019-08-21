@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.BusinessValidation.XmlBusinessRules
 {
-    using System;
-    using System.Linq;
     using Core.Shared;
     using Domain.Scheme;
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
-    using Xml.DataReturns;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class SchemeApprovalNumberMismatchTests

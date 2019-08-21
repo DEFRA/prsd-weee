@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Core.Admin;
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     public interface IAatfDataAccess
     {
         Task<Aatf> GetDetails(Guid id);

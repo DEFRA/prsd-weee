@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public enum CoreEnumeration 
+    public enum CoreEnumeration
     {
         [Display(Name = "Something")]
         Something = 1,

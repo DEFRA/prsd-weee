@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
+    using Prsd.Core.Web.Extensions;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Prsd.Core.Web.Extensions;
 
     public class SmokeTest : ISmokeTest
     {

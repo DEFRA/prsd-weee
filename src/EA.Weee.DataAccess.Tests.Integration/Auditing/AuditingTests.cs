@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.Auditing
 {
+    using FakeItEasy;
+    using Prsd.Core.Domain;
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using Domain;
-    using Domain.Organisation;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Address = Domain.Organisation.Address;
@@ -28,7 +26,7 @@
 
         [Fact]
         public void AddressAddedToExistingScheme_SchemeUpdateIsAudited_AddressCreateIsAudited()
-        {   
+        {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
@@ -41,7 +39,7 @@
                 context.SaveChanges(); // This will reset the change tracker
 
                 scheme.AddOrUpdateAddress(ValidAddress());
-                
+
                 var schemeChanges = context.ChangeTracker.Entries<Scheme>();
                 var addressChanges = context.ChangeTracker.Entries<Address>();
 

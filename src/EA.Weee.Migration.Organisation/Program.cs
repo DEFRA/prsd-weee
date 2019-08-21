@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.Migration.Organisation
 {
+    using Dapper;
+    using Model;
+    using NLog;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -8,9 +11,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Dapper;
-    using Model;
-    using NLog;
     using Validation;
 
     internal class Program

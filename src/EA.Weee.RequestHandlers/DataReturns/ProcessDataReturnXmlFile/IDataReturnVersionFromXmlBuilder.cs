@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System.Threading.Tasks;
     using ReturnVersionBuilder;
+    using System.Threading.Tasks;
     using Xml.DataReturns;
 
     /// <summary>

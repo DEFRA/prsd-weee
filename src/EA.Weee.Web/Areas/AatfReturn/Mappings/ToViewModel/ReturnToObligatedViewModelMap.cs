@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.Helpers;
     using EA.Weee.Core.Shared;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using ViewModels;
 
     public class ReturnToObligatedViewModelMap : IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel>
@@ -59,7 +59,7 @@
                 existingData = obligatedMap.Map(transfer).ToList();
             }
             else if (source.SiteName != null)
-            { 
+            {
                 transfer.WeeeDataValues = source.ReturnData.ObligatedWeeeSentOnData.Where(w => w.WeeeSentOnId == source.WeeeSentOnId).ToList();
                 existingData = obligatedMap.Map(transfer).ToList();
             }
@@ -78,7 +78,8 @@
             {
                 var obligatedPastedValues = new ObligatedPastedValues
                 {
-                    B2B = pasteProcessor.BuildModel(source.PastedData.B2B), B2C = pasteProcessor.BuildModel(source.PastedData.B2C)
+                    B2B = pasteProcessor.BuildModel(source.PastedData.B2B),
+                    B2C = pasteProcessor.BuildModel(source.PastedData.B2C)
                 };
 
                 model.CategoryValues = pasteProcessor.ParseObligatedPastedValues(obligatedPastedValues, existingData);

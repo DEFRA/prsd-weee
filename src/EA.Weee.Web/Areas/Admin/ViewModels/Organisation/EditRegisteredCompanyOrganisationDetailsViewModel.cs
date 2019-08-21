@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
 {
-    using System;
+    using EA.Weee.Core.DataStandards;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
-    
+
     public class EditRegisteredCompanyOrganisationDetailsViewModel : EditOrganisationDetailsViewModelBase
     {
         [Required]

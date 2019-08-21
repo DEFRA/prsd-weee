@@ -6,16 +6,11 @@
     using EA.Weee.Domain.User;
     using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers;
     using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations;
-    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 

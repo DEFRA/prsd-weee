@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Prsd.Core.Domain;
     using Specification;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IGenericDataAccess
     {
