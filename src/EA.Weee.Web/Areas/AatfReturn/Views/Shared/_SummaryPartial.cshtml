@@ -34,7 +34,7 @@
 {
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-4"></div>
-    <div class="govuk-body" style="padding-left: 15px; margin-bottom: 0px;">
+    <div class="govuk-body">
         @if (Model.ShowDownloadObligatedData)
         {
             @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
