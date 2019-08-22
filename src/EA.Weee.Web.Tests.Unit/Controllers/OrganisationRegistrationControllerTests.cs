@@ -885,6 +885,13 @@
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
+            var activeUsers = new List<OrganisationUserData>()
+            {
+                A.Fake<OrganisationUserData>()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
+
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
@@ -905,6 +912,7 @@
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(UserStatus.Active, viewModel.Status);
             Assert.Equal("Test Company", viewModel.OrganisationName);
+            Assert.Equal(true, viewModel.AnyActiveUsers);
         }
 
         [Fact]
