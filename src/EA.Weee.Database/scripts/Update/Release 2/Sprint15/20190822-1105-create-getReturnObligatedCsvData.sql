@@ -7,11 +7,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- Description:	This stored procedure is used to provide the data for the admin report of obligatde data
---				that have/haven't submitted a data return within
---				the limits of the specified parameters.Get the latest submitted return
-
--- =============================================
 CREATE PROCEDURE [AATF].[getReturnObligatedCsvData]
 	@ReturnId UNIQUEIDENTIFIER
 AS
@@ -67,7 +62,8 @@ INSERT INTO @ReturnAatf (AatfId, ReturnId)
 		@ReturnId
 	FROM
 		[AATF].AATF a 
-		INNER JOIN [AATF].[Return] r ON r.OrganisationId = a.OrganisationId
+		INNER JOIN [AATF].[Return] r ON r.OrganisationId = a.OrganisationId 
+			AND a.ComplianceYear = r.ComplianceYear AND a.FacilityType = r.FacilityType
 	WHERE
 		r.Id = @ReturnId
 		AND (a.ApprovalDate IS NOT NULL AND a.ApprovalDate < @AatfReportDate)
