@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
     public class GetAllAatfSentOnDataCsv : IRequest<CSVFileData>
     {
         public int ComplianceYear { get; private set; }
@@ -15,7 +15,7 @@
 
         public string AATFName { get; private set; }
 
-        public GetAllAatfSentOnDataCsv(int complianceYear, 
+        public GetAllAatfSentOnDataCsv(int complianceYear,
            string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
         {
             ComplianceYear = complianceYear;

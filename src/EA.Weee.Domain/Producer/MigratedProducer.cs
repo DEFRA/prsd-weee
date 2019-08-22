@@ -11,7 +11,7 @@
         public virtual string CompanyNumber { get; private set; }
 
         protected MigratedProducer()
-        {          
+        {
         }
     }
 }

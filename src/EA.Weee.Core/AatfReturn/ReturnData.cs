@@ -5,7 +5,6 @@
     using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core;
 
     public class ReturnData
     {

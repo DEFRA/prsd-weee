@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.CheckYourReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.NonObligated;
     using RequestHandlers.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

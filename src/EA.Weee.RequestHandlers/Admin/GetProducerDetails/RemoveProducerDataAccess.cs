@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using DataAccess;
+    using DataAccess.DataAccess;
+    using Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using DataAccess.DataAccess;
-    using Domain.Producer;
 
     public class RemoveProducerDataAccess : IRemoveProducerDataAccess
     {

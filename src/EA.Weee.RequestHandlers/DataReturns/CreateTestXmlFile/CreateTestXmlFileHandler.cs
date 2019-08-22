@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.CreateTestXmlFile
 {
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
     using Domain.DataReturns;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.DataReturns;
     using Prsd.Core;
+    using System.Threading.Tasks;
+    using System.Xml.Linq;
 
     public class CreateTestXmlFileHandler : IRequestHandler<CreateTestXmlFile, FileInfo>
     {

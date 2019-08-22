@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Security
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Security.Claims;
     using DataAccess;
     using Domain.Admin;
     using Domain.Organisation;
@@ -11,6 +7,10 @@
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Security.Claims;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

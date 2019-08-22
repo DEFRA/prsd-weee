@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
-    using System.ComponentModel.DataAnnotations;
     using Core.AatfReturn;
+    using System.ComponentModel.DataAnnotations;
 
     public class AddAatfViewModel : AddFacilityViewModelBase
     {

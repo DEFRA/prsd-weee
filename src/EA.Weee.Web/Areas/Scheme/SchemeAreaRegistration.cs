@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme
 {
-    using System.Web.Mvc;
     using Controllers;
     using Infrastructure;
+    using System.Web.Mvc;
 
-    public class SchemeAreaRegistration : AreaRegistration 
+    public class SchemeAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "Scheme";
             }

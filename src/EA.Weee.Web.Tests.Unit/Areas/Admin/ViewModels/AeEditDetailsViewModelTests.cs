@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Xunit;
 
     public class AeEditDetailsViewModelTests

@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess.DataAccess;
     using Domain.DataReturns;
     using Factories;
     using Prsd.Core;
-    using ReturnVersionBuilder;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class SubmissionWindowClosed : ISubmissionWindowClosed
     {

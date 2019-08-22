@@ -37,7 +37,13 @@
     <div class="govuk-body">
         @if (Model.ShowDownloadObligatedData)
         {
-            @Html.NavigationRouteLink("Download all obligated data", "Download all obligated data", AatfRedirect.Download, new { returnId = Model.ReturnId }, null)
+            @(this.WeeeGds().ActionLinkWithEventTracking("Download all obligated data",
+                  "Download all obligated data",
+                  Url.RouteUrl(AatfRedirect.Download, new {returnId = Model.ReturnId}),
+                  "AATF return",
+                  "Obligated data download",
+                  "Obligated data download"
+                  ))
         }
     </div>
     <div class="govuk-table govuk-grid-column-full">

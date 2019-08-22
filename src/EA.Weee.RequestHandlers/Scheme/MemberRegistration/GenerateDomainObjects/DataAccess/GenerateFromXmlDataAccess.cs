@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess
 {
+    using Core.Helpers.PrnGeneration;
+    using Domain;
+    using Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -7,9 +10,6 @@
     using System.Linq;
     using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
-    using Core.Helpers.PrnGeneration;
-    using Domain;
-    using Domain.Producer;
     using Weee.DataAccess;
 
     public class GenerateFromXmlDataAccess : IGenerateFromXmlDataAccess

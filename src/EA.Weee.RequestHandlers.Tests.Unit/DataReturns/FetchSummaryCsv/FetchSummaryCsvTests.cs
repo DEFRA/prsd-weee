@@ -1,21 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.FetchSummaryCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using Domain;
     using Domain.Organisation;
-    using Domain.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Prsd.Core;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class FetchSummaryCsvTests

@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchPendingCharges
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Charges;
     using EA.Prsd.Core.Mediator;
     using Ionic.Zip;
     using Security;
     using Shared;
+    using System;
+    using System.Threading.Tasks;
 
     public class FetchInvoiceRunIbisZipFileHandler : IRequestHandler<Requests.Charges.FetchInvoiceRunIbisZipFile, FileInfo>
     {

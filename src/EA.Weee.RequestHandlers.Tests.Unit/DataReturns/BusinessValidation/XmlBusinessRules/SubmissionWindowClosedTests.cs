@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.BusinessValidation.XmlBusinessRules
 {
-    using System;
-    using System.Linq;
     using DataAccess.DataAccess;
     using Domain;
     using Domain.DataReturns;
-    using Factories;
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.Factories;
-    using Xml.DataReturns;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class SubmissionWindowClosedTests

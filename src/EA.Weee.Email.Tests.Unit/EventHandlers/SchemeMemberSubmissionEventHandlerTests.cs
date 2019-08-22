@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Email.Tests.Unit.EventHandlers
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Events;
     using Domain.Scheme;
     using Email.EventHandlers;
     using FakeItEasy;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 

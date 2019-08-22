@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -40,7 +40,7 @@
             var @return = A.Fake<ReturnData>();
             @return.Quarter = new Quarter(2019, QuarterType.Q1);
             @return.QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
-            var transfer = new ReturnDataToSelectReportOptionsNilViewModelMapTransfer() {OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReturnData = @return};
+            var transfer = new ReturnDataToSelectReportOptionsNilViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReturnData = @return };
 
             var result = map.Map(transfer);
 

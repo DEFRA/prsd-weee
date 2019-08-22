@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
     using Core.DataReturns;
     using EA.Weee.Core.Helpers;
     using FluentAssertions;
+    using System;
+    using System.Globalization;
+    using System.Linq;
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
+    using DataAccess;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using DataAccess;
 
     [RoutePrefix("api/SmokeTest")]
     public class SmokeTestController : ApiController

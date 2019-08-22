@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class FetchInvoiceRunCsv : IRequest<CSVFileData>
     {

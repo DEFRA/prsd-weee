@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System;
-    using System.Collections.Generic;
     using Classfication;
     using Classification;
     using Domain;
@@ -10,6 +8,8 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
+    using System;
+    using System.Collections.Generic;
 
     public class ProducerSubmission : Entity, IEquatable<ProducerSubmission>
     {
@@ -174,7 +174,7 @@
             {
                 return MemberUpload.HasAnnualCharge ? "Yes" : "No";
             }
-        } 
+        }
 
         public override int GetHashCode()
         {

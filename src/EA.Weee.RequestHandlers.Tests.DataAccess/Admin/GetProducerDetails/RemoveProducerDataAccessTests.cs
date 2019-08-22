@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetProducerDetails
 {
+    using RequestHandlers.Admin.GetProducerDetails;
     using System.Linq;
     using System.Threading.Tasks;
-    using RequestHandlers.Admin.GetProducerDetails;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;

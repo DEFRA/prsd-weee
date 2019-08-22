@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System;
     using Core.DataReturns;
+    using System;
 
     public class AatfSubmissionHistoryViewModel
     {

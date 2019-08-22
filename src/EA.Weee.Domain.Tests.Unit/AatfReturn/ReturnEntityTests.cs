@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class ReturnEntityTests

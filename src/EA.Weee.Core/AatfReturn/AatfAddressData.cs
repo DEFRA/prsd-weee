@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using EA.Weee.Core.DataStandards;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.DataStandards;
 
     public class AatfAddressData : AddressData
     {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
+    using EA.Weee.Core.AatfReturn;
+    using FluentAssertions;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Reflection;
-    using EA.Weee.Core.AatfReturn;
-    using FluentAssertions;
     using Xunit;
 
     public class AatfAddressTests

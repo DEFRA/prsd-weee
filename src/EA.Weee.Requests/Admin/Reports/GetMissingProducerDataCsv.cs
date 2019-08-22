@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Requests.Admin.Reports
 {
-    using System;
     using Core.Admin;
     using Core.Shared;
     using Prsd.Core.Mediator;
-    
+    using System;
+
     public class GetMissingProducerDataCsv : IRequest<CSVFileData>
     {
         public int ComplianceYear { get; private set; }

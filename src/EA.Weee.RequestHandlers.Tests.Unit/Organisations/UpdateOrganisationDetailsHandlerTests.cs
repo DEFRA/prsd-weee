@@ -1,19 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
-    using DataAccess.Identity;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
-    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.Requests.Organisations;
     using FakeItEasy;
-    using Microsoft.AspNet.Identity;
-    using RequestHandlers.Admin;
     using RequestHandlers.Security;
-    using Requests.Admin;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -33,7 +28,7 @@
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
             var handler = new UpdateOrganisationDetailsHandler(dataAccess, authorization);
-            
+
             // Act
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<UpdateOrganisationDetails>());
 
@@ -49,7 +44,7 @@
                 .AllowInternalAreaAccess()
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
-            
+
             var dataAccess = A.Fake<IOrganisationDetailsDataAccess>();
 
             var handler = new UpdateOrganisationDetailsHandler(dataAccess, authorization);

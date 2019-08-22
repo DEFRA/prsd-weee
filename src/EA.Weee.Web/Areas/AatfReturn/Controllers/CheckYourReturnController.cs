@@ -24,7 +24,7 @@
         public CheckYourReturnController(Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
-            IMapper mapper)    
+            IMapper mapper)
         {
             this.apiClient = apiClient;
             this.cache = cache;
@@ -34,7 +34,7 @@
 
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid returnId)
-        { 
+        {
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));

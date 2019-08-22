@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSubmissionChanges
 {
+    using DataAccess.StoredProcedure;
+    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using DataAccess.StoredProcedure;
-    using Domain.Scheme;
 
     public interface IGetSubmissionChangesCsvDataAccess
     {

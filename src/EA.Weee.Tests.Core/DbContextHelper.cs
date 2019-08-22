@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Tests.Core
 {
+    using FakeItEasy;
+    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
 
     public class DbContextHelper
     {
@@ -28,7 +28,7 @@
         {
             var queryable = data.AsQueryable();
 
-            var dbSet = A.Fake<DbSet<T>>(options => 
+            var dbSet = A.Fake<DbSet<T>>(options =>
                 {
                     options.Implements(typeof(IQueryable<T>));
                     options.Implements(typeof(IDbAsyncEnumerable<T>));

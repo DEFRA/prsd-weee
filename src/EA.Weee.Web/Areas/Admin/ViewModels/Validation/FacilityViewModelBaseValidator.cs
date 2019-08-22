@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Validation
 {
-    using System;
-    using System.Threading.Tasks;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentValidation;
+    using System;
+    using System.Threading.Tasks;
 
     public class FacilityViewModelBaseValidator : AbstractValidator<FacilityViewModelBase>
     {

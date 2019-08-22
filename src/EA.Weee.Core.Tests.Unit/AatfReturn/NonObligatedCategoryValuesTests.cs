@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Linq;
     using Core.AatfReturn;
     using Core.Helpers;
     using DataReturns;
     using FluentAssertions;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class ObligatedCategoryValuesTests

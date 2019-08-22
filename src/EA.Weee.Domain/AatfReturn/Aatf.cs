@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
     using Lookup;
     using Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
 
     public class Aatf : Entity
     {
@@ -91,7 +91,7 @@
             Guard.ArgumentNotNull(() => aatfSize, aatfSize);
             Guard.ArgumentNotNull(() => aatfSiteAddress, aatfSiteAddress);
             Guard.ArgumentNotNull(() => facilityType, facilityType);
-         
+
             Name = name;
             CompetentAuthority = competentAuthority;
             ApprovalNumber = approvalNumber;

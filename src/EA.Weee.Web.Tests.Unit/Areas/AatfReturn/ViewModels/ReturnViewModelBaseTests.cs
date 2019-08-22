@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Globalization;
     using Core.AatfReturn;
     using Core.DataReturns;
     using FluentAssertions;
-    using Web.Areas.AatfReturn.ViewModels;
+    using System;
+    using System.Globalization;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -101,7 +100,7 @@
             {
                 var returnData = new ReturnData()
                 {
-                    Quarter = GetQuarter(), 
+                    Quarter = GetQuarter(),
                     QuarterWindow = GetQuarterWindow(),
                     ReturnStatus = (ReturnStatus)value
                 };
@@ -127,7 +126,7 @@
         public void Constructor_GivenSubmittedDateEmpty_SubmittedDateShouldBeFormattedAsDash(string submittedBy)
         {
             var model = new ReturnViewModelTest(new ReturnData() { Quarter = GetQuarter(), QuarterWindow = GetQuarterWindow(), SubmittedBy = submittedBy });
-           
+
             model.SubmittedBy.Should().Be("-");
         }
 

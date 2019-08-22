@@ -1,22 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Web.Mvc;
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
-    using Core.Scheme;
     using EA.Weee.Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using TestHelpers;
-    using Web.Areas.AatfReturn.Attributes;
+    using System;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Controllers;
-    using Web.Areas.AatfReturn.ViewModels;
-    using Web.Controllers.Base;
     using Web.ViewModels.Returns;
     using Weee.Requests.AatfReturn;
     using Xunit;

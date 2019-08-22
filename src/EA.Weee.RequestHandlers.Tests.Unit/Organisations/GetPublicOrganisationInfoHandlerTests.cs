@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
-    using Domain.Organisation;
     using FakeItEasy;
     using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -45,7 +44,7 @@
             var expectedReturnValue = new PublicOrganisationData();
             Organisation mappedOrganisation = null;
             var publicOrganisationMap = A.Fake<IMap<Organisation, PublicOrganisationData>>();
-            
+
             A.CallTo(() => publicOrganisationMap.Map(A<Organisation>._))
                 .Invokes((Organisation o) => mappedOrganisation = o)
                 .Returns(expectedReturnValue);

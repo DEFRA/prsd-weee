@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
@@ -11,6 +9,8 @@
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ReturnToNonObligatedViewModelMapTests

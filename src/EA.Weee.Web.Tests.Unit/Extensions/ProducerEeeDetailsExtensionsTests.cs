@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Extensions
 {
-    using System.Collections.Generic;
     using Core.Admin;
     using Core.DataReturns;
     using Core.Shared;
+    using System.Collections.Generic;
     using Web.Extensions;
     using Xunit;
 

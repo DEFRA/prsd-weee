@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
-    using System;
     using Core.Organisations;
     using Prsd.Core.Validation;
+    using System;
 
     public class OrganisationSummaryViewModel
     {

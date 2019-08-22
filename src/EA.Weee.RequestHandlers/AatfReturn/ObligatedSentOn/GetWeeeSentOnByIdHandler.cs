@@ -7,10 +7,8 @@
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class GetWeeeSentOnByIdHandler : IRequestHandler<GetWeeeSentOnById, WeeeSentOnData>

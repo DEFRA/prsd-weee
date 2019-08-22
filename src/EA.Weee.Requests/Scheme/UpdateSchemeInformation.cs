@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
-    using System;
     using Core.Scheme;
     using Core.Shared;
     using Prsd.Core.Mediator;
+    using System;
 
     public class UpdateSchemeInformation : IRequest<UpdateSchemeInformationResult>
     {

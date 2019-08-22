@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class ReturnReportOn 
+    public class ReturnReportOn
     {
         public ReturnReportOn(int reportOnQuestionId, Guid returnId)
         {

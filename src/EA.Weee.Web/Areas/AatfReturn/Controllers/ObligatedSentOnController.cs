@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -16,6 +13,9 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [ValidateReturnCreatedActionFilter]
     public class ObligatedSentOnController : AatfReturnBaseController
@@ -55,7 +55,7 @@
                     SiteName = siteName,
                     WeeeSentOnId = weeeSentOnId,
                     PastedData = TempData["pastedValues"] as ObligatedCategoryValue
-                });                
+                });
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 TempData["currentQuarter"] = @return.Quarter;
                 TempData["currentQuarterWindow"] = @return.QuarterWindow;

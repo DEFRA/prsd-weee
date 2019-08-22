@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System;
     using Prsd.Core.Domain;
+    using System;
 
     public class Company : Entity, IEquatable<Company>
     {
@@ -16,27 +16,27 @@
         {
         }
 
-         public override int GetHashCode()
-         {
-             return base.GetHashCode();
-         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-         public virtual bool Equals(Company other)
-         {
-             if (other == null)
-             {
-                 return false;
-             }
+        public virtual bool Equals(Company other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
 
-             return Name == other.Name &&
-                    CompanyNumber == other.CompanyNumber &&
-                    object.Equals(RegisteredOfficeContact, other.RegisteredOfficeContact);
-         }
+            return Name == other.Name &&
+                   CompanyNumber == other.CompanyNumber &&
+                   object.Equals(RegisteredOfficeContact, other.RegisteredOfficeContact);
+        }
 
-         public override bool Equals(Object obj)
-         {
-             return Equals(obj as Company);
-         }
+        public override bool Equals(Object obj)
+        {
+            return Equals(obj as Company);
+        }
 
         public string Name { get; private set; }
 

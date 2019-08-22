@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Web.Mvc;
     using Core.Scheme;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
@@ -24,6 +19,11 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Web.Mvc;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -112,7 +112,7 @@
             A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
             A.CallTo(() => model.OrganisationId).Returns(organisationId);
             A.CallTo(() => model.ReturnId).Returns(returnId);
-            
+
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
@@ -235,7 +235,7 @@
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-           var result = await controller.Index(model) as RedirectToRouteResult;
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["returnId"].Should().Be(returnId);

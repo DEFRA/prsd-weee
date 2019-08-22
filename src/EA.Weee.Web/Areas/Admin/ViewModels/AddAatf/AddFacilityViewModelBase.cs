@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using System;
+    using System.Collections.Generic;
 
     public abstract class AddFacilityViewModelBase : FacilityViewModelBase
     {

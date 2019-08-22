@@ -4,13 +4,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using Core.Shared;
     using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
     public class ReturnAndAatfToSentOnSummaryListViewModelMap : IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel>

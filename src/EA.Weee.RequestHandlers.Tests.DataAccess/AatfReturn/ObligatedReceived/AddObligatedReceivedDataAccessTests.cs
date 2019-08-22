@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.ObligatedReceived
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedGeneric;
     using RequestHandlers.AatfReturn.ObligatedReceived;
+    using System;
+    using System.Collections.Generic;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;

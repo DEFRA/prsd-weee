@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;

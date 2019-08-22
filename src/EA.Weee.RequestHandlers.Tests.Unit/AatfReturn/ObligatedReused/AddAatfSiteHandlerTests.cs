@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReused
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -17,6 +13,10 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class AddAatfSiteHandlerTests
@@ -24,8 +24,8 @@
         private readonly IWeeeAuthorization authorisation;
         private readonly IAatfSiteDataAccess addAatfSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IObligatedReusedDataAccess obligatedReusedDataAccess; 
-        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess; 
+        private readonly IObligatedReusedDataAccess obligatedReusedDataAccess;
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly AddAatfSiteHandler handler;
 
@@ -67,13 +67,13 @@
 
             await handler.HandleAsync(siteRequest);
 
-            A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.Matches(w => 
+            A.CallTo(() => addAatfSiteDataAccess.Submit(A<WeeeReusedSite>.That.Matches(w =>
                 w.Address.Address1.Equals(siteRequest.AddressData.Address1)
                 && w.Address.Address2.Equals(siteRequest.AddressData.Address2)
                 && w.Address.CountyOrRegion.Equals(siteRequest.AddressData.CountyOrRegion)
                 && w.Address.TownOrCity.Equals(siteRequest.AddressData.TownOrCity)
                 && w.Address.Postcode.Equals(siteRequest.AddressData.Postcode)
-                && w.Address.Country.Equals(country)                                 
+                && w.Address.Country.Equals(country)
                 && w.WeeeReused.Equals(weeReused)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 

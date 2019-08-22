@@ -1,14 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
-    using Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
-    using FacilityType = Core.AatfReturn.FacilityType;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class ReturnFactoryDataAccess : IReturnFactoryDataAccess
     {

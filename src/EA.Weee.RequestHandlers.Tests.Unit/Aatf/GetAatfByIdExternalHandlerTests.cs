@@ -2,7 +2,6 @@
 {
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Aatf;
@@ -13,10 +12,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 

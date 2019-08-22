@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetSubmissionChanges
 {
+    using RequestHandlers.Admin.GetSubmissionChanges;
     using System;
     using System.Threading.Tasks;
-    using RequestHandlers.Admin.GetSubmissionChanges;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -30,7 +30,7 @@
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(memberUpload.Id, result.Id); 
+                Assert.Equal(memberUpload.Id, result.Id);
             }
         }
 

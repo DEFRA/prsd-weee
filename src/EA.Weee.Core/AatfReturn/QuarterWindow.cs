@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using DataReturns;
+    using System;
 
     public class QuarterWindow
     {
@@ -36,7 +32,7 @@
 
             QuarterStart = new DateTime(startYear, startMonth, 1);
             QuarterEnd = windowOpenDate.AddDays(-1);
-           
+
             WindowOpenDate = windowOpenDate;
             WindowClosedDate = windowClosedDate;
 

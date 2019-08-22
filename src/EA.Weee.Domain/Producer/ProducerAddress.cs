@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using Prsd.Core.Domain;
     using System;
     using System.Linq;
-    using Prsd.Core.Domain;
 
     public class ProducerAddress : Entity, IEquatable<ProducerAddress>
     {

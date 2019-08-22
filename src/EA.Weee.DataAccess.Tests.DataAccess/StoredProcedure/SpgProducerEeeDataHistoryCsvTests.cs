@@ -201,7 +201,7 @@
 
                 EeeOutputAmount eeeOutputAmount1 =
                     helper.CreateEeeOutputAmount(producer1.RegisteredProducer, "B2B", 1, 100);
-                EeeOutputReturnVersion eeeOutputReturnVersion1 = 
+                EeeOutputReturnVersion eeeOutputReturnVersion1 =
                     helper.CreateEeeOutputReturnVersion();
                 helper.AddEeeOutputAmount(eeeOutputReturnVersion1, eeeOutputAmount1);
 

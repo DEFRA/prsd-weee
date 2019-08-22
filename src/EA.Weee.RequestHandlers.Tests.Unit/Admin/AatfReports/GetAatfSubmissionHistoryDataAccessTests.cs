@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
-    using DataAccess.StoredProcedure;
     using Domain.AatfReturn;
     using Domain.Admin.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

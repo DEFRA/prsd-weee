@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using System;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Http;
     using Client.Entities;
     using DataAccess.Identity;
     using Domain.User;
@@ -15,6 +10,11 @@
     using Prsd.Core.Domain;
     using RequestHandlers.Admin;
     using Security;
+    using System;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Http;
 
     [RoutePrefix("api/UnauthenticatedUser")]
     public class UnauthenticatedUserController : ApiController

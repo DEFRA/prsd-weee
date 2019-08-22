@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System.Threading.Tasks;
     using AatfReturn;
     using AatfReturn.Internal;
     using Domain;
@@ -9,6 +8,7 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.Aatf;
     using Security;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     internal class EditAatfContactHandler : IRequestHandler<EditAatfContact, bool>

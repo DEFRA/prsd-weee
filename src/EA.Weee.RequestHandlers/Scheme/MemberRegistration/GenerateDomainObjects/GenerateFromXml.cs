@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
-    using Domain;
     using Domain.Error;
     using Domain.Obligation;
     using Domain.Producer;
@@ -17,6 +11,11 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
     using Xml.Converter;
     using Xml.MemberRegistration;
 
@@ -111,7 +110,7 @@
                 switch (producerData.status)
                 {
                     case statusType.I:
-                    producerRegistrationNo = generatedPrns.Dequeue();
+                        producerRegistrationNo = generatedPrns.Dequeue();
                         break;
 
                     case statusType.A:

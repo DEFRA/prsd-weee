@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using EA.Prsd.Core;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Core.Scheme;
-    using EA.Prsd.Core;
 
     public class AatfObligatedData
     {
@@ -18,7 +17,7 @@
         public AatfObligatedData()
         {
         }
-        
+
         public AatfData Aatf { get; set; }
 
         public List<AatfSchemeData> SchemeData { get; set; }

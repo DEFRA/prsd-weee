@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Threading.Tasks;
-    using Domain.Admin.AatfReports;
 
     public interface IStoredProcedures
     {
@@ -14,7 +14,7 @@
             bool includeBrandNames, Guid? schemeId = null, Guid? competentAuthorityId = null);
 
         Task<int> SpgNextIbisTransactionNumber();
-        
+
         Task<List<ProducerPublicRegisterCSVData>> SpgProducerPublicRegisterCSVDataByComplianceYear(int complianceYear);
 
         Task<List<ProducerAmendmentsHistoryCSVData>> SpgProducerAmendmentsCSVDataByPRN(string prn);
@@ -55,7 +55,7 @@
         Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId);
 
         Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea);
-        
+
         Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea);
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
-    using System.Collections.Generic;
-    using System.Security.Claims;
     using EA.Weee.Core;
     using IdentityServer3.Core.Models;
+    using System.Collections.Generic;
+    using System.Security.Claims;
 
     internal static class Scopes
     {

@@ -1,22 +1,20 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Weee.Requests.AatfReturn;
 
     [ValidateReturnCreatedActionFilter]
@@ -31,7 +29,7 @@
         public ObligatedReusedController(IWeeeCache cache,
             BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
-            IObligatedReusedWeeeRequestCreator requestCreator, 
+            IObligatedReusedWeeeRequestCreator requestCreator,
             IMap<ReturnToObligatedViewModelMapTransfer, ObligatedViewModel> mapper)
         {
             this.apiClient = apiClient;

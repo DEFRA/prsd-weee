@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.FetchDataReturnForSubmission
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.DataReturns;
-    using Domain;
     using Domain.DataReturns;
     using Domain.Error;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.DataReturns.FetchDataReturnForSubmission;
     using RequestHandlers.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

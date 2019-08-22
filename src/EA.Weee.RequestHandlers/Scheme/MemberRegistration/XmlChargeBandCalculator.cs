@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.Error;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xml.Converter;
     using Xml.MemberRegistration;
 
@@ -24,7 +23,7 @@
         }
 
         public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
-        { 
+        {
             var schemeType = xmlConverter.Deserialize<schemeType>(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();

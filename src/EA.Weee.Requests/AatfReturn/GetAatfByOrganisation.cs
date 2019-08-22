@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
+    using System;
+    using System.Collections.Generic;
 
     public class GetAatfByOrganisation : IRequest<List<AatfData>>
     {

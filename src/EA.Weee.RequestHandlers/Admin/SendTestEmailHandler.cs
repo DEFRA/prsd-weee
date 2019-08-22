@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System.Threading.Tasks;
     using Email;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System.Threading.Tasks;
 
     public class SendTestEmailHandler : IRequestHandler<SendTestEmail, bool>
     {
