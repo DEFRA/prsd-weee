@@ -40,11 +40,10 @@
             </div>
         </div>
 
-        <form method="post" class="form" style="display: inline">
-            <button type="submit" class="govuk-button" id="aatf-task-list">
-                Continue
-            </button>
-        </form>
+        <button type="submit" class="govuk-button" id="aatf-task-list">
+            Continue
+        </button>
+        
         <a href="@(Url.UrlFor<NonObligatedController>(u => u.Index(Model.ReturnId, Model.Dcf)))">Cancel</a>
     }
 </section>
