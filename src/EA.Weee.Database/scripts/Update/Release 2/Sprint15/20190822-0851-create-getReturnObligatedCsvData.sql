@@ -277,10 +277,10 @@ FROM
 	SELECT DISTINCT
 		s.SchemeName As SchemeName
 	FROM
-		[AATF].WeeeReceived wr
-		INNER JOIN [PCS].Scheme s ON s.Id = wr.SchemeId
+		[AATF].ReturnScheme rs
+		INNER JOIN [PCS].Scheme s ON s.Id = rs.SchemeId
 	WHERE
-		 wr.ReturnId = @ReturnId) AS SchemeNames
+		 rs.ReturnId = @ReturnId) AS SchemeNames
 
 	SET @DynamicPivotQuery = 
 	N'
