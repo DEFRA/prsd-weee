@@ -48,7 +48,10 @@
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
                 ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false),
                 PanArea = source.AatfData.PanAreaData,
-                LocalArea = source.AatfData.LocalAreaData
+                LocalArea = source.AatfData.LocalAreaData,
+                ComplianceYearList = source.ComplianceYearList,
+                AatfId = source.AatfData.AatfId,
+                SelectedComplianceYear = source.AatfData.ComplianceYear
             };
 
             if (source.AssociatedAatfs != null)
