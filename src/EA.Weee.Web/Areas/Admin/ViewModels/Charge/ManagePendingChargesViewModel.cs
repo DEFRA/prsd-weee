@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Charge
 {
-    using System.Collections.Generic;
     using Core.Charges;
+    using System.Collections.Generic;
 
     public class ManagePendingChargesViewModel
     {

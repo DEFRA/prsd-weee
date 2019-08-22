@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -18,6 +15,9 @@
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfInfoByAatfIdRequestHandlerTests
@@ -37,14 +37,14 @@
                 A.Fake<IMap<AatfAddress, AatfAddressData>>(),
                 A.Fake<IMap<AatfContact, AatfContactData>>(),
                 A.Fake<IMap<Organisation, OrganisationData>>(),
-                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>(), 
-                A.Fake<IMap<PanArea, PanAreaData>>(), 
+                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>(),
+                A.Fake<IMap<PanArea, PanAreaData>>(),
                 A.Fake<IMap<LocalArea, LocalAreaData>>());
             dataAccess = A.Dummy<IGetAatfsDataAccess>();
 
             fakeMapper = A.Fake<IMap<Aatf, AatfData>>();
 
-             handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
+            handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
         }
 
         [Fact]

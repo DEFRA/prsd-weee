@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
-    using System;
-    using System.Threading.Tasks;
     using DataAccess;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
     using RequestHandlers.Users;
     using Requests.Users;
+    using System;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -18,7 +18,7 @@
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
         private readonly IWeeeAuthorization weeeAuthorization;
-        
+
         public GetUserDataHandlerTests()
         {
             context = A.Fake<WeeeContext>();

@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using Domain.AatfReturn;
@@ -11,6 +8,9 @@
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

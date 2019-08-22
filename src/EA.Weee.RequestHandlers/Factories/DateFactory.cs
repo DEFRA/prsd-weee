@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
+    using System;
+    using System.Threading.Tasks;
 
     public class DateFactory : IDateFactory
     {

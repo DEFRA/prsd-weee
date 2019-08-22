@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details.Base
 {
+    using Core.DataStandards;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.DataStandards;
 
     public abstract class OrganisationViewModel
     {

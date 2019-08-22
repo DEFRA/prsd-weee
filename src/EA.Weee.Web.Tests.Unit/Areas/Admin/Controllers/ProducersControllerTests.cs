@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Search;
@@ -14,8 +9,11 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using FakeItEasy;
-    using Infrastructure;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Xunit;
 
     public class ProducersControllerTests
@@ -89,7 +87,7 @@
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
 
-            SearchViewModel viewModel = new SearchViewModel {SearchTerm = "testSearchTerm", SelectedRegistrationNumber = null};
+            SearchViewModel viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedRegistrationNumber = null };
 
             // Act
             ActionResult result = await controller.Search(viewModel);
@@ -114,7 +112,8 @@
 
             SearchViewModel viewModel = new SearchViewModel
             {
-                SearchTerm = "testSearchTerm, WEE/AA1111AA", SelectedRegistrationNumber = "WEE/AA1111AA"
+                SearchTerm = "testSearchTerm, WEE/AA1111AA",
+                SelectedRegistrationNumber = "WEE/AA1111AA"
             };
 
             // Act
@@ -189,7 +188,7 @@
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
 
-            SearchResultsViewModel viewModel = new SearchResultsViewModel {SearchTerm = "testSearchTerm"};
+            SearchResultsViewModel viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
             // Act
@@ -559,7 +558,7 @@
         [Fact]
         public async Task HttpPost_ConfirmRemoval_WithYesOptionSelected_AndRequestReturnsCacheInvalidation_ShouldInvalidateProducerSearch()
         {
-            var viewModel = new ConfirmRemovalViewModel {SelectedValue = "Yes"};
+            var viewModel = new ConfirmRemovalViewModel { SelectedValue = "Yes" };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
                 .Returns(new RemoveProducerResult(true));
@@ -573,7 +572,7 @@
         [Fact]
         public async Task HttpPost_ConfirmRemoval_WithYesOptionSelected_AndRequestDoesNotReturnCacheInvalidation_ShouldNotInvalidateProducerSearch()
         {
-            var viewModel = new ConfirmRemovalViewModel {SelectedValue = "Yes"};
+            var viewModel = new ConfirmRemovalViewModel { SelectedValue = "Yes" };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
                 .Returns(new RemoveProducerResult(false));
@@ -590,7 +589,7 @@
         public async Task HttpPost_ConfirmRemoval_WithYesOptionSelected_SendsRequest_ThenRegardlessOfCacheInvalidation_ShouldRedirectToRemovedAction(bool invalidateCache)
         {
             // Arrange
-            var viewModel = new ConfirmRemovalViewModel {SelectedValue = "Yes"};
+            var viewModel = new ConfirmRemovalViewModel { SelectedValue = "Yes" };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
                 .Returns(new RemoveProducerResult(invalidateCache));
@@ -614,7 +613,7 @@
         public async Task HttpPost_ConfirmRemoval_WithNoOptionSelected_DoesNotSendRequest_AndDoesNotInvalidateProducerSearch_ThenRedirectsToDetailsAction()
         {
             // Arrange
-            var viewModel = new ConfirmRemovalViewModel {SelectedValue = "No"};
+            var viewModel = new ConfirmRemovalViewModel { SelectedValue = "No" };
 
             // Act
             var result = await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);

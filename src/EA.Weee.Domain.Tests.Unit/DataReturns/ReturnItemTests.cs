@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
     using Obligation;
+    using System;
     using Xunit;
 
     public class ReturnItemTests

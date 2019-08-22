@@ -14,7 +14,7 @@
             Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
             Guard.ArgumentNotNullOrEmpty(() => surname, surname);
             Guard.ArgumentNotNullOrEmpty(() => email, email);
-       
+
             FirstName = firstName;
             Surname = surname;
             Email = email;

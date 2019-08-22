@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Producer;
     using Domain.Scheme;
     using Mappings;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class ProducerEeeMapTests

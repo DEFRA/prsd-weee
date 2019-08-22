@@ -2,17 +2,12 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class EditSentOnAatfSiteHandler : IRequestHandler<EditSentOnAatfSite, Guid>

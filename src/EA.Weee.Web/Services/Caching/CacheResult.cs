@@ -10,7 +10,7 @@
         /// Indicates the result of the attempt to find the item.
         /// </summary>
         public bool FoundInCache { get; private set; }
-        
+
         /// <summary>
         /// If the item was found, Value will provide the item.
         /// Otherwise, Value will be default(T).

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using System;
@@ -13,7 +12,7 @@
             {
                 return new EditSentOnAatfSite()
                 {
-                    SiteAddressData = viewModel.SiteAddressData,   
+                    SiteAddressData = viewModel.SiteAddressData,
                     WeeeSentOnId = (Guid)viewModel.WeeeSentOnId,
                     OperatorAddressData = viewModel.OperatorAddressData,
                 };

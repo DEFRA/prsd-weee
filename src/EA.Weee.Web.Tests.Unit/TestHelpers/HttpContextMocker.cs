@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.TestHelpers
 {
+    using FakeItEasy;
     using System.Collections.Generic;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using FakeItEasy;
 
     internal class HttpContextMocker
     {

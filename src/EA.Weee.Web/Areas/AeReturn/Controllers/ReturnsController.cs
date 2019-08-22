@@ -15,7 +15,6 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.DataReturns;
 
     [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
     public class ReturnsController : AeReturnBaseController

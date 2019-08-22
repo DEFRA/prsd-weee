@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Charging
 {
+    using Domain;
+    using RequestHandlers.Shared;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Charges;
-    using Domain;
-    using RequestHandlers.Shared;
     using Weee.Tests.Core.Model;
     using Xunit;
     public class CommonDataAccessTests
@@ -17,7 +16,7 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(wrapper.Model);
-              
+
                 Weee.Tests.Core.Model.Country country = new Weee.Tests.Core.Model.Country();
                 country.Id = new Guid("FA20ED45-5488-491D-A117-DFC09C9C1BA2");
                 country.Name = "Test Country";
@@ -30,11 +29,11 @@
                 databaseAuthority1.Email = "TestEmailAddress";
                 databaseAuthority1.AnnualChargeAmount = 0;
                 wrapper.Model.CompetentAuthorities.Add(databaseAuthority1);
-                
+
                 var scheme = helper.CreateScheme();
-                
-                scheme.CompetentAuthorityId = databaseAuthority1.Id;             
-                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);              
+
+                scheme.CompetentAuthorityId = databaseAuthority1.Id;
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 wrapper.Model.SaveChanges();
 
                 UKCompetentAuthority domainAuthority1 = wrapper.WeeeContext.UKCompetentAuthorities.Find(databaseAuthority1.Id);

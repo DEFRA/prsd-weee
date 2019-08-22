@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
-    using Domain.Admin;
     using Domain.Lookup;
+    using System.Data.Entity.ModelConfiguration;
 
     internal class LocalAreaMapping : EntityTypeConfiguration<LocalArea>
     {

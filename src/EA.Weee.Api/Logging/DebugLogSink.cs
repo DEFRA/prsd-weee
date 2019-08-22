@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Api.Logging
 {
-    using System.Diagnostics;
-    using System.IO;
     using Serilog.Core;
     using Serilog.Events;
     using Serilog.Formatting.Display;
+    using System.Diagnostics;
+    using System.IO;
 
     internal class DebugLogSink : ILogEventSink
     {

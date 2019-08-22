@@ -51,7 +51,7 @@
 
                 // Assert
                 Assert.Empty(result);
-            }   
+            }
         }
 
         [Fact]

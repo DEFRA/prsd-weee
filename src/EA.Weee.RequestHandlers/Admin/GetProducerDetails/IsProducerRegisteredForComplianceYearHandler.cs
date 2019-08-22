@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class IsProducerRegisteredForComplianceYearHandler : IRequestHandler<IsProducerRegisteredForComplianceYear, bool>
     {

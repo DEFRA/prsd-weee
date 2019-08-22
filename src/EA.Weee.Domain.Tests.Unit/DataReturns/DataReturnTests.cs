@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
     using Domain.DataReturns;
     using Domain.Scheme;
-    using FakeItEasy;
+    using System;
     using Xunit;
 
     public class DataReturnTests

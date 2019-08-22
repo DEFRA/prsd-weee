@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.JoinOrganisation.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
     using Core.Helpers;
-    using Domain;
     using Domain.Organisation;
     using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
+    using System;
+    using System.Collections.Generic;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
@@ -104,7 +103,7 @@
                     .JoinOrganisation(new OrganisationUser(userId, organisationId, UserStatus.Pending));
 
             Assert.False((result).Successful);
-            
+
             A.CallTo(() => context.SaveChangesAsync())
                 .MustNotHaveHappened();
         }
@@ -126,7 +125,7 @@
             var result =
                 await JoinOrganisationDataAccess()
                     .JoinOrganisation(organisationUser);
-            
+
             A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappened(Repeated.Exactly.Once);
 

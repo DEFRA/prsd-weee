@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IAatfSiteDataAccess
     {

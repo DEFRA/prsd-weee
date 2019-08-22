@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Organisations;
@@ -10,6 +7,9 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.ViewModels.Returns;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Weee.Tests.Core;
@@ -60,7 +60,7 @@
 
             A.CallTo(() => ordering.Order(returnsData.ReturnsList)).Returns(returnsData.ReturnsList.AsEnumerable());
             A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
-            
+
             var result = returnsMap.Map(returnsData);
 
             result.Returns.Should().Contain(returnsItems.ElementAt(0));

@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
@@ -16,6 +10,11 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Scheme;
     using ViewModels.Scheme.Overview;
     using ViewModels.Scheme.Overview.ContactDetails;
@@ -96,7 +95,7 @@
                     case OverviewDisplayOption.OrganisationDetails:
 
                         var orgDetails = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
-                       
+
                         switch (orgDetails.OrganisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
@@ -224,7 +223,7 @@
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
-            {   
+            {
                 model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                 await SetBreadcrumb(schemeId);
                 return View(model);
@@ -256,7 +255,7 @@
                 case UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
-                        
+
                         await SetBreadcrumb(schemeId);
                         model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                         return View(model);
@@ -330,7 +329,7 @@
                 {
                     return new HttpForbiddenResult();
                 }
-                
+
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 model.OrganisationAddress = scheme.Address;

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using System;
     using Core.Admin;
     using EA.Weee.Core.User;
     using Prsd.Core.Mediator;
+    using System;
 
     public class FindMatchingUsers : IRequest<UserSearchDataResult>
     {
@@ -20,7 +20,7 @@
         /// </summary>
         public int PageSize { get; private set; }
 
-        public UserFilter Filter { get; private set; } 
+        public UserFilter Filter { get; private set; }
 
         /// <summary>
         /// Defines how the results will be ordered.

@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -9,6 +7,8 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Services.Caching;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class ReturnToNonObligatedValuesViewModelMap : IMap<ReturnToNonObligatedValuesViewModelMapTransfer, NonObligatedValuesViewModel>
     {

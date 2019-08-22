@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -10,6 +7,9 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetProducerPublicRegisterCSVHandler : IRequestHandler<GetProducerPublicRegisterCSV, CSVFileData>
     {

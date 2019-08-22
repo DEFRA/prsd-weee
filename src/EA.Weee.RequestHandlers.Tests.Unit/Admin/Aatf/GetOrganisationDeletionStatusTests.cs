@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using DataAccess.DataAccess;
@@ -9,6 +7,8 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.Aatf;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetOrganisationDeletionStatusTests

@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AatfReports
 {
+    using Core.AatfReturn;
+    using Extensions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Web.Mvc;
-    using Core.AatfReturn;
-    using Extensions;
 
     public class AatfAeReturnDataViewModel
     {

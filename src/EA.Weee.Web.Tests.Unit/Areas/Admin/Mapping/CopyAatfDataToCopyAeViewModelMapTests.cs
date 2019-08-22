@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class CopyAatfDataToCopyAeViewModelMapTests

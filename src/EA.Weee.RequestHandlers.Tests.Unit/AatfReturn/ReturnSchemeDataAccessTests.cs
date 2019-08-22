@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.AatfReturn;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -98,7 +96,7 @@
         {
             var returnId = Guid.NewGuid();
             var returnMatch = A.Fake<Return>();
-            
+
             A.CallTo(() => context.Returns).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Return>() { returnMatch }));
 
             var result = await dataAccess.GetOrganisationByReturnId(returnId);
@@ -128,7 +126,7 @@
 
             List<WeeeReceived> weeeReceived = new List<WeeeReceived>();
 
-            WeeeReceived weee = new WeeeReceived(schemeId1, A.Dummy<Guid>(), returnId);           
+            WeeeReceived weee = new WeeeReceived(schemeId1, A.Dummy<Guid>(), returnId);
             WeeeReceived weee1 = new WeeeReceived(schemeId1, A.Dummy<Guid>(), returnIdNoMatch);
             weeeReceived.Add(weee);
             weeeReceived.Add(weee1);

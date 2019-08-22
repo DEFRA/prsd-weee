@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Migration.Organisation.Validation
 {
-    using System.Collections.Generic;
     using FluentValidation;
     using Model;
     using NLog;
+    using System.Collections.Generic;
 
     public class OrganisationDataListValidator
     {

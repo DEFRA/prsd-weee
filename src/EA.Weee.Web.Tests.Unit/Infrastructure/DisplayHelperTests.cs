@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Infrastructure
 {
-    using System;
     using Core.DataReturns;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Infrastructure;
     using Weee.Tests.Core;
     using Xunit;

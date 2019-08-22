@@ -3,8 +3,6 @@
     using EA.Weee.Web.Infrastructure;
     using System;
     using System.Web.Mvc;
-    using Core.DataReturns;
-    using FakeItEasy;
     using Xunit;
 
     public class ARedirectTests

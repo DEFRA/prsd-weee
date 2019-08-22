@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Validation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
@@ -10,6 +7,9 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Xunit;
 
     public class AatfDetailsViewModelTests

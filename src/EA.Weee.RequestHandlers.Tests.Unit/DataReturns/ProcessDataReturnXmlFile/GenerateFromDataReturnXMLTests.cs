@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Linq;
     using FakeItEasy;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Requests.DataReturns;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;

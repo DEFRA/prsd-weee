@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
-    using System;
     using Organisations;
     using Shared;
+    using System;
 
     public class SchemeData
     {

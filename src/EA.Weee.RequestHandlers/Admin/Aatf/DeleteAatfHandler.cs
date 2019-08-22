@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System;
-    using System.Threading.Tasks;
     using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess;
@@ -9,6 +7,8 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.Aatf;
     using Security;
+    using System;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class DeleteAatfHandler : IRequestHandler<DeleteAnAatf, bool>
@@ -19,10 +19,10 @@
         private readonly WeeeContext context;
         private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
 
-        public DeleteAatfHandler(IWeeeAuthorization authorization, 
-            IAatfDataAccess aatfDataAccess, 
-            IOrganisationDataAccess organisationDataAccess, 
-            WeeeContext context, 
+        public DeleteAatfHandler(IWeeeAuthorization authorization,
+            IAatfDataAccess aatfDataAccess,
+            IOrganisationDataAccess organisationDataAccess,
+            WeeeContext context,
             IGetAatfDeletionStatus getAatfDeletionStatus)
         {
             this.authorization = authorization;

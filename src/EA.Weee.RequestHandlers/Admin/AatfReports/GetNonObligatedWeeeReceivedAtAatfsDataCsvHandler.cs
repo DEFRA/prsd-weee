@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -10,7 +8,8 @@
     using EA.Weee.Requests.Admin.AatfReports;
     using Prsd.Core.Mediator;
     using Security;
-    using Shared;
+    using System;
+    using System.Threading.Tasks;
 
     internal class GetNonObligatedWeeeReceivedDataAtAatfsCsvHandler : IRequestHandler<GetUkNonObligatedWeeeReceivedAtAatfsDataCsv, CSVFileData>
     {
@@ -18,7 +17,7 @@
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetNonObligatedWeeeReceivedDataAtAatfsCsvHandler(IWeeeAuthorization authorization, 
+        public GetNonObligatedWeeeReceivedDataAtAatfsCsvHandler(IWeeeAuthorization authorization,
             WeeeContext context,
             CsvWriterFactory csvWriterFactory)
         {
@@ -51,7 +50,7 @@
             var fileContent = csvWriter.Write(items);
 
             var fileNameParameters = string.Empty;
-            
+
             if (!string.IsNullOrWhiteSpace(request.AatfName))
             {
                 fileNameParameters += $"_{request.AatfName}";

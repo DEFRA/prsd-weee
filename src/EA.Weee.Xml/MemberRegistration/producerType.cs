@@ -23,8 +23,8 @@
             }
             set
             {
-                annualTurnoverString = value.HasValue 
-                    ? value.Value.ToString(CultureInfo.InvariantCulture) 
+                annualTurnoverString = value.HasValue
+                    ? value.Value.ToString(CultureInfo.InvariantCulture)
                     : null;
             }
         }

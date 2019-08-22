@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Producer;
 
     public class GetProducerDetailsDataAccess : IGetProducerDetailsDataAccess
     {

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Test
 {
-    using AutoFixture;
     using FluentAssertions;
     using Security;
     using Web.Areas.Test.Controllers;

@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
     using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
@@ -15,7 +12,9 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
-    using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
@@ -68,7 +67,7 @@
         {
             AatfData aatfData = CreateAatfData();
             var associatedAatfs = A.Fake<List<AatfDataList>>();
-            
+
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
             {
                 AssociatedAatfs = associatedAatfs

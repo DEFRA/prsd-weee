@@ -8,7 +8,6 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using Core.Shared;
     using Xunit;
 
     public class ReturnToReturnViewModelMapTests

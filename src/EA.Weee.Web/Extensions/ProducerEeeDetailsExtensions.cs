@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
-    using System.Linq;
     using Core.Admin;
     using Core.DataReturns;
     using Core.Shared;
+    using System.Linq;
 
     public static class ProducerEeeDetailsExtensions
     {

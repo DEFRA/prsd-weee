@@ -10,6 +10,10 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
 
     public class AatfDetailsViewModel
     {
@@ -37,7 +41,7 @@
         public AatfSize Size { get; set; }
 
         public OrganisationData Organisation { get; set; }
-        
+
         [AllowHtml]
         public string OrganisationAddress { get; set; }
 

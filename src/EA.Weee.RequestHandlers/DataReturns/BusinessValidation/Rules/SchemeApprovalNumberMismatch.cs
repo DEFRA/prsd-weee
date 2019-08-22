@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
-    using System.Collections.Generic;
     using Core.Shared;
     using Domain.Scheme;
-    using ReturnVersionBuilder;
+    using System.Collections.Generic;
 
     public class SchemeApprovalNumberMismatch : ISchemeApprovalNumberMismatch
     {

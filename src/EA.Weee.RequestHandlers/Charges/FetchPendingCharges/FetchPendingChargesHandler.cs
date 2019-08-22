@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchPendingCharges
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Charges;
     using Domain;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Scheme;
     using Security;
     using Shared;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class FetchPendingChargesHandler : IRequestHandler<Requests.Charges.FetchPendingCharges, ManagePendingCharges>

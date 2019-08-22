@@ -25,9 +25,9 @@
         /// The date that the Ibis file was created.
         /// </summary>
         public DateTime CreatedDate { get; private set; }
-        
+
         private IIbisFormatter mFormatter;
-        
+
         /// <summary>
         /// The formatter to use when writing to the Ibis file.
         /// </summary>

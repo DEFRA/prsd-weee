@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
@@ -16,6 +13,9 @@
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -143,7 +143,7 @@
 
             Assert.Equal("FirstName", scheme.Contact.FirstName);
             Assert.Equal("LastName", scheme.Contact.LastName);
-            Assert.Equal("Position", scheme.Contact.Position); 
+            Assert.Equal("Position", scheme.Contact.Position);
             Assert.Equal("Address1", scheme.Address.Address1);
             Assert.Equal("Address2", scheme.Address.Address2);
             Assert.Equal("Town", scheme.Address.TownOrCity);

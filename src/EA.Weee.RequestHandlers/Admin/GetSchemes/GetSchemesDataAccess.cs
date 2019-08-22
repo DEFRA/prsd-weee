@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemes
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class GetSchemesDataAccess : IGetSchemesDataAccess
     {

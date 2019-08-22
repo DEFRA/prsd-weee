@@ -1,12 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Script.Serialization;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
@@ -30,6 +23,13 @@
     using FakeItEasy;
     using FluentAssertions;
     using FluentValidation.Results;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Script.Serialization;
     using Web.Infrastructure;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
@@ -985,7 +985,7 @@
             A.CallTo(() => organisationSearcher.Search(query, A<int>._, true)).Returns(organisationResult);
 
             var jsonResult = await controller.FetchSearchResultsJson(query) as JsonResult;
-            
+
             var serializer = new JavaScriptSerializer();
             var result = serializer.Deserialize<List<OrganisationSearchResult>>(serializer.Serialize(jsonResult.Data));
 

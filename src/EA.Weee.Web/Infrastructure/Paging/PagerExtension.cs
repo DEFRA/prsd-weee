@@ -23,7 +23,7 @@
 namespace EA.Weee.Web.Infrastructure.Paging
 {
     using System.Web.Mvc;
- 
+
     public static class PagerExtensions
     {
         public static Pager Pager(this HtmlHelper htmlHelper, int pageSize, int currentPage, int totalItemCount)

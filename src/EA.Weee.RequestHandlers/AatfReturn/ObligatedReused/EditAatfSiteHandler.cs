@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -8,6 +7,7 @@
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using System.Threading.Tasks;
 
     internal class EditAatfSiteHandler : IRequestHandler<EditAatfSite, bool>
     {
@@ -35,7 +35,7 @@
             authorization.EnsureCanAccessExternalArea();
 
             Country country = await organisationDetailsDataAccess.FetchCountryAsync(message.AddressData.CountryId);
-            
+
             var value = await genericDataAccess.GetById<AatfAddress>(message.AddressData.Id);
 
             await offSiteDataAccess.Update(value, message.AddressData, country);
