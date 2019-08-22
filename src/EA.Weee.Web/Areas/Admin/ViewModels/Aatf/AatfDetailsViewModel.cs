@@ -5,15 +5,10 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Web.Mvc;
-    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Mvc;
 
     public class AatfDetailsViewModel
     {
