@@ -6,7 +6,14 @@
 @section main_content {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            You have already added this organisation
+            @if (Model.Status == EA.Weee.Core.Shared.UserStatus.Inactive)
+            {
+                @:You no longer have access to this organisation
+            }
+            else
+            {
+                @:You have already added this organisation
+            }
         </h1>
     </header>
 
@@ -36,7 +43,16 @@
         
         case EA.Weee.Core.Shared.UserStatus.Inactive:
         {
-            <p>You no longer have access to @Model.OrganisationName. To reinstate your access, contact the organisation's administrator.</p>
+            <p>
+                @if (Model.AnyActiveUsers)
+                {
+                    @:You no longer have access to @Model.OrganisationName. To reinstate your access, contact an existing user within your organisation.
+                }
+                else
+                {
+                    @:You no longer have access to @Model.OrganisationName. To reinstate your access, contact your environmental regulator.
+                }
+            </p>
 
             <p>
                 <a href="@Url.Action("Index", "Organisation")" class="govuk-button">Continue</a>

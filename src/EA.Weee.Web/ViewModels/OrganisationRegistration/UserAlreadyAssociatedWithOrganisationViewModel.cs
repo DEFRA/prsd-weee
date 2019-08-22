@@ -10,5 +10,7 @@
         public string OrganisationName { get; set; }
 
         public UserStatus Status { get; set; }
+
+        public bool AnyActiveUsers { get; set; }
     }
 }
