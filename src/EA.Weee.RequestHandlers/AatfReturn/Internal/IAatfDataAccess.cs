@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.Admin;
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
+
     public interface IAatfDataAccess
     {
         Task<Aatf> GetDetails(Guid id);
@@ -22,8 +22,6 @@
         Task<bool> HasAatfData(Guid aatfId);
 
         Task<bool> HasAatfOrganisationOtherAeOrAatf(Aatf aatf);
-
-        Task<bool> HasAatfOrganisationOtherAeOrAatfWithQuarterWindow(Aatf aatf, EA.Weee.Domain.DataReturns.QuarterWindow quarterWindow);
 
         Task RemoveAatf(Guid aatfId);
 
