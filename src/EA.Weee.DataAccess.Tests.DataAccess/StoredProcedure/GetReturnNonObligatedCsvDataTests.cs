@@ -131,6 +131,36 @@
         }
 
         [Fact]
+        public async Task Execute_GivenReturnWithZeroData_NullDataShouldBeReturned()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var @return = SetupSubmittedReturn(db);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation);
+                var values = CategoryValues();
+
+                db.WeeeContext.Returns.Add(@return);
+
+                foreach (var weeeCategory in values)
+                {
+                    db.WeeeContext.NonObligatedWeee.Add(new NonObligatedWeee(@return, (int)weeeCategory, false, 0));
+                    db.WeeeContext.NonObligatedWeee.Add(new NonObligatedWeee(@return, (int)weeeCategory, true, 0));
+                }
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetReturnNonObligatedCsvData(@return.Id);
+                results.Count.Should().Be(14);
+
+                for (var countValue = 0; countValue < values.Count(); countValue++)
+                {
+                    results.ElementAt(countValue).TotalNonObligatedWeeeReceived.Should().BeNull();
+                    results.ElementAt(countValue).TotalNonObligatedWeeeReceivedFromDcf.Should().BeNull();
+                }
+            }
+        }
+
+        [Fact]
         public async Task Execute_GivenSubmittedReturnWithNoData_DefaultDataShouldBeReturned()
         {
             using (var db = new DatabaseWrapper())

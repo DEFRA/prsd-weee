@@ -80,7 +80,7 @@ WHERE
 UPDATE
 	f
 SET
-	f.[TotalNonObligatedWeeeReceivedFromDcf] = t.Tonnage
+	f.[TotalNonObligatedWeeeReceivedFromDcf] = CASE t.Tonnage WHEN 0 THEN NULL ELSE t.Tonnage END
 FROM
 	@FinalTable f
 	INNER JOIN TotalNonObligated t ON t.CategoryId = f.CategoryId
