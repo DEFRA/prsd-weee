@@ -21,9 +21,11 @@
 
             var selectedAatfsOrAes = new List<AatfData>();
 
+            var filteredAatfList = RemoveOlderAatfs(source.AatfList);
+
             if (source.IsAE)
             {
-                foreach (var aatf in source.AatfList)
+                foreach (var aatf in filteredAatfList)
                 {
                     if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
                     {
@@ -33,7 +35,7 @@
             }
             else
             {
-                foreach (var aatf in source.AatfList)
+                foreach (var aatf in filteredAatfList)
                 {
                     if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
                     {
@@ -52,6 +54,33 @@
             Model.AatfList = selectedAatfsOrAes.OrderBy(o => o.Name).ToList();
 
             return Model;
+        }
+
+        private List<AatfData> RemoveOlderAatfs(List<AatfData> source)
+        {
+            var listToBeReturned = new List<AatfData>();
+
+            for (var i = 0; i < source.Count; i++)
+            {
+                var aatfListToSort = new List<AatfData>();
+
+                for (var j = 0; j < source.Count; j++)
+                {
+                    if (source[i].AatfId == source[j].AatfId)
+                    {
+                        aatfListToSort.Add(source[j]);
+                    }
+                }
+
+                var latestAatf = aatfListToSort.OrderByDescending(x => x.ApprovalDate).FirstOrDefault();
+
+                if (!listToBeReturned.Contains(latestAatf))
+                {
+                    listToBeReturned.Add(latestAatf);
+                }
+            }
+
+            return listToBeReturned;
         }
     }
 }
