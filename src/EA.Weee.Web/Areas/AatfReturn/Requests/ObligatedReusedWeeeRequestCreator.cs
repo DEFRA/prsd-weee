@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
+    using EA.Prsd.Core;
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.AatfReturn.Obligated;

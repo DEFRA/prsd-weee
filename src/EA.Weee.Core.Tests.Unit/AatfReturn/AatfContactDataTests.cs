@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Validation;
     using FluentAssertions;
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Xunit;
 
     public class AatfContactDataTests

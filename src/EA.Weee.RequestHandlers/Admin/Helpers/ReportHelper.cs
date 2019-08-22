@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Helpers
 {
-    using System.Collections.Generic;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.Lookup;
+    using System.Collections.Generic;
 
     public static class ReportHelper
     {

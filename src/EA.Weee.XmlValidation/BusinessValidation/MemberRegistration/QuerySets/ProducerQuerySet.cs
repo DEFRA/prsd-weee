@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Domain.Obligation;
     using Domain.Producer;
     using Queries.Producer;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xml.MemberRegistration;
 
     public class ProducerQuerySet : IProducerQuerySet
@@ -65,7 +65,7 @@
             return currentProducersByRegistrationNumber.Run()[registrationNo]
                 .FirstOrDefault(p => p.RegisteredProducer.Scheme.OrganisationId != organisationId
                     && p.MemberUpload.ComplianceYear == complianceYear
-                    && (p.ObligationType == obligationType || 
+                    && (p.ObligationType == obligationType ||
                     p.ObligationType == ObligationType.Both ||
                     obligationType == (obligationTypeType.Both.ToDomainObligationType())));
         }

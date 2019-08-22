@@ -1,12 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -27,6 +20,12 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -260,7 +259,7 @@
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
                 SetBreadcrumb(facilityType, aatf.Name);
-            
+
                 var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
 
                 var viewModel = new DeleteViewModel()
@@ -321,7 +320,7 @@
                 }
                 else
                 {
-                    return RedirectToAction(nameof(ManageAatfDetails), new {id = model.AatfId});
+                    return RedirectToAction(nameof(ManageAatfDetails), new { id = model.AatfId });
                 }
             }
 
@@ -345,10 +344,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
+        public async Task<ActionResult> Download(Guid returnId, int complianceYear, int quarter, Guid aatfId)
         {
             CSVFileData fileData;
-            
+
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), new GetAatfObligatedData(complianceYear, quarter, returnId, aatfId));

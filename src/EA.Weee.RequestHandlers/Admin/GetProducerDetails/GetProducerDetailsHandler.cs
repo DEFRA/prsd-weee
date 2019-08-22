@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class GetProducerDetailsHandler : IRequestHandler<Requests.Admin.GetProducerDetails, ProducerDetails>

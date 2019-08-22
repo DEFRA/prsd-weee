@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Email.Tests.Unit.EventHandlers.SchemeDataReturnSubmission
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.DataReturns;
     using Domain.Events;
     using Domain.Scheme;
     using Email.EventHandlers.SchemeDataReturnSubmission;
     using FakeItEasy;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class SchemeDataReturnSubmissionEventHandlerTests

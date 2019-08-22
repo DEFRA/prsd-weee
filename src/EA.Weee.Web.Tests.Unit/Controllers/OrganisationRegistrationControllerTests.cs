@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Core.Organisations;
@@ -12,6 +8,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
     using Web.ViewModels.OrganisationRegistration.Details;
@@ -60,7 +60,7 @@
         public async Task GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ReturnsViewWithModel()
         {
             // Arrange
-            var addressData = new AddressData {Address1 = "Address Line 1"};
+            var addressData = new AddressData { Address1 = "Address Line 1" };
 
             var organisationData = new OrganisationData
             {
@@ -368,7 +368,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var model = new AddressPrepopulateViewModel {SelectedValue = "No"};
+            var model = new AddressPrepopulateViewModel { SelectedValue = "No" };
 
             // Act
             var result = await controller.RegisteredOfficeAddressPrepopulate(model);
@@ -441,7 +441,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var model = new OrganisationTypeViewModel {SelectedValue = selection, OrganisationId = null};
+            var model = new OrganisationTypeViewModel { SelectedValue = selection, OrganisationId = null };
 
             // Act
             var result = await controller.Type(model);
@@ -919,7 +919,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var model = new JoinOrganisationViewModel {SelectedValue = "No"};
+            var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
             // Act
             var result = await controller.JoinOrganisation(model);
@@ -945,7 +945,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var model = new JoinOrganisationViewModel {SelectedValue = "Yes - join xyz"};
+            var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
             // Act
             var result = await controller.JoinOrganisation(model);
@@ -1039,7 +1039,7 @@
         {
             // Arrange
             var weeeClient = A.Fake<IWeeeClient>();
-            
+
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             var controller = new OrganisationRegistrationController(
@@ -1050,7 +1050,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteRegistration>._))
                 .Returns(Guid.NewGuid());
 
-            var model = new OrganisationSummaryViewModel() { AddressId = Guid.NewGuid(), ContactId = Guid.NewGuid(), OrganisationData = new OrganisationData() { Contact = new ContactData() {Id = Guid.NewGuid() }, OrganisationAddress = new AddressData() { Id = Guid.NewGuid() }}};
+            var model = new OrganisationSummaryViewModel() { AddressId = Guid.NewGuid(), ContactId = Guid.NewGuid(), OrganisationData = new OrganisationData() { Contact = new ContactData() { Id = Guid.NewGuid() }, OrganisationAddress = new AddressData() { Id = Guid.NewGuid() } } };
 
             // Act
             var result = await controller.ConfirmOrganisationDetails(model, Guid.NewGuid());
@@ -1142,7 +1142,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var viewModel = new SearchViewModel {SearchTerm = "testSearchTerm", SelectedOrganisationId = null};
+            var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
             // Act
             var result = await controller.Search(viewModel);
@@ -1169,7 +1169,8 @@
 
             var viewModel = new SearchViewModel
             {
-                SearchTerm = "Test Company", SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
+                SearchTerm = "Test Company",
+                SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
             };
 
             // Act
@@ -1246,7 +1247,7 @@
                 organisationSearcher,
                 configurationService);
 
-            var viewModel = new SearchResultsViewModel {SearchTerm = "testSearchTerm"};
+            var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
             // Act

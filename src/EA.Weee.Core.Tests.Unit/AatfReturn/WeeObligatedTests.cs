@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
     using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class WeeObligatedTests

@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.PcsDetails
 {
-    using System;
-
     public class PcsDetailsOverviewViewModel : OverviewViewModel
     {
         public string ApprovalNumber { get; set; }
@@ -18,7 +16,7 @@
 
         public bool CanEditPcs { get; set; }
 
-        public PcsDetailsOverviewViewModel() 
+        public PcsDetailsOverviewViewModel()
             : base(OverviewDisplayOption.PcsDetails)
         {
         }

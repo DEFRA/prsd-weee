@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
+    using IdentityModel;
+    using Security;
     using System;
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Mvc;
-    using IdentityModel;
-    using Security;
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     public class UserAccountActivationAttribute : AuthorizeAttribute

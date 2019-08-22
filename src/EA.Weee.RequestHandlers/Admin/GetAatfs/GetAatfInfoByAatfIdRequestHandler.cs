@@ -20,7 +20,7 @@
         {
             this.authorization = authorization;
             this.mapper = mapper;
-            this.aatfDataAccess = aatfDataAccess;   
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<AatfData> HandleAsync(GetAatfById message)
@@ -37,7 +37,7 @@
             var aatfMapped = mapper.Map(aatf);
 
             aatfMapped.CanEdit = authorization.CheckUserInRole(Roles.InternalAdmin);
-            
+
             aatfMapped.Contact.CanEditContactDetails = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             return aatfMapped;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System.Collections.Generic;
     using DataReturns;
+    using System.Collections.Generic;
 
     public class ProducerEeeByQuarter
     {

@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Domain.DataReturns;
     using Domain.Lookup;
@@ -13,10 +8,14 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetUkWeeeAtAatfsCsvHandlerTests

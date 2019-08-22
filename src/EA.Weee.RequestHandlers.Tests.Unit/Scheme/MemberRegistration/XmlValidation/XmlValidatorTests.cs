@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
 {
+    using Core.Shared;
+    using FakeItEasy;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
+    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml.Linq;
-    using Core.Shared;
-    using FakeItEasy;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
-    using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;

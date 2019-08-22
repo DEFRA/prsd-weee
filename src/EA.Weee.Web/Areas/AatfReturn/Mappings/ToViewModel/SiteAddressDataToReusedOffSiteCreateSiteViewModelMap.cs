@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Linq;
     using Core.AatfReturn;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using System.Linq;
 
     public class SiteAddressDataToReusedOffSiteCreateSiteViewModelMap : IMap<SiteAddressDataToReusedOffSiteCreateSiteViewModelMapTransfer, ReusedOffSiteCreateSiteViewModel>
     {

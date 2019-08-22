@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain.Lookup;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Lookup;
     using Weee.DataAccess;
 
     public class ProducerChargeCalculatorDataAccess : IProducerChargeCalculatorDataAccess

@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public abstract class FacilityViewModelBase : IValidatableObject
     {

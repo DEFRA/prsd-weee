@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
@@ -14,6 +9,11 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class AddReturnSchemeHandlerTests
@@ -88,7 +88,7 @@
             A.CallTo(() => returnDataAccess.GetById(request.ReturnId)).Returns(@return);
 
             await handler.HandleAsync(request);
-            
+
             A.CallTo(() => returnSchemeDataAccess.Submit(A<List<ReturnScheme>>.That.Matches(c => c.First().ReturnId == @return.Id && c.First().SchemeId == scheme.Id))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -97,7 +97,7 @@
         {
             var request = new AddReturnScheme { ReturnId = Guid.NewGuid(), SchemeIds = fixture.CreateMany<Guid>().ToList() };
             var id = fixture.CreateMany<Guid>().ToList();
-            
+
             A.CallTo(() => returnSchemeDataAccess.Submit(A<List<ReturnScheme>>._)).Returns(id);
 
             var result = await handler.HandleAsync(request);

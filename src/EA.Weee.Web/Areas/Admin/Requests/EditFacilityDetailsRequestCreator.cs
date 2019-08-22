@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Requests
 {
-    using System.Linq;
     using Core.Shared;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using System.Linq;
     using Weee.Requests.Admin.Aatf;
 
     public class EditFacilityDetailsRequestCreator : IEditFacilityDetailsRequestCreator
@@ -20,7 +20,8 @@
                 Enumeration.FromValue<AatfStatus>(viewModel.StatusValue),
                 viewModel.SiteAddressData,
                 Enumeration.FromValue<AatfSize>(viewModel.SizeValue),
-                viewModel.ApprovalDate.GetValueOrDefault()) {AatfSizeValue = viewModel.SizeValue, AatfStatusValue = viewModel.StatusValue};
+                viewModel.ApprovalDate.GetValueOrDefault())
+            { AatfSizeValue = viewModel.SizeValue, AatfStatusValue = viewModel.StatusValue };
 
             if (viewModel.CompetentAuthorityId != UKCompetentAuthorityAbbreviationType.EA)
             {

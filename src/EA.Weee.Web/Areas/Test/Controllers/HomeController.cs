@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
+    using EA.Weee.Web.Areas.Test.ViewModels;
     using System;
     using System.Web.Mvc;
-    using EA.Weee.Web.Areas.Test.ViewModels;
 
     public class HomeController : TestControllerBase
     {
@@ -29,7 +29,7 @@
 
                     case HomeViewModel.ManageCache:
                         return RedirectToAction("Index", "ManageCache");
-                    
+
                     case HomeViewModel.ManagePcsReturnsSubmissionWindow:
                         return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
 

@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using Core.AatfReturn;
     using System;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
-    using Domain.AatfReturn;
 
     public interface IGetPopulatedReturn
     {

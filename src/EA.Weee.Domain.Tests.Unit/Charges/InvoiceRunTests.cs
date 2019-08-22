@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Charges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.Charges;
     using Domain.Scheme;
     using Domain.User;
     using FakeItEasy;
     using Prsd.Core;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class InvoiceRunTests

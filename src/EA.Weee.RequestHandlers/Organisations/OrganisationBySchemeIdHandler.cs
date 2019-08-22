@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess.DataAccess;
     using Domain.Organisation;
@@ -8,6 +7,7 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class OrganisationBySchemeIdHandler : IRequestHandler<OrganisationBySchemeId, OrganisationData>

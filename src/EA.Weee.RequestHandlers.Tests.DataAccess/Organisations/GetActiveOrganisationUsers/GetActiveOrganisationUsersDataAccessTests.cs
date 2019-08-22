@@ -2,15 +2,8 @@
 {
     using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
-    using EA.Weee.Tests.Core;
-    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using DomainHelper = Weee.Tests.Core.DomainHelper;

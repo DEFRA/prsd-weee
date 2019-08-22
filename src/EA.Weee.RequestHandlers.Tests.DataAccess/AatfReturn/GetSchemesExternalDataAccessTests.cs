@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
+    using Core.Organisations;
+    using Core.Shared;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
@@ -9,12 +11,9 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Scheme;
     using FakeItEasy;
-    using FluentAssertions;
-    using Xunit;
     using System;
     using System.Collections.Generic;
-    using Core.Organisations;
-    using Core.Shared;
+    using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using Organisation = Domain.Organisation.Organisation;
     using OrganisationStatus = Domain.Organisation.OrganisationStatus;

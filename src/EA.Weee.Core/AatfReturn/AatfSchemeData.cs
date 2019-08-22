@@ -13,7 +13,7 @@
         public AatfSchemeData(SchemeData scheme, ObligatedCategoryValue received, string approvalName)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
-            Guard.ArgumentNotNull(() => received, received);            
+            Guard.ArgumentNotNull(() => received, received);
 
             Scheme = scheme;
             Received = received;

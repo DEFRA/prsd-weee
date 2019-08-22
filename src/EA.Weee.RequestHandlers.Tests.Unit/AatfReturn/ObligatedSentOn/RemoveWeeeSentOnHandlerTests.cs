@@ -12,9 +12,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -49,7 +47,7 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-        
+
         [Fact]
         public async Task HandleAsync_GivenGetSentOnAatfSiteRequest_DataAccessIsCalled()
         {

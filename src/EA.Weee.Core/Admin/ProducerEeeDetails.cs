@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using System.Collections.Generic;
     using DataReturns;
+    using System.Collections.Generic;
 
     public class ProducerEeeDetails
     {

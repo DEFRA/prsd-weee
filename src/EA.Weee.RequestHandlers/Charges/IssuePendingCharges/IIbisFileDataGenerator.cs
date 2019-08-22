@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Threading.Tasks;
     using Domain.Charges;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A generator of 1B1S file data for an invoice run.

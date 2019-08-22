@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf
 {
-    using System.Security.Policy;
     using Aatf.Controllers;
     using Infrastructure;
     using System.Web.Mvc;
@@ -16,7 +15,7 @@
             context.MapLowercaseDashedRoute(
                 name: "Aatf_default",
                 url: "Aatf/{organisationId}/{controller}/{action}/",
-                defaults: new { action = "Index", controller = "Home"},
+                defaults: new { action = "Index", controller = "Home" },
                 namespaces: new[] { typeof(HomeController).Namespace });
 
             context.MapLowercaseDashedRoute(

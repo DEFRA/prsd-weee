@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.CheckYourReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.User;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -15,8 +10,11 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.CheckYourReturn;
     using Requests.AatfReturn.NonObligated;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Organisation = Domain.Organisation.Organisation;

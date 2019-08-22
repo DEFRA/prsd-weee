@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
+    using DataAccess;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Domain.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
 
     public class GetAatfsDataAccess : IGetAatfsDataAccess
     {

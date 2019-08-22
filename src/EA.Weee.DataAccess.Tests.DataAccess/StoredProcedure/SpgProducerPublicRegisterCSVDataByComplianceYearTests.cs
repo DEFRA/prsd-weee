@@ -23,7 +23,7 @@
                 scheme1.OrganisationId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
                 scheme1.Organisation.Id = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
                 scheme1.SchemeName = "SchemeName";
-                
+
                 scheme1.Organisation.Name = "PCS operator name";
                 scheme1.Organisation.BusinessAddressId = new Guid("b58e9cb2-b97e-4141-ad32-73c70284fc77");
                 scheme1.Organisation.Address = helper.CreateOrganisationAddress();
@@ -32,7 +32,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
-                
+
                 ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
                 producerSubmission1.Business.Company.Contact1.Telephone = "55 5555 5555";
                 producerSubmission1.Business.Company.Contact1.Email = "email@test.com";
@@ -94,7 +94,7 @@
 
                 scheme1.OrganisationId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
                 scheme1.Organisation.Id = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
-                
+
                 scheme1.Organisation.BusinessAddressId = new Guid("b58e9cb2-b97e-4141-ad32-73c70284fc77");
                 scheme1.Organisation.Address = helper.CreateOrganisationAddress();
                 scheme1.Organisation.Address.Id = new Guid("b58e9cb2-b97e-4141-ad32-73c70284fc77");

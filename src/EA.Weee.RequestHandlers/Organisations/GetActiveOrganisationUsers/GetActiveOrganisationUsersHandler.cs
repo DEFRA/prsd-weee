@@ -5,7 +5,6 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations;
     using System.Collections.Generic;
     using System.Threading.Tasks;

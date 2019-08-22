@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Lookup;
     using Domain.Producer;
@@ -17,6 +12,10 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Xunit;
     using GetProducerDetails = Requests.Admin.GetProducerDetails;

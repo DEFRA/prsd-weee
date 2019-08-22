@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using DataAccess;
     using Domain.Producer;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class MigratedProducerQuerySet : IMigratedProducerQuerySet
     {
         private readonly WeeeContext context;
-        
+
         private bool dataFetched = false;
         private List<string> existingMigratedProducerRegistrationNumbers;
-        private List<MigratedProducer> migratedProducers; 
+        private List<MigratedProducer> migratedProducers;
 
         public MigratedProducerQuerySet(WeeeContext context)
         {

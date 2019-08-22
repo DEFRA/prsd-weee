@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using System;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Prsd.Core.Mediator;
+    using System;
 
     public class AddReturn : IRequest<Guid>
     {

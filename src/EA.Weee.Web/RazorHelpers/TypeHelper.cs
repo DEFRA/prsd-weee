@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
     using global::System.Web.Routing;
-    using global::System.Web.WebPages;
 
     public class TypeHelper
     {

@@ -24,7 +24,7 @@
             dataAccess = new WeeeSentOnDataAccess(context);
             dbContextHelper = new DbContextHelper();
         }
-        
+
         [Fact]
         public void Submit_GivenSentOnData_ValuesShouldBeAddedToContext()
         {

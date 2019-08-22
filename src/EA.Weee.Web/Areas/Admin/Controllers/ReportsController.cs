@@ -1,22 +1,19 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using Api.Client;
+    using Base;
+    using Core.Admin;
+    using Core.Scheme;
+    using Core.Shared;
+    using Infrastructure;
+    using Prsd.Core;
+    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Base;
-    using Core.Admin;
-    using Core.Scheme;
-    using Core.Shared;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.Admin.Aatf;
-    using Infrastructure;
-    using Prsd.Core;
-    using Prsd.Core.Helpers;
-    using Services;
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
@@ -126,7 +123,7 @@
 
                 case Reports.AatfSentOnData:
                     return RedirectToAction("AatfSentOnData", "AatfReports");
-                    
+
                 case Reports.AatfReuseSitesData:
                     return RedirectToAction("AatfReuseSites", "AatfReports");
 
@@ -194,7 +191,7 @@
             CSVFileData membersDetailsCsvData;
             using (IWeeeClient client = apiClient())
             {
-                GetMemberDetailsCsv request = 
+                GetMemberDetailsCsv request =
                     new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId, includeBrandNames);
                 membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
             }
@@ -382,7 +379,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadUkEeeDataCsv(int complianceYear)
-        {   
+        {
             using (var client = apiClient())
             {
                 var ukEeeCsvData = await client.SendAsync(User.GetAccessToken(),
@@ -427,7 +424,7 @@
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(schemeObligationCsvData.FileName));
             }
         }
-        
+
         [HttpGet]
         public async Task<ActionResult> MissingProducerData()
         {
@@ -485,7 +482,7 @@
 
             model.ComplianceYears = new SelectList(years);
         }
-        
+
         private void PopulateFilters(SchemeObligationDataViewModel model)
         {
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());

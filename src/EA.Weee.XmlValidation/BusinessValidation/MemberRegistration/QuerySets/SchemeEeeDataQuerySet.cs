@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
+    using DataAccess;
+    using Domain.DataReturns;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.DataReturns;
 
     public class SchemeEeeDataQuerySet : ISchemeEeeDataQuerySet
     {

@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Shared;
     using DataAccess;
     using Domain.Admin;
     using Domain.Security;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class UpdateCompetentAuthorityUserRoleAndStatusDataAccess : IUpdateCompetentAuthorityUserRoleAndStatusDataAccess
     {

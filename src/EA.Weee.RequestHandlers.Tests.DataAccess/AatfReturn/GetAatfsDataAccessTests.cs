@@ -1,17 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
-    using EA.Weee.RequestHandlers.Charges;
     using FluentAssertions;
     using RequestHandlers.Shared;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;

@@ -8,7 +8,7 @@
 
         public DateTime EndDate { get; private set; }
 
-        public QuarterType QuarterType { get; private set; } 
+        public QuarterType QuarterType { get; private set; }
 
         public QuarterWindow(DateTime startDate, DateTime endDate, QuarterType quarterType)
         {

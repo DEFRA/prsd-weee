@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using DataAccess;
@@ -14,6 +11,9 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Factories;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
@@ -253,7 +253,7 @@
             A.CallTo(() => aatf.ComplianceYear).Returns(complianceYear);
             A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
-            var aatfs = new List<Aatf> {aatf};
+            var aatfs = new List<Aatf> { aatf };
 
             if (hasOtherAatfs)
             {
@@ -346,7 +346,7 @@
             A.CallTo(() => returnAatf.Aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
-            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() {returnAatf}));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() { returnAatf }));
 
             await dataAccess.RemoveAatf(aatfId);
 

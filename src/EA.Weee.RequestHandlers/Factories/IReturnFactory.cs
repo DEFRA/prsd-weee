@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IReturnFactory
     {

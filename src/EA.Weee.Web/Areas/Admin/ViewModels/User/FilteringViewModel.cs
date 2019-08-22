@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
 {
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.Shared;
+    using System.ComponentModel.DataAnnotations;
 
     public class FilteringViewModel
     {

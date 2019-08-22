@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchInvoiceRuns
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Charges;
     using Shared;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class FetchInvoiceRunsDataAccess : CommonDataAccess, IFetchInvoiceRunsDataAccess
     {

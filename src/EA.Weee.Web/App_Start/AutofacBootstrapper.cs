@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Web
 {
-    using System.Reflection;
     using Areas.AatfReturn.Attributes;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
-    using Core.Shared;
     using EA.Weee.Core;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
@@ -21,6 +19,7 @@
     using Prsd.Core.Mapper;
     using Requests.Base;
     using Security;
+    using System.Reflection;
 
     public class AutofacBootstrapper
     {

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
     using Domain;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
@@ -8,6 +7,7 @@
     using EA.Weee.Xml.Deserialization;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
@@ -102,7 +102,7 @@
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
 
             var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, A.Dummy<bool>(), ref totalCharge);
-            
+
             Assert.Equal(producerCharges, result);
         }
 
@@ -151,7 +151,7 @@
                 { "1", new ProducerCharge() { Amount = 100 } },
                 { "2", new ProducerCharge() { Amount = 200 } }
             };
-            return producerCharges;   
+            return producerCharges;
         }
     }
 }

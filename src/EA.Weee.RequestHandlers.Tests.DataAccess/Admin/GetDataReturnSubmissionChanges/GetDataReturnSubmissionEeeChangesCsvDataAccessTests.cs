@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetDataReturnSubmissionChanges
 {
+    using RequestHandlers.Admin.GetDataReturnSubmissionChanges;
     using System;
     using System.Threading.Tasks;
-    using RequestHandlers.Admin.GetDataReturnSubmissionChanges;
     using Weee.Tests.Core.Model;
     using Xunit;
 

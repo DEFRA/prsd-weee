@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -12,11 +9,13 @@
     using FluentAssertions;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.AatfReports;
-    using Requests.Admin.Reports;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     public class GetAllAatfObligatedDataCsvHandlerTests
-    {      
+    {
         [Fact]
         public async Task GetAllAatfObligatedDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
@@ -115,7 +114,7 @@
             var commanDataAccess = A.Fake<ICommonDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
             int complianceYear = 2019;
-                
+
             var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, string.Empty, string.Empty, null, null);
 

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Specification
 {
+    using EA.Weee.Domain.AatfReturn;
     using System;
     using System.Linq.Expressions;
-    using EA.Weee.Domain.AatfReturn;
     using FacilityType = Core.AatfReturn.FacilityType;
 
     public class AatfsByOrganisationAndFacilityTypeSpecification : Specification<Aatf>

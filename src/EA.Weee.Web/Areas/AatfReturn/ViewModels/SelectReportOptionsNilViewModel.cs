@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Globalization;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
+    using System;
 
     public class SelectReportOptionsNilViewModel : ReturnViewModelBase
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using EA.Weee.Domain.Producer;
+    using System.Data.Entity.ModelConfiguration;
 
     internal class ProducerAddressMapping : EntityTypeConfiguration<ProducerAddress>
     {

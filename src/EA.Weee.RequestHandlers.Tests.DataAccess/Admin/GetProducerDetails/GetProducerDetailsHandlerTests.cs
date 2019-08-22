@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetProducerDetails
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using Core.Admin;
     using Domain.Producer;
     using FakeItEasy;
@@ -10,6 +8,8 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using Requests.Admin;
     using Security;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using Weee.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;

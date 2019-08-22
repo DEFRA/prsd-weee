@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.Core.Helpers;
-    using FluentAssertions;
+    using System.Collections.Generic;
     using Xunit;
 
     public class CategoryValueTotalCalculatorTests

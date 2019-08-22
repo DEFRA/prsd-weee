@@ -1,12 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Core.AatfReturn;
@@ -17,6 +10,13 @@
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
@@ -416,7 +416,7 @@
         public async Task PostUkWeeeDataAtAatfs_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Arrange
-           var viewModel = new UkWeeeDataAtAatfViewModel();
+            var viewModel = new UkWeeeDataAtAatfViewModel();
 
             // Act
             var result = await controller.UkWeeeDataAtAatfs(viewModel);
@@ -582,7 +582,7 @@
             var panAreas = fixture.CreateMany<PanAreaData>().ToList();
             var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
             var years = fixture.CreateMany<int>().ToList();
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
@@ -1158,7 +1158,7 @@
                 FileName = "test.csv"
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfReuseSitesCsv>.That.Matches(g => g.AuthorityId.Equals(authority) 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfReuseSitesCsv>.That.Matches(g => g.AuthorityId.Equals(authority)
             && g.ComplianceYear.Equals(complianceYear) && g.PanArea.Equals(panArea)))).Returns(csvData);
 
             var fileResult = await controller.DownloadAatfReuseSitesCsv(complianceYear, authority, panArea) as FileContentResult;

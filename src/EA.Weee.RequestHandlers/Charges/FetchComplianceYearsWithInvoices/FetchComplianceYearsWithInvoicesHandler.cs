@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchComplianceYearsWithInvoices
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Shared;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class FetchComplianceYearsWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchComplianceYearsWithInvoices, IReadOnlyList<int>>
     {

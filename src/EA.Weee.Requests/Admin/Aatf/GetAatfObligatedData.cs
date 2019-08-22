@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin.Aatf
 {
-    using System;
     using Core.Admin;
-    using Core.Shared;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetAatfObligatedData : IRequest<CSVFileData>
     {

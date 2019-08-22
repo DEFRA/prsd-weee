@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
-    using System.Security.Claims;
     using IdentityModel.Client;
     using Prsd.Core.Web.Extensions;
+    using System.Security.Claims;
 
     public static class TokenResponseExtensions
     {
