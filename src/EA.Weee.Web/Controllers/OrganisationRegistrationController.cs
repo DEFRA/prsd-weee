@@ -418,21 +418,22 @@
                     .Where(o => o.UserStatus != UserStatus.Rejected)
                     .FirstOrDefault();
 
+                var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+
                 if (existingAssociation != null)
                 {
                     UserAlreadyAssociatedWithOrganisationViewModel viewModel = new UserAlreadyAssociatedWithOrganisationViewModel()
                     {
                         OrganisationId = organisationId,
                         OrganisationName = organisationData.DisplayName,
-                        Status = existingAssociation.UserStatus
+                        Status = existingAssociation.UserStatus,
+                        AnyActiveUsers = activeUsers.Any()
                     };
 
                     return View("UserAlreadyAssociatedWithOrganisation", viewModel);
                 }
                 else
                 {
-                    var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
-
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
