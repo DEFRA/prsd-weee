@@ -459,13 +459,13 @@
                 .ToListAsync();
         }
 
-        public async Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
+        public async Task<List<NonObligatedWeeeReceivedCsvData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var aatfNameParameter = new SqlParameter("@AatfName", (object)aatf ?? DBNull.Value);
 
             return await context.Database
-                .SqlQuery<NonObligatedWeeeReceivedAtAatfData>(
+                .SqlQuery<NonObligatedWeeeReceivedCsvData>(
                     "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @AatfName",
                     complianceYearParameter,
                     aatfNameParameter)
@@ -535,6 +535,13 @@
                 obligatedData.Load(await cmd.ExecuteReaderAsync());
             }
             return obligatedData;
+        }
+
+        public async Task<List<NonObligatedWeeeReceivedCsvData>> GetReturnNonObligatedCsvData(Guid returnId)
+        {
+            var returnIdParameter = new SqlParameter("@ReturnId", returnId);
+
+            return await context.Database.SqlQuery<NonObligatedWeeeReceivedCsvData>("[AATF].[getReturnNonObligatedCsvData] @ReturnId", returnIdParameter).ToListAsync();
         }
 
         public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
