@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
@@ -11,6 +7,10 @@
     using EA.Weee.Web.Controllers;
     using EA.Weee.Web.ViewModels.Organisation;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
     using Xunit;
 
     public class OrganisationControllerTests
@@ -52,7 +52,7 @@
             Assert.Equal("chooseactivity", redirectResult.RouteValues["action"] as string, ignoreCase: true);
             Assert.Equal(organisationId, redirectResult.RouteValues["pcsId"]);
         }
-        
+
         [Fact]
         public async void GetIndex_OneActiveOrg_And_OneInactiveOrg_ShowsYourOrganisationsView()
         {

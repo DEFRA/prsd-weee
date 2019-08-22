@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchInvoiceRunIbisZipFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
     using Domain.Charges;
@@ -11,10 +7,13 @@
     using Domain.User;
     using FakeItEasy;
     using Prsd.Core;
-    using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

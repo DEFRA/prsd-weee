@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Helper
 {
-    using System;
-    using System.Linq;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using System;
+    using System.Linq;
 
     public static class AatfHelper
     {

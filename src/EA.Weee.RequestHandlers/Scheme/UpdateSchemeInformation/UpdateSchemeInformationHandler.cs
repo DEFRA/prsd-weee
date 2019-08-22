@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Scheme;
-    using DataAccess;
     using Domain;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, UpdateSchemeInformationResult>
     {
@@ -60,7 +57,7 @@
                     };
                 }
                 else
-                { 
+                {
                     /*
                      * The 1B1S customer refernece must be unique across schemes within the Environment Agency.
                      *

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using FakeItEasy;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;

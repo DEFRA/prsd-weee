@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemes
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Security;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetSchemesByOrganisationIdHandler : IRequestHandler<Requests.Admin.GetSchemesByOrganisationId, List<SchemeData>>
     {

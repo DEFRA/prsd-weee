@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Domain.DataReturns;
     using Domain.Producer;
     using Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class GetProducerDetailsByRegisteredProducerIdHandler : IRequestHandler<Requests.Admin.GetProducerDetailsByRegisteredProducerId, ProducerDetailsScheme>

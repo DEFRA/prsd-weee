@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
     using EA.Weee.RequestHandlers.Charges.IssuePendingCharges;
     using FakeItEasy;
     using Ibis;
     using RequestHandlers.Charges.IssuePendingCharges.Errors;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class IbisFileDataGeneratorTests

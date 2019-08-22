@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
     using Domain.Charges;
     using Domain.Lookup;
     using Domain.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface ICommonDataAccess
     {

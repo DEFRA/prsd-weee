@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using AutoFixture;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
@@ -27,6 +22,11 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Xunit;
 
     public class EditOrganisationControllerTests
@@ -199,7 +199,7 @@
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
                 .Returns(true);
-            
+
             new HttpContextMocker().AttachToController(controller);
 
             var result = await controller.EditRegisteredCompanyOrganisationDetails(viewModel);
@@ -282,7 +282,7 @@
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
                 .Returns(true);
-            
+
             new HttpContextMocker().AttachToController(controller);
 
             var result = await controller.EditPartnershipOrganisationDetails(viewModel);
@@ -458,7 +458,7 @@
 
             var model = result.Model as EditPartnershipOrganisationDetailsViewModel;
 
-            model.OrganisationType.Should().Be(organisationData.OrganisationType);            
+            model.OrganisationType.Should().Be(organisationData.OrganisationType);
             model.BusinessTradingName.Should().Be(organisationData.TradingName);
             model.BusinessAddress.Should().Be(organisationData.BusinessAddress);
             model.BusinessAddress.Countries.Should().BeEquivalentTo(countries);

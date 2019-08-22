@@ -16,8 +16,8 @@
                 return string.Empty;
             }
 
-            return descriptionAttributes.Length > 0 
-                ? descriptionAttributes[0].Name 
+            return descriptionAttributes.Length > 0
+                ? descriptionAttributes[0].Name
                 : value.ToString();
         }
     }

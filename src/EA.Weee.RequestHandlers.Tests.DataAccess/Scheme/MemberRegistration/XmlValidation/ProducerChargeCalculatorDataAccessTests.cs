@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.XmlValidation
 {
     using Domain.Lookup;
-    using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
     using EA.Weee.Tests.Core.Model;
     using Weee.DataAccess.DataAccess;
     using Xunit;

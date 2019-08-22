@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using Core.AatfReturn;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -20,6 +17,9 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
     using Xunit;
@@ -134,7 +134,7 @@
         public async void IndexPost_GivenEditedObligatedReusedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
         {
             var categoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() { Id = Guid.NewGuid() } };
-            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), CategoryValues = categoryValues};
+            var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), CategoryValues = categoryValues };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
 

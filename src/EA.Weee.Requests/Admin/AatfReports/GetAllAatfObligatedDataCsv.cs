@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetAllAatfObligatedDataCsv : IRequest<CSVFileData>
     {
         public int ComplianceYear { get; private set; }
-       
+
         public string ObligationType { get; private set; }
 
         public Guid? AuthorityId { get; private set; }

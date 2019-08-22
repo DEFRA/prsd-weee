@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Specification
 {
+    using Domain.AatfReturn;
     using System;
     using System.Linq.Expressions;
-    using Domain.AatfReturn;
-    using Prsd.Core.Domain;
 
     public class AatfsByOrganisationSpecification : Specification<Aatf>
     {

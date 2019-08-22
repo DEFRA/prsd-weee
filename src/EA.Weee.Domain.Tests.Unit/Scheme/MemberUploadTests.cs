@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Producer.Classfication;
@@ -14,6 +11,9 @@
     using FakeItEasy;
     using Lookup;
     using Obligation;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class MemberUploadTests

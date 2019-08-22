@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
-    using Core.Organisations;
     using Core.Scheme;
     using Prsd.Core.Mediator;
 

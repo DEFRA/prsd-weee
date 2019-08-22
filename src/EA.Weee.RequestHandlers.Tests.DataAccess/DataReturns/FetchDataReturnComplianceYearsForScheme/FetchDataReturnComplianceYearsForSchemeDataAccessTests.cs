@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.FetchDataReturnComplianceYearsForScheme
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.DataReturns;
     using EA.Weee.Tests.Core.Model;
     using RequestHandlers.DataReturns.FetchDataReturnComplianceYearsForScheme;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     public class FetchDataReturnComplianceYearsForSchemeDataAccessTests
     {
@@ -79,7 +79,7 @@
             using (var database = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(database.Model);                
+                ModelHelper helper = new ModelHelper(database.Model);
 
                 var scheme = helper.CreateScheme();
                 var firstDataReturn = helper.CreateDataReturn(scheme, 2006, (int)QuarterType.Q1);
@@ -89,7 +89,7 @@
                 var secondDataReturn = helper.CreateDataReturn(scheme, 2007, (int)QuarterType.Q1);
                 var secondDataReturnVersion = helper.CreateDataReturnVersion(scheme, 2007, 1, true, secondDataReturn);
                 helper.CreateDataReturnUpload(scheme, secondDataReturnVersion);
-                database.Model.SaveChanges();               
+                database.Model.SaveChanges();
 
                 // Act
                 var dataAccess = new FetchDataReturnComplianceYearsForSchemeDataAccess(database.WeeeContext);

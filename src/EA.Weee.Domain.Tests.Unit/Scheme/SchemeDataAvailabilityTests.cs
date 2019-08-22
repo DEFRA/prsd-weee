@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
+    using Domain.Scheme;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain.Scheme;
     using Xunit;
 
     public class SchemeDataAvailabilityTests

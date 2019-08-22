@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Core.DataReturns
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [DebuggerDisplay("{Year} {Q}")]
     public class Quarter : IComparable<Quarter>, IEquatable<Quarter>

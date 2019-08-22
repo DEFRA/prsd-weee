@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using DataReturns;
     using Organisation;
     using Prsd.Core;
+    using System;
+    using System.Collections.Generic;
 
     public class ReturnQuarterWindow
     {
@@ -33,7 +30,7 @@
 
         public virtual DateTime SystemDateTime { get; private set; }
 
-        public ReturnQuarterWindow(Return @return, 
+        public ReturnQuarterWindow(Return @return,
             QuarterWindow quarterWindow,
             List<Aatf> aatfs, List<NonObligatedWeee> nonObligatedWeeeList,
             List<WeeeReceivedAmount> obligatedReceivedList,

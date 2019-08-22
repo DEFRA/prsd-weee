@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation
 {
-    using System;
-    using System.Linq;
-    using Core.AatfReturn;
     using FluentValidation;
     using FluentValidation.Results;
-    using Prsd.Core.Domain;
+    using System;
 
     public class SelectReportOptionsViewModelValidator : AbstractValidator<SelectReportOptionsViewModel>
     {

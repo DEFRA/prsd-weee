@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.Errors
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Xml.Linq;
     using Core.Helpers;
     using Core.Scheme;
     using FakeItEasy;
+    using System.ComponentModel.DataAnnotations;
+    using System.Xml.Linq;
     using XmlValidation.Errors;
     using Xunit;
 

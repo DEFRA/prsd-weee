@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
+    using System;
 
     public class ReturnToObligatedViewModelMapTransfer
     {

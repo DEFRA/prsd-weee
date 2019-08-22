@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.DataReturns
 {
-    using System;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.DataReturns;
+    using System;
 
     public class FetchDataReturnForSubmission : IRequest<DataReturnForSubmission>
     {

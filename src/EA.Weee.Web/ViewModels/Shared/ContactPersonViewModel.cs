@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using Core.Organisations;
-    using Weee.Requests.Organisations;
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Weee.Requests.Scheme;
 
     public class ContactPersonViewModel
@@ -35,7 +34,7 @@
         public AddContactPerson ToAddRequest()
         {
             var contact = new ContactData
-            {   
+            {
                 FirstName = FirstName,
                 LastName = LastName,
                 Position = Position

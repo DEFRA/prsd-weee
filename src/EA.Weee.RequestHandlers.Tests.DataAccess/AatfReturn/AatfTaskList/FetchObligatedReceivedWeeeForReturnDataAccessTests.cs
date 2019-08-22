@@ -1,29 +1,25 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.AatfTaskList
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.User;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
-    using WeeeReused = Domain.AatfReturn.WeeeReused;
     using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
 
     public class FetchObligatedReceivedWeeeForReturnDataAccessTests
@@ -85,7 +81,7 @@
                 {
                     weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
-                
+
                 var obligateReceivedDataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
                 await obligateReceivedDataAccess.Submit(weeeReceivedAmount);
 

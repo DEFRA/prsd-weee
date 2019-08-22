@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Shared
 {
-    using System;
     using DataAccess.DataAccess;
     using DataReturns.BusinessValidation.XmlBusinessRules;
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.Shared;
     using Requests.Shared;
+    using System;
     using Xunit;
 
     public class GetApiDateHandlerTests
@@ -28,7 +28,7 @@
 
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);
-           
+
             var handler = new GetApiDateHandler(systemDataDataAccess);
 
             var result = await handler.HandleAsync(A.Dummy<GetApiDate>());

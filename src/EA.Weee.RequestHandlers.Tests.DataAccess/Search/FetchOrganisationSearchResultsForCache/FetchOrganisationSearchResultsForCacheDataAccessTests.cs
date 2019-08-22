@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Search.FetchOrganisationSearchResultsForCache
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Weee.Core.Search;
     using EA.Weee.DataAccess;
@@ -15,6 +11,10 @@
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class FetchOrganisationSearchResultsForCacheDataAccessTests

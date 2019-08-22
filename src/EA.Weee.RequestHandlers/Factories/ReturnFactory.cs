@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Core.DataReturns;
     using DataAccess.DataAccess;
     using Prsd.Core;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class ReturnFactory : IReturnFactory
     {
@@ -14,8 +14,8 @@
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
 
-        public ReturnFactory(IReturnFactoryDataAccess returnFactoryDataAccess, 
-            ISystemDataDataAccess systemDataDataAccess, 
+        public ReturnFactory(IReturnFactoryDataAccess returnFactoryDataAccess,
+            ISystemDataDataAccess systemDataDataAccess,
             IQuarterWindowFactory quarterWindowFactory)
         {
             this.returnFactoryDataAccess = returnFactoryDataAccess;

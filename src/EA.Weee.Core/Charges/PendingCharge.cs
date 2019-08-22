@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Core.Charges
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides summary details about a pending charge for a scheme and compliance year.

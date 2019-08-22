@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemes
 {
+    using Domain.Scheme;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Scheme;
 
     public interface IGetSchemesDataAccess
     {

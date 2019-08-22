@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
     using Domain.DataReturns;
+    using System;
     using QuarterType = Core.DataReturns.QuarterType;
 
     public class DataReturnSubmissionsData

@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
+    using System;
 
     public abstract class EditOrganisationDetailsViewModelBase
     {

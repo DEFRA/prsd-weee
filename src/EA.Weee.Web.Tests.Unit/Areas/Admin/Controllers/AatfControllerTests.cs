@@ -1,13 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
@@ -21,7 +13,6 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
@@ -33,6 +24,14 @@
     using FluentAssertions;
     using FluentValidation.Results;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Requests;
     using Web.Areas.Admin.ViewModels.Aatf;
@@ -797,7 +796,7 @@
         {
             var approvalNumber = "test";
 
-            var viewModel = new AatfEditDetailsViewModel {Id = Guid.NewGuid(), ApprovalNumber = approvalNumber};
+            var viewModel = new AatfEditDetailsViewModel { Id = Guid.NewGuid(), ApprovalNumber = approvalNumber };
 
             var aatf = new AatfData()
             {

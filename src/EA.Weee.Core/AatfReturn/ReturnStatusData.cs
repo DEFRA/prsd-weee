@@ -1,9 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using DataReturns;
-    using EA.Weee.Core.Scheme;
     using System;
-    using System.Collections.Generic;
 
     public class ReturnStatusData
     {

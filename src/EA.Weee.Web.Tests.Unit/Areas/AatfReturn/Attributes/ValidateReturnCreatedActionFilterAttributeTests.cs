@@ -10,7 +10,6 @@
     using System;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Core.DataReturns;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
     using Weee.Tests.Core;
@@ -27,7 +26,7 @@
             client = A.Fake<IWeeeClient>();
             attribute = new ValidateReturnCreatedActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
-            
+
             var routeData = new RouteData();
             routeData.Values.Add("returnId", Guid.NewGuid());
             A.CallTo(() => context.RouteData).Returns(routeData);

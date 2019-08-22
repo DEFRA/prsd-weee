@@ -11,7 +11,7 @@
         public FindMatchingOrganisations(string companyName)
         {
             Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
-    
+
             CompanyName = companyName;
         }
     }

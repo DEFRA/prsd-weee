@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using System;
 
     public class AatfContact : Entity
     {

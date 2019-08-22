@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Domain;
 
     public class SystemDataDataAccess : ISystemDataDataAccess
     {

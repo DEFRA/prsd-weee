@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -19,6 +16,8 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -182,7 +181,7 @@
 
             ObligatedCategoryValue obligatedCategoryValue = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
 
-            TempDataDictionary tempdata = new TempDataDictionary {{"pastedValues", obligatedCategoryValue}};
+            TempDataDictionary tempdata = new TempDataDictionary { { "pastedValues", obligatedCategoryValue } };
 
             controller.TempData = tempdata;
 

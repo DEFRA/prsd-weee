@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using Domain.AatfReturn;
@@ -10,6 +8,8 @@
     using FluentAssertions;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfDeletionStatusTests

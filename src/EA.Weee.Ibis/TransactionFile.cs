@@ -10,7 +10,7 @@
     public sealed class TransactionFile : IbisFile
     {
         private List<Invoice> mInvoices = new List<Invoice>();
-        
+
         /// <summary>
         /// The collection of invoices associated with the transaction file.
         /// </summary>
@@ -20,7 +20,7 @@
         }
 
         private string mBillRunId;
-        
+
         /// <summary>
         /// The feeder system bill run identifier (if available).
         /// </summary>

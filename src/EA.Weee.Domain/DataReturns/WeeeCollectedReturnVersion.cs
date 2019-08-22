@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using Obligation;
+    using Prsd.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Obligation;
-    using Prsd.Core;
 
     public class WeeeCollectedReturnVersion : DataReturnVersionAssociativeEntity
     {

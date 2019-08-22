@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -11,6 +7,10 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetProducerEeeDataHistoryCsvHandler : IRequestHandler<GetProducerEeeDataHistoryCsv, CSVFileData>
     {
@@ -65,9 +65,9 @@
             csvWriter.DefineColumn(@"Latest data", i => i.LatestData);
             foreach (int category in Enumerable.Range(1, 14))
             {
-                    string title = string.Format("Cat{0} B2C", category);
-                    string columnName = string.Format("Cat{0}B2C", category);
-                    csvWriter.DefineColumn(title, i => i.GetType().GetProperty(columnName).GetValue(i));               
+                string title = string.Format("Cat{0} B2C", category);
+                string columnName = string.Format("Cat{0}B2C", category);
+                csvWriter.DefineColumn(title, i => i.GetType().GetProperty(columnName).GetValue(i));
             }
             foreach (int category in Enumerable.Range(1, 14))
             {
@@ -81,12 +81,12 @@
 
         public IEnumerable<EeeHistoryCsvResult> CreateResults(ProducerEeeHistoryCsvData results)
         {
-            List<EeeHistoryCsvResult> csvResults = new List<EeeHistoryCsvResult>();          
-          
+            List<EeeHistoryCsvResult> csvResults = new List<EeeHistoryCsvResult>();
+
             var uniqueSetsforHistory = results.ProducerReturnsHistoryData.GroupBy(p => new { p.ApprovalNumber, p.ComplianceYear, p.Quarter, p.SchemeName, p.PRN })
                    .Select(x => new { x.Key.ApprovalNumber, x.Key.ComplianceYear, x.Key.Quarter, x.Key.SchemeName, x.Key.PRN, count = x.Count() });
 
-            var uniqueSetsforRemovedHistory = results.ProducerRemovedFromReturnsData.GroupBy(p => new { p.ApprovalNumber, p.ComplianceYear, p.Quarter})
+            var uniqueSetsforRemovedHistory = results.ProducerRemovedFromReturnsData.GroupBy(p => new { p.ApprovalNumber, p.ComplianceYear, p.Quarter })
                   .Select(x => new { x.Key.ApprovalNumber, x.Key.ComplianceYear, x.Key.Quarter, count = x.Count() });
 
             foreach (var set in uniqueSetsforHistory)
@@ -97,8 +97,8 @@
 
                 //for each (scheme, year and quarter) combination in ProducerEEEHisory resultset
                 //get the earliest date, discards the results from removed producers result set which are less than earliest set
-                var resultforHistoryDataSet = results.ProducerReturnsHistoryData.Where(p => (p.ApprovalNumber == set.ApprovalNumber 
-                                                                                    && p.Quarter == set.Quarter 
+                var resultforHistoryDataSet = results.ProducerReturnsHistoryData.Where(p => (p.ApprovalNumber == set.ApprovalNumber
+                                                                                    && p.Quarter == set.Quarter
                                                                                     && p.ComplianceYear == set.ComplianceYear));
 
                 var resultforRemovedDataSet = results.ProducerRemovedFromReturnsData.Where(p => (p.ApprovalNumber == set.ApprovalNumber
@@ -111,7 +111,7 @@
                 {
                     //discard for all records from removedproducer result set where date is less than earliestDate for this set
                     var newRemovedResultSet = resultforRemovedDataSet.Where(r => (r.SubmittedDate > earliestDateForSet));
-                    
+
                     //removed duplicate submissions which happened after the producer was removed
                     if (newRemovedResultSet.Any())
                     {
@@ -129,7 +129,7 @@
                 }
                 List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult> duplicateItemsToRemove = new List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult>();
                 for (int i = 0; i < resultforHistoryDataSet.Count(); i++)
-                {                    
+                {
                     var item = resultforHistoryDataSet.ElementAt(i);
                     var nextItem = resultforHistoryDataSet.ElementAtOrDefault(i + 1);
 
@@ -174,13 +174,13 @@
                         //Set "no" for the max date data from producer history result set
                         csvResults.Single(s => s.SubmittedDate == maxDateForSet).LatestData = "No";
                     }
-                    
+
                     EeeHistoryCsvResult row = new EeeHistoryCsvResult(prn, item.ApprovalNumber, schemeName, item.ComplianceYear,
                                                                      item.Quarter, item.SubmittedDate, latestData);
                     csvResults.Add(row);
                 }
             }
-           
+
             return csvResults.OrderByDescending(r => r.ComplianceYear).ThenByDescending(r => r.SubmittedDate);
         }
 
@@ -266,7 +266,7 @@
                 Cat12B2B = cat12b2b;
                 Cat13B2B = cat13b2b;
                 Cat14B2B = cat14b2b;
-            }        
+            }
         }
     }
 }

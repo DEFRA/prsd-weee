@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns
 {
-    using System;
-    using System.Globalization;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Prsd.Core;
+    using System;
+    using System.Globalization;
 
     public abstract class ReturnViewModelBase : IReturnViewModel
     {

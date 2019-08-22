@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.SubmitReturnVersion
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using FakeItEasy;
     using RequestHandlers.DataReturns.FetchDataReturnForSubmission;
     using RequestHandlers.DataReturns.SubmitReturnVersion;
     using RequestHandlers.Security;
     using Requests.DataReturns;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges.Errors
 {
+    using FakeItEasy;
+    using RequestHandlers.Charges.IssuePendingCharges.Errors;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FakeItEasy;
-    using RequestHandlers.Charges.IssuePendingCharges.Errors;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 

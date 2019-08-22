@@ -102,7 +102,7 @@
             public string GetData(T item)
             {
                 string result;
-                
+
                 object data = func(item);
                 if (data == null)
                 {

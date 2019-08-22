@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Users
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Domain.Organisation;
     using EA.Prsd.Core.Mediator;
@@ -9,6 +7,8 @@
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Requests.Users;
+    using System;
+    using System.Threading.Tasks;
 
     internal class GetOrganisationUserHandler : IRequestHandler<GetOrganisationUser, OrganisationUserData>
     {
@@ -34,7 +34,7 @@
                     query.OrganisationUserId);
                 throw new Exception(message);
             }
-            
+
             authorization.EnsureOrganisationAccess(organisationUser.OrganisationId);
 
             return organisationUserMap.Map(organisationUser);

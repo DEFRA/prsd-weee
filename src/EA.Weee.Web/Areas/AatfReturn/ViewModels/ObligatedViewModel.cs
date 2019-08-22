@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
 
     public class ObligatedViewModel
     {

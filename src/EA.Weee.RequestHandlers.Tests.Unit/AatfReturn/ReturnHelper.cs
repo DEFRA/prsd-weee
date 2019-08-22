@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
+    using System;
 
     public static class ReturnHelper
     {

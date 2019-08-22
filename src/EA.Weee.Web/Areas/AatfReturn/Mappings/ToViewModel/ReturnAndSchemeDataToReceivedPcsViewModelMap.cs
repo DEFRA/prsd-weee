@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using System.Collections.Generic;
+    using System.Linq;
     using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
     public class ReturnAndSchemeDataToReceivedPcsViewModelMap : IMap<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer, ReceivedPcsListViewModel>

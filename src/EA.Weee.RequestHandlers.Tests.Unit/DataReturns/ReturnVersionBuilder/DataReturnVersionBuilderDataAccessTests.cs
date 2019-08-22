@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.ReturnVersionBuilder
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
     using FakeItEasy;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;

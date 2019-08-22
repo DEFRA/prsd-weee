@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using EA.Prsd.Core;
@@ -13,6 +9,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

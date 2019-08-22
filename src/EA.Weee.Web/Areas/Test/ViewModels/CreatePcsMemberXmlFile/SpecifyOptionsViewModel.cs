@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile
 {
+    using Core.Scheme;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.Scheme;
 
     public class SpecifyOptionsViewModel
     {
@@ -49,7 +49,7 @@
 
             // If acceptable, default to the current year.
             int year = DateTime.UtcNow.Year;
-            
+
             if (year < 2016)
             {
                 year = 2016;

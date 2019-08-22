@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using Weee.Requests.AatfReturn.Obligated;
     using Xunit;
 
@@ -145,7 +145,7 @@
         {
             var model = new ObligatedViewModel(calculator)
             {
-                CategoryValues = new List<ObligatedCategoryValue>() {new ObligatedCategoryValue() }
+                CategoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() }
             };
 
             model.CategoryValues.ElementAt(0).Id = Guid.NewGuid();

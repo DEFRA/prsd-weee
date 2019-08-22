@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
 

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mappings.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Organisations;
     using FluentAssertions;
+    using System;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Weee.Tests.Core;
     using Xunit;

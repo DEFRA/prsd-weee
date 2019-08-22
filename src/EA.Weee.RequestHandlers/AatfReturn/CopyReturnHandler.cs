@@ -1,25 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using DataAccess;
+    using Domain.AatfReturn;
+    using Factories;
+    using Prsd.Core.Domain;
+    using Prsd.Core.Mediator;
+    using Requests.AatfReturn;
+    using Security;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using AatfTaskList;
-    using CheckYourReturn;
-    using Core.AatfReturn;
-    using Core.Helpers;
-    using DataAccess;
-    using Domain.AatfReturn;
-    using Factories;
-    using NonObligated;
-    using Prsd.Core.Domain;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
-    using Requests.AatfReturn;
-    using Security;
     using QuarterWindow = Domain.DataReturns.QuarterWindow;
-    using ReturnStatus = Core.AatfReturn.ReturnStatus;
 
     internal class CopyReturnHandler : IRequestHandler<CopyReturn, Guid>
     {

@@ -1,20 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports.GetUKWeeeCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Lookup;
     using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports.GetUKWeeeCsv;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using DomainObligationType = Domain.Obligation.ObligationType;
 

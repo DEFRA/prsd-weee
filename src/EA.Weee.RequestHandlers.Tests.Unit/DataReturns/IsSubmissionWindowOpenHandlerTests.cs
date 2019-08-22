@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
     using BusinessValidation.XmlBusinessRules;
     using DataAccess.DataAccess;
     using Domain.DataReturns;
-    using Factories;
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.DataReturns;
     using RequestHandlers.Factories;
     using Requests.DataReturns;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class IsSubmissionWindowOpenHandlerTests
@@ -91,7 +90,7 @@
                 .Returns(systemData);
 
             var timeNow = new DateTime(2016, 3, 25, 0, 0, 0);
-            
+
             A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
                 .Returns(new List<QuarterWindow>());
 

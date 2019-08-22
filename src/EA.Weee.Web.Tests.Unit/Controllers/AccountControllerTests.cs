@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
@@ -14,6 +8,12 @@
     using FakeItEasy;
     using Prsd.Core.Web.ApiClient;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Controllers;
     using Xunit;
 
@@ -47,19 +47,19 @@
             IWeeeClient apiClient = A.Fake<IWeeeClient>();
             A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
                 .Returns(false);
-            
+
             IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
             IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
 
             var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService);
-            
+
             // Act
             var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
-            
+
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            
+
             Assert.Equal("AccountActivationFailed", viewResult.ViewName);
         }
 

@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using Aatf = Core.AatfReturn.AatfData;
 
     public class AatfSentOnSiteMap : IMap<AatfAddress, AatfAddressData>
     {

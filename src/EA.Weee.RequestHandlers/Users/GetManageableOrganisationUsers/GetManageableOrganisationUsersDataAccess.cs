@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.GetManageableOrganisationUsers
 {
+    using DataAccess;
+    using Domain.Organisation;
+    using Domain.User;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.Organisation;
-    using Domain.User;
 
     public class GetManageableOrganisationUsersDataAccess : IGetManageableOrganisationUsersDataAccess
     {

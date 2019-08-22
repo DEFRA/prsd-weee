@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using Core.AatfReturn;
     using DataReturns;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ReturnsDataTests

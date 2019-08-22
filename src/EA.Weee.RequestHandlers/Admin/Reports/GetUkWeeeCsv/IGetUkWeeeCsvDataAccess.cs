@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUKWeeeCsv
 {
+    using EA.Weee.Domain.DataReturns;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.DataReturns;
 
     public interface IGetUkWeeeCsvDataAccess
     {

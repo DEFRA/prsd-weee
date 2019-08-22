@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
-    using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.DataReturns;
+    using System.Collections.Generic;
 
     public class PartialAatfReturn
     {

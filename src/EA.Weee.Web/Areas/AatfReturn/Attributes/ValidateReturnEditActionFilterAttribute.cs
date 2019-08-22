@@ -1,17 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Attributes
 {
+    using Infrastructure;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.AatfReturn;
-    using Core.Shared;
-    using Infrastructure;
-    using Services;
     using Weee.Requests.AatfReturn;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Scheme;
-    
+
     public class ValidateReturnEditActionFilterAttribute : ValidateReturnBaseActionFilterAttribute
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid returnId)

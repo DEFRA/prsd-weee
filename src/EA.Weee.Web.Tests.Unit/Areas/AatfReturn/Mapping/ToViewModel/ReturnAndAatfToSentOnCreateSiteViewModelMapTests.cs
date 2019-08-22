@@ -1,18 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using AutoFixture;
     using AutoFixture.Dsl;
     using Core.DataReturns;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
+    using FluentAssertions;
+    using System;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -51,7 +45,7 @@
         public void Map_GivenNullWeeeSentOn_SiteAddressShouldNotBeNullAndContainCountryData()
         {
             var source = CreateDefaultTransferObject().Without(s => s.WeeeSentOnData).Create();
-            
+
             var result = map.Map(source);
 
             result.SiteAddressData.Should().NotBeNull();

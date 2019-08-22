@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System.Threading.Tasks;
     using AatfReturn.Internal;
     using Core.Admin;
     using Prsd.Core.Mediator;
     using Requests.Admin.Aatf;
     using Security;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class CheckAatfApprovalDateChangeHandler : IRequestHandler<CheckAatfApprovalDateChange, CanApprovalDateBeChangedFlags>
@@ -14,8 +14,8 @@
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus;
 
-        public CheckAatfApprovalDateChangeHandler(IWeeeAuthorization authorization, 
-            IAatfDataAccess aatfDataAccess, 
+        public CheckAatfApprovalDateChangeHandler(IWeeeAuthorization authorization,
+            IAatfDataAccess aatfDataAccess,
             IGetAatfApprovalDateChangeStatus getAatfApprovalDateChangeStatus)
         {
             this.authorization = authorization;

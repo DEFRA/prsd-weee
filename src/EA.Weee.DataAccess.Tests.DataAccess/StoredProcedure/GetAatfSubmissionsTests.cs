@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.Admin.AatfReports;
     using FluentAssertions;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -275,7 +275,7 @@
                 db.WeeeContext.WeeeReused.Add(weeeReused2);
                 db.WeeeContext.WeeeReusedAmount.Add(weeeReusedAmount1);
                 db.WeeeContext.WeeeReusedAmount.Add(weeeReusedAmount2);
-                
+
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
@@ -311,7 +311,7 @@
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
                 @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-                
+
                 db.WeeeContext.Returns.Add(@return);
 
                 await db.WeeeContext.SaveChangesAsync();

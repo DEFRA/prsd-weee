@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using DataAccess.DataAccess;
     using Domain.Scheme;
@@ -11,6 +8,9 @@
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -65,7 +65,7 @@
             ISchemeDataAccess dataAccess = A.Fake<ISchemeDataAccess>();
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
-            
+
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             var mapper = A.Fake<IMapper>();

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Attributes
 {
+    using Api.Client;
+    using Services;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Services;
 
     public abstract class ValidateReturnBaseActionFilterAttribute : ActionFilterAttribute
     {

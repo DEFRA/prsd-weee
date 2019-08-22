@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.DataReturns
 {
-    using System;
     using Core.DataReturns;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetUploadInfoByDataReturnUploadId : IRequest<DataReturnUploadInfo>
     {
