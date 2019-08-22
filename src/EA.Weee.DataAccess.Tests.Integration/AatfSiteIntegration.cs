@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -12,6 +7,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using AatfAddress = Domain.AatfReturn.AatfAddress;
@@ -76,7 +75,7 @@
             database.WeeeContext.Schemes.Add(scheme);
             database.WeeeContext.Aatfs.Add(aatf);
             database.WeeeContext.Returns.Add(@return);
-            
+
             await database.WeeeContext.SaveChangesAsync();
 
             var weeeReused = new WeeeReused(aatf.Id, @return.Id);
@@ -88,7 +87,7 @@
             }
 
             await database.WeeeContext.SaveChangesAsync();
-            
+
             var weeeReusedSite = new WeeeReusedSite(weeeReused, aatfAddress);
 
             await dataAccess.Submit(weeeReusedSite);

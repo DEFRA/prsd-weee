@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Requests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 

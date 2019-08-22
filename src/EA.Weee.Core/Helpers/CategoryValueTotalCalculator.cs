@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Core.Helpers
 {
+    using EA.Weee.Core.Validation;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using EA.Weee.Core.Validation;
 
     public class CategoryValueTotalCalculator : ICategoryValueTotalCalculator
     {

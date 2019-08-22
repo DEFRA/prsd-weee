@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System.Collections.Generic;
     using Domain;
     using FakeItEasy;
-    using Weee.Domain;
+    using System.Collections.Generic;
     using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
     using Xml.MemberRegistration;
@@ -26,7 +25,7 @@
         public void Evaluate_Amendment_ReturnsPass()
         {
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(new producerType() { status = statusType.A });
-            
+
             A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).MustNotHaveHappened();
             A.CallTo(() => migratedProducerQuerySet.GetAllMigratedProducers()).MustNotHaveHappened();
 
@@ -228,7 +227,7 @@
             A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
-            
+
             Assert.True(result.IsValid);
         }
 

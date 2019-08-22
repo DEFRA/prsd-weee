@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSchemes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using FakeItEasy;
@@ -13,6 +8,11 @@
     using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

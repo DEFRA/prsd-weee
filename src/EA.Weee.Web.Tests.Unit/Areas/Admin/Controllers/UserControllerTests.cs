@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Core.Admin;
@@ -14,6 +11,9 @@
     using FakeItEasy;
     using FluentAssertions;
     using Security;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;

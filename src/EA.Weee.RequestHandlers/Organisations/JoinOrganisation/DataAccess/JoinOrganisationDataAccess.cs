@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.JoinOrganisation.DataAccess
 {
+    using Domain.Organisation;
+    using Domain.User;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Domain.Organisation;
-    using Domain.User;
     using Weee.DataAccess;
 
     public class JoinOrganisationDataAccess : IJoinOrganisationDataAccess

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Shared
 {
-    using System;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetApiDate : IRequest<DateTime>
     {

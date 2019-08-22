@@ -1,22 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchComplianceYearsWithInvoices
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
     using Domain.Scheme;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain.DataReturns;
-    using EA.Weee.RequestHandlers.Admin;
-    using EA.Weee.RequestHandlers.Charges;
     using EA.Weee.RequestHandlers.Charges.FetchComplianceYearsWithInvoices;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using RequestHandlers.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     public class FetchComplianceYearsWithInvoicesHandlerTests
     {
@@ -46,7 +42,7 @@
         public async Task GetAllComplianceYearsHandler_ReturnsYearsInDescendingOrder()
         {
             // Arrange
-            UKCompetentAuthority competentAuthority = 
+            UKCompetentAuthority competentAuthority =
                 new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk", 0);
             var scheme1 = A.Fake<Scheme>();
             A.CallTo(() => scheme1.SchemeName).Returns("Test1");
@@ -88,8 +84,8 @@
             FetchComplianceYearsWithInvoicesHandler handler = new FetchComplianceYearsWithInvoicesHandler(authorization, dataAccess);
 
             Requests.Charges.FetchComplianceYearsWithInvoices request = new Requests.Charges.FetchComplianceYearsWithInvoices(CompetentAuthority.England);
-            A.CallTo(() => dataAccess.FetchCompetentAuthority(CompetentAuthority.England)).Returns(competentAuthority); 
-            
+            A.CallTo(() => dataAccess.FetchCompetentAuthority(CompetentAuthority.England)).Returns(competentAuthority);
+
             // Act
             var yearsList = await handler.HandleAsync(request);
             Assert.NotNull(yearsList);

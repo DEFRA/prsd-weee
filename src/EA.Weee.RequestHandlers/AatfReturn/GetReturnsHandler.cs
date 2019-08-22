@@ -2,22 +2,14 @@
 {
     using Core.AatfReturn;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using Factories;
     using Prsd.Core;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using FacilityType = Core.AatfReturn.FacilityType;
     using QuarterType = Core.DataReturns.QuarterType;
 
     internal class GetReturnsHandler : IRequestHandler<GetReturns, ReturnsData>
@@ -66,7 +58,7 @@
 
             foreach (var @return in @returns.Where(p => p.FacilityType.Value == (int)message.Facility))
             {
-               returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
+                returnsData.Add(await getPopulatedReturn.GetReturnData(@return.Id, false));
             }
 
             var returnOpenQuarters = new List<Core.DataReturns.Quarter>();

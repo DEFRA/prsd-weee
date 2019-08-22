@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.DataReturns;
     using Domain.Scheme;
     using Error;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class DataReturnUploadTests

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
+    using Errors;
     using System.Collections.Generic;
     using System.Xml.Linq;
-    using Errors;
 
     public interface INamespaceValidator
     {

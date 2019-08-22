@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
@@ -9,6 +8,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class CopyAatfDataToCopyAatfViewModelMapTests
@@ -125,7 +125,7 @@
                 .With(a => a.CompetentAuthority, competentAuthority)
                 .With(a => a.AatfStatus, AatfStatus.Approved)
                 .With(a => a.Size, AatfSize.Large)
-                .With(a => a.FacilityType, FacilityType.Aatf)               
+                .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.PanAreaData, panAreaData)
                 .With(a => a.LocalAreaData, localAreaData)
                 .With(a => a.AatfId, Guid.NewGuid())

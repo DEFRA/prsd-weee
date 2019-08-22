@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using DataReturns;
-    using Helpers;
     using Validation;
 
     public class NonObligatedCategoryValue : CategoryValue

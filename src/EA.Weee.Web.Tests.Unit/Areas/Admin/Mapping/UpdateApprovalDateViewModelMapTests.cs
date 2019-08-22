@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
     using AutoFixture;
     using Core.AatfReturn;
     using Core.Admin;
     using FluentAssertions;
+    using System;
     using Web.Areas.Admin.Mappings.ToViewModel;
-    using Web.Areas.Admin.ViewModels.Aatf;
     using Weee.Requests.Admin.Aatf;
     using Xunit;
 

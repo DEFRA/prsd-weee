@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
-    using System;
     using Core.Validation;
     using FluentAssertions;
     using Xunit;

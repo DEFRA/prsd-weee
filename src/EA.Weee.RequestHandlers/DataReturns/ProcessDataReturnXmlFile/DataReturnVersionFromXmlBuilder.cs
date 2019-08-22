@@ -1,16 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using BusinessValidation;
     using BusinessValidation.Rules;
-    using Core.Shared;
     using Domain.DataReturns;
     using Prsd.Core;
     using ReturnVersionBuilder;
     using Shared;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xml.DataReturns;
 
     /// <summary>

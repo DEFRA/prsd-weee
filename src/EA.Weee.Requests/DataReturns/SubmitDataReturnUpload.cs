@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.DataReturns
 {
-    using System;
     using Prsd.Core.Mediator;
+    using System;
 
     public class SubmitDataReturnUpload : IRequest<Guid>
     {

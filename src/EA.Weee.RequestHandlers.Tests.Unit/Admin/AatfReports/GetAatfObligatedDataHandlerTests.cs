@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Data;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain.AatfReturn;
@@ -18,6 +14,10 @@
     using EA.Weee.Requests.Admin.Aatf;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Data;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -156,19 +156,19 @@
             obligatedDataTable.Columns.Add("Reused as a whole appliance (t)");
             obligatedDataTable.Columns.Add("Total received from PCS (t)");
 
-                for (int i = 0; i < 5; i++)
-                {
-                    DataRow row = obligatedDataTable.NewRow();
-                    row[0] = 2019;
-                    row[1] = "Q1";
-                    row[2] = "TestAatf" + i;
-                    row[3] = "WEE/AC0005ZT/ATF";
-                    row[4] = "T User";
-                    row[5] = "24/04/2019";
-                    row[6] = "1. Large Household Appliances";
-                    row[7] = "B2C";
-                    row[8] = 33;
-                    row[9] = 15;
+            for (int i = 0; i < 5; i++)
+            {
+                DataRow row = obligatedDataTable.NewRow();
+                row[0] = 2019;
+                row[1] = "Q1";
+                row[2] = "TestAatf" + i;
+                row[3] = "WEE/AC0005ZT/ATF";
+                row[4] = "T User";
+                row[5] = "24/04/2019";
+                row[6] = "1. Large Household Appliances";
+                row[7] = "B2C";
+                row[8] = 33;
+                row[9] = 15;
             }
 
             return obligatedDataTable;

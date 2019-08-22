@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberUploadTesting
 {
+    using DataAccess;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
 
     public class ProducerListFactoryDataAccess : IProducerListFactoryDataAccess
     {

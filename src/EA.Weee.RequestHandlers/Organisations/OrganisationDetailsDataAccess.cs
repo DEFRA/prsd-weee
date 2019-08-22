@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Domain.Scheme;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class OrganisationDetailsDataAccess : IOrganisationDetailsDataAccess
     {
         private readonly WeeeContext context;
-        
+
         public OrganisationDetailsDataAccess(WeeeContext context)
         {
             this.context = context;
@@ -55,7 +55,7 @@
 
         public async Task SaveAsync()
         {
-            await context.SaveChangesAsync(); 
+            await context.SaveChangesAsync();
         }
     }
 }

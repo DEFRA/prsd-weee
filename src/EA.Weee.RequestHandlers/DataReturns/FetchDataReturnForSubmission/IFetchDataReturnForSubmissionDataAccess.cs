@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
+    using Domain.DataReturns;
     using System;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
 
     public interface IFetchDataReturnForSubmissionDataAccess
     {

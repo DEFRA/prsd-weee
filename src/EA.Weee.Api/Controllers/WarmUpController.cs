@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
+    using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using System;
     using System.Configuration;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Prsd.Core.Web.OAuth;
-    using Prsd.Core.Web.OpenId;
 
     /// <summary>
     /// This controller provides an action which warms up the Thinktecure IdentityServer
@@ -22,7 +22,7 @@
         {
             try
             {
-                    string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
+                string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
                 string password = ConfigurationManager.AppSettings["Weee.WarmUpUserPassword"];
 
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))

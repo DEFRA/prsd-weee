@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
     using Core.Helpers;
     using Microsoft.Ajax.Utilities;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class ObligatedDataToObligatedValueMap : IMap<ObligatedDataToObligatedValueMapTransfer, IList<ObligatedCategoryValue>>
     {

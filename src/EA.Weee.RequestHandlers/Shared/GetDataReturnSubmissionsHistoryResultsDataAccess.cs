@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using DataAccess;
+    using Domain.Obligation;
+    using Requests.Shared;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.Obligation;
-    using Requests.Shared;
 
     public class GetDataReturnSubmissionsHistoryResultsDataAccess : IGetDataReturnSubmissionsHistoryResultsDataAccess
     {

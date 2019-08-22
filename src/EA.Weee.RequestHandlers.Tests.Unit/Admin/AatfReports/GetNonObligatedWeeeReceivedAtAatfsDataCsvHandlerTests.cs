@@ -1,24 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
+    using AutoFixture;
+    using Core.Shared;
+    using DataAccess;
+    using DataAccess.StoredProcedure;
+    using EA.Weee.RequestHandlers.Admin.AatfReports;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core;
+    using Requests.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using AutoFixture;
-    using Core.Admin;
-    using Core.Shared;
-    using DataAccess;
-    using DataAccess.StoredProcedure;
-    using Domain;
-    using Domain.Lookup;
-    using EA.Weee.RequestHandlers.Admin.AatfReports;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Aatf;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Prsd.Core;
-    using RequestHandlers.Shared;
-    using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 

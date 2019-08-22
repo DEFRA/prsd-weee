@@ -4,17 +4,17 @@
     using EA.Weee.Web.Infrastructure;
     using System.Web.Mvc;
 
-    public class AeReturnAreaRegistration : AreaRegistration 
+    public class AeReturnAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "AeReturn";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.Routes.MapMvcAttributeRoutes();
 

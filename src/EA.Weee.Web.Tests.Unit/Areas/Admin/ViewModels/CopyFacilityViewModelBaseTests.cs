@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using System.Collections.Generic;
     using System.Linq;
-    using EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf;
     using Xunit;
 
     public class CopyFacilityViewModelBaseTests

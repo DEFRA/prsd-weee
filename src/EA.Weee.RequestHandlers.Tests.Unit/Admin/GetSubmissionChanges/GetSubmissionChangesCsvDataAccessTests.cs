@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSubmissionChanges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.StoredProcedure;
     using FakeItEasy;
     using RequestHandlers.Admin.GetSubmissionChanges;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSubmissionChangesCsvDataAccessTests

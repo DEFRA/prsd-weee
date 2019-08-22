@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using System.Collections.Generic;
     using Shared.Paging;
+    using System.Collections.Generic;
 
     public class UserSearchDataResult
     {

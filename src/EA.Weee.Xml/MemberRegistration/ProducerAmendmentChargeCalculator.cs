@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System.Threading.Tasks;
-    using Domain.Lookup;
     using EA.Weee.DataAccess.DataAccess;
+    using System.Threading.Tasks;
 
     public class ProducerAmendmentChargeCalculator : IProducerChargeBandCalculator
     {

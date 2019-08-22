@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.DataReturns;
     using DataReturns;
     using Prsd.Core.Mediator;
     using Requests.Shared;
     using Security;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetDataReturnSubmissionsHistoryResultsHandler : IRequestHandler<GetDataReturnSubmissionsHistoryResults, DataReturnSubmissionsHistoryResult>
     {

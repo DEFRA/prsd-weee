@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using Core.AatfReturn;
+    using Core.Organisations;
+    using Domain.Organisation;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Scheme;
     using EA.Weee.RequestHandlers.Security;
@@ -8,11 +11,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
-    using Core.Organisations;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
-    using Specification;
     using Scheme = Domain.Scheme.Scheme;
 
     public class GetSchemeRequestHandler : IRequestHandler<GetReturnScheme, SchemeDataList>
@@ -20,9 +18,9 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnSchemeDataAccess returnSchemeDataAccess;
         private readonly IMapper mapper;
-  
-        public GetSchemeRequestHandler(IWeeeAuthorization authorization, 
-            IReturnSchemeDataAccess returnSchemeDataAccess, 
+
+        public GetSchemeRequestHandler(IWeeeAuthorization authorization,
+            IReturnSchemeDataAccess returnSchemeDataAccess,
             IMapper mapper)
         {
             this.authorization = authorization;

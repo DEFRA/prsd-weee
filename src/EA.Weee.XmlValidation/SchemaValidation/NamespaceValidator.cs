@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
+    using Core.Shared;
     using Errors;
     using System;
     using System.Collections.Generic;
     using System.Xml.Linq;
-    using Core.Shared;
     using Xml;
 
     public class NamespaceValidator : INamespaceValidator
@@ -13,7 +13,7 @@
         private const string IncorrectNamespaceMessageTemplate = "The XML file you have provided is for {0}. You must provide a {1} XML file.";
 
         private readonly Dictionary<XNamespace, string> validNamespaceDictionary;
-         
+
         public NamespaceValidator()
         {
             validNamespaceDictionary = new Dictionary<XNamespace, string>();
@@ -29,7 +29,7 @@
             if (!validNamespaceDictionary.ContainsKey(expectedNamespace))
             {
                 throw new ArgumentException(string.Format("The expected namespace '{0}' is not a namespace recognised by the system", expectedNamespace));
-            } 
+            }
 
             if (actualNamespace != expectedNamespace)
             {

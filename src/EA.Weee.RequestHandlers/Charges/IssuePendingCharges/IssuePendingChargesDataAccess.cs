@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Domain;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Charges;
     using Shared;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     public class IssuePendingChargesDataAccess : CommonDataAccess, IIssuePendingChargesDataAccess
     {

@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Factories
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Charges;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using FluentAssertions;
     using RequestHandlers.Factories;
     using RequestHandlers.Shared;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -32,7 +31,7 @@
                 var domainHelper = new DomainHelper(database.WeeeContext);
 
                 var organisation = Organisation.CreatePartnership("Dummy");
-                
+
                 await CreateAatf(database, organisation, DateTime.Now);
 
                 var dataAccess = new ReturnFactoryDataAccess(database.WeeeContext);

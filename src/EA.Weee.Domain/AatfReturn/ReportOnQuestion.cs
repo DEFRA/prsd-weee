@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using System.ComponentModel.DataAnnotations;
-    using EA.Prsd.Core.Domain;
 
     public class ReportOnQuestion
     {

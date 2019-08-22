@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System.Collections.Generic;
     using Domain.Producer;
+    using System.Collections.Generic;
 
     public interface IProducerSubmissionDataAccess
     {

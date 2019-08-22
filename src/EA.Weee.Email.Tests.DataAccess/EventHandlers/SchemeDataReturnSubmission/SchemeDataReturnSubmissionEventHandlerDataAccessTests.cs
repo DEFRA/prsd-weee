@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Email.Tests.DataAccess.EventHandlers.SchemeDataReturnSubmission
 {
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Email.EventHandlers.SchemeDataReturnSubmission;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

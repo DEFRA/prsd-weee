@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -49,12 +45,12 @@
 
                 //Assert
                 Assert.NotNull(results);
-                
+
                 Assert.Equal(results.Count, 14);
-                
+
                 var firstCategoryRecord = results[0];
                 var secondCategoryRecord = results[1];
-                
+
                 Assert.Equal("1. Large Household Appliances", firstCategoryRecord.Category);
                 Assert.Equal("2. Small Household Appliances", secondCategoryRecord.Category);
 
@@ -80,7 +76,7 @@
                 scheme.ApprovalNumber = "WEE/TE0000ST/SCH";
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2000;
-                
+
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, "PRN123");
                 var producer2 = helper.CreateProducerAsCompany(memberUpload, "PRN456");
                 var producer3 = helper.CreateProducerAsCompany(memberUpload, "PRN777");
@@ -95,7 +91,7 @@
                 helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, "B2C", 1, 200);
                 helper.CreateEeeOutputAmount(dataReturnVersion3, producer3.RegisteredProducer, "B2C", 1, 300);
                 helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, "B2C", 1, 400);
-                
+
                 db.Model.SaveChanges();
 
                 // Act

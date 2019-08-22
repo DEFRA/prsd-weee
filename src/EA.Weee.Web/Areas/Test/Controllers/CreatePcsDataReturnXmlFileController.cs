@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
+    using Api.Client;
+    using Core.DataReturns;
+    using Core.Organisations;
+    using Core.Shared;
+    using Core.Shared.Paging;
+    using Infrastructure;
+    using Services;
     using System;
     using System.Net.Mime;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.DataReturns;
-    using Core.Organisations;
-    using Core.Scheme.MemberUploadTesting;
-    using Core.Shared;
-    using Core.Shared.Paging;
-    using Filters;
-    using Infrastructure;
-    using Security;
-    using Services;
     using ViewModels.CreatePcsDataReturnXmlFile;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
@@ -64,7 +61,7 @@
                     MatchingOrganisations = matchingOrganistionList
                 };
             }
-            
+
             return View(viewModel);
         }
 
@@ -128,8 +125,8 @@
 
             ContentDisposition cd = new ContentDisposition
             {
-                FileName = xmlFile.FileName, 
-                Inline = false, 
+                FileName = xmlFile.FileName,
+                Inline = false,
             };
 
             Response.AppendHeader("Content-Disposition", cd.ToString());
@@ -158,7 +155,7 @@
             using (IWeeeClient client = apiClient())
             {
                 return await client.SendAsync(
-                    User.GetAccessToken(), 
+                    User.GetAccessToken(),
                     new CreateTestXmlFile(settings));
             }
         }

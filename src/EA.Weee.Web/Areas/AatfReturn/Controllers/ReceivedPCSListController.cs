@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Attributes;
     using Constant;
@@ -14,6 +10,10 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [ValidateReturnCreatedActionFilter]
     public class ReceivedPcsListController : AatfReturnBaseController

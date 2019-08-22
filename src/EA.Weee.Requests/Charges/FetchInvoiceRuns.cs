@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System.Collections.Generic;
     using Core.Shared;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Charges;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A request to fetch all invoice runs for the specified appropriate authority.

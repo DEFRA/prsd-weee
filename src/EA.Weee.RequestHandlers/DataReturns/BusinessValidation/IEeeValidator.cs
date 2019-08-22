@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Lookup;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using ObligationType = Domain.Obligation.ObligationType;
 
     public interface IEeeValidator

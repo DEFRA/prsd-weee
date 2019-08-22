@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using FluentAssertions;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
-    using FluentAssertions;
     using Web.Areas.Admin.ViewModels.AatfReports;
-    using Web.Areas.Admin.ViewModels.Reports;
     using Xunit;
     public class AatfObligatedDataViewModelTests
     {
@@ -50,8 +49,8 @@
         [Fact]
         public void AatfObligatedDataViewModel_ObligationTypes_ShouldHaveValidValues()
         {
-            model.ObligationTypes.ElementAt(0).Should().BeEquivalentTo(new SelectListItem() {Text = "B2B" });
-            model.ObligationTypes.ElementAt(1).Should().BeEquivalentTo(new SelectListItem() {Text = "B2C" });
+            model.ObligationTypes.ElementAt(0).Should().BeEquivalentTo(new SelectListItem() { Text = "B2B" });
+            model.ObligationTypes.ElementAt(1).Should().BeEquivalentTo(new SelectListItem() { Text = "B2C" });
         }
 
         [Fact]

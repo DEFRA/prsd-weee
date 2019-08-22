@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Tests.Core
 {
-    using System;
-    using System.Linq;
-    using DataAccess;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.Tests.Core.Model;
+    using System;
+    using System.Linq;
     using Aatf = Domain.AatfReturn.Aatf;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;

@@ -5,5 +5,5 @@
     public interface IDeserializer
     {
         T Deserialize<T>(XDocument document);
-    } 
+    }
 }

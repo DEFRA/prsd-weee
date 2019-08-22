@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
+    using EA.Prsd.Core;
+    using Scheme;
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
-    using Scheme;
 
     public class WeeeReceived : AatfEntity, IReturnOption
     {

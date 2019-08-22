@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System;
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
+    using System;
     using ObligationType = Core.Shared.ObligationType;
     using OrganisationType = Domain.Organisation.OrganisationType;
     using SchemeStatus = Core.Shared.SchemeStatus;

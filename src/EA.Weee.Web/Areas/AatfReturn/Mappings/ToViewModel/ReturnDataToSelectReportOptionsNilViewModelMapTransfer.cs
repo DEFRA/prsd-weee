@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
+    using System;
 
     public class ReturnDataToSelectReportOptionsNilViewModelMapTransfer
     {

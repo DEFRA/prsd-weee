@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -15,6 +13,8 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -113,7 +113,7 @@
 
             var returnId = Guid.NewGuid();
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = new string[1], Dcf = false};
+            var viewModel = new NonObligatedValuesCopyPasteViewModel { ReturnId = returnId, PastedValues = new string[1], Dcf = false };
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
@@ -152,7 +152,7 @@
 
             var returnId = Guid.NewGuid();
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = new string[1], Dcf = true};
+            var viewModel = new NonObligatedValuesCopyPasteViewModel { ReturnId = returnId, PastedValues = new string[1], Dcf = true };
 
             httpContext.RouteData.Values.Add("returnId", returnId);
 
@@ -172,13 +172,13 @@
             var returnId = Guid.NewGuid();
             var pastedValues = new string[1] { "2\n" };
 
-            var viewModel = new NonObligatedValuesCopyPasteViewModel {ReturnId = returnId, PastedValues = pastedValues};
+            var viewModel = new NonObligatedValuesCopyPasteViewModel { ReturnId = returnId, PastedValues = pastedValues };
 
             await controller.Index(viewModel);
 
             controller.TempData["pastedValues"].Should().NotBeNull();
         }
-        
+
         [Fact]
         public async void IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
         {

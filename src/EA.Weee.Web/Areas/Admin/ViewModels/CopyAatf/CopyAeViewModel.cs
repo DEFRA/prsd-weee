@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf
 {
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
+    using System.ComponentModel.DataAnnotations;
 
     public class CopyAeViewModel : CopyFacilityViewModelBase
     {

@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using Requests.AatfReturn;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetReturnHandlerTests
     {
