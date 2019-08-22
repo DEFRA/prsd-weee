@@ -228,5 +228,27 @@
         {
             return w => w.AatfId == aatf.Id && w.Return.Quarter.Year == aatf.ComplianceYear && (int)w.Return.Quarter.Q == quarter;
         }
+
+        public async Task<List<short>> GetComplianceYearsForAatfByAatfId(Guid aatfId)
+        {
+            return await context.Aatfs
+                    .Where(r => r.AatfId == aatfId)
+                    .Select(r => r.ComplianceYear)
+                    .Distinct()
+                    .OrderByDescending(year => year)
+                    .ToListAsync();
+        }
+
+        public async Task<Guid> GetAatfId(Guid aatfId, short complianceYear)
+        {
+            var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.AatfId == aatfId && p.ComplianceYear == complianceYear);
+
+            if (aatf == null)
+            {
+                throw new ArgumentException($"Aatf with aatfId {aatfId} and compliance year {complianceYear} not found");
+            }
+
+            return aatf.Id;
+        }
     }
 }

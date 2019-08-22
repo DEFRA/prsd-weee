@@ -456,6 +456,53 @@
         }
 
         [Fact]
+        public async void DetailsGet_GivenValidAatfId_AatfComplianceYearsByAatfIdShouldBeCalled()
+        {
+            var aatfId = Guid.NewGuid();
+            var organisationData = new OrganisationData
+            {
+                BusinessAddress = new Core.Shared.AddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country",
+                    Telephone = "9367282",
+                    Email = "test@test.com"
+                }
+            };
+
+            var contactData = new AatfContactData
+            {
+                AddressData = new AatfContactAddressData()
+                {
+                    Address1 = "Site address 1",
+                    Address2 = "Site address 2",
+                    TownOrCity = "Site town",
+                    CountyOrRegion = "Site county",
+                    Postcode = "GU22 7UY",
+                    CountryId = Guid.NewGuid(),
+                    CountryName = "Site country"
+                }
+            };
+
+            var aatfData = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now)
+            {
+                Organisation = organisationData,
+                Contact = contactData
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
+
+            await controller.Details(aatfId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfComplianceYearsByAatfId>.That.Matches(a => a.AatfId == aatfData.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
         {
             var viewModel = A.Fake<AatfDetailsViewModel>();
@@ -555,6 +602,16 @@
             var result = await controller.Details(aatfId) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async void FetchDetailsGet_GivenAatfId_Year_IdShouldBeRetrieved()
+        {
+            var aatfId = Guid.NewGuid();
+
+            var result = await controller.FetchDetails(aatfId, 2019);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfIdByComplianceYear>.That.Matches(c => c.AatfId.Equals(aatfId) && c.ComplianceYear == 2019))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
