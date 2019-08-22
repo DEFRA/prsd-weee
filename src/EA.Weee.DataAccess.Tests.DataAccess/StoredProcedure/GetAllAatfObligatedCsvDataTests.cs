@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public async Task Execute_GivenNoData_NoResultsShouldBeReturned()
+        public async Task Execute_GivenNoData_DefaultResultsShouldBeReturned()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -75,7 +75,7 @@
 
                 var results = await db.StoredProcedures.GetAllAatfObligatedCsvData(2019, string.Empty, string.Empty, null, null, 1);
 
-                results.Rows.Count.Should().Be(0);
+                results.Rows.Count.Should().Be(56);
 
                 results.Dispose();
             }
