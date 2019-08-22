@@ -15,6 +15,7 @@
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
     using Return = Domain.AatfReturn.Return;
+    using ReturnScheme = Domain.AatfReturn.ReturnScheme;
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
     using WeeeReused = Domain.AatfReturn.WeeeReused;
@@ -218,6 +219,8 @@
                     db.WeeeContext.WeeeReceivedAmount.Add(new Domain.AatfReturn.WeeeReceivedAmount(weeeReceivedAatf2Scheme2, categoryValue.CategoryId, categoryValue.CategoryId, categoryValue.CategoryId + 1));
                 }
 
+                db.WeeeContext.ReturnScheme.Add(new ReturnScheme(scheme1, @return));
+                db.WeeeContext.ReturnScheme.Add(new ReturnScheme(scheme2, @return));
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf2, @return));
                 db.WeeeContext.Returns.Add(@return);
@@ -278,6 +281,9 @@
                     db.WeeeContext.WeeeReceivedAmount.Add(new Domain.AatfReturn.WeeeReceivedAmount(weeeReceivedAatf1Scheme2, categoryValue.CategoryId, categoryValue.CategoryId, categoryValue.CategoryId + 1));
                     db.WeeeContext.WeeeReceivedAmount.Add(new Domain.AatfReturn.WeeeReceivedAmount(weeeReceivedAatf2Scheme2, categoryValue.CategoryId, categoryValue.CategoryId, categoryValue.CategoryId + 1));
                 }
+
+                db.WeeeContext.ReturnScheme.Add(new ReturnScheme(scheme1, @return));
+                db.WeeeContext.ReturnScheme.Add(new ReturnScheme(scheme2, @return));
 
                 db.WeeeContext.Returns.Add(@return);
 

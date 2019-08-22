@@ -40,12 +40,7 @@
         {
             var handler = new GetReturnObligatedCsvHandler(new AuthorizationBuilder().DenyOrganisationAccess().Build(), weeContext, returnDataAccess);
 
-            var returnId = Guid.NewGuid();
-            var @return = A.Fake<Return>();
-            var organisation = A.Fake<Organisation>();
-            A.CallTo(() => @return.Id).Returns(returnId);
-            A.CallTo(() => @return.Organisation).Returns(organisation);
-            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            var returnId = SetupReturn();
 
             var result = await Xunit.Record.ExceptionAsync(() => handler.HandleAsync(new GetReturnObligatedCsv(returnId)));
 
@@ -85,17 +80,32 @@
 
             A.CallTo(() => weeContext.StoredProcedures).Returns(storedProcedures);
 
+            var returnId = SetupReturn();
             var obligatedDataTable = CreateDummyDataTable();
 
-            var request = new GetReturnObligatedCsv(Guid.NewGuid());
+            var request = new GetReturnObligatedCsv(returnId);
 
             A.CallTo(() => storedProcedures.GetReturnObligatedCsvData(request.ReturnId)).Returns(obligatedDataTable);
 
             var data = await handler.HandleAsync(request);
 
+            data.FileContent.Should()
+                .Contain(
+                    "ComplianceYear,Quarter,AATFName,AATFApprovalNumber,SubmittedBy,SubmittedDate,Obligation,CategoryName,TotalSent,TotalReused,TotalReceived,Obligated WEEE sent to DSDS (t)");
             data.FileContent.Should().Contain("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,B2C,1. Large Household Appliances,33,15,2,88");
             data.FileContent.Should().NotContain("ReturnId");
             data.FileContent.Should().NotContain("AatfKey");
+        }
+
+        private Guid SetupReturn()
+        {
+            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => @return.Id).Returns(returnId);
+            A.CallTo(() => @return.Organisation).Returns(organisation);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            return returnId;
         }
 
         internal DataTable CreateDummyDataTable()
@@ -131,6 +141,7 @@
                 row[9] = 15;
                 row[10] = 2;
                 row[11] = 88;
+                obligatedDataTable.Rows.Add(row);
             }
 
             return obligatedDataTable;
