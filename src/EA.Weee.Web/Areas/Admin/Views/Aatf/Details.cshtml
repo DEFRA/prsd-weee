@@ -15,6 +15,13 @@
         </header>
     </section>
 </div>
+@Html.HiddenFor(m => m.AatfId)
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+    @Html.Gds().LabelFor(m => m.SelectedComplianceYear, new { @class = "govuk-label govuk-label--s" })
+    @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+    @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
+</div>
 
 <div class="govuk-tabs" data-module="tabs">
     <h2 class="govuk-tabs__title">
@@ -48,7 +55,7 @@
         <div class="govuk-table__header--large">
             @Model.FacilityType.ToDisplayString() details
         </div>
-        @if (Model.CanEdit)
+        @if (Model.CanEdit && Model.IsLatestComplianceYear)
         {
             <div style="float:right">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
@@ -414,3 +421,15 @@
         <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
     </p>
 </div>
+
+@section scripts {
+    <script type="text/javascript">
+            $("#SelectedComplianceYear")
+                    .change(function () {
+                    var selectedYear = $("#SelectedComplianceYear").val();
+                    var aatfIdvalue = $("#AatfId").val();
+                    window.location.href = '@Url.Action("FetchDetails", "Aatf")' + '?aatfId=' + aatfIdvalue + '&selectedComplianceYear=' + selectedYear;
+
+                    });
+    </script>
+}

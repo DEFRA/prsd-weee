@@ -28,5 +28,9 @@
         Task RemoveAatf(Guid aatfId);
 
         Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters, CanApprovalDateBeChangedFlags flags);
+
+        Task<List<short>> GetComplianceYearsForAatfByAatfId(Guid aatfId);
+
+        Task<Guid> GetAatfId(Guid aatfId, short complianceYear);
     }
 }
