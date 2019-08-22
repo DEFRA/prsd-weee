@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class UpdateOrganisationDetailsHandler : IRequestHandler<UpdateOrganisationDetails, bool>
@@ -39,7 +38,7 @@
                     organisation.UpdateSoleTraderDetails(message.OrganisationData.Name, message.OrganisationData.TradingName);
                     break;
             }
-            
+
             Country country = await dataAccess.FetchCountryAsync(message.OrganisationData.BusinessAddress.CountryId);
 
             Address address = new Address(

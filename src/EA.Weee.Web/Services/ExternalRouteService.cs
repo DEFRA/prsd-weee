@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using System;
+    using EA.Weee.Core.Routing;
     using System.Web;
     using System.Web.Mvc;
-    using EA.Weee.Core.Routing;
 
     /// <summary>
     /// Uses the current HttpContext to resolve routes that are used externally

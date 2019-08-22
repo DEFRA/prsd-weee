@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
-    using Domain;
     using Domain.DataReturns;
     using Domain.Error;
     using Domain.Obligation;
     using Domain.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.XmlValidation.Errors;
 
     public static class Extensions

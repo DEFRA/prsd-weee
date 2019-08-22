@@ -1,17 +1,14 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.DataAccess
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.Organisation;
-    using Domain.Scheme;
     using Domain.User;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -139,7 +136,7 @@
             new object[] {UserStatus.Rejected},
             new object[] {UserStatus.Inactive}
         };
-    
+
         [Theory]
         [MemberData(nameof(InactiveUserStatusData))]
         public async void HasActiveUsers_GivenOrganisationWithInactiveUser_FalseShouldBeReturned(UserStatus status)

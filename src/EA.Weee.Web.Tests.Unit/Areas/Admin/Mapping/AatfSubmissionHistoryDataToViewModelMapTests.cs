@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping
 {
-    using System;
-    using System.Collections.Generic;
     using AutoFixture;
     using Core.Admin.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Web.Areas.Admin.Mappings.ToViewModel;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Xunit;
@@ -53,7 +53,7 @@
 
             mapper.Map(source);
 
-            A.CallTo(() => tonnageUtilities.SumTotals(A<List<decimal?>>.That.IsSameSequenceAs(new List<decimal?>() {source.WeeeReceivedHouseHold})))
+            A.CallTo(() => tonnageUtilities.SumTotals(A<List<decimal?>>.That.IsSameSequenceAs(new List<decimal?>() { source.WeeeReceivedHouseHold })))
                 .MustHaveHappenedOnceExactly();
         }
 

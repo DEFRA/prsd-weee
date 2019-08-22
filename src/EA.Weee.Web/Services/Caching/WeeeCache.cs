@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
     using Core.AatfReturn;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
@@ -14,6 +9,11 @@
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Search;
     using Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
     using Weee.Requests.AatfReturn;
 
     public class WeeeCache : IWeeeCache
@@ -114,7 +114,7 @@
             {
                 var request = new EA.Weee.Requests.Users.GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
-                
+
                 return string.Format("{0} {1}", result.FirstName, result.Surname).Trim();
             }
         }

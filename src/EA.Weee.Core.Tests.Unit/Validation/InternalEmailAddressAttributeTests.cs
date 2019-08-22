@@ -19,7 +19,7 @@
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(false, result);           
+            Assert.Equal(false, result);
         }
 
         [Theory]

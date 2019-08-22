@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Admin;
     using DataAccess;
     using DataAccess.StoredProcedure;
@@ -14,6 +9,11 @@
     using FakeItEasy;
     using RequestHandlers.Admin;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetProducerEeeDataHistoryCsvHandlerTests
@@ -124,7 +124,7 @@
               (r1) => Assert.Equal(null, r1.Cat1B2B),
               (r2) => Assert.Equal(100, r2.Cat1B2B));
         }
-        
+
         /// <summary>
         /// This test ensures that blank row is added in between 2 upload 
         /// for producer which has been removed in upload2 after upload1 but added later on in the upload 3
@@ -152,9 +152,9 @@
             results.ProducerRemovedFromReturnsData.Add(removedUpload);
 
             //In this upload producer added back again
-            ProducerEeeHistoryCsvData.ProducerInReturnsResult upload2 = CreateEeeDataForProducer("WEE/MM0841AA", "WEE/FA0000KE/SCH", "Test Scheme", 2007, 1, new DateTime(2016, 1, 3), 200, "Yes");            
+            ProducerEeeHistoryCsvData.ProducerInReturnsResult upload2 = CreateEeeDataForProducer("WEE/MM0841AA", "WEE/FA0000KE/SCH", "Test Scheme", 2007, 1, new DateTime(2016, 1, 3), 200, "Yes");
             results.ProducerReturnsHistoryData.Add(upload2);
-            
+
             //Act
             IEnumerable<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult> csvResults = new List<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult>();
             csvResults = handler.CreateResults(results);
@@ -316,11 +316,11 @@
             //producer removed in third upload
             ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult removedUpload1 = CreateRemovedProducerResults("WEE/FA0000KE/SCH", 2007, new DateTime(2016, 1, 3), 1);
             results.ProducerRemovedFromReturnsData.Add(removedUpload1);
-           
+
             //Act
             IEnumerable<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult> csvResults = new List<GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult>();
             csvResults = handler.CreateResults(results);
-            
+
             //Assert
             Assert.NotNull(csvResults);
             Assert.Equal(2, csvResults.Count());
@@ -336,19 +336,19 @@
               (r1) => Assert.Equal(null, r1.Cat1B2B),
               (r2) => Assert.Equal(100, r2.Cat1B2B));
         }
-        private static ProducerEeeHistoryCsvData.ProducerInReturnsResult CreateEeeDataForProducer(string prn, string approvalNumber, string schemeName, int year, 
+        private static ProducerEeeHistoryCsvData.ProducerInReturnsResult CreateEeeDataForProducer(string prn, string approvalNumber, string schemeName, int year,
             int quarter, DateTime date, int cat1b2b, string latestData)
-        {          
+        {
             ProducerEeeHistoryCsvData.ProducerInReturnsResult eeeDatahistoryResult = new ProducerEeeHistoryCsvData.ProducerInReturnsResult();
             eeeDatahistoryResult.PRN = prn;
             eeeDatahistoryResult.SchemeName = schemeName;
-            eeeDatahistoryResult.ApprovalNumber = approvalNumber; 
+            eeeDatahistoryResult.ApprovalNumber = approvalNumber;
             eeeDatahistoryResult.ComplianceYear = year;
             eeeDatahistoryResult.Quarter = quarter;
             eeeDatahistoryResult.SubmittedDate = date;
             eeeDatahistoryResult.LatestData = latestData;
             eeeDatahistoryResult.Cat1B2B = cat1b2b;
-            return eeeDatahistoryResult;            
+            return eeeDatahistoryResult;
         }
 
         private static ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult CreateRemovedProducerResults(string approvalnumber, int year, DateTime date, int quarter)

@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using Core.Helpers.PrnGeneration;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
+    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -9,25 +15,12 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using Core.Helpers.PrnGeneration;
-    using Domain;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using Requests.Scheme.MemberRegistration;
     using Weee.Tests.Core.Model;
     using Xml.Converter;
     using Xml.Deserialization;
     using Xml.MemberRegistration;
     using Xunit;
     using ChargeBandAmount = Domain.Lookup.ChargeBandAmount;
-    using MemberUpload = Domain.Scheme.MemberUpload;
-    using MemberUploadError = Domain.Scheme.MemberUploadError;
-    using Organisation = Domain.Organisation.Organisation;
-    using ProducerSubmission = Domain.Producer.ProducerSubmission;
-    using Scheme = Domain.Scheme.Scheme;
 
     public class PrnGenerationIntegration
     {

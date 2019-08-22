@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Reflection;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels.Validation;
     using FakeItEasy;
     using FluentAssertions;
     using FluentValidation.Attributes;
-    using Validation;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class SelectReportOptionsViewModelTests
@@ -67,7 +65,7 @@
         public void SelectReportOptionsViewModel_GivenAnySelectionOptions_HasSelectedOptionsIsTrue()
         {
             var viewModel = GetDefaultViewModel();
-            viewModel.ReportOnQuestions = new List<ReportOnQuestion>() {fixture.Build<ReportOnQuestion>().With(r => r.Selected, true).Create() };
+            viewModel.ReportOnQuestions = new List<ReportOnQuestion>() { fixture.Build<ReportOnQuestion>().With(r => r.Selected, true).Create() };
 
             viewModel.HasSelectedOptions.Should().Be(true);
         }

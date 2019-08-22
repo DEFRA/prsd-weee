@@ -1,16 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Filters
 {
-    using EA.Weee.Security;
     using EA.Weee.Web.Filters;
     using FakeItEasy;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Net;
     using System.Security.Claims;
-    using System.Security.Principal;
     using System.Web;
     using System.Web.Mvc;
-    using FluentAssertions;
-    using Prsd.Core.Domain;
     using Xunit;
 
     public class AuthorizeInternalClaimsAttributeTests

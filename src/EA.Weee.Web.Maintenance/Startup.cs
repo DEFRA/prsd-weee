@@ -8,7 +8,7 @@ namespace EA.Weee.Web.Maintenance
     {
         public void Configuration(IAppBuilder app)
         {
-         //   ConfigureAuth(app);
+            //   ConfigureAuth(app);
         }
     }
 }

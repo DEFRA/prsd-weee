@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.Web.Areas.Admin
 {
-    using System.Web.Mvc;
     using Controllers;
     using Infrastructure;
+    using System.Web.Mvc;
 
-    public class AdminAreaRegistration : AreaRegistration 
+    public class AdminAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "admin";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapLowercaseDashedRoute(
                 name: "admin_producers_search",

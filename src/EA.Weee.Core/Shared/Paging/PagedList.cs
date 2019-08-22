@@ -80,7 +80,7 @@ namespace EA.Weee.Core.Shared.Paging
                 AddRange(source.Skip(PageIndex * PageSize).Take(PageSize));
             }
         }
-        
+
         public PagedList()
         {
         }
@@ -88,12 +88,12 @@ namespace EA.Weee.Core.Shared.Paging
         public int PageCount { get; private set; }
         public int TotalItemCount { get; private set; }
         public int PageIndex { get; private set; }
-        public int PageNumber 
+        public int PageNumber
         {
             get
             {
                 return PageIndex + 1;
-            } 
+            }
         }
         public int PageSize { get; private set; }
         public bool HasPreviousPage { get; private set; }

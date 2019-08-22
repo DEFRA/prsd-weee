@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Validation;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class SelectYourPCSViewModelTests

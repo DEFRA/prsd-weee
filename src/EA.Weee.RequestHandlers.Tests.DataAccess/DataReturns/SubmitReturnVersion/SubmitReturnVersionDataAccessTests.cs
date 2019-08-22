@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.SubmitReturnVersion
 {
-    using System.Threading.Tasks;
     using RequestHandlers.DataReturns.SubmitReturnVersion;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

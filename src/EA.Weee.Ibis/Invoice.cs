@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
 
     /// <summary>
@@ -17,19 +16,19 @@
         public IReadOnlyList<InvoiceLineItem> LineItems { get; private set; }
 
         private string mCustomerReference;
-        
+
         /// <summary>
         /// The customer number of the invoicee. This should be prefixed with the region code and
         /// suffixed with an identifier for the income stream or feeder system (as agreed with
         /// 1B1S income section).
         /// </summary>
         public string CustomerReference
-        { 
-            get 
-            { 
-                return mCustomerReference; 
+        {
+            get
+            {
+                return mCustomerReference;
             }
-            private set 
+            private set
             {
                 if (string.IsNullOrEmpty(value))
                 {
@@ -41,7 +40,7 @@
                     throw new ArgumentException("The customer reference cannot exceed 12 characters.");
                 }
 
-                mCustomerReference = value; 
+                mCustomerReference = value;
             }
         }
 
@@ -56,17 +55,17 @@
         public TransactionType TransactionType { get; private set; }
 
         private string mTransactionReference;
-        
+
         /// <summary>
         /// The invoice number. This must be unique in 1B1S, preferably in the form
         /// "AnnnnnnnnR", where A is a code for the feeder system or income stream
         /// assigned by 1B1S Income section, and R is the regional identifier.
         /// </summary>
         public string TransactionReference
-        { 
-            get 
-            { 
-                return mTransactionReference; 
+        {
+            get
+            {
+                return mTransactionReference;
             }
             private set
             {
@@ -80,21 +79,21 @@
                     throw new ArgumentException("The transaction reference cannot exceed 18 characters.");
                 }
 
-                mTransactionReference = value; 
+                mTransactionReference = value;
             }
         }
 
         private string mRelatedTransactionReference;
-        
+
         /// <summary>
         /// Blank if transaction is an invoice, optional if the transaction is a credit note.
         /// This will be the transaction reference of the invoice to which the credit note relates.
         /// </summary>
         public string RelatedTransactionReference
         {
-            get 
-            { 
-                return mRelatedTransactionReference; 
+            get
+            {
+                return mRelatedTransactionReference;
             }
             set
             {
@@ -113,16 +112,16 @@
         public CurrencyCode CurrencyCode { get; set; }
 
         private string mTransactionHeaderNarrative;
-        
+
         /// <summary>
         /// The transaction header narrative is mapped individually for each feeder system or income stream variant
         /// For example, it could be the combination of Line Income Stream Code and Line Context Code.
         /// </summary>
-        public string TransactionHeaderNarrative 
+        public string TransactionHeaderNarrative
         {
-            get 
-            { 
-                return mTransactionHeaderNarrative; 
+            get
+            {
+                return mTransactionHeaderNarrative;
             }
             set
             {

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Search.FetchProducerSearchResultsForCache
 {
+    using EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache;
+    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache;
-    using EA.Weee.Tests.Core.Model;
     using Xunit;
     using Model = EA.Weee.Tests.Core.Model;
 
@@ -24,7 +24,7 @@
 
                 // Arrange
                 Model.Scheme scheme = helper.CreateScheme();
-                
+
                 Model.MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;

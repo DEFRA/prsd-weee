@@ -8,17 +8,17 @@
     public class InvoiceLineItem
     {
         private decimal mAmountExcludingVAT;
-        
+
         /// <summary>
         /// The amount of the line item in GBP, excluding VAT.
         /// </summary>
-        public decimal AmountExcludingVAT 
+        public decimal AmountExcludingVAT
         {
-            get 
-            { 
+            get
+            {
                 return mAmountExcludingVAT;
             }
-            private set 
+            private set
             {
                 // Note that limits are asymmetric to ensure that when formatted as a string to 2 
                 // decimal places, the length will note exceed 13 characters.
@@ -32,7 +32,7 @@
                     throw new ArgumentOutOfRangeException("The amount cannot be less than -999999999.");
                 }
 
-                mAmountExcludingVAT = value; 
+                mAmountExcludingVAT = value;
             }
         }
 
@@ -52,7 +52,7 @@
         }
 
         private string mAreaCode;
-        
+
         /// <summary>
         /// The area code within the region. A list of codes used within the feeder system should be provided
         /// to EFAS income section so they can be mapped to the appropriate General Ledger Accounting Key segment values.
@@ -75,7 +75,7 @@
         }
 
         private string mDescription;
-        
+
         /// <summary>
         /// Description.
         /// </summary>
@@ -102,11 +102,11 @@
         }
 
         private string mIncomeStreamCode;
-        
+
         /// <summary>
         /// Income stream.
         /// </summary>
-        public string IncomeStreamCode 
+        public string IncomeStreamCode
         {
             get
             {
@@ -129,7 +129,7 @@
         }
 
         private string mContextCode;
-        
+
         /// <summary>
         /// Context code.
         /// </summary>
@@ -156,11 +156,11 @@
         }
 
         private UInt64 mQuantity;
-        
+
         /// <summary>
         /// The quantity.
         /// </summary>
-        public UInt64 Quantity 
+        public UInt64 Quantity
         {
             get
             {
@@ -183,7 +183,7 @@
                 mQuantity = value;
             }
         }
-        
+
         /// <summary>
         /// The unit of measure.
         /// </summary>

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Linq;
     using Core.AatfReturn;
     using Prsd.Core.Mapper;
+    using System.Linq;
 
     public class ReturnToReturnsListRedirectOptionsMap : IMap<ReturnData, ReturnsListRedirectOptions>
     {

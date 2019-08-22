@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.Upload
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.DataReturns.Upload;
     using RequestHandlers.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -34,7 +34,7 @@
                A.Dummy<string>(),
                2016,
                1);
-          
+
             IFetchDataReturnUploadDataAccess dataAccess = A.Fake<IFetchDataReturnUploadDataAccess>();
             A.CallTo(() => dataAccess.FetchDataReturnUploadByIdAsync(A<Guid>._)).Returns(dataReturnsUpload);
 

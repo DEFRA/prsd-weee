@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Mappings;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class AatfSiteMapTests

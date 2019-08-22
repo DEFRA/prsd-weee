@@ -4,10 +4,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class AddObligatedSentOnHandler : IRequestHandler<AddObligatedSentOn, bool>
@@ -17,7 +14,7 @@
         private readonly IGenericDataAccess genericDataAccess;
 
         public AddObligatedSentOnHandler(IWeeeAuthorization authorization,
-            IObligatedSentOnDataAccess obligatedSentOnDataAccess, 
+            IObligatedSentOnDataAccess obligatedSentOnDataAccess,
             IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System;
     using EA.Weee.Core.AatfReturn;
+    using System;
 
     public class AatfEditContactAddressViewModel
     {

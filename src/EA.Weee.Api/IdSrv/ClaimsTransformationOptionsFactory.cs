@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
     using Autofac;
     using Autofac.Integration.Owin;
     using Identity;
     using IdentityModel.Owin.ClaimsTransformation;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
 
     internal static class ClaimsTransformationOptionsFactory
     {

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.AatfTaskList
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -13,6 +9,10 @@
     using FluentAssertions;
     using RequestHandlers.Factories;
     using RequestHandlers.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;

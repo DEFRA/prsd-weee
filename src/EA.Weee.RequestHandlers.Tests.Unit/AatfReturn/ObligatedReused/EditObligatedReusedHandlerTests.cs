@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
@@ -12,6 +7,11 @@
     using RequestHandlers.AatfReturn.ObligatedReused;
     using RequestHandlers.Security;
     using Requests.AatfReturn.Obligated;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -41,7 +41,7 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-        
+
         [Fact]
         public async Task HandleAsync_GivenMessageContainingUpdatedAmounts_AmountsAreUpdatedCorrectly()
         {

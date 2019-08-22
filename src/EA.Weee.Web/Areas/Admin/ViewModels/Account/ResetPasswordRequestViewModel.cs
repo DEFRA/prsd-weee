@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Account
 {
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.Validation;
+    using System.ComponentModel.DataAnnotations;
 
     public class ResetPasswordRequestViewModel
     {

@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -19,6 +13,12 @@
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;

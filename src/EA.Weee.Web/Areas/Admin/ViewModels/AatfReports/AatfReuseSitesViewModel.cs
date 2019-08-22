@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using EA.Weee.Core.DataStandards;
     public class AatfReuseSitesViewModel
     {
         [Required]

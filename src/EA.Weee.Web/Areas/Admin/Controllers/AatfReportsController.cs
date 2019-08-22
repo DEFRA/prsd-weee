@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.AatfReturn;
@@ -16,6 +10,12 @@
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Home;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -345,7 +345,7 @@
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
-         private async Task PopulateFilters(AatfReuseSitesViewModel model)
+        private async Task PopulateFilters(AatfReuseSitesViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
             var authorities = await FetchAuthorities();
@@ -354,7 +354,7 @@
             {
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
-        } 
+        }
 
         private async Task PopulateFilters(AatfObligatedDataViewModel model)
         {

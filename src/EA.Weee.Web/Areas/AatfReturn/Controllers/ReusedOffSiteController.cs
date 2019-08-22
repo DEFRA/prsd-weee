@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -14,6 +11,9 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [ValidateReturnCreatedActionFilter]
     public class ReusedOffSiteController : ExternalSiteController

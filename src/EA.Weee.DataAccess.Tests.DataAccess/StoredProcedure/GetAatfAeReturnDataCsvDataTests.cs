@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
-    using Domain.Scheme;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
     using Prsd.Core;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
-    using Contact = Domain.Organisation.Contact;
     using Organisation = Domain.Organisation.Organisation;
     using Scheme = Domain.Scheme.Scheme;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
@@ -115,7 +112,7 @@
                     1, null, null, null, null, true);
 
                 var initialSubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(0);
-                
+
                 initialSubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
                 initialSubmission.CompetentAuthorityAbbr.Should().Be("EA");
                 initialSubmission.Name.Should().Be(aatf.Name);
@@ -127,7 +124,7 @@
                 initialSubmission.ReSubmission.Should().Be("First submission");
 
                 var resubmission = results.Where(x => x.AatfId == aatf.Id).ElementAt(1);
-                
+
                 resubmission.ApprovalNumber.Should().Be(aatf.ApprovalNumber);
                 resubmission.CompetentAuthorityAbbr.Should().Be("EA");
                 resubmission.Name.Should().Be(aatf.Name);
@@ -540,5 +537,5 @@
         {
             return db.WeeeContext.LocalAreas.First(x => x.Name == name);
         }
-    }    
+    }
 }

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using Prsd.Core.Mapper;
 

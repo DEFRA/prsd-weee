@@ -1,18 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.AatfReturn;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using Domain.Admin.AatfReports;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Return = Domain.AatfReturn.Return;
     using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
-    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
-    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
     public class GetAeSubmissionsTests
     {
@@ -25,7 +22,7 @@
                 var @return2 = CreateSubmittedReturn(db);
 
                 var ae = ObligatedWeeeIntegrationCommon.CreateAe(db, @return1.Organisation);
-                
+
                 db.WeeeContext.Returns.Add(@return1);
                 db.WeeeContext.Returns.Add(@return2);
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(ae, @return1));

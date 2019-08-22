@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.Producer.Classfication;
     using Domain.Producer.Classification;
     using EA.Weee.Domain.Producer;
@@ -9,6 +7,8 @@
     using FakeItEasy;
     using Lookup;
     using Obligation;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ProducerSubmissionTests
@@ -363,7 +363,7 @@
                "WEE/AA1111AA",
                2019,
                scheme);
-            
+
             var producer = new ProducerSubmission(
                registeredProducer,
                memberUpload,

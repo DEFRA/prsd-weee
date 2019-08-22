@@ -1,14 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
@@ -23,6 +14,15 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;
     using Weee.Requests.Admin;

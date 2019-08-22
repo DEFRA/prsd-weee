@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Requests.AatfReturn;
     using Prsd.Core.Mapper;
     using Specification;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetAatfByOrganisationFacilityTypeHandler : IRequestHandler<GetAatfByOrganisationFacilityType, List<AatfData>>
     {

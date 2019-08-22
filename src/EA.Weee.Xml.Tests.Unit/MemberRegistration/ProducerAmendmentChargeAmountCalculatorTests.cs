@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
@@ -10,6 +7,8 @@
     using Domain.Scheme;
     using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
     using Xml.MemberRegistration;
     using Xunit;
 
@@ -147,7 +146,7 @@
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
             Assert.Equal(result.Amount, 0);
         }
-    
+
         [Fact]
         public async void GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {

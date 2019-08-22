@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetActiveComplianceYears
 {
-    using System;
-    using System.Linq;
     using Core.DataReturns;
     using RequestHandlers.Admin.GetActiveComplianceYears;
+    using System.Linq;
     using Weee.Tests.Core.Model;
     using Xunit;
 

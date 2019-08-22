@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using EA.Prsd.Core;
-    using System;
 
     public class WeeeSentOnAmount : ObligatedAmount, IObligatedAmount
     {

@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Core.Validation
 {
+    using DataReturns;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using DataReturns;
-    using DataStandards;
 
     public class TonnageValueAttribute : ValidationAttribute
     {
@@ -14,7 +13,7 @@
 
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
-        
+
         /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
         private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
@@ -111,7 +110,7 @@
         private string GenerateMessage(string message, int categoryId)
         {
             var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
-            
+
             return $"The tonnage value for category {categoryId}{additionalMessage} must be {message}";
         }
     }

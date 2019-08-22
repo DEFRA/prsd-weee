@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReused;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using WeeeReused = Domain.AatfReturn.WeeeReused;

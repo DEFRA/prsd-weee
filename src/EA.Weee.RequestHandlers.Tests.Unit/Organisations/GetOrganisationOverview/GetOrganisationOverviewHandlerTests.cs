@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.GetOrganisationOverview
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Weee.Requests.Organisations;
     using FakeItEasy;
     using RequestHandlers.Organisations.GetOrganisationOverview;
     using RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
     using RequestHandlers.Security;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
+    using System;
 
     /// <summary>
     /// This entity represents a scheme's data return for a single quarter.

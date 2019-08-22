@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
+    using Domain.Obligation;
+    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain;
-    using Domain.Obligation;
-    using EA.Weee.Tests.Core.Model;
     using Weee.DataAccess;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
@@ -124,7 +123,7 @@
 
                 // Assert
                 Assert.Null(result);
-            } 
+            }
         }
 
         [Fact]
@@ -289,7 +288,7 @@
 
                 // Arrange
                 Scheme scheme1 = helper.CreateScheme();
-                
+
                 Scheme scheme2 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme2);

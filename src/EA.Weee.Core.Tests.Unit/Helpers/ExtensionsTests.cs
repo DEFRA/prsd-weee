@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
-    using System;
-    using System.Collections.Generic;
     using Core.Helpers;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ExtensionsTests

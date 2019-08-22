@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
     using Domain.DataReturns;
-    using FakeItEasy;
-    using Lookup;
+    using System;
     using Xunit;
 
     public class AatfDeliveryLocationTests

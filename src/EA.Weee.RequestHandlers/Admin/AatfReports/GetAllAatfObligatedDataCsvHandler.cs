@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -11,8 +9,9 @@
     using EA.Weee.RequestHandlers.Shared;
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
-    using Requests.Admin.Reports;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class GetAllAatfObligatedDataCsvHandler : IRequestHandler<GetAllAatfObligatedDataCsv, CSVFileData>
     {
@@ -49,7 +48,7 @@
             }
 
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
- 
+
             //Remove the Id columns
             if (obligatedData != null)
             {
@@ -75,7 +74,7 @@
                 }
             }
 
-           var fileName = string.Format("{0}", request.ComplianceYear);
+            var fileName = string.Format("{0}", request.ComplianceYear);
             if (request.AuthorityId != null)
             {
                 fileName += "_" + authority.Abbreviation;
@@ -90,7 +89,7 @@
             }
 
             fileName += "_View obligated WEEE data" + string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
-                                SystemTime.UtcNow);           
+                                SystemTime.UtcNow);
 
             string fileContent = DataTableCsvHelper.DataTableToCsv(obligatedData);
 
@@ -100,5 +99,5 @@
                 FileName = fileName
             };
         }
-    }   
+    }
 }

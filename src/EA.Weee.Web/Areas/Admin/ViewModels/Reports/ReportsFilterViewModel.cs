@@ -17,7 +17,7 @@
 
         [DisplayName("Appropriate authority")]
         public Guid? SelectedAA { get; set; }
-        
+
         public bool IncludeRemovedProducer { get; set; }
 
         public bool IncludeBrandNames { get; set; }

@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using System;
-    using System.Threading.Tasks;
     using AatfReturn.Internal;
     using Core.Admin;
     using Domain.AatfReturn;
+    using System;
+    using System.Threading.Tasks;
 
     public class GetAatfDeletionStatus : IGetAatfDeletionStatus
     {
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IGetOrganisationDeletionStatus getOrganisationDeletionStatus;
 
-        public GetAatfDeletionStatus(IAatfDataAccess aatfDataAccess, 
+        public GetAatfDeletionStatus(IAatfDataAccess aatfDataAccess,
             IGetOrganisationDeletionStatus getOrganisationDeletionStatus)
         {
             this.aatfDataAccess = aatfDataAccess;
@@ -49,7 +49,7 @@
                 result |= CanAatfBeDeletedFlags.CanDelete;
 
                 if (!organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasScheme) && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility)
-                && (aatf.FacilityType == FacilityType.Aatf && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAe) 
+                && (aatf.FacilityType == FacilityType.Aatf && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAe)
                     || (aatf.FacilityType == FacilityType.Ae && !organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasAatf))))
                 {
                     result |= CanAatfBeDeletedFlags.CanDeleteOrganisation;

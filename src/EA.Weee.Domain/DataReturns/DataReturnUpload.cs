@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Error;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class DataReturnUpload : Entity
     {
@@ -30,13 +30,13 @@
 
         public DataReturnUpload(Scheme scheme, string data, List<DataReturnUploadError> errors, string fileName, int? year, int? quarter)
         {
-            Guard.ArgumentNotNull(() => scheme, scheme);           
+            Guard.ArgumentNotNull(() => scheme, scheme);
 
             Scheme = scheme;
             Errors = errors;
             RawData = new DataReturnUploadRawData() { Data = data };
             this.Date = SystemTime.UtcNow;
-            FileName = fileName;            
+            FileName = fileName;
             ComplianceYear = year;
             Quarter = quarter;
         }
@@ -46,7 +46,7 @@
         /// </summary>
         protected DataReturnUpload()
         {
-            this.Date = SystemTime.UtcNow;           
+            this.Date = SystemTime.UtcNow;
         }
 
         public virtual void SetProcessTime(TimeSpan processTime)

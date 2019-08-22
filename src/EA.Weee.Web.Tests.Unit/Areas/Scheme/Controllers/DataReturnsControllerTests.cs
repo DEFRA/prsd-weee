@@ -1,5 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using Api.Client;
+    using Core.DataReturns;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using Services;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -10,13 +17,6 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Api.Client;
-    using Core.DataReturns;
-    using Core.Shared;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Prsd.Core.Mapper;
-    using Services;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -50,7 +50,7 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnableDataReturns).Returns(false);
-            
+
             ConfigurationService configurationService = A.Fake<ConfigurationService>();
             A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
 
@@ -213,7 +213,7 @@
                 catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException;
-        }
+                }
             };
 
             // Assert
@@ -331,7 +331,7 @@
                 try
                 {
                     onActionExecutingMethod.Invoke(controller, args);
-        }
+                }
                 catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException;
@@ -486,7 +486,7 @@
 
         [Fact]
         public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
-        {   
+        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
                 .Returns(false);
 
@@ -998,7 +998,7 @@
 
             Assert.Equal("Test file.csv", fileResult.FileDownloadName);
         }
-       
+
         /// <summary>
         /// This test ensures that the GET "DownloadEeeWeeeData" returns
         /// a FileResult with a content type of "text/csv".

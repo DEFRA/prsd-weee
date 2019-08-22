@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.ViewModels
 {
+    using FluentAssertions;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
-    using FluentAssertions;
     using Web.Areas.Admin.ViewModels.AatfReports;
-    using Web.Areas.Admin.ViewModels.Reports;
     using Xunit;
 
     public class AatfAeReturnDataViewModelTests

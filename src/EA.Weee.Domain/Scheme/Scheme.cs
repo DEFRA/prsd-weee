@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
-    using System;
     using Obligation;
     using Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
 
     public partial class Scheme : Entity
     {

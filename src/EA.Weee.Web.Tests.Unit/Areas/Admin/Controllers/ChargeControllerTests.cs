@@ -1,15 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Core.Admin;
     using Core.Charges;
@@ -17,7 +7,14 @@
     using Core.Shared;
     using FakeItEasy;
     using Services;
-    using TestHelpers;
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Charge;
     using Weee.Requests.Charges;

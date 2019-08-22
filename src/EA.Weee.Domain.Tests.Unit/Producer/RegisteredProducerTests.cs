@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
-    using System;
     using Domain.Producer;
     using FakeItEasy;
     using Prsd.Core;
+    using System;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 

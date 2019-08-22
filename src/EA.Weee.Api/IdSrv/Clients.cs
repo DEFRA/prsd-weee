@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
-    using System.Collections.Generic;
-    using System.Configuration;
     using IdentityServer3.Core.Models;
     using Services;
+    using System.Collections.Generic;
+    using System.Configuration;
     using Client = IdentityServer3.Core.Models.Client;
     internal static class Clients
     {

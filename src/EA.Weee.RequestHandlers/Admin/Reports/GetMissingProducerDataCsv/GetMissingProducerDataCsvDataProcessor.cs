@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetMissingProducerDataCsv
 {
+    using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.StoredProcedure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.StoredProcedure;
-    
+
     public class GetMissingProducerDataCsvDataProcessor : IGetMissingProducerDataCsvDataProcessor
     {
         private readonly WeeeContext context;

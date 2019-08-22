@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.Core.User;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using OrganisationStatus = Domain.Organisation.OrganisationStatus;
 
     public class FindMatchingUsersDataAccess : IFindMatchingUsersDataAccess

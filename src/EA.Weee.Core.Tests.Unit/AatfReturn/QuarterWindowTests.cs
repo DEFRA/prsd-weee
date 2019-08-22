@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
     using Core.AatfReturn;
     using DataReturns;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class QuarterWindowTests
@@ -13,7 +13,7 @@
         private const string Q3 = "2018-10-01";
         private const string Q4 = "2019-01-01";
         private readonly DateTime windowClosedDate = new DateTime(2019, 03, 16);
-     
+
         [Theory]
         [InlineData(Q1, QuarterType.Q1)]
         [InlineData(Q2, QuarterType.Q2)]

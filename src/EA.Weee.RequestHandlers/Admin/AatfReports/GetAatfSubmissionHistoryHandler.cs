@@ -1,22 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AatfReports;
-    using Core.Admin;
     using Core.Admin.AatfReports;
-    using DataAccess;
-    using DataAccess.StoredProcedure;
     using Domain.Admin.AatfReports;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin;
     using Requests.Admin.Aatf;
-    using FacilityType = Core.AatfReturn.FacilityType;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetAatfSubmissionHistoryHandler : IRequestHandler<GetAatfSubmissionHistory, List<AatfSubmissionHistoryData>>
     {

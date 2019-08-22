@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Email.EventHandlers.SchemeDataReturnSubmission
 {
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
     using Domain.Scheme;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class SchemeDataReturnSubmissionEventHandlerDataAccess : ISchemeDataReturnSubmissionEventHandlerDataAccess
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Integration
 {
-    using System.Web;
     using Autofac;
+    using System.Web;
     using Web.Services;
 
     public static class TestStartup

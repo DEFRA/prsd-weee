@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Weee.DataAccess.DataAccess;
-    using Xml.MemberRegistration;
+    using System.Threading.Tasks;
 
     public class EnvironmentAgencyProducerChargeBandCalculator : IEnvironmentAgencyProducerChargeBandCalculator, IProducerChargeBandCalculator
     {
@@ -27,15 +25,15 @@
                 band = ChargeBand.E;
             }
             else
-            { 
+            {
                 if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                     producer.VATRegistered && producerCountry == countryType.UKENGLAND)
                 {
                     band = ChargeBand.A2;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
-                         producer.VATRegistered && 
-                (producerCountry != countryType.UKENGLAND && 
+                         producer.VATRegistered &&
+                (producerCountry != countryType.UKENGLAND &&
                  producerCountry != countryType.UKSCOTLAND &&
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))
@@ -60,15 +58,15 @@
                 {
                     band = ChargeBand.B;
                 }
-                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket && 
-                producerCountry == countryType.UKENGLAND && 
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                producerCountry == countryType.UKENGLAND &&
                 !producer.VATRegistered)
                 {
                     band = ChargeBand.C2;
                 }
                 else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                 !producer.VATRegistered &&
-                (producerCountry != countryType.UKENGLAND && 
+                (producerCountry != countryType.UKENGLAND &&
                  producerCountry != countryType.UKSCOTLAND &&
                  producerCountry != countryType.UKWALES &&
                  producerCountry != countryType.UKNORTHERNIRELAND))

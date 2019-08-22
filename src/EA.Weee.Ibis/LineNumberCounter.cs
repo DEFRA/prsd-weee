@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Ibis
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// Internal class used to help with tracking the numbers of lines written.
     /// The number of the first line will be 0.

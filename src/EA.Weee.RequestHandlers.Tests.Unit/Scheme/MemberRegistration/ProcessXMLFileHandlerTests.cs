@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Error;
@@ -15,17 +9,19 @@
     using Domain.Producer.Classfication;
     using Domain.Producer.Classification;
     using Domain.Scheme;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Domain;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.Organisations.GetOrganisationOverview.DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Prsd.Core;
-    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xml.Converter;
     using Xml.MemberRegistration;
@@ -102,7 +98,7 @@
             A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
         }
-        
+
         [Fact]
         public async void TotalChargeCalculator_Returns_ProducerCharges()
         {
@@ -178,7 +174,7 @@
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description"),
             };
 
-           var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
+            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
 
             var scheme = schemesDbSet.ElementAt(0);
             scheme.UpdateScheme(
@@ -192,7 +188,7 @@
 
             SetupSchemeTypeComplianceYear();
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
-            
+
             await handler.HandleAsync(Message);
 
             A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, scheme, 2019, true, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
@@ -254,7 +250,7 @@
             {
                 new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
-         
+
             SetupSchemeTypeComplianceYear();
 
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);

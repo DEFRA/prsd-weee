@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System.Linq;
+    using FluentAssertions;
     using System.Reflection;
     using System.Web.Mvc;
-    using FluentAssertions;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Controllers.Base;
     using Xunit;

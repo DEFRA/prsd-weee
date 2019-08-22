@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
     using EA.Prsd.Core.Domain;
     using Events;
     using Prsd.Core;
+    using System;
 
     /// <summary>
     /// This entity provides the content for a data return. Each data return may have
