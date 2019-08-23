@@ -1167,5 +1167,154 @@
             fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
             fileResult.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvData.FileName));
         }
+
+        [Fact]
+        public async Task GetAatfAeDetails_Always_ReturnsAatfAeDetailsuViewModel()
+        {
+            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            List<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            List<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+            List<int> years = Enumerable.Range(2019, DateTime.Now.Year - 2018).OrderByDescending(year => year).ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            ActionResult result = await controller.AatfAeDetails();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAeDetails");
+
+            AatfAeDetailsViewModel model = viewResult.Model as AatfAeDetailsViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.PanAreaList.Select(c => c.Text).Should().BeEquivalentTo(panAreas.Select(y => y.Name.ToString()));
+            model.PanAreaList.Select(c => c.Value).Should().BeEquivalentTo(panAreas.Select(y => y.Id.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+
+            Assert.Collection(model.FacilityTypes,
+               s1 => Assert.Equal("AATF", s1.Text),
+               s2 => Assert.Equal("AE", s2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task GetAatfAeDetails_Always_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            var result = await controller.AatfAeDetails();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task GetAatfAeDetails_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAeDetails();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task PostAatfAeDetails_WithInvalidViewModel_ReturnsAatfAeDetailsViewModel()
+        {
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+            var years = Enumerable.Range(2019, DateTime.Now.Year - 2018).OrderByDescending(year => year).ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfAeDetails(new AatfAeDetailsViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAeDetails");
+
+            AatfAeDetailsViewModel model = viewResult.Model as AatfAeDetailsViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.PanAreaList.Select(c => c.Text).Should().BeEquivalentTo(panAreas.Select(y => y.Name.ToString()));
+            model.PanAreaList.Select(c => c.Value).Should().BeEquivalentTo(panAreas.Select(y => y.Id.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+        }
+
+        [Fact]
+        public async Task PostAatfAeDetails_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfAeDetails(new AatfAeDetailsViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+       [Fact]
+        public async Task PostAatfAeDetails_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Act
+            ActionResult result = await controller.AatfAeDetails(new AatfAeDetailsViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostAatfAeDetails_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAeDetails(A.Dummy<AatfAeDetailsViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfAeDetailsCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            int complianceYear = fixture.Create<int>();
+            FacilityType facilityType = fixture.Create<FacilityType>();
+            Guid? authority = fixture.Create<Guid?>();
+            Guid? pat = fixture.Create<Guid?>();
+            Guid? area = fixture.Create<Guid?>();
+
+            CSVFileData fileData = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeDetailsCsv>.That.Matches(g =>
+                g.ComplianceYear.Equals(complianceYear) && g.FacilityType.Equals(facilityType)
+                && g.AuthorityId.Equals(authority)))).Returns(fileData);
+
+            FileContentResult result = await controller.DownloadAatfAeDetailsCsv(complianceYear, facilityType, authority, pat, area) as FileContentResult;
+
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
+        }
     }
 }
