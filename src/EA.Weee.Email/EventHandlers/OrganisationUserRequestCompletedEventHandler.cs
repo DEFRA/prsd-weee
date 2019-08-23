@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Events;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Organisation;
 
     public class OrganisationUserRequestCompletedEventHandler : IEventHandler<OrganisationUserRequestCompletedEvent>
