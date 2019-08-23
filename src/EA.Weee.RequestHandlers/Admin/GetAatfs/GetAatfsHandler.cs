@@ -28,7 +28,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var aatfs = message.Filter == null ? await dataAccess.GetAatfs() : await dataAccess.GetFilteredAatfs(message.Filter);
+            var aatfs = message.Filter == null ? await dataAccess.GetLatestAatfs() : await dataAccess.GetFilteredAatfs(message.Filter);
 
             if (message.FacilityType == FacilityType.Aatf)
             {
@@ -42,7 +42,7 @@
 
         private List<AatfDataList> SortAatfs(List<Aatf> aatfs, FacilityType facilityType)
         {
-            return aatfs.OrderBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
+            return aatfs.OrderByDescending(a => a.ComplianceYear).ThenBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
         }
     }
 }
