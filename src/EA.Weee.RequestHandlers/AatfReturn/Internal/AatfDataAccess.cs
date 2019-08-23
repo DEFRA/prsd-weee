@@ -227,7 +227,7 @@
                     .ToListAsync();
         }
 
-        public async Task<Guid> GetAatfId(Guid aatfId, short complianceYear)
+        public async Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, short complianceYear)
         {
             var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.AatfId == aatfId && p.ComplianceYear == complianceYear);
 
@@ -237,6 +237,15 @@
             }
 
             return aatf.Id;
+        }
+
+        public async Task<bool> IsLatestAatf(Guid id, Guid aatfId)
+        {
+            var latestAatf = await context.Aatfs
+                .Where(r => r.AatfId == aatfId)
+                .OrderByDescending(r => r.ComplianceYear).FirstOrDefaultAsync();                   
+
+            return latestAatf != null && latestAatf.Id.Equals(id) ? true : false;
         }
     }
 }

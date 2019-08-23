@@ -28,10 +28,10 @@
 
             if (aatf.FacilityType.Equals(FacilityType.Aatf))
             {
-                return await context.StoredProcedures.GetAatfSubmissions(aatfId);
+                return await context.StoredProcedures.GetAatfSubmissions(aatfId, aatf.ComplianceYear);
             }
 
-            return await context.StoredProcedures.GetAeSubmissions(aatfId);
+            return await context.StoredProcedures.GetAeSubmissions(aatfId, aatf.ComplianceYear);
         }
     }
 }

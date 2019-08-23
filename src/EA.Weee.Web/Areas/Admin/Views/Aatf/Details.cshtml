@@ -146,7 +146,6 @@
                     <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="text-align: left" scope="col">Year</th>
                             <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
                             <th class="govuk-table__header" style="text-align: right" scope="col">B2C total obligated (tonnes)</th>
                             <th class="govuk-table__header" style="text-align: right" scope="col">B2B total obligated (tonnes)</th>
@@ -162,7 +161,6 @@
                             var item = Model.SubmissionHistoryData[returnCount];
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" style="text-align: left">@item.ComplianceYear</td>
                                 <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
                                 <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedHouseHoldTotal</td>
                                 <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedNonHouseHoldTotal</td>
@@ -193,7 +191,6 @@
                             var item = Model.SubmissionHistoryData[returnCount];
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell" style="text-align: left">@item.ComplianceYear</td>
                                 <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
                                 <td class="govuk-table__cell">@item.SubmittedDate</td>
                                 <td class="govuk-table__cell">@item.SubmittedBy</td>

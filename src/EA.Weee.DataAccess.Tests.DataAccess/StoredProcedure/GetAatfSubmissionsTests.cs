@@ -39,7 +39,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReceivedHouseHold.Should().Be(4);
@@ -68,7 +68,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }
@@ -97,7 +97,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReceivedHouseHold.Should().BeNull();
@@ -128,7 +128,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReusedHouseHold.Should().Be(4);
@@ -159,7 +159,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReusedHouseHold.Should().BeNull();
@@ -190,7 +190,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeSentOnHouseHold.Should().Be(4);
@@ -221,7 +221,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeSentOnHouseHold.Should().BeNull();
@@ -278,7 +278,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(2);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnHouseHold.Should().Be(1);
@@ -316,7 +316,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }

@@ -30,7 +30,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id);
+                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id, ae.ComplianceYear);
 
                 results.Count.Should().Be(2);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnHouseHold.Should().BeNull();
@@ -68,7 +68,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id);
+                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id, ae.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }
@@ -94,7 +94,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }

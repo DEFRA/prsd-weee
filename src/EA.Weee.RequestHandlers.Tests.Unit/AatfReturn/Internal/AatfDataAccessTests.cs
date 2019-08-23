@@ -358,16 +358,21 @@
         [Fact]
         public async Task GetDetails_GivenAatfId_ComplianceYearsShouldBeReturned()
         {
-            var aatfId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();            
             var aatf = A.Fake<Aatf>();
+            var aatfIdForAatf1 = Guid.NewGuid();
+            var aatf1 = A.Fake<Aatf>();
 
             A.CallTo(() => aatf.AatfId).Returns(aatfId);
             A.CallTo(() => aatf.ComplianceYear).Returns((short)2019);
-            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
+            A.CallTo(() => aatf1.AatfId).Returns(aatfIdForAatf1);
+            A.CallTo(() => aatf1.ComplianceYear).Returns((short)2020);
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf, aatf1 }));
 
             var result = await dataAccess.GetComplianceYearsForAatfByAatfId(aatfId);
 
             result.Should().BeEquivalentTo(aatf.ComplianceYear);
+            result.Count.Should().Be(1);
         }
 
         [Fact]
@@ -375,16 +380,25 @@
         {
             var aatfId = Guid.NewGuid();
             var aatf = A.Fake<Aatf>();
+            var aatfIdForAatf1 = Guid.NewGuid();
+            var aatf1 = A.Fake<Aatf>();
             var id = Guid.NewGuid();
+            var idForAatf1 = Guid.NewGuid();
 
             A.CallTo(() => aatf.Id).Returns(id);
             A.CallTo(() => aatf.AatfId).Returns(aatfId);
             A.CallTo(() => aatf.ComplianceYear).Returns((short)2019);
-            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
 
-            var result = await dataAccess.GetAatfId(aatfId, 2019);
+            A.CallTo(() => aatf1.Id).Returns(idForAatf1);
+            A.CallTo(() => aatf1.AatfId).Returns(aatfIdForAatf1);
+            A.CallTo(() => aatf1.ComplianceYear).Returns((short)2020);
+
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf, aatf1 }));
+
+            var result = await dataAccess.GetAatfByAatfIdAndComplianceYear(aatfId, 2019);
 
             result.Should().Be(aatf.Id);
+            result.Should().NotBe(aatf1.Id);
         }
     }
 }
