@@ -28,17 +28,22 @@
 
         public static Return CreateReturn(Organisation organisation, string createdById, FacilityType facilityType, int year, QuarterType quarter)
         {
+            if (organisation == null)
+            {
+                organisation = Organisation.CreateSoleTrader("Test Organisation");
+            }
+
             return new Return(organisation, new Quarter(year, quarter), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, short year = 2019)
         {
-            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, year, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
-        public static Aatf CreateAe(DatabaseWrapper database, Organisation organisation)
+        public static Aatf CreateAe(DatabaseWrapper database, Organisation organisation, short year = 2019)
         {
-            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, year, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
         public static Scheme CreateScheme(Organisation organisation)

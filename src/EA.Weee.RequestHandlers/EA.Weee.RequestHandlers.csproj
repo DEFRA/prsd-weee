@@ -88,6 +88,8 @@
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandler.cs" />
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatus.cs" />
+    <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandler.cs" />
+    <Compile Include="Admin\Aatf\GetAatfIdByComplianceYearHandler.cs" />
     <Compile Include="Admin\Aatf\IGetAatfApprovalDateChangeStatus.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandler.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandler.cs" />
