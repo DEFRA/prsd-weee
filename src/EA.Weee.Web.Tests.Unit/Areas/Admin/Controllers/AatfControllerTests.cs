@@ -395,16 +395,19 @@
 
             var associatedAatfs = new List<AatfDataList>();
             var associatedSchemes = new List<Core.Scheme.SchemeData>();
+            var yearList = new List<short> { 2019, 2020 };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(a => a.AatfId == aatfId))).Returns(aatfData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).Returns(associatedAatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>._)).Returns(associatedSchemes);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfComplianceYearsByAatfId>._)).Returns(yearList);
 
             await controller.Details(aatfId);
 
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
-            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)))).MustHaveHappened(Repeated.Exactly.Once);
+            && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)
+            && a.ComplianceYearList == yearList))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
