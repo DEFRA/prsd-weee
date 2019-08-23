@@ -19,29 +19,17 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var selectedAatfsOrAes = new List<AatfData>();
-
             var filteredAatfList = RemoveOlderAatfs(source.AatfList);
+
+            var selectedAatfsOrAes = new List<AatfData>();
 
             if (source.IsAE)
             {
-                foreach (var aatf in filteredAatfList)
-                {
-                    if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
-                    {
-                        selectedAatfsOrAes.Add(aatf);
-                    }
-                }
+                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Ae));
             }
             else
             {
-                foreach (var aatf in filteredAatfList)
-                {
-                    if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
-                    {
-                        selectedAatfsOrAes.Add(aatf);
-                    }
-                }
+                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Aatf));
             }
 
             foreach (var aatf in selectedAatfsOrAes)
@@ -60,26 +48,22 @@
         {
             var listToBeReturned = new List<AatfData>();
 
-            for (var i = 0; i < source.Count; i++)
+            foreach (var aatf in source)
             {
-                var aatfListToSort = new List<AatfData>();
-
-                for (var j = 0; j < source.Count; j++)
+                if (source.Any(m => m.AatfId == aatf.AatfId && m.Id != aatf.Id))
                 {
-                    if (source[i].AatfId == source[j].AatfId)
+                    var latestAatf = source.Where(m => m.AatfId == aatf.AatfId).OrderByDescending(m => m.ApprovalDate).First();
+
+                    if (!listToBeReturned.Contains(latestAatf))
                     {
-                        aatfListToSort.Add(source[j]);
+                        listToBeReturned.Add(latestAatf);
                     }
                 }
-
-                var latestAatf = aatfListToSort.OrderByDescending(x => x.ApprovalDate).FirstOrDefault();
-
-                if (!listToBeReturned.Contains(latestAatf))
+                else
                 {
-                    listToBeReturned.Add(latestAatf);
+                    listToBeReturned.Add(aatf);
                 }
             }
-
             return listToBeReturned;
         }
     }
