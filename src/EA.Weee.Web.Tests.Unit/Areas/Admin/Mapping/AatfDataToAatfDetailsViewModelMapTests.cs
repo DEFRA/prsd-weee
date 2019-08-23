@@ -239,6 +239,7 @@
             Assert.Equal(aatfData.LocalAreaData, result.LocalArea);
             Assert.Equal(aatfData.PanAreaData, result.PanArea);
             Assert.Equal(aatfData.AatfId, result.AatfId);
+            Assert.Equal(aatfData.ComplianceYear, result.SelectedComplianceYear);
         }
 
         [Fact]
@@ -319,7 +320,7 @@
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
             {
-                ComplianceYearList = complianceYears
+                ComplianceYearList = complianceYears,
             };
 
             AatfDetailsViewModel result = map.Map(transfer);
