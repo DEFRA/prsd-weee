@@ -75,6 +75,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandler.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Admin\Aatf\IGetOrganisationDeletionStatus.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="ReportConstants.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />
