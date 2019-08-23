@@ -29,7 +29,7 @@
 
         Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
 
-        Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf);
+        Task<List<NonObligatedWeeeReceivedCsvData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf);
 
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
@@ -51,6 +51,8 @@
         Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType);
 
         Task<DataTable> GetReturnObligatedCsvData(Guid returnId);
+
+        Task<List<NonObligatedWeeeReceivedCsvData>> GetReturnNonObligatedCsvData(Guid returnId);
 
         Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId);
 
