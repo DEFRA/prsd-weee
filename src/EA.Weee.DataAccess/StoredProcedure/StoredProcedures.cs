@@ -577,12 +577,19 @@
                 .ToListAsync();
         }
 
-        public Task<List<AatfAeDetailsData>> GetAatfAeDetailsCsvData(int complianceYear, int facilityType, Guid? authority, Guid? area, Guid? panArea)
+        public async Task<List<AatfAeDetailsData>> GetAatfAeDetailsCsvData(int complianceYear, int facilityType, Guid? authority, Guid? area, Guid? panArea)
         {
-            return Task.Run(() =>
-             {
-                 return new List<AatfAeDetailsData>();
-             });
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
+            SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
+            SqlParameter areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<AatfAeDetailsData>(
+                    "[AATF].[getAatfAeDetailsCsvData] @ComplianceYear, @FacilityType, @CA, @Area, @PanArea",
+                    complianceYearParameter, facilityTypeParameter, areaParameter, authorityParameter, panAreaParameter)
+                .ToListAsync();
         }
     }
 }
