@@ -108,14 +108,15 @@
             }
         }
 
-        public async Task<bool> SendOrganisationUserRequestCompleted(Domain.Organisation.OrganisationUser organisationUser)
+        public async Task<bool> SendOrganisationUserRequestCompleted(Domain.Organisation.OrganisationUser organisationUser, bool activeUsers)
         {
             var model = new
             {
                 OrganisationName = organisationUser.Organisation.OrganisationName,
                 Approved = organisationUser.UserStatus == UserStatus.Active,
                 ExternalUserLoginUrl = configuration.ExternalUserLoginUrl,
-                FullName = organisationUser.User.FullName
+                FullName = organisationUser.User.FullName,
+                ActiveUsers = activeUsers
             };
 
             EmailContent content = new EmailContent()

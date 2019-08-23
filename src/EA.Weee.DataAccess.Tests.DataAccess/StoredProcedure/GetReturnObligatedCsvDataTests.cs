@@ -83,34 +83,11 @@
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(28);
 
-                AssertSubmittedRow(results, aatf, db, 0, "1. Large household appliances", B2C);
-                AssertSubmittedRow(results, aatf, db, 1, "2. Small household appliances", B2C);
-                AssertSubmittedRow(results, aatf, db, 2, "3. IT and telecommunications equipment", B2C);
-                AssertSubmittedRow(results, aatf, db, 3, "4. Consumer equipment", B2C);
-                AssertSubmittedRow(results, aatf, db, 4, "5. Lighting equipment", B2C);
-                AssertSubmittedRow(results, aatf, db, 5, "6. Electrical and electronic tools", B2C);
-                AssertSubmittedRow(results, aatf, db, 6, "7. Toys, leisure and sports equipment", B2C);
-                AssertSubmittedRow(results, aatf, db, 7, "8. Medical devices", B2C);
-                AssertSubmittedRow(results, aatf, db, 8, "9. Monitoring and control instruments", B2C);
-                AssertSubmittedRow(results, aatf, db, 9, "10. Automatic dispensers", B2C);
-                AssertSubmittedRow(results, aatf, db, 10, "11. Display equipment", B2C);
-                AssertSubmittedRow(results, aatf, db, 11, "12. Appliances containing refrigerants", B2C);
-                AssertSubmittedRow(results, aatf, db, 12, "13. Gas discharge lamps and LED light sources", B2C);
-                AssertSubmittedRow(results, aatf, db, 13, "14. Photovoltaic panels", B2C);
-                AssertSubmittedRow(results, aatf, db, 14, "1. Large household appliances", B2B);
-                AssertSubmittedRow(results, aatf, db, 15, "2. Small household appliances", B2B);
-                AssertSubmittedRow(results, aatf, db, 16, "3. IT and telecommunications equipment", B2B);
-                AssertSubmittedRow(results, aatf, db, 17, "4. Consumer equipment", B2B);
-                AssertSubmittedRow(results, aatf, db, 18, "5. Lighting equipment", B2B);
-                AssertSubmittedRow(results, aatf, db, 19, "6. Electrical and electronic tools", B2B);
-                AssertSubmittedRow(results, aatf, db, 20, "7. Toys, leisure and sports equipment", B2B);
-                AssertSubmittedRow(results, aatf, db, 21, "8. Medical devices", B2B);
-                AssertSubmittedRow(results, aatf, db, 22, "9. Monitoring and control instruments", B2B);
-                AssertSubmittedRow(results, aatf, db, 23, "10. Automatic dispensers", B2B);
-                AssertSubmittedRow(results, aatf, db, 24, "11. Display equipment", B2B);
-                AssertSubmittedRow(results, aatf, db, 25, "12. Appliances containing refrigerants", B2B);
-                AssertSubmittedRow(results, aatf, db, 26, "13. Gas discharge lamps and LED light sources", B2B);
-                AssertSubmittedRow(results, aatf, db, 27, "14. Photovoltaic panels", B2B);
+                for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
+                {
+                    var value = CategoryValues().ElementAt(countValue);
+                    AssertSubmittedRow(results, aatf, db, countValue, $"{value.CategoryId}. {value.CategoryDisplay}", B2C);
+                }
 
                 results.Dispose();
             }
@@ -132,34 +109,11 @@
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(28);
 
-                AssertCreatedRow(results, aatf, 0, "1. Large household appliances", B2C);
-                AssertCreatedRow(results, aatf, 1, "2. Small household appliances", B2C);
-                AssertCreatedRow(results, aatf, 2, "3. IT and telecommunications equipment", B2C);
-                AssertCreatedRow(results, aatf, 3, "4. Consumer equipment", B2C);
-                AssertCreatedRow(results, aatf, 4, "5. Lighting equipment", B2C);
-                AssertCreatedRow(results, aatf, 5, "6. Electrical and electronic tools", B2C);
-                AssertCreatedRow(results, aatf, 6, "7. Toys, leisure and sports equipment", B2C);
-                AssertCreatedRow(results, aatf, 7, "8. Medical devices", B2C);
-                AssertCreatedRow(results, aatf, 8, "9. Monitoring and control instruments", B2C);
-                AssertCreatedRow(results, aatf, 9, "10. Automatic dispensers", B2C);
-                AssertCreatedRow(results, aatf, 10, "11. Display equipment", B2C);
-                AssertCreatedRow(results, aatf, 11, "12. Appliances containing refrigerants", B2C);
-                AssertCreatedRow(results, aatf, 12, "13. Gas discharge lamps and LED light sources", B2C);
-                AssertCreatedRow(results, aatf, 13, "14. Photovoltaic panels", B2C);
-                AssertCreatedRow(results, aatf, 14, "1. Large household appliances", B2B);
-                AssertCreatedRow(results, aatf, 15, "2. Small household appliances", B2B);
-                AssertCreatedRow(results, aatf, 16, "3. IT and telecommunications equipment", B2B);
-                AssertCreatedRow(results, aatf, 17, "4. Consumer equipment", B2B);
-                AssertCreatedRow(results, aatf, 18, "5. Lighting equipment", B2B);
-                AssertCreatedRow(results, aatf, 19, "6. Electrical and electronic tools", B2B);
-                AssertCreatedRow(results, aatf, 20, "7. Toys, leisure and sports equipment", B2B);
-                AssertCreatedRow(results, aatf, 21, "8. Medical devices", B2B);
-                AssertCreatedRow(results, aatf, 22, "9. Monitoring and control instruments", B2B);
-                AssertCreatedRow(results, aatf, 23, "10. Automatic dispensers", B2B);
-                AssertCreatedRow(results, aatf, 24, "11. Display equipment", B2B);
-                AssertCreatedRow(results, aatf, 25, "12. Appliances containing refrigerants", B2B);
-                AssertCreatedRow(results, aatf, 26, "13. Gas discharge lamps and LED light sources", B2B);
-                AssertCreatedRow(results, aatf, 27, "14. Photovoltaic panels", B2B);
+                for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
+                {
+                    var value = CategoryValues().ElementAt(countValue);
+                    AssertCreatedRow(results, aatf, countValue, $"{value.CategoryId}. {value.CategoryDisplay}", B2C);
+                }
 
                 results.Dispose();
             }
@@ -592,7 +546,7 @@
 
         private CategoryValues<ObligatedCategoryValue> CategoryValues()
         {
-            return new CategoryValues<EA.Weee.Core.AatfReturn.ObligatedCategoryValue>();
+            return new CategoryValues<ObligatedCategoryValue>();
         }
     }
 }

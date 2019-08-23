@@ -19,27 +19,17 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            var filteredAatfList = RemoveOlderAatfs(source.AatfList);
+
             var selectedAatfsOrAes = new List<AatfData>();
 
             if (source.IsAE)
             {
-                foreach (var aatf in source.AatfList)
-                {
-                    if (aatf.FacilityType == Core.AatfReturn.FacilityType.Ae)
-                    {
-                        selectedAatfsOrAes.Add(aatf);
-                    }
-                }
+                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Ae));
             }
             else
             {
-                foreach (var aatf in source.AatfList)
-                {
-                    if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
-                    {
-                        selectedAatfsOrAes.Add(aatf);
-                    }
-                }
+                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Aatf));
             }
 
             foreach (var aatf in selectedAatfsOrAes)
@@ -52,6 +42,29 @@
             Model.AatfList = selectedAatfsOrAes.OrderBy(o => o.Name).ToList();
 
             return Model;
+        }
+
+        private List<AatfData> RemoveOlderAatfs(List<AatfData> source)
+        {
+            var listToBeReturned = new List<AatfData>();
+
+            foreach (var aatf in source)
+            {
+                if (source.Any(m => m.AatfId == aatf.AatfId && m.Id != aatf.Id))
+                {
+                    var latestAatf = source.Where(m => m.AatfId == aatf.AatfId).OrderByDescending(m => m.ApprovalDate).First();
+
+                    if (!listToBeReturned.Contains(latestAatf))
+                    {
+                        listToBeReturned.Add(latestAatf);
+                    }
+                }
+                else
+                {
+                    listToBeReturned.Add(aatf);
+                }
+            }
+            return listToBeReturned;
         }
     }
 }

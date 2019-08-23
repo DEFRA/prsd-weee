@@ -13,6 +13,8 @@
 
         public string AatfName { get; set; }
 
+        public short ComplianceYear { get; set; }
+
         public AatfEditContactAddressViewModel()
         {
             this.ContactData = new AatfContactData();

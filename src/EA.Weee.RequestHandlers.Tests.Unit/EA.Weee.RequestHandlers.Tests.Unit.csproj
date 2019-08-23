@@ -112,10 +112,13 @@
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfReuseSitesCsvHandlerTests.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatusTests.cs" />
+    <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandlerTests.cs" />
+    <Compile Include="Admin\Aatf\GetAatfIdByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />
