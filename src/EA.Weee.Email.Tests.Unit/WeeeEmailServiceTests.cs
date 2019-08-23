@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Email.Tests.Unit
 {
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using Prsd.Email;
+    using System;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using Xunit;
@@ -464,6 +467,78 @@
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, false)).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var notificationService = builder.Build();
+
+            // Act
+            await notificationService.SendOrganisationUserRequestCompleted(A.Fake<OrganisationUser>(), true);
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var notificationService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await notificationService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(organisationUser.User.Email, A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await emailService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Your request to access " + organisationUser.Organisation.OrganisationName, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_ModelIsBuiltWithCorrectParameters()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await emailService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", A<object>.That.Matches(m => m.GetPropertyValue<bool>("ActiveUsers") == true
+            && m.GetPropertyValue<string>("FullName") == organisationUser.User.FullName
+            && m.GetPropertyValue<string>("OrganisationName") == organisationUser.Organisation.OrganisationName
+            && m.GetPropertyValue<bool>("Approved") == false
+            && m.GetPropertyValue<string>("ExternalUserLoginUrl") == builder.Configuration.ExternalUserLoginUrl)))
+                .MustHaveHappened();
         }
 
         private class WeeeEmailServiceBuilder
