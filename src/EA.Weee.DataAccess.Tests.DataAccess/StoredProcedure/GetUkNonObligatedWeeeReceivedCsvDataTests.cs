@@ -118,11 +118,11 @@
                             results.ElementAt(index).Category.Should().Be($"{(int)value}. {value.ToDisplayString()}");
                             if (dcf)
                             {
-                                results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((int)value * 4);
+                                results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((int)value * 4 * 4);
                             }
                             else
                             {
-                                results.ElementAt(index).TotalNonObligatedWeeeReceived.Should().Be((int)value * 4);
+                                results.ElementAt(index).TotalNonObligatedWeeeReceived.Should().Be((int)value * 4 * 4);
                             }
                         }
                         else
