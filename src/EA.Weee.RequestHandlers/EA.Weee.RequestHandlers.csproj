@@ -75,6 +75,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandler.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandler.cs" />
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatus.cs" />
+    <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandler.cs" />
+    <Compile Include="Admin\Aatf\GetAatfIdByComplianceYearHandler.cs" />
     <Compile Include="Admin\Aatf\IGetAatfApprovalDateChangeStatus.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandler.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandler.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="Admin\Aatf\IGetOrganisationDeletionStatus.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="ReportConstants.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />
