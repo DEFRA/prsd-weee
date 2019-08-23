@@ -37,10 +37,10 @@
             var items = await context.StoredProcedures.GetUkNonObligatedWeeeReceivedByComplianceYear(request.ComplianceYear);
 
             var csvWriter = csvWriterFactory.Create<UkNonObligatedWeeeReceivedData>();
-            csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
-            csvWriter.DefineColumn(@"Category", i => i.Category);
-            csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
-            csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
+            csvWriter.DefineColumn(ReportConstants.QuarterColumnHeading, i => i.Quarter);
+            csvWriter.DefineColumn(ReportConstants.CategoryColumnHeading, i => i.Category);
+            csvWriter.DefineColumn(ReportConstants.NonObligatedColumnHeading, i => i.TotalNonObligatedWeeeReceived);
+            csvWriter.DefineColumn(ReportConstants.NonObligatedDcfColumnHeading, i => i.TotalNonObligatedWeeeReceivedFromDcf);
             var fileContent = csvWriter.Write(items);
 
             var fileName = $"{request.ComplianceYear}_UK non-obligated WEEE received at AATFs_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
