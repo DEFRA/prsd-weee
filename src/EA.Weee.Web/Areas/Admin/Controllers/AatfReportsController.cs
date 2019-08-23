@@ -361,11 +361,11 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-            string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+             FacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
         {
             CSVFileData fileData;
 
-            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, aatfName, authorityId, panArea);
+            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId);
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
