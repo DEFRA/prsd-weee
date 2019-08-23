@@ -17,18 +17,20 @@
             this.context = context;
         }
 
-        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId)
+        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId, short complianceYear)
         {
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId", aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId)
+        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId, short complianceYear)
         {
             var aatfIdParameter = new SqlParameter("@AeId", aatfId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId", aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
