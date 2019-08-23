@@ -85,14 +85,14 @@
 
             var request = new GetReturnObligatedCsv(returnId);
 
-            A.CallTo(() => storedProcedures.GetReturnObligatedCsvData(request.ReturnId)).Returns(obligatedDataTable);
+            A.CallTo(() => storedProcedures.GetReturnObligatedCsvData(returnId)).Returns(obligatedDataTable);
 
             var data = await handler.HandleAsync(request);
 
             data.FileContent.Should()
                 .Contain(
-                    "ComplianceYear,Quarter,AATFName,AATFApprovalNumber,SubmittedBy,SubmittedDate,Obligation,CategoryName,TotalSent,TotalReused,TotalReceived,Obligated WEEE sent to DSDS (t)");
-            data.FileContent.Should().Contain("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,B2C,1. Large Household Appliances,33,15,2,88");
+                    "Compliance Year,Quarter,Name of AATF,AATF approval number,Submitted by,Submitted date (GMT),Category,Obligation,Total obligated WEEE sent to another AATF / ATF for treatment (t)");
+            data.FileContent.Should().Contain("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,1. Large Household Appliances,B2C,33");
             data.FileContent.Should().NotContain("ReturnId");
             data.FileContent.Should().NotContain("AatfKey");
         }
@@ -111,20 +111,17 @@
         internal DataTable CreateDummyDataTable()
         {
             var obligatedDataTable = new DataTable();
-            obligatedDataTable.Columns.Add("ComplianceYear");
+            obligatedDataTable.Columns.Add("Compliance Year");
             obligatedDataTable.Columns.Add("Quarter");
-            obligatedDataTable.Columns.Add("AATFName");
-            obligatedDataTable.Columns.Add("AATFApprovalNumber");
-            obligatedDataTable.Columns.Add("SubmittedBy");
-            obligatedDataTable.Columns.Add("SubmittedDate");
+            obligatedDataTable.Columns.Add("Name of AATF");
+            obligatedDataTable.Columns.Add("AATF approval number");
+            obligatedDataTable.Columns.Add("Submitted by");
+            obligatedDataTable.Columns.Add("Submitted date (GMT)");
+            obligatedDataTable.Columns.Add("Category");
             obligatedDataTable.Columns.Add("Obligation");
-            obligatedDataTable.Columns.Add("CategoryName");
-            obligatedDataTable.Columns.Add("TotalSent");
-            obligatedDataTable.Columns.Add("TotalReused");
-            obligatedDataTable.Columns.Add("TotalReceived");
-            obligatedDataTable.Columns.Add("Obligated WEEE sent to DSDS (t)");
-            obligatedDataTable.Columns.Add("ReturnId");
-            obligatedDataTable.Columns.Add("AatfKey");
+            obligatedDataTable.Columns.Add("Total obligated WEEE sent to another AATF / ATF for treatment (t)");
+            obligatedDataTable.Columns.Add("Return Id");
+            obligatedDataTable.Columns.Add("Aatf Key");
 
             for (var i = 0; i < 5; i++)
             {
@@ -135,12 +132,9 @@
                 row[3] = "WEE/AC0005ZT/ATF";
                 row[4] = "T User";
                 row[5] = "24/04/2019";
-                row[6] = "B2C";
-                row[7] = "1. Large Household Appliances";
+                row[6] = "1. Large Household Appliances";
+                row[7] = "B2C";
                 row[8] = 33;
-                row[9] = 15;
-                row[10] = 2;
-                row[11] = 88;
                 obligatedDataTable.Rows.Add(row);
             }
 
