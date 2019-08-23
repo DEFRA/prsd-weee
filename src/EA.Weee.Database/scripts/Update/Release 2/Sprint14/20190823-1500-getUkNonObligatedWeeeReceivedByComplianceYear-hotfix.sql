@@ -113,7 +113,6 @@ WHERE
 	wr.Dcf = 0 
 	AND r.ComplianceYear = @ComplianceYear
 GROUP BY
-	r.[Quarter],
 	wr.CategoryId
 )
 UPDATE
@@ -163,7 +162,6 @@ WHERE
 	wr.Dcf = 1 
 	AND r.ComplianceYear = @ComplianceYear
 GROUP BY
-	r.[Quarter],
 	wr.CategoryId
 )
 UPDATE
