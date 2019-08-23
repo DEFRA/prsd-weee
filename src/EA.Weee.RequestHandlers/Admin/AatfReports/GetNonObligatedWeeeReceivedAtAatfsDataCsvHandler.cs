@@ -38,15 +38,15 @@
 
             var items = await context.StoredProcedures.GetNonObligatedWeeeReceivedAtAatf(request.ComplianceYear, request.AatfName);
 
-            var csvWriter = csvWriterFactory.Create<NonObligatedWeeeReceivedAtAatfData>();
-            csvWriter.DefineColumn(@"Year", i => i.Year);
-            csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
-            csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
-            csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
-            csvWriter.DefineColumn(@"Organisation name", i => i.OrganisationName);
-            csvWriter.DefineColumn(@"Category", i => i.Category);
-            csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
-            csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
+            var csvWriter = csvWriterFactory.Create<NonObligatedWeeeReceivedCsvData>();
+            csvWriter.DefineColumn(ReportConstants.YearColumnHeading, i => i.Year);
+            csvWriter.DefineColumn(ReportConstants.QuarterColumnHeading, i => i.Quarter);
+            csvWriter.DefineColumn(ReportConstants.SubmittedByColumnHeading, i => i.SubmittedBy);
+            csvWriter.DefineColumn(ReportConstants.DateSubmittedColumnHeading, i => i.SubmittedDate);
+            csvWriter.DefineColumn(ReportConstants.OrganisationColumnHeading, i => i.OrganisationName);
+            csvWriter.DefineColumn(ReportConstants.CategoryColumnHeading, i => i.Category);
+            csvWriter.DefineColumn(ReportConstants.NonObligatedColumnHeading, i => i.TotalNonObligatedWeeeReceived);
+            csvWriter.DefineColumn(ReportConstants.NonObligatedDcfColumnHeading, i => i.TotalNonObligatedWeeeReceivedFromDcf);
             var fileContent = csvWriter.Write(items);
 
             var fileNameParameters = string.Empty;

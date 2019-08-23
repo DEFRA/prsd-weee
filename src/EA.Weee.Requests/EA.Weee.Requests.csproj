@@ -58,9 +58,11 @@
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
+    <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChange.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetails.cs" />
     <Compile Include="Admin\Aatf\EditAatfContact.cs" />
+    <Compile Include="Admin\Aatf\GetAatfIdByComplianceYear.cs" />
     <Compile Include="Admin\Aatf\GetAatfContact.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligated.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequest.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Admin\AatfReports\GetAllAatfReuseSitesCsv.cs" />
     <Compile Include="Admin\Aatf\GetAatfObligatedData.cs" />
     <Compile Include="Admin\Aatf\GetAatfSubmissionHistory.cs" />
+    <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfId.cs" />
     <Compile Include="Admin\AddAatf.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUnique.cs" />
     <Compile Include="Admin\CompleteOrganisationAdmin.cs" />

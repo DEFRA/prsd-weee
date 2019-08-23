@@ -74,7 +74,7 @@
 
             A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
 
-            var csvData1 = new NonObligatedWeeeReceivedAtAatfData()
+            var csvData1 = new NonObligatedWeeeReceivedCsvData()
             {
                 Year = fixture.Create<int>(),
                 Quarter = fixture.Create<string>(),
@@ -86,7 +86,7 @@
                 TotalNonObligatedWeeeReceivedFromDcf = fixture.Create<decimal>()
             };
 
-            var csvData2 = new NonObligatedWeeeReceivedAtAatfData()
+            var csvData2 = new NonObligatedWeeeReceivedCsvData()
             {
                 Year = fixture.Create<int>(),
                 Quarter = fixture.Create<string>(),
@@ -100,7 +100,7 @@
 
             var request = new GetUkNonObligatedWeeeReceivedAtAatfsDataCsv(2019, fixture.Create<string>());
 
-            A.CallTo(() => storedProcedures.GetNonObligatedWeeeReceivedAtAatf(request.ComplianceYear, request.AatfName)).Returns(new List<NonObligatedWeeeReceivedAtAatfData> { csvData1, csvData2 });
+            A.CallTo(() => storedProcedures.GetNonObligatedWeeeReceivedAtAatf(request.ComplianceYear, request.AatfName)).Returns(new List<NonObligatedWeeeReceivedCsvData> { csvData1, csvData2 });
 
             var data = await handler.HandleAsync(request);
 

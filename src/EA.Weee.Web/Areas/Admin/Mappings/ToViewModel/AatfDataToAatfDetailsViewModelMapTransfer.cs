@@ -24,5 +24,7 @@
         public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
 
         public List<AatfSubmissionHistoryData> SubmissionHistory { get; set; }
+
+        public IEnumerable<short> ComplianceYearList { get; set; }
     }
 }

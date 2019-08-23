@@ -146,16 +146,6 @@
             return sb.ToString();
         }
 
-        public static void SetColumnsOrder(this DataTable datatable, params String[] columnNames)
-        {
-            var columnIndex = 0;
-            foreach (var columnName in columnNames)
-            {
-                datatable.Columns[columnName].SetOrdinal(columnIndex);
-                columnIndex++;
-            }
-        }
-
         public static string EncodeAndCheck(string value, NoFormulaeExcelSanitizer excelSanitizer)
         {
             string result;
