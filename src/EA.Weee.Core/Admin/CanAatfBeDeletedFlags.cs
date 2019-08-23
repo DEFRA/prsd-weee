@@ -8,6 +8,7 @@
         HasData = 1,
         OrganisationHasActiveUsers = 2,
         CanDelete = 4,
-        CanDeleteOrganisation = 8
+        CanDeleteOrganisation = 8,
+        IsNotLatest = 10
     }
 }

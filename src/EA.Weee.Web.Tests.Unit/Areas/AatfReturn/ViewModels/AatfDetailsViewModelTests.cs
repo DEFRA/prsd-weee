@@ -80,5 +80,29 @@
 
             model.HasLocalArea.Should().BeTrue();
         }
+
+        [Fact]
+        public void AatfDetailsViewModel_CYIsNotNull_IsLatestComplianceYearShouldBeFalse()
+        {
+            var model = new AatfDetailsViewModel() { ComplianceYear = A.Dummy<short>() };
+
+            model.IsLatestComplianceYear.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_CYIsNotEqualToLatest_IsLatestComplianceYearShouldBeFalse()
+        {
+            var model = new AatfDetailsViewModel() { ComplianceYear = A.Dummy<short>(), ComplianceYearList = A.CollectionOfDummy<short>(2) };
+
+            model.IsLatestComplianceYear.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_CYIsEqualToLatest_IsLatestComplianceYearShouldBeFalse()
+        {
+            var model = new AatfDetailsViewModel() { ComplianceYear = 4, ComplianceYearList = new List<short> {4, 3} };
+
+            model.IsLatestComplianceYear.Should().BeTrue();
+        }
     }
 }

@@ -63,6 +63,8 @@
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
+                var years = await client.SendAsync(User.GetAccessToken(), new GetAatfComplianceYearsByAatfId(aatf.AatfId));
+
                 var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(aatf.Organisation.Id));
 
                 var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Organisation.Id));
@@ -74,12 +76,24 @@
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes,
-                    SubmissionHistory = submissionHistory
+                    SubmissionHistory = submissionHistory,
+                    ComplianceYearList = years
                 });
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear)
+        {
+            using (var client = apiClient())
+            {               
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfIdByComplianceYear(aatfId, selectedComplianceYear));
+
+                return RedirectToAction("Details", new { Id = aatf });
             }
         }
 
@@ -201,7 +215,8 @@
                     AatfId = id,
                     ContactData = contact,
                     FacilityType = facilityType,
-                    AatfName = aatf.Name
+                    AatfName = aatf.Name,
+                    ComplianceYear = aatf.ComplianceYear
                 };
 
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
