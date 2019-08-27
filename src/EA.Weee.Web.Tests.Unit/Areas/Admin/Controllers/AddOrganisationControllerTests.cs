@@ -86,7 +86,7 @@
             var viewModel = new SearchViewModel()
             {
                 SearchTerm = "test",
-                EntityType = EntityType.Aatf
+                EntityType = entityType
             };
 
             var result = controller.Search(viewModel) as RedirectToRouteResult;

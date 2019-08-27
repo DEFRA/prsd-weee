@@ -1,35 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
-    using EA.Weee.Web.Areas.Admin.Helper;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
-    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
-    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using ViewModels.AddOrganisation;
-    using ViewModels.AddOrganisation.Details;
-    using ViewModels.AddOrganisation.Type;
 
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class AddPcsController : AdminController
