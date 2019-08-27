@@ -29,12 +29,12 @@
                                                   && a.FacilityType.Value == @return.FacilityType.Value
                                                   && a.ComplianceYear == @return.Quarter.Year
                                                   && a.ApprovalDate.HasValue
-                                                  && a.ApprovalDate.Value < quarterWindow.StartDate.Date).Select(a => a).ToListAsync();
+                                                  && a.ApprovalDate.Value < quarterWindow.StartDate.Date).Select(a => a).OrderBy(a => a.Name).ToListAsync();
         }
 
         public async Task<List<Aatf>> FetchAatfByReturnId(Guid returnId)
         {
-            return await context.ReturnAatfs.Where(r => r.Return.Id.Equals(returnId)).Select(r => r.Aatf).ToListAsync();
+            return await context.ReturnAatfs.Where(r => r.Return.Id.Equals(returnId)).Select(r => r.Aatf).OrderBy(r => r.Name).ToListAsync();
         }
 
         public async Task<Aatf> FetchByApprovalNumber(string approvalNumber, int? year = null)
