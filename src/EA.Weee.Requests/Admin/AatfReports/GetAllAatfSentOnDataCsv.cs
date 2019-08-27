@@ -13,14 +13,11 @@
 
         public Guid? PanArea { get; private set; }
 
-        public string AATFName { get; private set; }
-
         public GetAllAatfSentOnDataCsv(int complianceYear,
-           string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+           string obligationType, Guid? authorityId, Guid? panArea)
         {
             ComplianceYear = complianceYear;
             ObligationType = obligationType;
-            AATFName = aatfName;
             AuthorityId = authorityId;
             PanArea = panArea;
         }
