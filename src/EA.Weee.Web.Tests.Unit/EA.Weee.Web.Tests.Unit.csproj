@@ -228,6 +228,8 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AddPcsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />

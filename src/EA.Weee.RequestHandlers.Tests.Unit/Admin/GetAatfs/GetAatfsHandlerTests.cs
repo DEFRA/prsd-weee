@@ -54,7 +54,7 @@
         {
             var request = new GetAatfs(fixture.Create<FacilityType>());
             await handler.HandleAsync(request);
-            A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetLatestAatfs()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -73,7 +73,7 @@
         {
             var aatfs = CreateAatfAeList();
 
-            A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
+            A.CallTo(() => dataAccess.GetLatestAatfs()).Returns(aatfs);
 
             var request = new GetAatfs(facilityType);
             var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType, (Int16)2019);

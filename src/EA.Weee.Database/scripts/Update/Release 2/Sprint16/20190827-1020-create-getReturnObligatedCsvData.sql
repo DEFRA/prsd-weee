@@ -16,11 +16,29 @@ DECLARE @DynamicPivotQuery AS NVARCHAR(MAX)
 DECLARE @ColumnName AS NVARCHAR(MAX)
 DECLARE @HasPcsData BIT
 DECLARE @HasSentOnData BIT
+DECLARE @SelectedReceived BIT
+DECLARE @SelectedSentOn BIT
+DECLARE @SelectedReused BIT
 DECLARE @AatfReportDate DATETIME
 DECLARE @Status INT
 
+SET @SelectedReceived = 0
+SET @SelectedSentOn = 0
+SET @SelectedReused = 0
 SET @HasPcsData = 0
 SET @HasSentOnData = 0
+
+IF EXISTS (SELECT * FROM [AATF].ReturnReportOn WHERE ReturnId = @ReturnId AND ReportOnQuestionId = 1) BEGIN
+	SET @SelectedReceived = 1
+END
+
+IF EXISTS (SELECT * FROM [AATF].ReturnReportOn WHERE ReturnId = @ReturnId AND ReportOnQuestionId = 2) BEGIN
+	SET @SelectedSentOn = 1
+END
+
+IF EXISTS (SELECT * FROM [AATF].ReturnReportOn WHERE ReturnId = @ReturnId AND ReportOnQuestionId = 3) BEGIN
+	SET @SelectedReused = 1
+END
 
 DECLARE @ObligationType TABLE
 (
@@ -30,7 +48,7 @@ INSERT INTO @ObligationType SELECT 0 -- Household / B2C
 INSERT INTO @ObligationType SELECT 1 -- Non house hold / B2B
 
 SELECT
-	@AatfReportDate = DATEFROMPARTS(r.ComplianceYear, l.StartMonth, l.StartDay),
+	@AatfReportDate = DATEFROMPARTS(CASE AddStartYears WHEN 1 THEN r.ComplianceYear + 1 ELSE r.ComplianceYear END, l.StartMonth, l.StartDay),
 	@Status = r.ReturnStatus
 FROM
 	[Lookup].QuarterWindowTemplate l
@@ -375,7 +393,6 @@ SET @DynamicPivotQuery =
 		pivotSentOnObligated
 	PIVOT (MAX(Tonnage) FOR SiteOperator IN (' + @ColumnName + ')) AS x'
 
-	print @DynamicPivotQuery
 EXEC (@DynamicPivotQuery)
 
 IF OBJECT_ID('tempdb..##PcsObligated') IS NOT NULL
@@ -395,30 +412,37 @@ SET @DynamicPivotQuery = N'
 		f.[Submitted by],
 		f.[Submitted date (GMT)],
 		f.Category,
-		f.[Obligation type],
-		f.[Total obligated WEEE received on behalf of PCS(s) (t)],'
+		f.[Obligation type]'
 
-IF @HasPcsData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N'ph.*,'
+IF @SelectedReceived = 1 BEGIN
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, ', f.[Total obligated WEEE received on behalf of PCS(s) (t)]')
+END		
+
+IF @HasPcsData = 1 AND @SelectedReceived = 1 BEGIN
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, ', ph.*')
 END
 
-SET @DynamicPivotQuery = @DynamicPivotQuery + N'f.[Total obligated WEEE sent to another AATF / ATF for treatment (t)],'
-
-IF @HasSentOnData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N'so.*,'
+IF @SelectedSentOn = 1 BEGIN
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, ', f.[Total obligated WEEE sent to another AATF / ATF for treatment (t)]')
 END
 
-SET @DynamicPivotQuery = @DynamicPivotQuery + N'f.[Total obligated WEEE reused as a whole appliance (t)]'
+IF @HasSentOnData = 1 AND @SelectedSentOn = 1 BEGIN
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, ', so.*')
+END
 
-SET @DynamicPivotQuery = @DynamicPivotQuery + N'
+IF @SelectedReused = 1 BEGIN
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, N', f.[Total obligated WEEE reused as a whole appliance (t)]')
+END
+
+SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, '
 FROM
-	##FinalTable f '
+	##FinalTable f ')
 
 IF @HasPcsData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##PcsObligated ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType '
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, N'LEFT JOIN ##PcsObligated ph ON ph.CategoryId = f.CategoryId AND ph.AatfId = f.AatfKey AND ph.ObligationType = f.ObligationType ')
 END
 IF @HasSentOnData = 1 BEGIN
-	SET @DynamicPivotQuery = @DynamicPivotQuery + N'LEFT JOIN ##SentOnObligated so ON so.CategoryId = f.CategoryId AND so.AatfId = f.AatfKey AND so.ObligationType = f.ObligationType '
+	SET @DynamicPivotQuery = CONCAT(@DynamicPivotQuery, N'LEFT JOIN ##SentOnObligated so ON so.CategoryId = f.CategoryId AND so.AatfId = f.AatfKey AND so.ObligationType = f.ObligationType ')
 END
 
 EXEC (@DynamicPivotQuery)

@@ -1,10 +1,12 @@
-﻿namespace EA.Weee.Web.Areas.Admin.Controllers
+namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
@@ -15,8 +17,6 @@
     using EA.Weee.Web.Areas.Admin.Helper;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Extensions;
@@ -24,111 +24,25 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class AddAatfController : AdminController
     {
-        private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
-        private readonly int maximumSearchResults;
         private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
 
         public AddAatfController(
-            ISearcher<OrganisationSearchResult> organisationSearcher,
             Func<IWeeeClient> apiClient,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            ConfigurationService configurationService,
             IFacilityViewModelBaseValidatorWrapper validationWrapper)
         {
-            this.organisationSearcher = organisationSearcher;
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.validationWrapper = validationWrapper;
-
-            maximumSearchResults = configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults;
-        }
-
-        [HttpGet]
-        public ActionResult Search(FacilityType facilityType)
-        {
-            SetBreadcrumb(facilityType);
-            return View(new SearchViewModel { FacilityType = facilityType });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Search(SearchViewModel viewModel)
-        {
-            SetBreadcrumb(viewModel.FacilityType);
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            return RedirectToAction("SearchResults", "AddAatf", new { viewModel.SearchTerm, viewModel.FacilityType });
-        }
-
-        /// <summary>
-        /// This method is called using AJAX by JS-users.
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
-        {
-            if (!this.Request.IsAjaxRequest())
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return Json(null, JsonRequestBehavior.AllowGet);
-            }
-
-            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
-
-            return Json(searchResults, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> SearchResults(string searchTerm, FacilityType facilityType)
-        {
-            SetBreadcrumb(facilityType);
-
-            var viewModel = new SearchResultsViewModel
-            {
-                SearchTerm = searchTerm,
-                FacilityType = facilityType,
-                Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
-            };
-
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
-        {
-            SetBreadcrumb(viewModel.FacilityType);
-
-            if (!ModelState.IsValid)
-            {
-                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
-
-                return View(viewModel);
-            }
-
-            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.FacilityType });
         }
 
         [HttpGet]
@@ -159,189 +73,6 @@
         public async Task<ActionResult> AddAe(AddAeViewModel viewModel)
         {
             return await AddFacility(viewModel);
-        }
-
-        [HttpGet]
-        public ActionResult Type(string searchedText, FacilityType facilityType)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            return View(new OrganisationTypeViewModel(searchedText, facilityType));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Type(OrganisationTypeViewModel model)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            if (ModelState.IsValid)
-            {
-                var organisationType = model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
-                var routeValues = new { organisationType = model.SelectedValue, facilityType = model.FacilityType, searchedText = model.SearchedText };
-
-                switch (organisationType)
-                {
-                    case OrganisationType.SoleTraderOrIndividual:
-                        return RedirectToAction(nameof(SoleTraderDetails), "AddAatf", routeValues);
-                    case OrganisationType.Partnership:
-                        return RedirectToAction(nameof(PartnershipDetails), "AddAatf", routeValues);
-                    case OrganisationType.RegisteredCompany:
-                        return RedirectToAction(nameof(RegisteredCompanyDetails), "AddAatf", routeValues);
-                }
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> PartnershipDetails(string organisationType, FacilityType facilityType, string searchedText = null)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            IList<CountryData> countries = await GetCountries();
-
-            var model = new PartnershipDetailsViewModel
-            {
-                BusinessTradingName = searchedText,
-                OrganisationType = organisationType,
-                FacilityType = facilityType
-            };
-
-            model.Address.Countries = countries;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            if (!ModelState.IsValid)
-            {
-                IList<CountryData> countries = await GetCountries();
-
-                model.Address.Countries = countries;
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
-                {
-                    Address = model.Address,
-                    BusinessName = model.BusinessTradingName,
-                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>()
-                };
-
-                Guid id = await client.SendAsync(User.GetAccessToken(), request);
-
-                return RedirectToAction(nameof(Add), "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails(string organisationType, FacilityType facilityType, string searchedText = null)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            var countries = await GetCountries();
-
-            var model = new SoleTraderDetailsViewModel
-            {
-                CompanyName = searchedText,
-                OrganisationType = organisationType,
-                FacilityType = facilityType
-            };
-
-            model.Address.Countries = countries;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SoleTraderDetails(SoleTraderDetailsViewModel model)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            if (!ModelState.IsValid)
-            {
-                var countries = await GetCountries();
-
-                model.Address.Countries = countries;
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                var request = new CreateOrganisationAdmin()
-                {
-                    Address = model.Address,
-                    BusinessName = model.CompanyName,
-                    TradingName = model.BusinessTradingName,
-                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>()
-                };
-
-                var id = await client.SendAsync(User.GetAccessToken(), request);
-
-                return RedirectToAction(nameof(Add), "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, FacilityType facilityType, string searchedText = null)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            IList<CountryData> countries = await GetCountries();
-
-            RegisteredCompanyDetailsViewModel model = new RegisteredCompanyDetailsViewModel()
-            {
-                CompanyName = searchedText,
-                OrganisationType = organisationType,
-                FacilityType = facilityType
-            };
-
-            model.Address.Countries = countries;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
-        {
-            SetBreadcrumb(InternalUserActivity.CreateOrganisation);
-
-            if (!ModelState.IsValid)
-            {
-                IList<CountryData> countries = await GetCountries();
-
-                model.Address.Countries = countries;
-
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                CreateOrganisationAdmin request = new CreateOrganisationAdmin()
-                {
-                    Address = model.Address,
-                    BusinessName = model.CompanyName,
-                    OrganisationType = model.OrganisationType.GetValueFromDisplayName<OrganisationType>(),
-                    RegistrationNumber = model.CompaniesRegistrationNumber,
-                    TradingName = model.BusinessTradingName
-                };
-
-                Guid id = await client.SendAsync(User.GetAccessToken(), request);
-
-                await cache.InvalidateOrganisationSearch();
-
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.FacilityType });
-            }
         }
 
         private async Task<T> PopulateAndReturnViewModel<T>(T viewModel, Guid organisationId)

@@ -109,7 +109,10 @@
         locale: "en"
 	    }
     );
+
 });
+
+
 
 //USAGE: $("#form").serializeFiles();
 (function ($) {
