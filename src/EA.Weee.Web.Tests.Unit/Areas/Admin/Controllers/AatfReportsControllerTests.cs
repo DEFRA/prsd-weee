@@ -1169,7 +1169,7 @@
         }
 
         [Fact]
-        public async Task GetAatfAeDetails_Always_ReturnsAatfAeDetailsuViewModel()
+        public async Task GetAatfAeDetails_Always_ReturnsAatfAeDetailsViewModel()
         {
             List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             List<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
