@@ -57,6 +57,7 @@
     <Compile Include="AatfReturn\AddReturn.cs" />
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChange.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetails.cs" />
