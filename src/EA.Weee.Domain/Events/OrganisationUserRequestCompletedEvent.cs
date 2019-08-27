@@ -7,7 +7,7 @@
     {
         public OrganisationUser OrganisationUser { get; private set; }
 
-        internal OrganisationUserRequestCompletedEvent(OrganisationUser organisationUser)
+        public OrganisationUserRequestCompletedEvent(OrganisationUser organisationUser)
         {
             OrganisationUser = organisationUser;
         }

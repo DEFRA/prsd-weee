@@ -35,11 +35,11 @@
     <h2 class="govuk-heading-m">Obligated WEEE</h2>
     <div class="govuk-!-padding-bottom-4"></div>
     <div class="govuk-body">
-        @if (Model.ShowDownloadObligatedData)
+        @if (Model.ShowDownloadObligatedDataLink)
         {
             @(this.WeeeGds().ActionLinkWithEventTracking("Download all obligated data",
                   "Download all obligated data",
-                  Url.RouteUrl(AatfRedirect.Download, new {returnId = Model.ReturnId}),
+                  Url.RouteUrl(AatfRedirect.Download, new { returnId = Model.ReturnId, obligated = true }),
                   "AATF return",
                   "Obligated data download",
                   "Obligated data download"
@@ -333,6 +333,18 @@
 </div>
 
 <h2 class="govuk-heading-m">Non-obligated WEEE</h2>
+<div class="govuk-body">
+    @if (Model.ShowDownloadNonObligatedDataLink)
+    {
+        @(this.WeeeGds().ActionLinkWithEventTracking("Download a copy of non-obligated WEEE data",
+              "Download a copy of non-obligated WEEE data",
+              Url.RouteUrl(AatfRedirect.Download, new { returnId = Model.ReturnId, obligated = false }),
+              "AATF return",
+              "Non-obligated data download",
+              "Non-obligated data download"
+              ))
+    }
+</div>
 <div class="govuk-table govuk-grid-column-full">
     <div class="govuk-grid-row govuk-table__cell--thick">
         <div class="govuk-grid-column-one-half">
