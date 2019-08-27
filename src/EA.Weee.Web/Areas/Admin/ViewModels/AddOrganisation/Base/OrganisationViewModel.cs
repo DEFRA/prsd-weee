@@ -15,7 +15,7 @@
 
         public AddressData Address { get; set; }
 
-        public Core.AatfReturn.FacilityType FacilityType { get; set; }
+        public Core.Shared.EntityType EntityType { get; set; }
 
         public OrganisationViewModel()
         {
