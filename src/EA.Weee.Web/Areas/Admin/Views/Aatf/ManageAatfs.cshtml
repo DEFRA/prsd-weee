@@ -3,6 +3,8 @@
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Shared
+
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.ManageAatfsViewModel
 @{
     ViewBag.Title = "Manage " + Model.FacilityType.ToDisplayString() + "s - GOV.UK";
@@ -104,7 +106,7 @@
     if (Model.CanAddAatf)
     {
         <p>
-            <a href="@(Url.UrlFor<AddAatfController>(u => u.Search(Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
+            <a href="@(Url.UrlFor<AddOrganisationController>(u => u.Search((EntityType)Model.FacilityType)))">Add @Model.FacilityType.ToDisplayString()</a>
         </p>
     }
     <br />
