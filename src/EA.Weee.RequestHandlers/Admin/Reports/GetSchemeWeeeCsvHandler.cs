@@ -3,6 +3,10 @@
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using Domain.DataReturns;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.Lookup;
+    using EA.Weee.RequestHandlers.Admin.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
@@ -19,23 +23,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        private readonly Dictionary<int, string> categoryDisplayNames = new Dictionary<int, string>()
-        {
-            { 1, "1. Large Household Appliances" },
-            { 2, "2. Small Household Appliances" },
-            { 3, "3. IT and Telecomms Equipment" },
-            { 4, "4. Consumer Equipment" },
-            { 5, "5. Lighting Equipment" },
-            { 6, "6. Electrical and Electronic Tools" },
-            { 7, "7. Toys Leisure and Sports" },
-            { 8, "8. Medical Devices" },
-            { 9, "9. Monitoring and Control Instruments" },
-            { 10, "10. Automatic Dispensers" },
-            { 11, "11. Display Equipment" },
-            { 12, "12. Cooling Appliances Containing Refrigerants" },
-            { 13, "13. Gas Discharge Lamps and LED Light Sources" },
-            { 14, "14. Photovoltaic Panels" },
-        };
+        private readonly Dictionary<int, string> categories = ReportHelper.GetCategoryDisplayNames();
 
         public GetSchemeWeeeCsvHandler(
             IStoredProcedures storedProcedures,
@@ -200,7 +188,7 @@
             writer.DefineColumn("Scheme name", x => x.SchemeName);
             writer.DefineColumn("Scheme approval No", x => x.SchemeApprovalNumber);
             writer.DefineColumn("Quarter", x => string.Format("Q{0}", x.QuarterType));
-            writer.DefineColumn("Category", x => categoryDisplayNames[x.Category]);
+            writer.DefineColumn("Category", x => categories[x.Category]);
             writer.DefineColumn("DCF (t)", x => x.Dcf);
 
             if (obligationType == ObligationType.B2C)
