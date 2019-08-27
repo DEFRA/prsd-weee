@@ -66,8 +66,8 @@ INSERT INTO @AATF
 		JOIN Organisation.Organisation o ON a.OrganisationId  = o.Id
 		JOIN Organisation.Address oa ON o.BusinessAddressId = oa.Id
 		JOIN Lookup.CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
-		JOIN Lookup.PanArea pa on a.PanAreaId = pa.Id
-		JOIN Lookup.LocalArea la on a.LocalAreaId = la.Id
+		LEFT JOIN Lookup.PanArea pa on a.PanAreaId = pa.Id
+		LEFT JOIN Lookup.LocalArea la on a.LocalAreaId = la.Id
 		JOIN AATF.Address ad on a.SiteAddressId = ad.Id
 		JOIN AATF.Contact c on a.ContactId = c.Id
 	WHERE 
