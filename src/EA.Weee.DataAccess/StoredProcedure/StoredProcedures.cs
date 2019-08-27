@@ -582,13 +582,13 @@
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             SqlParameter facilityTypeParameter = new SqlParameter("@FacilityType", facilityType);
             SqlParameter authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
-            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
             SqlParameter areaParameter = new SqlParameter("@Area", (object)area ?? DBNull.Value);
+            SqlParameter panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
 
             return await context.Database
                 .SqlQuery<AatfAeDetailsData>(
                     "[AATF].[getAatfAeDetailsCsvData] @ComplianceYear, @FacilityType, @CA, @Area, @PanArea",
-                    complianceYearParameter, facilityTypeParameter, areaParameter, authorityParameter, panAreaParameter)
+                    complianceYearParameter, facilityTypeParameter, authorityParameter, areaParameter, panAreaParameter)
                 .ToListAsync();
         }
     }
