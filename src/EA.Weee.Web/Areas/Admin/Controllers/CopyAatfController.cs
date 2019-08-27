@@ -6,6 +6,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -19,6 +20,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -102,6 +104,7 @@
             using (var client = apiClient())
             {
                 var accessToken = User.GetAccessToken();
+
                 var countries = await client.SendAsync(accessToken, new GetCountries(false));
 
                 viewModel.ContactData.AddressData.Countries = countries;
@@ -111,6 +114,10 @@
                 viewModel.LocalAreaList = await client.SendAsync(accessToken, new GetLocalAreas());
                 viewModel.SizeList = Enumeration.GetAll<AatfSize>();
                 viewModel.StatusList = Enumeration.GetAll<AatfStatus>();
+
+                var years = await client.SendAsync(accessToken, new GetAatfComplianceYearsByAatfId(viewModel.AatfId));
+
+                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears().Except(years.Select(x => (int)x)));
             }
 
             return viewModel;
