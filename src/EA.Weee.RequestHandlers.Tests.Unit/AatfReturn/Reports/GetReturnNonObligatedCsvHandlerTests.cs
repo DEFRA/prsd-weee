@@ -5,6 +5,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.AatfReturn;
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
@@ -16,16 +17,18 @@
     using Prsd.Core;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Reports;
+    using RequestHandlers.AatfReturn.Specification;
     using Requests.AatfReturn.Reports;
     using Weee.Tests.Core;
     using Xunit;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetReturnNonObligatedCsvHandlerTests
     {
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly GetReturnNonObligatedCsvHandler handler;
-        private readonly IReturnDataAccess dataAccess;
+        private readonly IGenericDataAccess dataAccess;
         private readonly IStoredProcedures storedProcedures;
         private readonly Fixture fixture;
         
@@ -33,7 +36,7 @@
         {
             context = A.Fake<WeeeContext>();
             csvWriterFactory = A.Fake<CsvWriterFactory>();
-            dataAccess = A.Fake<IReturnDataAccess>();
+            dataAccess = A.Fake<IGenericDataAccess>();
             storedProcedures = A.Fake<IStoredProcedures>();
             fixture = new Fixture();
 
@@ -67,6 +70,16 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenReturn_ReturnReportsOnShouldBeRetrieved()
+        {
+            var returnId = SetupReturn();
+
+            await handler.HandleAsync(new GetReturnNonObligatedCsv(returnId));
+
+            A.CallTo(() => dataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(r => r.ReturnId == @returnId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenStoredProcedureReturnData_FileContentShouldMatch()
         {
             var returnId = SetupReturn();
@@ -74,6 +87,8 @@
             var csvData2 = fixture.Create<NonObligatedWeeeReceivedCsvData>();
 
             A.CallTo(() => storedProcedures.GetReturnNonObligatedCsvData(returnId)).Returns(new List<NonObligatedWeeeReceivedCsvData> { csvData1, csvData2 });
+            A.CallTo(() => dataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(r => r.ReturnId == returnId)))
+                .Returns(new List<ReturnReportOn>() { new ReturnReportOn(returnId, (int)ReportOnQuestionEnum.NonObligatedDcf) });
 
             var result = await handler.HandleAsync(new GetReturnNonObligatedCsv(returnId));
 
@@ -82,6 +97,26 @@
                     "Compliance year,Quarter,Submitted by,Submitted date (GMT),Name of operator,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
             result.FileContent.Should().Contain($"{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrganisationName},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived},{csvData1.TotalNonObligatedWeeeReceivedFromDcf}");
             result.FileContent.Should().Contain($"{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrganisationName},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived},{csvData2.TotalNonObligatedWeeeReceivedFromDcf}");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenReturnHasNotSelectedDcfAndReturnData_FileContentShouldNotHaveDcfColumn()
+        {
+            var returnId = SetupReturn();
+            var csvData1 = fixture.Create<NonObligatedWeeeReceivedCsvData>();
+            var csvData2 = fixture.Create<NonObligatedWeeeReceivedCsvData>();
+
+            A.CallTo(() => storedProcedures.GetReturnNonObligatedCsvData(returnId)).Returns(new List<NonObligatedWeeeReceivedCsvData> { csvData1, csvData2 });
+            A.CallTo(() => dataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(r => r.ReturnId == returnId)))
+                .Returns(new List<ReturnReportOn>());
+
+            var result = await handler.HandleAsync(new GetReturnNonObligatedCsv(returnId));
+
+            result.FileContent.Should()
+                .Contain(
+                    "Compliance year,Quarter,Submitted by,Submitted date (GMT),Name of operator,Category,Total non-obligated WEEE received (t)");
+            result.FileContent.Should().Contain($"{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrganisationName},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived}");
+            result.FileContent.Should().Contain($"{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrganisationName},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived}");
         }
 
         [Fact]
@@ -105,7 +140,7 @@
             A.CallTo(() => @return.Quarter).Returns(new Quarter(2019, QuarterType.Q1));
             A.CallTo(() => @return.Id).Returns(returnId);
             A.CallTo(() => @return.Organisation).Returns(organisation);
-            A.CallTo(() => dataAccess.GetById(returnId)).Returns(@return);
+            A.CallTo(() => dataAccess.GetById<Return>(returnId)).Returns(@return);
             return returnId;
         }
     }

@@ -13,5 +13,7 @@
         Task<List<Aatf>> GetAatfs();
 
         Task<List<Aatf>> GetFilteredAatfs(AatfFilter filter);
+
+        Task<List<Aatf>> GetLatestAatfs();
     }
 }
