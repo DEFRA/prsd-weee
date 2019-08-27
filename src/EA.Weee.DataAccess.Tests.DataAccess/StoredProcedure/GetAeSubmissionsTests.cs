@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
     using Domain.AatfReturn;
+    using EA.Weee.Domain.DataReturns;
     using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
@@ -20,17 +21,22 @@
             {
                 var @return1 = CreateSubmittedReturn(db);
                 var @return2 = CreateSubmittedReturn(db);
+                var @return3 = CreateSubmittedReturn(db, 2020);
 
                 var ae = ObligatedWeeeIntegrationCommon.CreateAe(db, @return1.Organisation);
 
+                var ae1 = ObligatedWeeeIntegrationCommon.CreateAe(db, @return1.Organisation, 2020);
+
                 db.WeeeContext.Returns.Add(@return1);
                 db.WeeeContext.Returns.Add(@return2);
+                db.WeeeContext.Returns.Add(@return3);
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(ae, @return1));
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(ae, @return2));
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(ae1, @return3));
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id);
+                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id, ae.ComplianceYear);
 
                 results.Count.Should().Be(2);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnHouseHold.Should().BeNull();
@@ -68,7 +74,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id);
+                var results = await db.StoredProcedures.GetAeSubmissions(ae.Id, ae.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }
@@ -94,15 +100,15 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }
         }
 
-        private static Return CreateSubmittedReturn(DatabaseWrapper db)
+        private static Return CreateSubmittedReturn(DatabaseWrapper db, int year = 2019)
         {
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Ae);
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Ae, year, QuarterType.Q1);
             @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
             return @return;
         }

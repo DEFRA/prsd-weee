@@ -238,6 +238,8 @@
             Assert.Equal(aatfData.FacilityType, result.FacilityType);
             Assert.Equal(aatfData.LocalAreaData, result.LocalArea);
             Assert.Equal(aatfData.PanAreaData, result.PanArea);
+            Assert.Equal(aatfData.AatfId, result.AatfId);
+            Assert.Equal(aatfData.ComplianceYear, result.SelectedComplianceYear);
         }
 
         [Fact]
@@ -310,6 +312,22 @@
             result.SubmissionHistoryData.ElementAt(1).Should().Equals(aatSubmissionHistoryViewModel.ElementAt(1));
         }
 
+        [Fact]
+        public void Map_GivenValidSource_WithComplianceYears_PropertiesShouldBeMapped()
+        {
+            AatfData aatfData = CreateAatfData();
+            var complianceYears = A.Fake<List<short>>();
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                ComplianceYearList = complianceYears,
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.ComplianceYearList.Should().BeEquivalentTo(complianceYears);
+        }
+
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
         {
             return new UKCompetentAuthorityData()
@@ -367,7 +385,8 @@
                 Organisation = CreateOrganisationData(),
                 FacilityType = FacilityType.Aatf,
                 PanAreaData = new PanAreaData() { Name = "PAN Area", CompetentAuthorityId = competentAuthority.Id },
-                LocalAreaData = new LocalAreaData() { Name = "EA Area", CompetentAuthorityId = competentAuthority.Id }
+                LocalAreaData = new LocalAreaData() { Name = "EA Area", CompetentAuthorityId = competentAuthority.Id },
+                AatfId = Guid.NewGuid()
             };
         }
     }

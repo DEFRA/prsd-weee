@@ -13,6 +13,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Admin;
 
     public class ReturnsSummaryController : AatfReturnBaseController
     {
@@ -55,11 +56,19 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> DownloadAllObligatedData(Guid returnId)
+        public virtual async Task<ActionResult> Download(Guid returnId, bool obligated)
         {
             using (var client = apiClient())
             {
-                var fileData = await client.SendAsync(User.GetAccessToken(), new GetReturnObligatedCsv(returnId));
+                CSVFileData fileData;
+                if (obligated)
+                {
+                    fileData = await client.SendAsync(User.GetAccessToken(), new GetReturnObligatedCsv(returnId));
+                }
+                else
+                {
+                    fileData = await client.SendAsync(User.GetAccessToken(), new GetReturnNonObligatedCsv(returnId));
+                }
 
                 var data = new UTF8Encoding().GetBytes(fileData.FileContent);
 
