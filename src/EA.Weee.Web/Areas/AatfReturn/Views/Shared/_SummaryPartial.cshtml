@@ -336,8 +336,8 @@
 <div class="govuk-body">
     @if (Model.ShowDownloadNonObligatedDataLink)
     {
-        @(this.WeeeGds().ActionLinkWithEventTracking("Download a copy of non-obligated WEEE data",
-              "Download a copy of non-obligated WEEE data",
+        @(this.WeeeGds().ActionLinkWithEventTracking("Download all non-obligated data",
+              "Download all non-obligated data",
               Url.RouteUrl(AatfRedirect.Download, new { returnId = Model.ReturnId, obligated = false }),
               "AATF return",
               "Non-obligated data download",

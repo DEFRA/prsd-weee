@@ -1,8 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details
 {
-    using Core.DataStandards;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using AddAatf.Details;
+    using Core.DataStandards;
 
     public class RegisteredCompanyDetailsViewModel : OrganisationViewModel
     {

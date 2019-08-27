@@ -79,6 +79,7 @@
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationAndFacilityTypeSpecification.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandler.cs" />
