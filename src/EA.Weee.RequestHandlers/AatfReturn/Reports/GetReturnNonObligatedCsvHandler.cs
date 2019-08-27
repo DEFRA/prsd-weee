@@ -1,38 +1,43 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Reports
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Core.Admin;
     using DataAccess;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.Reports;
     using Security;
-    using Shared;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfReturn;
     using Core.Shared;
     using DataAccess.StoredProcedure;
+    using Domain.AatfReturn;
+    using Specification;
+    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
 
     public class GetReturnNonObligatedCsvHandler : IRequestHandler<GetReturnNonObligatedCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext weeContext;
-        private readonly IReturnDataAccess returnDataAccess;
+        private readonly IGenericDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
 
         public GetReturnNonObligatedCsvHandler(IWeeeAuthorization authorization,
             WeeeContext weeContext,
-            IReturnDataAccess returnDataAccess, 
+            IGenericDataAccess dataAccess, 
             CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
             this.weeContext = weeContext;
-            this.returnDataAccess = returnDataAccess;
+            this.dataAccess = dataAccess;
             this.csvWriterFactory = csvWriterFactory;
         }
 
         public async Task<CSVFileData> HandleAsync(GetReturnNonObligatedCsv request)
         {
-            var @return = await returnDataAccess.GetById(request.ReturnId);
+            var @return = await dataAccess.GetById<Return>(request.ReturnId);
 
             authorization.EnsureOrganisationAccess(@return.Organisation.Id);
 
@@ -49,7 +54,11 @@
             csvWriter.DefineColumn(@"Name of operator", i => i.OrganisationName);
             csvWriter.DefineColumn(@"Category", i => i.Category);
             csvWriter.DefineColumn(@"Total non-obligated WEEE received (t)", i => i.TotalNonObligatedWeeeReceived);
-            csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
+            if (await SelectedDcf(@return.Id))
+            {
+                csvWriter.DefineColumn(@"Non-obligated WEEE kept / retained by DCFs (t)", i => i.TotalNonObligatedWeeeReceivedFromDcf);
+            }
+            
             var fileContent = csvWriter.Write(items);
 
             return new CSVFileData
@@ -57,6 +66,13 @@
                 FileContent = fileContent,
                 FileName = fileName
             };
+        }
+
+        private async Task<bool> SelectedDcf(Guid returnId)
+        {
+            var reportsOn = await dataAccess.GetManyByExpression(new ReturnReportOnByReturnIdSpecification(returnId));
+
+            return reportsOn.Any(r => r.ReportOnQuestionId == (int)ReportOnQuestionEnum.NonObligatedDcf);
         }
     }
 }
