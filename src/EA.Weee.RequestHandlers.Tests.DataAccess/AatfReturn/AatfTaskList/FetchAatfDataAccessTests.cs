@@ -52,6 +52,52 @@
         }
 
         [Fact]
+        public async Task FetchAatfByReturnQuarterWindow_GivenMatchingParameters_AatfsShouldBeOrderedByName()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatfList = await CreateMultipleAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+                var @return = new Return(aatfList[0].Organisation, new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(new QuarterWindow(DateTime.Now.AddDays(1), DateTime.Now.AddDays(1), QuarterType.Q1));
+
+                await genericDataAccess.AddMany<Aatf>(aatfList);
+
+                var returnedAatfList = await dataAccess.FetchAatfByReturnQuarterWindow(@return);
+
+                aatfList.Should().BeInDescendingOrder(m => m.Name);
+            }
+        }
+
+        [Fact]
+        public async Task FetchAatfByReturnId_GivenMatchingParameters_AatfsShouldBeOrderedByName()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var domainHelper = new DomainHelper(database.WeeeContext);
+                var dataAccess = new FetchAatfDataAccess(database.WeeeContext, quarterWindowFactory);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var aatfList = await CreateMultipleAatf(database, FacilityType.Aatf, DateTime.Now, 2019);
+                var @return = new Return(aatfList[0].Organisation, new Quarter(2019, QuarterType.Q1), "created", FacilityType.Aatf);
+
+                A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).Returns(new QuarterWindow(DateTime.Now.AddDays(1), DateTime.Now.AddDays(1), QuarterType.Q1));
+
+                await genericDataAccess.AddMany<Aatf>(aatfList);
+
+                var returnedAatfList = await dataAccess.FetchAatfByReturnId(@return.Id);
+
+                aatfList.Should().BeInDescendingOrder(m => m.Name);
+            }
+        }
+
+        [Fact]
         public async Task FetchAatfByReturnQuarterWindow_GivenNotMatchingApprovalDate_ReturnedListShouldNotContainAatf()
         {
             using (var database = new DatabaseWrapper())
@@ -293,7 +339,7 @@
             }
         }
 
-        private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year, string approvalNumber = null)
+        private async Task<Aatf> CreateAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year, string approvalNumber = null, string name = null)
         {
             var country = database.WeeeContext.Countries.First();
             var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
@@ -306,7 +352,12 @@
                 approvalNumber = "12345678";
             }
 
-            return new Aatf("name",
+            if (name == null)
+            {
+                name = "name";
+            }
+
+            return new Aatf(name,
                 competentAuthority,
                 approvalNumber,
                 AatfStatus.Approved,
@@ -319,6 +370,46 @@
                 year,
                 database.WeeeContext.LocalAreas.First(),
                 database.WeeeContext.PanAreas.First());
+        }
+
+        private async Task<List<Aatf>> CreateMultipleAatf(DatabaseWrapper database, FacilityType facilityType, DateTime date, short year)
+        {
+            var country = database.WeeeContext.Countries.First();
+            var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+            var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+            var organisation = Organisation.CreatePartnership("Dummy");
+            var contact = new AatfContact("First Name", "Last Name", "Manager", "1 Address Lane", "Address Ward", "Town", "County", "Postcode", country, "01234 567890", "email@email.com");
+            var aatfList = new List<Aatf>();
+
+            aatfList.Add(new Aatf("B",
+                competentAuthority,
+                "12345678",
+                AatfStatus.Approved,
+                organisation,
+                AddressHelper.GetAatfAddress(database),
+                A.Fake<AatfSize>(),
+                date,
+                contact,
+                facilityType,
+                year,
+                database.WeeeContext.LocalAreas.First(),
+                database.WeeeContext.PanAreas.First()));
+
+            aatfList.Add(new Aatf("A",
+                competentAuthority,
+                "12345679",
+                AatfStatus.Approved,
+                organisation,
+                AddressHelper.GetAatfAddress(database),
+                A.Fake<AatfSize>(),
+                date,
+                contact,
+                facilityType,
+                year,
+                database.WeeeContext.LocalAreas.First(),
+                database.WeeeContext.PanAreas.First()));
+
+            return aatfList;
         }
     }
 }
