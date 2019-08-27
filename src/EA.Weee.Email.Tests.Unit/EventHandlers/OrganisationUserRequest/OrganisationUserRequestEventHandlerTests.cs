@@ -1,16 +1,13 @@
 ﻿namespace EA.Weee.Email.Tests.Unit.EventHandlers.OrganisationUserRequest
 {
+    using Domain;
     using EA.Weee.Domain.Events;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Email.EventHandlers;
     using FakeItEasy;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Domain;
     using Xunit;
 
     public class OrganisationUserRequestEventHandlerTests

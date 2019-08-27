@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Internal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using DataAccess;
@@ -14,6 +11,9 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Factories;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
@@ -253,7 +253,7 @@
             A.CallTo(() => aatf.ComplianceYear).Returns(complianceYear);
             A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
 
-            var aatfs = new List<Aatf> {aatf};
+            var aatfs = new List<Aatf> { aatf };
 
             if (hasOtherAatfs)
             {
@@ -346,13 +346,59 @@
             A.CallTo(() => returnAatf.Aatf.Id).Returns(aatfId);
             A.CallTo(() => aatf.Id).Returns(aatfId);
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
-            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() {returnAatf}));
+            A.CallTo(() => context.ReturnAatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<ReturnAatf>() { returnAatf }));
 
             await dataAccess.RemoveAatf(aatfId);
 
             A.CallTo(() => genericDataAccess.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
                 .Then(A.CallTo(() => genericDataAccess.Remove(returnAatf)).MustHaveHappened(Repeated.Exactly.Once))
                 .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+        }
+
+        [Fact]
+        public async Task GetDetails_GivenAatfId_ComplianceYearsShouldBeReturned()
+        {
+            var aatfId = Guid.NewGuid();            
+            var aatf = A.Fake<Aatf>();
+            var aatfIdForAatf1 = Guid.NewGuid();
+            var aatf1 = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.AatfId).Returns(aatfId);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)2019);
+            A.CallTo(() => aatf1.AatfId).Returns(aatfIdForAatf1);
+            A.CallTo(() => aatf1.ComplianceYear).Returns((short)2020);
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf, aatf1 }));
+
+            var result = await dataAccess.GetComplianceYearsForAatfByAatfId(aatfId);
+
+            result.Should().BeEquivalentTo(aatf.ComplianceYear);
+            result.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task GetDetails_GivenCYAatfId_AatfShouldBeReturned()
+        {
+            var aatfId = Guid.NewGuid();
+            var aatf = A.Fake<Aatf>();
+            var aatfIdForAatf1 = Guid.NewGuid();
+            var aatf1 = A.Fake<Aatf>();
+            var id = Guid.NewGuid();
+            var idForAatf1 = Guid.NewGuid();
+
+            A.CallTo(() => aatf.Id).Returns(id);
+            A.CallTo(() => aatf.AatfId).Returns(aatfId);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)2019);
+
+            A.CallTo(() => aatf1.Id).Returns(idForAatf1);
+            A.CallTo(() => aatf1.AatfId).Returns(aatfIdForAatf1);
+            A.CallTo(() => aatf1.ComplianceYear).Returns((short)2020);
+
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf, aatf1 }));
+
+            var result = await dataAccess.GetAatfByAatfIdAndComplianceYear(aatfId, 2019);
+
+            result.Should().Be(aatf.Id);
+            result.Should().NotBe(aatf1.Id);
         }
     }
 }

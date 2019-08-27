@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class WeeeReusedAmountTests

@@ -5,7 +5,6 @@
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.Shared;
 
     public class ReturnToReturnViewModelMap : IMap<ReturnData, ReturnViewModel>
     {
@@ -43,11 +42,6 @@
                 }
             }
 
-            if (DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn)
-            {
-                ShowObligatedDataLink = true;
-            }
-
             return new ReturnViewModel(
                 source,
                 AatfObligatedData,
@@ -58,7 +52,8 @@
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
                 NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source)),
-                ShowDownloadObligatedData = ShowObligatedDataLink
+                ShowDownloadObligatedDataLink = DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn,
+                ShowDownloadNonObligatedDataLink = DisplayOptions.DisplayNonObligated || DisplayOptions.DisplayNonObligatedDcf
             };
         }
 

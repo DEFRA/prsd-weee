@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.Deserializer
 {
-    using System.Xml.Linq;
     using Deserialization;
+    using System.Xml.Linq;
     using Xml.MemberRegistration;
     using Xunit;
 

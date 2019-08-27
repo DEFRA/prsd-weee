@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit
 {
-    using System;
     using Helpers;
+    using System;
     using Xunit;
     using Address = Domain.Organisation.Address;
 
@@ -27,7 +27,7 @@
         {
             var country = GetTestCountry(new Guid(), "UK - England");
             var addressUk = new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region", "Postcode", country, "01234567890", "email@email.email");
-       
+
             Assert.True(addressUk.IsUkAddress());
         }
 
@@ -100,7 +100,7 @@
             Assert.ThrowsAny<InvalidOperationException>(
                 () => new Address("R", "R", "R", "NR", CharacterString(11), countrydata, "R", "R"));
         }
-       
+
         [Fact]
         public void CreateAddress_TelephoneIs21Characters_ShouldThrowInvalidOperationException()
         {

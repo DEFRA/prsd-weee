@@ -16,7 +16,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
+                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, null))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.OrganisationId)
@@ -30,10 +30,10 @@
 
                 <div>
                     @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
-                   "If you want to start a different return other than the one available, contact your environmental regulator",
-                   "Hidden content",
-                   "Progressive disclosure",
-                   "I need to submit a return for a different quarter (AE)")
+                        "If you want to start a different return other than the one available, contact your environmental regulator",
+                        "Hidden content",
+                        "Progressive disclosure",
+                        "I need to submit a return for a different quarter (AE)")
                 </div>
             </div>
         </div>
@@ -98,33 +98,7 @@
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, new { title = "Perform another activity page navigation" })
     </p>
-    <style type="text/css">
-
-        @@media only screen and (max-width: 1020px) {
-            td:nth-of-type(1):before {
-                content: "Year";
-            }
-
-            td:nth-of-type(2):before {
-                content: "Quarter";
-            }
-
-            td:nth-of-type(3):before {
-                content: "Created by";
-            }
-
-            td:nth-of-type(4):before {
-                content: "Submitted date (GMT)";
-            }
-
-            td:nth-of-type(5):before {
-                content: "Submitted by";
-            }
-
-            td:nth-of-type(6):before {
-                content: "Status";
-            }
-        }
-    </style>
 
 </section>
+
+@Styles.Render("~/Content/weee-returns-mobile")

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
@@ -13,6 +9,10 @@
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
     using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using ReturnStatus = Domain.AatfReturn.ReturnStatus;

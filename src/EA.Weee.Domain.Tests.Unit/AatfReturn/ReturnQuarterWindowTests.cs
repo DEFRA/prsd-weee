@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class ReturnQuarterWindowTests
@@ -20,10 +20,10 @@
         {
             Action action = () =>
             {
-                var returnQuarterWindow = new ReturnQuarterWindow(null, 
-                    A.Dummy<QuarterWindow>(), 
-                    new List<Aatf>(), 
-                    new List<NonObligatedWeee>(), 
+                var returnQuarterWindow = new ReturnQuarterWindow(null,
+                    A.Dummy<QuarterWindow>(),
+                    new List<Aatf>(),
+                    new List<NonObligatedWeee>(),
                     new List<WeeeReceivedAmount>(),
                     new List<WeeeReusedAmount>(),
                     A.Dummy<Organisation>(),

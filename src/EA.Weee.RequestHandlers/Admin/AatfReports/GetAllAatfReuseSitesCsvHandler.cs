@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -13,6 +11,8 @@
     using EA.Weee.Requests.Admin.AatfReports;
     using Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Threading.Tasks;
     public class GetAllAatfReuseSitesCsvHandler : IRequestHandler<GetAllAatfReuseSitesCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;

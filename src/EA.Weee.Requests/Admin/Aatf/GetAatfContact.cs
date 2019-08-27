@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin.Aatf
 {
-    using System;
     using Core.AatfReturn;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetAatfContact : IRequest<AatfContactData>
     {

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
     using EA.Weee.Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class AatfContactTests
@@ -110,7 +110,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), new string('*', 36),  A.Dummy<string>(), A.Dummy<Country>(), A.Dummy<string>(), A.Dummy<string>());
+                var @return = new AatfContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), new string('*', 36), A.Dummy<string>(), A.Dummy<Country>(), A.Dummy<string>(), A.Dummy<string>());
             };
 
             constructor.Should().Throw<ArgumentException>();
@@ -143,7 +143,7 @@
         {
             Action constructor = () =>
             {
-                var @return = new AatfContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),  A.Dummy<string>(), A.Dummy<Country>(), new string('*', 21), A.Dummy<string>());
+                var @return = new AatfContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<Country>(), new string('*', 21), A.Dummy<string>());
             };
 
             constructor.Should().Throw<ArgumentException>();

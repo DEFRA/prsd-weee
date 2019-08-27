@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
-    using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Security;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -32,7 +31,7 @@
             GetComplianceYears request = new GetComplianceYears(pcsId);
 
             // Act
-            Func<Task> action = async () => await handler.HandleAsync(request); 
+            Func<Task> action = async () => await handler.HandleAsync(request);
 
             // Asert
             await Assert.ThrowsAsync<SecurityException>(action);
@@ -45,7 +44,7 @@
             Guid pcsId = new Guid("A7905BCD-8EE7-48E5-9E71-2B571F7BBC81");
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            
+
             WeeeContext context = A.Fake<WeeeContext>();
             var organisations = dbContextHelper.GetAsyncEnabledDbSet<Organisation>(new List<Organisation>());
             A.CallTo(() => organisations.FindAsync(pcsId)).Returns((Organisation)null);

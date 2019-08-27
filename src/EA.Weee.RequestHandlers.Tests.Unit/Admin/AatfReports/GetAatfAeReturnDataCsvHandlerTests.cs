@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using Core.Shared;
@@ -15,9 +11,12 @@
     using Prsd.Core;
     using Prsd.Core.Helpers;
     using RequestHandlers.Admin.AatfReports;
-    using RequestHandlers.Admin.Reports;
     using RequestHandlers.Shared;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

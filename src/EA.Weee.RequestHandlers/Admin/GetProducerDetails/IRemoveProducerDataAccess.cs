@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Producer;
 
     public interface IRemoveProducerDataAccess
     {

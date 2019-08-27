@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -33,7 +33,7 @@
                 .Build();
 
             var userMap = A.Fake<IMap<Domain.User.UserStatus, UserStatus>>();
-            
+
             A.CallTo(() => userMap.Map(user.UserStatus)).Returns(UserStatus.Active);
 
             GetAdminUserStatusHandler handler = new GetAdminUserStatusHandler(dataAccess, userMap, authorization);

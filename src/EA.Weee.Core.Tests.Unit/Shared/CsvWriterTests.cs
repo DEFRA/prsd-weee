@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.Shared;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class CsvWriterTests

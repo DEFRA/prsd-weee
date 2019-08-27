@@ -14,7 +14,7 @@ namespace EA.Weee.Tests.Core
 
         public TestDbAsyncEnumerable(Expression expression)
             : base(expression)
-        { 
+        {
         }
 
         public IDbAsyncEnumerator<T> GetAsyncEnumerator()

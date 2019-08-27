@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.JoinOrganisation
 {
-    using System;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
-    using Domain.User;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
     {

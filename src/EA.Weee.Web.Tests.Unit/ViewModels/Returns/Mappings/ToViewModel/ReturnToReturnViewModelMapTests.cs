@@ -8,7 +8,6 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using Core.Shared;
     using Xunit;
 
     public class ReturnToReturnViewModelMapTests
@@ -99,39 +98,112 @@
             result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
             result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
             result.ReportOnDisplayOptions.DisplayObligatedReceived.Should().Be(true);
-            result.ShowDownloadObligatedData.Should().Be(true);
+        }
+
+        [Theory]
+        [InlineData(ReportOnQuestionEnum.WeeeSentOn)]
+        [InlineData(ReportOnQuestionEnum.WeeeReceived)]
+        [InlineData(ReportOnQuestionEnum.WeeeReused)]
+        public void Map_GivenObligatedDisplayOptions_ShowDownloadObligatedLinkShouldBeTrue(ReportOnQuestionEnum reportQuestion)
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)reportQuestion, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenAllObligatedDisplayOptions_ShowDownloadObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>()
+                {
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeSentOn, Guid.NewGuid()),
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReceived, Guid.NewGuid()),
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReused, Guid.NewGuid())
+                }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNonObligatedDisplayOptions_ShowDownloadNonObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.NonObligated, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNonObligatedDcfDisplayOptions_ShowDownloadNonObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.NonObligatedDcf, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNoNonObligatedDcfDisplayOptions_ShowDownloadNonObligatedLinkShouldBeFalse()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>()
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeFalse();
         }
 
         [Fact]
         public void Map_GivenNoObligatedDisplayOptions_ShowDownloadObligatedShouldBeFalse()
         {
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false, Guid.NewGuid()));
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true, Guid.NewGuid()));
-
-            mapperTestAatfList.Add(mapperTestAatf);
-
-            var schemeDataList = CreateSchemeDataItems();
-            var reportedOnList = new List<ReturnReportOn>();
-            reportedOnList.Add(new ReturnReportOn(4, Guid.NewGuid()));
-            reportedOnList.Add(new ReturnReportOn(5, Guid.NewGuid()));
+            var reportedOnList = new List<ReturnReportOn> {new ReturnReportOn(4, Guid.NewGuid()), new ReturnReportOn(5, Guid.NewGuid()) };
 
             var returnData = new ReturnData()
             {
                 Id = mapperTestId,
                 Quarter = mapperTestQuarter,
                 QuarterWindow = mapperTestQuarterWindow,
-                NonObligatedData = mapperTestNonObligatedData,
-                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
-                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
-                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
-                Aatfs = mapperTestAatfList,
-                SchemeDataItems = schemeDataList,
                 ReturnReportOns = reportedOnList
             };
 
             var result = map.Map(returnData);
 
-            result.ShowDownloadObligatedData.Should().Be(false);
+            result.ShowDownloadObligatedDataLink.Should().Be(false);
         }
 
         [Fact]

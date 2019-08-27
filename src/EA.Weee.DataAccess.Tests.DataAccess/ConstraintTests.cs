@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.Tests.Core.Model;
+    using System;
+    using System.Data.Entity.Infrastructure;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class ConstraintTests

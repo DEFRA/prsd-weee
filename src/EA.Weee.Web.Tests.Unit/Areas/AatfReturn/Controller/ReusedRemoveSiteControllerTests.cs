@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -17,6 +14,9 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -71,7 +71,7 @@
             const string aatfName = "Test";
             aatfInfo.ApprovalNumber = "WEE/QW1234RE/ATF";
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") { Id = siteId };
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -139,7 +139,7 @@
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") { Id = siteId };
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()
@@ -166,7 +166,7 @@
             var aatfId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
 
-            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") {Id = siteId};
+            var siteAddressData = new SiteAddressData("TEST", "TEST", "TEST", "TEST", "TEST", "TEST", Guid.NewGuid(), "TEST") { Id = siteId };
             var addressTonnage = new AddressTonnageSummary()
             {
                 AddressData = new List<SiteAddressData>()

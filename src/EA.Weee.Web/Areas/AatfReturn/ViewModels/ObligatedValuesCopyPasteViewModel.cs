@@ -21,6 +21,6 @@
 
         public String[] B2cPastedValues { get; set; }
 
-        public ObligatedType Type { get; set; } 
+        public ObligatedType Type { get; set; }
     }
 }

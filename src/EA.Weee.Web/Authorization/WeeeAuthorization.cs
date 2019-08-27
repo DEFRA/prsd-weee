@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.Web.Authorization
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
     using IdentityModel;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Security;
-    
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+
     public class WeeeAuthorization : IWeeeAuthorization
     {
         private readonly Func<IOAuthClient> oauthClient;

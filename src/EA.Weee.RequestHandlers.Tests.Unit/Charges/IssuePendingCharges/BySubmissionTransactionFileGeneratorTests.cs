@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
     using Domain.Obligation;
@@ -12,6 +9,9 @@
     using Ibis;
     using Prsd.Core;
     using RequestHandlers.Charges.IssuePendingCharges;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 

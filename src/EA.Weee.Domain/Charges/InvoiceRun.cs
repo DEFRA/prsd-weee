@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Charges
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.Scheme;
     using Domain.User;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// An invoice run is a collection of member uploads which have been grouped

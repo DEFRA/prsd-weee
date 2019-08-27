@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Test
 {
-    using System.Threading.Tasks;
     using Core.SystemData;
     using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Test;
+    using System.Threading.Tasks;
 
     public class GetPcsSubmissionWindowSettingsHandler : IRequestHandler<GetPcsSubmissionWindowSettings, PcsSubmissionWindowSettings>
     {

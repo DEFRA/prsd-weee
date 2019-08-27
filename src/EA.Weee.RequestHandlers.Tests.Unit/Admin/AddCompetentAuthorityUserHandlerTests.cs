@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using Core.Configuration;
     using DataAccess;
     using Domain;
@@ -12,6 +9,9 @@
     using FakeItEasy;
     using RequestHandlers.Admin;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -113,7 +113,7 @@
 
         private UKCompetentAuthority FakeCompetentAuthorityData()
         {
-            UKCompetentAuthority competentAuthority = 
+            UKCompetentAuthority competentAuthority =
                 new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk", 12500.00M);
             return competentAuthority;
         }

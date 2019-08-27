@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberUploadTesting
 {
+    using RequestHandlers.Scheme.MemberUploadTesting;
     using System;
     using System.Linq;
-    using RequestHandlers.Scheme.MemberUploadTesting;
     using Weee.Tests.Core.Model;
     using Xunit;
 

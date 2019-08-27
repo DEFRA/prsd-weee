@@ -1,22 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.AatfTaskList
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.Domain.User;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -46,7 +42,7 @@
                 database.WeeeContext.Aatfs.Add(aatf);
                 database.WeeeContext.Returns.Add(@return);
                 await database.WeeeContext.SaveChangesAsync();
-                
+
                 var addObligatedReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
                 var categoryValues = new List<ObligatedValue>();
@@ -66,12 +62,12 @@
                 };
 
                 var weeeReusedAmount = new List<WeeeReusedAmount>();
-                
+
                 foreach (var categoryValue in obligatedReusedRequest.CategoryValues)
                 {
                     weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
                 }
-                
+
                 var obligateReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
                 await obligateReusedDataAccess.Submit(weeeReusedAmount);
 

@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
+    using Core.Shared;
+    using DataAccess.StoredProcedure;
+    using Domain.DataReturns;
+    using Prsd.Core;
+    using Prsd.Core.Mediator;
+    using Requests.Admin.Reports;
+    using Security;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Core.Shared;
-    using DataAccess;
-    using DataAccess.StoredProcedure;
-    using Domain.DataReturns;
-    using GetUKWeeeCsv;
-    using Prsd.Core;
-    using Prsd.Core.Mediator;
-    using Requests.Admin.Reports;
-    using Security;
 
     public class GetSchemeWeeeCsvHandler : IRequestHandler<GetSchemeWeeeCsv, FileInfo>
     {

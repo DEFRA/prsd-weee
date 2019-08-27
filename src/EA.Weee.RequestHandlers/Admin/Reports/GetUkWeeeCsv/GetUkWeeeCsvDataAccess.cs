@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUKWeeeCsv
 {
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.DataReturns;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.DataReturns;
 
     public class GetUkWeeeCsvDataAccess : IGetUkWeeeCsvDataAccess
     {

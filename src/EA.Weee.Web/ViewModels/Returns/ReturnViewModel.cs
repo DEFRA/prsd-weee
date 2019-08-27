@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Globalization;
-    using System.Linq;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Scheme;
     using Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     public class ReturnViewModel : ReturnViewModelBase
     {
@@ -52,7 +51,9 @@
 
         public TaskListDisplayOptions ReportOnDisplayOptions { get; set; }
 
-        public bool ShowDownloadObligatedData { get; set; }
+        public bool ShowDownloadObligatedDataLink { get; set; }
+
+        public bool ShowDownloadNonObligatedDataLink { get; set; }
 
         public string SchemeName { get; set; }
 

@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
+    using DataAccess;
+    using Domain.AatfReturn;
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using DataAccess.StoredProcedure;
-    using Domain.AatfReturn;
-    using Domain.Admin.AatfReports;
 
     public class GetAatfSubmissionHistoryDataAccess : IGetAatfSubmissionHistoryDataAccess
     {
@@ -29,10 +28,10 @@
 
             if (aatf.FacilityType.Equals(FacilityType.Aatf))
             {
-                return await context.StoredProcedures.GetAatfSubmissions(aatfId);
+                return await context.StoredProcedures.GetAatfSubmissions(aatfId, aatf.ComplianceYear);
             }
 
-            return await context.StoredProcedures.GetAeSubmissions(aatfId);
+            return await context.StoredProcedures.GetAeSubmissions(aatfId, aatf.ComplianceYear);
         }
     }
 }

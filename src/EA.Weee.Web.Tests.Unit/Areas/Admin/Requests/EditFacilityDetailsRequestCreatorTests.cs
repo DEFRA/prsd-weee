@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Requests
 {
-    using System.Linq;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentAssertions;
+    using System.Linq;
     using Xunit;
 
     public class EditFacilityDetailsRequestCreatorTests

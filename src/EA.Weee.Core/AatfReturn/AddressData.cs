@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
 
     public abstract class AddressData
     {
         public Guid Id { get; set; }
 
         public abstract string Name { get; set; }
-        
+
         [Required]
         [StringLength(CommonMaxFieldLengths.AddressLine)]
         [Display(Name = "Address line 1")]
@@ -29,7 +29,7 @@
         [StringLength(CommonMaxFieldLengths.TownCounty)]
         [Display(Name = "County or region")]
         public string CountyOrRegion { get; set; }
-        
+
         [StringLength(CommonMaxFieldLengths.Postcode)]
         public string Postcode { get; set; }
 
@@ -42,7 +42,7 @@
 
         public IEnumerable<CountryData> Countries { get; set; }
 
-        protected AddressData()  
+        protected AddressData()
         {
         }
 

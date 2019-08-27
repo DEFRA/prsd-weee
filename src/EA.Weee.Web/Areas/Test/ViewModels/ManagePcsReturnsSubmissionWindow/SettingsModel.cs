@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.ManagePcsReturnsSubmissionWindow
 {
+    using Prsd.Core.Validation;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core.Validation;
 
     public class SettingsModel
     {

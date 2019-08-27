@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using AatfTaskList;
-    using CheckYourReturn;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -14,7 +10,9 @@
     using Prsd.Core.Mapper;
     using Security;
     using Specification;
-    using ReturnStatus = Core.AatfReturn.ReturnStatus;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class GetPopulatedReturn : IGetPopulatedReturn
     {
@@ -29,13 +27,13 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public GetPopulatedReturn(IWeeeAuthorization authorization, 
-            IReturnDataAccess returnDataAccess,  
-            IMap<ReturnQuarterWindow, ReturnData> mapper, 
+        public GetPopulatedReturn(IWeeeAuthorization authorization,
+            IReturnDataAccess returnDataAccess,
+            IMap<ReturnQuarterWindow, ReturnData> mapper,
             IQuarterWindowFactory quarterWindowFactory,
-            INonObligatedDataAccess nonObligatedDataAccess, 
-            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess, 
-            IFetchAatfDataAccess aatfDataAccess, 
+            INonObligatedDataAccess nonObligatedDataAccess,
+            IFetchObligatedWeeeForReturnDataAccess obligatedDataAccess,
+            IFetchAatfDataAccess aatfDataAccess,
             IReturnSchemeDataAccess returnSchemeDataAccess,
             IGenericDataAccess genericDataAccess, ISystemDataDataAccess systemDataDataAccess)
         {

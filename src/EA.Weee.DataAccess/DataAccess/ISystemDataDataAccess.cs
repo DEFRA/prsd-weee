@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System.Threading.Tasks;
     using Domain;
+    using System.Threading.Tasks;
 
     public interface ISystemDataDataAccess
     {

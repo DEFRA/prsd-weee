@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using System.Collections.Generic;
+    using System.Linq;
     using Aatf = Core.AatfReturn.AatfData;
 
     public class AatfSiteMap : IMap<AatfAddressObligatedAmount, AddressTonnageSummary>
@@ -33,7 +33,7 @@
             {
                 summaryData.AddressData = new List<SiteAddressData>();
             }
-            
+
             if (source.WeeeReusedAmounts != null)
             {
                 summaryData.ObligatedData = source.WeeeReusedAmounts.Select(n => new WeeeObligatedData(

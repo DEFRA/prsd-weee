@@ -2,7 +2,6 @@
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using FakeItEasy;
     using FluentAssertions;
     using System;
     using Xunit;

@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetProducerEeeDataCsv
 {
+    using DataAccess.StoredProcedure;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using DataAccess.StoredProcedure;
     using Scheme = Domain.Scheme.Scheme;
 
     public interface IGetProducerEeeDataCsvDataAccess

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetSchemesHandler : IRequestHandler<Requests.Admin.GetSchemes, List<SchemeData>>
     {
@@ -16,7 +16,7 @@
         private readonly IGetSchemesDataAccess dataAccess;
         private readonly IMap<Scheme, SchemeData> schemeMap;
 
-        public GetSchemesHandler(IWeeeAuthorization authorization,  IMap<Scheme, SchemeData> schemeMap, IGetSchemesDataAccess dataAccess)
+        public GetSchemesHandler(IWeeeAuthorization authorization, IMap<Scheme, SchemeData> schemeMap, IGetSchemesDataAccess dataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;

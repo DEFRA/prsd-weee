@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Xml.Converter
 {
+    using Core.Helpers;
+    using Deserialization;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
-    using Core.Helpers;
-    using Deserialization;
-    using MemberRegistration;
 
     public class XmlConverter : IXmlConverter
     {
@@ -20,7 +19,7 @@
 
         public XDocument Convert(byte[] data)
         {
-            return XDocument.Parse(XmlToUtf8String(data), LoadOptions.SetLineInfo);          
+            return XDocument.Parse(XmlToUtf8String(data), LoadOptions.SetLineInfo);
         }
 
         public string XmlToUtf8String(byte[] data)

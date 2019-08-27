@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchInvoiceRunCsv
 {
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -9,6 +8,7 @@
     using Requests.Charges;
     using Security;
     using Shared;
+    using System.Threading.Tasks;
 
     public class FetchInvoiceRunCsvHandler : IRequestHandler<FetchInvoiceRunCsv, CSVFileData>
     {

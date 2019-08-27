@@ -1,12 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -27,6 +20,12 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -64,6 +63,8 @@
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
+                var years = await client.SendAsync(User.GetAccessToken(), new GetAatfComplianceYearsByAatfId(aatf.AatfId));
+
                 var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(aatf.Organisation.Id));
 
                 var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(aatf.Organisation.Id));
@@ -75,12 +76,24 @@
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes,
-                    SubmissionHistory = submissionHistory
+                    SubmissionHistory = submissionHistory,
+                    ComplianceYearList = years
                 });
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear)
+        {
+            using (var client = apiClient())
+            {               
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfIdByComplianceYear(aatfId, selectedComplianceYear));
+
+                return RedirectToAction("Details", new { Id = aatf });
             }
         }
 
@@ -202,7 +215,8 @@
                     AatfId = id,
                     ContactData = contact,
                     FacilityType = facilityType,
-                    AatfName = aatf.Name
+                    AatfName = aatf.Name,
+                    ComplianceYear = aatf.ComplianceYear
                 };
 
                 viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
@@ -245,7 +259,7 @@
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
                 SetBreadcrumb(facilityType, aatf.Name);
-            
+
                 var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
 
                 var viewModel = new DeleteViewModel()
@@ -306,7 +320,7 @@
                 }
                 else
                 {
-                    return RedirectToAction(nameof(ManageAatfDetails), new {id = model.AatfId});
+                    return RedirectToAction(nameof(ManageAatfDetails), new { id = model.AatfId });
                 }
             }
 
@@ -330,10 +344,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
+        public async Task<ActionResult> Download(Guid returnId, int complianceYear, int quarter, Guid aatfId)
         {
             CSVFileData fileData;
-            
+
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), new GetAatfObligatedData(complianceYear, quarter, returnId, aatfId));

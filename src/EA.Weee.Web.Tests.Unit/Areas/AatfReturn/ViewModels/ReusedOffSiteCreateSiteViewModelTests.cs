@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
     using FluentAssertions;
+    using System;
     using Web.Areas.AatfReturn.ViewModels;
     using Xunit;
 

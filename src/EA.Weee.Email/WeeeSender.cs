@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Email
 {
-    using System;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
     using Prsd.Email;
     using Serilog;
     using Serilog.Events;
+    using System;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Uses an instance of <see cref="ISender"/> to send emails while providing the option to

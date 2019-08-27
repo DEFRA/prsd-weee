@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation
 {
+    using Core.Shared;
+    using DataAccess;
+    using Domain;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Core.Shared;
-    using DataAccess;
-    using Domain;
     using Scheme = Domain.Scheme.Scheme;
 
     public class UpdateSchemeInformationDataAccess : IUpdateSchemeInformationDataAccess

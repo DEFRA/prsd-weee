@@ -1,18 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Attributes
 {
+    using Core.AatfReturn;
+    using Infrastructure;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.AatfReturn;
-    using Core.Shared;
-    using EA.Weee.Core.Helpers;
-    using Infrastructure;
-    using Services;
     using Weee.Requests.AatfReturn;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Scheme;
-    
+
     public class ValidateReturnCreatedActionFilterAttribute : ValidateReturnBaseActionFilterAttribute
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid returnId)
@@ -25,7 +19,7 @@
                 {
                     filterContext.Result = AatfRedirect.ReturnsList(@return.OrganisationId);
                 }
-                
+
                 if (!@return.QuarterWindow.IsOpen(@return.SystemDateTime))
                 {
                     filterContext.Result = new RedirectResult("~/errors/QuarterClosed");

@@ -14,7 +14,7 @@
 
         public string ProducerName { get; set; }
         public string PRN { get; set; }
-        
+
         public DateTime SubmissionDate { get; set; }
 
         public decimal ChargeValue { get; set; }

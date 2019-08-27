@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin.GetDataReturnSubmissionChanges
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetDataReturnSubmissionEeeChangesCsv : IRequest<CSVFileData>
     {

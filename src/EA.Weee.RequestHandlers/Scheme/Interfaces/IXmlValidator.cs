@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.Scheme;
     using Requests.Scheme.MemberRegistration;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IXMLValidator
     {
