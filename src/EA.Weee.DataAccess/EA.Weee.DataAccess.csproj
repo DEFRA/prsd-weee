@@ -118,6 +118,7 @@
     <Compile Include="Mappings\ReturnStatusMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
+    <Compile Include="StoredProcedure\AatfAeDetailsData.cs" />
     <Compile Include="StoredProcedure\AatfAeReturnData.cs" />
     <Compile Include="StoredProcedure\AatfReuseSitesData.cs" />
     <Compile Include="StoredProcedure\DataReturnSummaryCsvData.cs" />
