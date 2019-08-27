@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.CreatePcsDataReturnXmlFile
 {
+    using Core.DataReturns;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.DataReturns;
 
     public class SpecifyOptionsViewModel
     {
@@ -22,7 +22,7 @@
         [Required]
         [Range(0, 250)]
         [DisplayName("Number of AATFs")]
-        public int NumberOfAatfs{ get; set; }
+        public int NumberOfAatfs { get; set; }
 
         [Required]
         [Range(0, 50)]
@@ -42,7 +42,7 @@
         {
             // If acceptable, default to the current year.
             int year = DateTime.UtcNow.Year;
-            
+
             if (year < 2016)
             {
                 year = 2016;

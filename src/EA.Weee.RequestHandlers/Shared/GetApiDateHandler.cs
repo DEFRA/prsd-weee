@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Shared;
+    using System;
+    using System.Threading.Tasks;
 
     internal class GetApiDateHandler : IRequestHandler<GetApiDate, DateTime>
     {

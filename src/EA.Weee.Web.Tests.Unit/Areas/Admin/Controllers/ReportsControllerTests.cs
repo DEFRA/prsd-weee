@@ -1,24 +1,20 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Requests.Admin.Aatf;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
@@ -749,7 +745,7 @@
                 FileContent = "UK EEE DATA REPORT",
                 FileName = "test.csv"
             });
-            
+
             ReportsController controller = new ReportsController(
                 () => weeeClient,
                 A.Dummy<BreadcrumbService>());

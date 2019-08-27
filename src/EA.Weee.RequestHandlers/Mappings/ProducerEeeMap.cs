@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Admin;
     using Core.DataReturns;
     using Core.Shared;
     using Domain.Producer;
     using Prsd.Core.Mapper;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class ProducerEeeMap : IMap<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>
     {
@@ -55,7 +55,7 @@
                     }
 
                     return new List<Eee>();
-            }      
+            }
         }
     }
 }

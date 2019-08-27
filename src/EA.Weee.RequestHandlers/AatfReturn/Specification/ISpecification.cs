@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Specification
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Text;
-    using System.Threading.Tasks;
     using Prsd.Core.Domain;
+    using System;
+    using System.Linq.Expressions;
 
     public interface ISpecification<T> where T : Entity
     {

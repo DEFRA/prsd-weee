@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using Domain.AatfReturn;
-    using Domain.User;
+    using System.Data.Entity.ModelConfiguration;
 
     internal class ReturnStatusMapping : ComplexTypeConfiguration<ReturnStatus>
     {

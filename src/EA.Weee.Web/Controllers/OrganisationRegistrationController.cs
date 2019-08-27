@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Constant;
@@ -16,6 +11,11 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -31,7 +31,7 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, 
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
             ConfigurationService configurationService)
         {
@@ -82,7 +82,8 @@
         {
             SearchResultsViewModel viewModel = new SearchResultsViewModel
             {
-                SearchTerm = searchTerm, Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+                SearchTerm = searchTerm,
+                Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
             };
 
             return View(viewModel);
@@ -418,21 +419,22 @@
                     .Where(o => o.UserStatus != UserStatus.Rejected)
                     .FirstOrDefault();
 
+                var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+
                 if (existingAssociation != null)
                 {
                     UserAlreadyAssociatedWithOrganisationViewModel viewModel = new UserAlreadyAssociatedWithOrganisationViewModel()
                     {
                         OrganisationId = organisationId,
                         OrganisationName = organisationData.DisplayName,
-                        Status = existingAssociation.UserStatus
+                        Status = existingAssociation.UserStatus,
+                        AnyActiveUsers = activeUsers.Any()
                     };
 
                     return View("UserAlreadyAssociatedWithOrganisation", viewModel);
                 }
                 else
                 {
-                    var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
-
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
@@ -518,7 +520,7 @@
                 {
                     var contact = await client.SendAsync(User.GetAccessToken(), new GetContact(contactId.Value, organisationId));
 
-                    model = new ContactPersonViewModel(contact) {OrganisationId = organisationId, AddressId = addressId, ContactId = contactId };
+                    model = new ContactPersonViewModel(contact) { OrganisationId = organisationId, AddressId = addressId, ContactId = contactId };
                 }
                 else
                 {
@@ -592,7 +594,7 @@
         public async Task<ActionResult> OrganisationAddress(AddressViewModel viewModel)
         {
             viewModel.Address.Countries = await GetCountries(false);
-            
+
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
@@ -778,7 +780,7 @@
 
                 return RedirectToAction("Confirmation", new
                 {
-                    organisationName = 
+                    organisationName =
                         model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany || model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual
                             ? model.OrganisationData.Name
                             : model.OrganisationData.TradingName

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
-    using System;
     using EA.Weee.Tests.Core.Model;
+    using System;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using Xunit;
 

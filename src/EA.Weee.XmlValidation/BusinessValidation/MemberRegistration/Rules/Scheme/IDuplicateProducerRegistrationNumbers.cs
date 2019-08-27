@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Scheme
 {
-    using System.Collections.Generic;
     using BusinessValidation;
+    using System.Collections.Generic;
     using Xml.MemberRegistration;
 
     public interface IDuplicateProducerRegistrationNumbers

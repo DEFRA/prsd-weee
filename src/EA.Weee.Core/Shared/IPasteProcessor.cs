@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Shared
 {
-    using System.Collections.Generic;
     using Core.AatfReturn;
+    using System.Collections.Generic;
 
     public interface IPasteProcessor
     {

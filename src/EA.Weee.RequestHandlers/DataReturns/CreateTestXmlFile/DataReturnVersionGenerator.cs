@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.CreateTestXmlFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.DataReturns;
-    using Domain;
     using Domain.Obligation;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Quarter = EA.Weee.Domain.DataReturns.Quarter;
     using QuarterType = EA.Weee.Domain.DataReturns.QuarterType;
     using RandomHelper = Core.Scheme.MemberUploadTesting.RandomHelper;

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Organisation
 {
+    using EA.Weee.Core.DataStandards;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.DataStandards;
 
     public class EditPartnershipOrganisationDetailsViewModel : EditOrganisationDetailsViewModelBase
     {

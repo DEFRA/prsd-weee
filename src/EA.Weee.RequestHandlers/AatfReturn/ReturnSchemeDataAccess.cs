@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using Domain.Organisation;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using System;
@@ -7,7 +8,6 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Organisation;
 
     public class ReturnSchemeDataAccess : IReturnSchemeDataAccess
     {

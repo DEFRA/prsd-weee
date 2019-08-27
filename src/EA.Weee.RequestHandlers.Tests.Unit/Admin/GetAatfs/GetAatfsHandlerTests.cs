@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -16,6 +12,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using FacilityType = Core.AatfReturn.FacilityType;
 

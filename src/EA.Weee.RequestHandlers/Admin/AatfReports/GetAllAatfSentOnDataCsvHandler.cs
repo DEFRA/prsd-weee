@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -11,6 +9,8 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.AatfReports;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class GetAllAatfSentOnDataCsvHandler : IRequestHandler<GetAllAatfSentOnDataCsv, CSVFileData>
     {

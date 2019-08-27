@@ -1,15 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
-    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using WeeeReceived = Domain.AatfReturn.WeeeReceived;
@@ -40,7 +38,7 @@
                 var dataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
                 var returnId = await CreateWeeeReceivedAmounts(dataAccess, database);
-                
+
                 AssertValues(context, returnId);
 
                 for (var i = 1; i <= Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>().Count(); i++)

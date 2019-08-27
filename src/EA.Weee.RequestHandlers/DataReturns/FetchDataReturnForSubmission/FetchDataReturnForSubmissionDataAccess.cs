@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
+    using DataAccess;
+    using Domain.DataReturns;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.DataReturns;
 
     public class FetchDataReturnForSubmissionDataAccess : IFetchDataReturnForSubmissionDataAccess
     {
@@ -20,7 +20,7 @@
         {
             DataReturnUpload result = await context
                 .DataReturnsUploads
-                .Include(dru => dru.DataReturnVersion)                
+                .Include(dru => dru.DataReturnVersion)
                 .Include(dru => dru.Errors)
                 .Where(dru => dru.Id == dataReturnUploadId)
                 .SingleOrDefaultAsync();

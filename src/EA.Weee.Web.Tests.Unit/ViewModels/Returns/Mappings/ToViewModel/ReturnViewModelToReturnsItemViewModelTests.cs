@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mapping.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
-    using Core.DataReturns;
-    using EA.Prsd.Core;
     using EA.Weee.Web.ViewModels.Returns;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
+    using System;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -53,7 +51,7 @@
         public void Map_GivenSource_ReturnDisplayOptionsListShouldBeMapped()
         {
             var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
-            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now};
+            var returnData = new ReturnData() { ReturnStatus = ReturnStatus.Created, QuarterWindow = quarterWindow, SystemDateTime = DateTime.Now };
 
             var result = mapper.Map(returnData);
 

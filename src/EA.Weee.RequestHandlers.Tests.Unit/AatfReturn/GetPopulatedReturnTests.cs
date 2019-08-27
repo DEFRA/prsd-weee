@@ -1,27 +1,24 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using DataAccess.DataAccess;
     using Domain;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using FakeItEasy;
     using FluentAssertions;
     using FluentAssertions.Common;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.CheckYourReturn;
     using RequestHandlers.AatfReturn.NonObligated;
     using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Factories;
-    using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using Weee.Tests.Core;
     using Xunit;
@@ -262,7 +259,7 @@
         [Fact]
         public async Task GetReturnData_GivenReturnForSummary_MapperShouldBeCalled()
         {
-            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>()) {ReturnStatus = ReturnStatus.Submitted};
+            var @return = new Return(A.Fake<Organisation>(), A.Fake<Quarter>(), "id", A.Fake<FacilityType>()) { ReturnStatus = ReturnStatus.Submitted };
             var quarterWindow = new Domain.DataReturns.QuarterWindow(DateTime.MaxValue, DateTime.MaxValue, QuarterType.Q1);
             var nonObligatedValues = new List<NonObligatedWeee>();
             var obligatedReceivedValues = new List<WeeeReceivedAmount>();

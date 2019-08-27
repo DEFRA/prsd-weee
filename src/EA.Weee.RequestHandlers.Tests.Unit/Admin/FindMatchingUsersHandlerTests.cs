@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using EA.Weee.Core.User;
@@ -12,6 +7,11 @@
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -42,7 +42,7 @@
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
-            
+
             FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending, filter);
 
             // Act
@@ -92,7 +92,7 @@
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
             // Page 2, where each page has 3 results.
-            FindMatchingUsers request = new FindMatchingUsers(2, 3, FindMatchingUsers.OrderBy.FullNameAscending, filter); 
+            FindMatchingUsers request = new FindMatchingUsers(2, 3, FindMatchingUsers.OrderBy.FullNameAscending, filter);
 
             // Act
             var response = await handler.HandleAsync(request);

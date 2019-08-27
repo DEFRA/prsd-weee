@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Specification
 {
+    using Domain.AatfReturn;
     using System;
     using System.Linq.Expressions;
-    using Domain.AatfReturn;
 
     public class WeeeReusedSiteByWeeeReusedIdSpecification : Specification<WeeeReusedSite>
     {

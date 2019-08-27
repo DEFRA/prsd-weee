@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.DataReturns
 {
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core.Mediator;
 
     public class FetchDataReturnComplianceYearsForScheme : IRequest<List<int>>
     {

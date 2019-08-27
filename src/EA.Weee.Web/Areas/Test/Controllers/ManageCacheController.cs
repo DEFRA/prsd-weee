@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Weee.Web.Services.Caching;
     using Services;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [Authorize]
     public class ManageCacheController : TestControllerBase
@@ -39,5 +39,5 @@
 
             return View("CacheCleared");
         }
-   }
+    }
 }

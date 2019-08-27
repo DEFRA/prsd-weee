@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -10,6 +8,8 @@
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class AddAatfSiteHandler : IRequestHandler<AddAatfSite, bool>
     {
@@ -46,7 +46,7 @@
                 country);
 
             var weeeReused = await genericDataAccess.GetManyByExpression<WeeeReused>(new WeeeReusedByAatfIdAndReturnIdSpecification(message.AatfId, message.ReturnId));
-            
+
             var weeeReusedSite = new WeeeReusedSite(
                 weeeReused.Last(),
                 address);

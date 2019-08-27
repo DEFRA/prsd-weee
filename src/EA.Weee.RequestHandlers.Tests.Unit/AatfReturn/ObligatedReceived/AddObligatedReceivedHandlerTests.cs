@@ -1,19 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.DataReturns;
     using Domain.Lookup;
-    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.ObligatedReceived;
     using RequestHandlers.Security;
     using Requests.AatfReturn.Obligated;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -41,7 +40,7 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-        
+
         [Fact]
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
@@ -71,12 +70,12 @@
                 SchemeId = scheme.Id,
                 AatfId = aatf.Id
             };
-            
+
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
                 weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
-            
+
             var requestHandler = new AddObligatedReceivedHandler(authorization, addObligatedReceivedDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);

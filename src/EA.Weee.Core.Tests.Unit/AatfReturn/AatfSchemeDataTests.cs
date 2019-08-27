@@ -34,7 +34,7 @@
         [Fact]
         public void GivenSource_AatfSchemeDataPropertyShouldBeSet()
         {
-            var schemeData = new SchemeData() { ApprovalName = "ABC123"};
+            var schemeData = new SchemeData() { ApprovalName = "ABC123" };
 
             var obligatedReceivedValues = new ObligatedCategoryValue("25.00", "50.00");
 

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfReturn;
     using Domain.DataReturns;
     using FluentAssertions;
     using Prsd.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -82,17 +82,17 @@
                     nonObligatedWeeeReceivedAtAatfsData.Year.Should().Be(2019);
                     nonObligatedWeeeReceivedAtAatfsData.Quarter.Should().Be("Q1");
                     nonObligatedWeeeReceivedAtAatfsData.SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
-                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Date.Should().Be(@return1.SubmittedDate.Value.Date);
+                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Value.Date.Should().Be(@return1.SubmittedDate.Value.Date);
                     nonObligatedWeeeReceivedAtAatfsData.OrganisationName.Should().Be(org1.OrganisationName);
                 }
-                
+
                 var return2Results = results.Where(r => r.ReturnId.Equals(@return2.Id));
                 foreach (var nonObligatedWeeeReceivedAtAatfsData in return2Results)
                 {
                     nonObligatedWeeeReceivedAtAatfsData.Year.Should().Be(2019);
                     nonObligatedWeeeReceivedAtAatfsData.Quarter.Should().Be("Q1");
                     nonObligatedWeeeReceivedAtAatfsData.SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
-                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Date.Should().Be(@return2.SubmittedDate.Value.Date);
+                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Value.Date.Should().Be(@return2.SubmittedDate.Value.Date);
                     nonObligatedWeeeReceivedAtAatfsData.OrganisationName.Should().Be(org2.OrganisationName);
                 }
             }
@@ -169,7 +169,7 @@
                 var @return2 = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
                 @return2.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
                 SystemTime.Unfreeze();
-                
+
                 db.WeeeContext.Returns.Add(@return1);
                 db.WeeeContext.Returns.Add(@return2);
 

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
     using Lookup;
     using Obligation;
+    using System;
+    using System.Collections.Generic;
 
     public class WeeeCollectedAmount : ReturnItem, IEquatable<WeeeCollectedAmount>
     {

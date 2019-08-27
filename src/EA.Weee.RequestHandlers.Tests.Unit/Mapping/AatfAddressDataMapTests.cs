@@ -1,16 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Mappings;
-    using FakeItEasy;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class AatfAddressDataMapTests
@@ -26,7 +19,7 @@
         public void Map_GivenSourceIsNull__BlankContactReturned()
         {
             var result = map.Map(null);
-            
+
             result.Name.Should().Be(null);
             result.Address1.Should().Be(null);
             result.Address2.Should().Be(null);

@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Prsd.Core.Mediator;
     using Requests.Shared;
     using Security;
+    using System.Threading.Tasks;
 
     public class GetSubmissionsHistoryResultsHandler : IRequestHandler<GetSubmissionsHistoryResults, SubmissionsHistorySearchResult>
     {

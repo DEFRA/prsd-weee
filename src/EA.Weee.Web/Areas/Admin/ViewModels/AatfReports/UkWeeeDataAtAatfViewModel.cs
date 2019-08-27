@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AatfReports
 {
+    using Core.Shared;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Shared;
 
     public class UkWeeeDataAtAatfViewModel
     {

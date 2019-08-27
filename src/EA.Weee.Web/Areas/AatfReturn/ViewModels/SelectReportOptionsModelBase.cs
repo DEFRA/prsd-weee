@@ -1,14 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using EA.Weee.Core.AatfReturn;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
-    using EA.Prsd.Core;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
-    using FluentValidation.Attributes;
-    using Validation;
 
     public abstract class SelectReportOptionsModelBase
     {

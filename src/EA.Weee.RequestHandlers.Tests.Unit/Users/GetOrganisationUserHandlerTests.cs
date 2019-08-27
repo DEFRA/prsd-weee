@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
@@ -11,6 +8,9 @@
     using FakeItEasy;
     using RequestHandlers.Users;
     using Requests.Users;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -61,7 +61,7 @@
 
             var handler = new GetOrganisationUserHandler(context, authorization, mapper);
             var request = new GetOrganisationUser(organisationUserId);
-            
+
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
 

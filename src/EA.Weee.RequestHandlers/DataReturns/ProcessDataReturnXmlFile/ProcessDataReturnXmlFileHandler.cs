@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Scheme;
@@ -12,6 +8,10 @@
     using ReturnVersionBuilder;
     using Security;
     using Shared;
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xml.DataReturns;
 
     internal class ProcessDataReturnXmlFileHandler : IRequestHandler<ProcessDataReturnXmlFile, Guid>

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
@@ -11,6 +7,10 @@
     using FakeItEasy;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -80,13 +80,13 @@
         private IGetSchemesDataAccess CreateFakeDataAccess()
         {
             IGetSchemesDataAccess dataAccess = A.Fake<IGetSchemesDataAccess>();
-            
+
             scheme1 = A.Fake<Domain.Scheme.Scheme>();
             scheme2 = A.Fake<Domain.Scheme.Scheme>();
             scheme3 = A.Fake<Domain.Scheme.Scheme>();
 
             var results = new List<Domain.Scheme.Scheme>()
-            { 
+            {
                 scheme1,
                 scheme2,
                 scheme3

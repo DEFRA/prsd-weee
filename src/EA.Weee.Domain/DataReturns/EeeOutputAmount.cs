@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Domain.Producer;
     using Lookup;
     using Obligation;
+    using System;
+    using System.Collections.Generic;
 
     public class EeeOutputAmount : ReturnItem, IEquatable<EeeOutputAmount>
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Tests.Core
 {
-    using System;
     using Domain.User;
+    using System;
 
     public class UserHelper
     {

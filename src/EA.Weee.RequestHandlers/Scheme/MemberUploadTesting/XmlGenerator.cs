@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberUploadTesting
 {
-    using System;
-    using System.Xml.Linq;
     using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using Prsd.Core;
+    using System;
+    using System.Xml.Linq;
     using Xml;
 
     /// <summary>
@@ -64,7 +64,7 @@
                 default:
                     throw new NotSupportedException();
             }
-            
+
             XElement xmlApprovalNo = new XElement(XmlNamespace.MemberRegistration + "approvalNo");
             xmlScheme.Add(xmlApprovalNo);
             xmlApprovalNo.Value = producerList.ApprovalNumber ?? string.Empty;
@@ -133,7 +133,7 @@
         {
             XElement xmlStatus = new XElement(XmlNamespace.MemberRegistration + "status");
             xmlProducer.Add(xmlStatus);
-            
+
             switch (producer.Status)
             {
                 case ProducerStatus.Insert:
@@ -302,7 +302,7 @@
 
                 XElement xmlPartnershipList = new XElement(XmlNamespace.MemberRegistration + "partnershipList");
                 xmlParnership.Add(xmlPartnershipList);
-                
+
                 foreach (string partner in producerBusiness.Partnership.PartnershipList)
                 {
                     XElement xmlPartner = new XElement(XmlNamespace.MemberRegistration + "partner");

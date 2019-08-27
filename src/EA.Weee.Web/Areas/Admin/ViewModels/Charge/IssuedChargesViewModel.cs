@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Charge
 {
+    using Core.Scheme;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web;
-    using Core.Scheme;
 
     public class IssuedChargesViewModel
     {

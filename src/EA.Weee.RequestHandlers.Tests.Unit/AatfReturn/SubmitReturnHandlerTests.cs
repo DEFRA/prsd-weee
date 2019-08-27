@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using DataAccess;
     using Domain.AatfReturn;
@@ -12,11 +7,15 @@
     using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
-    using FluentAssertions.Common;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.AatfTaskList;
     using Requests.AatfReturn;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

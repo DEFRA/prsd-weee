@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
     using Core.Shared;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
+    using System;
 
     public class AatfData
     {
@@ -35,15 +35,15 @@
         public virtual UKCompetentAuthorityData CompetentAuthority { get; set; }
 
         public virtual PanAreaData PanAreaData { get; set; }
-        
+
         public virtual LocalAreaData LocalAreaData { get; set; }
 
         public virtual AatfStatus AatfStatus { get; set; }
-      
+
         public virtual AatfAddressData SiteAddress { get; set; }
-      
+
         public AatfSize Size { get; set; }
-      
+
         public DateTime? ApprovalDate { get; set; }
 
         public AatfContactData Contact { get; set; }

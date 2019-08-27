@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.BusinessValidation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
@@ -11,6 +7,9 @@
     using FakeItEasy;
     using RequestHandlers.DataReturns.BusinessValidation;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
     using ObligationType = Domain.Obligation.ObligationType;
     using Quarter = Domain.DataReturns.Quarter;

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using Api.Client;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
 
     [AllowAnonymous]
     public class SmokeTestController : Controller

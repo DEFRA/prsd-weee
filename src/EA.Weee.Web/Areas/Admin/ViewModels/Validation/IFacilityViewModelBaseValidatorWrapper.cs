@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Validation
 {
-    using System.Threading.Tasks;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentValidation.Results;
+    using System.Threading.Tasks;
 
     public interface IFacilityViewModelBaseValidatorWrapper
     {

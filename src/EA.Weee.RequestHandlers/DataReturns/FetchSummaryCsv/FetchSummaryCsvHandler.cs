@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using Prsd.Core;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class FetchSummaryCsvHandler : IRequestHandler<Requests.DataReturns.FetchSummaryCsv, FileInfo>
     {
@@ -49,7 +48,7 @@
 
             return new FileInfo(fileName, data);
         }
-        
+
         public CsvWriter<DataReturnSummaryCsvData> CreateWriter()
         {
             CsvWriter<DataReturnSummaryCsvData> writer = csvWriterFactory.Create<DataReturnSummaryCsvData>();

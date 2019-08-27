@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetSchemeObligationDataCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetSchemeObligationDataCsvHandler : IRequestHandler<GetSchemeObligationDataCsv, CSVFileData>
     {

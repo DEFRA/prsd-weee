@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.Reports
 {
-    using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetReturnObligatedCsv : IRequest<CSVFileData>
     {

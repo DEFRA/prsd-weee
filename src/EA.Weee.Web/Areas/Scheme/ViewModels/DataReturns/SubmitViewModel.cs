@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns
 {
-    using System;
     using Core.DataReturns;
+    using System;
 
     public class SubmitViewModel
     {

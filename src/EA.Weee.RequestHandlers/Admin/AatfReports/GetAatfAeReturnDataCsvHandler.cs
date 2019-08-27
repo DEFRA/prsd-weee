@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -13,6 +11,8 @@
     using Requests.Admin.AatfReports;
     using Security;
     using Shared;
+    using System;
+    using System.Threading.Tasks;
 
     internal class GetAatfAeReturnDataCsvHandler : IRequestHandler<GetAatfAeReturnDataCsv, CSVFileData>
     {
@@ -21,9 +21,9 @@
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly ICommonDataAccess commonDataAccess;
 
-        public GetAatfAeReturnDataCsvHandler(IWeeeAuthorization authorization, 
+        public GetAatfAeReturnDataCsvHandler(IWeeeAuthorization authorization,
             WeeeContext context,
-            CsvWriterFactory csvWriterFactory, 
+            CsvWriterFactory csvWriterFactory,
             ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
@@ -43,12 +43,12 @@
             }
 
             var items = await context.StoredProcedures.GetAatfAeReturnDataCsvData(
-                       request.ComplianceYear, request.Quarter, (int)request.FacilityType, 
+                       request.ComplianceYear, request.Quarter, (int)request.FacilityType,
                        request.ReturnStatus.HasValue ? (int)request.ReturnStatus : (int?)null, request.AuthorityId, request.LocalArea, request.PanArea, request.IncludeReSubmissions);
 
             foreach (var item in items)
             {
-                 item.AatfDataUrl = $@" =HYPERLINK(""""{request.AatfDataUrl}{item.AatfId}#data"""", """"View AATF / AE data"""")";
+                item.AatfDataUrl = $@" =HYPERLINK(""""{request.AatfDataUrl}{item.AatfId}#data"""", """"View AATF / AE data"""")";
             }
 
             var csvWriter = csvWriterFactory.Create<AatfAeReturnData>();

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using System;
-    using System.Data.SqlClient;
-    using System.Threading.Tasks;
     using EA.Prsd.Core;
     using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
+    using System;
+    using System.Data.SqlClient;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// An implementation of the ISecurityEventAuditor interface which
@@ -52,7 +52,7 @@
             string data = JsonConvert.SerializeObject(user);
             await LogEvent(5, "UserUpdated", userId, data);
         }
-        
+
         private async Task LogEvent(int eventId, string eventName, string userId, string data)
         {
             Guard.ArgumentNotNullOrEmpty(() => eventName, eventName);

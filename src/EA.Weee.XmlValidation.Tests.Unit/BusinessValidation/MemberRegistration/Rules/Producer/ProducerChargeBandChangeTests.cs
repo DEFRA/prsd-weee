@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
     using FakeItEasy;
+    using System;
     using Weee.Domain.Lookup;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation;
@@ -50,7 +50,7 @@
             A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
 
             var result = evaluator.Evaluate(ChargeBand.E);
-            
+
             Assert.True(result.IsValid);
         }
 
@@ -89,7 +89,7 @@
             string producerName = "ProdA";
             string registrationNumber = "reg123";
             var existingChargeBand = ChargeBand.A;
-            
+
             var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
             var producerCharge = new ProducerCharge()
             {
@@ -125,7 +125,7 @@
             public IProducerQuerySet QuerySet { get; private set; }
             private IProducerChargeBandCalculator ProducerChargeBandCalculator { get; set; }
             private readonly ProducerChargeBandChange producerChargeBandChange;
-            
+
             public ProducerChargeBandChangeEvaluator(IProducerChargeBandCalculatorChooser chooser)
             {
                 QuerySet = A.Fake<IProducerQuerySet>();

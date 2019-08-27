@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class GetSchemesExternalHandler : IRequestHandler<GetSchemesExternal, List<SchemeData>>
     {

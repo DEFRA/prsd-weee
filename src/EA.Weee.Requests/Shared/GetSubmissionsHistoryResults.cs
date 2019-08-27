@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Requests.Shared
 {
-    using System;
-    using System.Collections.Generic;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetSubmissionsHistoryResults : IRequest<SubmissionsHistorySearchResult>
     {

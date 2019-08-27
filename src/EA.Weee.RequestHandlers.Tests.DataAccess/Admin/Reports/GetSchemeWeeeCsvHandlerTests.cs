@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
-    using System;
-    using System.Diagnostics;
     using Core.Shared;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.Reports;
+    using System.Diagnostics;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

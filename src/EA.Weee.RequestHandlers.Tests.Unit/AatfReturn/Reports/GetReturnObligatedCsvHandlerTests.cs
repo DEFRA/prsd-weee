@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.Reports
 {
     using EA.Prsd.Core;
-    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Domain.AatfReturn;
@@ -10,17 +9,13 @@
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Reports;
     using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.AatfReturn.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
     using System.Data;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -28,20 +23,28 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext weeContext;
-        private readonly CsvWriterFactory csvWriterFactory;
-        private readonly ICommonDataAccess commonDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
-        private GetReturnObligatedCsvHandler handler;
+        private readonly GetReturnObligatedCsvHandler handler;
 
         public GetReturnObligatedCsvHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
             this.weeContext = A.Fake<WeeeContext>();
-            this.csvWriterFactory = A.Fake<CsvWriterFactory>();
-            this.commonDataAccess = A.Fake<ICommonDataAccess>();
             this.returnDataAccess = A.Fake<IReturnDataAccess>();
 
-            this.handler = new GetReturnObligatedCsvHandler(authorization, weeContext, csvWriterFactory, commonDataAccess, returnDataAccess);
+            this.handler = new GetReturnObligatedCsvHandler(authorization, weeContext, returnDataAccess);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOrganisationAccess_SecurityExceptionExpected()
+        {
+            var handler = new GetReturnObligatedCsvHandler(new AuthorizationBuilder().DenyOrganisationAccess().Build(), weeContext, returnDataAccess);
+
+            var returnId = SetupReturn();
+
+            var result = await Xunit.Record.ExceptionAsync(() => handler.HandleAsync(new GetReturnObligatedCsv(returnId)));
+
+            result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
@@ -77,52 +80,62 @@
 
             A.CallTo(() => weeContext.StoredProcedures).Returns(storedProcedures);
 
-            DataTable obligatedDataTable = CreateDummyDatatable();
+            var returnId = SetupReturn();
+            var obligatedDataTable = CreateDummyDataTable();
 
-            var request = new GetReturnObligatedCsv(Guid.NewGuid());
+            var request = new GetReturnObligatedCsv(returnId);
 
-            A.CallTo(() => storedProcedures.GetReturnObligatedCsvData(request.ReturnId)).Returns(obligatedDataTable);
+            A.CallTo(() => storedProcedures.GetReturnObligatedCsvData(returnId)).Returns(obligatedDataTable);
 
             var data = await handler.HandleAsync(request);
 
-            data.FileContent.Contains("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,B2C,1. Large Household Appliances,33,15,2,88");
+            data.FileContent.Should()
+                .Contain(
+                    "Compliance Year,Quarter,Name of AATF,AATF approval number,Submitted by,Submitted date (GMT),Category,Obligation,Total obligated WEEE sent to another AATF / ATF for treatment (t)");
+            data.FileContent.Should().Contain("2019,Q1,TestAatf1,WEE/AC0005ZT/ATF,T User,24/04/2019,1. Large Household Appliances,B2C,33");
             data.FileContent.Should().NotContain("ReturnId");
             data.FileContent.Should().NotContain("AatfKey");
         }
 
-        internal DataTable CreateDummyDatatable()
+        private Guid SetupReturn()
         {
-            DataTable obligatedDataTable = new DataTable();
-            obligatedDataTable.Columns.Add("ComplianceYear");
-            obligatedDataTable.Columns.Add("Quarter");
-            obligatedDataTable.Columns.Add("AATFName");
-            obligatedDataTable.Columns.Add("AATFApprovalNumber");
-            obligatedDataTable.Columns.Add("SubmittedBy");
-            obligatedDataTable.Columns.Add("SubmittedDate");
-            obligatedDataTable.Columns.Add("Obligation");
-            obligatedDataTable.Columns.Add("CategoryName");
-            obligatedDataTable.Columns.Add("TotalSent");
-            obligatedDataTable.Columns.Add("TotalReused");
-            obligatedDataTable.Columns.Add("TotalReceived");
-            obligatedDataTable.Columns.Add("Obligated WEEE sent to DSDS (t)");
-            obligatedDataTable.Columns.Add("ReturnId");
-            obligatedDataTable.Columns.Add("AatfKey");
+            var returnId = Guid.NewGuid();
+            var @return = A.Fake<Return>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => @return.Id).Returns(returnId);
+            A.CallTo(() => @return.Organisation).Returns(organisation);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).Returns(@return);
+            return returnId;
+        }
 
-            for (int i = 0; i < 5; i++)
+        internal DataTable CreateDummyDataTable()
+        {
+            var obligatedDataTable = new DataTable();
+            obligatedDataTable.Columns.Add("Compliance Year");
+            obligatedDataTable.Columns.Add("Quarter");
+            obligatedDataTable.Columns.Add("Name of AATF");
+            obligatedDataTable.Columns.Add("AATF approval number");
+            obligatedDataTable.Columns.Add("Submitted by");
+            obligatedDataTable.Columns.Add("Submitted date (GMT)");
+            obligatedDataTable.Columns.Add("Category");
+            obligatedDataTable.Columns.Add("Obligation");
+            obligatedDataTable.Columns.Add("Total obligated WEEE sent to another AATF / ATF for treatment (t)");
+            obligatedDataTable.Columns.Add("Return Id");
+            obligatedDataTable.Columns.Add("Aatf Key");
+
+            for (var i = 0; i < 5; i++)
             {
-                DataRow row = obligatedDataTable.NewRow();
+                var row = obligatedDataTable.NewRow();
                 row[0] = 2019;
                 row[1] = "Q1";
                 row[2] = "TestAatf" + i;
                 row[3] = "WEE/AC0005ZT/ATF";
                 row[4] = "T User";
                 row[5] = "24/04/2019";
-                row[6] = "B2C";
-                row[7] = "1. Large Household Appliances";
+                row[6] = "1. Large Household Appliances";
+                row[7] = "B2C";
                 row[8] = 33;
-                row[9] = 15;
-                row[10] = 2;
-                row[11] = 88;
+                obligatedDataTable.Rows.Add(row);
             }
 
             return obligatedDataTable;

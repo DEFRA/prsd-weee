@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using DataAccess.DataAccess;
@@ -14,6 +11,9 @@
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using RequestHandlers.Factories;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfApprovalDateChangeStatusTests
@@ -111,7 +111,7 @@
         {
             var currentApprovalDate = fixture.Create<DateTime>();
             var newApprovalDate = fixture.Create<DateTime>();
-            
+
             var aatf = A.Fake<Aatf>();
 
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);
@@ -153,7 +153,7 @@
             {
                 startedReturn
             };
-            
+
             A.CallTo(() => aatf.Organisation).Returns(organisation);
             A.CallTo(() => organisationDataAccess.GetReturnsByComplianceYear(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType)).Returns(returns);
             SetupApprovalDateMovedToNextQuarter(aatf, currentApprovalDate, newApprovalDate);

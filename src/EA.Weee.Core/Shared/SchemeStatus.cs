@@ -5,9 +5,9 @@
     public enum SchemeStatus
     {
         [Display(Name = "Pending")]
-        Pending = 1, 
+        Pending = 1,
         [Display(Name = "Approved")]
-        Approved = 2, 
+        Approved = 2,
         [Display(Name = "Rejected")]
         Rejected = 3,
         [Display(Name = "Withdrawn")]

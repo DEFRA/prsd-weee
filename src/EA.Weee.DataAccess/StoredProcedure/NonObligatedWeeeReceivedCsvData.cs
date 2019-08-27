@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class NonObligatedWeeeReceivedAtAatfData
+    public class NonObligatedWeeeReceivedCsvData
     {
         public int Year { get; set; }
 
@@ -10,7 +10,7 @@
 
         public string SubmittedBy { get; set; }
 
-        public DateTime SubmittedDate { get; set; }
+        public DateTime? SubmittedDate { get; set; }
 
         public string OrganisationName { get; set; }
 

@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Domain.AatfReturn;
     using Domain.DataReturns;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IReturnFactoryDataAccess
     {

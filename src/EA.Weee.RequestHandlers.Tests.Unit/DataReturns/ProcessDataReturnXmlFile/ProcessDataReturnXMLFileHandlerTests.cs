@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.Security;
@@ -11,6 +7,10 @@
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Requests.DataReturns;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xml.DataReturns;
     using XmlValidation.Errors;

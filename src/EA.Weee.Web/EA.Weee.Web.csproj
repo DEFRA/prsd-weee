@@ -614,7 +614,8 @@
     <Content Include="Content\remove-site.css" />
     <Content Include="Areas\Admin\Views\Shared\_AatfDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
-    <None Include="Content\weee-returns-mobile.scss" />
+    <Content Include="Content\weee-returns-ae-mobile.scss" />
+    <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -1499,7 +1500,8 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
-    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-mobile.scss &gt; Content\weee-returns-mobile.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-aatf-mobile.scss &gt; Content\weee-returns-aatf-mobile.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-ae-mobile.scss &gt; Content\weee-returns-ae-mobile.css" />
     <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
@@ -1513,8 +1515,11 @@
     <CreateItem Include="Content\weee-page-ie8.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
-    <CreateItem Include="Content\weee-returns-mobile.css">
+    <CreateItem Include="Content\weee-returns-aatf-mobile.css">
       <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-returns-ae-mobile.css">
+        <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
   <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />

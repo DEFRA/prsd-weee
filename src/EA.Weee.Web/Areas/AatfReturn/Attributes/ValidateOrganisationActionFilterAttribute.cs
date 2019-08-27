@@ -1,16 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Attributes
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
-    using Core.Shared;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Infrastructure;
     using Services;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Scheme;
+    using System;
+    using System.Web.Mvc;
 
     public class ValidateOrganisationActionFilterAttribute : ActionFilterAttribute
     {

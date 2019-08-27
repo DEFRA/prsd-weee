@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Ibis;
     using Errors;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This 1B1S transaction file generator creates a transaction file with one

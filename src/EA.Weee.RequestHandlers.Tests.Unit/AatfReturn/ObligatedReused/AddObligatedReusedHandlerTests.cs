@@ -1,23 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedReceived
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedReceived;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class AddObligatedReusedHandlerTests
     {
@@ -41,11 +37,11 @@
 
             await action.Should().ThrowAsync<SecurityException>();
         }
-        
+
         [Fact]
         public async Task HandleAsync_WithValidInput_SubmittedIsCalledCorrectly()
         {
-            var aatf = A.Fake<Aatf>();            
+            var aatf = A.Fake<Aatf>();
             var aatfReturn = ReturnHelper.GetReturn();
 
             var weeeReused = new WeeeReused(
@@ -67,12 +63,12 @@
                 OrganisationId = aatfReturn.Organisation.Id,
                 CategoryValues = categoryValues
             };
-            
+
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
                 weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
-            
+
             var requestHandler = new AddObligatedReusedHandler(authorization, addObligatedReusedDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);

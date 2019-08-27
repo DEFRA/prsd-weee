@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using Entities;
     using Prsd.Core.Web.Extensions;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class UnauthenticatedUser : IUnauthenticatedUser
     {
@@ -49,7 +49,7 @@
             httpClient.SetBearerToken(accessToken);
 
             string url = Controller + "ResendActivationEmail";
-            
+
             ResendActivationEmailRequest model = new ResendActivationEmailRequest()
             {
                 ActivationBaseUrl = activationBaseUrl,

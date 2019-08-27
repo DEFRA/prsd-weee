@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
     using Domain.AatfReturn;
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Lookup;
+    using System;
     using Xunit;
     using AatfSize = Domain.AatfReturn.AatfSize;
     using AatfStatus = Domain.AatfReturn.AatfStatus;

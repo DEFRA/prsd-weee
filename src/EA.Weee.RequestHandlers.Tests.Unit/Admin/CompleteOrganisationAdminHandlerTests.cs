@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.Identity;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Admin;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
@@ -14,11 +11,7 @@
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 

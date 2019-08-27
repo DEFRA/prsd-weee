@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
 
     public class ReturnEntity : Entity
     {
