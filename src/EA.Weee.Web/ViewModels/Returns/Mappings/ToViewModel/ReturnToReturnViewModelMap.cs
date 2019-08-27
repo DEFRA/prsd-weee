@@ -42,11 +42,6 @@
                 }
             }
 
-            if (DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn)
-            {
-                ShowObligatedDataLink = true;
-            }
-
             return new ReturnViewModel(
                 source,
                 AatfObligatedData,
@@ -57,7 +52,8 @@
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
                 NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source)),
-                ShowDownloadObligatedData = ShowObligatedDataLink
+                ShowDownloadObligatedDataLink = DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn,
+                ShowDownloadNonObligatedDataLink = DisplayOptions.DisplayNonObligated || DisplayOptions.DisplayNonObligatedDcf
             };
         }
 

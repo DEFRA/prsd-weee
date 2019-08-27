@@ -82,7 +82,7 @@
                     nonObligatedWeeeReceivedAtAatfsData.Year.Should().Be(2019);
                     nonObligatedWeeeReceivedAtAatfsData.Quarter.Should().Be("Q1");
                     nonObligatedWeeeReceivedAtAatfsData.SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
-                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Date.Should().Be(@return1.SubmittedDate.Value.Date);
+                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Value.Date.Should().Be(@return1.SubmittedDate.Value.Date);
                     nonObligatedWeeeReceivedAtAatfsData.OrganisationName.Should().Be(org1.OrganisationName);
                 }
 
@@ -92,7 +92,7 @@
                     nonObligatedWeeeReceivedAtAatfsData.Year.Should().Be(2019);
                     nonObligatedWeeeReceivedAtAatfsData.Quarter.Should().Be("Q1");
                     nonObligatedWeeeReceivedAtAatfsData.SubmittedBy.Should().Be(db.Model.AspNetUsers.First().FirstName + " " + db.Model.AspNetUsers.First().Surname);
-                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Date.Should().Be(@return2.SubmittedDate.Value.Date);
+                    nonObligatedWeeeReceivedAtAatfsData.SubmittedDate.Value.Date.Should().Be(@return2.SubmittedDate.Value.Date);
                     nonObligatedWeeeReceivedAtAatfsData.OrganisationName.Should().Be(org2.OrganisationName);
                 }
             }

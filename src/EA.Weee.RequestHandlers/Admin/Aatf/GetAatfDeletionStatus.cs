@@ -23,6 +23,15 @@
             var result = new CanAatfBeDeletedFlags();
 
             var aatf = await aatfDataAccess.GetDetails(aatfId);
+
+            var isLatest = await aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId);
+
+            if (!isLatest)
+            {
+                result |= CanAatfBeDeletedFlags.IsNotLatest;
+                return result;
+            }
+
             var hasData = await aatfDataAccess.HasAatfData(aatfId);
 
             if (hasData)
