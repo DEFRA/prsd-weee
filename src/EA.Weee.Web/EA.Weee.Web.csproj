@@ -345,6 +345,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Helper\AatfHelper.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
@@ -615,6 +616,7 @@
     <Content Include="Areas\Admin\Views\Shared\_AatfDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Content\weee-returns-ae-mobile.scss" />
+    <Content Include="Areas\Admin\Views\AatfReports\AatfAeDetails.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -1519,7 +1521,7 @@
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
     <CreateItem Include="Content\weee-returns-ae-mobile.css">
-        <Output ItemName="Content" TaskParameter="Include" />
+      <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
   <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />

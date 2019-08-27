@@ -127,6 +127,9 @@
                 case Reports.AatfReuseSitesData:
                     return RedirectToAction("AatfReuseSites", "AatfReports");
 
+                case Reports.AatfAeDetails:
+                    return RedirectToAction("AatfAeDetails", "AatfReports");
+
                 default:
                     throw new NotSupportedException();
             }
