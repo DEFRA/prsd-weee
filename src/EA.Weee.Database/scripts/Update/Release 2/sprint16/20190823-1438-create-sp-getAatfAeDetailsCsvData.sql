@@ -5,7 +5,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
-ALTER PROCEDURE [AATF].[getAatfAeDetailsCsvData]
+CREATE PROCEDURE [AATF].[getAatfAeDetailsCsvData]
 	@ComplianceYear INT,
 	@FacilityType INT,
 	@CA UNIQUEIDENTIFIER,
