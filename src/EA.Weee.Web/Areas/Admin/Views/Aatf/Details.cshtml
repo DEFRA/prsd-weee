@@ -18,9 +18,11 @@
 @Html.HiddenFor(m => m.AatfId)
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
-    @Html.Gds().LabelFor(m => m.SelectedComplianceYear, new { @class = "govuk-label govuk-label--s" })
-    @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
-    @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
+    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):</span>
+        @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+    <span class="text-margin">
+        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
+    </span>
 </div>
 
 <div class="govuk-tabs" data-module="tabs">
