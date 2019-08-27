@@ -1,3 +1,7 @@
+IF OBJECT_ID('[AATF].getAatfAeDetailsCsvData', 'P') IS NOT NULL BEGIN
+	DROP PROCEDURE [AATF].[getAatfAeDetailsCsvData]
+END
+GO
 GO
 /****** Object:  StoredProcedure [AATF].[[getAatfAeDetailsCsvData]]    Script Date: 23/08/2019 13:48:03 ******/
 SET ANSI_NULLS ON
@@ -23,8 +27,8 @@ DECLARE @AATF TABLE
 	PanAreaTeam				NVARCHAR(256) NULL,
 	EaArea					NVARCHAR(256) NULL,
 	Name					NVARCHAR(256) NOT NULL,
-	Address					NVARCHAR(500) NOT NULL,
-	PostCode				NVARCHAR(10) NOT NULL,
+	Address					NVARCHAR(500) NULL,
+	PostCode				NVARCHAR(10) NULL,
 	ApprovalNumber			NVARCHAR(20) NOT NULL,
 	ApprovalDate			Datetime2(7) NOT NULL,
 	Size					NVARCHAR(20) NOT NULL,
@@ -35,8 +39,8 @@ DECLARE @AATF TABLE
 	ContactEmail			NVARCHAR(256) NOT NULL,
 	ContactPhone			NVARCHAR(20) NOT NULL,
 	OrganisationName		NVARCHAR(256) NOT NULL,
-	OrganisationAddress		NVARCHAR(500) NOT NULL,
-	OrganisationPostcode	NVARCHAR(10) NOT NULL	
+	OrganisationAddress		NVARCHAR(500) NULL,
+	OrganisationPostcode	NVARCHAR(10) NULL	
 )
 
 INSERT INTO @AATF
@@ -64,11 +68,11 @@ INSERT INTO @AATF
 	FROM
 		AATF.AATF a 
 		JOIN Organisation.Organisation o ON a.OrganisationId  = o.Id
-		JOIN Organisation.Address oa ON o.BusinessAddressId = oa.Id
+		LEFT JOIN Organisation.Address oa ON o.BusinessAddressId = oa.Id
 		JOIN Lookup.CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
 		LEFT JOIN Lookup.PanArea pa on a.PanAreaId = pa.Id
 		LEFT JOIN Lookup.LocalArea la on a.LocalAreaId = la.Id
-		JOIN AATF.Address ad on a.SiteAddressId = ad.Id
+		LEFT JOIN AATF.Address ad on a.SiteAddressId = ad.Id
 		JOIN AATF.Contact c on a.ContactId = c.Id
 	WHERE 
 		A.ComplianceYear = @ComplianceYear 
@@ -76,7 +80,6 @@ INSERT INTO @AATF
 		AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
 		AND (@Area IS NULL OR a.LocalAreaId = COALESCE(@Area, a.LocalAreaId))
 		AND (@PanArea IS NULL OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId))
-
 
 
 SELECT * FROM @AATF

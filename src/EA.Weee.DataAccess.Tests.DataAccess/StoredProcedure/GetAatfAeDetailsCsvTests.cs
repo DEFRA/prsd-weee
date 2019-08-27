@@ -9,12 +9,22 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoFixture;
+    using Domain;
     using Xunit;
     using Aatf = Domain.AatfReturn.Aatf;
+    using Address = Domain.Organisation.Address;
     using Organisation = Domain.Organisation.Organisation;
 
     public class GetAatfAeDetailsCsvTests
     {
+        private readonly Fixture fixture;
+
+        public GetAatfAeDetailsCsvTests()
+        {
+            fixture = new Fixture();
+        }
+
         [Theory]
         [InlineData(false, false)]
         [InlineData(true, false)]
@@ -22,18 +32,13 @@
         [InlineData(true, true)]
         public async Task Execute_GivenComplianceAndFacilityTypeAndLocalAreaAndPanArea_ReturnsData(bool hasArea, bool hasPan)
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                db.WeeeContext.Aatfs.RemoveRange(db.WeeeContext.Aatfs);
-                await db.WeeeContext.SaveChangesAsync();
+                var org = OrgWithAddress(db);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, org, 2019, hasArea, hasPan, fixture.Create<string>());
+                var aatfs = new List<Aatf>() { aatf };
 
-                OrganisationHelper orgHelper = new OrganisationHelper();
-
-                Organisation org = orgHelper.GetOrganisationWithDetails("org", "org", "1234", Domain.Organisation.OrganisationType.Partnership, Domain.Organisation.OrganisationStatus.Complete);
-
-                Aatf aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, org, 2019, hasArea, hasPan);
-                List<Aatf> aatfs = new List<Aatf>() { aatf };
-
+                db.WeeeContext.Organisations.Add(org);
                 db.WeeeContext.Aatfs.Add(aatf);
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -49,7 +54,7 @@
                     panId = aatf.PanAreaId;
                 }
 
-                List<AatfAeDetailsData> results = await db.StoredProcedures.GetAatfAeDetailsCsvData(2019, 1, aatf.CompetentAuthority.Id, areaId, panId);
+                var results = await db.StoredProcedures.GetAatfAeDetailsCsvData(2019, 1, aatf.CompetentAuthority.Id, areaId, panId);
                 
                 VerifyResult(results, aatfs);              
             }
@@ -58,22 +63,16 @@
         [Fact]
         public async Task Execute_GivenComplianceAndFacilityTypeOfAe_ReturnsData()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
-                db.WeeeContext.Aatfs.RemoveRange(db.WeeeContext.Aatfs);
-                await db.WeeeContext.SaveChangesAsync();
-
-                OrganisationHelper orgHelper = new OrganisationHelper();
-
-                Organisation org = orgHelper.GetOrganisationWithDetails("org", "org", "1234", Domain.Organisation.OrganisationType.Partnership, Domain.Organisation.OrganisationStatus.Complete);
-
-                Aatf ae = ObligatedWeeeIntegrationCommon.CreateAe(db, org);
-                List<Aatf> aatfs = new List<Aatf>() { ae };
+                var org = OrgWithAddress(db);
+                var ae = ObligatedWeeeIntegrationCommon.CreateAe(db, org);
+                var aatfs = new List<Aatf>() { ae };
 
                 db.WeeeContext.Aatfs.Add(ae);
                 await db.WeeeContext.SaveChangesAsync();
 
-                List<AatfAeDetailsData> results = await db.StoredProcedures.GetAatfAeDetailsCsvData(2019, 2, ae.CompetentAuthority.Id, null, null);
+                var results = await db.StoredProcedures.GetAatfAeDetailsCsvData(2019, 2, ae.CompetentAuthority.Id, null, null);
 
                 VerifyResult(results, aatfs);
             }
@@ -81,35 +80,43 @@
 
         private void VerifyResult(List<AatfAeDetailsData> results, List<Aatf> aatfs)
         {
-            Assert.Equal(aatfs.Count(), results.Count());
-
-            for (int i = 0; i < results.Count; i++)
+            foreach (var verifyAatf in aatfs)
             {
-                results.ElementAt(i).ComplianceYear.Should().Be(aatfs[i].ComplianceYear);
-                results.ElementAt(i).AppropriateAuthorityAbbr.Should().Be(aatfs[i].CompetentAuthority.Abbreviation);
-                results.ElementAt(i).EaArea.Should().Be(aatfs[i].LocalArea?.Name);
-                results.ElementAt(i).PanAreaTeam.Should().Be(aatfs[i].PanArea?.Name);
-                results.ElementAt(i).Name.Should().Be(aatfs[i].Name);
-                results.ElementAt(i).Address.Should().Be(GetSiteAddressString(aatfs[i].SiteAddress));
-                results.ElementAt(i).PostCode.Should().Be(aatfs[i].SiteAddress.Postcode);
-                results.ElementAt(i).ApprovalNumber.Should().Be(aatfs[i].ApprovalNumber);
-                results.ElementAt(i).ApprovalDate.Should().Be(aatfs[i].ApprovalDate.GetValueOrDefault());
-                results.ElementAt(i).Size.Should().Be(aatfs[i].Size.DisplayName);
-                results.ElementAt(i).Status.Should().Be(aatfs[i].AatfStatus.DisplayName);
-                results.ElementAt(i).ContactName.Should().Be(aatfs[i].Contact.FirstName + " " + aatfs[i].Contact.LastName);
-                results.ElementAt(i).ContactPosition.Should().Be(aatfs[i].Contact.Position);
-                results.ElementAt(i).ContactAddress.Should().Be(GetContactAddressString(aatfs[i].Contact));
-                results.ElementAt(i).ContactEmail.Should().Be(aatfs[i].Contact.Email);
-                results.ElementAt(i).ContactPhone.Should().Be(aatfs[i].Contact.Telephone);
-                results.ElementAt(i).OrganisationName.Should().Be(aatfs[i].Organisation.OrganisationName);
-                results.ElementAt(i).OrganisationAddress.Should().Be(GetOrganisationAddressString(aatfs[i].Organisation.BusinessAddress));
-                results.ElementAt(i).OrganisationPostcode.Should().Be(aatfs[i].Organisation.BusinessAddress.Postcode);
+                results.Count(x => x.Name == verifyAatf.Name).Should().Be(1);
+                var aatf = results.First(x => x.Name == verifyAatf.Name);
+                aatf.ComplianceYear.Should().Be(verifyAatf.ComplianceYear);
+                aatf.AppropriateAuthorityAbbr.Should().Be(verifyAatf.CompetentAuthority.Abbreviation);
+                aatf.EaArea.Should().Be(verifyAatf.LocalArea?.Name);
+                aatf.PanAreaTeam.Should().Be(verifyAatf.PanArea?.Name);
+                aatf.Name.Should().Be(verifyAatf.Name);
+                aatf.Address.Should().Be(GetSiteAddressString(verifyAatf.SiteAddress));
+                aatf.PostCode.Should().Be(verifyAatf.SiteAddress.Postcode);
+                aatf.ApprovalNumber.Should().Be(verifyAatf.ApprovalNumber);
+                aatf.ApprovalDate.Should().Be(verifyAatf.ApprovalDate.GetValueOrDefault());
+                aatf.Size.Should().Be(verifyAatf.Size.DisplayName);
+                aatf.Status.Should().Be(verifyAatf.AatfStatus.DisplayName);
+                aatf.ContactName.Should().Be(verifyAatf.Contact.FirstName + " " + verifyAatf.Contact.LastName);
+                aatf.ContactPosition.Should().Be(verifyAatf.Contact.Position);
+                aatf.ContactAddress.Should().Be(GetContactAddressString(verifyAatf.Contact));
+                aatf.ContactEmail.Should().Be(verifyAatf.Contact.Email);
+                aatf.ContactPhone.Should().Be(verifyAatf.Contact.Telephone);
+                aatf.OrganisationName.Should().Be(verifyAatf.Organisation.OrganisationName);
+                aatf.OrganisationAddress.Should().Be(GetOrganisationAddressString(verifyAatf.Organisation.BusinessAddress));
+                aatf.OrganisationPostcode.Should().Be(verifyAatf.Organisation.BusinessAddress.Postcode);
             }
+        }
+
+        private static Organisation OrgWithAddress(DatabaseWrapper db)
+        {
+            var org = Organisation.CreatePartnership("trading");
+            var address = new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", db.WeeeContext.Countries.First(), "12345678", "test@co.uk");
+            org.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
+            return org;
         }
 
         private string GetSiteAddressString(AatfAddress address)
         {
-            string addressString = address.Address1 + ", ";
+            var addressString = address.Address1 + ", ";
 
             if (address.Address2 != null)
             {
@@ -128,7 +135,7 @@
 
         private string GetOrganisationAddressString(Domain.Organisation.Address address)
         {
-            string addressString = address.Address1 + ", ";
+            var addressString = address.Address1 + ", ";
 
             if (address.Address2 != null)
             {
@@ -147,7 +154,7 @@
 
         private string GetContactAddressString(AatfContact contact)
         {
-            string addressString = contact.Address1 + ", ";
+            var addressString = contact.Address1 + ", ";
 
             if (contact.Address2 != null)
             {
