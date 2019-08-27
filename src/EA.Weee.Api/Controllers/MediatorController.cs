@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
+    using EA.Prsd.Core.Mediator;
+    using EA.Prsd.Core.Web.ApiClient;
+    using Elmah;
+    using Infrastructure;
+    using Newtonsoft.Json;
+    using Security;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,12 +14,6 @@
     using System.Security.Authentication;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using EA.Prsd.Core.Mediator;
-    using EA.Prsd.Core.Web.ApiClient;
-    using Elmah;
-    using Infrastructure;
-    using Newtonsoft.Json;
-    using Security;
 
     [RoutePrefix("api")]
     public class MediatorController : ApiController
@@ -49,7 +49,7 @@
 
                 throw new Exception(message);
             }
-            
+
             var typeInformation = new RequestTypeInformation(apiRequest);
 
             var result = JsonConvert.DeserializeObject(apiRequest.RequestJson, typeInformation.RequestType);

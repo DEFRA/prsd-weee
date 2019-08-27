@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using EA.Weee.Core;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Security;
+    using System;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Shared;
 
     public class HomeController : Controller
@@ -28,7 +27,7 @@
         {
             bool userIsInternal = ((ClaimsIdentity)User.Identity).HasClaim(
                 ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
-            
+
             TitleViewModel model = new TitleViewModel();
             model.User = User;
             model.UserIsInternal = userIsInternal;

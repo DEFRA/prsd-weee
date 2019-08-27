@@ -1,17 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
-    using Domain.Organisation;
     using FakeItEasy;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using AddressType = Core.Shared.AddressType;
@@ -108,10 +107,10 @@
             var addressLine1 = "Some address line";
             var message = GetMessage(organisationId, AddressType.RegisteredOrPPBAddress, new AddressData
             {
-                Address1 = addressLine1, 
-                CountryId = countryId, 
-                TownOrCity = "Some town", 
-                Telephone = "01234 567890", 
+                Address1 = addressLine1,
+                CountryId = countryId,
+                TownOrCity = "Some town",
+                Telephone = "01234 567890",
                 Email = "some@email.com"
             });
 
@@ -133,8 +132,8 @@
             data = data ?? new AddressData();
 
             var message = new AddAddressToOrganisation(
-                organisationId, 
-                addressType, 
+                organisationId,
+                addressType,
                 data);
 
             return message;

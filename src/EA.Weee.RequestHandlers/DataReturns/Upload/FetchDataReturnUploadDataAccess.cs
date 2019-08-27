@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.Upload
 {
+    using DataAccess;
+    using Domain.DataReturns;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.DataReturns;
 
     public class FetchDataReturnUploadDataAccess : IFetchDataReturnUploadDataAccess
     {

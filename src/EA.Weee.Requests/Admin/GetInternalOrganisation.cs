@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using System;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Organisations;
+    using System;
 
     public class GetInternalOrganisation : IRequest<OrganisationData>
     {

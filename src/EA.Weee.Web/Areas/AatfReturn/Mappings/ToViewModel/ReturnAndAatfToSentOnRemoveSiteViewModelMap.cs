@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
@@ -15,7 +11,7 @@
         private readonly ITonnageUtilities tonnageUtilities;
         private readonly IAddressUtilities addressUtilities;
 
-        public ReturnAndAatfToSentOnRemoveSiteViewModelMap(ITonnageUtilities tonnageUtilities, 
+        public ReturnAndAatfToSentOnRemoveSiteViewModelMap(ITonnageUtilities tonnageUtilities,
             IAddressUtilities addressUtilities)
         {
             this.tonnageUtilities = tonnageUtilities;

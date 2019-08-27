@@ -1,31 +1,23 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
+    using Core.AatfReturn;
+    using Domain.DataReturns;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core.Domain;
+    using RequestHandlers.AatfReturn;
+    using RequestHandlers.Factories;
+    using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
-    using Core.Helpers;
-    using Domain;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Prsd.Core;
-    using Prsd.Core.Domain;
-    using RequestHandlers.AatfReturn;
-    using RequestHandlers.Factories;
-    using Requests.AatfReturn;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
-    using AatfSize = Domain.AatfReturn.AatfSize;
-    using AatfStatus = Domain.AatfReturn.AatfStatus;
-    using Country = Domain.Country;
     using FacilityType = Domain.AatfReturn.FacilityType;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
     using Organisation = Domain.Organisation.Organisation;
@@ -70,7 +62,7 @@
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CopyReturn>());
 
-            await action.Should().ThrowAsync<SecurityException>();   
+            await action.Should().ThrowAsync<SecurityException>();
         }
 
         [Fact]
@@ -121,7 +113,7 @@
         public async Task HandleAsync_ReturnCopied_CopiedReturnShouldBeAddedToContext()
         {
             void Action(Guid id)
-            {   
+            {
                 copiedReturn.Should().NotBeNull();
                 copiedReturn.SubmittedById.Should().BeNull();
                 copiedReturn.SubmittedBy.Should().BeNull();
@@ -171,7 +163,7 @@
                     originalNonObligated.Where(n =>
                         n.Tonnage == copiedNonObligatedWeee.Tonnage && n.CategoryId == copiedNonObligatedWeee.CategoryId
                                                                     && n.Dcf == copiedNonObligatedWeee.Dcf).Should().NotBeNull();
-                }              
+                }
             }
 
             await ActionAndAssert(Action);
@@ -537,16 +529,16 @@
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(database.Model.AspNetUsers.First().Id));
 
                 await CreateReturnToCopy(DateTime.Now);
-                
+
                 var message = new CopyReturn(@return.Id);
 
                 var authorization = new AuthorizationBuilder().AllowEverything().Build();
-                
+
                 handler = new CopyReturnHandler(authorization,
                     database.WeeeContext,
                     userContext,
                     quarterWindowFactory);
-                
+
                 var result = await handler.HandleAsync(message);
 
                 @return = database.WeeeContext.Returns.AsNoTracking().First(r => r.Id == message.ReturnId);

@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchSummaryCsv
 {
+    using DataAccess.StoredProcedure;
+    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using DataAccess.StoredProcedure;
-    using Domain.DataReturns;
-    using Domain.Scheme;
 
     public interface IFetchSummaryCsvDataAccess
     {

@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System;
     using Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
     using Prsd.Core.Mapper;
+    using System;
 
     public class ReturnStatusToReturnDisplayOptionsMap : IMap<(ReturnStatus status, QuarterWindow quarterWindow, DateTime systemDateTime), ReturnsListDisplayOptions>
     {
@@ -25,7 +24,7 @@
 
             options.DisplaySummary = source.status == ReturnStatus.Submitted;
 
-            return options;                                         
+            return options;
         }
     }
 }

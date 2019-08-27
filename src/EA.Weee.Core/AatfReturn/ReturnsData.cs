@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using DataReturns;
     using Prsd.Core;
+    using System;
+    using System.Collections.Generic;
 
     public class ReturnsData
     {

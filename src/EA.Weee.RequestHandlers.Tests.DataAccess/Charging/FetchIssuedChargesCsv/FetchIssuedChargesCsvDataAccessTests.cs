@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Charging.FetchIssuedChargesCsv
 {
+    using Charges.FetchIssuedChargesCsv;
+    using Domain;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Charges;
-    using Charges.FetchIssuedChargesCsv;
-    using Domain;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Helpers
 {
+    using Prsd.Core.Domain;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using Prsd.Core.Domain;
 
     public static partial class Extensions
     {
@@ -87,7 +87,7 @@
                 {
                     property.SetValue(obj, null);
                 }
-                else if (property.PropertyType.IsCustom() 
+                else if (property.PropertyType.IsCustom()
                     && type.IsClass
                     && property.GetValue(obj) != null)
                 {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.NonObligated;
     using Security;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     internal class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
     {
@@ -13,8 +13,8 @@
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
 
-        public AddNonObligatedHandler(IWeeeAuthorization authorization, 
-            INonObligatedDataAccess nonObligatedDataAccess, 
+        public AddNonObligatedHandler(IWeeeAuthorization authorization,
+            INonObligatedDataAccess nonObligatedDataAccess,
             IReturnDataAccess returnDataAccess)
         {
             this.authorization = authorization;

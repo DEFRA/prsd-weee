@@ -7,8 +7,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class AatfDataToHomeViewModelMapTests
@@ -94,7 +92,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Map_GivenIsAE_AatfListShouldOnlyContainThatFacilityType(bool isAE)
+        public void Map_GivenIsAE_AatfListShouldOnlyContainThatIsFacilityType(bool isAE)
         {
             var organisationId = Guid.NewGuid();
             var aatfList = new List<AatfData>();
@@ -103,28 +101,32 @@
                    Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
                    A.Dummy<Core.Shared.PanAreaData>(), null)
             {
-                FacilityType = FacilityType.Aatf
+                FacilityType = FacilityType.Aatf,
+                AatfId = Guid.NewGuid()
             };
 
             var aatfData2 = new AatfData(Guid.NewGuid(), "AATF2", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
                    Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
                    A.Dummy<Core.Shared.PanAreaData>(), null)
             {
-                FacilityType = FacilityType.Aatf
+                FacilityType = FacilityType.Aatf,
+                AatfId = Guid.NewGuid()
             };
 
             var exporterData = new AatfData(Guid.NewGuid(), "AE", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
                    Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
                    A.Dummy<Core.Shared.PanAreaData>(), null)
             {
-                FacilityType = FacilityType.Ae
+                FacilityType = FacilityType.Ae,
+                AatfId = Guid.NewGuid()
             };
 
             var exporterData2 = new AatfData(Guid.NewGuid(), "AE", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
                A.Dummy<Core.Shared.PanAreaData>(), null)
             {
-                FacilityType = FacilityType.Ae
+                FacilityType = FacilityType.Ae,
+                AatfId = Guid.NewGuid()
             };
 
             aatfList.Add(aatfData);
@@ -136,19 +138,15 @@
 
             var result = map.Map(transfer);
 
+            result.AatfList.Should().NotBeEmpty();
+
             if (isAE)
             {
-                foreach (var aatf in result.AatfList)
-                {
-                    aatf.FacilityType.Should().Be(FacilityType.Ae);
-                }
+                result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Ae);
             }
             else
             {
-                foreach (var aatf in result.AatfList)
-                {
-                    aatf.FacilityType.Should().Be(FacilityType.Aatf);
-                }
+                result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Aatf);
             }
         }
 

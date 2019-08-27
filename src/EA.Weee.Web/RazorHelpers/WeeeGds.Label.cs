@@ -8,7 +8,7 @@
     {
         public MvcHtmlString ScreenReaderLabelFor<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-           return gdsHelper.LabelFor(expression, new { @class = "hidden-for-screen-reader" });
+            return gdsHelper.LabelFor(expression, new { @class = "hidden-for-screen-reader" });
         }
     }
 }

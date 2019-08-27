@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using Domain.AatfReturn;
-    using System.Data.Entity.ModelConfiguration;
     using Domain.Lookup;
     using Domain.Organisation;
+    using System.Data.Entity.ModelConfiguration;
 
     internal class AatfMapping : EntityTypeConfiguration<Aatf>
     {

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.Lookup;
+    using System.Threading.Tasks;
 
     public class FetchProducerCharge : IFetchProducerCharge
     {

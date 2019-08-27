@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
-    using System.Security.Policy;
-    using Areas.AatfReturn;
     using Controllers;
     using Infrastructure;
     using System.Web.Mvc;
@@ -83,7 +81,7 @@
             context.MapLowercaseDashedRoute(
                 name: AatfRedirect.Download,
                 url: "aatf-return/returns-download/{returnId}/",
-                defaults: new { action = "DownloadAllObligatedData", controller = "ReturnsSummary" },
+                defaults: new { action = "Download", controller = "ReturnsSummary" },
                 namespaces: new[] { typeof(ReturnsSummaryController).Namespace });
 
             context.MapLowercaseDashedRoute(

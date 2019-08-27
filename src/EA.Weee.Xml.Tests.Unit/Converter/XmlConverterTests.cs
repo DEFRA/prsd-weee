@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.Converter
 {
+    using Deserialization;
+    using FakeItEasy;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
-    using Deserialization;
-    using FakeItEasy;
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;
@@ -39,7 +39,7 @@
             var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + xml)).ToArray();
             var result = XmlConverter().Convert(data);
 
-            Assert.Equal(xml, result.ToString());  
+            Assert.Equal(xml, result.ToString());
         }
 
         [Fact]

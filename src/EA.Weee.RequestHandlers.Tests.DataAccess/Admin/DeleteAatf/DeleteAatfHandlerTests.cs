@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.DeleteAatf
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin;
     using FakeItEasy;
@@ -12,6 +9,9 @@
     using RequestHandlers.Admin.Aatf;
     using RequestHandlers.Factories;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -108,8 +108,8 @@
         private DeleteAatfHandler Handler(DatabaseWrapper databaseWrapper)
         {
             return new DeleteAatfHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(),
-                new AatfDataAccess(databaseWrapper.WeeeContext, new GenericDataAccess(databaseWrapper.WeeeContext), quarterWindowFactory), 
-                new OrganisationDataAccess(databaseWrapper.WeeeContext), 
+                new AatfDataAccess(databaseWrapper.WeeeContext, new GenericDataAccess(databaseWrapper.WeeeContext), quarterWindowFactory),
+                new OrganisationDataAccess(databaseWrapper.WeeeContext),
                 databaseWrapper.WeeeContext,
                 getAatfDeletionStatus);
         }

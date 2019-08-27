@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Charges;
     using Core.Shared;
     using Domain;
@@ -14,6 +10,10 @@
     using RequestHandlers.Charges.IssuePendingCharges;
     using RequestHandlers.Security;
     using RequestHandlers.Shared.DomainUser;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -143,7 +143,7 @@
         public async Task HandleAsync_WithErrorWhenGeneratingIbisFile_DoesNotSaveChanges_AndReturnsError()
         {
             // Arrange
-            UKCompetentAuthority authority = 
+            UKCompetentAuthority authority =
                 new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>(), "test@sfwltd.co.uk", 0);
 
             Scheme scheme = A.Fake<Scheme>();

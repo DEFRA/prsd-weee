@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using Prsd.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Prsd.Core;
 
     public class EeeOutputReturnVersion : DataReturnVersionAssociativeEntity
     {

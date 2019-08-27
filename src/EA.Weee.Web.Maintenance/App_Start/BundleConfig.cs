@@ -33,8 +33,8 @@
                         "~/Scripts/vendor/modernizr.custom.77028.js",
                         "~/Scripts/weee-application.js"));
 
-           bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
-                        "~/Content/weee-page-ie6.css"));
+            bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
+                         "~/Content/weee-page-ie6.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie7").Include(
                         "~/Content/weee-page-ie7.css"));

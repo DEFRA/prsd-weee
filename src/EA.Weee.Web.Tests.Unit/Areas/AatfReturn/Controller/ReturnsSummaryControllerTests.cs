@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Web.Mvc;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -15,6 +13,10 @@
     using EA.Weee.Web.ViewModels.Returns;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
+    using Core.Admin;
+    using Weee.Requests.AatfReturn.Reports;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -130,7 +132,7 @@
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
                 .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
-                .Without(r => r.SubmittedDate)                
+                .Without(r => r.SubmittedDate)
                 .Create();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
@@ -144,6 +146,58 @@
             redirectResult.RouteValues["action"].Should().Be("Index");
             redirectResult.RouteValues["controller"].Should().Be("Returns");
             redirectResult.RouteValues["organisationId"].Should().Be(@return.OrganisationData.Id);
+        }
+
+        [Fact]
+        public async void DownloadGet_GivenReturnIdAndObligatedRequest_RequestShouldBeSent()
+        {
+            var returnId = fixture.Create<Guid>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).Returns(fixture.Create<CSVFileData>());
+
+            await controller.Download(returnId, true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void DownloadGet_GivenReturnIdAndObligatedRequest_FileContentShouldBeReturned()
+        {
+            var returnId = fixture.Create<Guid>();
+            var file = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).Returns(file);
+
+            var result = await controller.Download(returnId, true) as FileContentResult;
+
+            result.FileDownloadName.Should().Be(file.FileName);
+            result.FileContents.Should().BeEquivalentTo(file.FileContent);
+        }
+
+        [Fact]
+        public async void DownloadGet_GivenReturnIdAndNonObligatedRequest_RequestShouldBeSent()
+        {
+            var returnId = fixture.Create<Guid>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnNonObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).Returns(fixture.Create<CSVFileData>());
+
+            await controller.Download(returnId, false);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnNonObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void DownloadGet_GivenReturnIdAndNonObligatedRequest_FileContentShouldBeReturned()
+        {
+            var returnId = fixture.Create<Guid>();
+            var file = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnNonObligatedCsv>.That.Matches(r => r.ReturnId == returnId))).Returns(file);
+
+            var result = await controller.Download(returnId, false) as FileContentResult;
+
+            result.FileDownloadName.Should().Be(file.FileName);
+            result.FileContents.Should().BeEquivalentTo(file.FileContent);
         }
     }
 }

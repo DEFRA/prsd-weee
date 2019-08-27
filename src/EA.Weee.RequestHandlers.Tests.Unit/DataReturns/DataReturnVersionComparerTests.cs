@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
-    using System;
     using Domain.DataReturns;
     using FakeItEasy;
     using RequestHandlers.DataReturns;
+    using System;
     using Xunit;
 
     public class DataReturnVersionComparerTests

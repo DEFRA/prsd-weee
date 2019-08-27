@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
@@ -16,6 +13,9 @@
     using FluentAssertions;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Web.Areas.AatfReturn.Requests;

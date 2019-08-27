@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using Domain;
+    using Domain.Organisation;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Organisation;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Address = Domain.Organisation.Address;
@@ -13,7 +13,7 @@
     using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationIntegration
-    {   
+    {
         [Fact]
         public async Task CanCreateRegisteredCompany()
         {

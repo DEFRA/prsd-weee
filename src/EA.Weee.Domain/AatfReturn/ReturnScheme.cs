@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using DataReturns;
     using Domain.Scheme;
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
+    using System;
 
     public partial class ReturnScheme : ReturnEntity, IReturnOption
     {

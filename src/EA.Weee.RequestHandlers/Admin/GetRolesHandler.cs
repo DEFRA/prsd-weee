@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class GetRolesHandler : IRequestHandler<GetRoles, List<Role>>

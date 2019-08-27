@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
     using Lookup;
     using Obligation;
     using Prsd.Core.Domain;
+    using System;
 
     public class ReturnItem : Entity, IReturnItem, IEquatable<ReturnItem>
     {

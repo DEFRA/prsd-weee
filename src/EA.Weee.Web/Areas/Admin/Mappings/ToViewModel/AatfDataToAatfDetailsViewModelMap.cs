@@ -4,21 +4,17 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin.AatfReports;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using Core.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
         private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
 
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities, 
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities,
             IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap)
         {
             this.addressUtilities = addressUtilities;
@@ -48,7 +44,10 @@
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
                 ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false),
                 PanArea = source.AatfData.PanAreaData,
-                LocalArea = source.AatfData.LocalAreaData
+                LocalArea = source.AatfData.LocalAreaData,
+                ComplianceYearList = source.ComplianceYearList,
+                AatfId = source.AatfData.AatfId,
+                SelectedComplianceYear = source.AatfData.ComplianceYear
             };
 
             if (source.AssociatedAatfs != null)

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Charging.FetchInvoiceRuns
 {
+    using Charges.FetchInvoiceRuns;
+    using Domain;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Charges.FetchInvoiceRuns;
-    using Domain;
     using Weee.Tests.Core.Model;
     using Xunit;
 

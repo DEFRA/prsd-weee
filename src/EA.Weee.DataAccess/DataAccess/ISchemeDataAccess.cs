@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Scheme;
 
     public interface ISchemeDataAccess
     {

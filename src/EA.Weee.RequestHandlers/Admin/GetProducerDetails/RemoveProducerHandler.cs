@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System.Threading.Tasks;
     using Core.Admin;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System.Threading.Tasks;
     using Weee.Security;
 
     public class RemoveProducerHandler : IRequestHandler<RemoveProducer, RemoveProducerResult>

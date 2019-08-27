@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchSchemesWithInvoices
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain;
@@ -10,6 +7,9 @@
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Shared;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class FetchSchemesWithInvoicesHandler : IRequestHandler<Requests.Charges.FetchSchemesWithInvoices, IReadOnlyList<SchemeData>>
     {
@@ -19,7 +19,7 @@
 
         public FetchSchemesWithInvoicesHandler(
             IWeeeAuthorization authorization,
-            ICommonDataAccess dataAccess, 
+            ICommonDataAccess dataAccess,
             IMap<Scheme, SchemeData> schemeMap)
         {
             this.authorization = authorization;

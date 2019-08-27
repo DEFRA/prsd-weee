@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
@@ -13,7 +10,6 @@
     using EA.Weee.Domain.Lookup;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.Admin;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
     using EA.Weee.Tests.Core;
@@ -21,6 +17,9 @@
     using FluentAssertions;
     using Microsoft.AspNet.Identity;
     using RequestHandlers.Shared;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class AddAatfRequestHandlerTests
@@ -137,7 +136,7 @@
             var panarea = A.Fake<PanArea>();
 
             var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now, 
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
                 A.Dummy<Core.Shared.PanAreaData>(), A.Dummy<Core.Admin.LocalAreaData>())
             {
                 FacilityType = facilityType

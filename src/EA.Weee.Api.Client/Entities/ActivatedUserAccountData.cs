@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.Client.Entities
 {
-    using System;
     using Core.Routing;
+    using System;
 
     public class ActivatedUserAccountData
     {

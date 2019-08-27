@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails
 {
-    using System;
     using Web.ViewModels.Shared;
 
     public abstract class OrganisationDetailsOverviewViewModel : OverviewViewModel

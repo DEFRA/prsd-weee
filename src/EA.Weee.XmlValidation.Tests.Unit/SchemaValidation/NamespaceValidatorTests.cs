@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.SchemaValidation
 {
+    using Core.Shared;
     using System;
     using System.Linq;
-    using Core.Shared;
     using Xml;
     using XmlValidation.SchemaValidation;
     using Xunit;

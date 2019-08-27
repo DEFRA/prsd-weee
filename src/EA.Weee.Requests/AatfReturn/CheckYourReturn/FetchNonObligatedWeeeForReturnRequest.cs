@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.AatfReturn.NonObligated
 {
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core.Mediator;
 
     public class FetchNonObligatedWeeeForReturnRequest : IRequest<List<decimal?>>
     {

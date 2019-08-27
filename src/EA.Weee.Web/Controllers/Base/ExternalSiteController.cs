@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Controllers.Base
 {
-    using System.Web.Mvc;
     using Filters;
     using Security;
+    using System.Web.Mvc;
 
     [AuthorizeClaims(Claims.CanAccessExternalArea)]
     public abstract class ExternalSiteController : Controller

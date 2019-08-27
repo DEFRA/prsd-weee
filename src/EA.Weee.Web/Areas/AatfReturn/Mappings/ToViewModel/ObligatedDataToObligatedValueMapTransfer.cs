@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
     using Core.AatfReturn;
+    using System.Collections.Generic;
 
     public class ObligatedDataToObligatedValueMapTransfer
     {

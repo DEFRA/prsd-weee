@@ -4,10 +4,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using Microsoft.Ajax.Utilities;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
 
     public class NonObligatedDataToNonObligatedValueMap : IMap<NonObligatedDataToNonObligatedValueMapTransfer, IList<NonObligatedCategoryValue>>
     {

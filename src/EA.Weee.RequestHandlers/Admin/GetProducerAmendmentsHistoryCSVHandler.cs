@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -11,7 +7,11 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     internal class GetProducerAmendmentsHistoryCSVHandler : IRequestHandler<GetProducerAmendmentsHistoryCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;

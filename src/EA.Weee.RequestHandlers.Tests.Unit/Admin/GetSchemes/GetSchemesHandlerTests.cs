@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
@@ -15,6 +11,10 @@
     using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Domain.Organisation;
     using Weee.Tests.Core;
     using Xunit;

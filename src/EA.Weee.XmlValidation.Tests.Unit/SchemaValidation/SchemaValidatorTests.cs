@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.SchemaValidation
 {
+    using Core.Shared;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -7,8 +9,6 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Core.Shared;
-    using FakeItEasy;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml;

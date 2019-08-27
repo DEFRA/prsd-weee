@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.AatfReturn;
+    using Domain.Admin.AatfReports;
+    using EA.Weee.Domain.DataReturns;
+    using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using Domain.Admin.AatfReports;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -39,7 +40,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReceivedHouseHold.Should().Be(4);
@@ -68,7 +69,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
             }
@@ -97,7 +98,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReceivedHouseHold.Should().BeNull();
@@ -128,7 +129,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReusedHouseHold.Should().Be(4);
@@ -159,7 +160,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeReusedHouseHold.Should().BeNull();
@@ -190,7 +191,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeSentOnHouseHold.Should().Be(4);
@@ -221,7 +222,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(1);
                 results.ElementAt(0).WeeeSentOnHouseHold.Should().BeNull();
@@ -275,10 +276,10 @@
                 db.WeeeContext.WeeeReused.Add(weeeReused2);
                 db.WeeeContext.WeeeReusedAmount.Add(weeeReusedAmount1);
                 db.WeeeContext.WeeeReusedAmount.Add(weeeReusedAmount2);
-                
+
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(2);
                 results.First(r => r.ReturnId.Equals(@return1.Id)).WeeeSentOnHouseHold.Should().Be(1);
@@ -295,14 +296,7 @@
                 results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedNonHouseHold.Should().Be(12);
             }
         }
-
-        private static Return CreateSubmittedReturn(DatabaseWrapper db)
-        {
-            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
-            @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
-            return @return;
-        }
-
+     
         [Fact]
         public async Task Execute_GivenNoData_NoResultsShouldBeReturned()
         {
@@ -311,14 +305,62 @@
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
                 @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-                
+
                 db.WeeeContext.Returns.Add(@return);
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id);
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
 
                 results.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_GivenAatfCY_ReturnsWeeeReceivedAatfForCYDataShouldBeCorrect()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var @return = CreateSubmittedReturn(db);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(@return.Organisation);
+                var weeeReceived = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return);
+
+                var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
+                {
+                    new Domain.AatfReturn.WeeeReceivedAmount(weeeReceived, 1, 1, 2),
+                    new Domain.AatfReturn.WeeeReceivedAmount(weeeReceived, 2, 3, 4)
+                };
+
+                db.WeeeContext.Returns.Add(@return);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
+                db.WeeeContext.WeeeReceived.Add(weeeReceived);
+                db.WeeeContext.WeeeReceivedAmount.AddRange(weeeReceivedAmounts);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation, 2020);
+                var @return2020 = CreateSubmittedReturn(db, 2020);
+                var weeeReceived2020 = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf1, @return2020);
+
+                var weeeReceivedAmounts2020 = new List<WeeeReceivedAmount>()
+                {
+                    new Domain.AatfReturn.WeeeReceivedAmount(weeeReceived2020, 1, 1, 2),
+                    new Domain.AatfReturn.WeeeReceivedAmount(weeeReceived2020, 2, 3, 4),
+                    new Domain.AatfReturn.WeeeReceivedAmount(weeeReceived2020, 3, 3, 4)
+                };
+
+                db.WeeeContext.Returns.Add(@return2020);
+                db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf1, @return2020));
+                db.WeeeContext.WeeeReceived.Add(weeeReceived2020);
+                db.WeeeContext.WeeeReceivedAmount.AddRange(weeeReceivedAmounts2020);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetAatfSubmissions(aatf.Id, aatf.ComplianceYear);
+
+                results.Count.Should().Be(1);
+                results.ElementAt(0).WeeeReceivedHouseHold.Should().Be(4);
+                results.ElementAt(0).WeeeReceivedNonHouseHold.Should().Be(6);
+                AssertFixedPropertiesForReturn(results, db, @return);
             }
         }
 
@@ -328,6 +370,13 @@
             results.ElementAt(0).SubmittedDate.Date.Should().Be(@return.SubmittedDate.Value.Date);
             results.ElementAt(0).ComplianceYear.Should().Be(@return.Quarter.Year);
             results.ElementAt(0).Quarter.Should().Be((int)@return.Quarter.Q);
+        }
+
+        private static Return CreateSubmittedReturn(DatabaseWrapper db, int year = 2019)
+        {
+            var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf, year, QuarterType.Q1);
+            @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
+            return @return;
         }
     }
 }

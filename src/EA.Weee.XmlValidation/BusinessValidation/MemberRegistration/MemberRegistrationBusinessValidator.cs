@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration
 {
+    using Rules.Producer;
+    using Rules.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Rules.Producer;
-    using Rules.Scheme;
     using Xml.MemberRegistration;
 
     public class MemberRegistrationBusinessValidator : IMemberRegistrationBusinessValidator
@@ -27,9 +27,9 @@
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
         private readonly Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate;
 
-        public MemberRegistrationBusinessValidator(IProducerNameChange producerNameWarning, 
-            IAnnualTurnoverMismatch annualTurnoverMismatch, 
-            IProducerAlreadyRegistered producerAlreadyRegistered, 
+        public MemberRegistrationBusinessValidator(IProducerNameChange producerNameWarning,
+            IAnnualTurnoverMismatch annualTurnoverMismatch,
+            IProducerAlreadyRegistered producerAlreadyRegistered,
             IProducerNameAlreadyRegistered producerNameAlreadyRegistered,
             IDuplicateProducerRegistrationNumbers duplicateProducerRegistrationNumbers,
             IDuplicateProducerNames duplicateProducerNames,

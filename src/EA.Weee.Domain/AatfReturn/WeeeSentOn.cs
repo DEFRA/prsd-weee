@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
 

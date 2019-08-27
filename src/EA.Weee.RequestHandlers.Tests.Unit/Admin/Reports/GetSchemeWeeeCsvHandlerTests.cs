@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.Admin.Reports;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Reports;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
-    using Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemeWeeeCsvHandlerTests

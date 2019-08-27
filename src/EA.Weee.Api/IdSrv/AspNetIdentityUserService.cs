@@ -16,18 +16,18 @@
 
 namespace EA.Weee.Api.IdSrv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
     using DataAccess;
     using IdentityModel;
     using IdentityServer3.Core.Extensions;
     using IdentityServer3.Core.Models;
     using IdentityServer3.Core.Services.Default;
     using Microsoft.AspNet.Identity;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
     using Constants = IdentityServer3.Core.Constants;
 
     public class AspNetIdentityUserService<TUser, TKey> : UserServiceBase

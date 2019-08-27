@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Admin;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

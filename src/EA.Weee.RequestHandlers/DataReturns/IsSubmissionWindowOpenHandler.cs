@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns
-{   
-    using System.Threading.Tasks;
+{
     using DataAccess.DataAccess;
     using Factories;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.DataReturns;
-    
+    using System.Threading.Tasks;
+
     internal class IsSubmissionWindowOpenHandler : IRequestHandler<IsSubmissionWindowOpen, bool>
     {
         private readonly IQuarterWindowFactory quarterWindowFactory;

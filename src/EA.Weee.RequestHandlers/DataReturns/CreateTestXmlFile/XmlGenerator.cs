@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.CreateTestXmlFile
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Xml.Linq;
-    using Domain;
     using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Prsd.Core;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Xml.Linq;
     using Xml;
     using QuarterType = EA.Weee.Domain.DataReturns.QuarterType;
 

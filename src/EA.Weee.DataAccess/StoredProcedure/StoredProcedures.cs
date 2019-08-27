@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
-    using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -17,18 +17,20 @@
             this.context = context;
         }
 
-        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId)
+        public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId, short complianceYear)
         {
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId", aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId)
+        public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId, short complianceYear)
         {
             var aatfIdParameter = new SqlParameter("@AeId", aatfId);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId", aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
         public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
@@ -448,9 +450,9 @@
             return await context.Database
                 .SqlQuery<AatfAeReturnData>(
                     "[AATF].[getAatfAeReturnDataCsvData] @ComplianceYear, @Quarter,  @FacilityType, @ReturnStatus, @CA, @Area, @PanArea, @IncludeResubmissions",
-                    complianceYearParameter,                  
+                    complianceYearParameter,
                     quarterParameter,
-                    facilityTypeParameter, 
+                    facilityTypeParameter,
                     returnStatusParameter,
                     authorityParameter,
                     areaParameter,
@@ -459,13 +461,13 @@
                 .ToListAsync();
         }
 
-        public async Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
+        public async Task<List<NonObligatedWeeeReceivedCsvData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var aatfNameParameter = new SqlParameter("@AatfName", (object)aatf ?? DBNull.Value);
 
             return await context.Database
-                .SqlQuery<NonObligatedWeeeReceivedAtAatfData>(
+                .SqlQuery<NonObligatedWeeeReceivedCsvData>(
                     "[AATF].[getNonObligatedWeeeReceived] @ComplianceYear, @AatfName",
                     complianceYearParameter,
                     aatfNameParameter)
@@ -537,6 +539,13 @@
             return obligatedData;
         }
 
+        public async Task<List<NonObligatedWeeeReceivedCsvData>> GetReturnNonObligatedCsvData(Guid returnId)
+        {
+            var returnIdParameter = new SqlParameter("@ReturnId", returnId);
+
+            return await context.Database.SqlQuery<NonObligatedWeeeReceivedCsvData>("[AATF].[getReturnNonObligatedCsvData] @ReturnId", returnIdParameter).ToListAsync();
+        }
+
         public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -564,7 +573,7 @@
             }
             return dataSet;
         }
-         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
+        public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
@@ -573,8 +582,8 @@
             return await context.Database
                 .SqlQuery<AatfReuseSitesData>(
                     "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea",
-                    complianceYearParameter, authorityParameter,  panAreaParameter)
+                    complianceYearParameter, authorityParameter, panAreaParameter)
                 .ToListAsync();
-        }   
+        }
     }
 }

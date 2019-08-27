@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
-    using System;
-    using Domain.Organisation;
     using Organisations;
+    using System;
 
     public class AatfDataList
     {

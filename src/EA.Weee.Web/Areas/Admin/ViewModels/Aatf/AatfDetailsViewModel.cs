@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Web.Mvc;
-    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
@@ -13,6 +13,8 @@
     public class AatfDetailsViewModel
     {
         public Guid Id { get; set; }
+
+        public Guid AatfId { get; set; }
 
         public string Name { get; set; }
 
@@ -34,7 +36,7 @@
         public AatfSize Size { get; set; }
 
         public OrganisationData Organisation { get; set; }
-        
+
         [AllowHtml]
         public string OrganisationAddress { get; set; }
 
@@ -105,6 +107,19 @@
                 }
 
                 return false;
+            }
+        }
+
+        [DisplayName("Compliance year")]
+        public Int16 SelectedComplianceYear { get; set; }
+
+        public IEnumerable<short> ComplianceYearList { get; set; }
+
+        public bool IsLatestComplianceYear
+        {
+            get
+            {
+                return ComplianceYearList != null && ComplianceYear == ComplianceYearList.First();
             }
         }
     }

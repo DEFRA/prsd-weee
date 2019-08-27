@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Producers
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using Core.Admin;
+    using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
     public class ConfirmRemovalViewModel : YesNoChoiceViewModel

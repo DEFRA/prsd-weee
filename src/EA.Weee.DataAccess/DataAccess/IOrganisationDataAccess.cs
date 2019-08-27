@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain.AatfReturn;
+    using Domain.Organisation;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
 
     public interface IOrganisationDataAccess
     {

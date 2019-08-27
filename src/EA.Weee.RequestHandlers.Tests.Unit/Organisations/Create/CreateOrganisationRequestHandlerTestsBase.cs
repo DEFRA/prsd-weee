@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.Create
 {
-    using System;
-    using System.Data.Entity;
     using DataAccess;
     using Domain.Organisation;
     using Domain.User;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
+    using System;
+    using System.Data.Entity;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
