@@ -109,7 +109,11 @@
         locale: "en"
 	    }
     );
+
+    $('.govuk-tabs__tab--selected').focus();
 });
+
+
 
 //USAGE: $("#form").serializeFiles();
 (function ($) {
