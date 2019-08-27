@@ -362,6 +362,7 @@
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.OrganisationName = organisation.OrganisationName;
                 viewModel = await PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
+                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears());
             }
 
             return viewModel;

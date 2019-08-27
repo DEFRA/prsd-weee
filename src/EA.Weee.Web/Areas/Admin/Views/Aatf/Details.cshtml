@@ -128,9 +128,12 @@
             <p>
                 <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
             </p>
-            <p>
-                <a href="@(Url.UrlFor<CopyAatfController>(a => a.CopyAatfDetails(Model.Id)))">Copy  @Model.FacilityType.ToDisplayString() details for a new compliance year</a>
-            </p>
+            if (Model.ShowCopyLink)
+            {
+                <p>
+                    <a href="@(Url.UrlFor<CopyAatfController>(a => a.CopyAatfDetails(Model.Id)))">Copy  @Model.FacilityType.ToDisplayString() details for a new compliance year</a>
+                </p>
+            }
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
