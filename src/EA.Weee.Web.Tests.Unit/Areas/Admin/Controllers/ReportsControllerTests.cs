@@ -168,6 +168,7 @@
         [InlineData(Reports.UkWeeeDataAtAatfs, "UkWeeeDataAtAatfs", "AatfReports")]
         [InlineData(Reports.UkNonObligatedWeeeData, "UkNonObligatedWeeeReceived", "AatfReports")]
         [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData", "AatfReports")]
+        [InlineData(Reports.AatfAeDetails, "AatfAeDetails", "AatfReports")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
         {
             // Arrange
