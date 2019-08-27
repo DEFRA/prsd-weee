@@ -36,16 +36,6 @@
                 var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
-            PanArea panArea = null;
-            UKCompetentAuthority authority = null;
-            if (request.AuthorityId != null)
-            {
-                authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
-            }
-            if (request.PanArea != null)
-            {
-                panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
-            }
 
             var obligatedData = await weeContext.StoredProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType);
 
@@ -74,13 +64,15 @@
                 }
             }
 
-            var fileName = string.Format("{0}", request.ComplianceYear);
-            if (request.AuthorityId != null)
+            var fileName = $"{request.ComplianceYear}";
+            if (request.AuthorityId.HasValue)
             {
+                var authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
                 fileName += "_" + authority.Abbreviation;
             }
-            if (request.PanArea != null)
+            if (request.PanArea.HasValue)
             {
+                var panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
                 fileName += "_" + panArea.Name;
             }
             if (!string.IsNullOrEmpty(request.ObligationType))
@@ -88,10 +80,9 @@
                 fileName += "_" + request.ObligationType;
             }
 
-            fileName += "_View obligated WEEE data" + string.Format("_{0:ddMMyyyy}_{0:HHmm}.csv",
-                                SystemTime.UtcNow);
+            fileName += $"_AATF obligated WEEE data_{SystemTime.UtcNow:ddMMyyyy}_{SystemTime.UtcNow:HHmm}.csv";
 
-            string fileContent = DataTableCsvHelper.DataTableToCsv(obligatedData);
+            var fileContent = obligatedData.DataTableToCsv();
 
             return new CSVFileData
             {
