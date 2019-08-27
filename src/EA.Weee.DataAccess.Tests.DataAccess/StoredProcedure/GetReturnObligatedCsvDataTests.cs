@@ -67,6 +67,60 @@
         }
 
         [Fact]
+        public async Task Execute_GivenSubmittedReturnWithWithoutOptionsSelected_DataShouldNotHaveColumns()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var @return = SetupCreatedReturn(db);
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+
+                db.WeeeContext.Aatfs.Add(aatf);
+                db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
+                results.Rows.Count.Should().Be(28);
+
+                results.Columns[TotalReceivedHeading].Should().BeNull();
+                results.Columns[TotalSentOnHeading].Should().BeNull();
+                results.Columns[TotalReusedHeading].Should().BeNull();
+                results.Dispose();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_GivenSubmittedReturnWithWithOptionsSelected_DataShouldHaveColumns()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var @return = SetupCreatedReturn(db);
+                var aatf = SetupAatfWithApprovalDate(db, DateTime.MinValue, "AAA");
+
+                db.WeeeContext.Aatfs.Add(aatf);
+                db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 1));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 2));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 3));
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
+                results.Rows.Count.Should().Be(28);
+
+                results.Columns[TotalReceivedHeading].Should().NotBeNull();
+                results.Columns[TotalSentOnHeading].Should().NotBeNull();
+                results.Columns[TotalReusedHeading].Should().NotBeNull();
+                results.Dispose();
+            }
+        }
+
+        [Fact]
         public async Task Execute_GivenAatfWithNoDataAndSubmittedReturn_DefaultDataShouldBeReturned()
         {
             using (var db = new DatabaseWrapper())
@@ -77,6 +131,12 @@
                 db.WeeeContext.ReturnAatfs.Add(new ReturnAatf(aatf, @return));
                 db.WeeeContext.Aatfs.Add(aatf);
                 db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 1));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 2));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 3));
 
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -103,6 +163,12 @@
 
                 db.WeeeContext.Aatfs.Add(aatf);
                 db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 1));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 2));
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 3));
 
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -181,6 +247,10 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 1));
+
+                await db.WeeeContext.SaveChangesAsync();
+
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(56);
 
@@ -240,6 +310,10 @@
                 db.WeeeContext.ReturnScheme.Add(new ReturnScheme(scheme2, @return));
 
                 db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 1));
 
                 await db.WeeeContext.SaveChangesAsync();
 
@@ -308,6 +382,10 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 2));
+
+                await db.WeeeContext.SaveChangesAsync();
+
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(56);
 
@@ -368,6 +446,10 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 2));
+
+                await db.WeeeContext.SaveChangesAsync();
+
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(56);
 
@@ -424,6 +506,10 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 3));
+
+                await db.WeeeContext.SaveChangesAsync();
+
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
                 results.Rows.Count.Should().Be(56);
 
@@ -465,6 +551,10 @@
                 }
 
                 db.WeeeContext.Returns.Add(@return);
+
+                await db.WeeeContext.SaveChangesAsync();
+
+                db.WeeeContext.ReturnReportOns.Add(new Domain.AatfReturn.ReturnReportOn(@return.Id, 3));
 
                 await db.WeeeContext.SaveChangesAsync();
 
