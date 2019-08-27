@@ -110,7 +110,6 @@
 	    }
     );
 
-    $('.govuk-tabs__tab--selected').focus();
 });
 
 
