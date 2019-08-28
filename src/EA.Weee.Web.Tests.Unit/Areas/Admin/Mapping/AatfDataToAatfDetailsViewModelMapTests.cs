@@ -287,6 +287,33 @@
         }
 
         [Fact]
+        public void Map_GivenListOfAatfs_GivenAatfsWithTheSameAatfIdTheLatestApprovalDateShouldBeReturned()
+        {
+            AatfData aatfData = CreateAatfData();
+            var aatfId = Guid.NewGuid();
+
+            var aatfDataList = new AatfDataList(Guid.NewGuid(), "B 2019", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, aatfId, new DateTime(2018, 10, 1));
+            var aatfDataList2 = new AatfDataList(Guid.NewGuid(), "B 2020", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2020, aatfId, new DateTime(2019, 10, 1));
+
+            var associatedAatfs = new List<AatfDataList>()
+            {
+                aatfDataList,
+                aatfDataList2
+            };
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedAatfs.Count.Should().Be(1);
+            result.AssociatedAatfs.Should().Contain(aatfDataList2);
+            result.AssociatedAatfs.Should().NotContain(aatfDataList);
+        }
+
+        [Fact]
         public void Map_GivenSubmissionHistoryOnTransfer_MappedSubmissionHistoryDataShouldBeReturned()
         {
             var aatSubmissionHistoryData = new List<AatfSubmissionHistoryData>()
