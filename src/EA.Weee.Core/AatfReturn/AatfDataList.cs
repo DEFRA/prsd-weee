@@ -24,7 +24,9 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear)
+        public Guid AatfId { get; set; }
+
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear, Guid aatfId)
         {
             this.Id = id;
             this.Name = name;
@@ -35,6 +37,7 @@
             this.Organisation = organisation;
             this.FacilityType = facilityType;
             this.ComplianceYear = complianceYear;
+            this.AatfId = aatfId;
         }
     }
 }
