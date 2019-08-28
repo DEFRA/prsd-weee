@@ -425,7 +425,7 @@
         {
             using (var client = apiClient())
             {
-                model.ComplianceYears = new SelectList(FetchAllAatfComplianceYears());
+                model.ComplianceYears = new SelectList(new List<int> { 2019, 2020, 2021 });
                 model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
                 model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
                 model.PanAreaList = await PatAreaList();
