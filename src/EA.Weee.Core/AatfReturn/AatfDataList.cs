@@ -26,7 +26,9 @@
 
         public Guid AatfId { get; set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear, Guid aatfId)
+        public DateTime? ApprovalDate { get; set; }
+
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear, Guid aatfId, DateTime? approvalDate)
         {
             this.Id = id;
             this.Name = name;
@@ -38,6 +40,7 @@
             this.FacilityType = facilityType;
             this.ComplianceYear = complianceYear;
             this.AatfId = aatfId;
+            this.ApprovalDate = approvalDate;
         }
     }
 }

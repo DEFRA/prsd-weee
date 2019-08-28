@@ -38,7 +38,7 @@
 
             var organisation = organisationMap.Map(source.Organisation);
 
-            return new AatfDataList(source.Id, source.Name, competentAuthority, source.ApprovalNumber, aatfStatus, organisation, facilityType, source.ComplianceYear, source.AatfId);
+            return new AatfDataList(source.Id, source.Name, competentAuthority, source.ApprovalNumber, aatfStatus, organisation, facilityType, source.ComplianceYear, source.AatfId, source.ApprovalDate);
         }
     }
 }

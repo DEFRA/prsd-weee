@@ -76,7 +76,7 @@
             A.CallTo(() => dataAccess.GetLatestAatfs()).Returns(aatfs);
 
             var request = new GetAatfs(facilityType);
-            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType, (Int16)2019, Guid.NewGuid());
+            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType, (Int16)2019, Guid.NewGuid(), null);
 
             A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(returnDataList);
 
