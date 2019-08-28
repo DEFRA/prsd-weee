@@ -38,10 +38,6 @@
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.19029-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -192,6 +188,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.DataAccess\EA.Prsd.Core.DataAccess.csproj">
+      <Project>{c5ef212b-402c-4586-992b-d051626e3747}</Project>
+      <Name>EA.Prsd.Core.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
