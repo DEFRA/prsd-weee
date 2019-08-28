@@ -20,6 +20,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGetUkWeeeAtAatfsCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly Dictionary<int, string> categories = ReportHelper.GetCategoryDisplayNames();
 
         public GetUkWeeeAtAatfsCsvHandler(
             IWeeeAuthorization authorization,
@@ -57,7 +58,7 @@
             var csvWriter = csvWriterFactory.Create<CsvResult>();
 
             csvWriter.DefineColumn("Quarter", x => x.TimePeriod);
-            csvWriter.DefineColumn("Category", x => ReportHelper.CategoryDisplayNames[x.Category]);
+            csvWriter.DefineColumn("Category", x => categories[(int)x.Category]);
             csvWriter.DefineColumn("B2C received for treatment (t)", x => x.B2cForTreatment);
             csvWriter.DefineColumn("B2C for reuse (t)", x => x.B2cForReuse);
             csvWriter.DefineColumn("B2C sent to AATF/ATF (t)", x => x.B2cForAatf);

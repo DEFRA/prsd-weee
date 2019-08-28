@@ -19,6 +19,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGetUkWeeeCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly Dictionary<int, string> categories = ReportHelper.GetCategoryDisplayNames();
 
         public GetUkWeeeCsvHandler(
             IWeeeAuthorization authorization,
@@ -55,7 +56,7 @@
         {
             CsvWriter<CsvResult> csvWriter = csvWriterFactory.Create<CsvResult>();
 
-            csvWriter.DefineColumn("Category", x => ReportHelper.CategoryDisplayNames[x.Category]);
+            csvWriter.DefineColumn("Category", x => categories[(int)x.Category]);
             csvWriter.DefineColumn("Obligation type", x => x.ObligationType);
             csvWriter.DefineColumn("Total WEEE from DCF (t)", x => x.DcfTotal);
             csvWriter.DefineColumn("Q1 WEEE from DCF (t)", x => x.DcfQ1);

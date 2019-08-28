@@ -494,6 +494,7 @@
         private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
         {
             List<int> years = await FetchComplianceYearsForDataReturns();
+
             model.ComplianceYears = new SelectList(years);
 
             if (populateSchemes)
