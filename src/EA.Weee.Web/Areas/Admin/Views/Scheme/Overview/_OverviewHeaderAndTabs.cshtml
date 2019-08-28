@@ -10,17 +10,17 @@
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("PCS details",
-        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.PcsDetails)),
-        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.PcsDetails)
+        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.PcsDetails, "pcsDetailsAnchor")),
+        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.PcsDetails, "pcsDetailsAnchor")
     @this.WeeeGds().Tab("Members and data",
-        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.MembersData)),
-        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.MembersData)
+        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.MembersData, "memberDetailsAnchor")),
+        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.MembersData, "memberDetailsAnchor")
     @this.WeeeGds().Tab("Organisation details",
-        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.OrganisationDetails)),
-        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.OrganisationDetails)
+        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.OrganisationDetails, "organisationDetailsAnchor")),
+        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
     @this.WeeeGds().Tab("Contact details",
-        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.ContactDetails)),
-        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.ContactDetails)
+        Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.ContactDetails, "contactDetailsAnchor")),
+        Model.ActiveOverviewDisplayOption == OverviewDisplayOption.ContactDetails, "contactDetailsAnchor")
 </ul>
 
 
