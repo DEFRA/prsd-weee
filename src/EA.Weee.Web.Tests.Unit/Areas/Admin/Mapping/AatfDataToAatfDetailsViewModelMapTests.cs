@@ -125,9 +125,9 @@
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid()),
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019)
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid())
             };
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
@@ -152,12 +152,12 @@
         public void Map_GivenValidSource_WithAatfs_AatfListShouldNotContainAatfFoundInSource()
         {
             AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear);
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear, aatfData.AatfId);
 
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid()),
                 aatfDataReplica
             };
 
@@ -178,12 +178,12 @@
         public void Map_GivenValidSource_WithAatfs_AeListShouldNotContainAatfFoundInSource()
         {
             AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear);
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear, aatfData.AatfId);
 
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid()),
                 aatfDataReplica
             };
 
