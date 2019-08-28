@@ -1172,8 +1172,9 @@
             List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             List<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
             List<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
-            List<int> years = Enumerable.Range(2019, DateTime.Now.Year - 2018).OrderByDescending(year => year).ToList();
+            List<int> years = fixture.CreateMany<int>().ToList();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
@@ -1199,6 +1200,7 @@
                s1 => Assert.Equal("AATF", s1.Text),
                s2 => Assert.Equal("AE", s2.Text));
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
@@ -1208,10 +1210,10 @@
         public async Task GetAatfAeDetails_Always_SetsTriggerDownloadToFalse()
         {
             // Act
-            var result = await controller.AatfAeDetails();
+            ActionResult result = await controller.AatfAeDetails();
 
             // Assert
-            var viewResult = result as ViewResult;
+            ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
         }
@@ -1229,12 +1231,12 @@
         [Fact]
         public async Task PostAatfAeDetails_WithInvalidViewModel_ReturnsAatfAeDetailsViewModel()
         {
-            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var panAreas = fixture.CreateMany<PanAreaData>().ToList();
-            var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
-            var years = Enumerable.Range(2019, DateTime.Now.Year - 2018).OrderByDescending(year => year).ToList();
+            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            List<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
+            List<LocalAreaData> localAreas = fixture.CreateMany<LocalAreaData>().ToList();
+            List<int> years = fixture.CreateMany<int>().ToList();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
@@ -1271,7 +1273,7 @@
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
         }
 
-       [Fact]
+        [Fact]
         public async Task PostAatfAeDetails_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Act
