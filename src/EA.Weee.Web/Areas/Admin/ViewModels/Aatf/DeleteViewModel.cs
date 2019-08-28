@@ -17,5 +17,7 @@
         public string AatfName { get; set; }
 
         public string OrganisationName { get; set; }
+
+        public bool ActiveUsers { get; set; }
     }
 }
