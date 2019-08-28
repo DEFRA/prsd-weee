@@ -122,11 +122,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
-      <Project>{67EB0694-6149-4A6F-89DE-144F24802C7F}</Project>
+      <Project>{67eb0694-6149-4a6f-89de-144f24802c7f}</Project>
       <Name>EA.Prsd.Core.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
+      <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
   </ItemGroup>
