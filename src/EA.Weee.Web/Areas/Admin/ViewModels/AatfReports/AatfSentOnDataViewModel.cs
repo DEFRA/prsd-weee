@@ -36,9 +36,5 @@
                 yield return new SelectListItem() { Text = "B2C" };
             }
         }
-
-        [DisplayName("AATF name")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public string AATFName { get; set; }
     }
 }
