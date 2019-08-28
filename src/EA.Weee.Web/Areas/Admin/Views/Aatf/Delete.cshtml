@@ -69,9 +69,9 @@
                 <div>
                     @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
                     {
-                        <p class="important-large">
-                            Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see the @facilityType or the organisation.
-                        </p>
+                    <p class="important-large">
+                        The organisation that operates this AATF has active users. If you delete the @facilityType these external users will no longer be able to see the @facilityType or the organisation.
+                    </p>
                     }
                     <p>
                         The @facilityType and the organisation that operates it will be deleted
@@ -83,12 +83,12 @@
                 <div>
                     @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
                     {
-                        <p class="important-large">
-                            Active external users exist within the organisation that operates this @facilityType. If you delete the @facilityType, these external users will no longer be able to see it.
-                        </p>
+                    <p class="important-large">
+                        The organisation that operates this @facilityType has active users. If you delete the @facilityType these external users will no longer be able to see it.
+                    </p>
                     }
                     <p>
-                        The @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs (or compliance years), AEs or PCSs.
+                        The @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs, AEs or PCSs or because there are records or data for other compliance years.
                     </p>
                 </div>
             }
