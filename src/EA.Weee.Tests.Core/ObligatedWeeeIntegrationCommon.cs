@@ -2,6 +2,7 @@
 {
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Tests.Core.Model;
     using System;
     using System.Linq;
@@ -36,14 +37,38 @@
             return new Return(organisation, new Quarter(year, quarter), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, short year = 2019)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, short year = 2019, bool hasLocalArea = true, bool hasPanArea = true, string name = null)
         {
-            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, year, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+            LocalArea localArea = null;
+            if (hasLocalArea)
+            {
+                localArea = database.WeeeContext.LocalAreas.First();
+            }
+
+            PanArea panArea = null;
+            if (hasPanArea)
+            {
+                panArea = database.WeeeContext.PanAreas.First();
+            }
+
+            var aatfName = "aatfname";
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                aatfName = name;
+            }
+
+            return new Aatf(aatfName, database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Aatf, year, localArea, panArea);
         }
 
-        public static Aatf CreateAe(DatabaseWrapper database, Organisation organisation, short year = 2019)
+        public static Aatf CreateAe(DatabaseWrapper database, Organisation organisation, short year = 2019, string name = null)
         {
-            return new Aatf("aatfname", database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, year, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+            var aatfName = "aatfname";
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                aatfName = name;
+            }
+
+            return new Aatf(aatfName, database.WeeeContext.UKCompetentAuthorities.First(), "number", AatfStatus.Approved, organisation, CreateAatfAddress(database), AatfSize.Large, DateTime.Now, CreateDefaultContact(database.WeeeContext.Countries.First()), FacilityType.Ae, year, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
         }
 
         public static Scheme CreateScheme(Organisation organisation)
