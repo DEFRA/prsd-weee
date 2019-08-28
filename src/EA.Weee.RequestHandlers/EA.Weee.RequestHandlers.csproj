@@ -39,9 +39,6 @@
     <Reference Include="DotNetZip, Version=1.13.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.13.0\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -487,6 +484,10 @@
     <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
+      <Project>{333c65b9-ebb6-4d04-921e-89094f80e2e3}</Project>
+      <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
