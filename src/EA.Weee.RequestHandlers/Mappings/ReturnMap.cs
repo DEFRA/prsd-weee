@@ -38,7 +38,7 @@
                 QuarterWindow = new QuarterWindow(source.QuarterWindow.StartDate, source.QuarterWindow.EndDate, (QuarterType)source.QuarterWindow.QuarterType),
                 OrganisationData = organisationMapper.Map(source.Organisation),
                 SchemeDataItems = source.ReturnSchemes.Select(s => mapper.Map<EA.Weee.Domain.Scheme.Scheme, SchemeData>(s.Scheme)).ToList(),
-                CreatedBy = source.Return.CreatedBy.FullName,
+                CreatedBy = source.Return.CreatedBy?.FullName,
                 CreatedDate = source.Return.CreatedDate,
                 SubmittedBy = source.Return.SubmittedBy?.FullName,
                 SubmittedDate = source.Return.SubmittedDate,
