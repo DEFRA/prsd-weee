@@ -9,6 +9,7 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.Admin.Helper;
 
     public class AatfDetailsViewModel
     {
@@ -120,6 +121,20 @@
             get
             {
                 return ComplianceYearList != null && ComplianceYear == ComplianceYearList.First();
+            }
+        }
+
+        public bool ShowCopyLink
+        {
+            get
+            {
+                if (IsLatestComplianceYear)
+                {
+                   var list = AatfHelper.FetchCurrentComplianceYears().Except(ComplianceYearList.Select(x => (int)x));
+
+                   return list.Count() > 0 ? true : false;
+                }
+                return false;
             }
         }
     }
