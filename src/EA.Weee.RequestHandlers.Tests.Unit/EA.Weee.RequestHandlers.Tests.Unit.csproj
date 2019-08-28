@@ -124,6 +124,7 @@
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfDeletionStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetOrganisationDeletionStatusTests.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkNonObligatedWeeeReceivedDataCsvHandlerTests.cs" />

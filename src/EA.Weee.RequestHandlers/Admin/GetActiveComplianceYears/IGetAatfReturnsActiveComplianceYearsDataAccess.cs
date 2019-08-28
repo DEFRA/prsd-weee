@@ -6,5 +6,7 @@
     public interface IGetAatfReturnsActiveComplianceYearsDataAccess
     {
         Task<List<int>> Get();
+
+        Task<List<int>> GetAatfAe();
     }
 }
