@@ -31,20 +31,10 @@
 
         @Html.Partial("_AatfDetails")
 
-        var complianceYearState = ViewData.ModelState["ComplianceYear"];
-        var complianceYearHasErrors = complianceYearState != null && complianceYearState.Errors.Count > 0;
-        var selectedValue = Model.ComplianceYear == default(short) && !complianceYearHasErrors ? DateTime.Now.Year : Model.ComplianceYear;
-        <div class="govuk-form-group @if (complianceYearHasErrors) { <text>govuk-form-group--error error</text> }">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ComplianceYear)">
             @Html.Gds().LabelFor(m => m.ComplianceYear)
             @Html.Gds().ValidationMessageFor(m => m.ComplianceYear)
-            <select class="govuk-!-width-one-third govuk-!-width-one-half form-control govuk-select" id="ComplianceYear" name="ComplianceYear">
-                <option></option>
-                @{foreach (var year in Model.ComplianceYearList)
-                    {
-                        <option @if (year == selectedValue) { <text> selected="selected" </text> }>@year</option>
-                    }
-                }
-            </select>
+            @Html.Gds().DropDownListFor(m => m.ComplianceYear, Model.ComplianceYearList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
         </div>
 
         <div>
