@@ -79,10 +79,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
+      <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
   </ItemGroup>

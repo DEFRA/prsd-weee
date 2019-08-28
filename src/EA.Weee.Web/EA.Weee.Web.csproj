@@ -65,10 +65,6 @@
     <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
-    </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
@@ -1411,6 +1407,10 @@
     <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
       <Project>{333c65b9-ebb6-4d04-921e-89094f80e2e3}</Project>
       <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
+      <Project>{67eb0694-6149-4a6f-89de-144f24802c7f}</Project>
+      <Name>EA.Prsd.Core.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
