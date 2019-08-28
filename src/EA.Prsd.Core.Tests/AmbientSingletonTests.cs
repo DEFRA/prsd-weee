@@ -61,15 +61,14 @@ namespace EA.Prsd.Core.Tests
         {
             var singleton = new AmbientSingleton<string>();
 
-            Assert.Equal(null, singleton.Value);
+            Assert.Null(singleton.Value);
         }
 
         [Fact]
         public void WhenSpecifyingAmbientValue_ThenOverridesGlobalDefault()
         {
-            var singleton = new AmbientSingleton<string>("foo");
+            var singleton = new AmbientSingleton<string>("foo") {Value = "bar"};
 
-            singleton.Value = "bar";
 
             Assert.Equal("bar", singleton.Value);
         }
