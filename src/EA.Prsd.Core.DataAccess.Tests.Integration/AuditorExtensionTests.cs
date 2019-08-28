@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EA.Prsd.Core.DataAccess.Extensions;
-using EA.Prsd.Core.DataAccess.Tests.Integration.Helpers;
-using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
-using EA.Prsd.Core.Domain.Auditing;
-using Xunit;
-
-namespace EA.Prsd.Core.DataAccess.Tests.Integration
+﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using EA.Prsd.Core.DataAccess.Extensions;
+    using EA.Prsd.Core.DataAccess.Tests.Integration.Helpers;
+    using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
+    using EA.Prsd.Core.Domain.Auditing;
+    using Xunit;
+    using Model;
+
     public class AuditorExtensionTests
     {
+        public AuditorExtensionTests()
+        {
+            var database = new TestDbContext();
+
+            database.Database.CreateIfNotExists();
+
+            database.Dispose();
+        }
 
         [Fact]
         public void AuditChanges_InsertTwoSimpleEntities_AddsTwoAuditLogs_OfAddedType()
