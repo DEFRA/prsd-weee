@@ -101,6 +101,7 @@
     <Compile Include="Admin\Aatf\IGetAatfDeletionStatus.cs" />
     <Compile Include="Admin\Aatf\IGetOrganisationDeletionStatus.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
