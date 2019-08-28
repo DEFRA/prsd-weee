@@ -52,8 +52,8 @@
         {
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            GetAatfAeReturnDataCsvHandler handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), fixture.Create<bool>());
+            GetAatfAeDetailsCsvHandler handler = new GetAatfAeDetailsCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>());
 
             Func<Task> action = async () => await handler.HandleAsync(request);
 
