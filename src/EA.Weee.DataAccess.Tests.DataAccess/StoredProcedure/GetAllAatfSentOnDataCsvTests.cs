@@ -17,26 +17,6 @@
     public class GetAllAatfSentOnDataCsvTests
     {
         [Fact]
-        public async Task Execute_GivenNoData_NoResultsShouldBeReturned()
-        {
-            using (var db = new DatabaseWrapper())
-            {
-                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
-                @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-
-                db.WeeeContext.Returns.Add(@return);
-
-                await db.WeeeContext.SaveChangesAsync();
-
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, null, null);
-
-                results.Tables[0].Rows.Count.Should().Be(84);
-                results.Tables[1].Rows.Count.Should().Be(2);
-            }
-        }
-
-        [Fact]
         public async Task Execute_GivenWeeeSentOnData_ReturnsWeeeSentOnAatfDataShouldBeCorrect()
         {
             using (var db = new DatabaseWrapper())
