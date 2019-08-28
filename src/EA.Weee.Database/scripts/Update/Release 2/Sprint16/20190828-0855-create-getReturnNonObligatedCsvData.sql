@@ -14,7 +14,7 @@ BEGIN
 
 DECLARE @FinalTable TABLE
 (
-	[Year] INT,
+	[Compliance year] INT,
 	[Quarter] CHAR(2),
 	[SubmittedBy] NVARCHAR(500),
 	[SubmittedDate] DATETIME,
