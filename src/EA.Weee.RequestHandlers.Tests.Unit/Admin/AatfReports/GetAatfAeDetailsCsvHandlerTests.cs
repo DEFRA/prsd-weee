@@ -52,8 +52,8 @@
         {
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            GetAatfAeReturnDataCsvHandler handler = new GetAatfAeReturnDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
-            GetAatfAeReturnDataCsv request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<string>(), fixture.Create<bool>());
+            GetAatfAeDetailsCsvHandler handler = new GetAatfAeDetailsCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>());
 
             Func<Task> action = async () => await handler.HandleAsync(request);
 
@@ -162,7 +162,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{panArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -207,7 +207,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
