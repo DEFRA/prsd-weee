@@ -51,8 +51,8 @@
                 var firstCategoryRecord = results[0];
                 var secondCategoryRecord = results[1];
 
-                Assert.Equal("1. Large Household Appliances", firstCategoryRecord.Category);
-                Assert.Equal("2. Small Household Appliances", secondCategoryRecord.Category);
+                Assert.Equal("1. Large household appliances", firstCategoryRecord.Category);
+                Assert.Equal("2. Small household appliances", secondCategoryRecord.Category);
 
                 Assert.Equal(400, secondCategoryRecord.Q1B2BEEE);
                 Assert.Equal(100, firstCategoryRecord.Q1B2CEEE);
@@ -101,7 +101,7 @@
                 Assert.NotNull(results);
                 Assert.Equal(results.Count, 14);
                 var firstCategoryRecord = results[0];
-                Assert.Equal("1. Large Household Appliances", firstCategoryRecord.Category);
+                Assert.Equal("1. Large household appliances", firstCategoryRecord.Category);
 
                 Assert.Null(firstCategoryRecord.Q3B2CEEE);
                 Assert.Equal(700, firstCategoryRecord.TotalB2CEEE);
