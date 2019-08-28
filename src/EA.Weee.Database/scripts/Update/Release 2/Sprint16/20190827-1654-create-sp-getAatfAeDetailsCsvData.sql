@@ -36,6 +36,7 @@ DECLARE @AATF TABLE
 	ContactName				NVARCHAR(70) NOT NULL,
 	ContactPosition			NVARCHAR(35) NOT NULL,
 	ContactAddress			NVARCHAR(500) NOT NULL,
+	ContactPostCode			NVARCHAR(10) NULL,
 	ContactEmail			NVARCHAR(256) NOT NULL,
 	ContactPhone			NVARCHAR(20) NOT NULL,
 	OrganisationName		NVARCHAR(256) NOT NULL,
@@ -50,7 +51,7 @@ INSERT INTO @AATF
 		pa.Name,
 		la.Name,
 		a.Name,
-		CONCAT(ad.Address1, COALESCE(', ' + NULLIF(ad.Address2, ''), ''), ', ', ad.TownOrCity,COALESCE(', ' + NULLIF(ad.CountyOrRegion, ''), ''), ''),
+		CONCAT(ad.Address1, COALESCE(', ' + NULLIF(ad.Address2, ''), ''), ', ', ad.TownOrCity,COALESCE(', ' + NULLIF(ad.CountyOrRegion, ''), ''),', ', co.Name, ''),
 		ad.Postcode,
 		a.ApprovalNumber,
 		a.ApprovalDate,
@@ -59,6 +60,7 @@ INSERT INTO @AATF
 		c.FirstName + ' ' + c.LastName,
 		c.Position,
 		CONCAT(c.Address1, COALESCE(', ' + NULLIF(c.Address2, ''), ''), ', ', c.TownOrCity,COALESCE(', ' + NULLIF(c.CountyOrRegion, ''), ''), ''),
+		C.Postcode,
 		c.Email, 
 		c.Telephone,
 		CASE WHEN o.Name IS NULL THEN o.TradingName ELSE o.Name END,
@@ -73,6 +75,7 @@ INSERT INTO @AATF
 		LEFT JOIN Lookup.PanArea pa on a.PanAreaId = pa.Id
 		LEFT JOIN Lookup.LocalArea la on a.LocalAreaId = la.Id
 		LEFT JOIN AATF.Address ad on a.SiteAddressId = ad.Id
+		JOIN Lookup.Country co on ad.CountryId = co.Id
 		JOIN AATF.Contact c on a.ContactId = c.Id
 	WHERE 
 		A.ComplianceYear = @ComplianceYear 
