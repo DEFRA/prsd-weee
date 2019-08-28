@@ -231,6 +231,7 @@
     <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddPcsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
+    <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />

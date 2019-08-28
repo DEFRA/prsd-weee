@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Validation
 {
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
@@ -90,7 +91,7 @@
         }
 
         [Fact]
-        public void AatfDetailsViewModel_CYIsNotEqualToLatest_IsLatestComplianceYearShouldBeFalse()
+        public void AatfDetailsViewModel_CYIsNotEqualToLatest_IsLatestComplianceYearShouldBeTrue()
         {
             var model = new AatfDetailsViewModel() { ComplianceYear = A.Dummy<short>(), ComplianceYearList = A.CollectionOfDummy<short>(2) };
 
@@ -98,11 +99,43 @@
         }
 
         [Fact]
-        public void AatfDetailsViewModel_CYIsEqualToLatest_IsLatestComplianceYearShouldBeFalse()
+        public void AatfDetailsViewModel_CYIsEqualToLatest_IsLatestComplianceYearShouldBeTrue()
         {
             var model = new AatfDetailsViewModel() { ComplianceYear = 4, ComplianceYearList = new List<short> {4, 3} };
 
             model.IsLatestComplianceYear.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_CYIsNotNull_ShowCopyLinkShouldBeFalse()
+        {
+            var model = new AatfDetailsViewModel() { ComplianceYear = A.Dummy<short>() };
+
+            model.ShowCopyLink.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_RecordExistsforOneCY_ShowCopyLinkShouldBeTrue()
+        {
+            SystemTime.Freeze(new DateTime(2019, 2, 11));
+
+            var model = new AatfDetailsViewModel() { ComplianceYear = 2019, ComplianceYearList = new List<short> { 2019 } };
+
+            model.ShowCopyLink.Should().BeTrue();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_RecordExistsforAllCY_ShowCopyLinkShouldBeFalse()
+        {
+            SystemTime.Freeze(new DateTime(2019, 2, 11));
+
+            var model = new AatfDetailsViewModel() { ComplianceYear = 2019, ComplianceYearList = new List<short> { 2019, 2020 } };
+
+            model.ShowCopyLink.Should().BeFalse();
+
+            SystemTime.Unfreeze();
         }
     }
 }
