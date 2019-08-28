@@ -65,13 +65,6 @@
     <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.19029-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
-    </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
       <Private>True</Private>
@@ -1407,6 +1400,10 @@
     <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
       <Project>{333c65b9-ebb6-4d04-921e-89094f80e2e3}</Project>
       <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
+      <Project>{212c8803-bfe2-4091-81b0-b25be91c1c04}</Project>
+      <Name>EA.Prsd.Core.Web.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
       <Project>{67eb0694-6149-4a6f-89de-144f24802c7f}</Project>
