@@ -1,4 +1,9 @@
-﻿ALTER PROCEDURE [Producer].[SpgUKEEEDataByComplianceYear]
+﻿IF OBJECT_ID('[Producer].[SpgUKEEEDataByComplianceYear]', 'P') IS NOT NULL BEGIN
+	DROP PROCEDURE [Producer].[SpgUKEEEDataByComplianceYear]
+END
+GO
+GO
+CREATE PROCEDURE [Producer].[SpgUKEEEDataByComplianceYear]
 	@ComplianceYear INT
 AS
 BEGIN
@@ -7,6 +12,13 @@ BEGIN
 CREATE TABLE #WeeeCategory(
  ID int,
  Name nvarchar(250))
+
+INSERT INTO #WeeeCategory (ID, Name)
+SELECT
+	Id,
+	CONCAT(Id, '. ', [Name])
+FROM
+	[Lookup].WeeeCategory w
 
 -- EEE data	
 SELECT
