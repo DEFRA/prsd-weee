@@ -71,6 +71,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
       <Project>{333c65b9-ebb6-4d04-921e-89094f80e2e3}</Project>
       <Name>EA.Prsd.Core.Autofac</Name>
@@ -79,9 +82,6 @@
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
