@@ -149,8 +149,10 @@
 
             if (address.CountyOrRegion != null)
             {
-                addressString += address.CountyOrRegion;
+                addressString += address.CountyOrRegion + ", ";
             }
+
+            addressString += address.Country.Name;
 
             return addressString;
         }
@@ -168,8 +170,10 @@
 
             if (contact.CountyOrRegion != null)
             {
-                addressString += contact.CountyOrRegion;
+                addressString += contact.CountyOrRegion + ", ";
             }
+
+            addressString += contact.Country.Name;
 
             return addressString;
         }
