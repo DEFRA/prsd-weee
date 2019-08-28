@@ -120,7 +120,6 @@
     var parameter = getUrlParameter("clickedTab");
     if (parameter !== "") {
         $("#" + parameter).focus();
-        console.log(parameter);
     }
 });
 
