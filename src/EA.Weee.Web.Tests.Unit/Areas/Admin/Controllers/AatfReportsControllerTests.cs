@@ -990,7 +990,6 @@
         {
             const int complianceYear = 2015;
             const string obligation = "b2c";
-            const string aatf = "aatf";
             var authority = fixture.Create<Guid>();
             var panArea = fixture.Create<Guid>();
             var csvData = new CSVFileData
@@ -999,10 +998,9 @@
                 FileName = "test.csv"
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>.That.Matches(g => g.AATFName.Equals(aatf)
-            && g.AuthorityId.Equals(authority) && g.ComplianceYear.Equals(complianceYear) && g.ObligationType.Equals(obligation) && g.PanArea.Equals(panArea)))).Returns(csvData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>.That.Matches(g => g.AuthorityId.Equals(authority) && g.ComplianceYear.Equals(complianceYear) && g.ObligationType.Equals(obligation) && g.PanArea.Equals(panArea)))).Returns(csvData);
 
-            var fileResult = await controller.DownloadAatfSentOnDataCsv(complianceYear, obligation, aatf, authority, panArea) as FileContentResult;
+            var fileResult = await controller.DownloadAatfSentOnDataCsv(complianceYear, obligation, authority, panArea) as FileContentResult;
 
             fileResult.ContentType.Should().Be("text/csv");
             fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
