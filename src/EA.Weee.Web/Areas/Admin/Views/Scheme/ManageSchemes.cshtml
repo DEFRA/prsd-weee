@@ -48,8 +48,14 @@
             }
         </tbody>
     </table>
-    <br/>
-
+    <br />
+    if (Model.CanAddPcs)
+    {
+        <p>
+            <a href="@(Url.UrlFor<AddOrganisationController>(u => u.Search(EntityType.Pcs)))">Add PCS</a>
+        </p>
+    }
+    <br />
     @(this.WeeeGds().Submit("Continue"))
 
     <p>

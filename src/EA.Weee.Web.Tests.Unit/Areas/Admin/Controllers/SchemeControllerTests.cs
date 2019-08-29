@@ -4,6 +4,7 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Security;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -14,8 +15,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Scheme;
@@ -36,6 +40,7 @@
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
+        private readonly SchemeController controller;
 
         public SchemeControllerTests()
         {
@@ -43,6 +48,8 @@
             weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
+
+            controller = new SchemeController(() => weeeClient, weeeCache, breadcrumbService, mapper);
 
             // By default all mappings will return a concrete instance, rather than faked
             A.CallTo(() => mapper.Map<PcsDetailsOverviewViewModel>(A<SchemeData>._))
@@ -85,6 +92,37 @@
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ManageSchemesGet_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            SetUpControllerContext(userHasInternalAdminClaims);
+
+            ViewResult result = await controller.ManageSchemes() as ViewResult;
+
+            ManageSchemesViewModel viewModel = result.Model as ManageSchemesViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, viewModel.CanAddPcs);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ManagesSchemesPost_InvalidModel_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            SetUpControllerContext(userHasInternalAdminClaims);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            ManageSchemesViewModel viewModel = new ManageSchemesViewModel();
+
+            ViewResult result = await controller.ManageSchemes(viewModel) as ViewResult;
+
+            ManageSchemesViewModel resultViewModel = result.Model as ManageSchemesViewModel;
+
+            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanAddPcs);
         }
 
         /// <summary>
@@ -895,6 +933,24 @@
         private SchemeController SchemeController()
         {
             return new SchemeController(() => weeeClient, weeeCache, breadcrumbService, mapper);
+        }
+
+        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        {
+            var httpContextBase = A.Fake<HttpContextBase>();
+            var principal = new ClaimsPrincipal(httpContextBase.User);
+            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+
+            if (hasInternalAdminUserClaims)
+            {
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            }
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+
+            var context = new ControllerContext(httpContextBase, new RouteData(), controller);
+            controller.ControllerContext = context;
         }
     }
 }
