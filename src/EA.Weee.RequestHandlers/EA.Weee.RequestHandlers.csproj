@@ -104,6 +104,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
+    <Compile Include="Scheme\AddSchemeHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />

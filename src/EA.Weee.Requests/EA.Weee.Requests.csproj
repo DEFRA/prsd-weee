@@ -158,6 +158,7 @@
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemeExternalById.cs" />
     <Compile Include="Scheme\GetSchemesExternal.cs" />
+    <Compile Include="Scheme\CreateScheme.cs" />
     <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />

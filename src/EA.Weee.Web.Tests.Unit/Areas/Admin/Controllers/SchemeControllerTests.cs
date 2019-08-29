@@ -378,9 +378,9 @@
         public async Task PostEditScheme_WithApiReturningSuccess_RedirectsToSchemeOverview()
         {
             // Arrange
-            var apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new CreateOrUpdateSchemeInformationResult()
             {
-                Result = UpdateSchemeInformationResult.ResultType.Success
+                Result = CreateOrUpdateSchemeInformationResult.ResultType.Success
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
 
@@ -415,9 +415,9 @@
         public async Task PostEditScheme_WithApiReturningApprovalNumberUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
-            var apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new CreateOrUpdateSchemeInformationResult()
             {
-                Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
+                Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
 
@@ -452,10 +452,10 @@
         public async Task PostEditScheme_WithApiReturningIbisCustomerReferenceUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
-            var apiResult = new UpdateSchemeInformationResult()
+            var apiResult = new CreateOrUpdateSchemeInformationResult()
             {
-                Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
-                IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
+                Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
+                IbisCustomerReferenceUniquenessFailure = new CreateOrUpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
                 {
                     IbisCustomerReference = "WEE1234567",
                     OtherSchemeName = "Big Waste Co.",
@@ -864,15 +864,15 @@
         }
 
         [Theory]
-        [InlineData(UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
-        [InlineData(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
-        [InlineData(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
-        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet(UpdateSchemeInformationResult.ResultType resultType)
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
+        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet(CreateOrUpdateSchemeInformationResult.ResultType resultType)
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
-            var infoResult = new UpdateSchemeInformationResult();
-            infoResult.Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure;
+            var infoResult = new CreateOrUpdateSchemeInformationResult();
+            infoResult.Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure;
 
             var controller = SchemeController();
 

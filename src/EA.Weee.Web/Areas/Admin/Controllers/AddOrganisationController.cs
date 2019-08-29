@@ -119,8 +119,9 @@
 
             if (viewModel.IsAeOrAatf)
             {
+                return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.EntityType });
             }
-            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.EntityType });
+            return RedirectToAction("AddScheme", "Scheme", new { organisationId = viewModel.SelectedOrganisationId});
         }
 
         [HttpGet]
