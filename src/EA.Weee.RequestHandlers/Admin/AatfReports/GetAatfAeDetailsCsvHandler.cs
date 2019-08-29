@@ -64,6 +64,7 @@
             csvWriter.DefineColumn($"Contact name", i => i.ContactName);
             csvWriter.DefineColumn($"Contact position", i => i.ContactPosition);
             csvWriter.DefineColumn($"Contact address", i => i.ContactAddress);
+            csvWriter.DefineColumn($"Contact postcode", i => i.ContactPostcode);
             csvWriter.DefineColumn($"Contact email", i => i.ContactEmail);
             csvWriter.DefineColumn($"Contact phone number", i => i.ContactPhone);
             csvWriter.DefineColumn($"Organisation name", i => i.OrganisationName);
