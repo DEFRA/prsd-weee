@@ -42,7 +42,7 @@
 
         private List<AatfDataList> SortAatfs(List<Aatf> aatfs, FacilityType facilityType)
         {
-            return aatfs.OrderByDescending(a => a.ComplianceYear).ThenBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
+            return aatfs.OrderBy(a => a.Name).Where(w => w.FacilityType.Value == (int)facilityType).Select(s => aatfmap.Map(s)).ToList();
         }
     }
 }
