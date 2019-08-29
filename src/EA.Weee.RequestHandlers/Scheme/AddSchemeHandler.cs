@@ -1,23 +1,24 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation
+﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using Core.Helpers;
-    using Core.Scheme;
-    using Domain;
     using Domain.Scheme;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Domain;
+    using EA.Weee.RequestHandlers.Mappings;
+    using EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation;
     using EA.Weee.RequestHandlers.Security;
-    using Mappings;
-    using Prsd.Core.Mediator;
-    using Requests.Scheme;
+    using EA.Weee.Requests.Scheme;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, CreateOrUpdateSchemeInformationResult>
+    internal class AddSchemeHandler : IRequestHandler<CreateScheme, CreateOrUpdateSchemeInformationResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IUpdateSchemeInformationDataAccess dataAccess;
 
-        public UpdateSchemeInformationHandler(
+        public AddSchemeHandler(
             IWeeeAuthorization authorization,
             IUpdateSchemeInformationDataAccess dataAccess)
         {
@@ -25,24 +26,23 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<CreateOrUpdateSchemeInformationResult> HandleAsync(UpdateSchemeInformation message)
+        public async Task<CreateOrUpdateSchemeInformationResult> HandleAsync(CreateScheme message)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeId);
+            Scheme scheme = new Scheme(message.OrganisationId);
+
+            this.dataAccess.AddScheme(scheme);
 
             /*
              * Check the uniqueness of the approval number if the value is being changed.
              */
-            if (scheme.ApprovalNumber != message.ApprovalNumber)
+            if (await dataAccess.CheckSchemeApprovalNumberInUseAsync(message.ApprovalNumber))
             {
-                if (await dataAccess.CheckSchemeApprovalNumberInUseAsync(message.ApprovalNumber))
+                return new CreateOrUpdateSchemeInformationResult()
                 {
-                    return new CreateOrUpdateSchemeInformationResult()
-                    {
-                        Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
-                    };
-                }
+                    Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
+                };
             }
 
             UKCompetentAuthority environmentAgency = await dataAccess.FetchEnvironmentAgencyAsync();
