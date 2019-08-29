@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview
 @model EA.Weee.Web.Areas.Admin.ViewModels.Organisation.EditSoleTraderOrganisationDetailsViewModel
 @{
     ViewBag.Title = "Edit organisation details - GOV.UK";
@@ -45,7 +46,7 @@
         <p>
             @if (Model.SchemeId.HasValue)
             {
-                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId }) + "#organisationDetails")">Back</a>
+                <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails }) + "#organisationDetails")">Back</a>
             }
             else
             {

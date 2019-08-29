@@ -29,9 +29,9 @@
             return data;
         }
 
-        public static List<int> FetchCurrentComplianceYears()
+        public static List<int> FetchCurrentComplianceYears(DateTime systemTime)
         {
-            var currentYear = SystemTime.UtcNow.Year;
+            var currentYear = systemTime.Year;
 
             var list = Enumerable.Range(currentYear, 2).ToList();
 
@@ -39,9 +39,9 @@
             DateTime endOfMonth = new DateTime(currentYear, 1,
                                    DateTime.DaysInMonth(currentYear, 1));
 
-            if (SystemTime.UtcNow <= endOfMonth)
+            if (systemTime <= endOfMonth)
             {
-                list.Add(SystemTime.UtcNow.AddYears(-1).Year);
+                list.Add(systemTime.AddYears(-1).Year);
             }
 
             return list.OrderByDescending(x => x).ToList();
