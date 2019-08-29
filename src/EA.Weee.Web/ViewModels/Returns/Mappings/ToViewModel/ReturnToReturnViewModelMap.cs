@@ -52,6 +52,8 @@
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
                 NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source)),
+                ObligatedB2BTotal = TotalObligatedB2B(source),
+                ObligatedB2CTotal = TotalObligatedB2C(source),
                 ShowDownloadObligatedDataLink = DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn,
                 ShowDownloadNonObligatedDataLink = DisplayOptions.DisplayNonObligated || DisplayOptions.DisplayNonObligatedDcf
             };
@@ -123,6 +125,34 @@
                     }
                 }
             }
+        }
+
+        private decimal? TotalObligatedB2B(ReturnData returnData)
+        {
+            decimal? total = null;
+
+            var filteredList = returnData.ObligatedWeeeReceivedData.Select(o => o.B2B).ToList();
+
+            if (filteredList.Any(o => o.HasValue))
+            {
+                total = tonnageUtilities.InitialiseTotalDecimal(filteredList.Sum(o => o));
+            }
+
+            return total;
+        }
+
+        private decimal? TotalObligatedB2C(ReturnData returnData)
+        {
+            decimal? total = null;
+
+            var filteredList = returnData.ObligatedWeeeReceivedData.Select(o => o.B2C).ToList();
+
+            if (filteredList.Any(o => o.HasValue))
+            {
+                total = tonnageUtilities.InitialiseTotalDecimal(filteredList.Sum(o => o));
+            }
+
+            return total;
         }
 
         private decimal? TotalObligated(ReturnData returnData)
