@@ -125,9 +125,9 @@
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019)
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid(), null)
             };
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
@@ -152,12 +152,12 @@
         public void Map_GivenValidSource_WithAatfs_AatfListShouldNotContainAatfFoundInSource()
         {
             AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear);
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear, aatfData.AatfId, aatfData.ApprovalDate);
 
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
                 aatfDataReplica
             };
 
@@ -178,12 +178,12 @@
         public void Map_GivenValidSource_WithAatfs_AeListShouldNotContainAatfFoundInSource()
         {
             AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear);
+            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear, aatfData.AatfId, aatfData.ApprovalDate);
 
             List<AatfDataList> associatedAatfs = new List<AatfDataList>
             {
                 new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019),
+                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid(), null),
                 aatfDataReplica
             };
 
@@ -284,6 +284,33 @@
             {
                 A.CallTo(() => aatfSubmissionHistoryMap.Map(aatfSubmissionHistoryData)).MustHaveHappenedOnceExactly();
             }
+        }
+
+        [Fact]
+        public void Map_GivenListOfAatfs_GivenAatfsWithTheSameAatfIdTheLatestApprovalDateShouldBeReturned()
+        {
+            AatfData aatfData = CreateAatfData();
+            var aatfId = Guid.NewGuid();
+
+            var aatfDataList = new AatfDataList(Guid.NewGuid(), "B 2019", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, aatfId, new DateTime(2018, 10, 1));
+            var aatfDataList2 = new AatfDataList(Guid.NewGuid(), "B 2020", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2020, aatfId, new DateTime(2019, 10, 1));
+
+            var associatedAatfs = new List<AatfDataList>()
+            {
+                aatfDataList,
+                aatfDataList2
+            };
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                AssociatedAatfs = associatedAatfs
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.AssociatedAatfs.Count.Should().Be(1);
+            result.AssociatedAatfs.Should().Contain(aatfDataList2);
+            result.AssociatedAatfs.Should().NotContain(aatfDataList);
         }
 
         [Fact]
