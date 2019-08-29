@@ -24,5 +24,14 @@
                     .OrderByDescending(year => year)
                     .ToListAsync();
         }
+
+        public async Task<List<int>> GetAatfAe()
+        {
+            return await context.Aatfs
+                    .Select(r => (int)r.ComplianceYear)
+                    .Distinct()
+                    .OrderBy(year => year)
+                    .ToListAsync();
+        }
     }
 }

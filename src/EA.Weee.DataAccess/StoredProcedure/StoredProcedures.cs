@@ -546,10 +546,9 @@
             return await context.Database.SqlQuery<NonObligatedWeeeReceivedCsvData>("[AATF].[getReturnNonObligatedCsvData] @ReturnId", returnIdParameter).ToListAsync();
         }
 
-        public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea)
+        public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string obligationType, Guid? authority, Guid? panArea)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            var aatfNameParameter = new SqlParameter("@AatfName", (object)aatfName ?? DBNull.Value);
             var obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
             var authorityParameter = new SqlParameter("@CA", (object)authority ?? DBNull.Value);
             var panAreaParameter = new SqlParameter("@PanArea", (object)panArea ?? DBNull.Value);
@@ -562,9 +561,8 @@
             using (context)
             {
                 var cmd = context.Database.Connection.CreateCommand();
-                cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea";
+                cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @ObligationType, @CA, @PanArea";
                 cmd.Parameters.Add(complianceYearParameter);
-                cmd.Parameters.Add(aatfNameParameter);
                 cmd.Parameters.Add(obligationTypeParameter);
                 cmd.Parameters.Add(authorityParameter);
                 cmd.Parameters.Add(panAreaParameter);
