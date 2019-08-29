@@ -89,7 +89,11 @@
                 aatf.EaArea.Should().Be(verifyAatf.LocalArea?.Name);
                 aatf.PanAreaTeam.Should().Be(verifyAatf.PanArea?.Name);
                 aatf.Name.Should().Be(verifyAatf.Name);
-                aatf.Address.Should().Be(GetSiteAddressString(verifyAatf.SiteAddress));
+                aatf.Address1.Should().Be(verifyAatf.SiteAddress.Address1);
+                aatf.Address2.Should().Be(verifyAatf.SiteAddress.Address2);
+                aatf.TownCity.Should().Be(verifyAatf.SiteAddress.TownOrCity);
+                aatf.CountyRegion.Should().Be(verifyAatf.SiteAddress.CountyOrRegion);
+                aatf.Country.Should().Be(verifyAatf.SiteAddress.Country.Name);
                 aatf.PostCode.Should().Be(verifyAatf.SiteAddress.Postcode);
                 aatf.ApprovalNumber.Should().Be(verifyAatf.ApprovalNumber);
                 aatf.ApprovalDate.Should().Be(verifyAatf.ApprovalDate.GetValueOrDefault());
@@ -97,12 +101,20 @@
                 aatf.Status.Should().Be(verifyAatf.AatfStatus.DisplayName);
                 aatf.ContactName.Should().Be(verifyAatf.Contact.FirstName + " " + verifyAatf.Contact.LastName);
                 aatf.ContactPosition.Should().Be(verifyAatf.Contact.Position);
-                aatf.ContactAddress.Should().Be(GetContactAddressString(verifyAatf.Contact));
+                aatf.ContactAddress1.Should().Be(verifyAatf.Contact.Address1);
+                aatf.ContactAddress2.Should().Be(verifyAatf.Contact.Address2);
+                aatf.ContactTownCity.Should().Be(verifyAatf.Contact.TownOrCity);
+                aatf.ContactCountyRegion.Should().Be(verifyAatf.Contact.CountyOrRegion);
+                aatf.ContactCountry.Should().Be(verifyAatf.Contact.Country.Name);
                 aatf.ContactPostcode.Should().Be(verifyAatf.Contact.Postcode);
                 aatf.ContactEmail.Should().Be(verifyAatf.Contact.Email);
                 aatf.ContactPhone.Should().Be(verifyAatf.Contact.Telephone);
                 aatf.OrganisationName.Should().Be(verifyAatf.Organisation.OrganisationName);
-                aatf.OrganisationAddress.Should().Be(GetOrganisationAddressString(verifyAatf.Organisation.BusinessAddress));
+                aatf.OrganisationAddress1.Should().Be(verifyAatf.Organisation.BusinessAddress.Address1);
+                aatf.OrganisationAddress2.Should().Be(verifyAatf.Organisation.BusinessAddress.Address2);
+                aatf.OrganisationTownCity.Should().Be(verifyAatf.Organisation.BusinessAddress.TownOrCity);
+                aatf.OrganisationCountyRegion.Should().Be(verifyAatf.Organisation.BusinessAddress.CountyOrRegion);
+                aatf.OrganisationCountry.Should().Be(verifyAatf.Organisation.BusinessAddress.Country.Name);
                 aatf.OrganisationPostcode.Should().Be(verifyAatf.Organisation.BusinessAddress.Postcode);
             }
         }
@@ -113,69 +125,6 @@
             var address = new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", db.WeeeContext.Countries.First(), "12345678", "test@co.uk");
             org.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
             return org;
-        }
-
-        private string GetSiteAddressString(AatfAddress address)
-        {
-            var addressString = address.Address1 + ", ";
-
-            if (address.Address2 != null)
-            {
-                addressString += address.Address2 + ", ";
-            }
-
-            addressString += address.TownOrCity + ", ";
-
-            if (address.CountyOrRegion != null)
-            {
-                addressString += address.CountyOrRegion + ", ";
-            }
-
-            addressString += address.Country.Name;
-
-            return addressString;
-        }
-
-        private string GetOrganisationAddressString(Domain.Organisation.Address address)
-        {
-            var addressString = address.Address1 + ", ";
-
-            if (address.Address2 != null)
-            {
-                addressString += address.Address2 + ", ";
-            }
-
-            addressString += address.TownOrCity + ", ";
-
-            if (address.CountyOrRegion != null)
-            {
-                addressString += address.CountyOrRegion + ", ";
-            }
-
-            addressString += address.Country.Name;
-
-            return addressString;
-        }
-
-        private string GetContactAddressString(AatfContact contact)
-        {
-            var addressString = contact.Address1 + ", ";
-
-            if (contact.Address2 != null)
-            {
-                addressString += contact.Address2 + ", ";
-            }
-
-            addressString += contact.TownOrCity + ", ";
-
-            if (contact.CountyOrRegion != null)
-            {
-                addressString += contact.CountyOrRegion + ", ";
-            }
-
-            addressString += contact.Country.Name;
-
-            return addressString;
         }
     }
 }

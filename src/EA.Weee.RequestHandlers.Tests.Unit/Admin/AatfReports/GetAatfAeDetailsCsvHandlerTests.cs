@@ -106,10 +106,10 @@
 
             string facilityTypeString = facilityType.ToString().ToUpper();
 
-            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,WROS Pan Area Team,EA Area,Name of {facilityTypeString},{facilityTypeString} address,{facilityTypeString} postcode,{facilityTypeString} approval number,Date of approval,{facilityTypeString} size,{facilityTypeString} status,Contact name,Contact position,Contact address,Contact postcode,Contact email,Contact phone number,Organisation name,Organisation address,Organisation postcode");
-            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.AppropriateAuthorityAbbr},{csvData1.PanAreaTeam},{csvData1.EaArea},{csvData1.Name},{csvData1.Address},{csvData1.PostCode},{csvData1.ApprovalNumber},{csvData1.ApprovalDate},{csvData1.Size},{csvData1.Status},{csvData1.ContactName},{csvData1.ContactPosition},{csvData1.ContactAddress},{csvData1.ContactPostcode},{csvData1.ContactEmail},{csvData1.ContactPhone},{csvData1.OrganisationName},{csvData1.OrganisationAddress},{csvData1.OrganisationPostcode}");
-            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.AppropriateAuthorityAbbr},{csvData2.PanAreaTeam},{csvData2.EaArea},{csvData2.Name},{csvData2.Address},{csvData2.PostCode},{csvData2.ApprovalNumber},{csvData2.ApprovalDate},{csvData2.Size},{csvData2.Status},{csvData2.ContactName},{csvData2.ContactPosition},{csvData2.ContactAddress},{csvData2.ContactPostcode},{csvData2.ContactEmail},{csvData2.ContactPhone},{csvData2.OrganisationName},{csvData2.OrganisationAddress},{csvData2.OrganisationPostcode}");
-            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.AppropriateAuthorityAbbr},{csvData3.PanAreaTeam},{csvData3.EaArea},{csvData3.Name},{csvData3.Address},{csvData3.PostCode},{csvData3.ApprovalNumber},{csvData3.ApprovalDate},{csvData3.Size},{csvData3.Status},{csvData3.ContactName},{csvData3.ContactPosition},{csvData3.ContactAddress},{csvData3.ContactPostcode},{csvData3.ContactEmail},{csvData3.ContactPhone},{csvData3.OrganisationName},{csvData3.OrganisationAddress},{csvData3.OrganisationPostcode}");
+            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,WROS Pan Area Team,EA Area,Name of {facilityTypeString},{facilityTypeString} address1,{facilityTypeString} address2,{facilityTypeString} town or city,{facilityTypeString} county or region,{facilityTypeString} country,{facilityTypeString} postcode,{facilityTypeString} approval number,Date of approval,{facilityTypeString} size,{facilityTypeString} status,Contact name,Contact position,Contact address1,Contact address2,Contact town or city,Contact county or region,Contact country,Contact postcode,Contact email,Contact phone number,Organisation name,Organisation address1,Organisation address2,Organisation town or city,Organisation county or region,Organisation country,Organisation postcode");
+            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.AppropriateAuthorityAbbr},{csvData1.PanAreaTeam},{csvData1.EaArea},{csvData1.Name},{csvData1.Address1},{csvData1.Address2},{csvData1.TownCity},{csvData1.CountyRegion},{csvData1.Country},{csvData1.PostCode},{csvData1.ApprovalNumber},{csvData1.ApprovalDate},{csvData1.Size},{csvData1.Status},{csvData1.ContactName},{csvData1.ContactPosition},{csvData1.ContactAddress1},{csvData1.ContactAddress2},{csvData1.ContactTownCity},{csvData1.ContactCountyRegion},{csvData1.ContactCountry},{csvData1.ContactPostcode},{csvData1.ContactEmail},{csvData1.ContactPhone},{csvData1.OrganisationName},{csvData1.OrganisationAddress1},{csvData1.OrganisationAddress2},{csvData1.OrganisationTownCity},{csvData1.OrganisationCountyRegion},{csvData1.OrganisationCountry},{csvData1.OrganisationPostcode}");
+            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.AppropriateAuthorityAbbr},{csvData2.PanAreaTeam},{csvData2.EaArea},{csvData2.Name},{csvData2.Address1},{csvData2.Address2},{csvData2.TownCity},{csvData2.CountyRegion},{csvData2.Country},{csvData2.PostCode},{csvData2.ApprovalNumber},{csvData2.ApprovalDate},{csvData2.Size},{csvData2.Status},{csvData2.ContactName},{csvData2.ContactPosition},{csvData2.ContactAddress1},{csvData2.ContactAddress2},{csvData2.ContactTownCity},{csvData2.ContactCountyRegion},{csvData2.ContactCountry},{csvData2.ContactPostcode},{csvData2.ContactEmail},{csvData2.ContactPhone},{csvData2.OrganisationName},{csvData2.OrganisationAddress1},{csvData2.OrganisationAddress2},{csvData2.OrganisationTownCity},{csvData2.OrganisationCountyRegion},{csvData2.OrganisationCountry},{csvData2.OrganisationPostcode}");
+            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.AppropriateAuthorityAbbr},{csvData3.PanAreaTeam},{csvData3.EaArea},{csvData3.Name},{csvData3.Address1},{csvData3.Address2},{csvData3.TownCity},{csvData3.CountyRegion},{csvData3.Country},{csvData3.PostCode},{csvData3.ApprovalNumber},{csvData3.ApprovalDate},{csvData3.Size},{csvData3.Status},{csvData3.ContactName},{csvData3.ContactPosition},{csvData3.ContactAddress1},{csvData3.ContactAddress2},{csvData3.ContactTownCity},{csvData3.ContactCountyRegion},{csvData3.ContactCountry},{csvData3.ContactPostcode},{csvData3.ContactEmail},{csvData3.ContactPhone},{csvData3.OrganisationName},{csvData3.OrganisationAddress1},{csvData3.OrganisationAddress2},{csvData3.OrganisationTownCity},{csvData3.OrganisationCountyRegion},{csvData3.OrganisationCountry},{csvData3.OrganisationPostcode}");
         }
 
         [Fact]
@@ -221,7 +221,11 @@
                 PanAreaTeam = fixture.Create<string>(),
                 EaArea = fixture.Create<string>(),
                 Name = fixture.Create<string>(),
-                Address = fixture.Create<string>(),
+                Address1 = fixture.Create<string>(),
+                Address2 = fixture.Create<string>(),
+                TownCity = fixture.Create<string>(),
+                CountyRegion = fixture.Create<string>(),
+                Country = fixture.Create<string>(),
                 PostCode = fixture.Create<string>(),
                 ApprovalNumber = fixture.Create<string>(),
                 ApprovalDate = fixture.Create<DateTime>(),
@@ -229,12 +233,20 @@
                 Status = fixture.Create<string>(),
                 ContactName = fixture.Create<string>(),
                 ContactPosition = fixture.Create<string>(),
-                ContactAddress = fixture.Create<string>(),
+                ContactAddress1 = fixture.Create<string>(),
+                ContactAddress2 = fixture.Create<string>(),
+                ContactTownCity = fixture.Create<string>(),
+                ContactCountyRegion = fixture.Create<string>(),
+                ContactCountry = fixture.Create<string>(),
                 ContactPostcode = fixture.Create<string>(),
                 ContactEmail = fixture.Create<string>(),
                 ContactPhone = fixture.Create<string>(),
                 OrganisationName = fixture.Create<string>(),
-                OrganisationAddress = fixture.Create<string>(),
+                OrganisationAddress1 = fixture.Create<string>(),
+                OrganisationAddress2 = fixture.Create<string>(),
+                OrganisationTownCity = fixture.Create<string>(),
+                OrganisationCountyRegion = fixture.Create<string>(),
+                OrganisationCountry = fixture.Create<string>(),
                 OrganisationPostcode = fixture.Create<string>()
             };
         }
