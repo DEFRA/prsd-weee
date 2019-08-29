@@ -7,6 +7,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
@@ -53,8 +54,9 @@
 
             if (source.AssociatedAatfs != null)
             {
-                var associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae && a.Id != source.AatfData.Id).ToList();
-                source.AssociatedAatfs = source.AssociatedAatfs.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf).ToList();
+                var filteredList = RemoveOlderAatfs(source.AssociatedAatfs);
+                var associatedAEs = filteredList.Where(a => a.FacilityType == FacilityType.Ae && a.Id != source.AatfData.Id && a.AatfId != source.AatfData.AatfId).ToList();
+                source.AssociatedAatfs = filteredList.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf && a.AatfId != source.AatfData.AatfId).ToList();
                 viewModel.AssociatedAatfs = source.AssociatedAatfs;
                 viewModel.AssociatedAes = associatedAEs;
             }
@@ -75,6 +77,29 @@
             }
 
             return viewModel;
+        }
+
+        private List<AatfDataList> RemoveOlderAatfs(List<AatfDataList> source)
+        {
+            var listToBeReturned = new List<AatfDataList>();
+
+            foreach (var aatf in source)
+            {
+                if (source.Any(m => m.AatfId == aatf.AatfId && m.Id != aatf.Id))
+                {
+                    var latestAatf = source.Where(m => m.AatfId == aatf.AatfId).OrderByDescending(m => m.ApprovalDate).First();
+
+                    if (!listToBeReturned.Contains(latestAatf))
+                    {
+                        listToBeReturned.Add(latestAatf);
+                    }
+                }
+                else
+                {
+                    listToBeReturned.Add(aatf);
+                }
+            }
+            return listToBeReturned;
         }
     }
 }
