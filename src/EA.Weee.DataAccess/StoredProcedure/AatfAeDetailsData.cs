@@ -34,6 +34,8 @@
 
         public string ContactAddress { get; set; }
 
+        public string ContactPostcode { get; set; }
+
         public string ContactEmail { get; set; }
 
         public string ContactPhone { get; set; }
