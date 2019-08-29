@@ -394,7 +394,6 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             viewModel.OrganisationId = Guid.NewGuid();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
-            //viewModel.ComplianceYearList = new SelectList(new List<int> { 2019, 2020 });
             return viewModel;
         }
     }
