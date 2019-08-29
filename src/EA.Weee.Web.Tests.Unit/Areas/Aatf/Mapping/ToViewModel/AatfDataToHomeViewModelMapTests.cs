@@ -52,6 +52,41 @@
         }
 
         [Fact]
+        public void Map_GivenListOfAatfs_GivenAatfsWithTheSameAatfIdTheLatestApprovalDateShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfList = new List<AatfData>();
+            var aatfId = Guid.NewGuid();
+
+            var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, new DateTime(2018, 10, 1),
+                   A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf,
+                AatfId = aatfId
+            };
+
+            var aatfData2 = new AatfData(Guid.NewGuid(), "AATF 2020", "approval number", 2020, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+               Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, new DateTime(2019, 10, 1),
+               A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = FacilityType.Aatf,
+                AatfId = aatfId
+            };
+
+            aatfList.Add(aatfData);
+            aatfList.Add(aatfData2);
+
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = false };
+
+            var result = map.Map(transfer);
+
+            result.AatfList.Count.Should().Be(1);
+            result.AatfList.Should().Contain(aatfData2);
+            result.AatfList.Should().NotContain(aatfData);
+        }
+
+        [Fact]
         public void Map_GivenListOfAatfs_ListIdOrderedByName()
         {
             var organisationId = Guid.NewGuid();

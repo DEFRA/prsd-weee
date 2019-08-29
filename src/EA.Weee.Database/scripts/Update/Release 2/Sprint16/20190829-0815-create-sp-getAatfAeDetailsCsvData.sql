@@ -36,6 +36,7 @@ DECLARE @AATF TABLE
 	ContactName				NVARCHAR(70) NOT NULL,
 	ContactPosition			NVARCHAR(35) NOT NULL,
 	ContactAddress			NVARCHAR(500) NOT NULL,
+	ContactPostCode			NVARCHAR(10) NULL,
 	ContactEmail			NVARCHAR(256) NOT NULL,
 	ContactPhone			NVARCHAR(20) NOT NULL,
 	OrganisationName		NVARCHAR(256) NOT NULL,
@@ -50,7 +51,7 @@ INSERT INTO @AATF
 		pa.Name,
 		la.Name,
 		a.Name,
-		CONCAT(ad.Address1, COALESCE(', ' + NULLIF(ad.Address2, ''), ''), ', ', ad.TownOrCity,COALESCE(', ' + NULLIF(ad.CountyOrRegion, ''), ''), ''),
+		CONCAT(ad.Address1, COALESCE(', ' + NULLIF(ad.Address2, ''), ''), ', ', ad.TownOrCity,COALESCE(', ' + NULLIF(ad.CountyOrRegion, ''), ''),', ', adco.Name, ''),
 		ad.Postcode,
 		a.ApprovalNumber,
 		a.ApprovalDate,
@@ -58,22 +59,26 @@ INSERT INTO @AATF
 		CASE WHEN a.Status = 1 THEN 'Approved' WHEN a.Status = 2 THEN 'Suspended'  ELSE 'Cancelled' END,
 		c.FirstName + ' ' + c.LastName,
 		c.Position,
-		CONCAT(c.Address1, COALESCE(', ' + NULLIF(c.Address2, ''), ''), ', ', c.TownOrCity,COALESCE(', ' + NULLIF(c.CountyOrRegion, ''), ''), ''),
+		CONCAT(c.Address1, COALESCE(', ' + NULLIF(c.Address2, ''), ''), ', ', c.TownOrCity,COALESCE(', ' + NULLIF(c.CountyOrRegion, ''), ''),', ', conco.Name, ''),
+		C.Postcode,
 		c.Email, 
 		c.Telephone,
 		CASE WHEN o.Name IS NULL THEN o.TradingName ELSE o.Name END,
-		CONCAT(oa.Address1, COALESCE(', ' + NULLIF(oa.Address2, ''), ''), ', ', oa.TownOrCity,COALESCE(', ' + NULLIF(oa.CountyOrRegion, ''), ''), ''),
+		CONCAT(oa.Address1, COALESCE(', ' + NULLIF(oa.Address2, ''), ''), ', ', oa.TownOrCity,COALESCE(', ' + NULLIF(oa.CountyOrRegion, ''), ''),', ', orgco.Name, ''),
 		oa.Postcode
 	
 	FROM
 		AATF.AATF a 
 		JOIN Organisation.Organisation o ON a.OrganisationId  = o.Id
 		LEFT JOIN Organisation.Address oa ON o.BusinessAddressId = oa.Id
+		JOIN Lookup.Country orgco on oa.CountryId = orgco.Id
 		JOIN Lookup.CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
 		LEFT JOIN Lookup.PanArea pa on a.PanAreaId = pa.Id
 		LEFT JOIN Lookup.LocalArea la on a.LocalAreaId = la.Id
 		LEFT JOIN AATF.Address ad on a.SiteAddressId = ad.Id
+		JOIN Lookup.Country adco on ad.CountryId = adco.Id
 		JOIN AATF.Contact c on a.ContactId = c.Id
+		JOIN Lookup.Country conco on c.CountryId = conco.Id
 	WHERE 
 		A.ComplianceYear = @ComplianceYear 
 		AND A.FacilityType = @FacilityType
