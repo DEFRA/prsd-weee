@@ -93,7 +93,9 @@ namespace EA.Weee.Web.Areas.Admin.Controllers
                 viewModel.ContactData.AddressData.Countries = countries;
                 viewModel.OrganisationName = organisation.OrganisationName;
                 viewModel = await PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
-                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears());
+
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears(currentDate));
             }
 
             return viewModel;

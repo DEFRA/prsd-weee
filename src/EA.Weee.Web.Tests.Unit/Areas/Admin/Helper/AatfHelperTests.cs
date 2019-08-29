@@ -18,7 +18,7 @@
         public void GetValidComplianceYear_BasedOnCurrentDate(DateTime currentDate, int[] yearList)
         {
             SystemTime.Freeze(new DateTime(currentDate.Year, currentDate.Month, currentDate.Day));
-            var value = AatfHelper.FetchCurrentComplianceYears();
+            var value = AatfHelper.FetchCurrentComplianceYears(currentDate);
             SystemTime.Unfreeze();
             Assert.Equal(yearList, value.ToArray());
         }
