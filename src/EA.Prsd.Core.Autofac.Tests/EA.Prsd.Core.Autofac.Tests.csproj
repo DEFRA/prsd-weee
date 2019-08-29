@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Prsd.Core.Autofac.Tests</RootNamespace>
-    <AssemblyName>EA.Prsd.Core.Autofac.Tests</AssemblyName>
+    <AssemblyName>EA.Prsd.Core.Autofac.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
