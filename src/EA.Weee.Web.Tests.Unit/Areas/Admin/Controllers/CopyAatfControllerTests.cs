@@ -76,6 +76,7 @@
             var aatfViewModel = fixture.Create<CopyAatfViewModel>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(aatfViewModel);
 
@@ -96,6 +97,7 @@
             var aatfViewModel = fixture.Create<CopyAeViewModel>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(aatfViewModel);
 
@@ -114,6 +116,7 @@
             var aatfViewModel = fixture.Create<CopyAatfViewModel>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(aatfViewModel);
 
@@ -135,6 +138,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
 
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatf)).Returns(aatfViewModel);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             await controller.CopyAatfDetails(aatf.Id);
 
@@ -152,6 +156,7 @@
             var aatfViewModel = fixture.Create<CopyAeViewModel>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(aatfViewModel);
 
@@ -171,6 +176,7 @@
             var aatfViewModel = fixture.Create<CopyAeViewModel>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             A.CallTo(() => mapper.Map<CopyAeViewModel>(aatf)).Returns(aatfViewModel);
 
@@ -188,6 +194,8 @@
             CopyAatfViewModel viewModel = CreateCopyAatfViewModel();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatfData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
+
             A.CallTo(() => mapper.Map<CopyAatfViewModel>(aatfData)).Returns(viewModel);
 
             ViewResult result = await controller.CopyAatfDetails(viewModel.Id) as ViewResult;
@@ -386,6 +394,7 @@
             clientCallCountries.Returns(Task.FromResult(countries));
 
             controller.ModelState.AddModelError("error", "error");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             var result = await controller.CopyAatfDetails(viewModel) as ViewResult;
 
@@ -441,6 +450,7 @@
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.ValidateByYear(A<string>._, viewModel, viewModel.ComplianceYear)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             var result = await controller.CopyAatfDetails(viewModel);
 
@@ -489,6 +499,7 @@
             viewModel.OrganisationId = Guid.NewGuid();
             viewModel.Id = Guid.NewGuid();
             viewModel.AatfId = Guid.NewGuid();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
             return viewModel;
         }
     }
