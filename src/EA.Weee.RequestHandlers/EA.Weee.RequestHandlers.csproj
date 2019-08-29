@@ -256,6 +256,7 @@
     <Compile Include="Charges\FetchIssuedChargesCsv\IFetchIssuedChargesCsvDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandler.cs" />
+    <Compile Include="Shared\GetApiUtcDateHandler.cs" />
     <Compile Include="Shared\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />

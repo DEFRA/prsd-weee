@@ -71,13 +71,16 @@
 
                 var submissionHistory = await client.SendAsync(User.GetAccessToken(), new GetAatfSubmissionHistory(id));
 
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes,
                     SubmissionHistory = submissionHistory,
-                    ComplianceYearList = years
+                    ComplianceYearList = years,
+                    CurrentDate = currentDate
                 });
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);

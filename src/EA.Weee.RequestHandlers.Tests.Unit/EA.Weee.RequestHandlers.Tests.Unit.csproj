@@ -280,6 +280,7 @@
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Shared\GetApiDateHandlerTests.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsDataAccessTests.cs" />
+    <Compile Include="Shared\GetApiUtcDateHandlerTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Shared\GetLocalAreasHandlerTests.cs" />
     <Compile Include="Shared\GetPanAreasHandlerTests.cs" />

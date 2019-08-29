@@ -116,6 +116,8 @@
 
         public IEnumerable<short> ComplianceYearList { get; set; }
 
+        public DateTime CurrentDate { get; set; }
+
         public bool IsLatestComplianceYear
         {
             get
@@ -130,7 +132,7 @@
             {
                 if (IsLatestComplianceYear)
                 {
-                   var list = AatfHelper.FetchCurrentComplianceYears().Except(ComplianceYearList.Select(x => (int)x));
+                   var list = AatfHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
 
                    return list.Count() > 0 ? true : false;
                 }
