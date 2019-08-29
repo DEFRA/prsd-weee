@@ -17,26 +17,6 @@
     public class GetAllAatfSentOnDataCsvTests
     {
         [Fact]
-        public async Task Execute_GivenNoData_NoResultsShouldBeReturned()
-        {
-            using (var db = new DatabaseWrapper())
-            {
-                var @return = ObligatedWeeeIntegrationCommon.CreateReturn(null, db.Model.AspNetUsers.First().Id, FacilityType.Aatf);
-                @return.UpdateSubmitted(db.Model.AspNetUsers.First().Id, false);
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-
-                db.WeeeContext.Returns.Add(@return);
-
-                await db.WeeeContext.SaveChangesAsync();
-
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, string.Empty, null, null);
-
-                results.Tables[0].Rows.Count.Equals(0);
-                results.Tables[1].Rows.Count.Equals(0);
-            }
-        }
-
-        [Fact]
         public async Task Execute_GivenWeeeSentOnData_ReturnsWeeeSentOnAatfDataShouldBeCorrect()
         {
             using (var db = new DatabaseWrapper())
@@ -46,7 +26,7 @@
 
                 await CreateWeeSentOnData(db, aatf, @return);
 
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, string.Empty, null, null);
+                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, null, null);
 
                 Assert.NotNull(results);
                 var data = from x in results.Tables[0].AsEnumerable()
@@ -55,12 +35,12 @@
                 data.AsQueryable().Count().Should().Be(28);
 
                 var dataB2B = from x in results.Tables[0].AsEnumerable()
-                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2B"
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == "B2B"
                               select x;
                 dataB2B.AsQueryable().Count().Should().Be(14);
 
                 var dataB2C = from x in results.Tables[0].AsEnumerable()
-                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == "B2C"
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == "B2C"
                               select x;
                 dataB2C.AsQueryable().Count().Should().Be(14);
             }
@@ -78,17 +58,17 @@
 
                 await CreateWeeSentOnData(db, aatf, @return);
 
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, filter, null, null);
+                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, filter, null, null);
 
                 Assert.NotNull(results);
 
                 var dataB2B = from x in results.Tables[0].AsEnumerable()
-                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == filter
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == filter
                               select x;
                 dataB2B.AsQueryable().Count().Should().Be(14);
 
                 var dataB2C = from x in results.Tables[0].AsEnumerable()
-                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation") == nonFilter
+                              where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == nonFilter
                               select x;
                 dataB2C.AsQueryable().Count().Should().Be(0);
             }
@@ -106,7 +86,7 @@
 
                 var filter = db.WeeeContext.UKCompetentAuthorities.First();
 
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, string.Empty, filter.Id, null);
+                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, filter.Id, null);
 
                 Assert.NotNull(results);
 
@@ -131,7 +111,7 @@
 
                 var filter = db.WeeeContext.PanAreas.First();
 
-                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, string.Empty, ea.Id, filter.Id);
+                var results = await db.StoredProcedures.GetAllAatfSentOnDataCsv(2019, string.Empty, ea.Id, filter.Id);
 
                 Assert.NotNull(results);
 

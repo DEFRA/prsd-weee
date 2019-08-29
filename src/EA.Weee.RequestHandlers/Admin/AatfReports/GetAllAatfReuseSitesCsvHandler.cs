@@ -36,16 +36,6 @@
                 var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
-            PanArea panArea = null;
-            UKCompetentAuthority authority = null;
-            if (request.AuthorityId != null)
-            {
-                authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
-            }
-            if (request.PanArea != null)
-            {
-                panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
-            }
 
             var reuseSitesData = await weeContext.StoredProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AuthorityId, request.PanArea);
 
@@ -53,7 +43,7 @@
 
             csvWriter.DefineColumn(@"Appropriate authority", i => i.Abbreviation);
             csvWriter.DefineColumn(@"WROS Pan Area Team", i => i.PanName);
-            csvWriter.DefineColumn(@"EA area", i => i.LaName);
+            csvWriter.DefineColumn(@"EA Area", i => i.LaName);
             csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
@@ -66,17 +56,18 @@
 
             var fileContent = csvWriter.Write(reuseSitesData);
 
-            var fileName = string.Format("{0}", request.ComplianceYear);
-            if (request.AuthorityId != null)
+            var fileName = $"{request.ComplianceYear}";
+            if (request.AuthorityId.HasValue)
             {
+                var authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
                 fileName += "_" + authority.Abbreviation;
             }
-            if (request.PanArea != null)
+            if (request.PanArea.HasValue)
             {
+                var panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
                 fileName += "_" + panArea.Name;
             }
-            fileName += string.Format("_AATF using reuse sites_{0:ddMMyyyy_HHmm}.csv",
-                               SystemTime.UtcNow);
+            fileName += $"_AATF using reuse sites_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {

@@ -321,11 +321,11 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfSentOnDataCsv(int complianceYear,
-            string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+            string obligationType, Guid? authorityId, Guid? panArea)
         {
             CSVFileData fileData;
 
-            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, aatfName, authorityId, panArea);
+            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, authorityId, panArea);
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
@@ -422,20 +422,27 @@
         }
 
         private async Task PopulateFilters(AatfAeDetailsViewModel model)
-        {
-            using (var client = apiClient())
-            {
-                model.ComplianceYears = new SelectList(FetchAllAatfComplianceYears());
-                model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
-                model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
-                model.PanAreaList = await PatAreaList();
-                model.LocalAreaList = await LocalAreaList();
-            }
+        { 
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
+            model.PanAreaList = await PatAreaList();
+            model.LocalAreaList = await LocalAreaList();
         }
 
         private async Task<List<int>> FetchComplianceYearsForAatfReturns()
         {
             var request = new GetAatfReturnsActiveComplianceYears();
+            using (var client = apiClient())
+            {
+                var items = await client.SendAsync(User.GetAccessToken(), request);
+                return items;
+            }
+        }
+
+        private async Task<List<int>> FetchComplianceYearsForAatf()
+        {
+            var request = new GetAatfAeActiveComplianceYears();
             using (var client = apiClient())
             {
                 var items = await client.SendAsync(User.GetAccessToken(), request);
