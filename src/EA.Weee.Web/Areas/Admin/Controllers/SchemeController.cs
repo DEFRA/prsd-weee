@@ -5,6 +5,7 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Security;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
@@ -12,6 +13,7 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -43,11 +45,18 @@
             this.mapper = mapper;
         }
 
+        private bool IsUserInternalAdmin()
+        {
+            var claimsPrincipal = new ClaimsPrincipal(this.User);
+
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+        }
+
         [HttpGet]
         public async Task<ActionResult> ManageSchemes()
         {
             await SetBreadcrumb(null);
-            return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
+            return View(new ManageSchemesViewModel { Schemes = await GetSchemes(), CanAddPcs = IsUserInternalAdmin() });
         }
 
         [HttpPost]
@@ -57,7 +66,7 @@
             if (!ModelState.IsValid)
             {
                 await SetBreadcrumb(null);
-                return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
+                return View(new ManageSchemesViewModel { Schemes = await GetSchemes(), CanAddPcs = IsUserInternalAdmin() });
             }
 
             return RedirectToAction("Overview", new { schemeId = viewModel.Selected.Value });
