@@ -4,37 +4,27 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Web.Script.Serialization;
     using AutoFixture;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
     using FluentValidation.Results;
-    using Web.Areas.Admin.ViewModels.AddOrganisation;
-    using Web.Areas.Admin.ViewModels.AddOrganisation.Details;
-    using Web.Areas.Admin.ViewModels.AddOrganisation.Type;
     using Web.Infrastructure;
     using Xunit;
-    using AddressData = Core.Shared.AddressData;
 
     public class AddAatfControllerTests
     {
@@ -93,6 +83,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             RedirectToRouteResult result = await controller.AddAatf(viewModel) as RedirectToRouteResult;
 
@@ -103,6 +94,8 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
         [Fact]
         public async Task AddAatfPost_ValidViewModelRequestWithCorrectParametersCreated()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
+
             AddAatfViewModel viewModel = new AddAatfViewModel()
             {
                 Name = "name",
@@ -223,6 +216,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             await controller.AddAatf(viewModel);
 
@@ -242,6 +236,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             var result = await controller.AddAe(viewModel) as RedirectToRouteResult;
 
@@ -281,6 +276,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             await controller.AddAe(viewModel);
 
@@ -330,6 +326,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             var validationResult = new ValidationResult();
 
             A.CallTo(() => validationWrapper.Validate(A<string>._, viewModel)).Returns(validationResult);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             await controller.AddAe(viewModel);
 
@@ -342,6 +339,8 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
         [InlineData(FacilityType.Ae, "Add new AE")]
         public async Task AddGet_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
+
             await controller.Add(Guid.NewGuid(), facilityType);
 
             Assert.Equal(expectedBreadcrumb, breadcrumbService.InternalActivity);
@@ -358,6 +357,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
                 StatusValue = 1,
                 FacilityType = facilityType
             };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
 
             await controller.AddAatf(viewModel);
 
@@ -393,6 +393,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             viewModel.StatusList = statusList;
             viewModel.OrganisationId = Guid.NewGuid();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
             return viewModel;
         }
     }

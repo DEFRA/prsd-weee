@@ -48,7 +48,8 @@
                 LocalArea = source.AatfData.LocalAreaData,
                 ComplianceYearList = source.ComplianceYearList,
                 AatfId = source.AatfData.AatfId,
-                SelectedComplianceYear = source.AatfData.ComplianceYear
+                SelectedComplianceYear = source.AatfData.ComplianceYear,
+                CurrentDate = source.CurrentDate
             };
 
             if (source.AssociatedAatfs != null)
