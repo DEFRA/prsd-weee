@@ -98,6 +98,7 @@
                 aatf.ContactName.Should().Be(verifyAatf.Contact.FirstName + " " + verifyAatf.Contact.LastName);
                 aatf.ContactPosition.Should().Be(verifyAatf.Contact.Position);
                 aatf.ContactAddress.Should().Be(GetContactAddressString(verifyAatf.Contact));
+                aatf.ContactPostcode.Should().Be(verifyAatf.Contact.Postcode);
                 aatf.ContactEmail.Should().Be(verifyAatf.Contact.Email);
                 aatf.ContactPhone.Should().Be(verifyAatf.Contact.Telephone);
                 aatf.OrganisationName.Should().Be(verifyAatf.Organisation.OrganisationName);
@@ -127,8 +128,10 @@
 
             if (address.CountyOrRegion != null)
             {
-                addressString += address.CountyOrRegion;
+                addressString += address.CountyOrRegion + ", ";
             }
+
+            addressString += address.Country.Name;
 
             return addressString;
         }
@@ -146,8 +149,10 @@
 
             if (address.CountyOrRegion != null)
             {
-                addressString += address.CountyOrRegion;
+                addressString += address.CountyOrRegion + ", ";
             }
+
+            addressString += address.Country.Name;
 
             return addressString;
         }
@@ -165,8 +170,10 @@
 
             if (contact.CountyOrRegion != null)
             {
-                addressString += contact.CountyOrRegion;
+                addressString += contact.CountyOrRegion + ", ";
             }
+
+            addressString += contact.Country.Name;
 
             return addressString;
         }
