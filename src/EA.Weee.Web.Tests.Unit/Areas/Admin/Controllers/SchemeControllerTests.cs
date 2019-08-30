@@ -85,7 +85,7 @@
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
-            var controller = SchemeController();
+            SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Some error");
 
             var result = await controller.ManageSchemes(new ManageSchemesViewModel());
