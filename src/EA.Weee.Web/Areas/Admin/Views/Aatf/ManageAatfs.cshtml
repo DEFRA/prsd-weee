@@ -18,6 +18,16 @@
     </script>
 }
 
+<style>
+    .prsd-table thead th {
+        padding-left: 10px;
+    }
+
+    .prsd-table tbody td {
+        padding-left: 10px;
+    }
+</style>
+
 <header class="hgroup">
     <h1 class="govuk-heading-l">
         @Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")
@@ -76,11 +86,11 @@
             <table id="idManageAatfsTable" class="govuk-table prsd-table hover-effect" style="table-layout:fixed">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" width="35%" scope="col">Name of @Model.FacilityType.ToDisplayString()</th>
+                        <th class="govuk-table__header" width="34%" scope="col">Name of @Model.FacilityType.ToDisplayString()</th>
                         <th class="govuk-table__header" width="23%" scope="col">Approval number</th>
                         <th class="govuk-table__header" width="13%" scope="col">Appropriate authority</th>
-                	<th class="govuk-table__header" width="8%" scope="col">Latest year</th>
-                	<th class="govuk-table__header" width="11%" scope="col">Status</th>
+                	    <th class="govuk-table__header" width="8%" scope="col">Latest year</th>
+                	    <th class="govuk-table__header" width="13%" scope="col">Status</th>
                         <th class="govuk-table__header" style="width:9%; padding-right: 20px;" scope="col">Select</th>
                     </tr>
                 </thead>
