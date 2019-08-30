@@ -77,7 +77,7 @@
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
                     <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
-                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                    <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="white-space: nowrap;">
                         @{
                             var continueMessage = "Continue return for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
                             var editMessage = "Edit return for quarter " + item.ReturnViewModel.Quarter + " " + item.ReturnViewModel.Year;
