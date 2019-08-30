@@ -667,7 +667,8 @@
             {
                 Results = results,
                 SearchTerm = searchTerm,
-                SelectedOrganisationId = organisationId
+                SelectedOrganisationId = organisationId,
+                EntityType = EntityType.Aatf
             };
 
             var result = await controller.SearchResults(viewModel) as RedirectToRouteResult;
