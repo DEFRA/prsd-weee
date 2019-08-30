@@ -355,6 +355,22 @@
             result.ComplianceYearList.Should().BeEquivalentTo(complianceYears);
         }
 
+        [Fact]
+        public void Map_GivenValidSource_WithCurrentDate_PropertiesShouldBeMapped()
+        {
+            AatfData aatfData = CreateAatfData();
+            var date = DateTime.UtcNow;
+
+            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
+            {
+                CurrentDate = date,
+            };
+
+            AatfDetailsViewModel result = map.Map(transfer);
+
+            result.CurrentDate.Should().Be(date);
+        }
+
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()
         {
             return new UKCompetentAuthorityData()
