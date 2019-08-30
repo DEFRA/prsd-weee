@@ -106,7 +106,7 @@
 
             data.FileContent.Should()
                 .Contain(
-                    "Year,Quarter,Submitted by,Date submitted (GMT),Organisation name,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
+                    "Compliance year,Quarter,Submitted by,Date submitted (GMT),Organisation name,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
             data.FileContent.Should().Contain($"{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrganisationName},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived},{csvData1.TotalNonObligatedWeeeReceivedFromDcf}");
             data.FileContent.Should().Contain($"{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrganisationName},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived},{csvData2.TotalNonObligatedWeeeReceivedFromDcf}");
         }
