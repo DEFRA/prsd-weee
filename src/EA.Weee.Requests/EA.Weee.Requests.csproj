@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -185,6 +182,7 @@
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeId.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
     <Compile Include="Admin\GetRoles.cs" />
+    <Compile Include="Shared\GetApiUtcDate.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
     <Compile Include="Shared\GetPanAreas.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
@@ -235,6 +233,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
+      <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
+      <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
       <Name>EA.Weee.Core</Name>
@@ -251,10 +253,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -41,26 +41,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.4.10.0\lib\net452\AutoFixture.dll</HintPath>
+    <Reference Include="AutoFixture, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.4.11.0\lib\net452\AutoFixture.dll</HintPath>
     </Reference>
-    <Reference Include="AutoFixture.AutoFakeItEasy, Version=4.10.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.AutoFakeItEasy.4.10.0\lib\net452\AutoFixture.AutoFakeItEasy.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="AutoFixture.AutoFakeItEasy, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoFakeItEasy.4.11.0\lib\net452\AutoFixture.AutoFakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.4.9.2\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
+      <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
     </Reference>
-    <Reference Include="FluentAssertions, Version=5.5.3.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.5.5.3\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=5.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.9.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
@@ -160,6 +158,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
+      <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
+      <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
@@ -180,12 +182,12 @@
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
     <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.props'))" />
     <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

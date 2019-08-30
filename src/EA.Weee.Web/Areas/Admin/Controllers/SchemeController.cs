@@ -81,7 +81,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null)
+        public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null, string clickedTab = null)
         {
             await SetBreadcrumb(schemeId);
 
