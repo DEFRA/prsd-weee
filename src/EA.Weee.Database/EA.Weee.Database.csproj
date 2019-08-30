@@ -298,6 +298,7 @@
     <Content Include="scripts\Update\Release 2\Sprint16\20190823-1036-alter-getAeSubmissions.sql" />
     <Content Include="scripts\Update\Release 2\Sprint16\20190828-1012-alter-sp-ukEeeByComplianceYear.sql" />
     <Content Include="scripts\Update\Release 2\Sprint16\20190829-1115-create-sp-getAatfAeDetailsCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint16\20190830-1015-create-getPcsAatfDiscrepancyCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
