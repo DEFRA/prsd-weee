@@ -564,6 +564,54 @@
         }
 
         [Fact]
+        public void Map_GivenReceivedData_ObligatedB2BTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 2m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedB2BTotal.Should().Be(3.000m);
+        }
+
+        [Fact]
+        public void Map_GivenReceivedData_ObligatedB2CTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 2m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedB2CTotal.Should().Be(2.000m);
+        }
+
+        [Fact]
         public void Map_GivenSentOnData_ObligatedTotalIsBlank()
         {
             mapperTestAatfList.Add(mapperTestAatf);
