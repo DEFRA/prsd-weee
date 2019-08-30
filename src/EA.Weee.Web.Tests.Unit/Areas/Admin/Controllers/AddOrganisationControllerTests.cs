@@ -81,6 +81,7 @@
         [Theory]
         [InlineData(EntityType.Aatf)]
         [InlineData(EntityType.Ae)]
+        [InlineData(EntityType.Pcs)]
         public void PostSearch_ValidViewModelAndAatf_RedirectsToSearchResults(EntityType entityType)
         {
             var viewModel = new SearchViewModel()
@@ -190,24 +191,31 @@
             Assert.Equal(countries, resultViewModel.Address.Countries);
         }
 
-        [Fact]
-        public async Task PartnershipDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
+        [Theory]
+        [InlineData(EntityType.Aatf, "AddAatf", "Add")]
+        [InlineData(EntityType.Ae, "AddAatf", "Add")]
+        [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
+        public async Task PartnershipDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
             var viewModel = new PartnershipDetailsViewModel
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
-                EntityType = EntityType.Aatf,
+                EntityType = type,
                 Address = {Countries = countries}
             };
 
             var result = await controller.PartnershipDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Add");
-            result.RouteValues["controller"].Should().Be("AddAatf");
+            result.RouteValues["action"].Should().Be(expectedAction);
+            result.RouteValues["controller"].Should().Be(expectedController);
 
             result.RouteValues["organisationId"].Should().NotBe(null);
-            result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+
+            if (type != EntityType.Pcs)
+            {
+                result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+            }
         }
 
         [Fact]
@@ -268,24 +276,31 @@
             Assert.Equal(countries, resultViewModel.Address.Countries);
         }
 
-        [Fact]
-        public async Task SoleTraderDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
+        [Theory]
+        [InlineData(EntityType.Aatf, "AddAatf", "Add")]
+        [InlineData(EntityType.Ae, "AddAatf", "Add")]
+        [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
+        public async Task SoleTraderDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
             var viewModel = new SoleTraderDetailsViewModel
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
-                EntityType = EntityType.Aatf,
+                EntityType = type,
                 Address = {Countries = countries}
             };
 
             var result = await controller.SoleTraderDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Add");
-            result.RouteValues["controller"].Should().Be("AddAatf");
+            result.RouteValues["action"].Should().Be(expectedAction);
+            result.RouteValues["controller"].Should().Be(expectedController);
 
             result.RouteValues["organisationId"].Should().NotBe(null);
-            result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+
+            if (type != EntityType.Pcs)
+            {
+                result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+            }
         }
 
         [Fact]
@@ -369,8 +384,11 @@
             Assert.Equal(countries, resultViewModel.Address.Countries);
         }
 
-        [Fact]
-        public async Task RegisteredCompanyDetailsPost_ValidViewModel_ReturnsCorrectRedirect()
+        [Theory]
+        [InlineData(EntityType.Aatf, "AddAatf", "Add")]
+        [InlineData(EntityType.Ae, "AddAatf", "Add")]
+        [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
+        public async Task RegisteredCompanyDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
             var viewModel = new RegisteredCompanyDetailsViewModel()
             {
@@ -378,23 +396,28 @@
                 OrganisationType = "Registered company",
                 CompaniesRegistrationNumber = "1234567",
                 CompanyName = "Name",
-                EntityType = EntityType.Aatf
+                EntityType = type
             };
 
             viewModel.Address.Countries = countries;
 
             var result = await controller.RegisteredCompanyDetails(viewModel) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Add");
-            result.RouteValues["controller"].Should().Be("AddAatf");
+            result.RouteValues["action"].Should().Be(expectedAction);
+            result.RouteValues["controller"].Should().Be(expectedController);
 
             result.RouteValues["organisationId"].Should().NotBe(null);
-            result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+
+            if (type != EntityType.Pcs)
+            {
+                result.RouteValues["facilityType"].Should().Be(viewModel.EntityType);
+            }
         }
 
         [Theory]
         [InlineData(EntityType.Aatf, "Add new AATF")]
         [InlineData(EntityType.Ae, "Add new AE")]
+        [InlineData(EntityType.Pcs, "Add new PCS")]
         public void SearchGet_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             controller.Search(entityType);
@@ -405,6 +428,7 @@
         [Theory]
         [InlineData(EntityType.Aatf, "Add new AATF")]
         [InlineData(EntityType.Ae, "Add new AE")]
+        [InlineData(EntityType.Pcs, "Add new PCS")]
         public void SearchPost_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             var viewModel = fixture.Build<SearchViewModel>().With(m => m.EntityType, entityType).Create();
@@ -416,6 +440,7 @@
         [Theory]
         [InlineData(EntityType.Aatf, "Add new AATF")]
         [InlineData(EntityType.Ae, "Add new AE")]
+        [InlineData(EntityType.Pcs, "Add new PCS")]
         public async Task SearchResultsGet_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             await controller.SearchResults("test", entityType);
@@ -426,9 +451,13 @@
         [Theory]
         [InlineData(EntityType.Aatf, "Add new AATF")]
         [InlineData(EntityType.Ae, "Add new AE")]
+        [InlineData(EntityType.Pcs, "Add new PCS")]
         public async Task SearchResultsPost_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             var viewModel = fixture.Build<SearchResultsViewModel>().With(m => m.EntityType, entityType).Create();
+
+            viewModel.SelectedOrganisationId = viewModel.Results.FirstOrDefault().OrganisationId;
+
             await controller.SearchResults(viewModel);
 
             Assert.Equal(expectedBreadcrumb, breadcrumbService.InternalActivity);
@@ -647,7 +676,7 @@
         }
 
         [Fact]
-        public async Task PostSearch_ValidViewModelSelectedOrganisation_RedirectsToAdd()
+        public async Task PostSearchForAatf_ValidViewModelSelectedOrganisation_RedirectsToAdd()
         {
             var organisationId = Guid.NewGuid();
             var searchTerm = "civica";
@@ -676,6 +705,71 @@
             result.RouteValues["action"].Should().Be("Add");
             result.RouteValues["controller"].Should().Be("AddAatf");
             Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+        }
+
+        [Fact]
+        public async Task PostSearchForPcs_ValidViewModelSelectedOrganisation_RedirectsToAdd()
+        {
+            var organisationId = Guid.NewGuid();
+            var searchTerm = "civica";
+
+            IList<OrganisationSearchResult> results = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    Name = searchTerm,
+                    OrganisationId = organisationId
+                }
+            };
+
+            A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
+
+            var viewModel = new SearchResultsViewModel()
+            {
+                Results = results,
+                SearchTerm = searchTerm,
+                SelectedOrganisationId = organisationId,
+                EntityType = EntityType.Pcs
+            };
+
+            var result = await controller.SearchResults(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("AddScheme");
+            result.RouteValues["controller"].Should().Be("Scheme");
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+        }
+
+        [Fact]
+        public async Task PostSearchForPcs_ValidViewModelSelectedOrganisationAlreadyHasPcs_RedirectsToOrgAlreadyHasPcs()
+        {
+            var organisationId = Guid.NewGuid();
+            var searchTerm = "civica";
+
+            IList<OrganisationSearchResult> results = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    Name = searchTerm,
+                    OrganisationId = organisationId,
+                    PcsCount = 1
+                }
+            };
+
+            A.CallTo(() => organisationSearcher.Search(searchTerm, 5, false)).Returns(results);
+
+            var viewModel = new SearchResultsViewModel()
+            {
+                Results = results,
+                SearchTerm = searchTerm,
+                SelectedOrganisationId = organisationId,
+                EntityType = EntityType.Pcs
+            };
+
+            var result = await controller.SearchResults(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrgAlreadyHasScheme");
+            result.RouteValues["controller"].Should().Be("AddOrganisation");
+            Assert.Equal(searchTerm, result.RouteValues["searchTerm"]);
         }
 
         private void SetupControllerAjaxRequest()

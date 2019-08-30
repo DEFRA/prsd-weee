@@ -5,7 +5,9 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Mappings;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Scheme;
@@ -17,13 +19,16 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IUpdateSchemeInformationDataAccess dataAccess;
+        private readonly IOrganisationDetailsDataAccess organisationDataAccess;
 
         public AddSchemeHandler(
             IWeeeAuthorization authorization,
-            IUpdateSchemeInformationDataAccess dataAccess)
+            IUpdateSchemeInformationDataAccess dataAccess,
+            IOrganisationDetailsDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
         public async Task<CreateOrUpdateSchemeInformationResult> HandleAsync(CreateScheme message)
@@ -102,6 +107,15 @@
             scheme.SetStatus(status);
 
             await dataAccess.SaveAsync();
+
+
+            Organisation org = await organisationDataAccess.FetchOrganisationAsync(message.OrganisationId);
+
+            if (org.OrganisationStatus == OrganisationStatus.Incomplete)
+            {
+                org.CompleteRegistration();
+                await organisationDataAccess.SaveAsync();
+            }
 
             return new CreateOrUpdateSchemeInformationResult()
             {
