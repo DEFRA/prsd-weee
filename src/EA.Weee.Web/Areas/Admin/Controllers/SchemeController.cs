@@ -259,7 +259,7 @@
             switch (result.Result)
             {
                 case CreateOrUpdateSchemeInformationResult.ResultType.Success:
-                    return RedirectToAction("ManageSchemes");
+                    return RedirectToAction("Overview", new { schemeId });
 
                 case CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
@@ -315,7 +315,9 @@
                 return View(viewModel);
             }
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddScheme(SchemeViewModel model)
         {
             using (var client = apiClient())
