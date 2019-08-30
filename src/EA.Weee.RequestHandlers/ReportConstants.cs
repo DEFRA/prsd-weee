@@ -6,7 +6,7 @@
         public const string NonObligatedColumnHeading = "Total non-obligated WEEE received (t)";
         public const string CategoryColumnHeading = "Category";
         public const string QuarterColumnHeading = "Quarter";
-        public const string YearColumnHeading = "Year";
+        public const string YearColumnHeading = "Compliance year";
         public const string SubmittedByColumnHeading = "Submitted by";
         public const string DateSubmittedColumnHeading = "Date submitted (GMT)";
         public const string OrganisationColumnHeading = "Organisation name";
