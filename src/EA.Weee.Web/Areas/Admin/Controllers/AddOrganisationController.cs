@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -117,11 +118,30 @@
                 return View(viewModel);
             }
 
-            if (viewModel.IsAeOrAatf)
+            if (viewModel.EntityType == EntityType.Pcs)
             {
-                return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.EntityType });
+                var selectedOrg = viewModel.Results.FirstOrDefault(p => p.OrganisationId == viewModel.SelectedOrganisationId);
+
+                if (selectedOrg.PcsCount == 0)
+                {
+                    return RedirectToAction("AddScheme", "Scheme", new { organisationId = viewModel.SelectedOrganisationId });
+                }
+
+                return RedirectToAction("OrgAlreadyHasScheme", "AddOrganisation", new {searchTerm = viewModel.SearchTerm});
             }
-            return RedirectToAction("AddScheme", "Scheme", new { organisationId = viewModel.SelectedOrganisationId});
+
+            return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.EntityType });
+        }
+
+        [HttpGet]
+        public ActionResult OrgAlreadyHasScheme(string searchTerm)
+        {
+            OrgAlreadyHasSchemeViewModel model = new OrgAlreadyHasSchemeViewModel()
+            {
+                SearchTerm = searchTerm
+            };
+
+            return View(model);
         }
 
         [HttpGet]
@@ -169,7 +189,7 @@
                 BusinessTradingName = searchedText,
                 OrganisationType = organisationType,
                 EntityType = entityType,
-                Address = {Countries = countries}
+                Address = { Countries = countries }
             };
 
             return View(model);
@@ -200,7 +220,7 @@
 
                 var id = await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.EntityType });
+                return RedirectToAddAction(id, model.EntityType);
             }
         }
 
@@ -213,7 +233,10 @@
 
             var model = new SoleTraderDetailsViewModel
             {
-                CompanyName = searchedText, OrganisationType = organisationType, EntityType = entityType, Address = {Countries = countries}
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                EntityType = entityType,
+                Address = { Countries = countries }
             };
 
             return View(model);
@@ -245,7 +268,7 @@
 
                 var id = await client.SendAsync(User.GetAccessToken(), request);
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id, facilityType = model.EntityType });
+                return RedirectToAddAction(id, model.EntityType);
             }
         }
 
@@ -258,7 +281,10 @@
 
             var model = new RegisteredCompanyDetailsViewModel
             {
-                CompanyName = searchedText, OrganisationType = organisationType, EntityType = entityType, Address = {Countries = countries}
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                EntityType = entityType,
+                Address = { Countries = countries }
             };
 
             return View(model);
@@ -294,8 +320,18 @@
 
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction("Add", "AddAatf", new { organisationId = id, FacilityType = model.EntityType });
+                return RedirectToAddAction(id, model.EntityType);
             }
+        }
+
+        private ActionResult RedirectToAddAction(Guid organisationId, EntityType entityType)
+        {
+            if (entityType == EntityType.Pcs)
+            {
+                return RedirectToAction("AddScheme", "Scheme", new { organisationId = organisationId});
+            }
+
+            return RedirectToAction("Add", "AddAatf", new { organisationId = organisationId, FacilityType = entityType });
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -315,6 +351,9 @@
                     break;
                 case EntityType.Ae:
                     SetBreadcrumb(InternalUserActivity.CreateAe);
+                    break;
+                case EntityType.Pcs:
+                    SetBreadcrumb(InternalUserActivity.CreatePcs);
                     break;
                 default:
                     break;
