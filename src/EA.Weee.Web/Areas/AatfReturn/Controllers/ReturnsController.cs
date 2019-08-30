@@ -4,12 +4,15 @@
     using Attributes;
     using Constant;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Weee.Requests.AatfReturn;
@@ -38,8 +41,18 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
+                var complianceYearList = @return.ReturnsList.Select(x => x.Quarter.Year).Distinct().ToList();
+                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).First();
+
+                //Need to do the below 2 lines when compliance year drop down changes, so that the quarter dropdown dynamically changes
+                var quartersForLatestComplianceYear = @return.ReturnsList.Select(x => x.Quarter).ToList();
+                var filteredQuarterList = quartersForLatestComplianceYear.Where(x => x.Year == latestComplianceYear).Select(a => a.Q.ToString()).Distinct().ToList();
+
                 var viewModel = mapper.Map<ReturnsViewModel>(@return);
 
+                viewModel.QuarterList = filteredQuarterList;
+                viewModel.ComplianceYearList = complianceYearList;
+                viewModel.SelectedComplianceYear = latestComplianceYear;
                 viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 viewModel.OrganisationId = organisationId;
 
@@ -53,7 +66,7 @@
         [ValidateAntiForgeryToken]
         [ValidateReturnEditActionFilter]
         [Route("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}")]
-        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId)
+        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId, bool? noJavascriptCopy)
         {
             using (var client = apiClient())
             {
