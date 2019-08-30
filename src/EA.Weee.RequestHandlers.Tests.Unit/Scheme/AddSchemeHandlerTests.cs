@@ -4,6 +4,7 @@
     using Core.Shared;
     using Domain;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -21,6 +22,21 @@
 
     public class AddSchemeHandlerTests
     {
+        private readonly IWeeeAuthorization authorization;
+        private readonly IOrganisationDetailsDataAccess organisationDataAccess;
+        private readonly IUpdateSchemeInformationDataAccess dataAccess;
+
+        private readonly AddSchemeHandler handler;
+
+        public AddSchemeHandlerTests()
+        {
+            authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+
+            handler = new AddSchemeHandler(authorization, dataAccess, organisationDataAccess);
+        }
+
         [Fact]
         public async Task HandleAsync_WithNonInternalUser_ThrowsSecurityException()
         {
@@ -29,9 +45,7 @@
                 .DenyInternalAreaAccess()
                 .Build();
 
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                A.Dummy<IUpdateSchemeInformationDataAccess>());
+            AddSchemeHandler handler = new AddSchemeHandler(authorization, dataAccess, organisationDataAccess);
 
             // Act
             Func<Task<CreateOrUpdateSchemeInformationResult>> testCode = async () => await handler.HandleAsync(A.Dummy<CreateScheme>());
@@ -43,15 +57,6 @@
         [Fact]
         public async Task HandleAsync_EverythingCorrect_CreateSchemeCallsSaveAndReturnsSuccess()
         {
-            // Arrange
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
-
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
-
             // Act
             CreateScheme request = new CreateScheme(
                 A.Dummy<Guid>(),
@@ -71,19 +76,67 @@
         }
 
         [Fact]
+        public async Task HandleAsync_EverythingCorrectButWithNewOrganisation_CreateSchemeCallsSaveAndReturnsSuccess_CompleteOrgCalled()
+        {
+            Organisation organisation = A.Fake<Organisation>();
+            organisation.OrganisationStatus = Domain.Organisation.OrganisationStatus.Incomplete;
+
+            // Act
+            CreateScheme request = new CreateScheme(
+                organisation.Id,
+                "New scheme name",
+                "WEE/AB8888CD/SCH",
+                "WEE7453956",
+                ObligationType.B2B,
+                new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                SchemeStatus.Approved);
+
+            A.CallTo(() => organisationDataAccess.FetchOrganisationAsync(organisation.Id)).Returns(organisation);
+
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+            A.CallTo(() => organisationDataAccess.SaveAsync()).MustHaveHappened();
+
+            Assert.NotNull(result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
+        }
+
+        [Fact]
+        public async Task HandleAsync_EverythingCorrectButWithExistingOrganisation_CreateSchemeCallsSaveAndReturnsSuccess_CompleteOrgNotCalled()
+        {
+            Organisation organisation = A.Fake<Organisation>();
+            organisation.OrganisationStatus = Domain.Organisation.OrganisationStatus.Complete;
+
+            // Act
+            CreateScheme request = new CreateScheme(
+                organisation.Id,
+                "New scheme name",
+                "WEE/AB8888CD/SCH",
+                "WEE7453956",
+                ObligationType.B2B,
+                new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                SchemeStatus.Approved);
+
+            A.CallTo(() => organisationDataAccess.FetchOrganisationAsync(organisation.Id)).Returns(organisation);
+
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+            A.CallTo(() => organisationDataAccess.SaveAsync()).MustNotHaveHappened();
+
+            Assert.NotNull(result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
+        }
+
+        [Fact]
         public async Task HandleAsync_WhereApprovalNumberIsAValueThatAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
             UKCompetentAuthority environmentAgency = A.Dummy<UKCompetentAuthority>();
             typeof(UKCompetentAuthority).GetProperty("Id").SetValue(environmentAgency, new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"));
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.CheckSchemeApprovalNumberInUseAsync("WEE/ZZ9999ZZ/SCH")).Returns(true);
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -129,16 +182,10 @@
                 environmentAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme, otherScheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -192,16 +239,10 @@
                 devlovedAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -252,16 +293,10 @@
                 devlovedAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>());
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -297,16 +332,10 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -342,16 +371,10 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -387,16 +410,10 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
@@ -434,16 +451,10 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
-
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            AddSchemeHandler handler = new AddSchemeHandler(
-                authorization,
-                dataAccess);
 
             // Act
             CreateScheme request = new CreateScheme(
