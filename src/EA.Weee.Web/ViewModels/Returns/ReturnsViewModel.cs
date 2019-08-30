@@ -3,6 +3,7 @@
     using Core.DataReturns;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
 
     public class ReturnsViewModel
     {
@@ -13,6 +14,16 @@
         public IList<ReturnsItemViewModel> Returns { get; set; }
 
         public int ComplianceYear { get; set; }
+
+        public List<int> ComplianceYearList { get; set; }
+
+        [DisplayName("Compliance year")]
+        public int SelectedComplianceYear { get; set; }
+
+        public List<string> QuarterList { get; set; }
+
+        [DisplayName("Reporting quarter")]
+        public string SelectedQuarter { get; set; }
 
         public QuarterType Quarter { get; set; }
 
