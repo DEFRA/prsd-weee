@@ -640,7 +640,6 @@
             CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
             {
                 Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
-                
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateScheme>._)).Returns(apiResult);
