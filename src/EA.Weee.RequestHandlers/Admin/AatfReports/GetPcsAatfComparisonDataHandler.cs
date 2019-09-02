@@ -47,7 +47,7 @@
             csvWriter.DefineColumn(@"Quarter", i => i.QuarterValue);
             csvWriter.DefineColumn(@"Obligation type", i => i.ObligationType);
             csvWriter.DefineColumn(@"Category", i => i.Category);
-            csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"PCS name", i => i.SchemeNameValue);
             csvWriter.DefineColumn(@"PCS approval number", i => i.PcsApprovalNumber);
             csvWriter.DefineColumn(@"PCS appropriate authority", i => i.PcsAbbreviation);
             csvWriter.DefineColumn(@"AATF name", i => i.AatfName);

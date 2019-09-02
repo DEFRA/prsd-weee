@@ -89,7 +89,7 @@
                 QuarterValue = fixture.Create<string>(),
                 ObligationType = fixture.Create<string>(),
                 Category = fixture.Create<string>(),
-                SchemeName = fixture.Create<string>(),
+                SchemeNameValue = fixture.Create<string>(),
                 PcsApprovalNumber = fixture.Create<string>(),
                 PcsAbbreviation = fixture.Create<string>(),
                 AatfName = fixture.Create<string>(),
@@ -106,7 +106,7 @@
                 QuarterValue = fixture.Create<string>(),
                 ObligationType = fixture.Create<string>(),
                 Category = fixture.Create<string>(),
-                SchemeName = fixture.Create<string>(),
+                SchemeNameValue = fixture.Create<string>(),
                 PcsApprovalNumber = fixture.Create<string>(),
                 PcsAbbreviation = fixture.Create<string>(),
                 AatfName = fixture.Create<string>(),
@@ -123,7 +123,7 @@
                 QuarterValue = fixture.Create<string>(),
                 ObligationType = fixture.Create<string>(),
                 Category = fixture.Create<string>(),
-                SchemeName = fixture.Create<string>(),
+                SchemeNameValue = fixture.Create<string>(),
                 PcsApprovalNumber = fixture.Create<string>(),
                 PcsAbbreviation = fixture.Create<string>(),
                 AatfName = fixture.Create<string>(),
@@ -142,9 +142,9 @@
             var data = await handler.HandleAsync(request);
 
             data.FileContent.Should().Contain("Compliance year,Quarter,Obligation type,Category,PCS name,PCS approval number,PCS appropriate authority,AATF name,AATF approval number,AATF appropriate authority,PCS report (t),AATF report(t),Discrepancy between PCS and AATF reports (t)");
-            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.QuarterValue},{csvData1.ObligationType},{csvData1.Category},{csvData1.SchemeName},{csvData1.PcsApprovalNumber},{csvData1.PcsAbbreviation},{csvData1.AatfName},{csvData1.AatfApprovalNumber},{csvData1.AatfAbbreviation},{csvData1.PcsTonnage},{csvData1.AatfTonnage},{csvData1.DifferenceTonnage}");
-            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.QuarterValue},{csvData2.ObligationType},{csvData2.Category},{csvData2.SchemeName},{csvData2.PcsApprovalNumber},{csvData2.PcsAbbreviation},{csvData2.AatfName},{csvData2.AatfApprovalNumber},{csvData2.AatfAbbreviation},{csvData2.PcsTonnage},{csvData2.AatfTonnage},{csvData2.DifferenceTonnage}");
-            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.QuarterValue},{csvData3.ObligationType},{csvData3.Category},{csvData3.SchemeName},{csvData3.PcsApprovalNumber},{csvData3.PcsAbbreviation},{csvData3.AatfName},{csvData3.AatfApprovalNumber},{csvData3.AatfAbbreviation},{csvData3.PcsTonnage},{csvData3.AatfTonnage},{csvData3.DifferenceTonnage}");
+            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.QuarterValue},{csvData1.ObligationType},{csvData1.Category},{csvData1.SchemeNameValue},{csvData1.PcsApprovalNumber},{csvData1.PcsAbbreviation},{csvData1.AatfName},{csvData1.AatfApprovalNumber},{csvData1.AatfAbbreviation},{csvData1.PcsTonnage},{csvData1.AatfTonnage},{csvData1.DifferenceTonnage}");
+            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.QuarterValue},{csvData2.ObligationType},{csvData2.Category},{csvData2.SchemeNameValue},{csvData2.PcsApprovalNumber},{csvData2.PcsAbbreviation},{csvData2.AatfName},{csvData2.AatfApprovalNumber},{csvData2.AatfAbbreviation},{csvData2.PcsTonnage},{csvData2.AatfTonnage},{csvData2.DifferenceTonnage}");
+            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.QuarterValue},{csvData3.ObligationType},{csvData3.Category},{csvData3.SchemeNameValue},{csvData3.PcsApprovalNumber},{csvData3.PcsAbbreviation},{csvData3.AatfName},{csvData3.AatfApprovalNumber},{csvData3.AatfAbbreviation},{csvData3.PcsTonnage},{csvData3.AatfTonnage},{csvData3.DifferenceTonnage}");
         }
 
         [Fact]

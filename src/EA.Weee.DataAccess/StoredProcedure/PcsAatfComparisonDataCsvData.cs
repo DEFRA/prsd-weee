@@ -10,7 +10,7 @@
 
         public string Category { get; set; }
 
-        public string SchemeName { get; set; }
+        public string SchemeNameValue { get; set; }
 
         public string PcsApprovalNumber { get; set; }
 
