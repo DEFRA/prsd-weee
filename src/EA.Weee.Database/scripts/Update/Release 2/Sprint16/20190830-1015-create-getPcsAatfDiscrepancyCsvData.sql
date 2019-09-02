@@ -137,6 +137,7 @@ SELECT
 	LEFT JOIN [Lookup].CompetentAuthority ca1 ON ca1.Id = a.CompetentAuthorityId
 	WHERE
 		DR.[ComplianceYear] = @ComplianceYear
+		AND (@Quarter = 0 or DR.[Quarter] = @Quarter)
 
 
 		SELECT 
@@ -168,7 +169,7 @@ SELECT
 		WHERE ISNULL(P.PcsTonnage, 0) != ISNULL(A.AatfTonnage, 0)
 		AND
 		(@ObligationType IS NULL
-			OR a.Obligation LIKE '%' + COALESCE(@ObligationType, a.Obligation) + '%')
+			OR ObligationType LIKE '%' + COALESCE(@ObligationType, ObligationType) + '%')
 		ORDER BY [Quarter],ObligationType,CategoryValue,SchemeNameValue,AatfName
 
 
