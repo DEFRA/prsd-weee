@@ -14,5 +14,7 @@
         public int? ParentId { get; private set; }
 
         public string AlternativeDescription { get; private set; }
+
+        public string Title { get; private set; }
     }
 }

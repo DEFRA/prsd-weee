@@ -214,7 +214,7 @@
         {
             var viewModel = GetDefaultViewModelWithDcfQuestion();
             viewModel.DcfSelectedValue = viewModel.YesValue;
-            viewModel.ReportOnQuestions.Add(new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligated, string.Empty, string.Empty, null, string.Empty) { Selected = false });
+            viewModel.ReportOnQuestions.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, (int)ReportOnQuestionEnum.NonObligated).With(r => r.Selected, false).Create());
 
             var result = viewModel.DcfSelectedValue;
 

@@ -8,7 +8,7 @@
         public const string SchemeObligationData = "PCS obligation data";
         public const string SchemeWeeeData = "PCS WEEE data";
         public const string UkEeeData = "UK EEE data";
-        public const string UkWeeeData = "UK WEEE data";
+        public const string UkWeeeData = "UK WEEE collected by PCSs";
         public const string UkWeeeDataAtAatfs = "UK WEEE received at AATFs";
         public const string UkNonObligatedWeeeData = "UK non-obligated WEEE received at AATFs";
         public const string MissingProducerData = "Missing producer data";
