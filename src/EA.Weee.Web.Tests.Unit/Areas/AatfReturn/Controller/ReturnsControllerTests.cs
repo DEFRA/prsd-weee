@@ -13,6 +13,7 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
@@ -51,6 +52,10 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
@@ -59,6 +64,10 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_BreadcrumbShouldBeSet()
         {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
             await controller.Index(A.Dummy<Guid>());
 
             Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
@@ -67,6 +76,10 @@
         [Fact]
         public async void IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
         {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
             var organisationId = Guid.NewGuid();
 
             await controller.Index(organisationId);
@@ -88,8 +101,12 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
+        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturnedWithAllReturns()
         {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
             var model = new ReturnsViewModel();
             var organisationId = Guid.NewGuid();
 
@@ -101,6 +118,7 @@
 
             returnedModel.Should().Be(model);
             returnedModel.OrganisationId.Should().Be(organisationId);
+            returnedModel.Returns.Count.Should().Be(returns.ReturnsList.Count);
         }
 
         [Theory]
@@ -134,6 +152,53 @@
             redirectResult.RouteValues["action"].Should().Be("Index");
             redirectResult.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             redirectResult.RouteValues["returnId"].Should().Be(returnId);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenFilterParameter_ViewShouldBeReturned()
+        {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
+            var model = new ReturnsViewModel();
+            var organisationId = Guid.NewGuid();
+            model.OrganisationId = organisationId;
+
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnsData>._)).Returns(model);
+
+            var result = await controller.Index(model, true) as ViewResult;
+
+            var returnedModel = (ReturnsViewModel)model;
+
+            returnedModel.Should().Be(model);
+            returnedModel.OrganisationId.Should().Be(organisationId);
+            returnedModel.Returns.Count.Should().Be(returns.ReturnsList.Count);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenFilterParameterAndYearFilter_ViewShouldBeReturnedWithCorrectReturns()
+        {
+            var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>._)).Returns(returns);
+
+            var model = new ReturnsViewModel();
+            model.SelectedComplianceYear = 2019;
+            model.SelectedQuarter = "Q1";
+            var organisationId = Guid.NewGuid();
+            model.OrganisationId = organisationId;
+
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnsData>._)).Returns(model);
+
+            var result = await controller.Index(model, true) as ViewResult;
+
+            var returnedModel = (ReturnsViewModel)model;
+
+            returnedModel.Should().Be(model);
+            returnedModel.OrganisationId.Should().Be(organisationId);
+            returnedModel.Returns.Count.Should().Be(returns.ReturnsList.Count(p => p.Quarter.Q.ToString() == model.SelectedQuarter));
+            returnedModel.Returns.Count.Should().Be(returns.ReturnsList.Count(p => p.Quarter.Year == model.SelectedComplianceYear));
         }
 
         [Fact]
