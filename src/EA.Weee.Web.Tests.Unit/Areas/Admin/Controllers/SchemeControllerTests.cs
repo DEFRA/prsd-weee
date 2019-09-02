@@ -512,7 +512,6 @@
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             Guid organisationId = Guid.NewGuid();
 
-
             ActionResult result = await controller.AddScheme(new SchemeViewModel
             {
                 Status = status,
@@ -551,7 +550,7 @@
                 Status = SchemeStatus.Approved
             };
 
-            ActionResult result = await controller.AddScheme( model);
+            ActionResult result = await controller.AddScheme(model);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
 
@@ -583,7 +582,7 @@
                 OrganisationId = A.Dummy<Guid>()
             };
 
-            ActionResult result = await controller.AddScheme( model);
+            ActionResult result = await controller.AddScheme(model);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -643,6 +642,7 @@
                 Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
                 
             };
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateScheme>._)).Returns(apiResult);
 
             SchemeController controller = SchemeController();
