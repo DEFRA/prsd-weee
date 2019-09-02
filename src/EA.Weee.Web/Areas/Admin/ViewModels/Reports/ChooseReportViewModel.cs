@@ -23,7 +23,8 @@
                 Reports.AatfNonObligatedData,
                 Reports.AatfSentOnData,
                 Reports.AatfReuseSitesData,
-                Reports.AatfAeDetails
+                Reports.AatfAeDetails,
+                Reports.PcsAatfDataDifference
             })
         {
         }
