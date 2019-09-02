@@ -32,12 +32,15 @@ DECLARE @SUBMITTEDRETURN TABLE
 		[WeeeCategory]				INT,
 		[ObligationType]			NVARCHAR(4),
 		[AatfApprovalNumber]		NVARCHAR(50),
+		AatfName					NVARCHAR(256) NULL,
+		AatfCompetentAuthorityAbbr	NVARCHAR(65) NULL,
 		[PcsTonnage]				DECIMAL(38, 3)
 	)
 
 	DECLARE @AatfObligated TABLE
 	(
 		[SchemeId]					UNIQUEIDENTIFIER,
+		SchemeName					NVARCHAR(70)  NULL,
 		ComplianceYear				INT NOT NULL,
 		Name						NVARCHAR(256) NOT NULL,
 		AatfApprovalNumber			NVARCHAR(16)  NULL,	
@@ -46,6 +49,7 @@ DECLARE @SUBMITTEDRETURN TABLE
 		[CategoryId]				INT,
 		[Obligation]				NVARCHAR(4),
 		[ApprovalNumber]			NVARCHAR(50),
+		PcsCompetentAuthorityAbbr	NVARCHAR(65) NULL,
 		[AatfTonnage]				DECIMAL(38, 3)
 	)
 
@@ -74,21 +78,22 @@ WHERE X.RowNumber = 1
 
 
 INSERT INTO @AatfObligated
-SELECT u.SchemeId, u.ComplianceYear,  u.Name, u.AatfApprovalNumber, u.CompetentAuthorityAbbr, u.[Quarter], u.CategoryId, CASE WHEN u.Tonnage = 'HouseholdTonnage' THEN 'B2C'
+SELECT u.SchemeId, u.SchemeName, u.ComplianceYear,  u.Name, u.AatfApprovalNumber, u.CompetentAuthorityAbbr, u.[Quarter], u.CategoryId, CASE WHEN u.Tonnage = 'HouseholdTonnage' THEN 'B2C'
 			 ELSE 'B2B' END AS Obligation,
-  u.ApprovalNumber, SUM(u.value) AS AatfTonnage
+  u.ApprovalNumber, u.Abbreviation, SUM(u.value) AS AatfTonnage
 FROM (
 	SELECT r.ComplianceYear, r.Name, r.ApprovalNumber as AatfApprovalNumber, r.CompetentAuthorityAbbr, wr.SchemeId, r.AatfId, r.ReturnId, r.[Quarter], wra.CategoryId,
 	 ISNULL(wra.HouseholdTonnage,0) HouseholdTonnage ,
-	 ISNULL(wra.NonHouseholdTonnage,0) NonHouseholdTonnage, s.SchemeName, s.ApprovalNumber
+	 ISNULL(wra.NonHouseholdTonnage,0) NonHouseholdTonnage, s.SchemeName, s.ApprovalNumber, ca.Abbreviation
 	FROM @SUBMITTEDRETURN r
 	INNER JOIN [AATF].WeeeReceived wr ON r.ReturnId = wr.ReturnId
 		AND wr.AatfId = r.AatfId
 	INNER JOIN [AATF].WeeeReceivedAmount wra ON wr.Id = wra.WeeeReceivedId
 	INNER JOIN [PCS].[Scheme] S ON s.Id = wr.SchemeId
+	INNER JOIN [Lookup].CompetentAuthority ca ON ca.Id = s.CompetentAuthorityId 
 	) a
 	UNPIVOT(value FOR Tonnage IN (a.HouseholdTonnage, a.NonHouseholdTonnage)) u
-GROUP BY ComplianceYear, Name, AatfApprovalNumber, CompetentAuthorityAbbr, AatfId, ReturnId, [Quarter], Tonnage, CategoryId, u.SchemeId, u.SchemeName, u.ApprovalNumber
+GROUP BY ComplianceYear, Name, AatfApprovalNumber, CompetentAuthorityAbbr, AatfId, ReturnId, [Quarter], Tonnage, CategoryId, u.SchemeId, u.SchemeName, u.ApprovalNumber, u.Abbreviation
 
 
 
@@ -104,6 +109,8 @@ SELECT
 		WDA.[WeeeCategory],
 		WDA.[ObligationType],
 		AATF.[ApprovalNumber] AS 'AatfApprovalNumber',
+		AATF.FacilityName,
+		ca1.Abbreviation,
 		WDA.[Tonnage]
 	FROM
 		[PCS].[DataReturn] DR
@@ -126,32 +133,43 @@ SELECT
 	LEFT JOIN
 		[PCS].[AatfDeliveryLocation] AATF
 			ON WDA.[AatfDeliveryLocationId] = AATF.[Id]
+	LEFT JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
+	LEFT JOIN [Lookup].CompetentAuthority ca1 ON ca1.Id = a.CompetentAuthorityId
 	WHERE
 		DR.[ComplianceYear] = @ComplianceYear
 
 
 		SELECT 
-		A.ComplianceYear, A.[Quarter], A.Obligation AS ObligationType,		
-		CONCAT(c.Id, '. ', c.Name) AS Category, CONCAT('Q', A.[Quarter]) AS QuarterValue,
-		P.SchemeName, P.ApprovalNumber AS PcsApprovalNumber, P.CompetentAuthorityAbbr AS PcsAbbreviation,
-		A.Name AS AatfName, A.AatfApprovalNumber, A.CompetentAuthorityAbbr AS AatfAbbreviation, 
-		P.PcsTonnage, A.AatfTonnage,
-		P.PcsTonnage - A.AatfTonnage as DifferenceTonnage,
+		@ComplianceYear AS ComplianceYear,
+		CASE WHEN A.[Quarter] IS NULL THEN P.[Quarter] ELSE A.[Quarter] END AS [Quarter], 
+		CASE WHEN A.Obligation IS NULL THEN P.ObligationType ELSE A.Obligation END AS ObligationType,		
+		CASE WHEN A.CategoryId IS NULL THEN c1.Id ELSE c.Id END AS CategoryValue, 
+		CASE WHEN A.CategoryId IS NULL THEN CONCAT(c1.Id, '. ', c1.Name) ELSE CONCAT(c.Id, '. ', c.Name) END AS Category, 
+		CASE WHEN A.[Quarter] IS NULL THEN CONCAT('Q', P.[Quarter]) ELSE CONCAT('Q', A.[Quarter]) END AS QuarterValue,
+		CASE WHEN P.SchemeName IS NULL THEN A.SchemeName ELSE P.SchemeName END AS SchemeNameValue, 
+		CASE WHEN P.ApprovalNumber IS NULL THEN A.ApprovalNumber ELSE P.ApprovalNumber END AS PcsApprovalNumber, 
+		CASE WHEN P.CompetentAuthorityAbbr IS NULL THEN A.PcsCompetentAuthorityAbbr ELSE P.CompetentAuthorityAbbr END AS PcsAbbreviation,
+		CASE WHEN A.Name IS NULL THEN P.AatfName ELSE A.Name END AS AatfName, 
+		CASE WHEN A.AatfApprovalNumber IS NULL THEN P.AatfApprovalNumber ELSE A.AatfApprovalNumber END AS AatfApprovalNumber,
+		CASE WHEN A.CompetentAuthorityAbbr IS NULL THEN P.AatfCompetentAuthorityAbbr ELSE A.CompetentAuthorityAbbr END AS AatfAbbreviation, 
+		ISNULL(P.PcsTonnage,0) PcsTonnage, ISNULL(A.AatfTonnage,0) AatfTonnage,
+		ISNULL(P.PcsTonnage,0) - ISNULL(A.AatfTonnage,0) as DifferenceTonnage,
 		P.WeeeCategory, A.CategoryId
 		FROM
-		@AatfObligated A INNER JOIN
+		@AatfObligated A FULL OUTER JOIN
 		@PCSDelivered P ON  P.SchemeId = A.SchemeId
 		AND P.[Quarter] = A.[Quarter]
 		AND P.AatfApprovalNumber = A.AatfApprovalNumber
 		AND P.ApprovalNumber = A.ApprovalNumber
 		AND P.WeeeCategory = A.CategoryId
 		AND P.ObligationType = a.Obligation
-		INNER JOIN [Lookup].WeeeCategory c ON A.CategoryId = c.Id
+		LEFT JOIN [Lookup].WeeeCategory c ON A.CategoryId = c.Id
+		LEFT JOIN [Lookup].WeeeCategory c1 ON P.WeeeCategory = c1.Id
 		WHERE ISNULL(P.PcsTonnage, 0) != ISNULL(A.AatfTonnage, 0)
 		AND
 		(@ObligationType IS NULL
 			OR a.Obligation LIKE '%' + COALESCE(@ObligationType, a.Obligation) + '%')
-		ORDER BY A.[Quarter],A.Obligation,A.CategoryId,P.SchemeName,A.Name
+		ORDER BY [Quarter],ObligationType,CategoryValue,SchemeNameValue,AatfName
 
 
 END
