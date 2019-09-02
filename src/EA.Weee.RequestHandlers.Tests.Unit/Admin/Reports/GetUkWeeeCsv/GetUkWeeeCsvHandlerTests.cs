@@ -68,7 +68,7 @@
             SystemTime.Unfreeze();
 
             // Assert
-            Assert.Equal("2016_UK_WEEE_31122016_2359.csv", result.FileName);
+            Assert.Equal("2016_UK_WEEE_collected_by_PCSs_31122016_2359.csv", result.FileName);
         }
 
         /// <summary>
