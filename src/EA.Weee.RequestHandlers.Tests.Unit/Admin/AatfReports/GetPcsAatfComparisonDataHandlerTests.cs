@@ -162,5 +162,21 @@
 
             SystemTime.Unfreeze();
         }
+
+        [Fact]
+        public async Task HandleAsync_GivenOnlyYearParameters_FileNameShouldBeCorrect()
+        {
+            var request = new GetPcsAatfComparisonData(fixture.Create<int>(), null, null);
+
+            var date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_PCS v AATF WEEE data comparison_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
     }
 }
