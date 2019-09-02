@@ -130,6 +130,9 @@
                 case Reports.AatfAeDetails:
                     return RedirectToAction("AatfAeDetails", "AatfReports");
 
+                case Reports.PcsAatfDataDifference:
+                    return RedirectToAction("PcsAatfDataDifference", "AatfReports");
+
                 default:
                     throw new NotSupportedException();
             }
