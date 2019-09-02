@@ -19,6 +19,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Weee.Tests.Core;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;
@@ -37,6 +38,13 @@
 
     public class ReportOptionsIntegration
     {
+        private readonly Fixture fixture;
+
+        public ReportOptionsIntegration()
+        {
+            fixture = new Fixture();
+        }
+
         [Fact]
         public async Task CanCreateReturnReportOnEntry()
         {
@@ -386,7 +394,7 @@
             var output = new List<Core.AatfReturn.ReportOnQuestion>();
             for (var i = 1; i <= 5; i++)
             {
-                output.Add(new Core.AatfReturn.ReportOnQuestion(i, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>()));
+                output.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i).Create());
             }
 
             output[4].ParentId = 4;
