@@ -37,12 +37,21 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId)
         {
+            ReturnsViewModel viewModel = await PrepareViewModel(organisationId, null);
+
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
+
+            return View(viewModel);
+        }
+
+        private async Task<ReturnsViewModel> PrepareViewModel(Guid organisationId, int? complianceYear, string quarter = "All")
+        {
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
                 var complianceYearList = @return.ReturnsList.Select(x => x.Quarter.Year).Distinct().ToList();
-                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).First();
+                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
 
                 //Need to do the below 2 lines when compliance year drop down changes, so that the quarter dropdown dynamically changes
                 var quartersForLatestComplianceYear = @return.ReturnsList.Select(x => x.Quarter).ToList();
@@ -52,13 +61,58 @@
 
                 viewModel.QuarterList = filteredQuarterList;
                 viewModel.ComplianceYearList = complianceYearList;
-                viewModel.SelectedComplianceYear = latestComplianceYear;
+                
                 viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
                 viewModel.OrganisationId = organisationId;
 
+                if (complianceYear != null)
+                {
+                    viewModel.SelectedComplianceYear = complianceYear.GetValueOrDefault();
+                    viewModel.Returns = viewModel.Returns.Where(p => p.ReturnViewModel.Year == complianceYear.ToString()).ToList();
+                }
+                else
+                {
+                    viewModel.SelectedComplianceYear = latestComplianceYear;
+                }
+
+                if (quarter != "All")
+                {
+                    viewModel.Returns = viewModel.Returns.Where(p => p.ReturnViewModel.Quarter == quarter).ToList();
+                    viewModel.SelectedQuarter = quarter;
+                }
+                else
+                {
+                    viewModel.SelectedQuarter = "All";
+                }
+
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
+                return viewModel;
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(ReturnsViewModel model, bool applyFilter = false)
+        {
+            if (applyFilter)
+            {
+                ReturnsViewModel viewModel = await PrepareViewModel(model.OrganisationId, model.SelectedComplianceYear, model.SelectedQuarter);
+
                 return View(viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()
+                {
+                    OrganisationId = model.OrganisationId,
+                    Year = model.ComplianceYear,
+                    Quarter = model.Quarter,
+                    FacilityType = FacilityType.Aatf
+                });
+
+                return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }
         }
 
@@ -66,7 +120,7 @@
         [ValidateAntiForgeryToken]
         [ValidateReturnEditActionFilter]
         [Route("aatf-return/returns/{organisationId:Guid}/copy/{returnId:Guid}")]
-        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId, bool? noJavascriptCopy)
+        public virtual async Task<ActionResult> Copy(Guid returnId, Guid organisationId)
         {
             using (var client = apiClient())
             {
@@ -80,24 +134,6 @@
                 }
 
                 return AatfRedirect.TaskList(newId);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ReturnsViewModel model)
-        {
-            using (var client = apiClient())
-            {
-                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()
-                {
-                    OrganisationId = model.OrganisationId,
-                    Year = model.ComplianceYear,
-                    Quarter = model.Quarter,
-                    FacilityType = FacilityType.Aatf
-                });
-
-                return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }
         }
 

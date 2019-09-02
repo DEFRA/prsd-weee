@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     public class ReturnsViewModel
     {
@@ -20,7 +21,23 @@
         [DisplayName("Compliance year")]
         public int SelectedComplianceYear { get; set; }
 
-        public List<string> QuarterList { get; set; }
+        private List<string> quarterList;
+        public List<string> QuarterList
+        {
+            get
+            {
+                {
+                    this.quarterList.Add("All");
+                }
+
+                return this.quarterList.OrderBy(p => p).ToList();
+            }
+
+            set
+            {
+                this.quarterList = value;
+            }
+        }
 
         [DisplayName("Reporting quarter")]
         public string SelectedQuarter { get; set; }
