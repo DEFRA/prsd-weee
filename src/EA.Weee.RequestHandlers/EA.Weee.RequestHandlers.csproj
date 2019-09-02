@@ -79,6 +79,7 @@
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandler.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfReuseSitesCsvHandler.cs" />
+    <Compile Include="Admin\AatfReports\GetPcsAatfComparisonDataHandler.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\IGetUkWeeeAtAatfsCsvDataAccess.cs" />
     <Compile Include="Admin\AatfReports\IGetAatfSubmissionHistoryDataAccess.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandler.cs" />

@@ -113,6 +113,7 @@
     <Compile Include="StoredProcedure\GetAllAatfObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetAllAatfSentOnDataCsvTests.cs" />
     <Compile Include="StoredProcedure\GetAllAatfReuseSitesCsvDataTests.cs" />
+    <Compile Include="StoredProcedure\GetPcsAatfDiscrepancyCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetReturnNonObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetReturnObligatedCsvDataTests.cs" />
     <Compile Include="StoredProcedure\GetUkNonObligatedWeeeReceivedCsvDataTests.cs" />
