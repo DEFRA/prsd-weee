@@ -1,13 +1,15 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Areas.Admin.ViewModels.Reports
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducersDataViewModel
 @{
-    ViewBag.Title = "Download UK WEEE Data";
+    const string title = "Download " + Reports.UkWeeeData;
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     @using (Html.BeginForm())
