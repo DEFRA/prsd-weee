@@ -108,7 +108,6 @@
 
             await dataAccess.SaveAsync();
 
-
             Organisation org = await organisationDataAccess.FetchOrganisationAsync(message.OrganisationId);
 
             if (org.OrganisationStatus == OrganisationStatus.Incomplete)
