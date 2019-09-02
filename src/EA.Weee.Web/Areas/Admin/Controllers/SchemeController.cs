@@ -6,6 +6,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Security;
+    using EA.Weee.Web.Filters;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
@@ -145,6 +146,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> EditScheme(Guid? schemeId)
         {
             if (schemeId.HasValue)
@@ -217,6 +219,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModel model)
         {
             if (model.Status == SchemeStatus.Rejected)
@@ -298,6 +301,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> AddScheme(Guid organisationId)
         {
             await SetBreadcrumb(null);
@@ -318,6 +322,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> AddScheme(SchemeViewModel model)
         {
             using (var client = apiClient())
