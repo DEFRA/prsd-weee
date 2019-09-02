@@ -7,11 +7,18 @@
     using FluentAssertions;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoFixture;
     using Xunit;
 
     public class SelectReportOptionsViewModelValidatorTests
     {
+        private readonly Fixture fixture;
         private SelectReportOptionsViewModelValidator validator;
+
+        public SelectReportOptionsViewModelValidatorTests()
+        {
+            fixture = new Fixture();
+        }
 
         [Fact]
         public void RuleFor_NonObligatedSelectedAndDcfValueNotSelected_ViewModelErrorPropertyShouldBeTrue()
@@ -80,7 +87,10 @@
         [Fact]
         public void RuleFor_GivenNoSelectedItems_ErrorShouldBeValid()
         {
-            var question = new ReportOnQuestion(1, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>());
+            var question = fixture.Build<ReportOnQuestion>()
+                .With(r => r.Id, (int)ReportOnQuestionEnum.WeeeReceived)
+                .With(r => r.Selected, false)
+                .Create();
 
             var model = new SelectReportOptionsViewModel()
             {
@@ -98,15 +108,22 @@
 
         private SelectReportOptionsViewModel GenerateInvalidNonObligated()
         {
-            var nonObligatedQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligated, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>())
-            {
-                Selected = true
-            };
-            var nonObligatedDcfQuestion = new ReportOnQuestion((int)ReportOnQuestionEnum.NonObligatedDcf, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>());
-            var selectedQuestion = new ReportOnQuestion(2, A.Dummy<string>(), A.Dummy<string>(), 1, A.Dummy<string>())
-            {
-                Selected = true
-            };
+            var nonObligatedQuestion = fixture.Build<ReportOnQuestion>()
+                .With(r => r.Id, (int)ReportOnQuestionEnum.NonObligated)
+                .With(r => r.HasError, false)
+                .With(r => r.Selected, true)
+                .Create();
+            
+            var nonObligatedDcfQuestion = fixture.Build<ReportOnQuestion>()
+                .With(r => r.Id, (int)ReportOnQuestionEnum.NonObligatedDcf)
+                .With(r => r.HasError, false)
+                .With(r => r.Selected, false)
+                .Create();
+
+            var selectedQuestion = fixture.Build<ReportOnQuestion>()
+                .With(r => r.Id, (int)ReportOnQuestionEnum.WeeeSentOn)
+                .With(r => r.HasError, false)
+                .With(r => r.Selected, true).Create();
 
             var model = new SelectReportOptionsViewModel()
             {
