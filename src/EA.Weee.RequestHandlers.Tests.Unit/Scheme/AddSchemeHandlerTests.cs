@@ -65,7 +65,7 @@
                 "WEE7453956",
                 ObligationType.B2B,
                 new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
-                SchemeStatus.Approved);
+                SchemeStatus.Approved); 
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
