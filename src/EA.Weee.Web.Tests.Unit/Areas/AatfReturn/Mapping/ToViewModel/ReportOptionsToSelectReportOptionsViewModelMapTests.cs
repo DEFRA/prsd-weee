@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoFixture;
     using Web.Areas.AatfReturn.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
@@ -16,9 +17,12 @@
     {
         private readonly ReportOptionsToSelectReportOptionsViewModelMap map;
         private const string DcfNoValue = "No";
+        private readonly Fixture fixture;
 
         public ReportOptionsToSelectReportOptionsViewModelMapTests()
         {
+            fixture = new Fixture();
+
             map = new ReportOptionsToSelectReportOptionsViewModelMap();
         }
 
@@ -57,7 +61,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                questions.Add(fixture.Build<ReportOnQuestion>().With(r => r.Id, i + 1).With(r => r.Selected, false).Create());
             }
 
             var result = map.Map(new ReportOptionsToSelectReportOptionsViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), ReturnId = Guid.NewGuid(), ReportOnQuestions = questions, ReturnData = @return });
@@ -77,7 +81,7 @@
 
             for (var i = 0; i < 5; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                questions.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i + 1).Create());
                 returnReportOns.Add(new ReturnReportOn(i + 1, @return.Id));
             }
 
@@ -100,7 +104,7 @@
 
             for (var i = 0; i < 4; i++)
             {
-                questions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                questions.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i + 1).Create());
                 returnReportOns.Add(new ReturnReportOn(i + 1, @return.Id));
             }
 
