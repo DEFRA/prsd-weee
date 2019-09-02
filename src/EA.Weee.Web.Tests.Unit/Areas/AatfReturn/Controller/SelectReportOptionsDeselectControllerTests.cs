@@ -19,6 +19,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using AutoFixture;
     using Web.Infrastructure;
     using Weee.Tests.Core;
     using Xunit;
@@ -32,6 +33,7 @@
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly IMap<SelectReportOptionsViewModel, SelectReportOptionsDeselectViewModel> mapper;
         private const string ConfirmSelectedValue = "Yes";
+        private readonly Fixture fixture;
 
         public SelectReportOptionsDeselectControllerTests()
         {
@@ -40,6 +42,7 @@
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
             mapper = A.Fake<IMap<SelectReportOptionsViewModel, SelectReportOptionsDeselectViewModel>>();
+            fixture = new Fixture();
 
             controller = new SelectReportOptionsDeselectController(() => weeeClient, breadcrumb, cache, requestCreator, mapper);
         }
@@ -225,25 +228,25 @@
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
-        private static SelectReportOptionsDeselectViewModel CreateSubmittedViewModel()
+        private SelectReportOptionsDeselectViewModel CreateSubmittedViewModel()
         {
             var model = new SelectReportOptionsDeselectViewModel { ReportOnQuestions = new List<ReportOnQuestion>() };
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()) { Selected = true });
+                model.ReportOnQuestions.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i).Create());
             }
 
             return model;
         }
 
-        private static SelectReportOptionsViewModel CreateTempData()
+        private SelectReportOptionsViewModel CreateTempData()
         {
             var model = new SelectReportOptionsViewModel { ReportOnQuestions = new List<ReportOnQuestion>() };
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                model.ReportOnQuestions.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i).Create());
             }
 
             return model;

@@ -24,6 +24,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Web.Mvc;
+    using AutoFixture;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -35,6 +36,7 @@
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
+        private readonly Fixture fixture;
 
         public SelectReportOptionsControllerTests()
         {
@@ -43,6 +45,7 @@
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
             mapper = A.Fake<IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel>>();
+            fixture = new Fixture();
 
             controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, mapper);
         }
@@ -302,7 +305,10 @@
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                model.ReportOnQuestions.Add(fixture.Build<ReportOnQuestion>()
+                    .With(r => r.Id, (int)i + 1)
+                    .With(r => r.Selected, false)
+                    .Create());
             }
 
             return model;
