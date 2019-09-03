@@ -318,6 +318,8 @@
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddPcsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationSchemeBaseActionFilterAttribute.cs" />
+    <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationHasNoSchemeFilterAttribute.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
@@ -340,6 +342,7 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Base\OrganisationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\OrgAlreadyHasSchemeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyFacilityViewModelBase.cs" />
@@ -601,6 +604,9 @@
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Content\weee-returns-ae-mobile.scss" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAeDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\PcsAatfDataDifference.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />

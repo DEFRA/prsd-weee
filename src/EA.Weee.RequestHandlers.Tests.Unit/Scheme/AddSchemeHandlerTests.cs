@@ -1,12 +1,14 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.UpdateSchemeInformation
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
     using Core.Scheme;
     using Core.Shared;
     using Domain;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Organisations;
+    using EA.Weee.RequestHandlers.Scheme.UpdateSchemeInformation;
     using FakeItEasy;
     using Prsd.Core.Domain;
-    using RequestHandlers.Scheme.UpdateSchemeInformation;
+    using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
     using System;
@@ -18,14 +20,23 @@
     using Organisation = Domain.Organisation.Organisation;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
-    public class UpdateSchemeInformationHandlerTests
+    public class AddSchemeHandlerTests
     {
-        /// <summary>
-        /// This test ensures that a user without the right to access the internal area cannot use
-        /// the UpdateSchemeInformationRequestHandler, and that any attempt to do so will result
-        /// in a SecurityException being thrown.
-        /// </summary>
-        /// <returns></returns>
+        private readonly IWeeeAuthorization authorization;
+        private readonly IOrganisationDetailsDataAccess organisationDataAccess;
+        private readonly IUpdateSchemeInformationDataAccess dataAccess;
+
+        private readonly AddSchemeHandler handler;
+
+        public AddSchemeHandlerTests()
+        {
+            authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDetailsDataAccess>();
+
+            handler = new AddSchemeHandler(authorization, dataAccess, organisationDataAccess);
+        }
+
         [Fact]
         public async Task HandleAsync_WithNonInternalUser_ThrowsSecurityException()
         {
@@ -34,57 +45,29 @@
                 .DenyInternalAreaAccess()
                 .Build();
 
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                A.Dummy<IUpdateSchemeInformationDataAccess>());
+            AddSchemeHandler handler = new AddSchemeHandler(authorization, dataAccess, organisationDataAccess);
 
             // Act
-            Func<Task<CreateOrUpdateSchemeInformationResult>> testCode = async () => await handler.HandleAsync(A.Dummy<UpdateSchemeInformation>());
+            Func<Task<CreateOrUpdateSchemeInformationResult>> testCode = async () => await handler.HandleAsync(A.Dummy<CreateScheme>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
         }
 
-        /// <summary>
-        /// This test ensures the happy path successfully updates the scheme domain entity
-        /// with the specified information, that the scheme entity is persisted, and that
-        /// a success message is returned.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task HandleAsync_HappyPath_UpdatesSchemeCallsSaveAndReturnsSuccess()
+        public async Task HandleAsync_EverythingCorrect_CreateSchemeCallsSaveAndReturnsSuccess()
         {
-            // Arrange
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
-
-            Scheme scheme = new Scheme(A.Dummy<Organisation>());
-            A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
-
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 A.Dummy<Guid>(),
                 "New scheme name",
                 "WEE/AB8888CD/SCH",
                 "WEE7453956",
                 ObligationType.B2B,
                 new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
-                SchemeStatus.Approved);
+                SchemeStatus.Approved); 
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
-
-            // Assert
-            Assert.Equal("New scheme name", scheme.SchemeName);
-            Assert.Equal("WEE/AB8888CD/SCH", scheme.ApprovalNumber);
-            Assert.Equal("WEE7453956", scheme.IbisCustomerReference);
-            Assert.Equal(Domain.Obligation.ObligationType.B2B, scheme.ObligationType);
-            Assert.Equal(new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"), scheme.CompetentAuthorityId);
-            Assert.Equal(Domain.Scheme.SchemeStatus.Approved, scheme.SchemeStatus);
 
             A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
 
@@ -92,45 +75,78 @@
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the approval number cannot be changed to a value that already exists.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task HandleAsync_WhereApprovalNumberIsChangingToAValueThatAlreadyExists_ReturnsFailureResult()
+        public async Task HandleAsync_EverythingCorrectButWithNewOrganisation_CreateSchemeCallsSaveAndReturnsSuccess_CompleteOrgCalled()
+        {
+            Organisation organisation = A.Fake<Organisation>();
+            organisation.OrganisationStatus = Domain.Organisation.OrganisationStatus.Incomplete;
+
+            // Act
+            CreateScheme request = new CreateScheme(
+                organisation.Id,
+                "New scheme name",
+                "WEE/AB8888CD/SCH",
+                "WEE7453956",
+                ObligationType.B2B,
+                new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                SchemeStatus.Approved);
+
+            A.CallTo(() => organisationDataAccess.FetchOrganisationAsync(organisation.Id)).Returns(organisation);
+
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+            A.CallTo(() => organisationDataAccess.SaveAsync()).MustHaveHappened();
+
+            Assert.NotNull(result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
+        }
+
+        [Fact]
+        public async Task HandleAsync_EverythingCorrectButWithExistingOrganisation_CreateSchemeCallsSaveAndReturnsSuccess_CompleteOrgNotCalled()
+        {
+            Organisation organisation = A.Fake<Organisation>();
+            organisation.OrganisationStatus = Domain.Organisation.OrganisationStatus.Complete;
+
+            // Act
+            CreateScheme request = new CreateScheme(
+                organisation.Id,
+                "New scheme name",
+                "WEE/AB8888CD/SCH",
+                "WEE7453956",
+                ObligationType.B2B,
+                new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                SchemeStatus.Approved);
+
+            A.CallTo(() => organisationDataAccess.FetchOrganisationAsync(organisation.Id)).Returns(organisation);
+
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+            A.CallTo(() => organisationDataAccess.SaveAsync()).MustNotHaveHappened();
+
+            Assert.NotNull(result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhereApprovalNumberIsAValueThatAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
             UKCompetentAuthority environmentAgency = A.Dummy<UKCompetentAuthority>();
             typeof(UKCompetentAuthority).GetProperty("Id").SetValue(environmentAgency, new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"));
 
-            Scheme scheme = new Scheme(A.Dummy<Organisation>());
-            typeof(Entity).GetProperty("Id").SetValue(scheme, new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"));
-            scheme.UpdateScheme(
-                "Scheme 1",
-                "WEE/AA0000AA/SCH",
-                "WEE7453846",
-                Domain.Obligation.ObligationType.B2C,
-                environmentAgency);
-            scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
-
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
-            A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.CheckSchemeApprovalNumberInUseAsync("WEE/ZZ9999ZZ/SCH")).Returns(true);
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
-                scheme.Id,
-                "Scheme 1",
-                "WEE/ZZ9999ZZ/SCH",
-                "WEE7453846",
-                ObligationType.B2C,
-                new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
-                SchemeStatus.Approved);
+            CreateScheme request = new CreateScheme(
+                 A.Dummy<Guid>(),
+                 "New scheme name",
+                 "WEE/ZZ9999ZZ/SCH",
+                 "WEE7453956",
+                 ObligationType.B2B,
+                 new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                 SchemeStatus.Approved);
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
@@ -139,11 +155,6 @@
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the 1B1S customer billing reference must be unique accross all
-        /// schemes within the Environment Agency.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingEASchemeIbisCustomerReferenceNumberToAValueThatAlreadyExistsForAnotherEAScheme_ReturnsFailureResult()
         {
@@ -171,19 +182,13 @@
                 environmentAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme, otherScheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -204,11 +209,6 @@
             Assert.Equal("Scheme 2", result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName);
         }
 
-        /// <summary>
-        /// This test ensures that a scheme in the Environment Agency and a scheme under a devloved agency
-        /// may have the same 1B1S customer billing reference.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingEASchemeIbisCustomerReferenceNumberToAValueThatAlreadyExistsForAnotherNonEAScheme_ReturnsSuccessResult()
         {
@@ -239,19 +239,13 @@
                 devlovedAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -262,16 +256,13 @@
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+
             // Assert
             Assert.NotNull(result);
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that a scheme in a devloved agency and any other scheme
-        /// may have the same 1B1S customer billing reference.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingNonEASchemeIbisCustomerReferenceNumberToAValueThatAlreadyExistsForAnotherScheme_ReturnsSuccessResult()
         {
@@ -302,19 +293,13 @@
                 devlovedAgency);
             otherScheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>());
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -330,11 +315,6 @@
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the 1B1S customer billing reference for an EA scheme cannot be set to null
-        /// via this handler. Note: The value will be null when the scheme is first created.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingEASchemeIbisCustomerReferenceNumberToNull_ReturnsFailureResult()
         {
@@ -352,19 +332,13 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -380,11 +354,6 @@
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the 1B1S customer billing reference for an EA scheme cannot be set to a
-        /// blank string via this handler. Note: The value will be null when the scheme is first created.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingEASchemeIbisCustomerReferenceNumberToEmptyString_ReturnsFailureResult()
         {
@@ -402,19 +371,13 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -430,11 +393,6 @@
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the restriction on schemes within the Environment Agency to have non-null
-        /// 1B1S customer billing references does not affect schemes in devolved agencies.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingNonEASchemeIbisCustomerReferenceNumberToNull_ReturnsSuccessResult()
         {
@@ -452,19 +410,13 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -475,16 +427,13 @@
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
+
             // Assert
             Assert.NotNull(result);
             Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
-        /// <summary>
-        /// This test ensures that the restriction on schemes within the Environment Agency to have non-blank
-        /// 1B1S customer billing references does not affect schemes in devolved agencies.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
         public async Task HandleAsync_SettingNonEASchemeIbisCustomerReferenceNumberToEmptyString_ReturnsSuccessResult()
         {
@@ -502,19 +451,13 @@
                 environmentAgency);
             scheme.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
-            IUpdateSchemeInformationDataAccess dataAccess = A.Fake<IUpdateSchemeInformationDataAccess>();
             A.CallTo(() => dataAccess.FetchSchemeAsync(new Guid("5AE25C37-88C8-4646-8793-DB4C2F4EF0E5"))).Returns(scheme);
             A.CallTo(() => dataAccess.FetchEnvironmentAgencyAsync()).Returns(environmentAgency);
             A.CallTo(() => dataAccess.FetchNonRejectedEnvironmentAgencySchemesAsync())
                 .Returns(new List<Scheme>() { scheme });
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(
-                authorization,
-                dataAccess);
-
             // Act
-            UpdateSchemeInformation request = new UpdateSchemeInformation(
+            CreateScheme request = new CreateScheme(
                 scheme.Id,
                 "Scheme 1",
                 "WEE/AA0000AA/SCH",
@@ -524,6 +467,8 @@
                 SchemeStatus.Approved);
 
             CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
 
             // Assert
             Assert.NotNull(result);
