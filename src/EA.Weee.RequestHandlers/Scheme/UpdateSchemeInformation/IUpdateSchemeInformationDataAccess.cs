@@ -16,6 +16,8 @@
 
         Task<List<Scheme>> FetchNonRejectedEnvironmentAgencySchemesAsync();
 
+        void AddScheme(Scheme scheme);
+
         Task SaveAsync();
     }
 }

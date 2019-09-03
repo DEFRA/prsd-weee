@@ -3,7 +3,7 @@
     /// <summary>
     /// This DTO provides the result of a request to update scheme information.
     /// </summary>
-    public class UpdateSchemeInformationResult
+    public class CreateOrUpdateSchemeInformationResult
     {
         /// <summary>
         /// Indicates whether the operation was successful or the nature of the failure.

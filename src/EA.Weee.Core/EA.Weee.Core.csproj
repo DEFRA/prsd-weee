@@ -159,7 +159,7 @@
     <Compile Include="Routing\ViewCompetentAuthorityUserRoute.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Scheme\SchemeDataAvailability.cs" />
-    <Compile Include="Scheme\UpdateSchemeInformationResult.cs" />
+    <Compile Include="Scheme\CreateOrUpdateSchemeInformationResult.cs" />
     <Compile Include="Scheme\SchemeAnnualDataAvailability.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
