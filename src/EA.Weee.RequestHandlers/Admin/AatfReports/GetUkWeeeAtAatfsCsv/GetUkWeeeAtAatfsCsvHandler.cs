@@ -46,9 +46,7 @@
 
             var data = Encoding.UTF8.GetBytes(content);
 
-            var fileName = string.Format("{0}_UK WEEE received at AATFs_{1:ddMMyyyy_HHmm}.csv",
-                message.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{message.ComplianceYear}_UK WEEE received at AATFs_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new FileInfo(fileName, data);
         }
