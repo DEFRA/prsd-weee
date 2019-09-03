@@ -6,7 +6,7 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
-    ViewBag.Title = "Edit PCS";
+    ViewBag.Title = "Add PCS";
 }
 
 @using (Html.BeginForm())
@@ -14,12 +14,11 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.IsChangeableStatus)
     @Html.HiddenFor(m => m.OrganisationId)
-    @Html.HiddenFor(m => m.SchemeId)
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <header class="hgroup">
-                <h1 class="govuk-heading-l">Edit PCS</h1>
+                <h1 class="govuk-heading-l">Add PCS</h1>
             </header>
         </div>
     </div>
@@ -33,21 +32,6 @@
         @(this.WeeeGds().Submit("Save and Continue"))
     }
     <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null, null)))">Back</a>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageSchemes()))">Back</a>
     </p>
-}
-
-
-@section scripts {
-    <script>
-        $("#Status").change(function () {
-            if ($(this).val() === "3") /* Rejected status */ {
-                document.forms[1].submit(); // Submit the form immediately
-            }
-
-            if ($(this).val() === "4") /* Withdrawn status */ {
-                document.forms[1].submit(); // Submit the form immediately
-            }
-        });
-    </script>
 }

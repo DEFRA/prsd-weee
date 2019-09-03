@@ -4,6 +4,7 @@ namespace EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using Core.Search;
     using Core.Shared;
 
