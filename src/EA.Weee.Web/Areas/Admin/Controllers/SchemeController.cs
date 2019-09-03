@@ -6,6 +6,7 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Security;
+    using EA.Weee.Web.Areas.Admin.Controllers.Attributes;
     using EA.Weee.Web.Filters;
     using Infrastructure;
     using Prsd.Core.Helpers;
@@ -302,6 +303,7 @@
 
         [HttpGet]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateOrganisationHasNoSchemeFilterAttribute]
         public async Task<ActionResult> AddScheme(Guid organisationId)
         {
             await SetBreadcrumb(null);
