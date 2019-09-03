@@ -33,8 +33,7 @@
 
             if (scheme == null)
             {
-                var message = $"No scheme was found with organisation id \"{request.OrganisationId}\".";
-                throw new ArgumentException(message);
+                return null;
             }
 
             var schemeData = mapper.Map<Scheme, SchemeData>(scheme);
