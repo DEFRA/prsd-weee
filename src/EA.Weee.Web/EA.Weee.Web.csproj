@@ -333,6 +333,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\PcsAatfDataDifferenceViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateAatfDetailsTransferViewModel.cs" />
@@ -606,6 +607,7 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\PcsAatfDataDifference.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />

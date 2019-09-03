@@ -1316,5 +1316,133 @@
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
             result.ContentType.Should().Be("text/csv");
         }
+
+        [Fact]
+        public async Task GetPcsAatfDataDifference_Always_ReturnsPcsAatfDataDifferenceViewModel()
+        {
+            List<int> years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
+
+            ActionResult result = await controller.PcsAatfDataDifference();
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "PcsAatfDataDifference");
+
+            PcsAatfDataDifferenceViewModel model = viewResult.Model as PcsAatfDataDifferenceViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+
+            Assert.Collection(model.Quarters,
+               s1 => Assert.Equal("Q1", s1.Text),
+               s2 => Assert.Equal("Q2", s2.Text),
+               s3 => Assert.Equal("Q3", s3.Text),
+               s4 => Assert.Equal("Q4", s4.Text));
+
+            Assert.Collection(model.ObligationTypes,
+                s1 => Assert.Equal("B2B", s1.Text),
+                s2 => Assert.Equal("B2C", s2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task GetPcsAatfDataDifference_Always_SetsTriggerDownloadToFalse()
+        {
+            ActionResult result = await controller.PcsAatfDataDifference();
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task GetPcsAatfDataDifference_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            await controller.PcsAatfDataDifference();
+
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task PostPcsAatfDataDifference_WithInvalidViewModel_ReturnsPcsAatfDataDifferenceViewModel()
+        {
+            List<int> years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
+
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "PcsAatfDataDifference");
+
+            PcsAatfDataDifferenceViewModel model = viewResult.Model as PcsAatfDataDifferenceViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+
+            Assert.Collection(model.Quarters,
+              s1 => Assert.Equal("Q1", s1.Text),
+              s2 => Assert.Equal("Q2", s2.Text),
+              s3 => Assert.Equal("Q3", s3.Text),
+              s4 => Assert.Equal("Q4", s4.Text));
+
+            Assert.Collection(model.ObligationTypes,
+                s1 => Assert.Equal("B2B", s1.Text),
+                s2 => Assert.Equal("B2C", s2.Text));
+        }
+
+        [Fact]
+        public async Task PostPcsAatfDataDifference_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostPcsAatfDataDifference_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostPcsAatfDataDifference_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            await controller.PcsAatfDataDifference(A.Dummy<PcsAatfDataDifferenceViewModel>());
+
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadPcsAatfDataDifferenceCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            int complianceYear = fixture.Create<int>();
+            int quarter = fixture.Create<int>();
+            string obligation = fixture.Create<string>();
+
+            CSVFileData fileData = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPcsAatfComparisonData>.That.Matches(g =>
+                g.ComplianceYear.Equals(complianceYear) && g.Quarter.Equals(quarter)
+                && g.ObligationType.Equals(obligation)))).Returns(fileData);
+
+            FileContentResult result = await controller.DownloadPcsAatfDataDifference(complianceYear, quarter, obligation) as FileContentResult;
+            
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
+        }
     }
 }

@@ -306,7 +306,7 @@ SELECT
 ,a.OrganisationName AS 'Organisation name'
 ,a.Name AS 'Name of AATF'
 ,a.ApprovalNumber AS 'Approval number'
-,CONCAT(c.Id, '.', c.Name) AS Category
+,CONCAT(c.Id, '. ', c.Name) AS Category
 ,a.Obligation AS 'Obligation type'
 ,a.TotalSent AS 'Total sent to another AATF / ATF (t)'
 ,a.TotalReused AS 'Total reused as a whole appliance (t)'
