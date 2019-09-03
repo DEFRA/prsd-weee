@@ -53,7 +53,7 @@
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
             GetAatfAeDetailsCsvHandler handler = new GetAatfAeDetailsCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>());
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<bool>());
 
             Func<Task> action = async () => await handler.HandleAsync(request);
 
@@ -65,7 +65,7 @@
         {
             const int complianceYear = 0;
 
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>());
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<bool>());
 
             Func<Task> action = async () => await handler.HandleAsync(request);
 
@@ -75,7 +75,7 @@
         [Fact]
         public async Task HandleAsync_VariousParameters_ReturnsFileContent()
         {
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>());
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<bool>());
 
             CSVFileData data = await handler.HandleAsync(request);
 
@@ -100,7 +100,7 @@
             A.CallTo(() => storedProcedures.GetAatfAeDetailsCsvData(complianceYear, (int)facilityType, authority, area, pat))
             .Returns(new List<AatfAeDetailsData> { csvData1, csvData2, csvData3 });
 
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authority, pat, area);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authority, pat, area, false);
 
             CSVFileData data = await handler.HandleAsync(request);
 
@@ -115,7 +115,7 @@
         [Fact]
         public async Task HandleAsync_GivenMandatoryParameters_FileNameShouldBeCorrect()
         {
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, null, false);
 
             DateTime date = new DateTime(2019, 05, 18, 11, 12, 0);
 
@@ -133,7 +133,7 @@
         {
             UKCompetentAuthority ca = fixture.Create<UKCompetentAuthority>();
 
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), ca.Id, null, null);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), ca.Id, null, null, false);
 
             A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
 
@@ -151,7 +151,7 @@
         [Fact]
         public async Task HandleAsync_GivenMandatoryParametersAndPanArea_FileNameShouldBeCorrect()
         {
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), null);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), null, false);
 
             PanArea panArea = fixture.Create<PanArea>();
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Returns(panArea);
@@ -170,7 +170,7 @@
         [Fact]
         public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldNotContainLocalArea()
         {
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>());
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), false);
 
             LocalArea localArea = fixture.Create<LocalArea>();
             A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Returns(localArea);
@@ -193,7 +193,7 @@
             LocalArea localArea = fixture.Create<LocalArea>();
             PanArea panArea = fixture.Create<PanArea>();
 
-            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), ca.Id, panArea.Id, localArea.Id);
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), ca.Id, panArea.Id, localArea.Id, false);
 
             A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
 
@@ -208,6 +208,54 @@
             CSVFileData data = await handler.HandleAsync(request);
 
             data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsyncForPublicRegister_GivenStoredProcedureReturnItems_MatchingFileContent()
+        {
+            int complianceYear = fixture.Create<int>();
+            FacilityType facilityType = fixture.Create<FacilityType>();
+            Guid authority = fixture.Create<Guid>();
+
+            AatfAeDetailsData csvData1 = CreateCsvData();
+
+            AatfAeDetailsData csvData2 = CreateCsvData();
+
+            AatfAeDetailsData csvData3 = CreateCsvData();
+
+            A.CallTo(() => storedProcedures.GetAatfAeDetailsCsvData(complianceYear, (int)facilityType, authority, null, null))
+            .Returns(new List<AatfAeDetailsData> { csvData1, csvData2, csvData3 });
+
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authority, null, null, true);
+
+            CSVFileData data = await handler.HandleAsync(request);
+
+            string facilityTypeString = facilityType.ToString().ToUpper();
+
+            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,Name of {facilityTypeString},{facilityTypeString} address,{facilityTypeString} postcode,{facilityTypeString} country,EA Area for the {facilityTypeString},{facilityTypeString} approval number,Date of approval,{facilityTypeString} size,{facilityTypeString} status,Name of operator,Business trading name of operator,Operator address,Operator postcode,Operator country");
+            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.AppropriateAuthorityAbbr},{csvData1.Name},{csvData1.AatfAddress},{csvData1.PostCode},{csvData1.Country},{csvData1.EaArea},{csvData1.ApprovalNumber},{csvData1.ApprovalDate},{csvData1.Size},{csvData1.Status},{csvData1.OperatorName},{csvData1.OperatorTradingName},{csvData1.OperatorAddress},{csvData1.OrganisationPostcode},{csvData1.OrganisationCountry}");
+            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.AppropriateAuthorityAbbr},{csvData2.Name},{csvData2.AatfAddress},{csvData2.PostCode},{csvData2.Country},{csvData2.EaArea},{csvData2.ApprovalNumber},{csvData2.ApprovalDate},{csvData2.Size},{csvData2.Status},{csvData2.OperatorName},{csvData2.OperatorTradingName},{csvData2.OperatorAddress},{csvData2.OrganisationPostcode},{csvData2.OrganisationCountry}");
+            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.AppropriateAuthorityAbbr},{csvData3.Name},{csvData3.AatfAddress},{csvData3.PostCode},{csvData3.Country},{csvData3.EaArea},{csvData3.ApprovalNumber},{csvData3.ApprovalDate},{csvData3.Size},{csvData3.Status},{csvData3.OperatorName},{csvData3.OperatorTradingName},{csvData3.OperatorAddress},{csvData3.OrganisationPostcode},{csvData3.OrganisationCountry}");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenMandatoryParametersPublicRegister_FileNameShouldBeCorrect()
+        {
+            UKCompetentAuthority ca = fixture.Create<UKCompetentAuthority>();
+
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<FacilityType>(), ca.Id, null, null, true);
+
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Returns(ca);
+
+            DateTime date = new DateTime(2019, 05, 18, 11, 12, 0);
+
+            SystemTime.Freeze(date);
+
+            CSVFileData data = await handler.HandleAsync(request);
+
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{request.FacilityType.ToString().ToUpper()} public register_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -247,7 +295,11 @@
                 OrganisationTownCity = fixture.Create<string>(),
                 OrganisationCountyRegion = fixture.Create<string>(),
                 OrganisationCountry = fixture.Create<string>(),
-                OrganisationPostcode = fixture.Create<string>()
+                OrganisationPostcode = fixture.Create<string>(),
+                AatfAddress = fixture.Create<string>(),
+                OperatorAddress = fixture.Create<string>(),
+                OperatorName = fixture.Create<string>(),
+                OperatorTradingName = fixture.Create<string>()
             };
         }
     }

@@ -329,6 +329,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Helper\AatfHelper.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAePublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\PcsAatfDataDifferenceViewModel.cs" />
@@ -602,6 +603,7 @@
     <Content Include="Content\weee-returns-ae-mobile.scss" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\PcsAatfDataDifference.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
