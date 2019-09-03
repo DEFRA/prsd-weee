@@ -11,5 +11,7 @@
 
         [Required(ErrorMessage = "You must select a scheme to manage")]
         public Guid? Selected { get; set; }
+
+        public bool CanAddPcs { get; set; }
     }
 }
