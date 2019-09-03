@@ -19,5 +19,6 @@
         public const string AatfReuseSitesData = "AATF using reuse sites";
         public const string AatfAeDetails = "AATF / AE details";
         public const string PcsAatfDataDifference = "PCS v AATF WEEE data comparison";
+        public const string AatfAePublicRegister = "AATF / AE public register";
     }
 }

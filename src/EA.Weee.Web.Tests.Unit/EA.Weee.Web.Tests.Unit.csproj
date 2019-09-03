@@ -244,6 +244,7 @@
     <Compile Include="Areas\Admin\Mapping\MappingHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\UpdateApprovalDateViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Validation\FacilityViewModelBaseValidatorTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfAePublicRegisterViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfAeReturnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReuseSitesViewModelTests.cs" />
