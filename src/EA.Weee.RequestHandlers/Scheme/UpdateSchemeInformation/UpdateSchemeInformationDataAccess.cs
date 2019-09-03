@@ -3,6 +3,7 @@
     using Core.Shared;
     using DataAccess;
     using Domain;
+    using EA.Weee.Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -58,7 +59,7 @@
         public async Task<List<Scheme>> FetchNonRejectedEnvironmentAgencySchemesAsync()
         {
             return await context.Schemes
-                .Where(s => s.SchemeStatus.Value != (int)SchemeStatus.Rejected)
+                .Where(s => s.SchemeStatus.Value != (int)Core.Shared.SchemeStatus.Rejected)
                 .Where(s => s.CompetentAuthority.Abbreviation == UKCompetentAuthorityAbbreviationType.EA)
                 .ToListAsync();
         }
@@ -66,6 +67,11 @@
         public async Task SaveAsync()
         {
             await context.SaveChangesAsync();
+        }
+
+        public void AddScheme(Scheme scheme)
+        {
+            context.Schemes.Add(scheme);
         }
     }
 }

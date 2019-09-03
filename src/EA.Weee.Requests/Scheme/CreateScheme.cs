@@ -5,11 +5,11 @@
     using Prsd.Core.Mediator;
     using System;
 
-    public class UpdateSchemeInformation : IRequest<CreateOrUpdateSchemeInformationResult>
+    public class CreateScheme : IRequest<CreateOrUpdateSchemeInformationResult>
     {
-        public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId, SchemeStatus status)
+        public CreateScheme(Guid organisationId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId, SchemeStatus status)
         {
-            SchemeId = schemeId;
+            OrganisationId = organisationId;
             SchemeName = schemeName;
             ApprovalNumber = approvalNumber;
             IbisCustomerReference = ibisCustomerReference;
@@ -18,7 +18,7 @@
             Status = status;
         }
 
-        public Guid SchemeId { get; set; }
+        public Guid OrganisationId { get; set; }
 
         public string SchemeName { get; set; }
 
