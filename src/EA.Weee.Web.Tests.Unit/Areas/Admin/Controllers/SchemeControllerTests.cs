@@ -660,7 +660,7 @@
             ActionResult result = await controller.AddScheme(model);
 
             // Assert
-           ViewResult viewResult = result as ViewResult;
+            ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
@@ -1111,6 +1111,19 @@
 
             Assert.IsType(expectedViewModelType, viewResult.Model);
             Assert.Equal(expectedViewName, viewResult.ViewName);
+        }
+
+        [Fact]
+        public void CheckAddOrEditSchemeMethodsHaveInternalAdminAttribute()
+        {
+            IEnumerable<MethodInfo> methods = typeof(SchemeController).GetMethods().Where(p => p.Name == "AddScheme" || p.Name == "EditScheme");
+
+            foreach (MethodInfo mi in methods)
+            {
+                Attribute hasInternalAdminAttribue = mi.GetCustomAttribute(typeof(AuthorizeInternalClaimsAttribute), false);
+
+                Assert.NotNull(hasInternalAdminAttribue);
+            }
         }
 
         private SchemeController SchemeController()
