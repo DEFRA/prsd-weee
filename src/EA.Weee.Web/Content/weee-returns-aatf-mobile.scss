@@ -8,26 +8,34 @@
     }
 
     td:nth-of-type(3):before {
-        content: "Total obligated (tonnes)";
+        content: "Total obligated (t) B2C";
     }
 
     td:nth-of-type(4):before {
-        content: "Total non-obligated (tonnes)";
+        content: "Total obligated (t) B2B";
     }
 
     td:nth-of-type(5):before {
-        content: "Created by";
+        content: "Total non-obligated (tonnes)";
     }
 
     td:nth-of-type(6):before {
-        content: "Submitted date (GMT)";
+        content: "Created by";
     }
 
     td:nth-of-type(7):before {
-        content: "Submitted by";
+        content: "Submitted date (GMT)";
     }
 
     td:nth-of-type(8):before {
+        content: "Submitted by";
+    }
+
+    td:nth-of-type(9):before {
         content: "Status";
+    }
+
+    td:nth-of-type(10):before {
+        content: "Action";
     }
 }
