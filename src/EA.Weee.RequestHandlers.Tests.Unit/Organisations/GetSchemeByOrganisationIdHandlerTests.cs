@@ -61,9 +61,15 @@
 
             A.CallTo(() => dataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns((Scheme)null);
 
-            Func<Task<SchemeData>> action = async () => await handler.HandleAsync(request);
+            //Func<Task<SchemeData>> action = async () => await handler.HandleAsync(request);
 
-            await action.Should().ThrowAsync<ArgumentException>();
+            //await action.Should().ThrowAsync<ArgumentException>();
+
+            SchemeData result = await handler.HandleAsync(request);
+
+            Assert.Null(result);
+
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).MustNotHaveHappened();
         }
 
         [Fact]
