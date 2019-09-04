@@ -598,5 +598,18 @@
                     complianceYearParameter, facilityTypeParameter, authorityParameter, areaParameter, panAreaParameter)
                 .ToListAsync();
         }
+
+        public async Task<List<PcsAatfComparisonDataCsvData>> GetPcsAatfComparisonDataCsvData(int complianceYear, int? quarter, string obligationType)
+        {
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? 0);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
+
+            return await context.Database
+               .SqlQuery<PcsAatfComparisonDataCsvData>(
+                   "[AATF].[getPcsAatfDiscrepancyCsvData] @ComplianceYear, @Quarter, @ObligationType",
+                   complianceYearParameter, quarterParameter, obligationTypeParameter)
+               .ToListAsync();
+        }
     }
 }

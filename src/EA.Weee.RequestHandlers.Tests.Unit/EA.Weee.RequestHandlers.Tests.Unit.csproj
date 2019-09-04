@@ -113,6 +113,7 @@
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetNonObligatedWeeeReceivedAtAatfsDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfSentOnDataCsvHandlerTests.cs" />
+    <Compile Include="Admin\AatfReports\GetPcsAatfComparisonDataHandlerTests.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChangeHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandlerTests.cs" />
@@ -265,6 +266,7 @@
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
+    <Compile Include="Scheme\AddSchemeHandlerTests.cs" />
     <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />

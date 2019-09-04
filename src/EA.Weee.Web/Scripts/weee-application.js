@@ -106,6 +106,8 @@
         enableTime: false,
         allowInput: true,
         dateFormat: "d/m/Y",
+        altFormat: "d/m/Y",
+        disableMobile: "true",
         locale: "en"
 	    }
     );

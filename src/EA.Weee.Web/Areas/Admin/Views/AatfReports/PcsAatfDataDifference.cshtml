@@ -1,0 +1,67 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.PcsAatfDataDifferenceViewModel
+@{
+    ViewBag.Title = "Download PCS v AATF WEEE data comparison - GOV.UK";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download PCS v AATF WEEE data comparison</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria</p>
+        <p>All data is reported in tonnes (t) to three decimal places</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Quarter)">
+            @Html.Gds().LabelFor(m => m.Quarter)
+            @Html.Gds().ValidationMessageFor(m => m.Quarter)
+            @Html.Gds().DropDownListFor(m => m.Quarter, Model.Quarters, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationType)">
+            @Html.Gds().LabelFor(m => m.SelectedObligationType)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)
+            @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <p>
+            If there is a large amount of returns data for your selected criteria, it may take a while to download your results
+        </p>
+        <p>
+            This report only contains records where there is a discrepancy between the tonnage reported by the PCS and the corresponding tonnage reported by the AATF
+        </p>
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                                   "Report download", "PCS v AATF WEEE data comparison", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "Reports")
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadPcsAatfDataDifference", new { complianceYear = Model.SelectedYear, quarter = Model.Quarter, obligationType = Model.SelectedObligationType }))";
+        </script>
+    }
+}
+
+

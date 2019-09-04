@@ -183,7 +183,6 @@
                     <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="text-align: left" scope="col">Year</th>
                             <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
                             <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
                             <th class="govuk-table__header" scope="col">Submitted by</th>
@@ -410,7 +409,7 @@
         @if (Model.CanEdit)
         {
             <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit contact details</a>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit @Model.FacilityType.ToDisplayString() contact details</a>
             </p>
         }
     </section>
