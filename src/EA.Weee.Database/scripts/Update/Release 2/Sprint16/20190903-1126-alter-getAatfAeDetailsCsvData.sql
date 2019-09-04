@@ -107,7 +107,7 @@ INSERT INTO @AATF
 		AND (@PanArea IS NULL OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId))
 
 
-SELECT * FROM @AATF
+SELECT * FROM @AATF Order by Name
 
 END
 GO

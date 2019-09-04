@@ -123,7 +123,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -143,7 +143,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -162,7 +162,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{panArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -181,7 +181,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -207,7 +207,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()}_details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
