@@ -19,18 +19,22 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Mappings.ToViewModel;
     using ViewModels.Scheme;
     using ViewModels.Scheme.Overview;
     using ViewModels.Scheme.Overview.ContactDetails;
     using ViewModels.Scheme.Overview.MembersData;
     using ViewModels.Scheme.Overview.OrganisationDetails;
     using ViewModels.Scheme.Overview.PcsDetails;
+    using ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
+    using Weee.Requests.Admin;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
+    using GetSchemes = Weee.Requests.Scheme.GetSchemes;
 
     public class SchemeController : AdminController
     {
@@ -96,6 +100,10 @@
             {
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
+                var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(scheme.OrganisationId));
+
+                var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(scheme.OrganisationId));
+
                 switch (overviewDisplayOption.Value)
                 {
                     case OverviewDisplayOption.MembersData:
@@ -106,6 +114,10 @@
                     case OverviewDisplayOption.OrganisationDetails:
 
                         var orgDetails = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                        var associatedEntities = mapper.Map<AssociatedEntitiesViewModel>(new AssociatedEntitiesViewModelTransfer()
+                        {
+                            AssociatedAatfs = associatedAatfs, AssociatedSchemes = associatedSchemes, SchemeId = schemeId
+                        });
 
                         switch (orgDetails.OrganisationType)
                         {
@@ -114,6 +126,7 @@
                                 soleTraderModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 soleTraderModel.SchemeId = schemeId;
                                 soleTraderModel.SchemeName = scheme.SchemeName;
+                                soleTraderModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/SoleTraderDetailsOverview", soleTraderModel);
 
                             case OrganisationType.Partnership:
@@ -121,6 +134,7 @@
                                 partnershipModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 partnershipModel.SchemeId = schemeId;
                                 partnershipModel.SchemeName = scheme.SchemeName;
+                                partnershipModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/PartnershipDetailsOverview", partnershipModel);
 
                             case OrganisationType.RegisteredCompany:
@@ -129,6 +143,7 @@
                                 registeredCompanyModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 registeredCompanyModel.SchemeId = schemeId;
                                 registeredCompanyModel.SchemeName = scheme.SchemeName;
+                                registeredCompanyModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/RegisteredCompanyDetailsOverview", registeredCompanyModel);
                         }
 

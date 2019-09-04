@@ -9,17 +9,20 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using ViewModels.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
         private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
+        private readonly IMapper mapper;
 
         public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities,
-            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap)
+            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap, IMapper mapper)
         {
             this.addressUtilities = addressUtilities;
             this.aatfSubmissionHistoryMap = aatfSubmissionHistoryMap;
+            this.mapper = mapper;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
@@ -27,7 +30,7 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.AatfData, source.AatfData);
 
-            AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
+            var viewModel = new AatfDetailsViewModel()
             {
                 Id = source.AatfData.Id,
                 Name = source.AatfData.Name,
@@ -49,22 +52,9 @@
                 ComplianceYearList = source.ComplianceYearList,
                 AatfId = source.AatfData.AatfId,
                 SelectedComplianceYear = source.AatfData.ComplianceYear,
-                CurrentDate = source.CurrentDate
+                CurrentDate = source.CurrentDate,
+                AssociatedEntities = mapper.Map<AssociatedEntitiesViewModel>(new AssociatedEntitiesViewModelTransfer() { AatfId = source.AatfData.AatfId, AssociatedAatfs = source.AssociatedAatfs, AssociatedSchemes = source.AssociatedSchemes })
             };
-
-            if (source.AssociatedAatfs != null)
-            {
-                var filteredList = RemoveOlderAatfs(source.AssociatedAatfs);
-                var associatedAEs = filteredList.Where(a => a.FacilityType == FacilityType.Ae && a.Id != source.AatfData.Id && a.AatfId != source.AatfData.AatfId).ToList();
-                source.AssociatedAatfs = filteredList.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf && a.AatfId != source.AatfData.AatfId).ToList();
-                viewModel.AssociatedAatfs = source.AssociatedAatfs;
-                viewModel.AssociatedAes = associatedAEs;
-            }
-
-            if (source.AssociatedSchemes != null)
-            {
-                viewModel.AssociatedSchemes = source.AssociatedSchemes;
-            }
 
             if (source.AatfData.ApprovalDate != default(DateTime))
             {
@@ -77,29 +67,6 @@
             }
 
             return viewModel;
-        }
-
-        private List<AatfDataList> RemoveOlderAatfs(List<AatfDataList> source)
-        {
-            var listToBeReturned = new List<AatfDataList>();
-
-            foreach (var aatf in source)
-            {
-                if (source.Any(m => m.AatfId == aatf.AatfId && m.Id != aatf.Id))
-                {
-                    var latestAatf = source.Where(m => m.AatfId == aatf.AatfId).OrderByDescending(m => m.ApprovalDate).First();
-
-                    if (!listToBeReturned.Contains(latestAatf))
-                    {
-                        listToBeReturned.Add(latestAatf);
-                    }
-                }
-                else
-                {
-                    listToBeReturned.Add(aatf);
-                }
-            }
-            return listToBeReturned;
         }
     }
 }
