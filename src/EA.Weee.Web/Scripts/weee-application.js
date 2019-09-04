@@ -123,6 +123,14 @@
     if (parameter !== "") {
         $("#" + parameter).focus();
     }
+
+    $("#ReturnsExternalSelectedComplianceYear").change(function() {
+        $("#ReturnsQueryParameterForm").submit();
+    });
+    $("#ReturnsExternalSelectedQuarter").change(function () {
+        $("#ReturnsQueryParameterForm").submit();
+    });
+
 });
 
 
