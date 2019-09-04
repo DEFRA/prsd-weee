@@ -18,7 +18,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                    @Html.ActionLink(aatf.Name, "Details", "Aatf", new { id = aatf.Id }, null)
+                                    @Html.ActionLink(aatf.NameWithComplianceYear, "Details", "Aatf", new { id = aatf.Id }, null)
                                 </td>
                             </tr>
                         }
@@ -40,7 +40,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                    @Html.ActionLink(ae.Name, "Details", "Aatf", new { id = ae.Id }, new { })
+                                    @Html.ActionLink(ae.NameWithComplianceYear, "Details", "Aatf", new { id = ae.Id }, new { })
                                 </td>
                             </tr>
                         }
@@ -63,7 +63,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell aatf-details-associated-table-cell" style="word-break: break-all">
-                                    @Html.ActionLink(scheme.SchemeName, "Overview", "Scheme", new { schemeId = scheme.Id }, null)
+                                    @Html.ActionLink(scheme.SchemeNameDisplay, "Overview", "Scheme", new {schemeId = scheme.Id}, null)
                                 </td>
                             </tr>
                         }
