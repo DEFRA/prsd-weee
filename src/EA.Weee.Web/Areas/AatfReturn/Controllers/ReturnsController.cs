@@ -15,6 +15,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
 
@@ -35,69 +36,25 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
-        {
-            ReturnsViewModel viewModel = await PrepareViewModel(organisationId, null);
-
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
-
-            return View(viewModel);
-        }
-
-        private async Task<ReturnsViewModel> PrepareViewModel(Guid organisationId, int? complianceYear, string quarter = "All")
+        public virtual async Task<ActionResult> Index(Guid organisationId, int? selectedComplianceYear, string selectedQuarter)
         {
             using (var client = apiClient())
             {
-                ReturnsData @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
-                List<int> complianceYearList = @return.ReturnsList.Select(x => x.Quarter.Year).Distinct().ToList();
-                int latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
-
-                ReturnsViewModel viewModel = mapper.Map<ReturnsViewModel>(@return);
-
-                //Need to do the below 2 lines when compliance year drop down changes, so that the quarter dropdown dynamically changes
-                List<Quarter> quartersForLatestComplianceYear = @return.ReturnsList.Select(x => x.Quarter).ToList();
-                List<string> filteredQuarterList = quartersForLatestComplianceYear.Where(x => x.Year == latestComplianceYear).Select(a => a.Q.ToString()).Distinct().ToList();
-
-                viewModel.QuarterList = filteredQuarterList;
-                viewModel.ComplianceYearList = complianceYearList;
-                
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+                var viewModel = mapper.Map<ReturnsViewModel>(new ReturnToReturnsViewModelTransfer() { ReturnsData = @return, SelectedQuarter = selectedQuarter, SelectedComplianceYear = selectedComplianceYear });
                 viewModel.OrganisationId = organisationId;
-
-                if (complianceYear != null)
-                {
-                    viewModel.SelectedComplianceYear = complianceYear.GetValueOrDefault();
-                    viewModel.Returns = viewModel.Returns.Where(p => p.ReturnViewModel.Year == complianceYear.ToString()).ToList();
-                }
-                else
-                {
-                    viewModel.SelectedComplianceYear = latestComplianceYear;
-                }
-
-                viewModel.SelectedQuarter = quarter;
-                if (quarter != "All")
-                {
-                    viewModel.Returns = viewModel.Returns.Where(p => p.ReturnViewModel.Quarter == quarter).ToList();
-                }
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
-                return viewModel;
+                return View(viewModel);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ReturnsViewModel model, bool applyFilter = false)
+        public virtual async Task<ActionResult> Index(ReturnsViewModel model)
         {
-            if (applyFilter)
-            {
-                ReturnsViewModel viewModel = await PrepareViewModel(model.OrganisationId, model.SelectedComplianceYear, model.SelectedQuarter);
-
-                return View(viewModel);
-            }
-
             using (var client = apiClient())
             {
                 var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()

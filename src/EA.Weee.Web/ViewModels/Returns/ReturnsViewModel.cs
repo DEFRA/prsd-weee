@@ -26,6 +26,7 @@
         {
             get
             {
+                if (!this.quarterList.Contains("All"))
                 {
                     this.quarterList.Add("All");
                 }
@@ -33,10 +34,7 @@
                 return this.quarterList.OrderBy(p => p).ToList();
             }
 
-            set
-            {
-                this.quarterList = value;
-            }
+            set => this.quarterList = value;
         }
 
         [DisplayName("Reporting quarter")]
