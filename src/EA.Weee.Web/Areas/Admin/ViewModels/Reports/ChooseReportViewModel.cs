@@ -24,7 +24,8 @@
                 Reports.AatfSentOnData,
                 Reports.AatfReuseSitesData,
                 Reports.AatfAeDetails,
-                Reports.PcsAatfDataDifference
+                Reports.PcsAatfDataDifference,
+                Reports.AatfAePublicRegister
             })
         {
         }
