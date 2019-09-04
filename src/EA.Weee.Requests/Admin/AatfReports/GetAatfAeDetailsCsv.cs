@@ -16,17 +16,20 @@
 
         public Guid? LocalArea { get; private set; }
 
+        public bool IsPublicRegister { get; private set; }
+
         public GetAatfAeDetailsCsv(int complianceYear,
           FacilityType facilityType,
           Guid? authorityId,
           Guid? panArea,
-          Guid? localArea)
+          Guid? localArea, bool isPublicRegister)
         {
             ComplianceYear = complianceYear;
             FacilityType = facilityType;
             AuthorityId = authorityId;
             PanArea = panArea;
             LocalArea = localArea;
+            IsPublicRegister = isPublicRegister;
         }
     }
 }

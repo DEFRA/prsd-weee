@@ -133,6 +133,9 @@
                 case Reports.PcsAatfDataDifference:
                     return RedirectToAction("PcsAatfDataDifference", "AatfReports");
 
+                case Reports.AatfAePublicRegister:
+                    return RedirectToAction("AatfAePublicRegister", "AatfReports");
+
                 default:
                     throw new NotSupportedException();
             }
