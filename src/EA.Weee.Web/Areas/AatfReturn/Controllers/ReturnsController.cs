@@ -48,16 +48,16 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
+                ReturnsData @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
-                var complianceYearList = @return.ReturnsList.Select(x => x.Quarter.Year).Distinct().ToList();
-                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
+                List<int> complianceYearList = @return.ReturnsList.Select(x => x.Quarter.Year).Distinct().ToList();
+                int latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
+
+                ReturnsViewModel viewModel = mapper.Map<ReturnsViewModel>(@return);
 
                 //Need to do the below 2 lines when compliance year drop down changes, so that the quarter dropdown dynamically changes
-                var quartersForLatestComplianceYear = @return.ReturnsList.Select(x => x.Quarter).ToList();
-                var filteredQuarterList = quartersForLatestComplianceYear.Where(x => x.Year == latestComplianceYear).Select(a => a.Q.ToString()).Distinct().ToList();
-
-                var viewModel = mapper.Map<ReturnsViewModel>(@return);
+                List<Quarter> quartersForLatestComplianceYear = @return.ReturnsList.Select(x => x.Quarter).ToList();
+                List<string> filteredQuarterList = quartersForLatestComplianceYear.Where(x => x.Year == latestComplianceYear).Select(a => a.Q.ToString()).Distinct().ToList();
 
                 viewModel.QuarterList = filteredQuarterList;
                 viewModel.ComplianceYearList = complianceYearList;
@@ -75,14 +75,10 @@
                     viewModel.SelectedComplianceYear = latestComplianceYear;
                 }
 
+                viewModel.SelectedQuarter = quarter;
                 if (quarter != "All")
                 {
                     viewModel.Returns = viewModel.Returns.Where(p => p.ReturnViewModel.Quarter == quarter).ToList();
-                    viewModel.SelectedQuarter = quarter;
-                }
-                else
-                {
-                    viewModel.SelectedQuarter = "All";
                 }
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
