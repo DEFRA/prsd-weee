@@ -10,8 +10,10 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Helper;
+    using Scheme.Overview.OrganisationDetails;
+    using Shared;
 
-    public class AatfDetailsViewModel
+    public class AatfDetailsViewModel : OrganisationDetailsOverviewViewModel
     {
         public Guid Id { get; set; }
 
@@ -79,19 +81,6 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public List<AatfDataList> AssociatedAatfs { get; set; }
-
-        public List<AatfDataList> AssociatedAes { get; set; }
-
-        public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
-
-        public bool HasAnyRelatedEntities => IsNotNullOrEmpty(AssociatedAatfs) || IsNotNullOrEmpty(AssociatedAes) || IsNotNullOrEmpty(AssociatedSchemes);
-
-        private bool IsNotNullOrEmpty<T>(IList<T> entityList)
-        {
-            return entityList != null && entityList.Any();
-        }
-
         public bool HasPatArea => PanArea != null;
 
         public bool HasLocalArea => LocalArea != null;
@@ -118,13 +107,7 @@
 
         public DateTime CurrentDate { get; set; }
 
-        public bool IsLatestComplianceYear
-        {
-            get
-            {
-                return ComplianceYearList != null && ComplianceYear == ComplianceYearList.First();
-            }
-        }
+        public bool IsLatestComplianceYear => ComplianceYearList != null && ComplianceYear == ComplianceYearList.First();
 
         public bool ShowCopyLink
         {
@@ -134,7 +117,7 @@
                 {
                    var list = AatfHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
 
-                   return list.Count() > 0 ? true : false;
+                   return list.Any() ? true : false;
                 }
                 return false;
             }

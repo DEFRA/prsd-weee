@@ -15,6 +15,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.Areas.Admin.ViewModels.Shared;
     using Xunit;
 
     public class AatfDataToAatfDetailsViewModelMapTests
@@ -22,16 +23,18 @@
         private readonly IAddressUtilities addressUtilities;
         private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
         private readonly AatfDataToAatfDetailsViewModelMap map;
+        private readonly IMapper mapper;
         private readonly Fixture fixture;
 
         public AatfDataToAatfDetailsViewModelMapTests()
         {
             addressUtilities = A.Fake<IAddressUtilities>();
             aatfSubmissionHistoryMap = A.Fake<IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel>>();
+            mapper = A.Fake<IMapper>();
 
             fixture = new Fixture();
 
-            map = new AatfDataToAatfDetailsViewModelMap(addressUtilities, aatfSubmissionHistoryMap);
+            map = new AatfDataToAatfDetailsViewModelMap(addressUtilities, aatfSubmissionHistoryMap, mapper);
         }
 
         [Fact]
@@ -60,144 +63,6 @@
             AatfDetailsViewModel result = map.Map(transfer);
             AssertResults(aatfData, result);
             Assert.NotNull(result.ApprovalDate);
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithAssociatedAatfs_PropertiesShouldBeMapped()
-        {
-            AatfData aatfData = CreateAatfData();
-            var associatedAatfs = A.Fake<List<AatfDataList>>();
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedAatfs = associatedAatfs
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            result.AssociatedAatfs.Should().BeEquivalentTo(associatedAatfs);
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithNoAssociatedAatfs_PropertyShouldBeNull()
-        {
-            AatfData aatfData = CreateAatfData();
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            result.AssociatedAatfs.Should().BeNull();
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithNoAssociatedSchemes_PropertyShouldBeNull()
-        {
-            AatfData aatfData = CreateAatfData();
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData);
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            result.AssociatedSchemes.Should().BeNull();
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithAssociatedSchemes_PropertiesShouldBeMapped()
-        {
-            AatfData aatfData = CreateAatfData();
-            var associatedSchemes = A.Fake<List<Core.Scheme.SchemeData>>();
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedSchemes = associatedSchemes
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            result.AssociatedSchemes.Should().BeEquivalentTo(associatedSchemes);
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithAatfs_AEListShouldOnlyContainAEsAndAatfListShouldOnlyContainAatfs()
-        {
-            AatfData aatfData = CreateAatfData();
-            List<AatfDataList> associatedAatfs = new List<AatfDataList>
-            {
-                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
-                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid(), null)
-            };
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedAatfs = associatedAatfs
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            foreach (var ae in result.AssociatedAes)
-            {
-                ae.FacilityType.Should().Be(FacilityType.Ae);
-            }
-
-            foreach (var aatf in result.AssociatedAatfs)
-            {
-                aatf.FacilityType.Should().Be(FacilityType.Aatf);
-            }
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithAatfs_AatfListShouldNotContainAatfFoundInSource()
-        {
-            AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, aatfData.FacilityType, aatfData.ComplianceYear, aatfData.AatfId, aatfData.ApprovalDate);
-
-            List<AatfDataList> associatedAatfs = new List<AatfDataList>
-            {
-                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
-                aatfDataReplica
-            };
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedAatfs = associatedAatfs
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            foreach (var aatf in result.AssociatedAatfs)
-            {
-                aatf.Id.Should().NotBe(aatfDataReplica.Id);
-            }
-        }
-
-        [Fact]
-        public void Map_GivenValidSource_WithAatfs_AeListShouldNotContainAatfFoundInSource()
-        {
-            AatfData aatfData = CreateAatfData();
-            AatfDataList aatfDataReplica = new AatfDataList(aatfData.Id, aatfData.Name, aatfData.CompetentAuthority, aatfData.ApprovalNumber, aatfData.AatfStatus, aatfData.Organisation, FacilityType.Ae, aatfData.ComplianceYear, aatfData.AatfId, aatfData.ApprovalDate);
-
-            List<AatfDataList> associatedAatfs = new List<AatfDataList>
-            {
-                new AatfDataList(Guid.NewGuid(), "TEST", A.Fake<UKCompetentAuthorityData>(), "123456789", A.Fake<AatfStatus>(),
-                    A.Fake<OrganisationData>(), FacilityType.Ae, (Int16)2019, Guid.NewGuid(), null),
-                aatfDataReplica
-            };
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedAatfs = associatedAatfs
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            foreach (var ae in result.AssociatedAes)
-            {
-                ae.Id.Should().NotBe(aatfDataReplica.Id);
-            }
         }
 
         [Fact]
@@ -287,33 +152,6 @@
         }
 
         [Fact]
-        public void Map_GivenListOfAatfs_GivenAatfsWithTheSameAatfIdTheLatestApprovalDateShouldBeReturned()
-        {
-            AatfData aatfData = CreateAatfData();
-            var aatfId = Guid.NewGuid();
-
-            var aatfDataList = new AatfDataList(Guid.NewGuid(), "B 2019", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, aatfId, new DateTime(2018, 10, 1));
-            var aatfDataList2 = new AatfDataList(Guid.NewGuid(), "B 2020", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2020, aatfId, new DateTime(2019, 10, 1));
-
-            var associatedAatfs = new List<AatfDataList>()
-            {
-                aatfDataList,
-                aatfDataList2
-            };
-
-            var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
-            {
-                AssociatedAatfs = associatedAatfs
-            };
-
-            AatfDetailsViewModel result = map.Map(transfer);
-
-            result.AssociatedAatfs.Count.Should().Be(1);
-            result.AssociatedAatfs.Should().Contain(aatfDataList2);
-            result.AssociatedAatfs.Should().NotContain(aatfDataList);
-        }
-
-        [Fact]
         public void Map_GivenSubmissionHistoryOnTransfer_MappedSubmissionHistoryDataShouldBeReturned()
         {
             var aatSubmissionHistoryData = new List<AatfSubmissionHistoryData>()
@@ -369,6 +207,32 @@
             AatfDetailsViewModel result = map.Map(transfer);
 
             result.CurrentDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenSource_AssociatedEntitiesMapperMustBeCalled()
+        {
+            var transfer = fixture.Create<AatfDataToAatfDetailsViewModelMapTransfer>();
+
+            var result = map.Map(transfer);
+
+            A.CallTo(() => mapper.Map<AssociatedEntitiesViewModel>(A<AssociatedEntitiesViewModelTransfer>.That.Matches(a =>
+                a.AatfId == transfer.AatfData.AatfId &&
+                a.AssociatedAatfs == transfer.AssociatedAatfs &&
+                a.AssociatedSchemes == transfer.AssociatedSchemes))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenSource_MappedAssociatedViewModelIsReturned()
+        {
+            var transfer = fixture.Create<AatfDataToAatfDetailsViewModelMapTransfer>();
+            var associatedViewModel = fixture.Create<AssociatedEntitiesViewModel>();
+
+            A.CallTo(() => mapper.Map<AssociatedEntitiesViewModel>(A<AssociatedEntitiesViewModelTransfer>._)).Returns(associatedViewModel);
+
+            var result = map.Map(transfer);
+
+            result.AssociatedEntities.Should().Be(associatedViewModel);
         }
 
         private UKCompetentAuthorityData CreateUkCompetentAuthorityData()

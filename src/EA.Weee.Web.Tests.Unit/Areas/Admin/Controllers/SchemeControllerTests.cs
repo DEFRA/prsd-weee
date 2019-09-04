@@ -4,6 +4,7 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
@@ -22,20 +23,26 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using AutoFixture;
+    using Core.AatfReturn;
     using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Mappings.ToViewModel;
     using Web.Areas.Admin.ViewModels.Scheme;
     using Web.Areas.Admin.ViewModels.Scheme.Overview;
     using Web.Areas.Admin.ViewModels.Scheme.Overview.ContactDetails;
     using Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData;
     using Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails;
     using Web.Areas.Admin.ViewModels.Scheme.Overview.PcsDetails;
+    using Web.Areas.Admin.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
     using Xunit;
+    
+    using AddressData = Core.Shared.AddressData;
 
     public class SchemeControllerTests
     {
@@ -44,6 +51,7 @@
         private readonly BreadcrumbService breadcrumbService;
         private readonly IMapper mapper;
         private readonly SchemeController controller;
+        private readonly Fixture fixture;
 
         public SchemeControllerTests()
         {
@@ -51,6 +59,7 @@
             weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             mapper = A.Fake<IMapper>();
+            fixture = new Fixture();
 
             controller = new SchemeController(() => weeeClient, weeeCache, breadcrumbService, mapper);
 
@@ -1124,6 +1133,39 @@
 
                 Assert.NotNull(hasInternalAdminAttribue);
             }
+        }
+
+        [Theory]
+        [InlineData(OrganisationType.RegisteredCompany, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview")]
+        [InlineData(OrganisationType.Partnership, typeof(PartnershipDetailsOverviewViewModel), "Overview/PartnershipDetailsOverview")]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, typeof(SoleTraderDetailsOverviewViewModel), "Overview/SoleTraderDetailsOverview")]
+        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_AssociatedEntitiesShouldBeMapped(OrganisationType organisationType, Type expectedViewModelType, string expectedViewName)
+        {
+            var organisationId = fixture.Create<Guid>();
+            var schemeId = fixture.Create<Guid>();
+            var associatedAatfs = fixture.CreateMany<AatfDataList>().ToList();
+            var associatedSchemes = fixture.CreateMany<SchemeData>().ToList();
+            var associatedViewModel = fixture.Create<AssociatedEntitiesViewModel>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(new SchemeData() {Id = schemeId, OrganisationId = organisationId});
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = organisationType
+                });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(g => g.OrganisationId == organisationId)))
+                .Returns(associatedAatfs);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(g => g.OrganisationId == organisationId)))
+                .Returns(associatedSchemes);
+            A.CallTo(() => mapper.Map<AssociatedEntitiesViewModel>(A<AssociatedEntitiesViewModelTransfer>.That.Matches(a =>
+                a.AssociatedAatfs == associatedAatfs &&
+                a.AssociatedSchemes == associatedSchemes &&
+                a.SchemeId == schemeId))).Returns(associatedViewModel);
+
+            var result = await SchemeController().Overview(schemeId, OverviewDisplayOption.OrganisationDetails) as ViewResult;
+
+            var model = result.Model as OrganisationDetailsOverviewViewModel;
+            model.AssociatedEntities.Should().Be(associatedViewModel);
         }
 
         private SchemeController SchemeController()
