@@ -375,6 +375,46 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> PcsAatfDataDifference()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new PcsAatfDataDifferenceViewModel();
+            await PopulateFilters(model);
+
+            return View("PcsAatfDataDifference", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PcsAatfDataDifference(PcsAatfDataDifferenceViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadPcsAatfDataDifference(int complianceYear, int? quarter,
+            string obligationType)
+        {
+            CSVFileData fileData;
+
+            var request = new GetPcsAatfComparisonData(complianceYear, quarter, obligationType);
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
+
         private async Task PopulateFilters(AatfSentOnDataViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
@@ -428,6 +468,11 @@
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
             model.PanAreaList = await PatAreaList();
             model.LocalAreaList = await LocalAreaList();
+        }
+
+        private async Task PopulateFilters(PcsAatfDataDifferenceViewModel model)
+        {
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
         }
 
         private async Task<List<int>> FetchComplianceYearsForAatfReturns()

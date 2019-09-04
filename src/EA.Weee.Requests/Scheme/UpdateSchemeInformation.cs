@@ -5,7 +5,7 @@
     using Prsd.Core.Mediator;
     using System;
 
-    public class UpdateSchemeInformation : IRequest<UpdateSchemeInformationResult>
+    public class UpdateSchemeInformation : IRequest<CreateOrUpdateSchemeInformationResult>
     {
         public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId, SchemeStatus status)
         {

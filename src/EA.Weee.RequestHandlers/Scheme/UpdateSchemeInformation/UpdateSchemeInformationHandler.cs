@@ -12,7 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, UpdateSchemeInformationResult>
+    internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, CreateOrUpdateSchemeInformationResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IUpdateSchemeInformationDataAccess dataAccess;
@@ -25,7 +25,7 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<UpdateSchemeInformationResult> HandleAsync(UpdateSchemeInformation message)
+        public async Task<CreateOrUpdateSchemeInformationResult> HandleAsync(UpdateSchemeInformation message)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -38,9 +38,9 @@
             {
                 if (await dataAccess.CheckSchemeApprovalNumberInUseAsync(message.ApprovalNumber))
                 {
-                    return new UpdateSchemeInformationResult()
+                    return new CreateOrUpdateSchemeInformationResult()
                     {
-                        Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
+                        Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
                     };
                 }
             }
@@ -51,9 +51,9 @@
                 // The 1B1S customer reference is mandatory for schemes in the Environmetn Agency.
                 if (string.IsNullOrEmpty(message.IbisCustomerReference))
                 {
-                    return new UpdateSchemeInformationResult()
+                    return new CreateOrUpdateSchemeInformationResult()
                     {
-                        Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
+                        Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
                     };
                 }
                 else
@@ -76,10 +76,10 @@
 
                     if (otherScheme != null)
                     {
-                        return new UpdateSchemeInformationResult()
+                        return new CreateOrUpdateSchemeInformationResult()
                         {
-                            Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
-                            IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
+                            Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
+                            IbisCustomerReferenceUniquenessFailure = new CreateOrUpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
                             {
                                 IbisCustomerReference = message.IbisCustomerReference,
                                 OtherSchemeApprovalNumber = otherScheme.ApprovalNumber,
@@ -103,9 +103,9 @@
 
             await dataAccess.SaveAsync();
 
-            return new UpdateSchemeInformationResult()
+            return new CreateOrUpdateSchemeInformationResult()
             {
-                Result = UpdateSchemeInformationResult.ResultType.Success
+                Result = CreateOrUpdateSchemeInformationResult.ResultType.Success
             };
         }
     }
