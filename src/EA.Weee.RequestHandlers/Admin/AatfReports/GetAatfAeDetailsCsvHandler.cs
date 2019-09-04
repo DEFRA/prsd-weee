@@ -116,6 +116,10 @@
             {
                 additionalParameters += $"_{(await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Abbreviation}";
             }
+            if (request.PanArea.HasValue)
+            {
+                additionalParameters += $"_{(await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value)).Name}";
+            }
             if (request.LocalArea.HasValue)
             {
                 additionalParameters += $"_{(await commonDataAccess.FetchLookup<LocalArea>(request.LocalArea.Value)).Name}";
@@ -127,7 +131,7 @@
             }
             else
             {
-                additionalText = "_details";
+                additionalText = " details";
             }
 
             var fileName =
