@@ -323,6 +323,8 @@
     <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AssociatedEntitiesViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AssociatedEntitiesViewModelTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAatfViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAeViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
@@ -352,6 +354,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Shared\AssociatedEntitiesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
@@ -608,6 +611,7 @@
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\PcsAatfDataDifference.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
