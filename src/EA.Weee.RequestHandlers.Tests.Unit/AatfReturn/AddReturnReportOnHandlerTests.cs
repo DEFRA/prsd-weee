@@ -14,6 +14,7 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Xunit;
     using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
@@ -23,12 +24,14 @@
         private readonly IGenericDataAccess dataAccess;
         private readonly WeeeContext context;
         private AddReturnReportOnHandler handler;
+        private readonly Fixture fixture;
 
         public AddReturnReportOnHandlerTests()
         {
             var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             context = A.Fake<WeeeContext>();
             dataAccess = A.Fake<IGenericDataAccess>();
+            fixture = new Fixture();
 
             handler = new AddReturnReportOnHandler(weeeAuthorization, dataAccess, context);
         }
@@ -261,7 +264,7 @@
             var output = new List<ReportOnQuestion>();
             for (var i = 1; i <= 5; i++)
             {
-                output.Add(new ReportOnQuestion(i, A.Dummy<string>(), A.Dummy<string>(), default(int), A.Dummy<string>()));
+                output.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i).Create());
             }
 
             output[4].ParentId = 4;

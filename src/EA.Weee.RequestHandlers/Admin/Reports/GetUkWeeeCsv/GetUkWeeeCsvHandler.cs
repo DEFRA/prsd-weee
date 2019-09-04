@@ -35,26 +35,24 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            IEnumerable<DataReturn> dataReturns = await dataAccess.FetchDataReturnsForComplianceYearAsync(message.ComplianceYear);
+            var dataReturns = await dataAccess.FetchDataReturnsForComplianceYearAsync(message.ComplianceYear);
 
-            IEnumerable<CsvResult> csvReuslts = CreateResults(dataReturns);
+            var csvResults = CreateResults(dataReturns);
 
-            CsvWriter<CsvResult> csvWriter = CreateWriter();
+            var csvWriter = CreateWriter();
 
-            string content = csvWriter.Write(csvReuslts);
+            var content = csvWriter.Write(csvResults);
 
-            byte[] data = Encoding.UTF8.GetBytes(content);
+            var data = Encoding.UTF8.GetBytes(content);
 
-            string fileName = string.Format("{0}_UK_WEEE_{1:ddMMyyyy_HHmm}.csv",
-                message.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{message.ComplianceYear}_UK_WEEE_collected_by_PCSs_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new FileInfo(fileName, data);
         }
 
         public CsvWriter<CsvResult> CreateWriter()
         {
-            CsvWriter<CsvResult> csvWriter = csvWriterFactory.Create<CsvResult>();
+            var csvWriter = csvWriterFactory.Create<CsvResult>();
 
             csvWriter.DefineColumn("Category", x => categories[(int)x.Category]);
             csvWriter.DefineColumn("Obligation type", x => x.ObligationType);
@@ -84,7 +82,7 @@
 
         public IEnumerable<CsvResult> CreateResults(IEnumerable<DataReturn> dataReturns)
         {
-            foreach (Domain.Obligation.ObligationType obligationType in
+            foreach (var obligationType in
                 new List<Domain.Obligation.ObligationType>() { Domain.Obligation.ObligationType.B2B, Domain.Obligation.ObligationType.B2C })
             {
                 foreach (WeeeCategory category in Enum.GetValues(typeof(WeeeCategory)))
@@ -165,7 +163,7 @@
         {
             total = null;
 
-            IEnumerable<WeeeCollectedAmount> amountsQ1 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q1);
+            var amountsQ1 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q1);
 
             if (amountsQ1.Any())
             {
@@ -177,7 +175,7 @@
                 totalQ1 = null;
             }
 
-            IEnumerable<WeeeCollectedAmount> amountsQ2 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q2);
+            var amountsQ2 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q2);
 
             if (amountsQ2.Any())
             {
@@ -189,7 +187,7 @@
                 totalQ2 = null;
             }
 
-            IEnumerable<WeeeCollectedAmount> amountsQ3 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q3);
+            var amountsQ3 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q3);
 
             if (amountsQ3.Any())
             {
@@ -201,7 +199,7 @@
                 totalQ3 = null;
             }
 
-            IEnumerable<WeeeCollectedAmount> amountsQ4 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q4);
+            var amountsQ4 = GetCollectedAmounts(dataReturns, obligationType, category, source, QuarterType.Q4);
 
             if (amountsQ4.Any())
             {
@@ -226,7 +224,7 @@
         {
             total = null;
 
-            IEnumerable<WeeeDeliveredAmount> amountsQ1 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q1);
+            var amountsQ1 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q1);
 
             if (amountsQ1.Any())
             {
@@ -238,7 +236,7 @@
                 totalQ1 = null;
             }
 
-            IEnumerable<WeeeDeliveredAmount> amountsQ2 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q2);
+            var amountsQ2 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q2);
 
             if (amountsQ2.Any())
             {
@@ -250,7 +248,7 @@
                 totalQ2 = null;
             }
 
-            IEnumerable<WeeeDeliveredAmount> amountsQ3 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q3);
+            var amountsQ3 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q3);
 
             if (amountsQ3.Any())
             {
@@ -262,7 +260,7 @@
                 totalQ3 = null;
             }
 
-            IEnumerable<WeeeDeliveredAmount> amountsQ4 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q4);
+            var amountsQ4 = GetDeliveredAmounts(dataReturns, obligationType, category, QuarterType.Q4);
 
             if (amountsQ4.Any())
             {

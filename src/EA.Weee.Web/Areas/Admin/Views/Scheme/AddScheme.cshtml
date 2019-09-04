@@ -1,0 +1,37 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@{
+    ViewBag.Title = "Add PCS";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IsChangeableStatus)
+    @Html.HiddenFor(m => m.OrganisationId)
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">Add PCS</h1>
+            </header>
+        </div>
+    </div>
+
+    @Html.Gds().ValidationSummary()
+
+    @Html.Partial("_SchemeDetails")
+
+    if (Model.IsChangeableStatus)
+    {
+        @(this.WeeeGds().Submit("Save and Continue"))
+    }
+    <p>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageSchemes()))">Back</a>
+    </p>
+}

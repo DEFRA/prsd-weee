@@ -56,6 +56,7 @@
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />
+    <Compile Include="Admin\AatfReports\GetPcsAatfComparisonData.cs" />
     <Compile Include="Admin\Aatf\CheckAatfApprovalDateChange.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetails.cs" />
     <Compile Include="Admin\Aatf\EditAatfContact.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemeExternalById.cs" />
     <Compile Include="Scheme\GetSchemesExternal.cs" />
+    <Compile Include="Scheme\CreateScheme.cs" />
     <Compile Include="Shared\DataReturnSubmissionsHistoryOrderBy.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
