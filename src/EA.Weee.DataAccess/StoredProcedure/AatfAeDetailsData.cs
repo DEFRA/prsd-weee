@@ -69,5 +69,13 @@
         public string OrganisationCountry { get; set; }
 
         public string OrganisationPostcode { get; set; }
+
+        public string AatfAddress { get; set; }
+
+        public string OperatorName { get; set; }
+
+        public string OperatorTradingName { get; set; }
+
+        public string OperatorAddress { get; set; }
     }
 }

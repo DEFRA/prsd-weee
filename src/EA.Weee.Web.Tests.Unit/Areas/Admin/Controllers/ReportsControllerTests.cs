@@ -170,6 +170,7 @@
         [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData", "AatfReports")]
         [InlineData(Reports.AatfAeDetails, "AatfAeDetails", "AatfReports")]
         [InlineData(Reports.PcsAatfDataDifference, "PcsAatfDataDifference", "AatfReports")]
+        [InlineData(Reports.AatfAePublicRegister, "AatfAePublicRegister", "AatfReports")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
         {
             // Arrange
