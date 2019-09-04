@@ -50,7 +50,7 @@
                 @Html.AntiForgeryToken()
 
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
-                    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):</span>
+                    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):&nbsp;&nbsp;</span>
                     @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
                     <span class="text-margin">
                         @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
@@ -73,7 +73,6 @@
                 <caption class="govuk-table__caption govuk-visually-hidden">Manage AATF returns</caption>
                 <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
                     <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                        <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
                         <th class="govuk-table__header prsd-table-collapse" scope="col">Q</th>
                         <th class="govuk-table__header prsd-table-collapse" scope="col">Total obligated (t) B2C</th>
                         <th class="govuk-table__header prsd-table-collapse" scope="col">Total obligated (t) B2B</th>
@@ -92,7 +91,6 @@
                         var item = Model.Returns[returnCount];
 
                         <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Year</td>
                             <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell" style="text-align:right">@item.ReturnViewModel.Quarter</td>
                             <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell break-word" style="text-align:right">@item.ReturnViewModel.ObligatedB2CTotal</td>
                             <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell break-word" style="text-align:right">@item.ReturnViewModel.ObligatedB2BTotal</td>
