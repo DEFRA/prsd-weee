@@ -57,7 +57,7 @@
         <div class="govuk-table__header--large">
             @Model.FacilityType.ToDisplayString() details
         </div>
-        @if (Model.CanEdit && Model.IsLatestComplianceYear)
+        @if (Model.CanEdit && Model.IsValidComplianceYear)
         {
             <div style="float:right">
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
@@ -127,9 +127,12 @@
         </table>
         @if (Model.CanEdit)
         {
-            <p>
-                <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
-            </p>
+            if (Model.IsValidComplianceYear)
+            {
+                <p>
+                    <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
+                </p>
+            }
             if (Model.ShowCopyLink)
             {
                 <p>
@@ -335,7 +338,7 @@
             </tbody>
         </table>
 
-        @if (Model.CanEdit)
+        @if (Model.CanEdit && Model.IsValidComplianceYear)            
         {
             <p>
                 <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit @Model.FacilityType.ToDisplayString() contact details</a>
