@@ -15,6 +15,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
 
     [ValidateOrganisationActionFilterAttribute(FacilityType = FacilityType.Ae)]
     public class ReturnsController : AeReturnBaseController
@@ -33,17 +34,15 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, int? selectedComplianceYear, string selectedQuarter)
         {
             using (var client = apiClient())
             {
                 var @returns = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Ae));
 
-                var viewModel = mapper.Map<ReturnsViewModel>(@returns);
-
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+                var viewModel = mapper.Map<ReturnsViewModel>(new ReturnToReturnsViewModelTransfer() { ReturnsData = @returns, SelectedQuarter = selectedQuarter, SelectedComplianceYear = selectedComplianceYear });
                 viewModel.OrganisationId = organisationId;
-
+                
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AeReturn);
 
                 return View(viewModel);
