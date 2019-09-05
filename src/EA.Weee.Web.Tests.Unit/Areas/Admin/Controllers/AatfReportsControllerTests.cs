@@ -1444,5 +1444,141 @@
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
             result.ContentType.Should().Be("text/csv");
         }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_ReturnsAatfAePublicRegisterViewModel()
+        {
+            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            List<int> years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            ActionResult result = await controller.AatfAePublicRegister();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
+
+            AatfAePublicRegisterViewModel model = viewResult.Model as AatfAePublicRegisterViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+
+            Assert.Collection(model.FacilityTypes,
+               s1 => Assert.Equal("AATF", s1.Text),
+               s2 => Assert.Equal("AE", s2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            ActionResult result = await controller.AatfAePublicRegister();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAePublicRegister();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithInvalidViewModel_ReturnsAatfAePublicRegisterViewModel()
+        {
+            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            List<int> years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
+
+            AatfAePublicRegisterViewModel model = viewResult.Model as AatfAePublicRegisterViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Act
+            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAePublicRegister(A.Dummy<AatfAePublicRegisterViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfAePublicRegisterCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            int complianceYear = fixture.Create<int>();
+            FacilityType facilityType = fixture.Create<FacilityType>();
+            Guid authority = fixture.Create<Guid>();
+            bool isPublicRegister = fixture.Create<bool>();
+
+            CSVFileData fileData = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeDetailsCsv>.That.Matches(g =>
+                g.ComplianceYear.Equals(complianceYear) && g.FacilityType.Equals(facilityType)
+                && g.AuthorityId.Equals(authority) && g.IsPublicRegister.Equals(isPublicRegister)))).Returns(fileData);
+
+            FileContentResult result = await controller.DownloadAatfAePublicRegisterCsv(complianceYear, facilityType, authority) as FileContentResult;
+
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
+        }
     }
 }
