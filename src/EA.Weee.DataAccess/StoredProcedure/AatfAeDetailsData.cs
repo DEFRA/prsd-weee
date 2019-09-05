@@ -32,7 +32,15 @@
 
         public DateTime ApprovalDate { get; set; }
 
-        public string Size { get; set; }
+        public string ApprovalDateString
+        {
+            get
+            {
+                return ApprovalDate.ToShortDateString();
+            }
+        }
+
+    public string Size { get; set; }
 
         public string Status { get; set; }
 
