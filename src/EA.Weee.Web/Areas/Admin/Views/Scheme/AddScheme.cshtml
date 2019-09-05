@@ -6,53 +6,56 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.AddSchemeViewModel
 @{
-    ViewBag.Title = "Add PCS";
+    var title = "Add a PCS to an organisation";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.IsChangeableStatus)
-    @Html.HiddenFor(m => m.OrganisationId)
+    <section id="main-content">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.IsChangeableStatus)
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.OrganisationName)
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <header class="hgroup">
-                <h1 class="govuk-heading-l">Add PCS</h1>
-            </header>
-        </div>
-    </div>
+            <h1 class="govuk-heading-l">@title</h1>
 
-    @Html.Gds().ValidationSummary()
-    @Html.HiddenFor(m => m.Status)
+            <div>
+                <p>
+                    <span class="govuk-heading-m">Organisation: @Model.OrganisationName</span>
+                </p>
+            </div>
 
-    @Html.Partial("_SchemeDetails")
+            @Html.Gds().ValidationSummary()
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
-        @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
-        @Html.Gds().LabelFor(m => m.Contact.FirstName)
-        @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
-    </div>
+            @Html.Partial("_SchemeDetails")
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
-        @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
-        @Html.Gds().LabelFor(m => m.Contact.LastName)
-        @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
-    </div>
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
+                @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
+                @Html.Gds().LabelFor(m => m.Contact.FirstName)
+                @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
+            </div>
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
-        @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
-        @Html.Gds().LabelFor(m => m.Contact.Position)
-        @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Position })
-    </div>
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
+                @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
+                @Html.Gds().LabelFor(m => m.Contact.LastName)
+                @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
+            </div>
 
-    @Html.EditorFor(m => m.OrganisationAddress, new { htmlAttributes = new { @class = "govuk-!-width-one-half" } })
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
+                @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
+                @Html.Gds().LabelFor(m => m.Contact.Position)
+                @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Position })
+            </div>
 
-    if (Model.IsChangeableStatus)
-    {
-        @(this.WeeeGds().Submit("Save and Continue"))
-    }
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageSchemes()))">Back</a>
-    </p>
-}
+            @Html.EditorFor(m => m.OrganisationAddress, new { htmlAttributes = new { @class = "govuk-!-width-one-half" } })
+
+            if (Model.IsChangeableStatus)
+            {
+                @(this.WeeeGds().Submit("Add PCS"))
+            }
+            <p>
+                <a href="@(Url.UrlFor<SchemeController>(a => a.ManageSchemes()))">Back</a>
+            </p>
+        }
+    </section>
