@@ -75,7 +75,7 @@
                 csvWriter.DefineColumn($"EA Area for the {type}", i => i.EaArea);
             }                      
             csvWriter.DefineColumn($"{type} approval number", i => i.ApprovalNumber);
-            csvWriter.DefineColumn($"Date of approval", i => i.ApprovalDate);
+            csvWriter.DefineColumn($"Date of approval", i => i.ApprovalDateString);
             csvWriter.DefineColumn($"{type} size", i => i.Size);
             csvWriter.DefineColumn($"{type} status", i => i.Status);
             if (!request.IsPublicRegister)
