@@ -7,10 +7,10 @@
     ViewBag.Title = "Cannot add new PCS to this organisation - GOV.UK";
 }
 
-@section main_content {
+
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">Cannot add a new PCS to this organisation</h1>
+            <h1 class="govuk-heading-l">Add new PCS</h1>
         </div>
     </header>
 
@@ -20,7 +20,7 @@
         @Html.Gds().ValidationSummary()
 
         <div class="govuk-form-group">
-            <p>This organisation already operates a PCS, it's not possible to add another PCS to the same organisation</p>
+            <p>This organisation already operates a PCS, it's not possible to add another PCS to the same organisation.</p>
         </div>
 
         <p>
@@ -30,4 +30,4 @@
             <a href="@(Url.UrlFor<AddOrganisationController>(u => u.SearchResults(Model.SearchTerm, EntityType.Pcs)))">Back</a>
         </p>
     }
-}
+

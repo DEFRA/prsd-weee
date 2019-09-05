@@ -352,6 +352,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\AddSchemeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
@@ -1281,7 +1282,7 @@
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModelBase.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Routelink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Tab.cs" />
