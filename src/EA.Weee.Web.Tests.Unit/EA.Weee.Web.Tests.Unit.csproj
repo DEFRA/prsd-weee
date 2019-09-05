@@ -213,6 +213,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToUserFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ViewAatfContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Areas\Admin\Mapping\MappingHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\UpdateApprovalDateViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Validation\FacilityViewModelBaseValidatorTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfAePublicRegisterViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfAeReturnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfObligatedDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReuseSitesViewModelTests.cs" />
