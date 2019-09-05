@@ -9,9 +9,9 @@
     using System.Linq;
     using System.Web.Mvc;
 
-    public class SchemeViewModel
+    public class SchemeViewModelBase
     {
-        public SchemeViewModel()
+        public SchemeViewModelBase()
         {
             var obligationTypeNone = EA.Weee.Core.Shared.ObligationType.None.ToString();
             var allObligationTypes = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");

@@ -122,5 +122,7 @@
                 return false;
             }
         }
+
+        public bool IsValidComplianceYear => CurrentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(CurrentDate, true).Any(x => x.Equals(ComplianceYear)) ? true : false;
     }
 }

@@ -115,5 +115,56 @@
 
             SystemTime.Unfreeze();
         }
+
+        [Fact]
+        public void AatfDetailsViewModel_CYIsNotValid_IsValidComplianceYearShouldBeFalse()
+        {
+            var currentDate = new DateTime(2019, 2, 11);
+            SystemTime.Freeze(currentDate);
+
+            var model = new AatfDetailsViewModel() { CurrentDate = currentDate, ComplianceYear = 2021 };
+
+            model.IsValidComplianceYear.Should().BeFalse();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_PreviousCYIsValid_IsValidComplianceYearShouldBeTrue()
+        {
+            var currentDate = new DateTime(2020, 2, 11);
+            SystemTime.Freeze(currentDate);
+
+            var model = new AatfDetailsViewModel() { CurrentDate = currentDate, ComplianceYear = 2019 };
+
+            model.IsValidComplianceYear.Should().BeTrue();
+
+            SystemTime.Unfreeze();
+        }
+        [Fact]
+        public void AatfDetailsViewModel_CurrentCYIsValid_IsValidComplianceYearShouldBeTrue()
+        {
+            var currentDate = new DateTime(2019, 2, 11);
+            SystemTime.Freeze(currentDate);
+
+            var model = new AatfDetailsViewModel() { CurrentDate = currentDate, ComplianceYear = 2019 };
+
+            model.IsValidComplianceYear.Should().BeTrue();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void AatfDetailsViewModel_FutureCYIsValid_IsValidComplianceYearShouldBeTrue()
+        {
+            var currentDate = new DateTime(2020, 2, 11);
+            SystemTime.Freeze(currentDate);
+
+            var model = new AatfDetailsViewModel() { CurrentDate = currentDate, ComplianceYear = 2021 };
+
+            model.IsValidComplianceYear.Should().BeTrue();
+
+            SystemTime.Unfreeze();
+        }
     }
 }

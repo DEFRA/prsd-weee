@@ -17,7 +17,7 @@
         {
             if (!context.ActionParameters.TryGetValue("organisationId", out var organisationIdParameter))
             {
-                throw new ArgumentException("No return ID was specified.");
+                throw new ArgumentException("No organisation ID was specified.");
             }
 
             Guid organisationId = (Guid)organisationIdParameter;
