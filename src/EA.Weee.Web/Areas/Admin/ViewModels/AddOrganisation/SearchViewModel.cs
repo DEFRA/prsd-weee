@@ -24,7 +24,7 @@ namespace EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation
                 return "a " + EntityType.Pcs.ToDisplayString();
             }
 
-            return "an " + EntityType.Pcs.ToDisplayString();
+            return "an " + EntityType.ToDisplayString();
         }
     }
 }

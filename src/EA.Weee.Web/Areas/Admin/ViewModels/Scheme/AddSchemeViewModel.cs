@@ -8,5 +8,7 @@
         public AddressData OrganisationAddress { get; set; }
 
         public ContactData Contact { get; set; }
+
+        public string OrganisationName { get; set; }
     }
 }

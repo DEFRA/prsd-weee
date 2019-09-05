@@ -322,15 +322,15 @@
         [ValidateOrganisationHasNoSchemeFilterAttribute]
         public async Task<ActionResult> AddScheme(Guid organisationId)
         {
-            await SetBreadcrumb(null, InternalUserActivity.CreatePcs);
+            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
             using (var client = apiClient())
             {
                 AddSchemeViewModel viewModel = new AddSchemeViewModel()
                 {
                     CompetentAuthorities = await GetCompetentAuthorities(),
-                    Status = SchemeStatus.Approved,
                     ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(organisationId)),
                     OrganisationId = organisationId,
+                    OrganisationName = (await cache.FetchOrganisationName(organisationId)),
                     IsChangeableStatus = true,
                     OrganisationAddress = new AddressData()
                 };
@@ -348,14 +348,12 @@
         {
             using (var client = apiClient())
             {
-                model.CompetentAuthorities = await GetCompetentAuthorities();
-
                 if (!ModelState.IsValid)
                 {
                     model.CompetentAuthorities = await GetCompetentAuthorities();
-                    model.StatusSelectList = new SelectList(GetStatuses(model.Status), "Key", "Value");
                     model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
-                    await SetBreadcrumb(null, InternalUserActivity.CreatePcs);
+                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
                     return View(model);
                 }
 
@@ -366,7 +364,7 @@
                     model.IbisCustomerReference,
                     model.ObligationType.Value,
                     model.CompetentAuthorityId,
-                    model.Status);
+                    SchemeStatus.Approved);
 
                 CreateOrUpdateSchemeInformationResult result = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -391,9 +389,8 @@
                         {
                             ModelState.AddModelError("ApprovalNumber", "Approval number already exists");
 
-                            await SetBreadcrumb(null, InternalUserActivity.CreatePcs);
+                            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
                             model.CompetentAuthorities = await GetCompetentAuthorities();
-                            model.StatusSelectList = new SelectList(GetStatuses(model.Status), "Key", "Value");
                             model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
                             model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                             return View(model);
@@ -409,9 +406,8 @@
 
                             ModelState.AddModelError("IbisCustomerReference", errorMessage);
 
-                            await SetBreadcrumb(null, InternalUserActivity.CreatePcs);
+                            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
                             model.CompetentAuthorities = await GetCompetentAuthorities();
-                            model.StatusSelectList = new SelectList(GetStatuses(model.Status), "Key", "Value");
                             model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
                             model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                             return View(model);
@@ -420,9 +416,8 @@
                     case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
                         ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference");
 
-                        await SetBreadcrumb(null, InternalUserActivity.CreatePcs);
+                        await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
                         model.CompetentAuthorities = await GetCompetentAuthorities();
-                        model.StatusSelectList = new SelectList(GetStatuses(model.Status), "Key", "Value");
                         model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
                         model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                         return View(model);

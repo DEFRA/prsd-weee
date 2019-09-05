@@ -10,11 +10,8 @@
         public const string ManageUsers = "Manage users";
         public const string ViewReports = "View reports";
         public const string ManagePcsCharges = "Manage PCS charges";
-        public const string CreateAatf = "Add new AATF";
-        public const string CreateAe = "Add new AE";
         public const string CreateOrganisation = "Add new organisation";
         public const string CopyAatf = "Copy AATF for new compliance year";
         public const string CopyAe = "Copy AE for new compliance year";
-        public const string CreatePcs = "Add new PCS";
     }
 }
