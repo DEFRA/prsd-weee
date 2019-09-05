@@ -365,7 +365,7 @@
         {
             CSVFileData fileData;
 
-            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId);
+            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId, false);
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
@@ -415,6 +415,45 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> AatfAePublicRegister()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new AatfAePublicRegisterViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfAePublicRegister", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfAePublicRegister(AatfAePublicRegisterViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfAePublicRegisterCsv(int complianceYear,
+            FacilityType facilityType, Guid authorityId)
+        {
+            CSVFileData fileData;
+
+            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, null, null, true);
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
         private async Task PopulateFilters(AatfSentOnDataViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
@@ -473,6 +512,12 @@
         private async Task PopulateFilters(PcsAatfDataDifferenceViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
+        }
+        private async Task PopulateFilters(AatfAePublicRegisterViewModel model)
+        {
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
         }
 
         private async Task<List<int>> FetchComplianceYearsForAatfReturns()

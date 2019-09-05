@@ -29,7 +29,7 @@
         public Guid? PanAreaId { get; set; }
         public IEnumerable<SelectListItem> PanAreaList { get; set; }
 
-        [Display(Name = "EA area")]
+        [Display(Name = "EA Area")]
         public Guid? LocalAreaId { get; set; }
 
         public IEnumerable<SelectListItem> LocalAreaList { get; set; }
