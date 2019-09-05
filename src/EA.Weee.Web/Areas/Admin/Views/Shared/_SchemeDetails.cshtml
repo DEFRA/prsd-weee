@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModelBase
 
 @if (Model.IsChangeableStatus)
 {
@@ -31,18 +31,3 @@
         @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
     </div>
 }
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Status)">
-    @Html.Gds().LabelFor(m => m.Status)
-    @Html.Gds().ValidationMessageFor(m => m.Status)
-    @if (!Model.IsChangeableStatus)
-    {
-        <select class="form-control govuk-select govuk-!-width-one-half" disabled="disabled">
-            <option>@Model.Status</option>
-        </select>
-        @Html.HiddenFor(m => m.Status)
-    }
-    else
-    {
-        @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList, string.Empty, new { @class = "govuk-!-width-one-half" })
-    }
-</div>

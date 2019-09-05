@@ -4,7 +4,7 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.AddSchemeViewModel
 @{
     ViewBag.Title = "Add PCS";
 }
@@ -24,8 +24,29 @@
     </div>
 
     @Html.Gds().ValidationSummary()
+    @Html.HiddenFor(m => m.Status)
 
     @Html.Partial("_SchemeDetails")
+
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
+        @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
+        @Html.Gds().LabelFor(m => m.Contact.FirstName)
+        @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.FirstName })
+    </div>
+
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
+        @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
+        @Html.Gds().LabelFor(m => m.Contact.LastName)
+        @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.LastName })
+    </div>
+
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
+        @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
+        @Html.Gds().LabelFor(m => m.Contact.Position)
+        @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @class = "govuk-!-width-one-half", @maxlength = CommonMaxFieldLengths.Position })
+    </div>
+
+    @Html.EditorFor(m => m.OrganisationAddress, new { htmlAttributes = new { @class = "govuk-!-width-one-half" } })
 
     if (Model.IsChangeableStatus)
     {

@@ -177,7 +177,7 @@
             Assert.IsType<ViewResult>(result);
             var model = ((ViewResult)result).Model;
 
-            Assert.IsType<SchemeViewModel>(model);
+            Assert.IsType<SchemeViewModelBase>(model);
         }
 
         [Fact]
@@ -207,7 +207,7 @@
                 });
 
             var result = await SchemeController().EditScheme(Guid.NewGuid());
-            var model = (SchemeViewModel)((ViewResult)result).Model;
+            var model = (SchemeViewModelBase)((ViewResult)result).Model;
 
             Assert.Equal(false, model.IsChangeableStatus);
         }
@@ -223,7 +223,7 @@
                 });
 
             var result = await SchemeController().EditScheme(Guid.NewGuid());
-            var model = (SchemeViewModel)((ViewResult)result).Model;
+            var model = (SchemeViewModelBase)((ViewResult)result).Model;
 
             var statuses = model.StatusSelectList.ToList();
 
@@ -244,7 +244,7 @@
                 });
 
             var result = await SchemeController().EditScheme(Guid.NewGuid());
-            var model = (SchemeViewModel)((ViewResult)result).Model;
+            var model = (SchemeViewModelBase)((ViewResult)result).Model;
 
             var statuses = model.StatusSelectList.ToList();
 
@@ -283,7 +283,7 @@
                    SchemeStatus = status
                });
 
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = status,
             });
@@ -291,7 +291,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
                .MustHaveHappened(Repeated.Exactly.Once);
 
-            var model = ((ViewResult)result).Model as SchemeViewModel;
+            var model = ((ViewResult)result).Model as SchemeViewModelBase;
 
             Assert.NotNull(model);
 
@@ -317,7 +317,7 @@
                    SchemeStatus = status
                });
 
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = status,
             });
@@ -325,7 +325,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
                .MustHaveHappened(Repeated.Exactly.Once);
 
-            var model = ((ViewResult)result).Model as SchemeViewModel;
+            var model = ((ViewResult)result).Model as SchemeViewModelBase;
 
             Assert.NotNull(model);
 
@@ -342,7 +342,7 @@
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = SchemeStatus.Rejected
             });
@@ -360,7 +360,7 @@
         {
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = SchemeStatus.Rejected,
             });
@@ -390,7 +390,7 @@
             var controller = SchemeController();
 
             // Act
-            var model = new SchemeViewModel
+            var model = new SchemeViewModelBase
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
@@ -427,7 +427,7 @@
             var controller = SchemeController();
 
             // Act
-            var model = new SchemeViewModel
+            var model = new SchemeViewModelBase
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
@@ -470,7 +470,7 @@
             var controller = SchemeController();
 
             // Act
-            var model = new SchemeViewModel
+            var model = new SchemeViewModelBase
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
@@ -504,7 +504,7 @@
             Assert.IsType<ViewResult>(result);
             var model = ((ViewResult)result).Model;
 
-            Assert.IsType<SchemeViewModel>(model);
+            Assert.IsType<AddSchemeViewModel>(model);
         }
 
         [Fact]
@@ -515,13 +515,13 @@
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             Guid organisationId = Guid.NewGuid();
 
-            ActionResult result = await controller.AddScheme(new SchemeViewModel
+            ActionResult result = await controller.AddScheme(new AddSchemeViewModel
             {
                 Status = status,
                 OrganisationId = organisationId
             });
 
-            SchemeViewModel model = ((ViewResult)result).Model as SchemeViewModel;
+            AddSchemeViewModel model = ((ViewResult)result).Model as AddSchemeViewModel;
 
             Assert.NotNull(model);
 
@@ -547,7 +547,7 @@
             SchemeController controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            AddSchemeViewModel model = new AddSchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved
@@ -568,6 +568,12 @@
         public async Task PostAddScheme_WithApiReturningApprovalNumberUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
             CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
             {
                 Result = CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
@@ -578,12 +584,15 @@
             SchemeController controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            AddSchemeViewModel model = new AddSchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
-                OrganisationId = A.Dummy<Guid>()
+                OrganisationId = A.Dummy<Guid>(),
+                OrganisationAddress = A.Dummy<AddressData>()
             };
+
+            model.OrganisationAddress.Countries = countries;
 
             ActionResult result = await controller.AddScheme(model);
 
@@ -593,13 +602,22 @@
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
             Assert.Equal(1, controller.ModelState["ApprovalNumber"].Errors.Count);
-            Assert.Equal("Approval number already exists.", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
+            Assert.Equal("Approval number already exists", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async Task PostAddScheme_WithApiReturningIbisCustomerReferenceUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
             CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
             {
                 Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
@@ -616,12 +634,15 @@
             SchemeController controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            AddSchemeViewModel model = new AddSchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
-                OrganisationId = A.Dummy<Guid>()
+                OrganisationId = A.Dummy<Guid>(),
+                OrganisationAddress = A.Dummy<AddressData>()
             };
+
+            model.OrganisationAddress.Countries = countries;
 
             ActionResult result = await controller.AddScheme(model);
 
@@ -632,14 +653,23 @@
 
             Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
             Assert.Equal(
-                "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH).",
+                "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH)",
                 controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async Task PostAddScheme_WithApiReturningIbisCustomerReferenceMandatoryForEAFailure_ReturnsViewWithModelError()
         {
             // Arrange
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
             CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
             {
                 Result = CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure,
@@ -650,12 +680,15 @@
             SchemeController controller = SchemeController();
 
             // Act
-            SchemeViewModel model = new SchemeViewModel
+            AddSchemeViewModel model = new AddSchemeViewModel
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
-                OrganisationId = A.Dummy<Guid>()
+                OrganisationId = A.Dummy<Guid>(),
+                OrganisationAddress = A.Dummy<AddressData>()
             };
+
+            model.OrganisationAddress.Countries = countries;
 
             ActionResult result = await controller.AddScheme(model);
 
@@ -666,7 +699,63 @@
 
             Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
             Assert.Equal(
-                "Enter a customer billing reference.", controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
+                "Enter a customer billing reference", controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+              .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetAddScheme__BreadcrumbShouldBeSet()
+        {
+            var schemeId = Guid.NewGuid();
+    
+            var result = await controller.AddScheme(schemeId);
+
+            breadcrumbService.InternalActivity.Should().Be("Add new PCS");
+        }
+
+        [Theory]
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
+        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
+        public async void PostAddScheme__BreadcrumbShouldBeSet(CreateOrUpdateSchemeInformationResult.ResultType resultType)
+        {
+            // Arrange
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
+            {
+                Result = resultType,
+                IbisCustomerReferenceUniquenessFailure = new CreateOrUpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
+                {
+                    IbisCustomerReference = "WEE1234567",
+                    OtherSchemeName = "Big Waste Co.",
+                    OtherSchemeApprovalNumber = "WEE/AB1234CD/SCH"
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateScheme>._)).Returns(apiResult);
+
+            SchemeController controller = SchemeController();
+
+            // Act
+            AddSchemeViewModel model = new AddSchemeViewModel
+            {
+                ObligationType = ObligationType.Both,
+                Status = SchemeStatus.Approved,
+                OrganisationId = A.Dummy<Guid>(),
+                OrganisationAddress = A.Dummy<AddressData>()
+            };
+
+            model.OrganisationAddress.Countries = countries;
+
+            ActionResult result = await controller.AddScheme(model);
+
+            breadcrumbService.InternalActivity.Should().Be("Add new PCS");
         }
 
         [Fact]
@@ -718,7 +807,7 @@
         {
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = SchemeStatus.Withdrawn,
             });
@@ -1015,7 +1104,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(scheme);
             A.CallTo(() => weeeCache.FetchSchemeName(schemeId)).Returns(schemeName);
 
-            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            var result = await controller.EditScheme(schemeId, new SchemeViewModelBase
             {
                 Status = SchemeStatus.Pending
             });
