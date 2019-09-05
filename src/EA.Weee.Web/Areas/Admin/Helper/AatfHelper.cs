@@ -29,19 +29,26 @@
             return data;
         }
 
-        public static List<int> FetchCurrentComplianceYears(DateTime systemTime)
+        public static List<int> FetchCurrentComplianceYears(DateTime systemDateTime, bool forLinks = false)
         {
-            var currentYear = systemTime.Year;
+            var currentYear = systemDateTime.Year;
 
             var list = Enumerable.Range(currentYear, 2).ToList();
 
-            //Until end of Jan show previous year
-            DateTime endOfMonth = new DateTime(currentYear, 1,
-                                   DateTime.DaysInMonth(currentYear, 1));
-
-            if (systemTime <= endOfMonth)
+            if (forLinks)
             {
-                list.Add(systemTime.AddYears(-1).Year);
+                list.Add(systemDateTime.AddYears(-1).Year);
+            }
+            else
+            {
+                //Until end of Jan show previous year
+                DateTime endOfMonth = new DateTime(currentYear, 1,
+                                        DateTime.DaysInMonth(currentYear, 1));
+
+                if (systemDateTime <= endOfMonth)
+                {
+                    list.Add(systemDateTime.AddYears(-1).Year);
+                }
             }
 
             return list.OrderByDescending(x => x).ToList();
