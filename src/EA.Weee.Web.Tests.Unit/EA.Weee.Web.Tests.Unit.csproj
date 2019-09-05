@@ -213,6 +213,7 @@
     <Compile Include="Areas\AatfReturn\Controller\ReceivedPcsListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToUserFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
+    <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ViewAatfContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />

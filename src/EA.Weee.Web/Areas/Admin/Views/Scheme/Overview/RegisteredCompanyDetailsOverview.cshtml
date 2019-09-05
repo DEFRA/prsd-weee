@@ -51,6 +51,8 @@
                     <th class="govuk-table__header" scope="col">Email address</th>
                     <td class="govuk-table__cell">@Model.Address.Address.Email</td>
                 </tr>
+
+                @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
             </tbody>
         </table>
         @if (Model.CanEditOrganisation)

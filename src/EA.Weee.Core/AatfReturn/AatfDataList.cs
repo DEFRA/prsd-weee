@@ -24,6 +24,8 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
+        public string NameWithComplianceYear => $"{Name} ({ComplianceYear})";
+
         public Guid AatfId { get; set; }
 
         public DateTime? ApprovalDate { get; set; }
