@@ -136,6 +136,8 @@
         [HttpGet]
         public ActionResult OrgAlreadyHasScheme(string searchTerm)
         {
+            SetBreadcrumb(InternalUserActivity.ManageScheme);
+
             OrgAlreadyHasSchemeViewModel model = new OrgAlreadyHasSchemeViewModel()
             {
                 SearchTerm = searchTerm
@@ -328,10 +330,10 @@
         {
             if (entityType == EntityType.Pcs)
             {
-                return RedirectToAction("AddScheme", "Scheme", new { organisationId = organisationId});
+                return RedirectToAction("AddScheme", "Scheme", new {organisationId});
             }
 
-            return RedirectToAction("Add", "AddAatf", new { organisationId = organisationId, FacilityType = entityType });
+            return RedirectToAction("Add", "AddAatf", new { organisationId, FacilityType = entityType });
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -347,13 +349,13 @@
             switch (type)
             {
                 case EntityType.Aatf:
-                    SetBreadcrumb(InternalUserActivity.CreateAatf);
+                    SetBreadcrumb(InternalUserActivity.ManageAatfs);
                     break;
                 case EntityType.Ae:
-                    SetBreadcrumb(InternalUserActivity.CreateAe);
+                    SetBreadcrumb(InternalUserActivity.ManageAes);
                     break;
                 case EntityType.Pcs:
-                    SetBreadcrumb(InternalUserActivity.CreatePcs);
+                    SetBreadcrumb(InternalUserActivity.ManageScheme);
                     break;
                 default:
                     break;
