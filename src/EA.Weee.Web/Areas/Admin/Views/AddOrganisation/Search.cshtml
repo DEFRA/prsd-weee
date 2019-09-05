@@ -5,12 +5,13 @@
 @using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.SearchViewModel
 @{
-    ViewBag.Title = "Add " + Model.EntityType.ToDisplayString();
+    var title = "Add " + @Model.EntityTypeFormatted() + " to an organisation";
+    ViewBag.Title = title + " - GOV.UK";
 }
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Add @Model.EntityType.ToDisplayString()</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     @using (Html.BeginForm())

@@ -4,30 +4,26 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.OrgAlreadyHasSchemeViewModel
 @{
-    ViewBag.Title = "Cannot add new PCS to this organisation - GOV.UK";
+    const string title = "This organisation already operates a PCS, it's not possible to add another PCS to the same organisation";
+    ViewBag.Title = title + " - GOV.UK";
 }
+<header class="hgroup">
+    <div>
+        <h1 class="govuk-heading-l">@title</h1>
+    </div>
+</header>
 
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
 
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">Add new PCS</h1>
-        </div>
-    </header>
+    <p>
+        <a class="govuk-button" href="@(Url.UrlFor<AddOrganisationController>(u => u.SearchResults(Model.SearchTerm, EntityType.Pcs)))">Return to search results</a>
+    </p>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-
-        <div class="govuk-form-group">
-            <p>This organisation already operates a PCS, it's not possible to add another PCS to the same organisation.</p>
-        </div>
-
-        <p>
-            <a class="govuk-button" href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Continue</a>
-        </p>
-        <p>
-            <a href="@(Url.UrlFor<AddOrganisationController>(u => u.SearchResults(Model.SearchTerm, EntityType.Pcs)))">Back</a>
-        </p>
-    }
+    <p>
+        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
+    </p>
+}
 

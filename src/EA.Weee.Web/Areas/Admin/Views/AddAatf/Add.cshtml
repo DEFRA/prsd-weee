@@ -5,11 +5,12 @@
 @using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.AddFacilityViewModelBase
 @{
-    ViewBag.Title = "Enter " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
+    var title = "Add an " + @Model.FacilityType.ToDisplayString() + " to an organisation";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">Add an @Model.FacilityType.ToDisplayString() to an organisation</h1>
+    <h1 class="govuk-heading-l">@title</h1>
 
     <div>
         <p>
@@ -45,7 +46,7 @@
 
         <div class="govuk-!-padding-bottom-6"></div>
         <button type="submit" name="save" class="govuk-button" id="site-details">
-            Create @Model.FacilityType.ToDisplayString()
+            Add @Model.FacilityType.ToDisplayString()
         </button>
         <div class="govuk-!-padding-bottom-6"></div>
         <p>

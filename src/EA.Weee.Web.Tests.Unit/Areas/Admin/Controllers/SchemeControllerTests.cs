@@ -519,27 +519,58 @@
         [Fact]
         public async void PostAddScheme_ModelWithError_ReturnModel()
         {
-            SchemeStatus status = SchemeStatus.Pending;
-            SchemeController controller = SchemeController();
+            var status = SchemeStatus.Pending;
+            var controller = SchemeController();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
-            Guid organisationId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            ActionResult result = await controller.AddScheme(new AddSchemeViewModel
+            var competentAuthority = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var complianceYears = fixture.CreateMany<int>().ToList();
+            var countryData = fixture.CreateMany<CountryData>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthority);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>.That.Matches(g => g.PcsId == organisationId))).Returns(complianceYears);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false))).Returns(countryData);
+
+            var result = await controller.AddScheme(new AddSchemeViewModel
             {
                 Status = status,
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                OrganisationAddress = new AddressData()
             });
 
-            AddSchemeViewModel model = ((ViewResult)result).Model as AddSchemeViewModel;
-
-            Assert.NotNull(model);
-
-            Assert.True(model.StatusSelectList.Count() == 3);
-            Assert.Contains(model.StatusSelectList, item => (item.Text == SchemeStatus.Approved.ToString()
-            || item.Text == SchemeStatus.Rejected.ToString()
-            || item.Text == SchemeStatus.Pending.ToString()));
+            var model = ((ViewResult)result).Model as AddSchemeViewModel;
+            model.OrganisationAddress.Countries.Should().BeSameAs(countryData);
+            model.ComplianceYears.Should().BeSameAs(complianceYears);
+            model.CompetentAuthorities.Should().BeSameAs(competentAuthority);
 
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact] public async Task PostAddScheme_WithValidVewModel_ApuShouldBeCalledWithValidRequest()
+        {
+            var controller = SchemeController();
+
+            var model = new AddSchemeViewModel
+            {
+                OrganisationId = fixture.Create<Guid>(),
+                SchemeName = fixture.Create<string>(),
+                ApprovalNumber = fixture.Create<string>(),
+                IbisCustomerReference = fixture.Create<string>(),
+                ObligationType = fixture.Create<ObligationType>(),
+                CompetentAuthorityId = fixture.Create<Guid>()
+            };
+
+            await controller.AddScheme(model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateScheme>.That.Matches(c => 
+                c.OrganisationId == model.OrganisationId &&
+                c.ApprovalNumber == model.ApprovalNumber &&
+                c.CompetentAuthorityId == model.CompetentAuthorityId &&
+                c.IbisCustomerReference == model.IbisCustomerReference &&
+                c.ObligationType == model.ObligationType &&
+                c.SchemeName == model.SchemeName &&
+                c.Status == SchemeStatus.Approved))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -715,13 +746,35 @@
         }
 
         [Fact]
-        public async void GetAddScheme__BreadcrumbShouldBeSet()
+        public async void GetAddScheme_BreadcrumbShouldBeSet()
         {
-            var schemeId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
     
-            var result = await controller.AddScheme(schemeId);
+            var result = await controller.AddScheme(organisationId);
 
-            breadcrumbService.InternalActivity.Should().Be("Add new PCS");
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
+        }
+
+        [Fact]
+        public async void GetAddScheme_GivenOrganisation_ViewModelPropertiesShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var competentAuthority = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var complianceYears = fixture.CreateMany<int>().ToList();
+            var organisationName = fixture.Create<string>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthority);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>.That.Matches(g => g.PcsId == organisationId))).Returns(complianceYears);
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            var result = await controller.AddScheme(organisationId) as ViewResult;
+
+            var model = result.Model as AddSchemeViewModel;
+            model.CompetentAuthorities.Should().BeSameAs(competentAuthority);
+            model.ComplianceYears.Should().BeSameAs(complianceYears);
+            model.OrganisationId.Should().Be(organisationId);
+            model.OrganisationName.Should().Be(organisationName);
+            model.IsChangeableStatus = true;
+            model.OrganisationAddress.Should().NotBeNull();
         }
 
         [Theory]
@@ -764,7 +817,7 @@
 
             ActionResult result = await controller.AddScheme(model);
 
-            breadcrumbService.InternalActivity.Should().Be("Add new PCS");
+            breadcrumbService.InternalActivity.Should().Be("Manage PCSs");
         }
 
         [Fact]

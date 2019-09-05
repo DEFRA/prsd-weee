@@ -172,10 +172,10 @@ namespace EA.Weee.Web.Areas.Admin.Controllers
             switch (type)
             {
                 case FacilityType.Aatf:
-                    SetBreadcrumb(InternalUserActivity.CreateAatf);
+                    SetBreadcrumb(InternalUserActivity.ManageAatfs);
                     break;
                 case FacilityType.Ae:
-                    SetBreadcrumb(InternalUserActivity.CreateAe);
+                    SetBreadcrumb(InternalUserActivity.ManageAes);
                     break;
                 default:
                     break;
