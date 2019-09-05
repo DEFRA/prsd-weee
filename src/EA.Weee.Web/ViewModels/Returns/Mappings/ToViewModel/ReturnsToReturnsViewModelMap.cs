@@ -6,16 +6,18 @@
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using WebGrease.Css.Extensions;
+    using Weee.Requests.Organisations;
 
-    public class ReturnsToReturnsViewModelMap : IMap<ReturnsData, ReturnsViewModel>
+    public class ReturnsToReturnsViewModelMap : IMap<ReturnToReturnsViewModelTransfer, ReturnsViewModel>
     {
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
 
-        private readonly string notExpectedError = "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
+        private const string NotExpectedError = "You aren’t expected to submit a return yet. If you think this is wrong, contact your environmental regulator.";
 
         public ReturnsToReturnsViewModelMap(IReturnsOrdering ordering, IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap)
         {
@@ -23,12 +25,63 @@
             this.returnItemViewModelMap = returnItemViewModelMap;
         }
 
-        public ReturnsViewModel Map(ReturnsData source)
+        public ReturnsViewModel Map(ReturnToReturnsViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
+            Guard.ArgumentNotNull(() => source.ReturnsData, source.ReturnsData);
 
             var model = new ReturnsViewModel();
 
+            OrderReturns(source.ReturnsData, model);
+
+            SetEditableReturns(model);
+
+            SetMessages(source.ReturnsData, model);
+
+            FilterReturnsBasedOnParameters(source, model);
+
+            return model;
+        }
+
+        private static void FilterReturnsBasedOnParameters(ReturnToReturnsViewModelTransfer source, ReturnsViewModel model)
+        {
+            if (source.ReturnsData.ReturnsList.Any(x => x.Quarter != null))
+            {
+                var complianceYearList = source.ReturnsData.ReturnsList.Select(x => x.Quarter.Year).OrderByDescending(x => x).Distinct().ToList();
+                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
+
+                model.ComplianceYearList = complianceYearList;
+
+                if (source.SelectedComplianceYear.HasValue)
+                {
+                    model.SelectedComplianceYear = source.SelectedComplianceYear.Value;
+                    model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == source.SelectedComplianceYear.Value).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
+                    model.Returns = model.Returns.Where(p => p.ReturnViewModel.Year == source.SelectedComplianceYear.ToString()).ToList();
+                }
+                else
+                {
+                    model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == latestComplianceYear).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
+                    model.SelectedComplianceYear = latestComplianceYear;
+                }
+
+                if (source.SelectedQuarter != null)
+                {
+                    model.SelectedQuarter = source.SelectedQuarter;
+
+                    if (model.SelectedQuarter != "All")
+                    {
+                        model.Returns = model.Returns.Where(p => p.ReturnViewModel.Quarter == model.SelectedQuarter).ToList();
+                    }
+                }
+                else
+                {
+                    model.SelectedQuarter = "All";
+                }
+            }
+        }
+
+        private void OrderReturns(ReturnsData source, ReturnsViewModel model)
+        {
             var orderedItems = ordering.Order(source.ReturnsList);
             foreach (var @return in orderedItems)
             {
@@ -36,7 +89,10 @@
 
                 model.Returns.Add(returnViewModelItems);
             }
+        }
 
+        private static void SetEditableReturns(ReturnsViewModel model)
+        {
             var groupedEdits = model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit)
                 .OrderByDescending(r => Convert.ToDateTime(r.ReturnViewModel.CreatedDate))
                 .GroupBy(r => new { r.ReturnViewModel.Year, r.ReturnViewModel.Quarter });
@@ -51,14 +107,17 @@
                     r.ReturnViewModel.Year == year &&
                     r.ReturnsListDisplayOptions.DisplayContinue))
                 {
-                    groupedEdit.ForEach(r => r.ReturnsListDisplayOptions.DisplayEdit = false);
+                    groupedEdit.ForEach<ReturnsItemViewModel>(r => r.ReturnsListDisplayOptions.DisplayEdit = false);
                 }
                 else
                 {
-                    groupedEdit.Skip(1).ForEach(r => r.ReturnsListDisplayOptions.DisplayEdit = false);
+                    groupedEdit.Skip<ReturnsItemViewModel>(1).ForEach(r => r.ReturnsListDisplayOptions.DisplayEdit = false);
                 }
             }
+        }
 
+        private void SetMessages(ReturnsData source, ReturnsViewModel model)
+        {
             if (source.ReturnQuarter != null)
             {
                 model.DisplayCreateReturn = true;
@@ -69,17 +128,8 @@
             {
                 model.ErrorMessageForNotAllowingCreateReturn = WorkOutErrorMessageForNotAllowingCreateReturn(source);
 
-                if (model.ErrorMessageForNotAllowingCreateReturn == this.notExpectedError)
-                {
-                    model.NotStartedAnySubmissionsYet = false;
-                }
-                else
-                {
-                    model.NotStartedAnySubmissionsYet = true;
-                }
+                model.NotStartedAnySubmissionsYet = model.ErrorMessageForNotAllowingCreateReturn != NotExpectedError;
             }
-
-            return model;
         }
 
         private string WorkOutErrorMessageForNotAllowingCreateReturn(ReturnsData source)
@@ -99,7 +149,7 @@
                         $"Returns have been started or submitted for all open quarters. You can start submitting your {source.CurrentDate.Year} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
                 }
             }
-            return notExpectedError;
+            return NotExpectedError;
         }
 
         private QuarterType WorkOutNextQuarter(List<Quarter> openQuarters)
