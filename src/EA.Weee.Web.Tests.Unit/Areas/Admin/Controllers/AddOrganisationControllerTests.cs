@@ -23,6 +23,7 @@
     using Web.Areas.Admin.ViewModels.AddOrganisation;
     using Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using Web.Areas.Admin.ViewModels.AddOrganisation.Type;
+    using Web.Areas.Admin.ViewModels.Home;
     using Weee.Requests.Admin;
     using Xunit;
     using AddressData = Core.Shared.AddressData;
@@ -415,9 +416,9 @@
         }
 
         [Theory]
-        [InlineData(EntityType.Aatf, "Add new AATF")]
-        [InlineData(EntityType.Ae, "Add new AE")]
-        [InlineData(EntityType.Pcs, "Add new PCS")]
+        [InlineData(EntityType.Aatf, "Manage AATFs")]
+        [InlineData(EntityType.Ae, "Manage AEs")]
+        [InlineData(EntityType.Pcs, "Manage PCSs")]
         public void SearchGet_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             controller.Search(entityType);
@@ -426,9 +427,9 @@
         }
 
         [Theory]
-        [InlineData(EntityType.Aatf, "Add new AATF")]
-        [InlineData(EntityType.Ae, "Add new AE")]
-        [InlineData(EntityType.Pcs, "Add new PCS")]
+        [InlineData(EntityType.Aatf, "Manage AATFs")]
+        [InlineData(EntityType.Ae, "Manage AEs")]
+        [InlineData(EntityType.Pcs, "Manage PCSs")]
         public void SearchPost_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             var viewModel = fixture.Build<SearchViewModel>().With(m => m.EntityType, entityType).Create();
@@ -438,9 +439,9 @@
         }
 
         [Theory]
-        [InlineData(EntityType.Aatf, "Add new AATF")]
-        [InlineData(EntityType.Ae, "Add new AE")]
-        [InlineData(EntityType.Pcs, "Add new PCS")]
+        [InlineData(EntityType.Aatf, "Manage AATFs")]
+        [InlineData(EntityType.Ae, "Manage AEs")]
+        [InlineData(EntityType.Pcs, "Manage PCSs")]
         public async Task SearchResultsGet_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             await controller.SearchResults("test", entityType);
@@ -449,9 +450,9 @@
         }
 
         [Theory]
-        [InlineData(EntityType.Aatf, "Add new AATF")]
-        [InlineData(EntityType.Ae, "Add new AE")]
-        [InlineData(EntityType.Pcs, "Add new PCS")]
+        [InlineData(EntityType.Aatf, "Manage AATFs")]
+        [InlineData(EntityType.Ae, "Manage AEs")]
+        [InlineData(EntityType.Pcs, "Manage PCSs")]
         public async Task SearchResultsPost_Always_SetsInternalBreadcrumb(EntityType entityType, string expectedBreadcrumb)
         {
             var viewModel = fixture.Build<SearchResultsViewModel>().With(m => m.EntityType, entityType).Create();
@@ -770,6 +771,33 @@
             result.RouteValues["action"].Should().Be("OrgAlreadyHasScheme");
             result.RouteValues["controller"].Should().Be("AddOrganisation");
             Assert.Equal(searchTerm, result.RouteValues["searchTerm"]);
+        }
+
+        [Fact]
+        public void OrgAlreadyHasSchemeGet_BreadCrumbShouldBeSet()
+        {
+            controller.OrgAlreadyHasScheme(fixture.Create<string>());
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ManageScheme);
+        }
+
+        [Fact]
+        public void OrgAlreadyHasSchemeGet_ViewModelShouldBeReturned()
+        {
+            var search = fixture.Create<string>();
+
+            var result = controller.OrgAlreadyHasScheme(search) as ViewResult;
+
+            var model = result.Model as OrgAlreadyHasSchemeViewModel;
+            model.SearchTerm.Should().Be(search);
+        }
+
+        [Fact]
+        public void OrgAlreadyHasSchemeGet_DefaultViewShouldBeReturned()
+        {
+            var result = controller.OrgAlreadyHasScheme(fixture.Create<string>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
         }
 
         private void SetupControllerAjaxRequest()

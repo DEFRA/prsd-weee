@@ -4,7 +4,7 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModelBase
 @{
     ViewBag.Title = "Edit PCS";
 }
@@ -27,6 +27,22 @@
     @Html.Gds().ValidationSummary()
 
     @Html.Partial("_SchemeDetails")
+
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Status)">
+        @Html.Gds().LabelFor(m => m.Status)
+        @Html.Gds().ValidationMessageFor(m => m.Status)
+        @if (!Model.IsChangeableStatus)
+        {
+            <select class="form-control govuk-select govuk-!-width-one-half" disabled="disabled">
+                <option>@Model.Status</option>
+            </select>
+            @Html.HiddenFor(m => m.Status)
+        }
+        else
+        {
+            @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList, string.Empty, new { @class = "govuk-!-width-one-half" })
+        }
+    </div>
 
     if (Model.IsChangeableStatus)
     {
