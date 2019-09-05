@@ -374,18 +374,22 @@
             var returnsList = new List<ReturnData>()
             {
                 new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1) },
-                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q2) },
-                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q3) }
+                new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q2) },
+                new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q3) },
+                new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q3) },
+                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q3) },
+                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q4) }
             };
 
             var returnsData = GetDefaultReturnData(returnsList);
 
             var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData, SelectedComplianceYear = 2019 });
 
-            result.QuarterList.Count.Should().Be(3);
+            result.QuarterList.Count.Should().Be(4);
             result.QuarterList.ElementAt(0).Should().Be("All");
-            result.QuarterList.ElementAt(1).Should().Be("Q2");
-            result.QuarterList.ElementAt(2).Should().Be("Q3");
+            result.QuarterList.ElementAt(1).Should().Be("Q1");
+            result.QuarterList.ElementAt(2).Should().Be("Q2");
+            result.QuarterList.ElementAt(3).Should().Be("Q3");
             result.SelectedQuarter.Should().Be("All");
         }
 
@@ -463,6 +467,26 @@
             result.ComplianceYearList.ElementAt(1).Should().Be(2020);
             result.ComplianceYearList.ElementAt(2).Should().Be(2019);
             result.SelectedComplianceYear.Should().Be(2021);
+        }
+
+        [Fact]
+        public void Map_GivenSourceReturnDataWithNullSelectedComplianceYear_QuarterListYearShouldBeBasedOffLatestComplianceYear()
+        {
+            var returnsList = new List<ReturnData>()
+            {
+                new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1) },
+                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q2) },
+                new ReturnData() { Quarter = new Quarter(2021, QuarterType.Q3) }
+            };
+
+            var returnsData = GetDefaultReturnData(returnsList);
+
+            var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
+
+            result.QuarterList.Count.Should().Be(2);
+            result.QuarterList.ElementAt(0).Should().Be("All");
+            result.QuarterList.ElementAt(1).Should().Be("Q3");
+            result.SelectedQuarter.Should().Be("All");
         }
 
         [Fact]

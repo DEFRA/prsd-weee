@@ -50,21 +50,17 @@
                 var complianceYearList = source.ReturnsData.ReturnsList.Select(x => x.Quarter.Year).OrderByDescending(x => x).Distinct().ToList();
                 var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
 
-                //Need to do the below 2 lines when compliance year drop down changes, so that the quarter dropdown dynamically changes
-                var quartersForLatestComplianceYear = source.ReturnsData.ReturnsList.Select(x => x.Quarter).ToList();
-                var filteredQuarterList = quartersForLatestComplianceYear.Where(x => x.Year == latestComplianceYear).Select(a => a.Q.ToString()).Distinct()
-                    .ToList();
-
-                model.QuarterList = filteredQuarterList;
                 model.ComplianceYearList = complianceYearList;
 
-                if (source.SelectedComplianceYear != null)
+                if (source.SelectedComplianceYear.HasValue)
                 {
-                    model.SelectedComplianceYear = source.SelectedComplianceYear.GetValueOrDefault();
+                    model.SelectedComplianceYear = source.SelectedComplianceYear.Value;
+                    model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == source.SelectedComplianceYear.Value).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
                     model.Returns = model.Returns.Where(p => p.ReturnViewModel.Year == source.SelectedComplianceYear.ToString()).ToList();
                 }
                 else
                 {
+                    model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == latestComplianceYear).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
                     model.SelectedComplianceYear = latestComplianceYear;
                 }
 
