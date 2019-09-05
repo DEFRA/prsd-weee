@@ -44,9 +44,9 @@
             Assert.True(isValid);
         }
 
-        private SchemeViewModel ValidSchemeViewModel()
+        private SchemeViewModelBase ValidSchemeViewModel()
         {
-            return new SchemeViewModel
+            return new SchemeViewModelBase
             {
                 ApprovalNumber = "WEE/AA0123AA/SCH",
                 CompetentAuthorities = new List<UKCompetentAuthorityData>(),

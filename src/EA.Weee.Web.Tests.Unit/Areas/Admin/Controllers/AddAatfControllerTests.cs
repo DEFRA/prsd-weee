@@ -335,8 +335,8 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf, "Add new AATF")]
-        [InlineData(FacilityType.Ae, "Add new AE")]
+        [InlineData(FacilityType.Aatf, "Manage AATFs")]
+        [InlineData(FacilityType.Ae, "Manage AEs")]
         public async Task AddGet_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
@@ -347,8 +347,8 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf, "Add new AATF")]
-        [InlineData(FacilityType.Ae, "Add new AE")]
+        [InlineData(FacilityType.Aatf, "Manage AATFs")]
+        [InlineData(FacilityType.Ae, "Manage AEs")]
         public async Task AddAatfPost_Always_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
             AddAatfViewModel viewModel = new AddAatfViewModel()
