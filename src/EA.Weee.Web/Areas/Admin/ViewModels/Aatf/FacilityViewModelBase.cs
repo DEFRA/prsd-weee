@@ -34,14 +34,14 @@
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
-        [Display(Name = "WROS pan area team")]
+        [Display(Name = "WROS Pan Area Team")]
         public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
 
-        [Display(Name = "EA area")]
+        [Display(Name = "EA Area")]
         public Guid? LocalAreaId { get; set; }
 
         [Required]
