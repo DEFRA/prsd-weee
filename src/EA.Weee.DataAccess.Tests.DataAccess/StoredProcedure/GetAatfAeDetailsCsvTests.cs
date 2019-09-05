@@ -61,6 +61,25 @@
         }
 
         [Fact]
+        public async Task Execute_GivenComplianceAndFacilityTypeAndEA_ReturnsData()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                var org = OrgWithAddress(db);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, org, 2019, false, false, fixture.Create<string>());
+                var aatfs = new List<Aatf>() { aatf };
+
+                db.WeeeContext.Organisations.Add(org);
+                db.WeeeContext.Aatfs.Add(aatf);
+                await db.WeeeContext.SaveChangesAsync();
+
+                var results = await db.StoredProcedures.GetAatfAeDetailsCsvData(2019, 1, aatf.CompetentAuthority.Id, null, null);
+
+                VerifyResult(results, aatfs);
+            }
+        }
+
+        [Fact]
         public async Task Execute_GivenComplianceAndFacilityTypeOfAe_ReturnsData()
         {
             using (var db = new DatabaseWrapper())
@@ -116,7 +135,49 @@
                 aatf.OrganisationCountyRegion.Should().Be(verifyAatf.Organisation.BusinessAddress.CountyOrRegion);
                 aatf.OrganisationCountry.Should().Be(verifyAatf.Organisation.BusinessAddress.Country.Name);
                 aatf.OrganisationPostcode.Should().Be(verifyAatf.Organisation.BusinessAddress.Postcode);
+                aatf.OperatorName.Should().Be(verifyAatf.Organisation.Name);
+                aatf.OperatorTradingName.Should().Be(verifyAatf.Organisation.TradingName);
+                aatf.AatfAddress.Should().Be(GetSiteAddressString(verifyAatf.SiteAddress));
+                aatf.OperatorAddress.Should().Be(GetOrganisationAddressString(verifyAatf.Organisation.BusinessAddress));
             }
+        }
+
+        private string GetSiteAddressString(AatfAddress address)
+        {
+            var addressString = address.Address1 + ", ";
+
+            if (address.Address2 != null)
+            {
+                addressString += address.Address2 + ", ";
+            }
+
+            addressString += address.TownOrCity + ", ";
+
+            if (address.CountyOrRegion != null)
+            {
+                addressString += address.CountyOrRegion;
+            }
+
+            return addressString;
+        }
+
+        private string GetOrganisationAddressString(Domain.Organisation.Address address)
+        {
+            var addressString = address.Address1 + ", ";
+
+            if (address.Address2 != null)
+            {
+                addressString += address.Address2 + ", ";
+            }
+
+            addressString += address.TownOrCity + ", ";
+
+            if (address.CountyOrRegion != null)
+            {
+                addressString += address.CountyOrRegion;
+            }
+
+            return addressString;
         }
 
         private static Organisation OrgWithAddress(DatabaseWrapper db)
