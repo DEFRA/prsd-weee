@@ -5,7 +5,9 @@
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedSentOnValuesCopyPasteViewModel
 
 @{
-    ViewBag.Title = "Copy and Paste Obligated Sent On WEEE - GOV.UK";
+    var aatfName = Model.SiteName;
+
+    ViewBag.Title = "WEEE sent to " + aatfName + " for treatment - GOV.UK";
 }
 
     <section id="main-content">
