@@ -30,7 +30,7 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.ReturnsData, source.ReturnsData);
 
-            var model = new ReturnsViewModel();
+            var model = new ReturnsViewModel { NumberOfReturns = source.ReturnsData.ReturnsList.Count() };
 
             OrderReturns(source.ReturnsData, model);
 
