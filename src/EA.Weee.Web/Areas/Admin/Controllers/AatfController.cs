@@ -57,7 +57,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public async Task<ActionResult> Details(Guid id, string selectedTab = null)
         {
             using (var client = apiClient())
             {
@@ -82,6 +82,8 @@
                     ComplianceYearList = years,
                     CurrentDate = currentDate
                 });
+
+                viewModel.SelectedTab = selectedTab;
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
