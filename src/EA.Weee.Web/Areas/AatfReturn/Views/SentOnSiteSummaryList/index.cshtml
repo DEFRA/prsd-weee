@@ -4,7 +4,9 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnSiteSummaryListViewModel
 @{
-    ViewBag.Title = "Sent On WEEE - GOV.UK";
+    var aatfName = Model.AatfName;
+
+    ViewBag.Title = "Which other AATFs / ATFs has " + aatfName + " sent WEEE to for treatment? - GOV.UK";
 }
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Which other AATFs / ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
