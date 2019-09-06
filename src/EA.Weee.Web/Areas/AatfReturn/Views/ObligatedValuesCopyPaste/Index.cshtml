@@ -6,7 +6,17 @@
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedValuesCopyPasteViewModel
 
 @{
-    ViewBag.Title = "Copy and Paste Obligated WEEE - GOV.UK";
+    var aatfName = Model.AatfName;
+    var pcsName = Model.SchemeName;
+
+    if (Model.Type == ObligatedType.Received)
+    {
+        ViewBag.Title = "WEEE that has been received for treatment at " + aatfName + " from " + pcsName + " - GOV.UK";
+    }
+    else
+    {
+        ViewBag.Title = "WEEE that has been reused as a whole appliance - GOV.UK";
+    }
 }
 
     <section id="main-content">
