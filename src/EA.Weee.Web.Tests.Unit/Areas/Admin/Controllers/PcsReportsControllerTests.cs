@@ -27,50 +27,37 @@
     using Weee.Requests.Shared;
     using Xunit;
 
-    public class ReportsControllerTests
+    public class PcsReportsControllerTests
     {
         private readonly Fixture fixture;
-        private readonly ReportsController controller;
+        private readonly PcsReportsController controller;
         private readonly IWeeeClient client;
         private readonly BreadcrumbService breadcrumbService;
 
-        public ReportsControllerTests()
+        public PcsReportsControllerTests()
         {
             fixture = new Fixture();
             client = A.Fake<IWeeeClient>();
             breadcrumbService = A.Fake<BreadcrumbService>();
 
             A.CallTo(() => client.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
-            
-            controller = new ReportsController(() => client, breadcrumbService);
+
+            controller = new PcsReportsController(() => client, breadcrumbService);
         }
 
         [Fact]
-        public void ReportsController_ShouldInheritFromAdminController()
+        public void PcsReportsController_ShouldInheritFromAdminController()
         {
-            typeof(ReportsController).Should().BeDerivedFrom<AdminController>();
+            typeof(PcsReportsController).Should().BeDerivedFrom<AdminController>();
         }
 
-        /// <summary>
-        /// These tests ensure that the GET "Index" action prevents users who are inactive, pending or rejected
-        /// from accessing the index action by redirecting them to the "InternalUserAuthorizationRequired"
-        /// action of tyhe account controller.
-        /// </summary>
-        /// <param name="userStatus"></param>
-        /// <returns></returns>
         [Theory]
         [InlineData(UserStatus.Inactive)]
         [InlineData(UserStatus.Pending)]
         [InlineData(UserStatus.Rejected)]
         public async Task GetIndex_WhenUserIsNotActive_RedirectsToInternalUserAuthorizationRequired(UserStatus userStatus)
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
             A.CallTo(() => client.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(userStatus);
-
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
 
             // Act
             var result = await controller.Index();
@@ -91,18 +78,8 @@
         [Fact]
         public async Task GetIndex_WhenUserIsActive_RedirectsToChooseReport()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-            A.CallTo(() => client.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
-
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.Index();
 
-            // Assert
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
@@ -110,8 +87,12 @@
             Assert.Equal("Reports", redirectResult.RouteValues["controller"]);
         }
 
+        /// <summary>
+        /// This test ensures that the GET "ChooseReport" action returns the "ChooseReport" view with
+        /// a populated view model.
+        /// </summary>
         [Fact]
-        public void GetChooseReport_Always_ReturnsChooseReportTypeViewWithValidModel()
+        public void GetChooseReport_Always_ReturnsChooseReportView()
         {
             var result = controller.ChooseReport();
 
@@ -120,7 +101,7 @@
 
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
-            var viewModel = viewResult.Model as ChooseReportTypeModel;
+            var viewModel = viewResult.Model as ChooseReportViewModel;
             Assert.NotNull(viewModel);
         }
 
@@ -131,15 +112,10 @@
         [Fact]
         public void PostChooseReport_ModelIsInvalid_ReturnsChooseReportView()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             controller.ModelState.AddModelError("Key", "Any error");
 
             // Act
-            var result = controller.ChooseReport(A.Dummy<ChooseReportTypeModel>());
+            var result = controller.ChooseReport(A.Dummy<ChooseReportViewModel>());
 
             // Assert
             var viewResult = result as ViewResult;
@@ -172,21 +148,28 @@
         [InlineData(Reports.AatfAePublicRegister, "AatfAePublicRegister", "AatfReports")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
         {
-            // Arrange
-            var controller = new ReportsController(
-               () => A.Dummy<IWeeeClient>(),
-               A.Dummy<BreadcrumbService>());
-
-            // Act
-            var model = new ChooseReportTypeModel { SelectedValue = selectedValue };
+            var model = new ChooseReportViewModel { SelectedValue = selectedValue };
             var result = controller.ChooseReport(model);
 
-            // Assert
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
             Assert.Equal(expectedAction, redirectResult.RouteValues["action"]);
             Assert.Equal(expectedController, redirectResult.RouteValues["controller"]);
+        }
+
+        [Fact]
+        public void GetChooseReport_Always_ReturnsCorrectList()
+        {
+            var result = controller.ChooseReport();
+
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "choosereport");
+
+            var viewModel = viewResult.Model as ChooseReportViewModel;
+            viewModel.PossibleValues.ElementAt(8).Contains(Reports.AatfAeReturnData);
         }
 
         /// <summary>
@@ -197,16 +180,9 @@
         [Fact]
         public void PostChooseReport_WithInvalidSelectedValue_ThrowsNotSupportedException()
         {
-            // Arrange
-            var controller = new ReportsController(
-               () => A.Dummy<IWeeeClient>(),
-               A.Dummy<BreadcrumbService>());
-
-            // Act
-            var model = new ChooseReportTypeModel { SelectedValue = "SOME INVALID VALUE" };
+            var model = new ChooseReportViewModel { SelectedValue = "SOME INVALID VALUE" };
             Func<ActionResult> testCode = () => controller.ChooseReport(model);
 
-            // Assert
             Assert.Throws<NotSupportedException>(testCode);
         }
 
@@ -218,11 +194,8 @@
         [Fact]
         public async Task GetProducerDetails_Always_PopulatesFiltersAndReturnsProducerDetailsView()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
 
             var authority1 = new UKCompetentAuthorityData()
             {
@@ -230,7 +203,7 @@
                 Abbreviation = "AA1"
             };
             var authorities = new List<UKCompetentAuthorityData>() { authority1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(authorities);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(authorities);
 
             var scheme1 = new SchemeData()
             {
@@ -238,16 +211,10 @@
                 SchemeName = "Test Scheme"
             };
             var schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.ProducerDetails();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -274,15 +241,8 @@
         [Fact]
         public async Task GetProducerDetails_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.ProducerDetails();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -296,18 +256,9 @@
         [Fact]
         public async Task GetProducerDetails_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.ProducerDetails();
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -318,11 +269,8 @@
         [Fact]
         public async Task PostProducerDetails_WithInvalidViewModel_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
 
             var authority1 = new UKCompetentAuthorityData()
             {
@@ -330,7 +278,7 @@
                 Abbreviation = "AA1"
             };
             var authorities = new List<UKCompetentAuthorityData>() { authority1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(authorities);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(authorities);
 
             var scheme1 = new SchemeData()
             {
@@ -338,17 +286,11 @@
                 SchemeName = "Test Scheme"
             };
             var schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -375,18 +317,11 @@
         [Fact]
         public async Task PostProducerDetails_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -400,15 +335,8 @@
         [Fact]
         public async Task PostProducerDetails_WithViewModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -422,18 +350,9 @@
         [Fact]
         public async Task PostProducerDetails_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -445,23 +364,14 @@
         [Fact]
         public async Task GetDownloadProducerDetailsCsv_WithNoSchemeIdAndNoAuthorityId_ReturnsFileNameWithComplianceYearAndCurrentTime()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-
             var file = new CSVFileData() { FileContent = "Content" };
             A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
             var result = await controller.DownloadProducerDetailsCsv(2015, null, null, false, false);
             SystemTime.Unfreeze();
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -478,9 +388,6 @@
         [Fact]
         public async Task GetDownloadProducerDetailsCsv_WithSchemeIdAndNoAuthorityId_ReturnsFileNameWithComplianceYearSchemeApprovalNumberAndCurrentTime()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-
             var file = new CSVFileData() { FileContent = "Content" };
             A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
@@ -490,16 +397,10 @@
                 .WhenArgumentsMatch(a => a.Get<GetSchemeById>("request").SchemeId == new Guid("88DF333E-6B2B-4D72-B411-7D7024EAA5F5"))
                 .Returns(schemeData);
 
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
             var result = await controller.DownloadProducerDetailsCsv(2015, new Guid("88DF333E-6B2B-4D72-B411-7D7024EAA5F5"), null, false, false);
             SystemTime.Unfreeze();
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -516,9 +417,6 @@
         [Fact]
         public async Task GetDownloadProducerDetailsCsv_WithSchemeIdAndAuthorityId_ReturnsFileNameWithComplianceYearSchemeApprovalNumberAuthorityAbbreviationAndCurrentTime()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-
             var file = new CSVFileData() { FileContent = "Content" };
             A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
@@ -533,11 +431,6 @@
                 .WhenArgumentsMatch(a => a.Get<GetUKCompetentAuthorityById>("request").Id == new Guid("703839B3-A081-4491-92B7-FCF969067EA3"))
                 .Returns(authorityData);
 
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
             var result = await controller.DownloadProducerDetailsCsv(
                 2015,
@@ -547,7 +440,6 @@
                 false);
             SystemTime.Unfreeze();
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -563,9 +455,6 @@
         [Fact]
         public async Task GetDownloadProducerDetailsCsv_WithNoSchemeIdAndWithAnAuthorityId_ReturnsFileNameWithComplianceYearAuthorityAbbreviationAndCurrentTime()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-
             var file = new CSVFileData() { FileContent = "Content" };
             A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
@@ -575,11 +464,6 @@
                 .WhenArgumentsMatch(a => a.Get<GetUKCompetentAuthorityById>("request").Id == new Guid("703839B3-A081-4491-92B7-FCF969067EA3"))
                 .Returns(authorityData);
 
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
             var result = await controller.DownloadProducerDetailsCsv(
                 2015,
@@ -589,7 +473,6 @@
                 false);
             SystemTime.Unfreeze();
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -604,21 +487,12 @@
         [Fact]
         public async Task GetDownloadProducerDetailsCsv_Always_ReturnsFileResultWithContentTypeOfTextCsv()
         {
-            // Arrange
-            var client = A.Fake<IWeeeClient>();
-
             var file = new CSVFileData() { FileContent = "Content" };
             A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.DownloadProducerDetailsCsv(2015, null, null, false, false);
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -628,11 +502,6 @@
         [Fact]
         public async void HttpGet_UkEeeData_ShouldReturnsUkEeeDataView()
         {
-            var client = A.Fake<IWeeeClient>();
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
-
             A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
 
@@ -648,15 +517,8 @@
         [Fact]
         public async Task GetUKEeeData_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.UkEeeData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -665,10 +527,6 @@
         [Fact]
         public async void HttpPost_UkEeeData_ModelIsInvalid_ShouldRedirectViewWithError()
         {
-            var client = A.Fake<IWeeeClient>();
-            var controller = new ReportsController(
-                () => client,
-                A.Dummy<BreadcrumbService>());
             controller.ModelState.AddModelError("Key", "Any error");
 
             var result = await controller.UkEeeData(new UkEeeDataViewModel());
@@ -680,18 +538,11 @@
         [Fact]
         public async Task PostUkEeeData_ModelIsInvalid_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new UkEeeDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.UkEeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -700,17 +551,10 @@
         [Fact]
         public async Task PostUKEeeData_ValidModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new UkEeeDataViewModel();
 
-            // Act
             var result = await controller.UkEeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -719,22 +563,14 @@
         [Fact]
         public async Task GetDownloadUkEeeDataCsv_ReturnsFileResultWithContentTypeOfTextCsv()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkEeeDataCsv>._)).Returns(new CSVFileData
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetUkEeeDataCsv>._)).Returns(new CSVFileData
             {
                 FileContent = "UK EEE DATA REPORT",
                 FileName = "test.csv"
             });
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.DownloadUkEeeDataCsv(2015);
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
             Assert.Equal("text/csv", fileResult.ContentType);
@@ -749,27 +585,18 @@
         [Fact]
         public async Task GetSchemeWeeeData_Always_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             var schemes = new List<SchemeData>
             {
                 new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
                 new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.SchemeWeeeData();
-
-            // Assert
+   
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -794,15 +621,8 @@
         [Fact]
         public async Task GetSchemeWeeeData_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.SchemeWeeeData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -816,18 +636,10 @@
         [Fact]
         public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.SchemeWeeeData();
 
             // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -839,30 +651,21 @@
         [Fact]
         public async Task PostSchemeWeeeData_WithInvalidViewModel_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             var schemes = new List<SchemeData>
             {
                 new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
                 new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
-
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.SchemeWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -887,18 +690,11 @@
         [Fact]
         public async Task PostSchemeWeeeData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.SchemeWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -912,17 +708,10 @@
         [Fact]
         public async Task PostSchemeWeeeData_WithViewModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             var result = await controller.SchemeWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -936,18 +725,9 @@
         [Fact]
         public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.SchemeWeeeData(A.Dummy<ProducersDataViewModel>());
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -961,27 +741,20 @@
             // Arrange
             var file = new FileInfo("TEST FILE.csv", new byte[] { 1, 2, 3 });
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeWeeeCsv>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeWeeeCsv>._))
                 .WhenArgumentsMatch(a =>
                     a.Get<GetSchemeWeeeCsv>("request").ComplianceYear == 2015 &&
                     a.Get<GetSchemeWeeeCsv>("request").SchemeId == new Guid("B6826CC7-5043-47D2-96C9-7B559BB7DEA1") &&
                     a.Get<GetSchemeWeeeCsv>("request").ObligationType == ObligationType.B2C)
                 .Returns(file);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             var result = await controller.DownloadSchemeWeeeDataCsv(
                 2015,
                 new Guid("B6826CC7-5043-47D2-96C9-7B559BB7DEA1"),
                 ObligationType.B2C);
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -996,20 +769,13 @@
         [Fact]
         public async Task GetDownloadSchemeWeeeDataCsv_Always_ReturnsFileResultWithContentTypeOfTextCsv()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Fake<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             var result = await controller.DownloadSchemeWeeeDataCsv(
                 A.Dummy<int>(),
                 A.Dummy<Guid>(),
                 A.Dummy<ObligationType>());
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -1028,17 +794,10 @@
             // Arrange
             var years = new List<int>() { 2001, 2002 };
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.UkWeeeData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -1058,15 +817,8 @@
         [Fact]
         public async Task GetUkWeeeData_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.UkWeeeData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1080,18 +832,9 @@
         [Fact]
         public async Task GetUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.UkWeeeData();
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -1106,20 +849,13 @@
             // Arrange
             var years = new List<int>() { 2001, 2002 };
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
-
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.UkWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -1139,18 +875,11 @@
         [Fact]
         public async Task PostUkWeeeData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.UkWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1164,17 +893,10 @@
         [Fact]
         public async Task PostUkWeeeData_WithViewModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             var result = await controller.UkWeeeData(viewModel);
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -1188,18 +910,9 @@
         [Fact]
         public async Task PostUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             var result = await controller.UkWeeeData(A.Dummy<ProducersDataViewModel>());
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -1213,21 +926,14 @@
             // Arrange
             var file = new FileInfo("TEST FILE.csv", new byte[] { 1, 2, 3 });
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkWeeeCsv>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetUkWeeeCsv>._))
                 .WhenArgumentsMatch(a => a.Get<GetUkWeeeCsv>("request").ComplianceYear == 2015)
                 .Returns(file);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
             var viewModel = new ProducersDataViewModel();
 
-            // Act
             var result = await controller.DownloadUkWeeeDataCsv(2015);
 
-            // Assert
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);
 
@@ -1243,15 +949,9 @@
         [Fact]
         public async Task GetDownloadUkWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextCsv()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<GetUkWeeeCsv>._))
+            A.CallTo(() => client.SendAsync(A<GetUkWeeeCsv>._))
                 .WhenArgumentsMatch(a => a.Get<int>("complianceYear") == 2015)
                 .Returns(A.Dummy<FileInfo>());
-
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
 
             var viewModel = new ProducersDataViewModel();
 
@@ -1274,16 +974,8 @@
         [Fact]
         public void GetSchemeObligationData_Always_ReturnsComplianceYearReportViewModel()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = controller.SchemeObligationData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal("SchemeObligationData", viewResult.ViewName);
@@ -1291,7 +983,7 @@
             var model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
                 .MustNotHaveHappened();
             Assert.NotNull(model.ComplianceYears);
         }
@@ -1304,15 +996,8 @@
         [Fact]
         public void GetSchemeObligationData_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = controller.SchemeObligationData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1326,18 +1011,11 @@
         [Fact]
         public void GetSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
             // Act
             controller.SchemeObligationData();
 
             // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -1349,17 +1027,9 @@
         [Fact]
         public void PostSchemeObligationData_WithInvalidViewModel_ReturnsUkWeeeDataProducerDataViewModel()
         {
-            // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -1367,7 +1037,7 @@
             var model = viewResult.Model as SchemeObligationDataViewModel;
             Assert.NotNull(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
                 .MustNotHaveHappened();
             Assert.NotNull(model.ComplianceYears);
         }
@@ -1380,16 +1050,9 @@
         [Fact]
         public void PostSchemeObligationData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1403,15 +1066,8 @@
         [Fact]
         public void PostSchemeObligationData_WithViewModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = controller.SchemeObligationData(new SchemeObligationDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -1425,18 +1081,9 @@
         [Fact]
         public void PostSchemeObligationData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             controller.SchemeObligationData(A.Dummy<SchemeObligationDataViewModel>());
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -1451,24 +1098,17 @@
             // Arrange
             var years = new List<int>() { 2001, 2002 };
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             var schemes = new List<SchemeData>
             {
                 new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
                 new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.MissingProducerData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal("MissingProducerData", viewResult.ViewName);
@@ -1493,15 +1133,8 @@
         [Fact]
         public async Task GetMissingProducerData_Always_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.MissingProducerData();
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1515,18 +1148,9 @@
         [Fact]
         public async Task GetMissingProducerData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             await controller.MissingProducerData();
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
 
         /// <summary>
@@ -1541,25 +1165,18 @@
             // Arrange
             var years = new List<int>() { 2001, 2002 };
 
-            var weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             var schemes = new List<SchemeData>
             {
                 new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
                 new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
+            A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
-            var controller = new ReportsController(
-                () => weeeClient,
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.MissingProducerData(new MissingProducerDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
@@ -1579,16 +1196,9 @@
         [Fact]
         public async Task PostMissingProducerData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.MissingProducerData(new MissingProducerDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
@@ -1602,15 +1212,8 @@
         [Fact]
         public async Task PostMissingProducerData_WithViewModel_SetsTriggerDownloadToTrue()
         {
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<BreadcrumbService>());
-
-            // Act
             var result = await controller.MissingProducerData(new MissingProducerDataViewModel());
 
-            // Assert
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
@@ -1624,18 +1227,9 @@
         [Fact]
         public async Task PostMissingProducerData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var breadcrumb = new BreadcrumbService();
-
-            // Arrange
-            var controller = new ReportsController(
-                () => A.Dummy<IWeeeClient>(),
-                breadcrumb);
-
-            // Act
             await controller.MissingProducerData(A.Dummy<MissingProducerDataViewModel>());
 
-            // Assert
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
     }
 }

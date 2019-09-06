@@ -20,6 +20,7 @@
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
+    using Web.Areas.Admin.ViewModels.PcsReports;
     using Web.Areas.Admin.ViewModels.Reports;
     using Web.Infrastructure;
     using Weee.Requests.Admin;

@@ -1,15 +1,14 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducersDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.PcsReports.UkEeeDataViewModel
 @{
-    ViewBag.Title = "Download PCS WEEE Data";
+    ViewBag.Title = "UK EEE Data";
 }
 
-@section main_content
-{
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
-    </header>
+@section main_content {
 
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download @ViewBag.Title</h1>
+    </header>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -18,19 +17,22 @@
         <p>Filter the report to download entries that match your criteria</p>
         <p>All data is reported in tonnes (t) to three decimal places</p>
 
-        @Html.Partial("_ProducersDataReportFilters")
-
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
         <p>
             If there is a large amount of returns data for your selected criteria, it may take a while to download your results
         </p>
-
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "PCS WEEE data", new Dictionary<string, object> { { "class", "button" } }))
+           "Report download", "UK EEE data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
+
     <p>
         @Html.ActionLink("Back", "ChooseReport")
     </p>
@@ -41,12 +43,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadSchemeWeeeDataCsv", new
-                          {
-                              complianceYear = Model.SelectedYear,
-                              schemeId = Model.SelectedSchemeId,
-                              obligationType = Model.SelectedObligationType
-                          }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadUkEeeDataCsv", new { complianceYear = Model.SelectedYear }))";
         </script>
     }
 }
