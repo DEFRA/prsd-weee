@@ -283,7 +283,7 @@
 
                 case CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
-                        ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
+                        ModelState.AddModelError("ApprovalNumber", "Approval number already exists");
 
                         await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                         model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
@@ -293,7 +293,7 @@
                 case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
                     {
                         string errorMessage = string.Format(
-                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2}).",
+                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2})",
                             result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference,
                             result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName,
                             result.IbisCustomerReferenceUniquenessFailure.OtherSchemeApprovalNumber);
@@ -306,7 +306,7 @@
                     }
 
                 case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
-                    ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference.");
+                    ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference");
 
                     await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                     model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
