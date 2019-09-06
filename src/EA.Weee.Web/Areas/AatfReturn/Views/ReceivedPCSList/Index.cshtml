@@ -6,7 +6,8 @@
 @using EA.Weee.Web.Areas.AatfReturn.Controllers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReceivedPcsListViewModel
 @{
-    ViewBag.Title = "Received PCS List - GOV.UK";
+    var aatfName = Model.AatfName;
+    ViewBag.Title = "WEEE received for treatment at " + aatfName + " - GOV.UK";
 }
 
     <section id="main-content">
