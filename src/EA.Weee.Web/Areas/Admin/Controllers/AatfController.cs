@@ -57,7 +57,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public async Task<ActionResult> Details(Guid id, string selectedTab = null)
         {
             using (var client = apiClient())
             {
@@ -83,6 +83,8 @@
                     CurrentDate = currentDate
                 });
 
+                viewModel.SelectedTab = selectedTab;
+
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
                 return View(viewModel);
@@ -90,13 +92,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear)
+        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear, string selectedTab)
         {
             using (var client = apiClient())
             {               
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfIdByComplianceYear(aatfId, selectedComplianceYear));
 
-                return RedirectToAction("Details", new { Id = aatf });
+                return RedirectToAction("Details", new { Id = aatf, selectedTab });
             }
         }
 
