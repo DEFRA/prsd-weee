@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Reports
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.PcsReports
 {
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
 
-    public class UkEeeDataViewModel
+    public class ProducerPublicRegisterViewModel
     {
         [Required]
         [DisplayName("Compliance year")]
