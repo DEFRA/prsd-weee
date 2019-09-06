@@ -1,6 +1,7 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Reports
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.PcsReports
 {
     using System.Collections.Generic;
+    using Reports;
     using Web.ViewModels.Shared;
 
     public class ChooseReportViewModel : RadioButtonStringCollectionViewModel

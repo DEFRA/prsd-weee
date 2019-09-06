@@ -321,6 +321,7 @@
     <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationSchemeBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationHasNoSchemeFilterAttribute.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PcsReportController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AssociatedEntitiesViewModelMap.cs" />
@@ -355,6 +356,7 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\AddSchemeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\AssociatedEntitiesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
@@ -498,8 +500,8 @@
     <Compile Include="Areas\Admin\ViewModels\AddOrganisation\SearchViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditOrganisationDetailsViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\MissingProducerDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditPartnershipOrganisationDetailsViewModel.cs" />
@@ -526,12 +528,12 @@
     <Compile Include="Extensions\GdsExtensions.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\ChooseReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\ProducerPublicRegisterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\ProducersDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\SchemeObligationDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\PcsReports\SchemeObligationDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
@@ -543,8 +545,8 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\_ReportSearchFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -617,6 +619,7 @@
     <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -675,8 +678,8 @@
     <Content Include="Areas\Admin\Views\Producers\_detailsResults.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Index.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Success.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\SchemeObligationData.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\MissingProducerData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\SchemeObligationData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\MissingProducerData.cshtml" />
     <Content Include="Content\weee\_button.scss" />
     <Content Include="Content\weee\_conditional.scss" />
     <Content Include="Content\weee\_css3.scss" />
@@ -1128,7 +1131,7 @@
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
@@ -1149,14 +1152,14 @@
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerEeeData.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerEeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\_ProducersDataReportFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\UkWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\UkWeeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\UkEeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\UkEeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\CannotSubmitDataReturn.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmWithdrawn.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\PcsDetailsOverview.cshtml" />
