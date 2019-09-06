@@ -67,7 +67,7 @@
         }
 
         [Theory]
-        [InlineData(FacilityType.Aatf, "Copy AATF for new compliance year")]
+        [InlineData(FacilityType.Aatf, "Manage AATFs")]
         public async Task CopyGet_CanEdit_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
@@ -88,7 +88,7 @@
         }
 
         [Theory]
-        [InlineData(FacilityType.Ae, "Copy AE for new compliance year")]
+        [InlineData(FacilityType.Ae, "Manage AEs")]
         public async Task CopyGetAe_CanEdit_SetsInternalBreadcrumb(FacilityType facilityType, string expectedBreadcrumb)
         {
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();

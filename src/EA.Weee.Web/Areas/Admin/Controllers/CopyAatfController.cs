@@ -174,11 +174,11 @@
             switch (type)
             {
                 case FacilityType.Aatf:
-                    breadcrumb.InternalActivity = InternalUserActivity.CopyAatf;
+                    breadcrumb.InternalActivity = InternalUserActivity.ManageAatfs;
                     breadcrumb.InternalAatf = name;
                     break;
                 case FacilityType.Ae:
-                    breadcrumb.InternalActivity = InternalUserActivity.CopyAe;
+                    breadcrumb.InternalActivity = InternalUserActivity.ManageAes;
                     breadcrumb.InternalAe = name;
                     break;
                 default:
