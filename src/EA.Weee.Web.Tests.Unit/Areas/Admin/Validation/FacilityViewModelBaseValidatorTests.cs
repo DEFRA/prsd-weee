@@ -13,15 +13,13 @@
     public class FacilityViewModelBaseValidatorTests
     {
         private readonly FacilityViewModelBaseValidator validator;
-        private readonly FacilityViewModelBase model;
         private readonly IWeeeClient apiClient;
 
         public FacilityViewModelBaseValidatorTests()
         {
             this.apiClient = A.Fake<IWeeeClient>();
-            this.model = A.Fake<FacilityViewModelBase>();
 
-            validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, null);
+            validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, null);
         }
 
         [Fact]
@@ -65,7 +63,7 @@
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).Returns(exists);
 
-            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, 2019);
+            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, 2019);
 
             var validationResult = validator.Validate(viewModel);
 
@@ -81,7 +79,7 @@
                 ComplianceYear = 2019
             };
 
-            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, model, 2019);
+            FacilityViewModelBaseValidator validator = new FacilityViewModelBaseValidator(A.Dummy<string>(), () => apiClient, 2019);
 
             var validationResult = validator.Validate(viewModel);
 

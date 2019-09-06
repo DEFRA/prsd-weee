@@ -11,21 +11,17 @@
     {
         private readonly string token;
         private readonly Func<IWeeeClient> apiClient;
-        private readonly FacilityViewModelBase model;
-        private readonly int? year;
 
-        public FacilityViewModelBaseValidator(string token, Func<IWeeeClient> apiClient, FacilityViewModelBase model, int? year)
+        public FacilityViewModelBaseValidator(string token, Func<IWeeeClient> apiClient, int? year)
         {
             this.token = token;
             this.apiClient = apiClient;
-            this.model = model;
-            this.year = year;
 
             using (var client = this.apiClient())
             {
                 RuleFor(x => x.ApprovalNumber).MustAsync(async (approval, cancellation) =>
                 {
-                    bool exists = await CheckApprovalNumberIsUnique(approval, year);
+                    var exists = await CheckApprovalNumberIsUnique(approval, year);
                     return !exists;
                 }).WithMessage("Approval number must be unique");
             }
