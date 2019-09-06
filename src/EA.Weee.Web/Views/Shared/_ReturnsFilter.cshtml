@@ -2,7 +2,11 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
 
-@using (Html.BeginRouteForm(AatfRedirect.ReturnsRouteName, FormMethod.Get, new {id = "ReturnsQueryParameterForm"}))
+@{
+    var form = ViewData["form"] as string;
+}
+
+@using (Html.BeginRouteForm(form, FormMethod.Get, new {id = "ReturnsQueryParameterForm"}))
 {
     <div class="govuk-grid-column-full">
         <fieldset class="govuk-fieldset">

@@ -508,6 +508,22 @@
             result.SelectedComplianceYear.Should().Be(2019);
         }
 
+        [Fact]
+        public void Map_GivenSourceReturns_NumberOfReturnsPropertyShouldBeMapped()
+        {
+            var returnsList = new List<ReturnData>()
+            {
+                new ReturnData() { Quarter = new Quarter(2019, fixture.Create<QuarterType>()) },
+                new ReturnData() { Quarter = new Quarter(2020, fixture.Create<QuarterType>()) }
+            };
+
+            var returnsData = GetDefaultReturnData(returnsList);
+
+            var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
+
+            result.NumberOfReturns.Should().Be(2);
+        }
+
         private ReturnsData GetDefaultReturnData(List<ReturnData> returnsList)
         {
             var openQuarters = new List<Quarter>();

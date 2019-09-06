@@ -49,6 +49,8 @@
             Returns = new List<ReturnsItemViewModel>();
         }
 
+        public int NumberOfReturns { get; set; }
+
         public string ErrorMessageForNotAllowingCreateReturn { get; set; }
 
         public bool NotStartedAnySubmissionsYet { get; set; }
