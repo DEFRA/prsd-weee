@@ -48,9 +48,9 @@
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
-            csvWriter.DefineColumn(@"Organisation name", i => i.OrgName);
             csvWriter.DefineColumn(@"Name of AATF", i => i.Name);
             csvWriter.DefineColumn(@"Approval number", i => i.ApprovalNumber);
+            csvWriter.DefineColumn(@"Organisation name", i => i.OrgName);
             csvWriter.DefineColumn(@"Reuse site name", i => i.SiteName);
             csvWriter.DefineColumn(@"Reuse site address", i => i.SiteAddress);
 
