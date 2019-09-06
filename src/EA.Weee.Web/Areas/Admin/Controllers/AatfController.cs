@@ -92,13 +92,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear, string selectedTab)
+        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear)
         {
             using (var client = apiClient())
             {               
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfIdByComplianceYear(aatfId, selectedComplianceYear));
 
-                return RedirectToAction("Details", new { Id = aatf, selectedTab });
+                return RedirectToAction("Details", new { Id = aatf });
             }
         }
 
