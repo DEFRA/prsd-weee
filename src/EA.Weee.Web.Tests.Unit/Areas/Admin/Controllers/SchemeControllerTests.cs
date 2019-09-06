@@ -450,7 +450,7 @@
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
 
             Assert.Equal(1, controller.ModelState["ApprovalNumber"].Errors.Count);
-            Assert.Equal("Approval number already exists.", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
+            Assert.Equal("Approval number already exists", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
         }
 
         /// <summary>
@@ -494,7 +494,7 @@
 
             Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
             Assert.Equal(
-                "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH).",
+                "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH)",
                 controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
         }
 
