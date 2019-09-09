@@ -118,7 +118,8 @@
                 aatf.ApprovalDate.Should().Be(verifyAatf.ApprovalDate.GetValueOrDefault());
                 aatf.Size.Should().Be(verifyAatf.Size.DisplayName);
                 aatf.Status.Should().Be(verifyAatf.AatfStatus.DisplayName);
-                aatf.ContactName.Should().Be(verifyAatf.Contact.FirstName + " " + verifyAatf.Contact.LastName);
+                aatf.FirstName.Should().Be(verifyAatf.Contact.FirstName);
+                aatf.LastName.Should().Be(verifyAatf.Contact.LastName);
                 aatf.ContactPosition.Should().Be(verifyAatf.Contact.Position);
                 aatf.ContactAddress1.Should().Be(verifyAatf.Contact.Address1);
                 aatf.ContactAddress2.Should().Be(verifyAatf.Contact.Address2);
