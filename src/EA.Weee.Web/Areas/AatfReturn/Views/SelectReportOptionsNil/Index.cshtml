@@ -5,13 +5,14 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsNilViewModel
 @{
-    ViewBag.Title = "Confirm nothing to report - GOV.UK";
+    var title = "Are you sure you have nothing to report for " + @Model.Year + "  " + @Model.Period + "?";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">Are you sure you have nothing to report for @Model.Year @Model.Period?</h1>
+            <h1 class="govuk-heading-l">@title</h1>
         </div>
     </header>
     <div class="govuk-!-padding-bottom-5"></div>

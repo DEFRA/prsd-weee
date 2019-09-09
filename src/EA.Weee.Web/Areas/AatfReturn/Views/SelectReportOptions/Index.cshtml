@@ -3,7 +3,8 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
-    ViewBag.Title = "AATF return reporting options - GOV.UK";
+    var title = "What do you need to report for " + @Model.Year + " " + @Model.Period + "?";
+    ViewBag.Title = title + " - GOV.UK";
     var message = string.Empty;
 }
 
@@ -15,7 +16,7 @@
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">  
                     <h1 class="govuk-heading-l">
-                        What do you need to report for @Model.Year @Model.Period?
+                        @title
                     </h1>              
                 <p id="all-apply-hint">
                     Select all that apply
