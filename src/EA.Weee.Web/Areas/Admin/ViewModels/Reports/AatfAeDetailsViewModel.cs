@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AatfReports
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Reports
 {
     using System;
     using System.Collections.Generic;
