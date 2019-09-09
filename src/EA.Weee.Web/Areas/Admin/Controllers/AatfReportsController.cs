@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using Api.Client;
-    using Base;
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
@@ -11,25 +10,98 @@
     using Prsd.Core.Helpers;
     using Services;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Home;
+    using ViewModels.Reports;
     using Weee.Requests.Admin;
-    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Shared;
 
-    public class AatfReportsController : AdminController
+    public class AatfReportsController : ReportsBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
 
-        public AatfReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
+        public AatfReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb) : base(apiClient, breadcrumb)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                switch (userStatus)
+                {
+                    case UserStatus.Active:
+                        return RedirectToAction("ChooseReport", "AatfReports");
+                    case UserStatus.Inactive:
+                    case UserStatus.Pending:
+                    case UserStatus.Rejected:
+                        return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
+                    default:
+                        throw new NotSupportedException(
+                            $"Cannot determine result for user with status '{userStatus}'");
+                }
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ChooseReport()
+        {
+            SetBreadcrumb();
+
+            var model = new ChooseAatfReportViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChooseReport(ChooseAatfReportViewModel model)
+        {
+            SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            switch (model.SelectedValue)
+            {
+                case Reports.AatfAeReturnData:
+                    return RedirectToAction(nameof(AatfAeReturnData), "AatfReports");
+
+                case Reports.AatfObligatedData:
+                    return RedirectToAction(nameof(AatfObligatedData), "AatfReports");
+
+                case Reports.UkNonObligatedWeeeData:
+                    return RedirectToAction(nameof(UkNonObligatedWeeeReceived), "AatfReports");
+
+                case Reports.AatfNonObligatedData:
+                    return RedirectToAction(nameof(AatfNonObligatedData), "AatfReports");
+
+                case Reports.AatfSentOnData:
+                    return RedirectToAction(nameof(AatfSentOnData), "AatfReports");
+
+                case Reports.AatfReuseSitesData:
+                    return RedirectToAction(nameof(AatfReuseSites), "AatfReports");
+
+                case Reports.AatfAePublicRegister:
+                    return RedirectToAction(nameof(AatfAePublicRegister), "AatfReports");
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction(nameof(UkWeeeDataAtAatfs), "AatfReports");
+
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         [HttpGet]
@@ -336,86 +408,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AatfAeDetails()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            var model = new AatfAeDetailsViewModel();
-            await PopulateFilters(model);
-
-            return View("AatfAeDetails", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfAeDetails(AatfAeDetailsViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-             FacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
-        {
-            CSVFileData fileData;
-
-            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId, false);
-            using (var client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> PcsAatfDataDifference()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            var model = new PcsAatfDataDifferenceViewModel();
-            await PopulateFilters(model);
-
-            return View("PcsAatfDataDifference", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PcsAatfDataDifference(PcsAatfDataDifferenceViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadPcsAatfDataDifference(int complianceYear, int? quarter,
-            string obligationType)
-        {
-            CSVFileData fileData;
-
-            var request = new GetPcsAatfComparisonData(complianceYear, quarter, obligationType);
-            using (var client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
-        [HttpGet]
         public async Task<ActionResult> AatfAePublicRegister()
         {
             SetBreadcrumb();
@@ -500,95 +492,11 @@
             model.ComplianceYears = await ComplianceYears();
         }
 
-        private async Task PopulateFilters(AatfAeDetailsViewModel model)
-        { 
-            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
-            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
-            model.PanAreaList = await PatAreaList();
-            model.LocalAreaList = await LocalAreaList();
-        }
-
-        private async Task PopulateFilters(PcsAatfDataDifferenceViewModel model)
-        {
-            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
-        }
         private async Task PopulateFilters(AatfAePublicRegisterViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
             model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
-        }
-
-        private async Task<List<int>> FetchComplianceYearsForAatfReturns()
-        {
-            var request = new GetAatfReturnsActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                var items = await client.SendAsync(User.GetAccessToken(), request);
-                return items;
-            }
-        }
-
-        private async Task<List<int>> FetchComplianceYearsForAatf()
-        {
-            var request = new GetAatfAeActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                var items = await client.SendAsync(User.GetAccessToken(), request);
-                return items;
-            }
-        }
-
-        private IEnumerable<int> FetchAllAatfComplianceYears()
-        {
-            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
-                .OrderByDescending(year => year)
-                .ToList();
-        }
-
-        private void SetBreadcrumb()
-        {
-            breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
-        }
-
-        private async Task<SelectList> PatAreaList()
-        {
-            return new SelectList(await FetchPatAreas(), "Id", "Name");
-        }
-
-        private async Task<SelectList> LocalAreaList()
-        {
-            return new SelectList(await FetchLocalAreas(), "Id", "Name");
-        }
-
-        private async Task<SelectList> CompetentAuthoritiesList()
-        {
-            return new SelectList(await FetchAuthorities(), "Id", "Abbreviation");
-        }
-
-        private async Task<IList<PanAreaData>> FetchPatAreas()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
-            }
-        }
-
-        private async Task<IList<LocalAreaData>> FetchLocalAreas()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
-            }
-        }
-
-        private async Task<IList<UKCompetentAuthorityData>> FetchAuthorities()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-            }
         }
     }
 }

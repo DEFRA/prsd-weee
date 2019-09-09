@@ -17,8 +17,8 @@
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
-    using Web.Areas.Admin.ViewModels.PcsReports;
     using Web.Areas.Admin.ViewModels.Reports;
+    using Web.Areas.Admin.ViewModels.SchemeReports;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -27,14 +27,14 @@
     using Weee.Requests.Shared;
     using Xunit;
 
-    public class PcsReportsControllerTests
+    public class SchemeReportsControllerTests
     {
         private readonly Fixture fixture;
-        private readonly PcsReportsController controller;
+        private readonly SchemeReportsController controller;
         private readonly IWeeeClient client;
         private readonly BreadcrumbService breadcrumbService;
 
-        public PcsReportsControllerTests()
+        public SchemeReportsControllerTests()
         {
             fixture = new Fixture();
             client = A.Fake<IWeeeClient>();
@@ -42,13 +42,13 @@
 
             A.CallTo(() => client.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
 
-            controller = new PcsReportsController(() => client, breadcrumbService);
+            controller = new SchemeReportsController(() => client, breadcrumbService);
         }
 
         [Fact]
-        public void PcsReportsController_ShouldInheritFromAdminController()
+        public void SchemeReportsController_ShouldInheritFromReportBaseController()
         {
-            typeof(PcsReportsController).Should().BeDerivedFrom<AdminController>();
+            typeof(SchemeReportsController).Should().BeDerivedFrom<ReportsBaseController>();
         }
 
         [Theory]
@@ -84,7 +84,7 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("ChooseReport", redirectResult.RouteValues["action"]);
-            Assert.Equal("Reports", redirectResult.RouteValues["controller"]);
+            Assert.Equal("SchemeReports", redirectResult.RouteValues["controller"]);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@
 
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName));
 
-            var viewModel = viewResult.Model as ChooseReportViewModel;
+            var viewModel = viewResult.Model as ChooseSchemeReportViewModel;
             Assert.NotNull(viewModel);
         }
 
@@ -115,7 +115,7 @@
             controller.ModelState.AddModelError("Key", "Any error");
 
             // Act
-            var result = controller.ChooseReport(A.Dummy<ChooseReportViewModel>());
+            var result = controller.ChooseReport(A.Dummy<ChooseSchemeReportViewModel>());
 
             // Assert
             var viewResult = result as ViewResult;
@@ -131,31 +131,23 @@
         /// <param name="selectedValue"></param>
         /// <param name="expectedAction"></param>
         [Theory]
-        [InlineData(Reports.ProducerDetails, "ProducerDetails", null)]
-        [InlineData(Reports.ProducerPublicRegister, "ProducerPublicRegister", null)]
-        [InlineData(Reports.ProducerEeeData, "ProducerEeeData", null)]
-        [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData", null)]
-        [InlineData(Reports.UkEeeData, "UkEeeData", null)]
-        [InlineData(Reports.SchemeObligationData, "SchemeObligationData", null)]
-        [InlineData(Reports.UkWeeeData, "UkWeeeData", null)]
-        [InlineData(Reports.AatfAeReturnData, "AatfAeReturnData", "AatfReports")]
-        [InlineData(Reports.AatfObligatedData, "AatfObligatedData", "AatfReports")]
-        [InlineData(Reports.UkWeeeDataAtAatfs, "UkWeeeDataAtAatfs", "AatfReports")]
-        [InlineData(Reports.UkNonObligatedWeeeData, "UkNonObligatedWeeeReceived", "AatfReports")]
-        [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData", "AatfReports")]
-        [InlineData(Reports.AatfAeDetails, "AatfAeDetails", "AatfReports")]
-        [InlineData(Reports.PcsAatfDataDifference, "PcsAatfDataDifference", "AatfReports")]
-        [InlineData(Reports.AatfAePublicRegister, "AatfAePublicRegister", "AatfReports")]
-        public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
+        [InlineData(Reports.ProducerDetails, "ProducerDetails")]
+        [InlineData(Reports.ProducerPublicRegister, "ProducerPublicRegister")]
+        [InlineData(Reports.ProducerEeeData, "ProducerEeeData")]
+        [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData")]
+        [InlineData(Reports.UkEeeData, "UkEeeData")]
+        [InlineData(Reports.SchemeObligationData, "SchemeObligationData")]
+        [InlineData(Reports.UkWeeeData, "UkWeeeData")]
+        public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
         {
-            var model = new ChooseReportViewModel { SelectedValue = selectedValue };
+            var model = new ChooseSchemeReportViewModel { SelectedValue = selectedValue };
             var result = controller.ChooseReport(model);
 
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
             Assert.Equal(expectedAction, redirectResult.RouteValues["action"]);
-            Assert.Equal(expectedController, redirectResult.RouteValues["controller"]);
+            Assert.Equal("SchemeReports", redirectResult.RouteValues["controller"]);
         }
 
         [Fact]
@@ -168,8 +160,8 @@
 
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "choosereport");
 
-            var viewModel = viewResult.Model as ChooseReportViewModel;
-            viewModel.PossibleValues.ElementAt(8).Contains(Reports.AatfAeReturnData);
+            var viewModel = viewResult.Model as ChooseSchemeReportViewModel;
+            viewModel.Should().NotBeNull();
         }
 
         /// <summary>
@@ -180,7 +172,7 @@
         [Fact]
         public void PostChooseReport_WithInvalidSelectedValue_ThrowsNotSupportedException()
         {
-            var model = new ChooseReportViewModel { SelectedValue = "SOME INVALID VALUE" };
+            var model = new ChooseSchemeReportViewModel { SelectedValue = "SOME INVALID VALUE" };
             Func<ActionResult> testCode = () => controller.ChooseReport(model);
 
             Assert.Throws<NotSupportedException>(testCode);
@@ -256,7 +248,7 @@
         [Fact]
         public async Task GetProducerDetails_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.ProducerDetails();
+            await controller.ProducerDetails();
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
@@ -317,8 +309,6 @@
         [Fact]
         public async Task PostProducerDetails_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
-            var viewModel = new ProducersDataViewModel();
-
             controller.ModelState.AddModelError("Key", "Error");
             var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
@@ -350,7 +340,7 @@
         [Fact]
         public async Task PostProducerDetails_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
+            await controller.ProducerDetails(A.Dummy<ReportsFilterViewModel>());
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
@@ -636,7 +626,7 @@
         [Fact]
         public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.SchemeWeeeData();
+            await controller.SchemeWeeeData();
 
             // Assert
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
@@ -725,7 +715,7 @@
         [Fact]
         public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.SchemeWeeeData(A.Dummy<ProducersDataViewModel>());
+            await controller.SchemeWeeeData(A.Dummy<ProducersDataViewModel>());
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
@@ -769,8 +759,6 @@
         [Fact]
         public async Task GetDownloadSchemeWeeeDataCsv_Always_ReturnsFileResultWithContentTypeOfTextCsv()
         {
-            var viewModel = new ProducersDataViewModel();
-
             var result = await controller.DownloadSchemeWeeeDataCsv(
                 A.Dummy<int>(),
                 A.Dummy<Guid>(),
@@ -832,7 +820,7 @@
         [Fact]
         public async Task GetUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.UkWeeeData();
+            await controller.UkWeeeData();
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }
@@ -910,7 +898,7 @@
         [Fact]
         public async Task PostUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
-            var result = await controller.UkWeeeData(A.Dummy<ProducersDataViewModel>());
+            await controller.UkWeeeData(A.Dummy<ProducersDataViewModel>());
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
         }

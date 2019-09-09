@@ -1,8 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ChooseSchemeReportViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.ChooseAatfReportViewModel
 @{
-    var title = "Which PCS report would you like to view?";
+    var title = "Which AATF / AE report would you like to view?";
     ViewBag.Title = title + " - GOV.UK";
 }
 
@@ -14,7 +14,7 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "ChooseReport", controllerName: "SchemeReports", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "ChooseReport", controllerName: "AatfReports", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
