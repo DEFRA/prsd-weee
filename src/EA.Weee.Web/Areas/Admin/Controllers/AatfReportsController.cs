@@ -5,6 +5,7 @@
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Requests.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using Infrastructure;
@@ -361,7 +362,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-             FacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
+             ReportFacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
         {
             CSVFileData fileData;
 
@@ -441,7 +442,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAePublicRegisterCsv(int complianceYear,
-            FacilityType facilityType, Guid authorityId)
+            ReportFacilityType facilityType, Guid authorityId)
         {
             CSVFileData fileData;
 
@@ -503,7 +504,7 @@
         private async Task PopulateFilters(AatfAeDetailsViewModel model)
         { 
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value", 4);
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
             model.PanAreaList = await PatAreaList();
             model.LocalAreaList = await LocalAreaList();
@@ -538,13 +539,6 @@
                 var items = await client.SendAsync(User.GetAccessToken(), request);
                 return items;
             }
-        }
-
-        private IEnumerable<int> FetchAllAatfComplianceYears()
-        {
-            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
-                .OrderByDescending(year => year)
-                .ToList();
         }
 
         private void SetBreadcrumb()

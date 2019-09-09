@@ -1,14 +1,20 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
     using System;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Domain.Obligation;
+    using EA.Weee.Domain.Organisation;
 
     /// <summary>
     /// This class maps to the results of [AATF].[getAatfAeDetailsDataCsvData]
     /// </summary>
     public class AatfAeDetailsData
     {
-        public int ComplianceYear { get; set; }
+        public string ComplianceYear { get; set; }
         public string AppropriateAuthorityAbbr { get; set; }
+
+        public string RecordType { get; set; }
 
         public string PanAreaTeam { get; set; }
 
@@ -30,21 +36,23 @@
 
         public string ApprovalNumber { get; set; }
 
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
 
         public string ApprovalDateString
         {
             get
             {
-                return ApprovalDate.ToShortDateString();
+                return ApprovalDate != null ? ApprovalDate.Value.ToShortDateString() : string.Empty;
             }
         }
 
-    public string Size { get; set; }
+        public string Size { get; set; }
 
         public string Status { get; set; }
 
-        public string ContactName { get; set; }
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
 
         public string ContactPosition { get; set; }
 
@@ -85,5 +93,24 @@
         public string OperatorTradingName { get; set; }
 
         public string OperatorAddress { get; set; }
+
+        public int OrganisationType { get; set; }
+
+        public string OrganisationTypeString
+        {
+            get
+            {
+                return EnumHelper.GetDisplayName(Enumeration.FromValue<OrganisationType>(OrganisationType));
+            }
+        }
+        public string CompanyRegistrationNumber { get; set; }
+
+        public string OrganisationTelephone { get; set; }
+
+        public string OrganisationEmail { get; set; }
+
+        public string IbisCustomerReference { get; set; }
+
+        public string ObligationType { get; set; }
     }
 }
