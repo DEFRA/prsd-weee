@@ -11,7 +11,7 @@
                 Reports.PcsReports,
                 Reports.AatfReports,
                 Reports.PcsAatfDataDifference,
-                Reports.AatfAePublicRegister
+                Reports.AatfAeDetails
             })
         {
         }

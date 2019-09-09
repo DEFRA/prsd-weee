@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.PcsReports
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports
 {
     using System.Collections.Generic;
     using System.ComponentModel;
