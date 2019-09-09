@@ -124,11 +124,15 @@
             if (selection == InternalUserActivity.ManageAatfs)
             {
                 Assert.Equal(FacilityType.Aatf, redirectToRouteResult.RouteValues["facilityType"]);
+                Assert.Equal("ManageAatfs", redirectToRouteResult.RouteValues["action"]);
+                Assert.Equal("Aatf", redirectToRouteResult.RouteValues["controller"]);
             }
 
             if (selection == InternalUserActivity.ManageAes)
             {
                 Assert.Equal(FacilityType.Ae, redirectToRouteResult.RouteValues["facilityType"]);
+                Assert.Equal("ManageAatfs", redirectToRouteResult.RouteValues["action"]);
+                Assert.Equal("Aatf", redirectToRouteResult.RouteValues["controller"]);
             }
         }
 
