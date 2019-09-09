@@ -1,13 +1,15 @@
-﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.SchemeObligationDataViewModel
+﻿@using EA.Weee.Web.Areas.Admin.ViewModels.Reports
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ProducersDataViewModel
 @{
-    ViewBag.Title = "Download PCS Obligation Data";
+    const string title = "Download " + Reports.UkWeeeData;
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -23,20 +25,18 @@
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
-
         <p>
             If there is a large amount of returns data for your selected criteria, it may take a while to download your results
         </p>
-
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "PCS obligation data", new Dictionary<string, object> { { "class", "button" } }))
+           "Report download", "UK WEEE data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
     </p>
 }
 
@@ -45,7 +45,8 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadSchemeObligationDataCsv", new { complianceYear = Model.SelectedYear }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadUkWeeeDataCsv", new { complianceYear = Model.SelectedYear }))";
         </script>
     }
 }
+
