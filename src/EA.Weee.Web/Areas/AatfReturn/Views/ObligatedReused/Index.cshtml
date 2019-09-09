@@ -4,14 +4,15 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Reused WEEE - GOV.UK";
+    var title = "WEEE that has been reused as a whole appliance";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
             <h2 class="govuk-heading-l">
-                WEEE that has been reused as a whole appliance
+                @title
             </h2>
         </div>
     </header>
