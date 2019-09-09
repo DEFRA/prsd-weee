@@ -374,16 +374,19 @@
                     hash;
             });
 
+        var hash = window.location.hash;
         var target = window.location.hash,
             target = target.replace('#', '');
-
+        
         window.location.hash = "";
 
         $(window).on('load', function() {
             if (target) {
                 $('html, body').animate({
                     scrollTop: $("#main-content").offset().top
-                }, 200, 'swing', function () {});
+                }, 200, 'swing', function () { });
+
+                window.location.hash = hash;
             }
         });
     </script>
