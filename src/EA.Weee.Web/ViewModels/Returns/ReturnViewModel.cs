@@ -45,9 +45,9 @@
 
         public string ObligatedTotal { get; set; }
 
-        public decimal? ObligatedB2BTotal { get; set; }
+        public string ObligatedB2BTotal { get; set; }
 
-        public decimal? ObligatedB2CTotal { get; set; }
+        public string ObligatedB2CTotal { get; set; }
 
         public List<AatfObligatedData> AatfsData { get; set; }
 
