@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.Areas.Admin.ViewModels.Reports
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.PcsReports.ProducersDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ProducersDataViewModel
 @{
     const string title = "Download " + Reports.UkWeeeData;
     ViewBag.Title = title + " - GOV.UK";
@@ -36,7 +36,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
     </p>
 }
 

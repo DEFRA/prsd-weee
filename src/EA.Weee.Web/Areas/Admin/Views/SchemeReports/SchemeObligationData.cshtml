@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.PcsReports.SchemeObligationDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.SchemeObligationDataViewModel
 @{
     ViewBag.Title = "Download PCS Obligation Data";
 }
@@ -36,7 +36,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
     </p>
 }
 
