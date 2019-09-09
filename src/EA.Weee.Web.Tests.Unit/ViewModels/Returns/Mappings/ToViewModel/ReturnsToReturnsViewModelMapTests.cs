@@ -33,45 +33,6 @@
         }
 
         [Fact]
-        public void Map_GivenMappedReturns_ModelShouldBeReturned()
-        {
-            var returnsItems = new List<ReturnsItemViewModel>()
-            {
-                new ReturnsItemViewModel()
-                {
-                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions()
-                },
-                new ReturnsItemViewModel()
-                {
-                    ReturnsListDisplayOptions = new ReturnsListDisplayOptions()
-                }
-            };
-
-            var returnData = new List<ReturnData>()
-            {
-                new ReturnData()
-                {
-                    Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
-                },
-                new ReturnData()
-                {
-                    Quarter = new Quarter(2020, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow()
-                }
-            };
-
-            var returnsData = new ReturnsData(returnData, null, A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
-
-            A.CallTo(() => ordering.Order(returnsData.ReturnsList)).Returns(returnsData.ReturnsList.AsEnumerable());
-            A.CallTo(() => returnItemViewModelMap.Map(A<ReturnData>._)).ReturnsNextFromSequence(returnsItems.ToArray());
-
-            var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
-
-            result.Returns.Should().Contain(returnsItems.ElementAt(0));
-            result.Returns.Should().Contain(returnsItems.ElementAt(1));
-            result.Returns.Count().Should().Be(2);
-        }
-
-        [Fact]
         public void Map_GivenMappedReturnsAreEditableButThereIsAnInProgressReturnInComplianceYearAndQuarter_ReturnedShouldNotBeEditable()
         {
             var returnData = A.CollectionOfFake<ReturnData>(1).ToList();
@@ -408,6 +369,23 @@
             var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData, SelectedComplianceYear = 2019 });
 
             result.Returns.Count(r => r.ReturnViewModel.Year != "2019").Should().Be(0);
+        }
+
+        [Fact]
+        public void Map_GivenSourceReturnDataWithNullSelectedComplianceYear_ReturnsViewModelShouldBeFilteredToLatestComplianceYear()
+        {
+            var returnsList = new List<ReturnData>()
+            {
+                new ReturnData() { Quarter = new Quarter(2019, QuarterType.Q1) },
+                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q2) },
+                new ReturnData() { Quarter = new Quarter(2020, QuarterType.Q3) }
+            };
+
+            var returnsData = GetDefaultReturnData(returnsList);
+
+            var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
+
+            result.Returns.Count(r => r.ReturnViewModel.Year != "2020").Should().Be(0);
         }
 
         [Fact]
