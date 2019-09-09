@@ -48,21 +48,21 @@
             if (source.ReturnsData.ReturnsList.Any(x => x.Quarter != null))
             {
                 var complianceYearList = source.ReturnsData.ReturnsList.Select(x => x.Quarter.Year).OrderByDescending(x => x).Distinct().ToList();
-                var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
-
                 model.ComplianceYearList = complianceYearList;
 
                 if (source.SelectedComplianceYear.HasValue)
                 {
                     model.SelectedComplianceYear = source.SelectedComplianceYear.Value;
                     model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == source.SelectedComplianceYear.Value).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
-                    model.Returns = model.Returns.Where(p => p.ReturnViewModel.Year == source.SelectedComplianceYear.ToString()).ToList();
                 }
                 else
                 {
+                    var latestComplianceYear = complianceYearList.OrderByDescending(x => x).FirstOrDefault();
                     model.QuarterList = source.ReturnsData.ReturnsList.Where(x => x.Quarter.Year == latestComplianceYear).Select(x => x.Quarter.Q.ToString()).Distinct().ToList();
                     model.SelectedComplianceYear = latestComplianceYear;
                 }
+
+                model.Returns = model.Returns.Where(p => p.ReturnViewModel.Year == model.SelectedComplianceYear.ToString()).ToList();
 
                 if (source.SelectedQuarter != null)
                 {

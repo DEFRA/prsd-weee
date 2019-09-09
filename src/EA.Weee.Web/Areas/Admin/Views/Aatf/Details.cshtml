@@ -5,7 +5,7 @@
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
-    ViewBag.Title = Model.FacilityType.ToDisplayString() + " - GOV.UK";
+    ViewBag.Title = Model.Name + " - GOV.UK";
 }
 
 @functions{
@@ -374,16 +374,19 @@
                     hash;
             });
 
+        var hash = window.location.hash;
         var target = window.location.hash,
             target = target.replace('#', '');
-
+        
         window.location.hash = "";
 
         $(window).on('load', function() {
             if (target) {
                 $('html, body').animate({
                     scrollTop: $("#main-content").offset().top
-                }, 200, 'swing', function () {});
+                }, 200, 'swing', function () { });
+
+                window.location.hash = hash;
             }
         });
     </script>
