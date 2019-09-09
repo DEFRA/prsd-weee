@@ -484,19 +484,17 @@
             var columnTypeParameter = new SqlParameter("@ColumnType", columnType);
 
             var table = new DataTable();
-            using (context)
-            {
-                var cmd = context.Database.Connection.CreateCommand();
-                cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea, @ColumnType";
-                cmd.Parameters.Add(complianceYearParameter);
-                cmd.Parameters.Add(aatfNameParameter);
-                cmd.Parameters.Add(obligationTypeParameter);
-                cmd.Parameters.Add(authorityParameter);
-                cmd.Parameters.Add(panAreaParameter);
-                cmd.Parameters.Add(columnTypeParameter);
-                await cmd.Connection.OpenAsync();
-                table.Load(await cmd.ExecuteReaderAsync());
-            }
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea, @ColumnType";
+            cmd.Parameters.Add(complianceYearParameter);
+            cmd.Parameters.Add(aatfNameParameter);
+            cmd.Parameters.Add(obligationTypeParameter);
+            cmd.Parameters.Add(authorityParameter);
+            cmd.Parameters.Add(panAreaParameter);
+            cmd.Parameters.Add(columnTypeParameter);
+            await cmd.Connection.OpenAsync();
+            table.Load(await cmd.ExecuteReaderAsync());
+            
             return table;
         }
 
@@ -508,17 +506,16 @@
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
 
             var table = new DataTable();
-            using (context)
-            {
-                var cmd = context.Database.Connection.CreateCommand();
-                cmd.CommandText = "[AATF].[getAatfObligatedCsvData] @ComplianceYear, @Quarter, @ReturnId, @AatfId";
-                cmd.Parameters.Add(complianceYearParameter);
-                cmd.Parameters.Add(quarterParameter);
-                cmd.Parameters.Add(returnIdParameter);
-                cmd.Parameters.Add(aatfIdParameter);
-                await cmd.Connection.OpenAsync();
-                table.Load(await cmd.ExecuteReaderAsync());
-            }
+            
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "[AATF].[getAatfObligatedCsvData] @ComplianceYear, @Quarter, @ReturnId, @AatfId";
+            cmd.Parameters.Add(complianceYearParameter);
+            cmd.Parameters.Add(quarterParameter);
+            cmd.Parameters.Add(returnIdParameter);
+            cmd.Parameters.Add(aatfIdParameter);
+            await cmd.Connection.OpenAsync();
+            table.Load(await cmd.ExecuteReaderAsync());
+            
             return table;
         }
 
@@ -528,14 +525,12 @@
 
             var obligatedData = new DataTable();
 
-            using (context)
-            {
-                var cmd = context.Database.Connection.CreateCommand();
-                cmd.CommandText = "[AATF].[getReturnObligatedCsvData] @ReturnId";
-                cmd.Parameters.Add(returnIdParameter);
-                await cmd.Connection.OpenAsync();
-                obligatedData.Load(await cmd.ExecuteReaderAsync());
-            }
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "[AATF].[getReturnObligatedCsvData] @ReturnId";
+            cmd.Parameters.Add(returnIdParameter);
+            await cmd.Connection.OpenAsync();
+            obligatedData.Load(await cmd.ExecuteReaderAsync());
+
             return obligatedData;
         }
 
@@ -558,17 +553,16 @@
             var addressData = new DataTable();
             dataSet.Tables.Add(sentOnData);
             dataSet.Tables.Add(addressData);
-            using (context)
-            {
-                var cmd = context.Database.Connection.CreateCommand();
-                cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @ObligationType, @CA, @PanArea";
-                cmd.Parameters.Add(complianceYearParameter);
-                cmd.Parameters.Add(obligationTypeParameter);
-                cmd.Parameters.Add(authorityParameter);
-                cmd.Parameters.Add(panAreaParameter);
-                await cmd.Connection.OpenAsync();
-                dataSet.Load(await cmd.ExecuteReaderAsync(), LoadOption.OverwriteChanges, sentOnData, addressData);
-            }
+
+            var cmd = context.Database.Connection.CreateCommand();
+            cmd.CommandText = "[AATF].[getAllAatfSentOnCsvData] @ComplianceYear, @ObligationType, @CA, @PanArea";
+            cmd.Parameters.Add(complianceYearParameter);
+            cmd.Parameters.Add(obligationTypeParameter);
+            cmd.Parameters.Add(authorityParameter);
+            cmd.Parameters.Add(panAreaParameter);
+            await cmd.Connection.OpenAsync();
+            dataSet.Load(await cmd.ExecuteReaderAsync(), LoadOption.OverwriteChanges, sentOnData, addressData);
+           
             return dataSet;
         }
         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
