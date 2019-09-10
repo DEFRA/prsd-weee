@@ -16,9 +16,14 @@
 </div>
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeRemovedProducer)">
     <fieldset class="govuk-fieldset">
+        <legend class="govuk-visually-hidden">
+            <h2 class="govuk-fieldset__heading">
+                Include removed producers?
+            </h2>
+        </legend>
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
-                <input id="IncludeRemovedProducer" class="govuk-checkboxes__input" name="IncludeRemovedProducer" type="checkbox" value="true" />
+                <input id="IncludeRemovedProducer" class="govuk-checkboxes__input" name="IncludeRemovedProducer" type="checkbox" value="true"/>
                 <label class="block-label govuk-label govuk-checkboxes__label" for="IncludeRemovedProducer">
                     Include removed producers?
                 </label>
