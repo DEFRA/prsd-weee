@@ -23,11 +23,15 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
             <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">
+                    <h2 class="govuk-fieldset__heading">
+                        Include brand names?
+                    </h2>
+                </legend>
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <!-- Removed the checkboxfor helper as it was causing the check box to be invisible, check with John about this happening -->
-                        <input id="IncludeBrandNames" class="govuk-checkboxes__input" name="IncludeBrandNames" type="checkbox" value="true" />
-                        <label class="govuk-label govuk-checkboxes__label">
+                        <input id="IncludeBrandNames" class="govuk-checkboxes__input" name="IncludeBrandNames" type="checkbox" value="true"/>
+                        <label class="govuk-label govuk-checkboxes__label" for="IncludeBrandNames">
                             Include brand names?
                         </label>
                     </div>
