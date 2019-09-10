@@ -93,7 +93,7 @@
             @Html.HiddenFor(m => m.Request.Data.AatfSizeValue)
             @Html.HiddenFor(m => m.FacilityType)
 
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
                 @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedValue,
                     Model.PossibleValues,
