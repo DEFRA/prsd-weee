@@ -182,7 +182,7 @@ SELECT DISTINCT
 	LEFT JOIN
 		[PCS].[AatfDeliveryLocation] AATF
 			ON WDA.[AatfDeliveryLocationId] = AATF.[Id]
-	LEFT JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
+	INNER JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
 	INNER JOIN @PCSDelivered p ON p.SchemeId = s.Id AND p.[Quarter] = dr.[Quarter] AND p.WeeeCategory = wda.WeeeCategory AND p.ObligationType = wda.ObligationType AND p.AatfApprovalNumber = AATF.ApprovalNumber
 	WHERE
 		DR.[ComplianceYear] = @ComplianceYear
