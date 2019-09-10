@@ -24,7 +24,6 @@
     {
         private const int ComplianceYear = 2019;
         private readonly WeeeContext context;
-        private readonly CsvWriterFactory csvWriterFactory;
         private readonly GetAllAatfSentOnDataCsvHandler handler;
         private readonly ICommonDataAccess commonDataAccess;
         private readonly IStoredProcedures storedProcedures;
@@ -34,20 +33,19 @@
         {
             context = A.Fake<WeeeContext>();
             commonDataAccess = A.Fake<ICommonDataAccess>();
-            csvWriterFactory = A.Fake<CsvWriterFactory>();
             storedProcedures = A.Fake<IStoredProcedures>();
             fixture = new Fixture();
 
             A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
 
-            handler = new GetAllAatfSentOnDataCsvHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(), context, csvWriterFactory, commonDataAccess);
+            handler = new GetAllAatfSentOnDataCsvHandler(new AuthorizationBuilder().AllowInternalAreaAccess().Build(), context, commonDataAccess);
         }
         
         [Fact]
         public async Task GetAllAatfSentOnDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-            var handler = new GetAllAatfSentOnDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
+            var handler = new GetAllAatfSentOnDataCsvHandler(authorization, context, commonDataAccess);
             var request = new GetAllAatfSentOnDataCsv(ComplianceYear, string.Empty, null, null);
 
             // Act
