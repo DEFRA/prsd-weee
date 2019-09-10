@@ -1,11 +1,20 @@
-
-ALTER PROCEDURE [AATF].[getPcsAatfDiscrepancyCsvData]
+IF OBJECT_ID('[AATF].getPcsAatfDiscrepancyCsvData', 'P') IS NOT NULL BEGIN
+	DROP PROCEDURE [AATF].[getPcsAatfDiscrepancyCsvData]
+END
+GO
+CREATE PROCEDURE [AATF].[getPcsAatfDiscrepancyCsvData]
 	@ComplianceYear INT,
 	@Quarter INT,
 	@ObligationType nvarchar(3)
 AS
 BEGIN
 
+DECLARE @ObligationTypeTable TABLE
+(
+	Obligation CHAR(3)
+)
+INSERT INTO @ObligationTypeTable SELECT 'B2B'
+INSERT INTO @ObligationTypeTable SELECT 'B2C'
 
 DECLARE @SUBMITTEDRETURN TABLE
 (
@@ -31,7 +40,7 @@ DECLARE @SUBMITTEDRETURN TABLE
 		[AatfApprovalNumber]		NVARCHAR(50),
 		AatfName					NVARCHAR(256) NULL,
 		AatfCompetentAuthorityAbbr	NVARCHAR(65) NULL,
-		[PcsTonnage]				DECIMAL(38, 3)
+		[PcsTonnage]				DECIMAL(38, 3) NULL
 	)
 
 	DECLARE @AatfObligated TABLE
@@ -73,7 +82,6 @@ SELECT X.AatfId, X.ReturnId, X.ComplianceYear, X.[Quarter], X.Name, X.ApprovalNu
 	)X
 WHERE X.RowNumber = 1
 
-
 INSERT INTO @AatfObligated
 SELECT u.SchemeId, u.SchemeName, u.ComplianceYear,  u.Name, u.AatfApprovalNumber, u.CompetentAuthorityAbbr, u.[Quarter], u.CategoryId, CASE WHEN u.Tonnage = 'HouseholdTonnage' THEN 'B2C'
 			 ELSE 'B2B' END AS Obligation,
@@ -92,23 +100,67 @@ FROM (
 	UNPIVOT(value FOR Tonnage IN (a.HouseholdTonnage, a.NonHouseholdTonnage)) u
 GROUP BY ComplianceYear, Name, AatfApprovalNumber, CompetentAuthorityAbbr, AatfId, ReturnId, [Quarter], Tonnage, CategoryId, u.SchemeId, u.SchemeName, u.ApprovalNumber, u.Abbreviation
 
-
-
-
+;WITH ObligationData (ObligationType, CategoryId, CategoryName)
+AS (
+SELECT 
+	o.Obligation,
+	w.Id,
+	w.Name
+FROM
+	[Lookup].WeeeCategory w, @ObligationTypeTable o
+)
 INSERT INTO @PCSDelivered
-SELECT
+SELECT DISTINCT
 		S.Id,
 		DR.[ComplianceYear],
 		S.[ApprovalNumber],
 		S.[SchemeName],
 		ca.Abbreviation,
 		DR.[Quarter],
-		WDA.[WeeeCategory],
-		WDA.[ObligationType],
+		o.CategoryId,
+		o.ObligationType,
 		AATF.[ApprovalNumber] AS 'AatfApprovalNumber',
 		a.Name,
 		ca1.Abbreviation,
-		WDA.[Tonnage]
+		0
+	FROM
+		[PCS].[DataReturn] DR
+	INNER JOIN
+		[PCS].[Scheme] S
+			ON DR.[SchemeId] = S.[Id]
+	INNER JOIN [Lookup].CompetentAuthority ca ON s.CompetentAuthorityId = ca.Id
+	INNER JOIN
+		[PCS].[DataReturnVersion] DRV
+			ON DR.[CurrentDataReturnVersionId] = DRV.[Id]
+	INNER JOIN
+		[PCS].[WeeeDeliveredReturnVersion] WDRV
+			ON DRV.[WeeeDeliveredReturnVersionId] = WDRV.[Id]
+	INNER JOIN
+		[PCS].[WeeeDeliveredReturnVersionAmount] WDRVA
+			ON WDRV.[Id] = WDRVA.[WeeeDeliveredReturnVersionId]
+	INNER JOIN
+		[PCS].[WeeeDeliveredAmount] WDA
+			ON WDRVA.[WeeeDeliveredAmountId] = WDA.[Id]
+	INNER JOIN
+		[PCS].[AatfDeliveryLocation] AATF
+			ON WDA.[AatfDeliveryLocationId] = AATF.[Id]
+	INNER JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
+	LEFT JOIN [Lookup].CompetentAuthority ca1 ON ca1.Id = a.CompetentAuthorityId
+	, ObligationData o
+	WHERE
+		DR.[ComplianceYear] = @ComplianceYear
+		AND (@Quarter = 0 or DR.[Quarter] = @Quarter)
+	ORDER BY
+		dr.[Quarter],
+		o.ObligationType,
+		o.CategoryId,
+		s.SchemeName,
+		a.[Name]
+
+	UPDATE
+		@PCSDelivered
+	SET
+		PcsTonnage = WDA.[Tonnage]
 	FROM
 		[PCS].[DataReturn] DR
 	INNER JOIN
@@ -130,8 +182,8 @@ SELECT
 	LEFT JOIN
 		[PCS].[AatfDeliveryLocation] AATF
 			ON WDA.[AatfDeliveryLocationId] = AATF.[Id]
-	LEFT JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
-	LEFT JOIN [Lookup].CompetentAuthority ca1 ON ca1.Id = a.CompetentAuthorityId
+	INNER JOIN AATF.AATF a ON a.ApprovalNumber = AATF.ApprovalNumber AND A.ComplianceYear = @ComplianceYear
+	INNER JOIN @PCSDelivered p ON p.SchemeId = s.Id AND p.[Quarter] = dr.[Quarter] AND p.WeeeCategory = wda.WeeeCategory AND p.ObligationType = wda.ObligationType AND p.AatfApprovalNumber = AATF.ApprovalNumber
 	WHERE
 		DR.[ComplianceYear] = @ComplianceYear
 		AND (@Quarter = 0 or DR.[Quarter] = @Quarter)
@@ -148,11 +200,11 @@ SELECT
 		CASE WHEN P.ApprovalNumber IS NULL THEN A.ApprovalNumber ELSE P.ApprovalNumber END AS PcsApprovalNumber, 
 		CASE WHEN P.CompetentAuthorityAbbr IS NULL THEN A.PcsCompetentAuthorityAbbr ELSE P.CompetentAuthorityAbbr END AS PcsAbbreviation,
 		CASE WHEN A.Name IS NULL THEN P.AatfName ELSE A.Name END AS AatfName, 
-		A.AatfApprovalNumber,
+		CASE WHEN A.AatfApprovalNumber IS NULL THEN P.AatfApprovalNumber ELSE A.AatfApprovalNumber END AS AatfApprovalNumber,
 		CASE WHEN A.CompetentAuthorityAbbr IS NULL THEN P.AatfCompetentAuthorityAbbr ELSE A.CompetentAuthorityAbbr END AS AatfAbbreviation, 
 		ISNULL(P.PcsTonnage,0) PcsTonnage, ISNULL(A.AatfTonnage,0) AatfTonnage,
 		ISNULL(P.PcsTonnage,0) - ISNULL(A.AatfTonnage,0) as DifferenceTonnage,
-		P.WeeeCategory, A.CategoryId
+		P.WeeeCategory, A.CategoryId, p.AatfName as t, a.[Name]
 		FROM
 		@AatfObligated A FULL OUTER JOIN
 		@PCSDelivered P ON  P.SchemeId = A.SchemeId
