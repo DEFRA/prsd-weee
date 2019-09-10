@@ -1,32 +1,17 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ViewAatfContactDetailsViewModel
 @{
-    if (Model.IsAE)
-    {
-        ViewBag.Title = "View AE contact details - GOV.UK";
-    }
-    else
-    {
-        ViewBag.Title = "View AATF contact details - GOV.UK";
-    }
+    var title = "View " + @Model.FacilityType.ToDisplayString() + " contact details";
+    ViewBag.Title = title + " - GOV.UK";
 }
+
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            @if (Model.IsAE)
-            {
-                @:View AE contact details
-            }
-            else
-            {
-                @:View AATF contact details
-            }
+                @title
         </h1>
     </header>
 
@@ -36,14 +21,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
 
-        if (Model.IsAE)
-        {
-            <p class="govuk-body">AE name: @Model.AatfName</p>
-        }
-        else
-        {
-            <p class="govuk-body">AATF name: @Model.AatfName</p>
-        }
+       <p class="govuk-body">@Model.FacilityType.ToDisplayString() name: @Model.AatfName</p>
 
         <table class="govuk-table">
             <tbody class="govuk-table__body">

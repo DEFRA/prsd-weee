@@ -7,15 +7,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoFixture;
     using Xunit;
 
     public class AatfDataToHomeViewModelMapTests
     {
         private readonly AatfDataToHomeViewModelMap map;
-
+        private readonly Fixture fixture;
         public AatfDataToHomeViewModelMapTests()
         {
-            this.map = new AatfDataToHomeViewModelMap();
+            fixture = new Fixture();
+
+            map = new AatfDataToHomeViewModelMap();
         }
 
         [Fact]
@@ -41,7 +44,7 @@
 
             aatfList.Add(aatfData);
 
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = false };
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 
             var result = map.Map(transfer);
 
@@ -77,7 +80,7 @@
             aatfList.Add(aatfData);
             aatfList.Add(aatfData2);
 
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = false };
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 
             var result = map.Map(transfer);
 
@@ -117,48 +120,82 @@
             aatfList.Add(aatfData2);
             aatfList.Add(aatfData3);
 
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = false };
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 
             var result = map.Map(transfer);
 
             result.AatfList.Should().BeInAscendingOrder(z => z.Name);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void Map_GivenIsAE_AatfListShouldOnlyContainThatIsFacilityType(bool isAE)
+        [Fact]
+        public void Map_GivenAatfsAndAatfFacilityType_AatfListShouldOnlyContainAatfs()
         {
-            var organisationId = Guid.NewGuid();
+            var aatfList = SetupAatfList();
+
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = fixture.Create<Guid>(), AatfList = aatfList, FacilityType = FacilityType.Aatf };
+
+            var result = map.Map(transfer);
+
+            result.AatfList.Should().NotBeEmpty();
+            result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Aatf);
+        }
+
+        [Fact]
+        public void Map_GivenAesAndAeFacilityType_AatfListShouldOnlyContainAes()
+        {
+            var aatfList = SetupAatfList();
+
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = fixture.Create<Guid>(), AatfList = aatfList, FacilityType = FacilityType.Ae };
+
+            var result = map.Map(transfer);
+
+            result.AatfList.Should().NotBeEmpty();
+            result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Ae);
+        }
+
+        [Fact]
+        public void Map_GivenSource_PropertiesShouldBeSet()
+        {
+            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = A.Fake<List<AatfData>>(), FacilityType = fixture.Create<FacilityType>() };
+
+            var result = map.Map(transfer);
+
+            result.AatfList.Should().BeEquivalentTo(transfer.AatfList);
+            result.OrganisationId.Should().Be(transfer.OrganisationId);
+            result.FacilityType.Should().Be(transfer.FacilityType);
+        }
+
+        private List<AatfData> SetupAatfList()
+        {
             var aatfList = new List<AatfData>();
 
             var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
-                   A.Dummy<Core.Shared.PanAreaData>(), null)
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = FacilityType.Aatf,
                 AatfId = Guid.NewGuid()
             };
 
             var aatfData2 = new AatfData(Guid.NewGuid(), "AATF2", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
-                   A.Dummy<Core.Shared.PanAreaData>(), null)
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = FacilityType.Aatf,
                 AatfId = Guid.NewGuid()
             };
 
             var exporterData = new AatfData(Guid.NewGuid(), "AE", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
-                   A.Dummy<Core.Shared.PanAreaData>(), null)
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = FacilityType.Ae,
                 AatfId = Guid.NewGuid()
             };
 
             var exporterData2 = new AatfData(Guid.NewGuid(), "AE", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-               Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
-               A.Dummy<Core.Shared.PanAreaData>(), null)
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = FacilityType.Ae,
                 AatfId = Guid.NewGuid()
@@ -168,33 +205,7 @@
             aatfList.Add(exporterData);
             aatfList.Add(aatfData2);
             aatfList.Add(exporterData2);
-
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, IsAE = isAE };
-
-            var result = map.Map(transfer);
-
-            result.AatfList.Should().NotBeEmpty();
-
-            if (isAE)
-            {
-                result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Ae);
-            }
-            else
-            {
-                result.AatfList.Should().OnlyContain(m => m.FacilityType == FacilityType.Aatf);
-            }
-        }
-
-        [Fact]
-        public void Map_GivenSource_PropertiesShouldBeSet()
-        {
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = A.Fake<List<AatfData>>(), IsAE = false };
-
-            var result = map.Map(transfer);
-
-            result.AatfList.Should().BeEquivalentTo(transfer.AatfList);
-            result.OrganisationId.Should().Be(transfer.OrganisationId);
-            result.IsAE.Should().Be(transfer.IsAE);
+            return aatfList;
         }
     }
 }
