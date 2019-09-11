@@ -175,7 +175,7 @@
         private async Task PopulateFilters(AatfAeDetailsViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value", 4);
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
             model.PanAreaList = await PatAreaList();
             model.LocalAreaList = await LocalAreaList();
