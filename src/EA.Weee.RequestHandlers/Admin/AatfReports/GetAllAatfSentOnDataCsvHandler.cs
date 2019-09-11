@@ -17,16 +17,14 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext weeContext;
-        private readonly CsvWriterFactory csvWriterFactory;
+
         private readonly ICommonDataAccess commonDataAccess;
 
-        public GetAllAatfSentOnDataCsvHandler(IWeeeAuthorization authorization, WeeeContext weeContext,
-          CsvWriterFactory csvWriterFactory, ICommonDataAccess commonDataAccess)
+        public GetAllAatfSentOnDataCsvHandler(IWeeeAuthorization authorization, WeeeContext weeContext, ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
             this.weeContext = weeContext;
             this.commonDataAccess = commonDataAccess;
-            this.csvWriterFactory = csvWriterFactory;
         }
         public async Task<CSVFileData> HandleAsync(GetAllAatfSentOnDataCsv request)
         {

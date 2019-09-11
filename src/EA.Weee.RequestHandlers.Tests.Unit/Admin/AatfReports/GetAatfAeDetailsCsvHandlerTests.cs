@@ -265,7 +265,7 @@
         {
             return new AatfAeDetailsData
             {
-                ComplianceYear = fixture.Create<int>(),
+                ComplianceYear = fixture.Create<string>(),
                 AppropriateAuthorityAbbr = fixture.Create<string>(),
                 PanAreaTeam = fixture.Create<string>(),
                 EaArea = fixture.Create<string>(),

@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
+    using Api.Client;
+    using AutoFixture;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.Controllers;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Controllers.Base;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Services;
+    using Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
@@ -24,13 +25,16 @@
         private readonly IWeeeCache cache;
         private readonly HomeController controller;
         private readonly IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel> mapper;
+        private readonly Fixture fixture;
 
         public HomeControllerTests()
         {
-            this.apiClient = A.Fake<IWeeeClient>();
-            this.breadcrumb = A.Fake<BreadcrumbService>();
-            this.cache = A.Fake<IWeeeCache>();
-            this.mapper = A.Fake<IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>>();
+            apiClient = A.Fake<IWeeeClient>();
+            breadcrumb = A.Fake<BreadcrumbService>();
+            cache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>>();
+
+            fixture = new Fixture();
 
             controller = new HomeController(cache, breadcrumb, () => apiClient, mapper);
         }
@@ -42,43 +46,35 @@
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void IndexGet_GivenValidViewModelAndIsAE_BreadcrumbShouldBeSet(bool isAE)
+        [InlineData(FacilityType.Aatf, "AATF")]
+        [InlineData(FacilityType.Ae, "AE")]
+        public async void IndexGet_GivenValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
         {
             var organisationName = "Organisation";
             var model = new HomeViewModel()
             {
                 AatfList = A.Fake<List<AatfData>>(),
-                IsAE = isAE
+                FacilityType = facilityType
             };
 
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
-            await controller.Index(A.Dummy<Guid>(), isAE);
+            await controller.Index(A.Dummy<Guid>(), facilityType);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-
-            if (isAE)
-            {
-                breadcrumb.ExternalActivity.Should().Be("View AE contact details");
-            }
-            else
-            {
-                breadcrumb.ExternalActivity.Should().Be("View AATF contact details");
-            }
+            breadcrumb.ExternalActivity.Should().Be($"View {expected} contact details");
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async void IndexPost_GivenInValidViewModelAndIsAE_BreadcrumbShouldBeSet(bool isAE)
+        [InlineData(FacilityType.Aatf, "AATF")]
+        [InlineData(FacilityType.Ae, "AE")]
+        public async void IndexPost_GivenInValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
         {
             var organisationName = "organisation";
             var model = new HomeViewModel()
             {
-                IsAE = isAE
+                FacilityType = facilityType
             };
 
             controller.ModelState.AddModelError("error", "error");
@@ -86,18 +82,10 @@
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            await controller.Index(new HomeViewModel() { IsAE = isAE });
+            await controller.Index(new HomeViewModel() { FacilityType = facilityType });
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-
-            if (isAE)
-            {
-                breadcrumb.ExternalActivity.Should().Be("View AE contact details");
-            }
-            else
-            {
-                breadcrumb.ExternalActivity.Should().Be("View AATF contact details");
-            }
+            breadcrumb.ExternalActivity.Should().Be($"View {expected} contact details");
         }
 
         [Fact]
@@ -110,7 +98,7 @@
 
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(A.Dummy<Guid>(), false) as ViewResult;
+            var result = await controller.Index(A.Dummy<Guid>(), fixture.Create<FacilityType>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -126,7 +114,7 @@
 
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            await controller.Index(organisationId, false);
+            await controller.Index(organisationId, fixture.Create<FacilityType>());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -142,9 +130,11 @@
 
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            await controller.Index(organisationId, false);
+            var facilityType = fixture.Create<FacilityType>();
 
-            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>.That.Matches(a => a.IsAE == false && a.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            await controller.Index(organisationId, facilityType);
+
+            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -154,7 +144,7 @@
             var aatfList = new List<AatfData>();
 
             var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
-                   Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                   AatfStatus.Approved, A.Dummy<AatfAddressData>(), AatfSize.Large, DateTime.Now,
                    A.Dummy<Core.Shared.PanAreaData>(), null)
             {
                 FacilityType = FacilityType.Aatf
@@ -170,7 +160,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
             A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(organisationId, false) as RedirectToRouteResult;
+            var result = await controller.Index(organisationId, fixture.Create<FacilityType>()) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
@@ -182,9 +172,9 @@
         {
             var model = new HomeViewModel()
             {
-                OrganisationId = Guid.NewGuid(),
-                SelectedAatfId = Guid.NewGuid(),
-                IsAE = false
+                OrganisationId = fixture.Create<Guid>(),
+                SelectedId = fixture.Create<Guid>(),
+                FacilityType = fixture.Create<FacilityType>()
             };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
@@ -192,8 +182,8 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
-            result.RouteValues["aatfId"].Should().Be(model.SelectedAatfId);
-            result.RouteValues["isAE"].Should().Be(model.IsAE);
+            result.RouteValues["aatfId"].Should().Be(model.SelectedId);
+            result.RouteValues["facilityType"].Should().Be(model.FacilityType);
         }
     }
 }

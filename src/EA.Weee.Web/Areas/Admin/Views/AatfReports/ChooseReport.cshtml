@@ -1,0 +1,37 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.ChooseAatfReportViewModel
+@{
+    var title = "Which AATF / AE report would you like to view?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseReport", controllerName: "AatfReports", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ReportOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Which report would you like to view?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+
+        <p>
+            @Html.ActionLink("Back", "Index", "Reports")
+        </p>
+    }
+}

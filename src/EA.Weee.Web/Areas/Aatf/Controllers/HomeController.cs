@@ -13,6 +13,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.AatfReturn;
 
     public class HomeController : ExternalSiteController
     {
@@ -30,28 +31,21 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, bool isAE)
+        public virtual async Task<ActionResult> Index(Guid organisationId, FacilityType facilityType)
         {
             using (var client = apiClient())
             {
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, IsAE = isAE });
+                var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = facilityType });
 
                 if (model.AatfList.Count == 1)
                 {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId = organisationId, aatfId = model.AatfList[0].Id, isAE = isAE });
+                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId, aatfId = model.AatfList[0].Id, facilityType });
                 }
 
-                if (isAE)
-                {
-                    await SetBreadcrumb(model.OrganisationId, "View AE contact details", false);
-                }
-                else
-                {
-                    await SetBreadcrumb(model.OrganisationId, "View AATF contact details", false);
-                }
-
+                await SetBreadcrumb(model.OrganisationId, $"View {facilityType.ToDisplayString()} contact details");
+               
                 return View(model);
             }
         }
@@ -62,21 +56,14 @@
         {
             if (ModelState.IsValid)
             {
-                if (model.IsAE)
-                {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAeId, isAE = model.IsAE });
-                }
-                else
-                {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedAatfId, isAE = model.IsAE });
-                }
+               return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedId, facilityType = model.FacilityType });
             }
 
             using (var client = apiClient())
             {
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(model.OrganisationId));
 
-                model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, IsAE = model.IsAE });
+                model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, FacilityType = model.FacilityType });
             }
 
             if (!model.ModelValidated)
@@ -84,29 +71,16 @@
                 ModelState.RunCustomValidation(model);
             }
 
-            ModelState.ApplyCustomValidationSummaryOrdering(HomeViewModel.ValidationMessageDisplayOrder);
-
-            if (model.IsAE)
-            {
-                await SetBreadcrumb(model.OrganisationId, "View AE contact details", false);
-            }
-            else
-            {
-                await SetBreadcrumb(model.OrganisationId, "View AATF contact details", false);
-            }
-
+            await SetBreadcrumb(model.OrganisationId, $"View {model.FacilityType.ToDisplayString()} contact details");
+            
             return View(model);
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity, bool setScheme = true)
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
-            if (setScheme)
-            {
-                breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-            }
         }
     }
 }

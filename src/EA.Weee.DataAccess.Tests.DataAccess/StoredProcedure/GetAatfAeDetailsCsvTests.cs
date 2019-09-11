@@ -103,7 +103,7 @@
             {
                 results.Count(x => x.Name == verifyAatf.Name).Should().Be(1);
                 var aatf = results.First(x => x.Name == verifyAatf.Name);
-                aatf.ComplianceYear.Should().Be(verifyAatf.ComplianceYear);
+                aatf.ComplianceYear.Should().Be(verifyAatf.ComplianceYear.ToString());
                 aatf.AppropriateAuthorityAbbr.Should().Be(verifyAatf.CompetentAuthority.Abbreviation);
                 aatf.EaArea.Should().Be(verifyAatf.LocalArea?.Name);
                 aatf.PanAreaTeam.Should().Be(verifyAatf.PanArea?.Name);

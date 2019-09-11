@@ -3,7 +3,14 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.NonObligatedValuesViewModel
 @{
-    ViewBag.Title = "Non-obligated WEEE - GOV.UK";
+    if (Model.Dcf)
+    {
+        ViewBag.Title = "Non-obligated WEEE kept / retained by a DCF - GOV.UK";
+    }
+    else
+    {
+        ViewBag.Title = "Non-obligated WEEE - GOV.UK";
+    }
 }
 
 @{
