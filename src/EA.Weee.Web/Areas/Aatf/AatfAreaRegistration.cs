@@ -22,7 +22,7 @@
                 name: "Aatf_ContactDetails",
                 url: "Aatf/{organisationId}/{controller}/{action}/{aatfId}",
                 defaults: new { action = "Index", controller = "ViewAatfContactDetails" },
-                namespaces: new[] { typeof(ViewAatfContactDetailsController).Namespace });
+                namespaces: new[] { typeof(ContactDetailsController).Namespace });
         }
     }
 }
