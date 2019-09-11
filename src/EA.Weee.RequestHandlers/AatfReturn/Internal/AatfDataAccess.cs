@@ -245,7 +245,7 @@
                 .Where(r => r.AatfId == aatfId)
                 .OrderByDescending(r => r.ComplianceYear).FirstOrDefaultAsync();                   
 
-            return latestAatf != null && latestAatf.Id.Equals(id) ? true : false;
+            return latestAatf != null && latestAatf.Id.Equals(id);
         }
     }
 }

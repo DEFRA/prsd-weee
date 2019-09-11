@@ -33,6 +33,12 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+
+    using EA.Weee.Web.Requests;
+    using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Aatf.Mapping;
+
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Requests;
     using Web.Areas.Admin.ViewModels.Aatf;
@@ -1214,27 +1220,83 @@
         }
 
         [Fact]
+        public async Task ManageContactDetailsGet_GivenId_CurrentDateShouldBeRetrieved()
+        {
+            await this.controller.ManageContactDetails(A.Dummy<Guid>(), A.Dummy<FacilityType>());
+
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ManageContactDetailsGet_GivenApiData_ViewModelShouldBeMapped()
+        {
+            var aatfData = this.fixture.Build<AatfData>().With(r => r.ComplianceYear, 2019).Create();
+            var countries = this.fixture.CreateMany<CountryData>().ToList();
+            var currentDate = this.fixture.Create<DateTime>();
+
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatfData);
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
+                .Returns(new AatfContactData() { CanEditContactDetails = true });
+
+            await this.controller.ManageContactDetails(A.Dummy<Guid>(), A.Dummy<FacilityType>());
+
+            A.CallTo(() => mapper.Map<AatfEditContactAddressViewModel>(A<AatfEditContactTransfer>.That.Matches(e => e.AatfData == aatfData && e.Countries.Equals(countries) && e.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditGet_GivenMappedViewModel_ModelShouldBeReturned()
+        {
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
+            var aatfData = this.fixture.Build<AatfData>().With(r => r.ComplianceYear, 2019).Create();
+
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
+                .Returns(new AatfContactData() { CanEditContactDetails = true });
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatfData);
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
+            A.CallTo(() => mapper.Map<AatfEditContactAddressViewModel>(A<AatfEditContactTransfer>._)).Returns(model);
+
+            var result = await this.controller.ManageContactDetails(A.Dummy<Guid>(), A.Dummy<FacilityType>()) as ViewResult;
+
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task EditGet_GivenMappedViewModel_DefaultViewShouldBeReturned()
+        {
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
+            var aatfData = this.fixture.Build<AatfData>().With(r => r.ComplianceYear, 2019).Create();
+
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfContact>._))
+                .Returns(new AatfContactData() { CanEditContactDetails = true });
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatfData);
+            A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(2019, 1, 1));
+            A.CallTo(() => mapper.Map<AatfEditContactAddressViewModel>(A<AatfEditContactTransfer>._)).Returns(model);
+
+            var result = await this.controller.ManageContactDetails(A.Dummy<Guid>(), A.Dummy<FacilityType>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
         public async void ManageContactDetailsPost_OnSubmit_PageRedirectsToSiteList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
 
-            var aatfId = Guid.NewGuid();
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
+            var aatfData = this.fixture.Build<AatfData>().With(r => r.ComplianceYear, 2019).Create();
 
-            var viewModel = new AatfEditContactAddressViewModel
-            {
-                AatfId = aatfId,
-            };
-
-            httpContext.RouteData.Values.Add("id", aatfId);
+            httpContext.RouteData.Values.Add("id", model.Id);
 
             var helper = A.Fake<UrlHelper>();
             controller.Url = helper;
             var url = fixture.Create<string>();
 
-            A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == viewModel.AatfId))).Returns(url);
+            A.CallTo(() => helper.Action("Details", A<object>.That.Matches(o => o.GetPropertyValue<string>("area") == "Admin" && o.GetPropertyValue<Guid>("Id") == model.Id))).Returns(url);
 
-            var result = await controller.ManageContactDetails(viewModel) as RedirectResult;
+            var result = await controller.ManageContactDetails(model) as RedirectResult;
 
             result.Url.Should().Be($"{url}#contactDetails");
         }
@@ -1242,8 +1304,8 @@
         [Fact]
         public async void ManageContactDetailsPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
-            var model = new AatfEditContactAddressViewModel();
-            var request = new EditAatfContact();
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
+            var request = new EditAatfContact(this.fixture.Create<Guid>(), this.fixture.Create<AatfContactData>());
 
             A.CallTo(() => contactRequestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -1257,7 +1319,7 @@
         [Fact]
         public async void ManageContactDetailsPost_GivenInvalidViewModel_ApiShouldBeCalled()
         {
-            var model = new AatfEditContactAddressViewModel() { ContactData = new AatfContactData() };
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
             await controller.ManageContactDetails(model);
@@ -1268,21 +1330,16 @@
         [Fact]
         public async void ManageContactDetailsPost_GivenInvalidViewModel_CountriesShouldBeAttached()
         {
-            var model = new AatfEditContactAddressViewModel() { ContactData = new AatfContactData() };
+            var model = this.fixture.Create<AatfEditContactAddressViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
-            var countryGuid = Guid.NewGuid();
-            var countryName = "MyCountryName";
-            var countryList = new List<CountryData>() { new CountryData() { Id = countryGuid, Name = countryName } };
+            var countries = this.fixture.CreateMany<CountryData>().ToList();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countryList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
 
             var result = await controller.ManageContactDetails(model) as ViewResult;
             var viewModel = result.Model as AatfEditContactAddressViewModel;
-            viewModel.ContactData.AddressData.Countries.Should().NotBeNull();
-            viewModel.ContactData.AddressData.Countries.Count().Should().Be(1);
-            viewModel.ContactData.AddressData.Countries.ElementAt(0).Id.Should().Be(countryGuid);
-            viewModel.ContactData.AddressData.Countries.ElementAt(0).Name.Should().Be(countryName);
+            viewModel.ContactData.AddressData.Countries.Should().BeSameAs(countries);
         }
 
         [Theory]
@@ -1290,7 +1347,7 @@
         public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
-            var model = new AatfEditContactAddressViewModel() { AatfId = aatfId, ContactData = new AatfContactData(), FacilityType = type };
+            var model = new AatfEditContactAddressViewModel() { Id = aatfId, ContactData = new AatfContactData(), AatfData = new AatfData() { FacilityType = type }};
             controller.ModelState.AddModelError("error", "error");
 
             await controller.ManageContactDetails(model);
