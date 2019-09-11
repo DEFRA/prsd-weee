@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducersDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ProducersDataViewModel
 @{
-    ViewBag.Title = "Download PCS WEEE Data";
+    ViewBag.Title = "Download Producer EEE Data";
 }
 
 @section main_content
@@ -25,14 +25,14 @@
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "PCS WEEE data", new Dictionary<string, object> { { "class", "button" } }))
+           "Report download", "Producer EEE data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
     </p>
 }
 
@@ -41,7 +41,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadSchemeWeeeDataCsv", new
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerEeeDataCSV", new
                           {
                               complianceYear = Model.SelectedYear,
                               schemeId = Model.SelectedSchemeId,

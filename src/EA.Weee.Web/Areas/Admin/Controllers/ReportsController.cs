@@ -1,35 +1,28 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using Api.Client;
-    using Base;
-    using Core.Admin;
-    using Core.Scheme;
-    using Core.Shared;
-    using Infrastructure;
-    using Prsd.Core;
-    using Services;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using ViewModels.Home;
+    using Api.Client;
+    using Core.AatfReturn;
+    using Core.Admin;
+    using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
+    using Infrastructure;
+    using Prsd.Core.Helpers;
+    using Services;
+    using ViewModels.AatfReports;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.AatfReports;
-    using Weee.Requests.Admin.GetActiveComplianceYears;
-    using Weee.Requests.Admin.Reports;
-    using Weee.Requests.Scheme;
-    using Weee.Requests.Shared;
-    using GetSchemes = Weee.Requests.Admin.GetSchemes;
 
-    public class ReportsController : AdminController
+    public class ReportsController : ReportsBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
 
-        public ReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
+        public ReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb) : base(apiClient, breadcrumb)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -54,7 +47,7 @@
                         return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
                     default:
                         throw new NotSupportedException(
-                            string.Format("Cannot determine result for user with status '{0}'", userStatus));
+                            $"Cannot determine result for user with status '{userStatus}'");
                 }
             }
         }
@@ -64,14 +57,14 @@
         {
             SetBreadcrumb();
 
-            var model = new ChooseReportViewModel();
+            var model = new ChooseReportTypeModel();
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChooseReport(ChooseReportViewModel model)
+        public ActionResult ChooseReport(ChooseReportTypeModel model)
         {
             SetBreadcrumb();
 
@@ -82,59 +75,17 @@
 
             switch (model.SelectedValue)
             {
-                case Reports.ProducerDetails:
-                    return RedirectToAction(nameof(ProducerDetails));
+                case Reports.PcsReports:
+                    return RedirectToAction("Index", "SchemeReports");
 
-                case Reports.ProducerPublicRegister:
-                    return RedirectToAction(nameof(ProducerPublicRegister));
-
-                case Reports.UkWeeeData:
-                    return RedirectToAction(nameof(UkWeeeData));
-
-                case Reports.UkWeeeDataAtAatfs:
-                    return RedirectToAction("UkWeeeDataAtAatfs", "AatfReports");
-
-                case Reports.ProducerEeeData:
-                    return RedirectToAction(nameof(ProducerEeeData));
-
-                case Reports.SchemeWeeeData:
-                    return RedirectToAction(nameof(SchemeWeeeData));
-
-                case Reports.UkEeeData:
-                    return RedirectToAction(nameof(UkEeeData));
-
-                case Reports.SchemeObligationData:
-                    return RedirectToAction(nameof(SchemeObligationData));
-
-                case Reports.MissingProducerData:
-                    return RedirectToAction(nameof(MissingProducerData));
-
-                case Reports.AatfAeReturnData:
-                    return RedirectToAction("AatfAeReturnData", "AatfReports");
-
-                case Reports.AatfObligatedData:
-                    return RedirectToAction("AatfObligatedData", "AatfReports");
-
-                case Reports.UkNonObligatedWeeeData:
-                    return RedirectToAction("UkNonObligatedWeeeReceived", "AatfReports");
-
-                case Reports.AatfNonObligatedData:
-                    return RedirectToAction("AatfNonObligatedData", "AatfReports");
-
-                case Reports.AatfSentOnData:
-                    return RedirectToAction("AatfSentOnData", "AatfReports");
-
-                case Reports.AatfReuseSitesData:
-                    return RedirectToAction("AatfReuseSites", "AatfReports");
-
-                case Reports.AatfAeDetails:
-                    return RedirectToAction("AatfAeDetails", "AatfReports");
+                case Reports.AatfReports:
+                    return RedirectToAction("Index", "AatfReports");
 
                 case Reports.PcsAatfDataDifference:
-                    return RedirectToAction("PcsAatfDataDifference", "AatfReports");
+                    return RedirectToAction(nameof(PcsAatfDataDifference), "Reports");
 
-                case Reports.AatfAePublicRegister:
-                    return RedirectToAction("AatfAePublicRegister", "AatfReports");
+                case Reports.AatfAeDetails:
+                    return RedirectToAction(nameof(AatfAeDetails), "Reports");
 
                 default:
                     throw new NotSupportedException();
@@ -142,20 +93,20 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ProducerDetails()
+        public async Task<ActionResult> AatfAeDetails()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            ReportsFilterViewModel model = new ReportsFilterViewModel();
+            var model = new AatfAeDetailsViewModel();
             await PopulateFilters(model);
 
-            return View(model);
+            return View("AatfAeDetails", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerDetails(ReportsFilterViewModel model)
+        public async Task<ActionResult> AatfAeDetails(AatfAeDetailsViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -166,217 +117,36 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId,
-            bool includeRemovedProducers, bool includeBrandNames)
-        {
-            StringBuilder fileName = new StringBuilder();
-
-            fileName.AppendFormat("{0:D4}", complianceYear);
-
-            if (schemeId != null)
-            {
-                using (IWeeeClient client = apiClient())
-                {
-                    GetSchemeById requestScheme = new GetSchemeById(schemeId.Value);
-                    SchemeData scheme = await client.SendAsync(User.GetAccessToken(), requestScheme);
-
-                    fileName.AppendFormat("_{0}", scheme.ApprovalName);
-                }
-            }
-
-            if (authorityId != null)
-            {
-                using (IWeeeClient client = apiClient())
-                {
-                    GetUKCompetentAuthorityById requestAuthority = new GetUKCompetentAuthorityById(authorityId.Value);
-                    UKCompetentAuthorityData authorityData = await client.SendAsync(User.GetAccessToken(), requestAuthority);
-
-                    fileName.AppendFormat("_{0}", authorityData.Abbreviation);
-                }
-            }
-
-            fileName.AppendFormat("_producerdetails_{0:ddMMyyyy_HHmm}.csv", SystemTime.UtcNow);
-
-            CSVFileData membersDetailsCsvData;
-            using (IWeeeClient client = apiClient())
-            {
-                GetMemberDetailsCsv request =
-                    new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId, includeBrandNames);
-                membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileName.ToString()));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> ProducerPublicRegister()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            ProducerPublicRegisterViewModel model = new ProducerPublicRegisterViewModel();
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerPublicRegister(ProducerPublicRegisterViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadProducerPublicRegisterCsv(int complianceYear)
-        {
-            using (IWeeeClient client = apiClient())
-            {
-                var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-                   new GetProducerPublicRegisterCSV(complianceYear));
-
-                byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> ProducerEeeData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model, true);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerEeeData(ProducersDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model, true);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, Guid? schemeId, ObligationType obligationType)
+        public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
+             ReportFacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
         {
             CSVFileData fileData;
 
-            GetProducerEeeDataCsv request = new GetProducerEeeDataCsv(complianceYear, schemeId, obligationType);
-            using (IWeeeClient client = apiClient())
+            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId, false);
+            using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
         [HttpGet]
-        public async Task<ActionResult> SchemeWeeeData()
+        public async Task<ActionResult> PcsAatfDataDifference()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model, true);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SchemeWeeeData(ProducersDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model, true);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, Guid? schemeId, ObligationType obligationType)
-        {
-            FileInfo file;
-
-            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, schemeId, obligationType);
-            using (var client = apiClient())
-            {
-                file = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            return File(file.Data, "text/csv", file.FileName);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> UkWeeeData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model, false);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkWeeeData(ProducersDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model, false);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadUkWeeeDataCsv(int complianceYear)
-        {
-            FileInfo file;
-
-            GetUkWeeeCsv request = new GetUkWeeeCsv(complianceYear);
-            using (var client = apiClient())
-            {
-                file = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            return File(file.Data, "text/csv", file.FileName);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> UkEeeData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            UkEeeDataViewModel model = new UkEeeDataViewModel();
+            var model = new PcsAatfDataDifferenceViewModel();
             await PopulateFilters(model);
 
-            return View("UkEeeData", model);
+            return View("PcsAatfDataDifference", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
+        public async Task<ActionResult> PcsAatfDataDifference(PcsAatfDataDifferenceViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -387,197 +157,33 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadUkEeeDataCsv(int complianceYear)
-        {
-            using (var client = apiClient())
-            {
-                var ukEeeCsvData = await client.SendAsync(User.GetAccessToken(),
-                    new GetUkEeeDataCsv(complianceYear));
-                byte[] data = new UTF8Encoding().GetBytes(ukEeeCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukEeeCsvData.FileName));
-            }
-        }
-
-        [HttpGet]
-        public ActionResult SchemeObligationData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            SchemeObligationDataViewModel model = new SchemeObligationDataViewModel();
-            PopulateFilters(model);
-
-            return View("SchemeObligationData", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SchemeObligationData(SchemeObligationDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadSchemeObligationDataCsv(int complianceYear)
-        {
-            using (var client = apiClient())
-            {
-                var schemeObligationCsvData = await client.SendAsync(User.GetAccessToken(),
-                    new GetSchemeObligationDataCsv(complianceYear));
-                byte[] data = new UTF8Encoding().GetBytes(schemeObligationCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(schemeObligationCsvData.FileName));
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> MissingProducerData()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            MissingProducerDataViewModel model = new MissingProducerDataViewModel();
-            await PopulateFilters(model);
-
-            return View("MissingProducerData", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> MissingProducerData(MissingProducerDataViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadMissingProducerDataCsv(int complianceYear,
-            Guid? schemeId, ObligationType obligationType, int? quarter)
+        public async Task<ActionResult> DownloadPcsAatfDataDifference(int complianceYear, int? quarter,
+            string obligationType)
         {
             CSVFileData fileData;
 
-            GetMissingProducerDataCsv request = new GetMissingProducerDataCsv(complianceYear, obligationType, quarter, schemeId);
-            using (IWeeeClient client = apiClient())
+            var request = new GetPcsAatfComparisonData(complianceYear, quarter, obligationType);
+            using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
-        private async Task PopulateFilters(ReportsFilterViewModel model)
+        private async Task PopulateFilters(AatfAeDetailsViewModel model)
         {
-            List<int> years = await FetchComplianceYearsForMemberRegistrations();
-            List<SchemeData> schemes = await FetchSchemes();
-            IList<UKCompetentAuthorityData> authorities = await FetchAuthorities();
-
-            model.ComplianceYears = new SelectList(years);
-            model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
-            model.AppropriateAuthorities = new SelectList(authorities, "Id", "Abbreviation");
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
+            model.PanAreaList = await PatAreaList();
+            model.LocalAreaList = await LocalAreaList();
         }
 
-        private async Task PopulateFilters(ProducerPublicRegisterViewModel model)
+        private async Task PopulateFilters(PcsAatfDataDifferenceViewModel model)
         {
-            List<int> years = await FetchComplianceYearsForMemberRegistrations();
-
-            model.ComplianceYears = new SelectList(years);
-        }
-
-        private void PopulateFilters(SchemeObligationDataViewModel model)
-        {
-            model.ComplianceYears = new SelectList(FetchAllComplianceYears());
-        }
-
-        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
-        {
-            List<int> years = await FetchComplianceYearsForDataReturns();
-
-            model.ComplianceYears = new SelectList(years);
-
-            if (populateSchemes)
-            {
-                List<SchemeData> schemes = await FetchSchemes();
-                model.Schemes = new SelectList(schemes, "Id", "SchemeName");
-            }
-        }
-
-        private async Task PopulateFilters(MissingProducerDataViewModel model)
-        {
-            List<int> years = await FetchComplianceYearsForDataReturns();
-            model.ComplianceYears = new SelectList(years);
-
-            List<SchemeData> schemes = await FetchSchemes();
-            model.Schemes = new SelectList(schemes, "Id", "SchemeName");
-        }
-
-        /// <summary>
-        /// Return all years from 2016 to the current year in descending order
-        /// </summary>
-        /// <returns>descending list of compliance years</returns>
-        private List<int> FetchAllComplianceYears()
-        {
-            return Enumerable.Range(2016, DateTime.Now.Year - 2015)
-                .OrderByDescending(year => year)
-                .ToList();
-        }
-
-        /// <summary>
-        /// Return all years with valid data returns uploads associated with them
-        /// </summary>
-        /// <returns></returns>
-        private async Task<List<int>> FetchComplianceYearsForDataReturns()
-        {
-            var request = new GetDataReturnsActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
-        }
-        private async Task PopulateFilters(UkEeeDataViewModel model)
-        {
-            List<int> years = await FetchComplianceYearsForDataReturns();
-            model.ComplianceYears = new SelectList(years);
-        }
-
-        private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()
-        {
-            var request = new GetMemberRegistrationsActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
-        }
-
-        private async Task<List<SchemeData>> FetchSchemes()
-        {
-            var request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
-        }
-
-        private async Task<IList<UKCompetentAuthorityData>> FetchAuthorities()
-        {
-            var request = new GetUKCompetentAuthorities();
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
-        }
-
-        private void SetBreadcrumb()
-        {
-            breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
         }
     }
 }

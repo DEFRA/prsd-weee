@@ -247,9 +247,6 @@
         [Fact]
         public void Map_GivenListOfAatfsAndNoAatfId_AssociatedAatfsShouldBeEntireList()
         {
-            var aatfData = fixture.Create<AatfData>();
-            var aatfId = fixture.Create<Guid>();
-
             var aatfDataList1 = GetAatfDataList(FacilityType.Aatf, fixture.Create<short>(), fixture.Create<DateTime>(), null, fixture.Create<Guid>());
             var aatfDataList2 = GetAatfDataList(FacilityType.Aatf, fixture.Create<short>(), fixture.Create<DateTime>(), null, fixture.Create<Guid>());
 

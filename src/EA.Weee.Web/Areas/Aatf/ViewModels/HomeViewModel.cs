@@ -5,18 +5,16 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.Helpers;
 
     public class HomeViewModel : IValidatableObject
     {
         public Guid OrganisationId { get; set; }
 
-        public bool IsAE { get; set; }
+        public FacilityType FacilityType { get; set; }
 
         [DisplayName("Which organisation would you like to perform activities for?")]
-        public Guid? SelectedAatfId { get; set; }
-
-        [DisplayName("Which organisation would you like to perform activities for?")]
-        public Guid? SelectedAeId { get; set; }
+        public Guid? SelectedId { get; set; }
 
         public IReadOnlyList<AatfData> AatfList { get; set; }
 
@@ -26,12 +24,6 @@
         {
         }
 
-        public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
-        {
-            nameof(SelectedAatfId),
-            nameof(SelectedAeId)
-        };
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var validationResults = new List<ValidationResult>();
@@ -39,15 +31,10 @@
 
             if (instance != null)
             {
-                if (instance.IsAE && !instance.SelectedAeId.HasValue)
+                if (!instance.SelectedId.HasValue)
                 {
                     validationResults.Add(
-                        new ValidationResult($"Select an AE to perform activities"));
-                }
-                else if (!instance.IsAE && !instance.SelectedAatfId.HasValue)
-                {
-                    validationResults.Add(
-                        new ValidationResult($"Select an AATF to perform activities"));
+                        new ValidationResult($"Select an {FacilityType.ToDisplayString()} to perform activities"));
                 }
             }
 

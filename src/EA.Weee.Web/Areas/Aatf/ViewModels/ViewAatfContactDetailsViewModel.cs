@@ -13,7 +13,7 @@
 
         public AatfContactData Contact { get; set; }
 
-        public bool IsAE { get; set; }
+        public FacilityType FacilityType { get; set; }
 
         public ViewAatfContactDetailsViewModel()
         {

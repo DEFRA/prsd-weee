@@ -10,6 +10,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.Helper;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
@@ -22,6 +23,7 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -57,7 +59,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public async Task<ActionResult> Details(Guid id, string selectedTab = null)
         {
             using (var client = apiClient())
             {
@@ -82,6 +84,8 @@
                     ComplianceYearList = years,
                     CurrentDate = currentDate
                 });
+
+                viewModel.SelectedTab = selectedTab;
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
@@ -163,7 +167,9 @@
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                if (!aatf.CanEdit)
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                if (!aatf.CanEdit || !IsValidRecordToEdit(currentDate, aatf.ComplianceYear))
                 {
                     return new HttpForbiddenResult();
                 }
@@ -206,12 +212,14 @@
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
 
-                if (!contact.CanEditContactDetails)
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                if (!contact.CanEditContactDetails || !IsValidRecordToEdit(currentDate, aatf.ComplianceYear))
                 {
                     return new HttpForbiddenResult();
                 }
-
-                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
                 var viewModel = new AatfEditContactAddressViewModel()
                 {
@@ -497,6 +505,11 @@
                 default:
                     break;
             }
+        }
+
+        private bool IsValidRecordToEdit(DateTime currentDate, int complianceYear)
+        {
+            return currentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(currentDate, true).Any(x => x.Equals(complianceYear)) ? true : false;
         }
     }
 }

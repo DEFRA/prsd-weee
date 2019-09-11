@@ -2,14 +2,16 @@
 @using EA.Weee.Web.Infrastructure
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Sent On WEEE - GOV.UK";
+    var title = "WEEE sent to " + @Model.SiteName + " for treatment";
+
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">
-                WEEE sent to @Model.SiteName for treatment
+                @title
             </h1>
         </div>
     </header>

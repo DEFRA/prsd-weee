@@ -5,33 +5,27 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Core.AatfReturn;
     using Xunit;
 
     public class HomeViewModelTests
     {
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void Selected_NoSelected_ErrorMessageWithCorrectFacility(bool isAE)
+        [InlineData(FacilityType.Aatf, "AATF")]
+        [InlineData(FacilityType.Ae, "AE")]
+        public void Selected_NoSelected_ErrorMessageWithCorrectFacility(FacilityType facilityType, string expected)
         {
             var model = new HomeViewModel()
             {
-                IsAE = isAE
+                FacilityType = facilityType
             };
 
-            ValidationContext validationContext = new ValidationContext(model, null, null);
+            var validationContext = new ValidationContext(model, null, null);
 
             IList<ValidationResult> result = model.Validate(validationContext).ToList();
 
-            Assert.True(result.Count() > 0);
-            if (isAE)
-            {
-                result[0].ErrorMessage.Should().Be("Select an AE to perform activities");
-            }
-            else
-            {
-                result[0].ErrorMessage.Should().Be("Select an AATF to perform activities");
-            }
+            Assert.True(result.Any());
+            result[0].ErrorMessage.Should().Be($"Select an {expected} to perform activities");
         }
     }
 }

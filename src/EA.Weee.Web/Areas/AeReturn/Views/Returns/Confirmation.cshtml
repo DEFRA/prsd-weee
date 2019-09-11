@@ -5,7 +5,8 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Returns.SubmittedReturnViewModel
 @{
-    ViewBag.Title = "Submitted Return - GOV.UK";
+    var period = Model.Period;
+    ViewBag.Title = "You have successfully submitted your AE return for " + period + " - GOV.UK";
 }
 
 <section id="main-content">

@@ -3,7 +3,8 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
-    ViewBag.Title = "AATF return reporting options - GOV.UK";
+    var title = "What do you need to report for " + @Model.Year + " " + @Model.Period + "?";
+    ViewBag.Title = title + " - GOV.UK";
     var message = string.Empty;
 }
 
@@ -15,7 +16,7 @@
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">  
                     <h1 class="govuk-heading-l">
-                        What do you need to report for @Model.Year @Model.Period?
+                        @title
                     </h1>              
                 <p id="all-apply-hint">
                     Select all that apply
@@ -66,12 +67,12 @@
                                         <legend class="govuk-visually-hidden">Confirm if this WEEE has been been sent to you from a DCF operator</legend>
                                         <div class="govuk-radios govuk-radios--inline">
                                             <div class="govuk-radios__item">
-                                                <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes" @yesSelectedOption>
+                                                <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes">
                                                 <input class="govuk-radios__input" id="DcfSelectedValue-0" name="DcfSelectedValue" type="radio" value="Yes" @yesSelectedOption>
                                                 <label for="DcfSelectedValue-0" class="govuk-label govuk-radios__label">Yes</label>
                                             </div>
                                             <div class="govuk-radios__item">
-                                                <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No" @noSelectedOption>
+                                                <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No">
                                                 <input class="govuk-radios__input" id="DcfSelectedValue-1" name="DcfSelectedValue" type="radio" value="No" @noSelectedOption>
                                                 <label for="DcfSelectedValue-1" class="govuk-label govuk-radios__label">No</label>
                                             </div>

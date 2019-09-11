@@ -16,6 +16,9 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+
+    using EA.Weee.Core.AatfReturn;
+
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -26,6 +29,8 @@
     using Weee.Requests.Users;
     using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
+
+    using AddressData = EA.Weee.Core.Shared.AddressData;
 
     public class HomeControllerTests
     {
@@ -251,7 +256,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsToHomeControllerWithAESetToFalse()
+        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAatfFacilityType()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -264,11 +269,11 @@
 
             Assert.Equal("Index", routeValues["action"]);
             Assert.Equal("Home", routeValues["controller"]);
-            Assert.Equal(false, routeValues["isAE"]);
+            Assert.Equal(FacilityType.Aatf, routeValues["facilityType"]);
         }
 
         [Fact]
-        public async void PostChooseActivity_ViewAEContactDetails_RedirectsToHomeControllerWithAESetToTrue()
+        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAeFacilityType()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -281,7 +286,7 @@
 
             Assert.Equal("Index", routeValues["action"]);
             Assert.Equal("Home", routeValues["controller"]);
-            Assert.Equal(true, routeValues["isAE"]);
+            Assert.Equal(FacilityType.Ae, routeValues["facilityType"]);
         }
 
         [Fact]
