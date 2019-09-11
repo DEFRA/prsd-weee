@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.MissingProducerDataViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.MissingProducerDataViewModel
 @{
     ViewBag.Title = "Download Missing Producer Data";
 }
@@ -52,7 +52,7 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        @Html.ActionLink("Back", "ChooseReport")
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
     </p>
 }
 

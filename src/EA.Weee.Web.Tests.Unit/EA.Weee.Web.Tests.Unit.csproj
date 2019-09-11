@@ -223,6 +223,8 @@
     <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddPcsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReportsBaseControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\SchemeReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
@@ -252,6 +254,9 @@
     <Compile Include="Areas\Admin\ViewModels\AatfReuseSitesViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfSentOnDataViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddFacilityViewModelBaseTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ChooseReportTypeModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ChooseAatfReportViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ChooseSchemeReportViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyAatfViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyAeViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\CopyFacilityViewModelBaseTests.cs" />

@@ -9,12 +9,6 @@
 
     public class AatfDataToHomeViewModelMap : IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>
     {
-        public HomeViewModel Model = new HomeViewModel();
-
-        public AatfDataToHomeViewModelMap()
-        {
-        }
-
         public HomeViewModel Map(AatfDataToHomeViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
@@ -23,28 +17,24 @@
 
             var selectedAatfsOrAes = new List<AatfData>();
 
-            if (source.IsAE)
-            {
-                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Ae));
-            }
-            else
-            {
-                selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == Core.AatfReturn.FacilityType.Aatf));
-            }
+            selectedAatfsOrAes.AddRange(filteredAatfList.Where(m => m.FacilityType == source.FacilityType));
 
             foreach (var aatf in selectedAatfsOrAes)
             {
                 aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
             }
 
-            Model.IsAE = source.IsAE;
-            Model.OrganisationId = source.OrganisationId;
-            Model.AatfList = selectedAatfsOrAes.OrderBy(o => o.Name).ToList();
+            var model = new HomeViewModel
+            {
+                FacilityType = source.FacilityType,
+                OrganisationId = source.OrganisationId,
+                AatfList = selectedAatfsOrAes.OrderBy(o => o.Name).ToList()
+            };
 
-            return Model;
+            return model;
         }
 
-        private List<AatfData> RemoveOlderAatfs(List<AatfData> source)
+        private IEnumerable<AatfData> RemoveOlderAatfs(IReadOnlyCollection<AatfData> source)
         {
             var listToBeReturned = new List<AatfData>();
 

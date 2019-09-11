@@ -10,6 +10,6 @@
 
         public List<AatfData> AatfList { get; set; }
 
-        public bool IsAE { get; set; }
+        public FacilityType FacilityType { get; set; }
     }
 }

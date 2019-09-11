@@ -5,7 +5,14 @@
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfDetailsViewModel
 @{
-    ViewBag.Title = "View " + Model.FacilityType.ToDisplayString() + " details - GOV.UK";
+    ViewBag.Title = Model.Name + " - GOV.UK";
+}
+
+@functions{
+
+    string GetSelected(string name){
+        return Model.SelectedTab == name ? "govuk-tabs__tab--selected" : string.Empty;
+    }
 }
 
 <div class="govuk-grid-row">
@@ -19,7 +26,7 @@
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
     <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):</span>
-        @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
     <span class="text-margin">
         @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
     </span>
@@ -32,7 +39,7 @@
 
     <ul class="govuk-tabs__list">
         <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#aatfDetails">
+            <a class="govuk-tabs__tab" aria-selected="false" href="#aatfDetails">
                 @Model.FacilityType.ToDisplayString() details
             </a>
         </li>
@@ -279,9 +286,9 @@
                     <th class="govuk-table__header" scope="col">Email address</th>
                     <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
                 </tr>
-            
+
                 @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
-                
+
             </tbody>
         </table>
 
@@ -307,12 +314,9 @@
         <div class="govuk-table__header--large">
             Contact details
         </div>
+        <p>Only contact details for the latest compliance year are shown on to the customer in WEEE Online</p>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-!-width-one-half">Only contact details for the latest compliance year are shown on to the customer in WEEE Online</td>
-                    <td>&nbsp;</td>
-                </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Name</th>
                     <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
@@ -338,7 +342,7 @@
             </tbody>
         </table>
 
-        @if (Model.CanEdit && Model.IsValidComplianceYear)            
+        @if (Model.CanEdit && Model.IsValidComplianceYear)
         {
             <p>
                 <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit @Model.FacilityType.ToDisplayString() contact details</a>
@@ -356,12 +360,34 @@
 
 @section scripts {
     <script type="text/javascript">
-            $("#SelectedComplianceYear")
-                    .change(function () {
-                    var selectedYear = $("#SelectedComplianceYear").val();
-                    var aatfIdvalue = $("#AatfId").val();
-                    window.location.href = '@Url.Action("FetchDetails", "Aatf")' + '?aatfId=' + aatfIdvalue + '&selectedComplianceYear=' + selectedYear;
+        $("#SelectedComplianceYear")
+            .change(function() {
+                var selectedYear = $("#SelectedComplianceYear").val();
+                var aatfIdvalue = $("#AatfId").val();
+                var hash = window.location.href.substring(window.location.href.indexOf("#") + 1);
+                window.location.href = '@Url.Action("FetchDetails", "Aatf")' +
+                    '?aatfId=' +
+                    aatfIdvalue +
+                    '&selectedComplianceYear=' +
+                    selectedYear +
+                    '#' +
+                    hash;
+            });
 
-                    });
+        var hash = window.location.hash;
+        var target = window.location.hash,
+            target = target.replace('#', '');
+        
+        window.location.hash = "";
+
+        $(window).on('load', function() {
+            if (target) {
+                $('html, body').animate({
+                    scrollTop: $("#main-content").offset().top
+                }, 200, 'swing', function () { });
+
+                window.location.hash = hash;
+            }
+        });
     </script>
 }

@@ -17,6 +17,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+
+    using EA.Weee.Core.AatfReturn;
+
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -200,18 +203,18 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewAATFContactDetails)
                 {
-                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = false });
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Aatf });
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewAEContactDetails)
                 {
-                    return RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, isAE = true });
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Ae });
                 }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null, false);
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
-            await SetShowLinkToCreateOrJoinOrganisation(viewModel);
-            return View(viewModel);
+            await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]

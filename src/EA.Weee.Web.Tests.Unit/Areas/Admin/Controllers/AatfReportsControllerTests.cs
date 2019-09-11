@@ -18,10 +18,12 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Prsd.Core.Mediator;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
+    using Web.Areas.Admin.ViewModels.SchemeReports;
     using Web.Infrastructure;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -40,15 +42,113 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
+
             controller = new AatfReportsController(() => weeeClient, breadcrumb);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void AatfReportsController_ShouldInheritFromAdminController()
+        public void AatfReportsController_ShouldInheritFromReportBaseController()
         {
-            typeof(AatfReportsController).Should().BeDerivedFrom<AdminController>();
+            typeof(AatfReportsController).Should().BeDerivedFrom<ReportsBaseController>();
+        }
+
+        [Theory]
+        [InlineData(UserStatus.Inactive)]
+        [InlineData(UserStatus.Pending)]
+        [InlineData(UserStatus.Rejected)]
+        public async Task GetIndex_WhenUserIsNotActive_RedirectsToInternalUserAuthorizationRequired(UserStatus userStatus)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(userStatus);
+
+            var result = await controller.Index();
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be("InternalUserAuthorisationRequired");
+            redirectResult.RouteValues["controller"].Should().Be("Account");
+            redirectResult.RouteValues["userStatus"].Should().Be(userStatus);
+        }
+
+        [Fact]
+        public async Task GetIndex_WhenUserIsActive_RedirectsToChooseReport()
+        {
+            var result = await controller.Index();
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be("ChooseReport");
+            redirectResult.RouteValues["controller"].Should().Be("AatfReports");
+        }
+
+        [Fact]
+        public void GetChooseReport_Always_ReturnsChooseReportView()
+        {
+            var result = controller.ChooseReport();
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+
+            var viewModel = viewResult.Model as ChooseAatfReportViewModel;
+            viewModel.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void PostChooseReport_ModelIsInvalid_ReturnsChooseReportView()
+        {
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = controller.ChooseReport(A.Dummy<ChooseAatfReportViewModel>());
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(Reports.AatfAeReturnData, "AatfAeReturnData")]
+        [InlineData(Reports.AatfObligatedData, "AatfObligatedData")]
+        [InlineData(Reports.UkWeeeDataAtAatfs, "UkWeeeDataAtAatfs")]
+        [InlineData(Reports.AatfSentOnData, "AatfSentOnData")]
+        [InlineData(Reports.AatfReuseSitesData, "AatfReuseSites")]
+        [InlineData(Reports.UkNonObligatedWeeeData, "UkNonObligatedWeeeReceived")]
+        [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData")]
+        [InlineData(Reports.AatfAePublicRegister, "AatfAePublicRegister")]
+        public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
+        {
+            var model = new ChooseAatfReportViewModel() { SelectedValue = selectedValue };
+
+            var result = controller.ChooseReport(model);
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be(expectedAction);
+            redirectResult.RouteValues["controller"].Should().Be("AatfReports");
+        }
+
+        [Fact]
+        public void GetChooseReport_Always_ReturnsCorrectList()
+        {
+            var result = controller.ChooseReport();
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+
+            var viewModel = viewResult.Model as ChooseAatfReportViewModel;
+            viewModel.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void PostChooseReport_WithInvalidSelectedValue_ThrowsNotSupportedException()
+        {
+            var model = new ChooseAatfReportViewModel() { SelectedValue = "SOME INVALID VALUE" };
+            Func<ActionResult> testCode = () => controller.ChooseReport(model);
+
+            Assert.Throws<NotSupportedException>(testCode);
         }
 
         [Fact]
@@ -1319,151 +1419,23 @@
         }
 
         [Fact]
-        public async Task GetPcsAatfDataDifference_Always_ReturnsPcsAatfDataDifferenceViewModel()
-        {
-            List<int> years = fixture.CreateMany<int>().ToList();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
-
-            ActionResult result = await controller.PcsAatfDataDifference();
-
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "PcsAatfDataDifference");
-
-            PcsAatfDataDifferenceViewModel model = viewResult.Model as PcsAatfDataDifferenceViewModel;
-            Assert.NotNull(model);
-
-            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
-
-            Assert.Collection(model.Quarters,
-               s1 => Assert.Equal("Q1", s1.Text),
-               s2 => Assert.Equal("Q2", s2.Text),
-               s3 => Assert.Equal("Q3", s3.Text),
-               s4 => Assert.Equal("Q4", s4.Text));
-
-            Assert.Collection(model.ObligationTypes,
-                s1 => Assert.Equal("B2B", s1.Text),
-                s2 => Assert.Equal("B2C", s2.Text));
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async Task GetPcsAatfDataDifference_Always_SetsTriggerDownloadToFalse()
-        {
-            ActionResult result = await controller.PcsAatfDataDifference();
-
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
-        }
-
-        [Fact]
-        public async Task GetPcsAatfDataDifference_Always_SetsInternalBreadcrumbToViewReports()
-        {
-            await controller.PcsAatfDataDifference();
-
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
-        }
-
-        [Fact]
-        public async Task PostPcsAatfDataDifference_WithInvalidViewModel_ReturnsPcsAatfDataDifferenceViewModel()
-        {
-            List<int> years = fixture.CreateMany<int>().ToList();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
-
-            controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
-
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "PcsAatfDataDifference");
-
-            PcsAatfDataDifferenceViewModel model = viewResult.Model as PcsAatfDataDifferenceViewModel;
-            Assert.NotNull(model);
-
-            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
-
-            Assert.Collection(model.Quarters,
-              s1 => Assert.Equal("Q1", s1.Text),
-              s2 => Assert.Equal("Q2", s2.Text),
-              s3 => Assert.Equal("Q3", s3.Text),
-              s4 => Assert.Equal("Q4", s4.Text));
-
-            Assert.Collection(model.ObligationTypes,
-                s1 => Assert.Equal("B2B", s1.Text),
-                s2 => Assert.Equal("B2C", s2.Text));
-        }
-
-        [Fact]
-        public async Task PostPcsAatfDataDifference_WithInvalidViewModel_SetsTriggerDownloadToFalse()
-        {
-            controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
-
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
-        }
-
-        [Fact]
-        public async Task PostPcsAatfDataDifference_WithViewModel_SetsTriggerDownloadToTrue()
-        {
-            ActionResult result = await controller.PcsAatfDataDifference(new PcsAatfDataDifferenceViewModel());
-
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
-        }
-
-        [Fact]
-        public async Task PostPcsAatfDataDifference_Always_SetsInternalBreadcrumbToViewReports()
-        {
-            await controller.PcsAatfDataDifference(A.Dummy<PcsAatfDataDifferenceViewModel>());
-
-            Assert.Equal("View reports", breadcrumb.InternalActivity);
-        }
-
-        [Fact]
-        public async Task GetDownloadPcsAatfDataDifferenceCsv_GivenActionParameters_CsvShouldBeReturned()
-        {
-            int complianceYear = fixture.Create<int>();
-            int quarter = fixture.Create<int>();
-            string obligation = fixture.Create<string>();
-
-            CSVFileData fileData = fixture.Create<CSVFileData>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPcsAatfComparisonData>.That.Matches(g =>
-                g.ComplianceYear.Equals(complianceYear) && g.Quarter.Equals(quarter)
-                && g.ObligationType.Equals(obligation)))).Returns(fileData);
-
-            FileContentResult result = await controller.DownloadPcsAatfDataDifference(complianceYear, quarter, obligation) as FileContentResult;
-            
-            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
-            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
-            result.ContentType.Should().Be("text/csv");
-        }
-
-        [Fact]
         public async Task GetAatfAePublicRegister_Always_ReturnsAatfAePublicRegisterViewModel()
         {
-            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            List<int> years = fixture.CreateMany<int>().ToList();
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var years = fixture.CreateMany<int>().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
 
             // Act
-            ActionResult result = await controller.AatfAePublicRegister();
+            var result = await controller.AatfAePublicRegister();
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
 
-            AatfAePublicRegisterViewModel model = viewResult.Model as AatfAePublicRegisterViewModel;
+            var model = viewResult.Model as AatfAePublicRegisterViewModel;
             Assert.NotNull(model);
 
             model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
@@ -1482,10 +1454,10 @@
         public async Task GetAatfAePublicRegister_Always_SetsTriggerDownloadToFalse()
         {
             // Act
-            ActionResult result = await controller.AatfAePublicRegister();
+            var result = await controller.AatfAePublicRegister();
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
         }
@@ -1503,22 +1475,22 @@
         [Fact]
         public async Task PostAatfAePublicRegister_WithInvalidViewModel_ReturnsAatfAePublicRegisterViewModel()
         {
-            List<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            List<int> years = fixture.CreateMany<int>().ToList();
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var years = fixture.CreateMany<int>().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
 
-            AatfAePublicRegisterViewModel model = viewResult.Model as AatfAePublicRegisterViewModel;
+            var model = viewResult.Model as AatfAePublicRegisterViewModel;
             Assert.NotNull(model);
 
             model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
@@ -1531,10 +1503,10 @@
         {
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
         }
@@ -1543,10 +1515,10 @@
         public async Task PostAatfAePublicRegister_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Act
-            ActionResult result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
+            var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
             Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
         }
@@ -1564,18 +1536,18 @@
         [Fact]
         public async Task GetDownloadAatfAePublicRegisterCsv_GivenActionParameters_CsvShouldBeReturned()
         {
-            int complianceYear = fixture.Create<int>();
+            var complianceYear = fixture.Create<int>();
             ReportFacilityType facilityType = fixture.Create<ReportFacilityType>();
-            Guid authority = fixture.Create<Guid>();
-            bool isPublicRegister = fixture.Create<bool>();
+            var authority = fixture.Create<Guid>();
+            var isPublicRegister = fixture.Create<bool>();
 
-            CSVFileData fileData = fixture.Create<CSVFileData>();
+            var fileData = fixture.Create<CSVFileData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeDetailsCsv>.That.Matches(g =>
                 g.ComplianceYear.Equals(complianceYear) && g.FacilityType.Equals(facilityType)
                 && g.AuthorityId.Equals(authority) && g.IsPublicRegister.Equals(isPublicRegister)))).Returns(fileData);
 
-            FileContentResult result = await controller.DownloadAatfAePublicRegisterCsv(complianceYear, facilityType, authority) as FileContentResult;
+            var result = await controller.DownloadAatfAePublicRegisterCsv(complianceYear, facilityType, authority) as FileContentResult;
 
             result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));

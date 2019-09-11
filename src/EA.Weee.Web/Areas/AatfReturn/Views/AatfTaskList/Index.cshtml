@@ -6,7 +6,8 @@
 
 @model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
 @{
-    ViewBag.Title = "AATF task list  - GOV.UK";
+    var opertatorName = Model.Organisation.Name;
+    ViewBag.Title = "AATF return task list for " + opertatorName + " - GOV.UK";
     var displayObligatedGroup = Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedSentOn || Model.ReportOnDisplayOptions.DisplayObligatedReused;
 }
 

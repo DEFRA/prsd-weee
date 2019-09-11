@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Helpers;
@@ -679,16 +680,34 @@
         }
 
         [Fact]
+        public async void ManageAatfDetailsGet_CannotEditForCY_ReturnsForbiddenResult()
+        {
+            var id = fixture.Create<Guid>();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).With(a => a.ComplianceYear, 2019).Create();
+
+            var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
+            clientCall.Returns(aatf);
+
+            SystemTime.Freeze(new DateTime(2021, 04, 01));
+            var result = await controller.ManageAatfDetails(id);
+            SystemTime.Unfreeze();
+
+            Assert.IsType<HttpForbiddenResult>(result);
+        }
+
+        [Fact]
         public async void ManageAatfDetailsGet_CanEdit_BreadcrumbShouldBeSet()
         {
             var id = fixture.Create<Guid>();
-            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).With(a => a.ComplianceYear, 2019).Create();
             var aatfViewModel = fixture.Create<AatfEditDetailsViewModel>();
 
             var clientCall = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
             clientCall.Returns(aatf);
             var mapperCall = A.CallTo(() => mapper.Map<AatfEditDetailsViewModel>(aatf));
             mapperCall.Returns(aatfViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetApiUtcDate>.Ignored)).Returns(new DateTime(2019, 04, 01));
 
             await controller.ManageAatfDetails(id);
 
@@ -704,7 +723,7 @@
             var id = fixture.Create<Guid>();
             var countries = fixture.CreateMany<CountryData>().ToList();
             var authorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
-            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).Create();
+            var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).With(a => a.ComplianceYear, 2019).Create();
             var aatfViewModel = fixture.Create<AatfEditDetailsViewModel>();
 
             var clientCallAatf = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfById>.That.Matches(a => a.AatfId == id)));
@@ -715,6 +734,7 @@
             clientCallAuthorities.Returns(authorities);
             var clientCallCountries = A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetCountries>.That.Matches(a => a.UKRegionsOnly == false)));
             clientCallCountries.Returns(countries);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetApiUtcDate>.Ignored)).Returns(new DateTime(2019, 04, 01));
 
             var result = await controller.ManageAatfDetails(id) as ViewResult;
 
@@ -1120,6 +1140,8 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetApiUtcDate>.Ignored)).Returns(new DateTime(2019, 04, 01));
+
             await controller.ManageContactDetails(aatfId, type);
 
             breadcrumbService.InternalActivity.Should().Be(activity);
@@ -1137,6 +1159,12 @@
         public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
             ContactDataAccessSetup(true);
+
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetApiUtcDate>.Ignored)).Returns(new DateTime(2019, 04, 01));
+
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
@@ -1156,6 +1184,12 @@
         public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
+
+            var aatf = new AatfData(Guid.NewGuid(), "name", "approval number", (Int16)2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(), Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatf);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetApiUtcDate>.Ignored)).Returns(new DateTime(2019, 04, 01));
+
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);

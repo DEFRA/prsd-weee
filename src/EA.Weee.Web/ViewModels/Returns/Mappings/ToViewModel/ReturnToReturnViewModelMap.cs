@@ -52,8 +52,8 @@
                 NonObligatedTonnageTotalDcf = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnageDcf),
                 NonObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(totalNonObligatedTonnage),
                 ObligatedTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligated(source)),
-                ObligatedB2BTotal = TotalObligatedB2B(source),
-                ObligatedB2CTotal = TotalObligatedB2C(source),
+                ObligatedB2BTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligatedB2B(source)),
+                ObligatedB2CTotal = tonnageUtilities.CheckIfTonnageIsNull(TotalObligatedB2C(source)),
                 ShowDownloadObligatedDataLink = DisplayOptions.DisplayObligatedReceived || DisplayOptions.DisplayObligatedReused || DisplayOptions.DisplayObligatedSentOn,
                 ShowDownloadNonObligatedDataLink = DisplayOptions.DisplayNonObligated || DisplayOptions.DisplayNonObligatedDcf
             };

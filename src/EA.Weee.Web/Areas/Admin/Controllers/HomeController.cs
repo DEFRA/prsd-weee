@@ -44,7 +44,7 @@
                         return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
                     default:
                         throw new NotSupportedException(
-                            string.Format("Cannot determine result for user with status '{0}'", userStatus));
+                            $"Cannot determine result for user with status '{userStatus}'");
                 }
             }
         }

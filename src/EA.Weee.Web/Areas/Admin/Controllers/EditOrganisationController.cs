@@ -263,7 +263,7 @@
 
         private RedirectToRouteResult RedirectScheme(Guid schemeId)
         {
-            return RedirectToAction("Overview", "Scheme", new { schemeId = schemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
+            return RedirectToAction("Overview", "Scheme", new {schemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
         }
 
         private ActionResult RedirectToAatf(Guid aatfId)

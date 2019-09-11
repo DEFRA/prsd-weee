@@ -1,32 +1,18 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.HomeViewModel
 @{
-    if (Model.IsAE)
-    {
-        ViewBag.Title = "Which AE would you like to view - GOV.UK";
-    }
-    else
-    {
-        ViewBag.Title = "Which AATF would you like to view - GOV.UK";
-    }
+    var title = "Which " + Model.FacilityType.ToDisplayString() + " would you like to view?";
+    ViewBag.Title = title + " - GOV.UK";
+
 }
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            @if (Model.IsAE)
-            {
-                @:Which AE would you like to view?
-            }
-            else
-            {
-                @:Which AATF would you like to view ?
-            }
+            @title
         </h1>
     </header>
 
@@ -35,37 +21,23 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.IsAE)
+        @Html.HiddenFor(m => m.FacilityType)
 
-        if (Model.IsAE)
-        {
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAeId)" id="ActivityOptions">
-                @this.WeeeGds().RadioButtonsFor(
-                    m => m.SelectedAeId,
-                    Model.AatfList,
-                    o => o.Id,
-                    o => o.AatfContactDetailsName,
-                    RadioButtonLegend.VisuallyHidden,
-                    RadioButtonLayout.Stacked)
-            </div>
-        }
-        else
-        {
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAatfId)" id="ActivityOptions">
-                @this.WeeeGds().RadioButtonsFor(
-                    m => m.SelectedAatfId,
-                    Model.AatfList,
-                    o => o.Id,
-                    o => o.AatfContactDetailsName,
-                    RadioButtonLegend.VisuallyHidden,
-                    RadioButtonLayout.Stacked)
-            </div>
-        }
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedId,
+                Model.AatfList,
+                o => o.Id,
+                o => o.AatfContactDetailsName,
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
 
         @(this.WeeeGds().Submit("Continue"))
-
-        <p>
-            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
-        </p>
     }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
+    </p>
 }
