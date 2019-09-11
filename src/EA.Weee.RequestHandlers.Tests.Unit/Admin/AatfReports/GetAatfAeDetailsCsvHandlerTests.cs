@@ -107,10 +107,10 @@
 
             string facilityTypeString = facilityType.ToString().ToUpper();
 
-            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,WROS Pan Area Team,EA Area,Name of {facilityTypeString},{facilityTypeString} address1,{facilityTypeString} address2,{facilityTypeString} town or city,{facilityTypeString} county or region,{facilityTypeString} country,{facilityTypeString} postcode,{facilityTypeString} approval number,Date of approval,{facilityTypeString} size,{facilityTypeString} status,Contact name,Contact position,Contact address1,Contact address2,Contact town or city,Contact county or region,Contact country,Contact postcode,Contact email,Contact phone number,Organisation name,Organisation address1,Organisation address2,Organisation town or city,Organisation county or region,Organisation country,Organisation postcode");
-            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.AppropriateAuthorityAbbr},{csvData1.PanAreaTeam},{csvData1.EaArea},{csvData1.Name},{csvData1.Address1},{csvData1.Address2},{csvData1.TownCity},{csvData1.CountyRegion},{csvData1.Country},{csvData1.PostCode},{csvData1.ApprovalNumber},{csvData1.ApprovalDateString},{csvData1.Size},{csvData1.Status},{csvData1.FirstName},{csvData1.ContactPosition},{csvData1.ContactAddress1},{csvData1.ContactAddress2},{csvData1.ContactTownCity},{csvData1.ContactCountyRegion},{csvData1.ContactCountry},{csvData1.ContactPostcode},{csvData1.ContactEmail},{csvData1.ContactPhone},{csvData1.OrganisationName},{csvData1.OrganisationAddress1},{csvData1.OrganisationAddress2},{csvData1.OrganisationTownCity},{csvData1.OrganisationCountyRegion},{csvData1.OrganisationCountry},{csvData1.OrganisationPostcode}");
-            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.AppropriateAuthorityAbbr},{csvData2.PanAreaTeam},{csvData2.EaArea},{csvData2.Name},{csvData2.Address1},{csvData2.Address2},{csvData2.TownCity},{csvData2.CountyRegion},{csvData2.Country},{csvData2.PostCode},{csvData2.ApprovalNumber},{csvData2.ApprovalDateString},{csvData2.Size},{csvData2.Status},{csvData2.FirstName},{csvData2.ContactPosition},{csvData2.ContactAddress1},{csvData2.ContactAddress2},{csvData2.ContactTownCity},{csvData2.ContactCountyRegion},{csvData2.ContactCountry},{csvData2.ContactPostcode},{csvData2.ContactEmail},{csvData2.ContactPhone},{csvData2.OrganisationName},{csvData2.OrganisationAddress1},{csvData2.OrganisationAddress2},{csvData2.OrganisationTownCity},{csvData2.OrganisationCountyRegion},{csvData2.OrganisationCountry},{csvData2.OrganisationPostcode}");
-            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.AppropriateAuthorityAbbr},{csvData3.PanAreaTeam},{csvData3.EaArea},{csvData3.Name},{csvData3.Address1},{csvData3.Address2},{csvData3.TownCity},{csvData3.CountyRegion},{csvData3.Country},{csvData3.PostCode},{csvData3.ApprovalNumber},{csvData3.ApprovalDateString},{csvData3.Size},{csvData3.Status},{csvData3.FirstName},{csvData3.ContactPosition},{csvData3.ContactAddress1},{csvData3.ContactAddress2},{csvData3.ContactTownCity},{csvData3.ContactCountyRegion},{csvData3.ContactCountry},{csvData3.ContactPostcode},{csvData3.ContactEmail},{csvData3.ContactPhone},{csvData3.OrganisationName},{csvData3.OrganisationAddress1},{csvData3.OrganisationAddress2},{csvData3.OrganisationTownCity},{csvData3.OrganisationCountyRegion},{csvData3.OrganisationCountry},{csvData3.OrganisationPostcode}");
+            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,WROS Pan Area Team,EA Area,\"AATF, AE or PCS?\",Name,Approval number,Status,AATF / AE address1,AATF / AE address2,AATF / AE town or city,AATF / AE county or region,AATF / AE postcode,AATF / AE country,PCS billing reference,PCS obligation type,AATF / AE date of approval,AATF / AE size,Contact first name,Contact last name,Contact position,Contact address1,Contact address2,Contact town or city,Contact county or region,Contact postcode,Contact country,Contact phone number,Contact email,Organisation type,Organisation name,Organisation business trading name,Organisation company registration number,Organisation address1,Organisation address2,Organisation town or city,Organisation county or region,Organisation postcode,Organisation country,Organisation telephone,Organisation email");
+            data.FileContent.Should().Contain($"{csvData1.ComplianceYear},{csvData1.AppropriateAuthorityAbbr},{csvData1.PanAreaTeam},{csvData1.EaArea},{csvData1.RecordType},{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.Status},{csvData1.Address1},{csvData1.Address2},{csvData1.TownCity},{csvData1.CountyRegion},{csvData1.PostCode},{csvData1.Country},{csvData1.IbisCustomerReference},{csvData1.ObligationType},{csvData1.ApprovalDateString},{csvData1.Size},{csvData1.FirstName},{csvData1.LastName},{csvData1.ContactPosition},{csvData1.ContactAddress1},{csvData1.ContactAddress2},{csvData1.ContactTownCity},{csvData1.ContactCountyRegion},{csvData1.ContactPostcode},{csvData1.ContactCountry},{csvData1.ContactPhone},{csvData1.ContactEmail},{csvData1.OrganisationTypeString},{csvData1.OperatorName},{csvData1.OperatorTradingName},{csvData1.CompanyRegistrationNumber},{csvData1.OrganisationAddress1},{csvData1.OrganisationAddress2},{csvData1.OrganisationTownCity},{csvData1.OrganisationCountyRegion},{csvData1.OrganisationPostcode},{csvData1.OrganisationCountry},{csvData1.OrganisationTelephone},{csvData1.OrganisationEmail}");
+            data.FileContent.Should().Contain($"{csvData2.ComplianceYear},{csvData2.AppropriateAuthorityAbbr},{csvData2.PanAreaTeam},{csvData2.EaArea},{csvData2.RecordType},{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.Status},{csvData2.Address1},{csvData2.Address2},{csvData2.TownCity},{csvData2.CountyRegion},{csvData2.PostCode},{csvData2.Country},{csvData2.IbisCustomerReference},{csvData2.ObligationType},{csvData2.ApprovalDateString},{csvData2.Size},{csvData2.FirstName},{csvData2.LastName},{csvData2.ContactPosition},{csvData2.ContactAddress1},{csvData2.ContactAddress2},{csvData2.ContactTownCity},{csvData2.ContactCountyRegion},{csvData2.ContactPostcode},{csvData2.ContactCountry},{csvData2.ContactPhone},{csvData2.ContactEmail},{csvData2.OrganisationTypeString},{csvData2.OperatorName},{csvData2.OperatorTradingName},{csvData2.CompanyRegistrationNumber},{csvData2.OrganisationAddress1},{csvData2.OrganisationAddress2},{csvData2.OrganisationTownCity},{csvData2.OrganisationCountyRegion},{csvData2.OrganisationPostcode},{csvData2.OrganisationCountry},{csvData2.OrganisationTelephone},{csvData2.OrganisationEmail}");
+            data.FileContent.Should().Contain($"{csvData3.ComplianceYear},{csvData3.AppropriateAuthorityAbbr},{csvData3.PanAreaTeam},{csvData3.EaArea},{csvData3.RecordType},{csvData3.Name},{csvData3.ApprovalNumber},{csvData3.Status},{csvData3.Address1},{csvData3.Address2},{csvData3.TownCity},{csvData3.CountyRegion},{csvData3.PostCode},{csvData3.Country},{csvData3.IbisCustomerReference},{csvData3.ObligationType},{csvData3.ApprovalDateString},{csvData3.Size},{csvData3.FirstName},{csvData3.LastName},{csvData3.ContactPosition},{csvData3.ContactAddress1},{csvData3.ContactAddress2},{csvData3.ContactTownCity},{csvData3.ContactCountyRegion},{csvData3.ContactPostcode},{csvData3.ContactCountry},{csvData3.ContactPhone},{csvData3.ContactEmail},{csvData3.OrganisationTypeString},{csvData3.OperatorName},{csvData3.OperatorTradingName},{csvData3.CompanyRegistrationNumber},{csvData3.OrganisationAddress1},{csvData3.OrganisationAddress2},{csvData3.OrganisationTownCity},{csvData3.OrganisationCountyRegion},{csvData3.OrganisationPostcode},{csvData3.OrganisationCountry},{csvData3.OrganisationTelephone},{csvData3.OrganisationEmail}");
         }
 
         [Fact]
@@ -124,7 +124,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()}_AATF-AE-PCS-organisation details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -144,13 +144,13 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{request.FacilityType.ToString().ToUpper()}_AATF-AE-PCS-organisation details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenMandatoryParametersAndPanArea_FileNameShouldBeCorrect()
+        public async Task HandleAsync_GivenAatfAeMandatoryParametersAndPanArea_FileNameShouldBeCorrect()
         {
             GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(fixture.Create<int>(), fixture.Create<ReportFacilityType>(), null, fixture.Create<Guid>(), null, false);
 
@@ -163,7 +163,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{panArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{panArea.Name}_{request.FacilityType.ToString().ToUpper()}_AATF-AE-PCS-organisation details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -182,7 +182,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{request.FacilityType.ToString().ToUpper()}_AATF-AE-PCS-organisation details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -208,7 +208,7 @@
 
             CSVFileData data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{panArea.Name}_{localArea.Name}_{request.FacilityType.ToString().ToUpper()} details_{date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{request.ComplianceYear}_{ca.Abbreviation}_{panArea.Name}_{request.FacilityType.ToString().ToUpper()}_AATF-AE-PCS-organisation details_{date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }
@@ -301,7 +301,14 @@
                 AatfAddress = fixture.Create<string>(),
                 OperatorAddress = fixture.Create<string>(),
                 OperatorName = fixture.Create<string>(),
-                OperatorTradingName = fixture.Create<string>()
+                OperatorTradingName = fixture.Create<string>(),
+                OrganisationType = 1,
+                CompanyRegistrationNumber = fixture.Create<string>(),
+                OrganisationTelephone  = fixture.Create<string>(),
+                OrganisationEmail = fixture.Create<string>(),
+                IbisCustomerReference = fixture.Create<string>(),
+                ObligationType = fixture.Create<string>(),
+                RecordType = fixture.Create<string>()
             };
         }
     }

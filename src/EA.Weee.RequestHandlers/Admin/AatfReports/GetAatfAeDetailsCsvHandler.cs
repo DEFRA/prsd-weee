@@ -82,7 +82,7 @@
                 csvWriter.DefineColumn($"Contact phone number", i => i.ContactPhone);
                 csvWriter.DefineColumn($"Contact email", i => i.ContactEmail);
                 csvWriter.DefineColumn($"Organisation type", i => i.OrganisationTypeString);
-                csvWriter.DefineColumn($"Organisation name", i => i.OrganisationName);
+                csvWriter.DefineColumn($"Organisation name", i => i.OperatorName);
                 csvWriter.DefineColumn($"Organisation business trading name", i => i.OperatorTradingName);
                 csvWriter.DefineColumn($"Organisation company registration number", i => i.CompanyRegistrationNumber);
                 csvWriter.DefineColumn($"Organisation address1", i => i.OrganisationAddress1);

@@ -408,46 +408,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AatfAeDetails()
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
-
-            var model = new AatfAeDetailsViewModel();
-            await PopulateFilters(model);
-
-            return View("AatfAeDetails", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AatfAeDetails(AatfAeDetailsViewModel model)
-        {
-            SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
-
-            await PopulateFilters(model);
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-             ReportFacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
-        {
-            CSVFileData fileData;
-
-            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, panAreaId, localAreaId, false);
-            using (var client = apiClient())
-            {
-                fileData = await client.SendAsync(User.GetAccessToken(), request);
-            }
-
-            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
-        }
-
-        [HttpGet]
         public async Task<ActionResult> AatfAePublicRegister()
         {
             SetBreadcrumb();
@@ -530,15 +490,6 @@
         private async Task PopulateFilters(UkNonObligatedWeeeReceivedViewModel model)
         {
             model.ComplianceYears = await ComplianceYears();
-        }
-
-        private async Task PopulateFilters(AatfAeDetailsViewModel model)
-        { 
-            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value", 4);
-            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
-            model.PanAreaList = await PatAreaList();
-            model.LocalAreaList = await LocalAreaList();
         }
       
         private async Task PopulateFilters(AatfAePublicRegisterViewModel model)

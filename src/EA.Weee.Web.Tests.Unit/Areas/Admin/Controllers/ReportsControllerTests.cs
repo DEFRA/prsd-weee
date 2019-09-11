@@ -220,7 +220,11 @@
 
             Assert.Collection(model.FacilityTypes,
                s1 => Assert.Equal("AATF", s1.Text),
-               s2 => Assert.Equal("AE", s2.Text));
+               s2 => Assert.Equal("AE", s2.Text),
+               s3 => Assert.Equal("PCS", s3.Text),
+               s4 => Assert.Equal("All", s4.Text));
+
+            Assert.Collection(model.FacilityTypes.Where(x => x.Text == "All"), s => Assert.Equal(s.Selected, true));
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
