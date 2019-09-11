@@ -4,39 +4,41 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Core.Helpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Aatf.AatfEditContactAddressViewModel
+@model EA.Weee.Web.ViewModels.Shared.Aatf.AatfEditContactAddressViewModel
 @{
-    ViewBag.Title = "Edit " + Model.FacilityType.ToDisplayString() + " contact details - GOV.UK";
+    var title = "Edit " + Model.AatfData.FacilityType.ToDisplayString() + " contact details";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
-<section id="main-content">
-    <h1 class="govuk-heading-l">Edit @Model.FacilityType.ToDisplayString() contact details</h1>
-    <p>Make sure you update the contact details for the correct compliance year(s)</p>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.ContactData.Id)
-        @Html.HiddenFor(m => m.FacilityType)
-        @Html.HiddenFor(m => m.AatfId)
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <Label class="govuk-label form-label">
-                    Compliance year: @Model.ComplianceYear
-                </Label>
+    <section id="main-content">
+        <h1 class="govuk-heading-l">@title</h1>
+        <p>Make sure you update the contact details for the correct compliance year(s)</p>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.ContactData.Id)
+            @Html.HiddenFor(m => m.AatfData.FacilityType)
+            @Html.HiddenFor(m => m.AatfData.Id)
+            @Html.HiddenFor(m => m.Id)
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <Label class="govuk-label form-label">
+                        Compliance year: @Model.AatfData.ComplianceYear
+                    </Label>
+                </div>
             </div>
-        </div>
-        <br />
+            <br />
 
-        @Html.EditorFor(m => m.ContactData)
+            @Html.EditorFor(m => m.ContactData)
 
-        <div class="govuk-!-padding-bottom-6"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details">
-            Save and continue
-        </button>
-        <div class="govuk-!-padding-bottom-6"></div>
-        <p>
-            <a href="@(Url.Action("Details", new { area = "Admin", Id = Model.AatfId }) + "#contactDetails")">Back</a>
-        </p>
-    }
-</section>
+            <div class="govuk-!-padding-bottom-6"></div>
+            <button type="submit" name="save" class="govuk-button" id="site-details">
+                Save and continue
+            </button>
+            <div class="govuk-!-padding-bottom-6"></div>
+            <p>
+                <a href="@(Url.Action("Details", new { area = "Admin", Id = Model.Id }) + "#contactDetails")">Back</a>
+            </p>
+        }
+    </section>

@@ -1,7 +1,7 @@
 ﻿Hello,
 
-@Model.SchemeName has submitted changes to their organisation’s contact details.
+@Model.Name has submitted changes to their @Model.EntityType.ToString() contact details.
 
-To view the changed contact details, manage PCSs on the WEEE Online service.
+To view the changed contact details, manage @Model.EntityType.ToString()s on the WEEE Online service.
 
 This is an automated email. Do not reply.

@@ -3,6 +3,8 @@
     using Domain.Organisation;
     using System.Threading.Tasks;
 
+    using EA.Weee.Core.Shared;
+
     public interface IWeeeEmailService
     {
         Task<bool> SendActivateUserAccount(string emailAddress, string activationUrl);
@@ -21,7 +23,7 @@
 
         Task<bool> SendTestEmail(string emailAddress);
 
-        Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName);
+        Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string name, EntityType entityType);
 
         Task<bool> SendOrganisationUserRequestToEA(string emailAddress, string organisationName, string userName);
     }
