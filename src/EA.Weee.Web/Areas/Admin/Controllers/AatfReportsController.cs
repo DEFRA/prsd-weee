@@ -1,19 +1,19 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Requests.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Services;
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Shared;
@@ -433,7 +433,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAePublicRegisterCsv(int complianceYear,
-            FacilityType facilityType, Guid authorityId)
+            ReportFacilityType facilityType, Guid authorityId)
         {
             CSVFileData fileData;
 
@@ -491,7 +491,7 @@
         {
             model.ComplianceYears = await ComplianceYears();
         }
-
+      
         private async Task PopulateFilters(AatfAePublicRegisterViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());

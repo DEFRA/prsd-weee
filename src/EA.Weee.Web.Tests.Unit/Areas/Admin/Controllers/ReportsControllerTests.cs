@@ -1,33 +1,26 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using Api.Client;
-    using AutoFixture;
-    using Core.Admin;
-    using Core.Scheme;
-    using Core.Shared;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Prsd.Core;
-    using Prsd.Core.Mediator;
-    using Services;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.AatfReturn;
+    using Api.Client;
+    using AutoFixture;
+    using Core.Admin;
+    using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core.Mediator;
+    using Services;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.AatfReports;
     using Web.Areas.Admin.ViewModels.Reports;
-    using Web.Areas.Admin.ViewModels.SchemeReports;
     using Web.Infrastructure;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
-    using Weee.Requests.Admin.Reports;
-    using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -227,7 +220,11 @@
 
             Assert.Collection(model.FacilityTypes,
                s1 => Assert.Equal("AATF", s1.Text),
-               s2 => Assert.Equal("AE", s2.Text));
+               s2 => Assert.Equal("AE", s2.Text),
+               s3 => Assert.Equal("PCS", s3.Text),
+               s4 => Assert.Equal("All", s4.Text));
+
+            Assert.Collection(model.FacilityTypes.Where(x => x.Text == "All"), s => Assert.Equal(s.Selected, true));
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
@@ -328,7 +325,7 @@
         public async Task GetDownloadAatfAeDetailsCsv_GivenActionParameters_CsvShouldBeReturned()
         {
             var complianceYear = fixture.Create<int>();
-            var facilityType = fixture.Create<FacilityType>();
+            var facilityType = fixture.Create<ReportFacilityType>();
             var authority = fixture.Create<Guid?>();
             var pat = fixture.Create<Guid?>();
             var area = fixture.Create<Guid?>();

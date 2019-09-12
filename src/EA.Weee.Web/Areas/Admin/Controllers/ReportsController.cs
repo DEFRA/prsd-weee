@@ -1,16 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using Api.Client;
-    using Core.Admin;
-    using Core.Shared;
-    using Infrastructure;
-    using Services;
     using System;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
     using Core.AatfReturn;
+    using Core.Admin;
+    using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
+    using Infrastructure;
     using Prsd.Core.Helpers;
+    using Services;
     using ViewModels.AatfReports;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
@@ -117,7 +118,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-             FacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
+             ReportFacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
         {
             CSVFileData fileData;
 
@@ -174,7 +175,7 @@
         private async Task PopulateFilters(AatfAeDetailsViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value", 4);
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
             model.PanAreaList = await PatAreaList();
             model.LocalAreaList = await LocalAreaList();
