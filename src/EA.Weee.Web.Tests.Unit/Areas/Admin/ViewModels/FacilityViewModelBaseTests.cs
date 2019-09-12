@@ -46,7 +46,7 @@
             var validationResult = model.Validate(new ValidationContext(model));
 
             validationResult.Count().Should().Be(1);
-            validationResult.First().ErrorMessage.Should().Be("Enter EA area");
+            validationResult.First().ErrorMessage.Should().Be("Enter EA Area");
         }
 
         [Fact]
