@@ -76,6 +76,7 @@
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
+    <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />

@@ -2,13 +2,14 @@
 {
     using Core.Admin;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Admin.AatfReports;
     using Prsd.Core.Mediator;
     using System;
     public class GetAatfAeDetailsCsv : IRequest<CSVFileData>
     {
         public int ComplianceYear { get; private set; }
 
-        public FacilityType FacilityType { get; private set; }
+        public ReportFacilityType FacilityType { get; private set; }
 
         public Guid? AuthorityId { get; private set; }
 
@@ -19,7 +20,7 @@
         public bool IsPublicRegister { get; private set; }
 
         public GetAatfAeDetailsCsv(int complianceYear,
-          FacilityType facilityType,
+          ReportFacilityType facilityType,
           Guid? authorityId,
           Guid? panArea,
           Guid? localArea, bool isPublicRegister)
