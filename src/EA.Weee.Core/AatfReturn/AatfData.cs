@@ -60,6 +60,8 @@
 
         public int AatfStatusValue { get; set; }
 
+        public string AatfStatusDisplay { get; set; }
+
         public int AatfSizeValue { get; set; }
 
         public string AatfContactDetailsName { get; set; }

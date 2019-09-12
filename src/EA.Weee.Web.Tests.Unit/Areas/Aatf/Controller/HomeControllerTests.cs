@@ -63,7 +63,7 @@
             await controller.Index(A.Dummy<Guid>(), facilityType);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"View {expected} contact details");
+            breadcrumb.ExternalActivity.Should().Be($"Manage {expected} contact details");
         }
 
         [Theory]
@@ -85,7 +85,7 @@
             await controller.Index(new HomeViewModel() { FacilityType = facilityType });
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"View {expected} contact details");
+            breadcrumb.ExternalActivity.Should().Be($"Manage {expected} contact details");
         }
 
         [Fact]
@@ -163,7 +163,7 @@
             var result = await controller.Index(organisationId, fixture.Create<FacilityType>()) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
+            result.RouteValues["controller"].Should().Be("ContactDetails");
             result.RouteValues["organisationId"].Should().Be(organisationId);
         }
 
@@ -180,7 +180,7 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ViewAatfContactDetails");
+            result.RouteValues["controller"].Should().Be("ContactDetails");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             result.RouteValues["aatfId"].Should().Be(model.SelectedId);
             result.RouteValues["facilityType"].Should().Be(model.FacilityType);

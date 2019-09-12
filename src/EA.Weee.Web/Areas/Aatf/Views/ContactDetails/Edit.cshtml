@@ -1,0 +1,52 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.ViewModels.Shared.Aatf.AatfEditContactAddressViewModel
+@{
+    var title = "Edit " + Model.AatfData.FacilityType.ToDisplayString() + " contact details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+    <section id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @title
+            </h1>
+        </header>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.ContactData.Id)
+            @Html.HiddenFor(m => m.AatfData.FacilityType)
+            @Html.HiddenFor(m => m.AatfData.Organisation.Id)
+            @Html.HiddenFor(m => m.AatfData.ApprovalNumber)
+            @Html.HiddenFor(m => m.AatfData.AatfStatusDisplay)
+            @Html.HiddenFor(m => m.AatfData.Name)
+            @Html.HiddenFor(m => m.AatfData.Id)
+            @Html.HiddenFor(m => m.AatfData.ComplianceYear)
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.OrganisationId)
+
+            @Html.EditorFor(m => m.ContactData)
+
+            <div class="govuk-!-padding-bottom-6"></div>
+
+            @(this.WeeeGds().Submit("Save and continue"))
+        }
+
+        <p>
+            @Html.ActionLink("Perform another activity", "Index", "Home", new { area = "Scheme" })
+        </p>
+        <p>
+            <a class="govuk-back-link" href="@(Url.UrlFor<ContactDetailsController>(a => a.Index(Model.OrganisationId, Model.Id, Model.AatfData.FacilityType)))">Back</a>
+        </p>
+    </section>

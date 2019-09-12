@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmailModule.cs" />
+    <Compile Include="EventHandlers\ContactDetailsUpdateEventHandler.cs" />
     <Compile Include="EventHandlers\IOrganisationUserRequestEventHandlerDataAccess.cs" />
     <Compile Include="EventHandlers\SchemeDataReturnSubmission\ISchemeDataReturnSubmissionEventHandlerDataAccess.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequestEventHandler.cs" />
