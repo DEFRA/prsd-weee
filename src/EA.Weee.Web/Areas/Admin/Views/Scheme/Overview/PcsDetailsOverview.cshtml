@@ -6,7 +6,7 @@
 
 <div class="govuk-tabs">
     @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
-    
+
     <section class="govuk-tabs__panel" id="pcsDetails">
         <div class="govuk-table__header--large">
             PCS details
@@ -56,7 +56,7 @@
                 <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
             </p>
         }
-
-        @Html.Partial("Overview/_OverviewAvailableActions")
     </section>
+
+    @Html.Partial("Overview/_OverviewAvailableActions")
 </div>
