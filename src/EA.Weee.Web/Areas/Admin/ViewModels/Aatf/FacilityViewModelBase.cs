@@ -118,7 +118,7 @@
                     if (instance.LocalAreaId == null)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Enter EA area", new List<string> { nameof(instance.LocalAreaId) }));
+                            new ValidationResult($"Enter EA Area", new List<string> { nameof(instance.LocalAreaId) }));
                     }
 
                     if (instance.PanAreaId == null)
