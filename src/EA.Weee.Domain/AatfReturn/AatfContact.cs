@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
     using System;
 
-    public class AatfContact : Entity
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
+
+    public class AatfContact : Entity, IEquatable<AatfContact>
     {
         public AatfContact()
         {
@@ -31,18 +32,18 @@
             Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
             Guard.ArgumentNotNullOrEmpty(() => email, email);
 
-            FirstName = firstName;
-            LastName = lastName;
-            Position = position;
-            Address1 = address1;
-            Address2 = address2;
-            TownOrCity = townOrCity;
-            CountyOrRegion = countyOrRegion;
-            Postcode = postcode;
-            Country = country;
-            Telephone = telephone;
-            Email = email;
-            CountryId = country.Id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Position = position;
+            this.Address1 = address1;
+            this.Address2 = address2;
+            this.TownOrCity = townOrCity;
+            this.CountyOrRegion = countyOrRegion;
+            this.Postcode = postcode;
+            this.Country = country;
+            this.Telephone = telephone;
+            this.Email = email;
+            this.CountryId = country.Id;
         }
 
         public AatfContact(
@@ -66,17 +67,17 @@
             Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
             Guard.ArgumentNotNullOrEmpty(() => email, email);
 
-            FirstName = firstName;
-            LastName = lastName;
-            Position = position;
-            Address1 = address1;
-            Address2 = address2;
-            TownOrCity = townOrCity;
-            CountyOrRegion = countyOrRegion;
-            Postcode = postcode;
-            Telephone = telephone;
-            Email = email;
-            CountryId = countryId;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Position = position;
+            this.Address1 = address1;
+            this.Address2 = address2;
+            this.TownOrCity = townOrCity;
+            this.CountyOrRegion = countyOrRegion;
+            this.Postcode = postcode;
+            this.Telephone = telephone;
+            this.Email = email;
+            this.CountryId = countryId;
         }
 
         public virtual void UpdateDetails(
@@ -92,17 +93,17 @@
             string telephone,
             string email)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Position = position;
-            Address1 = address1;
-            Address2 = address2;
-            TownOrCity = townOrCity;
-            CountyOrRegion = countyOrRegion;
-            Postcode = postcode;
-            Country = country;
-            Telephone = telephone;
-            Email = email;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Position = position;
+            this.Address1 = address1;
+            this.Address2 = address2;
+            this.TownOrCity = townOrCity;
+            this.CountyOrRegion = countyOrRegion;
+            this.Postcode = postcode;
+            this.Country = country;
+            this.Telephone = telephone;
+            this.Email = email;
         }
 
         public virtual string FirstName { get; private set; }
@@ -128,5 +129,28 @@
         public virtual string Telephone { get; private set; }
 
         public virtual string Email { get; private set; }
+
+        public virtual bool Equals(AatfContact other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.FirstName == other.FirstName && this.LastName == other.LastName && this.Position == other.Position
+                   && this.Address1 == other.Address1 && this.Address2 == other.Address2 && this.TownOrCity == other.TownOrCity
+                   && this.CountyOrRegion == other.CountyOrRegion && this.Postcode == other.Postcode && this.CountryId == other.CountryId
+                   && this.Telephone == other.Telephone && this.Email == other.Email;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as AatfContact);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
