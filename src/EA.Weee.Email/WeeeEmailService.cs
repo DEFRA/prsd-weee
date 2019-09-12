@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.Email
 {
-    using Domain.User;
     using Prsd.Email;
     using System.Net.Mail;
     using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
+
+    using UserStatus = EA.Weee.Domain.User.UserStatus;
 
     public class WeeeEmailService : IWeeeEmailService
     {
@@ -31,13 +34,13 @@
                 ActivationUrl = activationUrl,
             };
 
-            EmailContent content = new EmailContent()
+            var content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("ActivateUserAccount.cshtml", model),
                 PlainText = templateExecutor.Execute("ActivateUserAccount.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                  "Activate your WEEE user account", content))
             {
                 return await sender.SendAsync(message);
@@ -51,13 +54,13 @@
                 PasswordResetUrl = passwordResetUrl,
             };
 
-            EmailContent content = new EmailContent()
+            var content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("PasswordResetRequest.cshtml", model),
                 PlainText = templateExecutor.Execute("PasswordResetRequest.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                  "Reset your WEEE password", content))
             {
                 return await sender.SendAsync(message);
@@ -73,13 +76,13 @@
                 FullName = userName
             };
 
-            EmailContent content = new EmailContent()
+            var content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("OrganisationUserRequest.cshtml", model),
                 PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                  "New request to access your organisation", content))
             {
                 return await sender.SendAsync(message);
@@ -95,13 +98,13 @@
                 FullName = userName
             };
 
-            EmailContent content = new EmailContent()
+            var content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("OrganisationUserRequestToEA.cshtml", model),
                 PlainText = templateExecutor.Execute("OrganisationUserRequestToEA.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                  "New request to access an organisation in WEEE Online", content))
             {
                 return await sender.SendAsync(message);
@@ -119,13 +122,13 @@
                 ActiveUsers = activeUsers
             };
 
-            EmailContent content = new EmailContent()
+            var content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", model),
                 PlainText = templateExecutor.Execute("OrganisationUserRequestCompleted.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(organisationUser.User.Email,
+            using (var message = messageCreator.Create(organisationUser.User.Email,
                 "Your request to access " + organisationUser.Organisation.OrganisationName, content))
             {
                 return await sender.SendAsync(message);
@@ -141,13 +144,13 @@
                 NumberOfWarnings = numberOfWarnings
             };
 
-            EmailContent content = new EmailContent
+            var content = new EmailContent
             {
                 HtmlText = templateExecutor.Execute("SchemeMemberSubmitted.cshtml", model),
                 PlainText = templateExecutor.Execute("SchemeMemberSubmitted.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                 string.Format("Member registration submission for {0}", schemeName), content))
             {
                 return await sender.SendAsync(message, true);
@@ -164,13 +167,13 @@
                 IsResubmission = isResubmission
             };
 
-            EmailContent content = new EmailContent
+            var content = new EmailContent
             {
                 HtmlText = templateExecutor.Execute("SchemeDataReturnSubmitted.cshtml", model),
                 PlainText = templateExecutor.Execute("SchemeDataReturnSubmitted.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress,
+            using (var message = messageCreator.Create(emailAddress,
                 string.Format("Data return submission for {0}", schemeName), content))
             {
                 return await sender.SendAsync(message, true);
@@ -186,13 +189,13 @@
                 ViewUserLink = viewUserLink
             };
 
-            EmailContent content = new EmailContent
+            var content = new EmailContent
             {
                 HtmlText = templateExecutor.Execute("InternalUserAccountActivated.cshtml", model),
                 PlainText = templateExecutor.Execute("InternalUserAccountActivated.txt", model)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress, "New internal user request", content))
+            using (var message = messageCreator.Create(emailAddress, "New internal user request", content))
             {
                 return await sender.SendAsync(message, true);
             }
@@ -200,34 +203,35 @@
 
         public async Task<bool> SendTestEmail(string emailAddress)
         {
-            EmailContent content = new EmailContent
+            var content = new EmailContent
             {
                 HtmlText = templateExecutor.Execute("Test.cshtml", null),
                 PlainText = templateExecutor.Execute("Test.txt", null)
             };
 
-            using (MailMessage message = messageCreator.Create(emailAddress, "Test email from WEEE", content))
+            using (var message = messageCreator.Create(emailAddress, "Test email from WEEE", content))
             {
                 return await sender.SendAsync(message, false);
             }
         }
 
-        public async Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName)
+        public async Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string name, EntityType entityType)
         {
             var model = new
             {
-                SchemeName = schemeName
+                Name = name,
+                EntityType = entityType
             };
 
-            EmailContent content = new EmailContent
+            var content = new EmailContent
             {
                 HtmlText = templateExecutor.Execute("OrganisationContactDetailsChanged.cshtml", model),
                 PlainText = templateExecutor.Execute("OrganisationContactDetailsChanged.txt", model)
             };
 
-            var subject = string.Format("Change of contact details for {0}", schemeName);
+            var subject = $"Change of contact details for {name}";
 
-            using (MailMessage message = messageCreator.Create(emailAddress, subject, content))
+            using (var message = messageCreator.Create(emailAddress, subject, content))
             {
                 return await sender.SendAsync(message, true);
             }

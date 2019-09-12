@@ -4,6 +4,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+
     using Xunit;
 
     public class AatfContactTests
@@ -188,6 +189,138 @@
             contact.Country.Should().Be(country);
             contact.Telephone.Should().Be(telephone);
             contact.Email.Should().Be(email);
+        }
+
+        [Fact]
+        public void Equals_GivenSameContact_TrueShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentFirstName_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("Z", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentLastName_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "z", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentPosition_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "z", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentAddress1_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "z", "a2", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentAddress2_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "z", "t", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentTown_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "z", "c", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentCounty_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "z", "p", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentPostcode_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "z", countryId, "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentCountry_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", Guid.NewGuid(), "te", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentTelephone_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "z", "e");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_GivenDifferentEmail_FalseShouldBeReturned()
+        {
+            var countryId = Guid.NewGuid();
+
+            var contact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "z");
+            var otherContact = new AatfContact("f", "l", "p", "a1", "a2", "t", "c", "p", countryId, "te", "e");
+
+            contact.Equals(otherContact).Should().BeFalse();
         }
     }
 }

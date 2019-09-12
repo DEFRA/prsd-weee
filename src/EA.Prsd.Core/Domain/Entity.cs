@@ -24,7 +24,7 @@
             return IsPersistent() ? Id.CompareTo(other.Id) : 0;
         }
 
-        public void RaiseEvent(IEvent @event)
+        public virtual void RaiseEvent(IEvent @event)
         {
             events.Add(@event);
         }
