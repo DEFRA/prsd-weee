@@ -1303,25 +1303,6 @@
         }
 
         [Fact]
-        public void GetCreateGuidance_ReturnsView()
-        {
-            // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService);
-
-            // Act
-            var result = controller.CreateGuidance("test");
-
-            // Assert
-            Assert.IsType<ViewResult>(result);
-        }
-
-        [Fact]
         public void GetConfirmation_ReturnsView()
         {
             // Arrange

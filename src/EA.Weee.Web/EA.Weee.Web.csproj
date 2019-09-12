@@ -1237,7 +1237,6 @@
     <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
-    <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
     <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
     <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
     <Content Include="Views\Shared\_WeeeFooter.cshtml" />
