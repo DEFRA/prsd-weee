@@ -1242,7 +1242,7 @@
 
             await this.controller.ManageContactDetails(A.Dummy<Guid>(), A.Dummy<FacilityType>());
 
-            A.CallTo(() => mapper.Map<AatfEditContactAddressViewModel>(A<AatfEditContactTransfer>.That.Matches(e => e.AatfData == aatfData && e.Countries.Equals(countries) && e.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<AatfEditContactAddressViewModel>(A<AatfEditContactTransfer>.That.Matches(e => e.AatfData == aatfData && e.Countries == countries && e.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
