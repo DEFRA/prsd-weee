@@ -41,10 +41,10 @@
 
                 if (model.AatfList.Count == 1)
                 {
-                    return RedirectToAction("Index", "ViewAatfContactDetails", new { organisationId, aatfId = model.AatfList[0].Id, facilityType });
+                    return RedirectToAction("Index", "ContactDetails", new { organisationId, aatfId = model.AatfList[0].Id, facilityType });
                 }
 
-                await SetBreadcrumb(model.OrganisationId, $"View {facilityType.ToDisplayString()} contact details");
+                await SetBreadcrumb(model.OrganisationId, string.Format(AatfAction.ManageAatfContactDetails, facilityType.ToDisplayString()));
                
                 return View(model);
             }
@@ -56,7 +56,7 @@
         {
             if (ModelState.IsValid)
             {
-               return RedirectToAction("Index", "ViewAatfContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedId, facilityType = model.FacilityType });
+               return RedirectToAction("Index", "ContactDetails", new { area = "Aatf", organisationId = model.OrganisationId, aatfId = model.SelectedId, facilityType = model.FacilityType });
             }
 
             using (var client = apiClient())
@@ -71,7 +71,7 @@
                 ModelState.RunCustomValidation(model);
             }
 
-            await SetBreadcrumb(model.OrganisationId, $"View {model.FacilityType.ToDisplayString()} contact details");
+            await SetBreadcrumb(model.OrganisationId, string.Format(AatfAction.ManageAatfContactDetails, model.FacilityType.ToDisplayString()));
             
             return View(model);
         }

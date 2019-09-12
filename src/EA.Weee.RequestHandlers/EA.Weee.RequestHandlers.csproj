@@ -119,7 +119,7 @@
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
     <Compile Include="AatfReturn\Internal\AatfDataAccess.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetailsRequestHandler.cs" />
-    <Compile Include="Admin\Aatf\EditAatfContactHandler.cs" />
+    <Compile Include="Aatf\EditAatfContactHandler.cs" />
     <Compile Include="Admin\Aatf\GetAatfContactHandler.cs" />
     <Compile Include="AatfReturn\Internal\IAatfDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />

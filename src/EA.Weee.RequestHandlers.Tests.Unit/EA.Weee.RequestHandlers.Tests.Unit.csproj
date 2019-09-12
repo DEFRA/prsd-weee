@@ -137,7 +137,7 @@
     <Compile Include="AatfReturn\GetReportOnQuestionHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnsHandlerTests.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetailsRequestHandlerTests.cs" />
-    <Compile Include="Admin\Aatf\EditAatfContactHandlerTests.cs" />
+    <Compile Include="Aatf\EditAatfContactHandlerTests.cs" />
     <Compile Include="AatfReturn\Internal\GetAatfContactHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandlerTests.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandlerTests.cs" />

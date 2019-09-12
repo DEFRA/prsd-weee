@@ -260,7 +260,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ViewAATFContactDetails
+                SelectedValue = PcsAction.ManageAatfContactDetails
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -277,7 +277,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ViewAEContactDetails
+                SelectedValue = PcsAction.ManageAeContactDetails
             });
 
             Assert.IsType<RedirectToRouteResult>(result);

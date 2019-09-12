@@ -177,7 +177,7 @@
 
     if (Model.Breadcrumb.ExternalAatf != null)
     {
-        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.Name): (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) Status: @Model.Breadcrumb.ExternalAatf.Status</div>
+        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.Name): (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) Status: @Model.Breadcrumb.ExternalAatf.AatfStatusDisplay</div>
     }
 
     if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
