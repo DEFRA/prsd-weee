@@ -5,6 +5,8 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
 
     public class AatfAeDetailsViewModel
     {
@@ -14,8 +16,8 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Required(ErrorMessage = "Enter AATF or AE")]
-        [Display(Name = "AATF or AE")]
+        [Required(ErrorMessage = "Enter PCS, AATF or AE")]
+        [Display(Name = "PCS, AATF or AE")]
         public string SelectedFacilityType { get; set; }
 
         public IEnumerable<SelectListItem> FacilityTypes { get; set; }
