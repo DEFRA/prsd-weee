@@ -15,7 +15,6 @@
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Security;
     using EA.Weee.Tests.Core;
@@ -134,7 +133,7 @@
             A.CallTo(() => this.aatfDataAccess.GetDetails(request.AatfId)).Returns(aatf);
             A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
 
-            var result = this.handler.HandleAsync(request);
+            var result = await this.handler.HandleAsync(request);
 
             A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>.That.Matches(a => Equals(a.Aatf, aatf)))).MustHaveHappened();
         }
@@ -148,7 +147,7 @@
             A.CallTo(() => this.aatfDataAccess.GetDetails(request.AatfId)).Returns(aatf);
             A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
 
-            var result = this.handler.HandleAsync(request);
+            var result = await this.handler.HandleAsync(request);
 
             A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>._)).MustNotHaveHappened();
         }
@@ -163,7 +162,7 @@
             A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
             A.CallTo(() => aatf.Contact.Equals(A<AatfContact>._)).Returns(true);
 
-            var result = this.handler.HandleAsync(request);
+            var result = await this.handler.HandleAsync(request);
 
             A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>._)).MustNotHaveHappened();
         }
