@@ -174,18 +174,18 @@
                         }
                     }
                 }
-                else
-                {
-                    switch (organisationType)
-                    {
-                        case OrganisationType.SoleTraderOrIndividual:
-                            return RedirectToAction(nameof(SoleTraderDetails), new { searchedText = model.SearchedText });
-                        case OrganisationType.RegisteredCompany:
-                            return RedirectToAction(nameof(RegisteredCompanyDetails), new { searchedText = model.SearchedText });
-                        case OrganisationType.Partnership:
-                            return RedirectToAction(nameof(PartnershipDetails), new { searchedText = model.SearchedText });
-                    }
-                }
+                //else
+                //{
+                //    switch (organisationType)
+                //    {
+                //        case OrganisationType.SoleTraderOrIndividual:
+                //            return RedirectToAction(nameof(SoleTraderDetails), new { searchedText = model.SearchedText });
+                //        case OrganisationType.RegisteredCompany:
+                //            return RedirectToAction(nameof(RegisteredCompanyDetails), new { searchedText = model.SearchedText });
+                //        case OrganisationType.Partnership:
+                //            return RedirectToAction(nameof(PartnershipDetails), new { searchedText = model.SearchedText });
+                //    }
+                //}
             }
 
             return View(model);
@@ -218,7 +218,8 @@
                     return View(new SoleTraderDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
                 }
             }
-            return View(new SoleTraderDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
+            return RedirectToAction(nameof(SoleTraderDetails));
+            //return View(new SoleTraderDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
         }
 
         [HttpPost]
@@ -247,15 +248,15 @@
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
                     return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
-
-                CreateSoleTraderRequest request = new CreateSoleTraderRequest
-                {
-                    BusinessName = model.CompanyName,
-                    TradingName = model.BusinessTradingName
-                };
-                //create the organisation only if does not exist
-                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
+                return View(model);
+                //CreateSoleTraderRequest request = new CreateSoleTraderRequest
+                //{
+                //    BusinessName = model.CompanyName,
+                //    TradingName = model.BusinessTradingName
+                //};
+                ////create the organisation only if does not exist
+                //Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                //return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
@@ -284,7 +285,8 @@
                     return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText, ContactId = schemeViewData?.ContactId, AddressId = schemeViewData?.AddressId });
                 }
             }
-            return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText, ContactId = schemeViewData?.ContactId, AddressId = schemeViewData?.AddressId });
+            return RedirectToAction(nameof(PartnershipDetails));
+            //return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText, ContactId = schemeViewData?.ContactId, AddressId = schemeViewData?.AddressId });
         }
 
         [HttpPost]
@@ -313,14 +315,14 @@
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
                     return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
-
-                CreatePartnershipRequest request = new CreatePartnershipRequest
-                {
-                    TradingName = model.BusinessTradingName
-                };
-                //create the organisation only if does not exist
-                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
+                return View(model);
+                //CreatePartnershipRequest request = new CreatePartnershipRequest
+                //{
+                //    TradingName = model.BusinessTradingName
+                //};
+                ////create the organisation only if does not exist
+                //Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                //return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
@@ -352,7 +354,8 @@
                     return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
                 }
             }
-            return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
+            return RedirectToAction(nameof(RegisteredCompanyDetails));
+            //return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText, AddressId = schemeViewData?.AddressId, ContactId = schemeViewData?.ContactId });
         }
 
         [HttpPost]
@@ -380,17 +383,17 @@
                     Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
                     return RedirectToAction("MainContactPerson", new { organisationId, model.ContactId, model.AddressId });
                 }
+                return View(model);
+                //CreateRegisteredCompanyRequest request = new CreateRegisteredCompanyRequest
+                //{
+                //    BusinessName = model.CompanyName,
+                //    CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
+                //    TradingName = model.BusinessTradingName
+                //};
 
-                CreateRegisteredCompanyRequest request = new CreateRegisteredCompanyRequest
-                {
-                    BusinessName = model.CompanyName,
-                    CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
-                    TradingName = model.BusinessTradingName
-                };
-
-                //create the organisation only if does not exist
-                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
+                ////create the organisation only if does not exist
+                //Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                //return RedirectToAction("MainContactPerson", new { organisationId = orgId, model.ContactId, model.AddressId });
             }
         }
 
@@ -803,12 +806,6 @@
         public ActionResult Confirmation(string organisationName)
         {
             return View((object)organisationName);
-        }
-
-        [HttpGet]
-        public ActionResult CreateGuidance(string searchedText)
-        {
-            return View((object)searchedText);
         }
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType, Guid? contactId, Guid? addressId)
