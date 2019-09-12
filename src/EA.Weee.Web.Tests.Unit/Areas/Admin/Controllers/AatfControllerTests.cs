@@ -1305,7 +1305,7 @@
         public async void ManageContactDetailsPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = this.fixture.Create<AatfEditContactAddressViewModel>();
-            var request = new EditAatfContact(this.fixture.Create<Guid>(), this.fixture.Create<AatfContactData>());
+            var request = new EditAatfContact(this.fixture.Create<Guid>(), this.fixture.Create<AatfContactData>()) { SendNotification = false };
 
             A.CallTo(() => contactRequestCreator.ViewModelToRequest(model)).Returns(request);
 

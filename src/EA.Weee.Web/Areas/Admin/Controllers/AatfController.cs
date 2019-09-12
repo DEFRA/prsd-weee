@@ -246,6 +246,7 @@
                 using (var client = apiClient())
                 {
                     var request = contactRequestCreator.ViewModelToRequest(viewModel);
+                    request.SendNotification = false;
 
                     await client.SendAsync(User.GetAccessToken(), request);
 

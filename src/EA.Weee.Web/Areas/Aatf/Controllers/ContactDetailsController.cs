@@ -81,6 +81,7 @@
                 using (var client = this.apiClient())
                 {
                     var request = this.contactRequestCreator.ViewModelToRequest(model);
+                    request.SendNotification = true;
 
                     await client.SendAsync(this.User.GetAccessToken(), request);
 

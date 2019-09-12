@@ -9,6 +9,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Events;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Aatf;
     using EA.Weee.RequestHandlers.AatfReturn;
@@ -122,6 +123,49 @@
             var exception = await Record.ExceptionAsync(() => this.handler.HandleAsync(request));
 
             exception.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAatfContactHasChangeAndSendNotification_AatfContactDetailsUpdateEventShouldBeRaised()
+        {
+            var request = this.fixture.Build<EditAatfContact>().With(e => e.SendNotification, true).Create();
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Organisation).Returns(A.Fake<Organisation>());
+            A.CallTo(() => this.aatfDataAccess.GetDetails(request.AatfId)).Returns(aatf);
+            A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
+
+            var result = this.handler.HandleAsync(request);
+
+            A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>.That.Matches(a => Equals(a.Aatf, aatf)))).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAatfContactHasChangeAndSendNotificationIsFalse_AatfContactDetailsUpdateEventShouldNotBeRaised()
+        {
+            var request = this.fixture.Build<EditAatfContact>().With(e => e.SendNotification, false).Create();
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Organisation).Returns(A.Fake<Organisation>());
+            A.CallTo(() => this.aatfDataAccess.GetDetails(request.AatfId)).Returns(aatf);
+            A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
+
+            var result = this.handler.HandleAsync(request);
+
+            A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAatfContactHasNotChangedAndSendNotificationIsTrue_AatfContactDetailsUpdateEventShouldNotBeRaised()
+        {
+            var request = this.fixture.Build<EditAatfContact>().With(e => e.SendNotification, false).Create();
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Organisation).Returns(A.Fake<Organisation>());
+            A.CallTo(() => this.aatfDataAccess.GetDetails(request.AatfId)).Returns(aatf);
+            A.CallTo(() => this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId)).Returns(true);
+            A.CallTo(() => aatf.Contact.Equals(A<AatfContact>._)).Returns(true);
+
+            var result = this.handler.HandleAsync(request);
+
+            A.CallTo(() => aatf.RaiseEvent(A<AatfContactDetailsUpdateEvent>._)).MustNotHaveHappened();
         }
     }
 }

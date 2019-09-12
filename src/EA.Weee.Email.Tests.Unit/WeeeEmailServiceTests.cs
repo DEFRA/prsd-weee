@@ -7,6 +7,11 @@
     using System;
     using System.Net.Mail;
     using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
+
+    using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
+
     using Xunit;
 
     public class WeeeEmailServiceTests
@@ -322,12 +327,40 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.cshtml", A<object>._))
                 .MustHaveHappened();
             A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(EntityType.Aatf)]
+        [InlineData(EntityType.Ae)]
+        [InlineData(EntityType.Pcs)]
+        public async Task SendOrganisationContactDetailsChanged_InvokesExecutorWithCorrectModel(EntityType entityType)
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "NAME", entityType);
+
+            // Assert
+            A.CallTo(
+                    () => builder.TemplateExecutor.Execute(
+                        "OrganisationContactDetailsChanged.cshtml",
+                        A<object>.That.Matches(
+                            a => a.GetPropertyValue<string>("Name") == "NAME" && a.GetPropertyValue<EntityType>("EntityType") == entityType)))
+                .MustHaveHappened();
+            A.CallTo(
+                    () => builder.TemplateExecutor.Execute(
+                        "OrganisationContactDetailsChanged.txt",
+                        A<object>.That.Matches(
+                            a => a.GetPropertyValue<string>("Name") == "NAME" && a.GetPropertyValue<EntityType>("EntityType") == entityType)))
                 .MustHaveHappened();
         }
 
@@ -339,7 +372,7 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged("a@b.com", A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged("a@b.com", A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -354,7 +387,7 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "TestPCS");
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "TestPCS", A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create(A.Dummy<string>(), "Change of contact details for TestPCS", A<EmailContent>._))
@@ -374,7 +407,7 @@
                 .Returns(mailMessage);
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))

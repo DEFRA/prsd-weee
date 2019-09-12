@@ -1,4 +1,5 @@
-﻿<html>
+﻿@using EA.Weee.Core.Helpers
+<html>
 
 <body style="font-family: Helvetica, Arial, sans-serif; font-size: 16px; margin: 0; color: #0b0c0c">
     <table width="100%" cellpadding="15" cellspacing="0" border="0">
@@ -15,8 +16,8 @@
         </tr>
     </table>
     <p>Hello,</p>
-    <p>@Model.Name has submitted changes to their @Model.EntityType.ToString() contact details.</p>
-    <p>To view the changed contact details, manage @Model.EntityType.ToString()s on the WEEE Online service.</p>
+    <p>@Model.Name has submitted changes to their @Model.EntityType.ToString().ToUpper() contact details.</p>
+    <p>To view the changed contact details, manage @Model.EntityType.ToString().ToUpper()s on the WEEE Online service.</p>
     <p>This is an automated email. Do not reply.</p>
 </body>
 </html>

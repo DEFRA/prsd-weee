@@ -1,7 +1,7 @@
 ﻿Hello,
 
-@Model.Name has submitted changes to their @Model.EntityType.ToString() contact details.
+@Model.Name has submitted changes to their @Model.EntityType.ToString().ToUpper() contact details.
 
-To view the changed contact details, manage @Model.EntityType.ToString()s on the WEEE Online service.
+To view the changed contact details, manage @Model.EntityType.ToString().ToUpper()s on the WEEE Online service.
 
 This is an automated email. Do not reply.

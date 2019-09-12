@@ -23,7 +23,11 @@
         [Fact]
         public void ViewModelToRequest_GivenValidViewModel_RequestShouldNotBeNull()
         {
-            var viewModel = A.Fake<AatfEditContactAddressViewModel>();
+            var viewModel = new AatfEditContactAddressViewModel()
+            {
+                ContactData = A.Fake<AatfContactData>(),
+                AatfData = A.Fake<AatfData>()
+            };
 
             var request = this.requestCreator.ViewModelToRequest(viewModel);
 
@@ -36,9 +40,10 @@
             var viewModel = new AatfEditContactAddressViewModel()
             {
                 ContactData = A.Fake<AatfContactData>(),
+                AatfData = A.Fake<AatfData>()
             };
 
-            var request = this.requestCreator.ViewModelToRequest(viewModel) as EditAatfContact;
+            var request = this.requestCreator.ViewModelToRequest(viewModel);
 
             request.ContactData.Should().Be(viewModel.ContactData);
         }

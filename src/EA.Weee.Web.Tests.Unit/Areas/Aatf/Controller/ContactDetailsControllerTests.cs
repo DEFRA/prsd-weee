@@ -253,7 +253,7 @@
         [Fact]
         public async Task EditPost_GivenRequest_ApiShouldBeCalledWithRequest()
         {
-            var request = this.fixture.Create<EditAatfContact>();
+            var request = this.fixture.Build<EditAatfContact>().With(r => r.SendNotification, true).Create();
 
             A.CallTo(() => this.contactRequestCreator.ViewModelToRequest(A<AatfEditContactAddressViewModel>._)).Returns(request);
 
