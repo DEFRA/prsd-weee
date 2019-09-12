@@ -5,6 +5,7 @@
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Requests.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using FakeItEasy;
@@ -1385,7 +1386,7 @@
         public async Task GetDownloadAatfAePublicRegisterCsv_GivenActionParameters_CsvShouldBeReturned()
         {
             var complianceYear = fixture.Create<int>();
-            var facilityType = fixture.Create<FacilityType>();
+            ReportFacilityType facilityType = fixture.Create<ReportFacilityType>();
             var authority = fixture.Create<Guid>();
             var isPublicRegister = fixture.Create<bool>();
 
