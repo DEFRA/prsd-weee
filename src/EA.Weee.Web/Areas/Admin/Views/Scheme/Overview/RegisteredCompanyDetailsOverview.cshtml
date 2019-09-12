@@ -62,7 +62,6 @@
                 <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
             </p>
         }
-
-        @Html.Partial("Overview/_OverviewAvailableActions")
     </section>
+    @Html.Partial("Overview/_OverviewAvailableActions")
 </div>
