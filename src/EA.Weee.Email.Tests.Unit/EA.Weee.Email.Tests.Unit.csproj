@@ -98,6 +98,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="EventHandlers\ContactDetailsUpdateEventHandlerTests.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequest\OrganisationUserRequestCompletedEventHandlerTests.cs" />
     <Compile Include="EventHandlers\OrganisationUserRequest\OrganisationUserRequestEventHandlerTests.cs" />
     <Compile Include="EventHandlers\SchemeDataReturnSubmission\SchemeDataReturnSubmissionEventHandlerTests.cs" />

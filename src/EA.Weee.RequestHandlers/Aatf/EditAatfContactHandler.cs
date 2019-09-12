@@ -42,7 +42,9 @@
                 this.authorization.EnsureUserInRole(Roles.InternalAdmin);
             }
 
-            if (message.SendNotification)
+            var aatfContact = this.GetAatfContactToCompare(message);
+
+            if (message.SendNotification && !aatf.Contact.Equals(aatfContact))
             {
                 if (!await this.aatfDataAccess.IsLatestAatf(aatf.Id, aatf.AatfId))
                 {
@@ -50,7 +52,6 @@
                 }
 
                 aatf.RaiseEvent(new AatfContactDetailsUpdateEvent(aatf));
-                // TODO: Only create event on contact or address changing
             }
 
             var country = await this.organisationDetailsDataAccess.FetchCountryAsync(message.ContactData.AddressData.CountryId);
@@ -60,6 +61,21 @@
             await this.aatfDataAccess.UpdateContact(value, message.ContactData, country);
 
             return true;
+        }
+
+        private AatfContact GetAatfContactToCompare(EditAatfContact message)
+        {
+            return new AatfContact(message.ContactData.FirstName, 
+                message.ContactData.LastName, 
+                message.ContactData.Position, 
+                message.ContactData.AddressData.Address1, 
+                message.ContactData.AddressData.Address2, 
+                message.ContactData.AddressData.TownOrCity, 
+                message.ContactData.AddressData.CountyOrRegion, 
+                message.ContactData.AddressData.Postcode, 
+                message.ContactData.AddressData.CountryId, 
+                message.ContactData.Telephone, 
+                message.ContactData.Email);
         }
     }
 }
