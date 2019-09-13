@@ -6,6 +6,13 @@
 
     public class GetPreviousQuarterSchemes : IRequest<List<Guid>>
     {
-        public Guid OrganisationId { get; set; }
+        public Guid OrganisationId { get; private set; }
+        public Guid ReturnId { get; private set; }
+
+        public GetPreviousQuarterSchemes(Guid organisationId, Guid returnId)
+        {
+            this.OrganisationId = organisationId;
+            this.ReturnId = returnId;
+        }
     }
 }

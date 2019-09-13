@@ -20,6 +20,11 @@
                         Select all the PCSs that you received WEEE from
                     </h1>
              
+                @if (Model.PreviousQuarterSchemes.Count > 0)
+                {
+                    <div>Hello</div>
+                }
+
                 <h2 class="govuk-heading-m">These PCSs will be available to all of your AATFs</h2>
                 <div class="govuk-checkboxes">
                     @for (var i = 0; i < Model.SchemeList.Count; i++)
