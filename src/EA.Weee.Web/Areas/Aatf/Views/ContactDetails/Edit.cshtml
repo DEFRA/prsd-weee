@@ -44,7 +44,7 @@
         }
 
         <p>
-            @Html.ActionLink("Perform another activity", "Index", "Home", new { area = "Scheme" })
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
         </p>
         <p>
             <a class="govuk-back-link" href="@(Url.UrlFor<ContactDetailsController>(a => a.Index(Model.OrganisationId, Model.Id, Model.AatfData.FacilityType)))">Back</a>
