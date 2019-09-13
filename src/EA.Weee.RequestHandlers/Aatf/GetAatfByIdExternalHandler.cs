@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Aatf
 {
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
@@ -11,39 +9,28 @@
     using EA.Weee.Requests.Aatf;
     using System.Threading.Tasks;
 
-    public class GetAatfByIdExternalHandler : IRequestHandler<GetAatfByIdExternal, AatfDataExternal>
+    public class GetAatfByIdExternalHandler : IRequestHandler<GetAatfByIdExternal, AatfData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IUserContext context;
         private readonly IFetchAatfDataAccess fetchDataAccess;
-        private readonly IMap<AatfContact, AatfContactData> mapper;
+        private readonly IMap<Aatf, AatfData> mapper;
 
-        public GetAatfByIdExternalHandler(IWeeeAuthorization authorization, IUserContext context, IMap<AatfContact, AatfContactData> mapper, IFetchAatfDataAccess fetchDataAccess)
+        public GetAatfByIdExternalHandler(IWeeeAuthorization authorization, IMap<Aatf, AatfData> mapper, IFetchAatfDataAccess fetchDataAccess)
         {
             this.authorization = authorization;
-            this.context = context;
             this.mapper = mapper;
             this.fetchDataAccess = fetchDataAccess;
         }
 
-        public async Task<AatfDataExternal> HandleAsync(GetAatfByIdExternal message)
+        public async Task<AatfData> HandleAsync(GetAatfByIdExternal message)
         {
             authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var aatf = await fetchDataAccess.FetchById(message.AatfId);
 
-            var aatfContactData = mapper.Map(aatf.Contact);
+            authorization.EnsureOrganisationAccess(aatf.Organisation.Id);
 
-            var aatfData = new AatfDataExternal(aatf.Id, aatf.Name)
-            {
-                Contact = aatfContactData,
-                ApprovalNumber = aatf.ApprovalNumber,
-                FacilityType = aatf.FacilityType.DisplayName,
-                Status = aatf.AatfStatus.DisplayName
-            };
-
-            return aatfData;
+            return mapper.Map(aatf);
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Admin.Requests
+﻿namespace EA.Weee.Web.Requests
 {
-    using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Web.Requests.Base;
-    using Weee.Requests.Admin.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Aatf;
 
     public interface IEditAatfContactRequestCreator : IRequestCreator<AatfEditContactAddressViewModel, EditAatfContact>
     {
