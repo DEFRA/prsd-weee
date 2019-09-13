@@ -308,7 +308,7 @@
     <Content Include="scripts\Update\Release 2\Sprint17\20190906-0756-alter-getAatfAeReturnDataCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint17\20190906-0800-alter-getAllAatfReuseSitesCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint17\20190913-0930-alter-getPcsAatfDiscrepancyCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Sprint17\20190913-0940-alter-getAatfAeDetailsCsvData.sql" />
+    <Content Include="scripts\Update\Release 2\Sprint17\20190913-1140-alter-getAatfAeDetailsCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
