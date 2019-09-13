@@ -75,7 +75,6 @@
   <ItemGroup>
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
-    <Compile Include="Aatf\AatfDataExternal.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />

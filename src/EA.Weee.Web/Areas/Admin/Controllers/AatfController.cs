@@ -28,6 +28,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+
+    using EA.Weee.Web.Requests;
+    using EA.Weee.Web.ViewModels.Shared.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Aatf.Mapping;
+
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -216,23 +221,17 @@
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
+                var countries = await client.SendAsync(this.User.GetAccessToken(), new GetCountries(false));
+
                 if (!contact.CanEditContactDetails || !IsValidRecordToEdit(currentDate, aatf.ComplianceYear))
                 {
                     return new HttpForbiddenResult();
                 }
 
-                var viewModel = new AatfEditContactAddressViewModel()
-                {
-                    AatfId = id,
-                    ContactData = contact,
-                    FacilityType = facilityType,
-                    AatfName = aatf.Name,
-                    ComplianceYear = aatf.ComplianceYear
-                };
+                var model = this.mapper.Map<AatfEditContactAddressViewModel>(new AatfEditContactTransfer() { AatfData = aatf, Countries = countries, CurrentDate = currentDate });
 
-                viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 SetBreadcrumb(facilityType, aatf.Name);
-                return View(viewModel);
+                return View(model);
             }
         }
 
@@ -240,17 +239,18 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(AatfEditContactAddressViewModel viewModel)
         {
-            SetBreadcrumb(viewModel.FacilityType, viewModel.AatfName);
+            SetBreadcrumb(viewModel.AatfData.FacilityType, viewModel.AatfData.Name);
 
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
                     var request = contactRequestCreator.ViewModelToRequest(viewModel);
+                    request.SendNotification = false;
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.AatfId }) + "#contactDetails");
+                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.Id }) + "#contactDetails");
                 }
             }
 

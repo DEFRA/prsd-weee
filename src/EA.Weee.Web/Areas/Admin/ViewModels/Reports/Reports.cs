@@ -17,7 +17,7 @@
         public const string AatfNonObligatedData = "AATF non-obligated WEEE data";
         public const string AatfSentOnData = "AATF WEEE sent on for treatment";
         public const string AatfReuseSitesData = "AATF using reuse sites";
-        public const string AatfAeDetails = "AATF / AE / PCS organisation details";
+        public const string AatfAeDetails = "AATF / AE / PCS / organisation details";
         public const string PcsAatfDataDifference = "PCS v AATF WEEE data comparison";
         public const string AatfAePublicRegister = "AATF / AE public register";
         public const string PcsReports = "PCS reports";

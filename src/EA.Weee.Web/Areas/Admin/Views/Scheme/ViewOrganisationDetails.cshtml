@@ -6,21 +6,21 @@
 
 @section main_content
 {
-   <header class="hgroup">
-    @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-    {
-        <h1 class="govuk-heading-l">Principal place of business details</h1>
-    }
-    else
-    {
-        <h1 class="govuk-heading-l">Registered office details</h1>
-    }
+    <header class="hgroup">
+        @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+        {
+            <h1 class="govuk-heading-l">Principal place of business details</h1>
+        }
+        else
+        {
+            <h1 class="govuk-heading-l">Registered office details</h1>
+        }
     </header>
 
     @{
         @Html.Partial("_ViewOrganisationDetails")
-     }
-    
+    }
+
     <p>
         <a href="javascript:history.back();">Back</a>
     </p>

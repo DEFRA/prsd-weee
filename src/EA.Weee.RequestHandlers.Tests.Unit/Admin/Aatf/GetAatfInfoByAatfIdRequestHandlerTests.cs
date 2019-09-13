@@ -1,6 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Aatf
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
+
+    using AutoFixture;
+
     using Domain.Lookup;
+
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
@@ -13,38 +20,32 @@
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
+
     using FakeItEasy;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
+
+    using FluentAssertions;
+
     using Xunit;
 
     public class GetAatfInfoByAatfIdRequestHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly AatfMap mapper;
         private readonly IMap<Aatf, AatfData> fakeMapper;
         private readonly IGetAatfsDataAccess dataAccess;
         private readonly GetAatfInfoByAatfIdRequestHandler handler;
+        private readonly Fixture fixture;
 
         public GetAatfInfoByAatfIdRequestHandlerTests()
         {
-            authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            mapper = new AatfMap(A.Fake<IMap<Domain.UKCompetentAuthority, UKCompetentAuthorityData>>(),
-                A.Fake<IMap<Domain.AatfReturn.AatfStatus, Core.AatfReturn.AatfStatus>>(),
-                A.Fake<IMap<Domain.AatfReturn.AatfSize, Core.AatfReturn.AatfSize>>(),
-                A.Fake<IMap<AatfAddress, AatfAddressData>>(),
-                A.Fake<IMap<AatfContact, AatfContactData>>(),
-                A.Fake<IMap<Organisation, OrganisationData>>(),
-                A.Fake<IMap<Domain.AatfReturn.FacilityType, Core.AatfReturn.FacilityType>>(),
-                A.Fake<IMap<PanArea, PanAreaData>>(),
-                A.Fake<IMap<LocalArea, LocalAreaData>>());
-            dataAccess = A.Dummy<IGetAatfsDataAccess>();
+            this.authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            this.dataAccess = A.Dummy<IGetAatfsDataAccess>();
+            this.fakeMapper = A.Fake<IMap<Aatf, AatfData>>();
 
-            fakeMapper = A.Fake<IMap<Aatf, AatfData>>();
+            this.fixture = new Fixture();
 
-            handler = new GetAatfInfoByAatfIdRequestHandler(authorization, mapper, dataAccess);
+            this.handler = new GetAatfInfoByAatfIdRequestHandler(this.authorization, this.fakeMapper, this.dataAccess);
         }
 
         [Fact]
@@ -70,14 +71,13 @@
         {
             DateTime date = DateTime.Now;
 
-            Aatf aatf = new Aatf("name", A.Dummy<UKCompetentAuthority>(), "1234", Domain.AatfReturn.AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), Domain.AatfReturn.AatfSize.Large, date, A.Fake<AatfContact>(), Domain.AatfReturn.FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
+            var aatfData = this.fixture.Create<AatfData>();
+            var aatf = this.fixture.Create<Aatf>();
 
-            A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(aatf);
+            A.CallTo(() => this.fakeMapper.Map(aatf)).Returns(aatfData);
+            A.CallTo(() => this.dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(aatf);
 
-            AatfData aatfData = new AatfData(Guid.Empty, "name", "1234", (Int16)2019, A.Dummy<UKCompetentAuthorityData>(), A.Fake<Core.AatfReturn.AatfStatus>(), A.Dummy<AatfAddressData>(), A.Fake<Core.AatfReturn.AatfSize>(), date);
-            A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(aatfData);
-
-            var result = await handler.HandleAsync(new GetAatfById(A.Dummy<Guid>()));
+            var result = await this.handler.HandleAsync(new GetAatfById(A.Dummy<Guid>()));
 
             Assert.Equal(aatfData.Id, result.Id);
             Assert.Equal(aatfData.Name, result.Name);
@@ -89,22 +89,45 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenReturnAndAuthorisation_CanEditPropertiesShouldBeSet()
+        {
+            var aatfData = this.fixture.Create<AatfData>();
+            var aatf = this.fixture.Create<Aatf>();
+            var canEdit = this.fixture.Create<bool>();
+
+            A.CallTo(() => this.fakeMapper.Map(aatf)).Returns(aatfData);
+            A.CallTo(() => this.dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(aatf);
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin)).Returns(canEdit);
+
+            var result = await this.handler.HandleAsync(new GetAatfById(A.Dummy<Guid>()));
+
+            result.CanEdit.Should().Be(canEdit);
+            result.Contact.CanEditContactDetails.Should().Be(canEdit);
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenGetAatfsReturnRequest_DataAccessFetchIsCalled()
         {
             IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
-            await handler.HandleAsync(A.Dummy<GetAatfById>());
-            A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
+            var request = new GetAatfById(Guid.NewGuid());
+            var aatfData = this.fixture.Create<AatfData>();
+
+            A.CallTo(() => this.fakeMapper.Map(A<Aatf>._)).Returns(aatfData);
+
+            await this.handler.HandleAsync(request);
+
+            A.CallTo(() => this.dataAccess.GetAatfById(request.AatfId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async Task HandleAsync_ProvideNonExistantAatfId_ReturnsException()
         {
-            Aatf returnData = null;
+            var aatfData = this.fixture.Create<AatfData>();
 
-            A.CallTo(() => dataAccess.GetAatfById(A.Dummy<Guid>())).Returns(returnData);
+            A.CallTo(() => this.dataAccess.GetAatfById(A<Guid>._)).Returns((Aatf)null);
 
-            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfById>());
+            Func<Task> action = async () => await this.handler.HandleAsync(A.Dummy<GetAatfById>());
 
             await Assert.ThrowsAsync<ArgumentException>(action);
         }

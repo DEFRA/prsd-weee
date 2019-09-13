@@ -215,7 +215,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
-    <Compile Include="Areas\Aatf\Controller\ViewAatfContactDetailsControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
@@ -279,6 +279,7 @@
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
@@ -330,7 +331,7 @@
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Admin\Requests\EditFacilityDetailsRequestCreatorTests.cs" />
-    <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreatorTests.cs" />
+    <Compile Include="Requests\EditAatfContactRequestCreatorTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfEditDetailsViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAeViewModelTests.cs" />

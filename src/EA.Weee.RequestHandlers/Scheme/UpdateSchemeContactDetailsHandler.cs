@@ -8,6 +8,9 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
+
     using Weee.Security;
 
     public class UpdateSchemeContactDetailsHandler : IRequestHandler<UpdateSchemeContactDetails, bool>
@@ -71,7 +74,7 @@
             if (message.SendNotificationOnChange &&
                 (contactChanged || schemeAddressChanged) && scheme.CompetentAuthority != null)
             {
-                await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName);
+                await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName, EntityType.Pcs);
             }
 
             return true;
