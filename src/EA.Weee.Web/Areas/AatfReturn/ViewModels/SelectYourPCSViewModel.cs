@@ -15,10 +15,12 @@
 
             this.SchemeList = schemeList;
             this.SelectedSchemes = selectedSchemes;
+            this.PreviousQuarterSchemes = new List<Guid>();
         }
 
         public SelectYourPcsViewModel()
         {
+            this.PreviousQuarterSchemes = new List<Guid>();
         }
 
         public List<SchemeData> SchemeList { get; set; }
@@ -33,5 +35,7 @@
         public Guid ReturnId { get; set; }
 
         public bool Reselect { get; set; }
+
+        public List<Guid> PreviousQuarterSchemes { get; set; }
     }
 }
