@@ -1232,7 +1232,7 @@
         {
             var aatfData = this.fixture.Build<AatfData>().With(r => r.ComplianceYear, 2019).Create();
             var countries = this.fixture.CreateMany<CountryData>().ToList();
-            var currentDate = this.fixture.Create<DateTime>();
+            var currentDate = new DateTime(2019, 1, 1);
 
             A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetAatfById>._)).Returns(aatfData);
             A.CallTo(() => this.weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(countries);
