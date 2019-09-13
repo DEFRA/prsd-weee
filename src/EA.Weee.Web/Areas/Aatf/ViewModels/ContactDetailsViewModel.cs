@@ -3,7 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using System;
 
-    public class ViewAatfContactDetailsViewModel
+    public class ContactDetailsViewModel
     {
         public Guid OrganisationId { get; set; }
 
@@ -15,7 +15,7 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public ViewAatfContactDetailsViewModel()
+        public ContactDetailsViewModel()
         {
         }
     }

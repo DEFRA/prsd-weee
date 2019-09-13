@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using EA.Weee.Core.Aatf;
     using EA.Weee.Core.Scheme;
     using System;
+
+    using EA.Weee.Core.AatfReturn;
 
     public class BreadcrumbService
     {
@@ -53,7 +54,7 @@
 
         public Guid OrganisationId { get; set; }
 
-        public AatfDataExternal ExternalAatf { get; set; }
+        public AatfData ExternalAatf { get; set; }
 
         /// <summary>
         /// The activity currently in scope when accessing the test area.
