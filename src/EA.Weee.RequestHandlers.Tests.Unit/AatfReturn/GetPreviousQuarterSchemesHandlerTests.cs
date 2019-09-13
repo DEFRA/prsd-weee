@@ -58,8 +58,15 @@
 
             Return previousReturn = A.Fake<Return>();
             A.CallTo(() => previousReturn.Id).Returns(Guid.NewGuid());
-            A.CallTo(() => previousReturn.Quarter).Returns(q4);
+            A.CallTo(() => previousReturn.Quarter).Returns(q3);
             A.CallTo(() => previousReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => previousReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
+
+            Return currentReturn = A.Fake<Return>();
+            A.CallTo(() => currentReturn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => currentReturn.Quarter).Returns(q4);
+            A.CallTo(() => currentReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => currentReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
 
             List<Return> returns = new List<Return>()
             {
@@ -70,22 +77,27 @@
             };
 
             A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
-            A.CallTo(() => returns.ElementAt(0).Quarter).Returns(q3);
+            A.CallTo(() => returns.ElementAt(0).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(0).Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
-            A.CallTo(() => returns.ElementAt(1).Quarter).Returns(q2);
+            A.CallTo(() => returns.ElementAt(1).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(1).Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(2).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(2).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(2).Organisation).Returns(otherOrganisation);
+            A.CallTo(() => returns.ElementAt(2).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(3).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(3).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(3).Organisation).Returns(otherOrganisation);
+            A.CallTo(() => returns.ElementAt(3).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             returns.Add(previousReturn);
+            returns.Add(currentReturn);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).Returns(returns);
 
@@ -110,10 +122,7 @@
 
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).Returns(returnSchemes);
 
-            GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes()
-            {
-                OrganisationId = requestedOrganisation.Id
-            };
+            GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes(requestedOrganisation.Id, currentReturn.Id);
 
             List<Guid> result = await handler.HandleAsync(request);
 
@@ -133,6 +142,7 @@
 
             Quarter q1 = new Quarter(2019, QuarterType.Q1);
             Quarter q2 = new Quarter(2019, QuarterType.Q2);
+            Quarter q3 = new Quarter(2019, QuarterType.Q3);
 
             List<Return> returns = new List<Return>()
             {
@@ -140,13 +150,23 @@
                 A.Fake<Return>()
             };
 
+            Return currentReturn = A.Fake<Return>();
+            A.CallTo(() => currentReturn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => currentReturn.Quarter).Returns(q3);
+            A.CallTo(() => currentReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => currentReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
+
+            returns.Add(currentReturn);
+
             A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(0).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(0).Organisation).Returns(otherOrganisation);
+            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(1).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(1).Organisation).Returns(otherOrganisation);
+            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(ReturnStatus.Submitted);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).Returns(returns);
 
@@ -154,15 +174,12 @@
 
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).Returns(returnSchemes);
 
-            GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes()
-            {
-                OrganisationId = requestedOrganisation.Id
-            };
+            GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes(requestedOrganisation.Id, currentReturn.Id);
 
             List<Guid> result = await handler.HandleAsync(request);
 
             Assert.Equal(0, result.Count);
-       
+
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
         }

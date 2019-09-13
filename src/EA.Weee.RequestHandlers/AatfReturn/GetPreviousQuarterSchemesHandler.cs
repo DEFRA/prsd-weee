@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using System;
@@ -24,9 +25,26 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
+            // Get all returns
             List<Return> allReturns = await dataAccess.GetAll<Return>();
 
-            Return lastReturn = allReturns.Where(p => p.Organisation.Id == message.OrganisationId).OrderByDescending(p => p.Quarter).FirstOrDefault();
+            // Filter the returns by the organisationId. Also ignore the return we are creating. Finally make sure they are submitted.
+            // Then order them by the Quarter descending so that we can get the latest returns
+            allReturns = allReturns.Where(p => p.Organisation.Id == message.OrganisationId && p.Id != message.ReturnId && p.ReturnStatus == ReturnStatus.Submitted)
+                .OrderByDescending(p => p.Quarter).ToList();
+
+            // This is their first return
+            if (allReturns.Count == 0)
+            {
+                return new List<Guid>();
+            }
+
+            // Find the last quarter submitted
+            Quarter lastQ = allReturns.FirstOrDefault().Quarter;
+
+            // Grab the previous return entries that match the last quarter. This is needed because if a return is edited, it creates a new entry, so we need to get them all.
+            List<Return> previousEntries = allReturns.Where(p => p.Quarter == lastQ).ToList();
+
 
             List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
 
@@ -35,7 +53,13 @@
                 return new List<Guid>();
             }
 
-            List<ReturnScheme> lastSchemes = returnSchemes.Where(p => p.ReturnId == lastReturn.Id).ToList();
+            List<ReturnScheme> lastSchemes = new List<ReturnScheme>();
+
+            // Get the return schemes from each return entry
+            foreach (Return r in previousEntries)
+            {
+                lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == r.Id));
+            }
 
             List<Guid> schemeIds = new List<Guid>();
 
