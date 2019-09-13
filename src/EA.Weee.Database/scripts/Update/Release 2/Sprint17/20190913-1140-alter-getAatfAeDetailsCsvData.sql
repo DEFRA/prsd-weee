@@ -1,6 +1,3 @@
-USE [WeeeTest]
-GO
-
 ALTER PROCEDURE [AATF].[getAatfAeDetailsCsvData]
 	@ComplianceYear INT,
 	@FacilityType INT,
@@ -131,7 +128,8 @@ IF (@FacilityType = 4 OR @FacilityType = 3)
 BEGIN
 	INSERT INTO @AATF (AppropriateAuthorityAbbr, Name, ApprovalNumber, Status, IbisCustomerReference, [ObligationType], FirstName, LastName, ContactPosition,
 	OrganisationType, OperatorName, OperatorTradingName, CompanyRegistrationNumber, OrganisationAddress1,   
-	OrganisationAddress2, OrganisationTownCity, OrganisationCountyRegion, OrganisationCountry, OrganisationPostcode, OrganisationTelephone, OrganisationEmail, RecordType)
+	OrganisationAddress2, OrganisationTownCity, OrganisationCountyRegion, OrganisationCountry, OrganisationPostcode, OrganisationTelephone, OrganisationEmail, RecordType,
+	ContactAddress1, ContactAddress2, ContactTownCity, ContactCountyRegion, ContactCountry, ContactPostCode, ContactEmail, ContactPhone)
 	SELECT ca.Abbreviation, s.SchemeName, s.ApprovalNumber, 
 	CASE s.SchemeStatus
 		WHEN 1 THEN 'Pending'
@@ -146,7 +144,8 @@ BEGIN
 		ELSE 'None' END,
 	oc.FirstName, oc.LastName, oc.Position,
 	o.OrganisationType, o.Name,o.TradingName, o.CompanyRegistrationNumber,
-	oa.Address1, oa.Address2, oa.TownOrCity,oa.CountyOrRegion, orgco.Name, oa.Postcode,oa.Telephone, oa.Email, 'PCS'
+	oa.Address1, oa.Address2, oa.TownOrCity,oa.CountyOrRegion, orgco.Name, oa.Postcode,oa.Telephone, oa.Email, 'PCS',
+	oca.Address1, oca.Address2, oca.TownOrCity,oca.CountyOrRegion, sco.Name,oca.Postcode, oca.Email, oca.Telephone
 	FROM 
 	[PCS].[Scheme] s
 	JOIN Organisation.Organisation o ON s.OrganisationId  = o.Id
@@ -154,6 +153,8 @@ BEGIN
 	JOIN Lookup.Country orgco on oa.CountryId = orgco.Id
 	LEFT JOIN Lookup.CompetentAuthority ca ON s.CompetentAuthorityId = ca.Id
 	LEFT JOIN [Organisation].[Contact]  oc ON s.ContactId = oc.Id
+	LEFT JOIN Organisation.Address oca ON s.AddressId = oca.Id
+	JOIN Lookup.Country sco on oca.CountryId = sco.Id
 	WHERE
 	 s.CompetentAuthorityId = COALESCE(@CA, s.CompetentAuthorityId)
 END
