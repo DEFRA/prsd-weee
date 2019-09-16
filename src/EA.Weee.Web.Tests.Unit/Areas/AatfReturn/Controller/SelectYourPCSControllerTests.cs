@@ -119,6 +119,43 @@
         }
 
         [Fact]
+        public async void IndexGet_CopyPreviousIsTrue_ViewModelSelectedPcsSelectedAndViewReturned()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+
+            List<SchemeData> schemeDatas = A.CollectionOfFake<SchemeData>(4).ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeDatas);
+
+            List<Guid> selectedSchemes = new List<Guid>()
+            {
+                schemeDatas.FirstOrDefault().Id
+            };
+
+            Quarter q = new Quarter(2019, QuarterType.Q1);
+
+            PreviousQuarterReturnResult previousQuarterReturnResult = new PreviousQuarterReturnResult()
+            {
+                PreviousSchemes = selectedSchemes,
+                PreviousQuarter = q
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPreviousQuarterSchemes>._)).Returns(previousQuarterReturnResult);
+
+            ViewResult result = await controller.Index(organisationId, returnId, false, true) as ViewResult;
+
+            Assert.True(result.ViewName == "Index");
+
+            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+
+            Assert.Equal(returnId, viewModel.ReturnId);
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            viewModel.CopyPrevious.Should().Be(true);
+            viewModel.SelectedSchemes.Should().Contain(selectedSchemes);
+            viewModel.PreviousQuarterData.PreviousQuarter.Should().Be(q);
+        }
+
+        [Fact]
         public async void IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
         {
             Guid returnId = Guid.NewGuid();

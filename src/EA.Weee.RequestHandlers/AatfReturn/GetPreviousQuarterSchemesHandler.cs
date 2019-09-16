@@ -43,9 +43,6 @@
             // Find the last quarter submitted
             Quarter lastQ = allReturns.FirstOrDefault().Quarter;
 
-            // Grab the previous return entries that match the last quarter. This is needed because if a return is edited, it creates a new entry, so we need to get them all.
-            List<Return> previousEntries = allReturns.Where(p => p.Quarter == lastQ).ToList();
-
             List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
 
             if (returnSchemes == null)
@@ -55,11 +52,9 @@
 
             List<ReturnScheme> lastSchemes = new List<ReturnScheme>();
 
-            // Get the return schemes from each return entry
-            foreach (Return r in previousEntries)
-            {
-                lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == r.Id));
-            }
+            // Grab the last submitted return
+            Return lastReturn = allReturns.FirstOrDefault(p => p.Quarter == lastQ);
+            lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == lastReturn.Id));
 
             List<Guid> schemes = new List<Guid>();
 
