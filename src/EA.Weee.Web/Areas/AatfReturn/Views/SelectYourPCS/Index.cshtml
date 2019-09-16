@@ -19,22 +19,22 @@
 
             @if (Model.PreviousQuarterData.PreviousSchemes.Count > 0)
             {
-                using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { }, FormMethod.Get))
+                using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Get, new { id = "SelectPcsForm" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.Gds().ValidationSummary()
-                   
+
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input type="hidden" name="copyPrevious" value="true" />
-                            <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="@Model.CopyPrevious" />
+                            <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="CopyPreviousSchemes" />
                             <label class="govuk-label govuk-checkboxes__label">
                                 Copy my options from the previous quarter @Model.PreviousQuarterData.PreviousQuarter.Year @Model.PreviousQuarterData.PreviousQuarter.Q.ToString()
                             </label>
+                            <input type="hidden" name="copyPrevious" value="false" />
                         </div>
 
                     </div>
-                    
+
                     <br />
                     <div>
                         <noscript>

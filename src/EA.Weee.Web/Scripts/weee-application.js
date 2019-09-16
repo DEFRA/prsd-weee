@@ -130,7 +130,9 @@
     $("#ReturnsExternalSelectedQuarter").change(function () {
         $("#ReturnsQueryParameterForm").submit();
     });
-
+    $("#CopyPreviousSchemes").change(function () {
+        $("#SelectPcsForm").submit();
+    });
 });
 
 
