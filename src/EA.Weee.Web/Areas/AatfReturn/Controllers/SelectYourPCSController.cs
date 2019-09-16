@@ -52,7 +52,13 @@
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
                     PreviousQuarterData = await client.SendAsync(User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
-            };
+                };
+
+                if (copyPrevious)
+                {
+                    viewModel.SelectedSchemes = viewModel.PreviousQuarterData.PreviousSchemes;
+                    viewModel.CopyPrevious = true;
+                }
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
