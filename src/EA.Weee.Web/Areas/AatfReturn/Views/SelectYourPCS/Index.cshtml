@@ -26,11 +26,11 @@
                    
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input type="hidden" name="copyPrevious" value="false" />
                             <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="@Model.CopyPrevious" />
                             <label class="govuk-label govuk-checkboxes__label">
                                 Copy my options from the previous quarter @Model.PreviousQuarterData.PreviousQuarter.Year @Model.PreviousQuarterData.PreviousQuarter.Q.ToString()
                             </label>
+                            <input type="hidden" name="copyPrevious" value="false" />
                         </div>
 
                     </div>
