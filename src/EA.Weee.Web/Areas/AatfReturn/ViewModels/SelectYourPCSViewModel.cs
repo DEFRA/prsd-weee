@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
     using EA.Prsd.Core;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Validation;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
 
     public class SelectYourPcsViewModel
     {
@@ -15,12 +17,10 @@
 
             this.SchemeList = schemeList;
             this.SelectedSchemes = selectedSchemes;
-            this.PreviousQuarterSchemes = new List<Guid>();
         }
 
         public SelectYourPcsViewModel()
         {
-            this.PreviousQuarterSchemes = new List<Guid>();
         }
 
         public List<SchemeData> SchemeList { get; set; }
@@ -36,6 +36,8 @@
 
         public bool Reselect { get; set; }
 
-        public List<Guid> PreviousQuarterSchemes { get; set; }
+        public PreviousQuarterReturnResult PreviousQuarterData { get; set; }
+
+        public bool CopyPrevious { get; set; }
     }
 }
