@@ -39,11 +39,6 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false, bool copyPrevious = false, bool clearSelections = false)
         {
-            if (reselect)
-            {
-                return await Reselect(organisationId, returnId);
-            }
-
             using (var client = apiClient())
             {
                 var viewModel = new SelectYourPcsViewModel
@@ -53,6 +48,15 @@
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
                     PreviousQuarterData = await client.SendAsync(User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
                 };
+
+                if (reselect)
+                {
+                    GetReturnScheme request = new GetReturnScheme(returnId);
+                    var existing = await client.SendAsync(User.GetAccessToken(), request);
+
+                    viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
+                    viewModel.Reselect = true;
+                }
 
                 if (copyPrevious)
                 {
@@ -100,33 +104,6 @@
             else
             {
                 return View(viewModel);
-            }
-        }
-
-        private async Task<ActionResult> Reselect(Guid organisationId, Guid returnId)
-        {
-            using (var client = apiClient())
-            {
-                GetReturnScheme request = new GetReturnScheme(returnId);
-
-                var existing = await client.SendAsync(User.GetAccessToken(), request);
-
-                SelectYourPcsViewModel viewModel = new SelectYourPcsViewModel
-                {
-                    OrganisationId = organisationId,
-                    ReturnId = returnId,
-                    SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    Reselect = true,
-                    SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList()
-                };
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
-
-                await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
-
-                TempData["currentQuarter"] = @return.Quarter;
-                TempData["currentQuarterWindow"] = @return.QuarterWindow;
-
-                return View(nameof(Index), viewModel);
             }
         }
 

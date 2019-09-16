@@ -54,6 +54,12 @@
 
             // Grab the last submitted return
             Return lastReturn = allReturns.FirstOrDefault(p => p.Quarter == lastQ);
+
+            if (lastReturn == null)
+            {
+                return new PreviousQuarterReturnResult();
+            }
+
             lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == lastReturn.Id));
 
             List<Guid> schemes = new List<Guid>();
