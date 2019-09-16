@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using AutoFixture;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
@@ -60,13 +61,13 @@
             A.CallTo(() => previousReturn.Id).Returns(Guid.NewGuid());
             A.CallTo(() => previousReturn.Quarter).Returns(q3);
             A.CallTo(() => previousReturn.Organisation).Returns(requestedOrganisation);
-            A.CallTo(() => previousReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => previousReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             Return currentReturn = A.Fake<Return>();
             A.CallTo(() => currentReturn.Id).Returns(Guid.NewGuid());
             A.CallTo(() => currentReturn.Quarter).Returns(q4);
             A.CallTo(() => currentReturn.Organisation).Returns(requestedOrganisation);
-            A.CallTo(() => currentReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => currentReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             List<Return> returns = new List<Return>()
             {
@@ -79,22 +80,22 @@
             A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(0).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(0).Organisation).Returns(requestedOrganisation);
-            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(1).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(1).Organisation).Returns(requestedOrganisation);
-            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(2).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(2).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(2).Organisation).Returns(otherOrganisation);
-            A.CallTo(() => returns.ElementAt(2).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(2).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(3).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(3).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(3).Organisation).Returns(otherOrganisation);
-            A.CallTo(() => returns.ElementAt(3).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(3).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             returns.Add(previousReturn);
             returns.Add(currentReturn);
@@ -124,11 +125,13 @@
 
             GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes(requestedOrganisation.Id, currentReturn.Id);
 
-            List<Guid> result = await handler.HandleAsync(request);
+            PreviousQuarterReturnResult result = await handler.HandleAsync(request);
 
-            Assert.Equal(2, result.Count);
+            Assert.Equal(2, result.PreviousSchemes.Count);
 
-            result.Should().Contain(returnSchemes.Where(p => p.ReturnId == previousReturn.Id).Select(p => p.Id));
+            result.PreviousQuarter.Should().Be(new Core.DataReturns.Quarter(q3.Year, (Core.DataReturns.QuarterType)q3.Q));
+
+            result.PreviousSchemes.Should().Contain(returnSchemes.Where(p => p.ReturnId == previousReturn.Id).Select(p => p.SchemeId));
 
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
@@ -154,19 +157,19 @@
             A.CallTo(() => currentReturn.Id).Returns(Guid.NewGuid());
             A.CallTo(() => currentReturn.Quarter).Returns(q3);
             A.CallTo(() => currentReturn.Organisation).Returns(requestedOrganisation);
-            A.CallTo(() => currentReturn.ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => currentReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             returns.Add(currentReturn);
 
             A.CallTo(() => returns.ElementAt(0).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(0).Quarter).Returns(q1);
             A.CallTo(() => returns.ElementAt(0).Organisation).Returns(otherOrganisation);
-            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(0).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             A.CallTo(() => returns.ElementAt(1).Id).Returns(Guid.NewGuid());
             A.CallTo(() => returns.ElementAt(1).Quarter).Returns(q2);
             A.CallTo(() => returns.ElementAt(1).Organisation).Returns(otherOrganisation);
-            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(ReturnStatus.Submitted);
+            A.CallTo(() => returns.ElementAt(1).ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).Returns(returns);
 
@@ -176,9 +179,9 @@
 
             GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes(requestedOrganisation.Id, currentReturn.Id);
 
-            List<Guid> result = await handler.HandleAsync(request);
+            PreviousQuarterReturnResult result = await handler.HandleAsync(request);
 
-            Assert.Equal(0, result.Count);
+            Assert.Equal(0, result.PreviousSchemes.Count);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
