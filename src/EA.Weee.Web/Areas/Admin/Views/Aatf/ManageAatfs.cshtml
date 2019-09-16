@@ -1,4 +1,6 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Domain
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -43,16 +45,50 @@
         <br />
         <table class="govuk-table">
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td>
-                        <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
-                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
-                    </td>
-                    <td>
-                        @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
-                        @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
-                    </td>
-                </tr>
+            <tr class="govuk-table__row">
+                <td>
+                    <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
+                    @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                </td>
+                <td>
+                    @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
+                    @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td>
+                <table>
+                    <tr>
+                        <td><Label class="govuk-label form-label" for="Status_Name">Status</Label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset" aria-describedby="aatf-status">
+                                    <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                                        select @Model.FacilityType.ToString() status
+                                    </legend>
+                                    <span id="aatf-status" class="govuk-hint govuk-visually-hidden">
+                                        Select all that apply.
+                                    </span>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="form-control govuk-checkboxes__input" id="approved" name="SelectedReturnStatus" type="checkbox" value="@AatfStatus.Approved.Value">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste">
+                                                @AatfStatus.Approved.ToDisplayString()
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </tr>
             </tbody>
         </table>
 
