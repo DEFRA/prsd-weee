@@ -26,7 +26,7 @@
                    
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input type="hidden" name="copyPrevious" value="false" />
+                            <input type="hidden" name="copyPrevious" value="true" />
                             <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="@Model.CopyPrevious" />
                             <label class="govuk-label govuk-checkboxes__label">
                                 Copy my options from the previous quarter @Model.PreviousQuarterData.PreviousQuarter.Year @Model.PreviousQuarterData.PreviousQuarter.Q.ToString()
@@ -55,7 +55,7 @@
                         <div class="govuk-checkboxes__item">
                             @{
                                 var selectedOption = "";
-                                if (Model.Reselect && Model.SelectedSchemes != null)
+                                if ((Model.Reselect || Model.CopyPrevious) && Model.SelectedSchemes != null)
                                 {
                                     selectedOption = Model.SelectedSchemes.Count(p => p == Model.SchemeList[i].Id) > 0 ? "checked" : "";
                                 }
