@@ -37,7 +37,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false, bool copyPrevious = false)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false, bool copyPrevious = false, bool clearSelections = false)
         {
             if (reselect)
             {
@@ -58,6 +58,11 @@
                 {
                     viewModel.SelectedSchemes = viewModel.PreviousQuarterData.PreviousSchemes;
                     viewModel.CopyPrevious = true;
+                }
+
+                if (clearSelections)
+                {
+                    viewModel.SelectedSchemes = new List<Guid>();
                 }
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));

@@ -1,6 +1,9 @@
 ﻿@using System.Web.Mvc.Html
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.AatfReturn.Controllers
 @using EA.Weee.Web.Infrastructure
+@using MvcNavigationHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectYourPcsViewModel
 @{
     ViewBag.Title = "Select all the PCSs that you received WEEE from - GOV.UK";
@@ -81,6 +84,12 @@
 
                 </div>
                 <br>
+
+                <p>
+                    @*<a class="govuk-button" href="@(Url.UrlFor<SelectYourPcsController>(a => a.Index(Model.OrganisationId, Model.ReturnId, false, false, true)))">Perform another activity</a>*@
+                    @Html.RouteLink("Clear selection", AatfRedirect.SelectPcsRouteName,  new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, clearSelections = true }, new { @class = "govuk-button" })
+                </p>
+
                 @Html.HiddenFor(m => m.OrganisationId)
                 @Html.HiddenFor(m => m.ReturnId)
                 <button type="submit" class="govuk-button">
