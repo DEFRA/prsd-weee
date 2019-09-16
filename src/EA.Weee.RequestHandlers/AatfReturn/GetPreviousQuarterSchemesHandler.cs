@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Security;
@@ -10,7 +11,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class GetPreviousQuarterSchemesHandler : IRequestHandler<GetPreviousQuarterSchemes, List<Guid>>
+    internal class GetPreviousQuarterSchemesHandler : IRequestHandler<GetPreviousQuarterSchemes, PreviousQuarterReturnResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
@@ -21,7 +22,7 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<List<Guid>> HandleAsync(GetPreviousQuarterSchemes message)
+        public async Task<PreviousQuarterReturnResult> HandleAsync(GetPreviousQuarterSchemes message)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -30,13 +31,13 @@
 
             // Filter the returns by the organisationId. Also ignore the return we are creating. Finally make sure they are submitted.
             // Then order them by the Quarter descending so that we can get the latest returns
-            allReturns = allReturns.Where(p => p.Organisation.Id == message.OrganisationId && p.Id != message.ReturnId && p.ReturnStatus == ReturnStatus.Submitted)
+            allReturns = allReturns.Where(p => p.Organisation.Id == message.OrganisationId && p.Id != message.ReturnId && p.ReturnStatus == Domain.AatfReturn.ReturnStatus.Submitted)
                 .OrderByDescending(p => p.Quarter).ToList();
 
             // This is their first return
             if (allReturns.Count == 0)
             {
-                return new List<Guid>();
+                return new PreviousQuarterReturnResult();
             }
 
             // Find the last quarter submitted
@@ -45,12 +46,11 @@
             // Grab the previous return entries that match the last quarter. This is needed because if a return is edited, it creates a new entry, so we need to get them all.
             List<Return> previousEntries = allReturns.Where(p => p.Quarter == lastQ).ToList();
 
-
             List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
 
             if (returnSchemes == null)
             {
-                return new List<Guid>();
+                return new PreviousQuarterReturnResult();
             }
 
             List<ReturnScheme> lastSchemes = new List<ReturnScheme>();
@@ -61,14 +61,20 @@
                 lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == r.Id));
             }
 
-            List<Guid> schemeIds = new List<Guid>();
+            List<Guid> schemes = new List<Guid>();
 
             foreach (ReturnScheme scheme in lastSchemes)
             {
-                schemeIds.Add(scheme.Id);
+                schemes.Add(scheme.SchemeId);
             }
 
-            return schemeIds;
+            PreviousQuarterReturnResult result = new PreviousQuarterReturnResult()
+            {
+                PreviousQuarter = new Core.DataReturns.Quarter(lastQ.Year, (Core.DataReturns.QuarterType)lastQ.Q),
+                PreviousSchemes = schemes
+            };
+
+            return result;
         }
     }
 }

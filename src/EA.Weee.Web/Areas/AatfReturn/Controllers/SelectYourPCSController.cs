@@ -37,7 +37,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false, bool copyPrevious = false)
         {
             if (reselect)
             {
@@ -51,7 +51,7 @@
                     OrganisationId = organisationId,
                     ReturnId = returnId,
                     SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    PreviousQuarterSchemes = await client.SendAsync(User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
+                    PreviousQuarterData = await client.SendAsync(User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
             };
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
