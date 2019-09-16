@@ -156,6 +156,24 @@
         }
 
         [Fact]
+        public async void IndexGet_ClearSelectionsIsTrue_ViewModelSelectedPcsIsEmptyAndViewReturned()
+        {
+            Guid returnId = Guid.NewGuid();
+            Guid organisationId = Guid.NewGuid();
+
+            ViewResult result = await controller.Index(organisationId, returnId, false, false, true) as ViewResult;
+
+            Assert.True(result.ViewName == "Index");
+
+            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+
+            Assert.Equal(returnId, viewModel.ReturnId);
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+
+            viewModel.SelectedSchemes.Count().Should().Be(0);
+        }
+
+        [Fact]
         public async void IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
         {
             Guid returnId = Guid.NewGuid();
