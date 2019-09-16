@@ -86,8 +86,7 @@
                 <br>
 
                 <p>
-                    @*<a class="govuk-button" href="@(Url.UrlFor<SelectYourPcsController>(a => a.Index(Model.OrganisationId, Model.ReturnId, false, false, true)))">Perform another activity</a>*@
-                    @Html.RouteLink("Clear selection", AatfRedirect.SelectPcsRouteName,  new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, clearSelections = true }, new { @class = "govuk-button" })
+                     @Html.RouteLink("Clear selection", AatfRedirect.SelectPcsRouteName,  new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, clearSelections = true }, new { @class = "govuk-button" })
                 </p>
 
                 @Html.HiddenFor(m => m.OrganisationId)
