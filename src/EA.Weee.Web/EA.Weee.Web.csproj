@@ -1198,17 +1198,8 @@
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
-    <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
-    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
-    <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
-    <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
     <Content Include="Views\Account\AccountActivated.cshtml" />
     <Content Include="Views\Account\AccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\PendingOrganisations.cshtml" />
@@ -1241,8 +1232,6 @@
     <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
-    <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
     <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
     <Content Include="Views\Shared\_WeeeFooter.cshtml" />
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
