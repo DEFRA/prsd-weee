@@ -118,7 +118,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAeDetailsCsv(int complianceYear,
-             ReportFacilityType facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
+             ReportFacilityType? facilityType, Guid? authorityId, Guid? panAreaId, Guid? localAreaId)
         {
             CSVFileData fileData;
 
@@ -175,7 +175,7 @@
         private async Task PopulateFilters(AatfAeDetailsViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
-            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value", 4);
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(ReportFacilityType)), "Key", "Value");
             model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
             model.PanAreaList = await PatAreaList();
             model.LocalAreaList = await LocalAreaList();
