@@ -232,7 +232,6 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        [Fact]
         public async void ReselectPost_SchemesRemoved()
         {
             Guid returnId = Guid.NewGuid();
