@@ -25,6 +25,10 @@
     [ValidateReturnCreatedActionFilter]
     public class SelectYourPcsController : AatfReturnBaseController
     {
+        private const string RemovedSchemeList = "RemovedSchemeList";
+        private const string SelectedSchemes = "SelectedSchemes";
+        private const string RemovedSchemes = "RemovedSchemes";
+
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
@@ -122,10 +126,10 @@
 
                 if (this.HaveSchemesBeenRemoved(viewModel, existing.SchemeDataItems.ToList()))
                 {
-                    this.TempData["RemovedSchemeList"] = viewModel.SchemeList
+                    this.TempData[RemovedSchemeList] = viewModel.SchemeList
                         .Where(q => !viewModel.SelectedSchemes.Contains(q.Id) && existing.SchemeDataItems.Any(e => e.Id == q.Id)).ToList();
-                    this.TempData["SelectedSchemes"] = viewModel.SelectedSchemes;
-                    this.TempData["RemovedSchemes"] = viewModel.SchemeList.Select(p => p.Id)
+                    this.TempData[SelectedSchemes] = viewModel.SelectedSchemes;
+                    this.TempData[RemovedSchemes] = viewModel.SchemeList.Select(p => p.Id)
                         .Where(q => !viewModel.SelectedSchemes.Contains(q) && existing.SchemeDataItems.Any(e => e.Id == q)).ToList();
 
                     return RedirectToRoute(AatfRedirect.RemovedPcsRouteName, new { returnId = viewModel.ReturnId, organisationId = viewModel.OrganisationId });
@@ -164,9 +168,9 @@
         [HttpGet]
         public ActionResult PcsRemoved(Guid organisationId, Guid returnId)
         {
-            var removedSchemeList = this.TempData["RemovedSchemeList"] as List<SchemeData>;
-            var selectedSchemes = this.TempData["SelectedSchemes"] as List<Guid>;
-            var removedSchemes = this.TempData["RemovedSchemes"] as List<Guid>;
+            var removedSchemeList = this.TempData[RemovedSchemeList] as List<SchemeData>;
+            var selectedSchemes = this.TempData[SelectedSchemes] as List<Guid>;
+            var removedSchemes = this.TempData[RemovedSchemes] as List<Guid>;
 
             var model = new PcsRemovedViewModel()
             {
@@ -177,9 +181,9 @@
                 OrganisationId = organisationId
             };
 
-            this.TempData["RemovedSchemeList"] = removedSchemeList;
-            this.TempData["SelectedSchemes"] = selectedSchemes;
-            this.TempData["RemovedSchemes"] = removedSchemes;
+            this.TempData[RemovedSchemeList] = removedSchemeList;
+            this.TempData[SelectedSchemes] = selectedSchemes;
+            this.TempData[RemovedSchemes] = removedSchemes;
 
             return this.View(model);
         }
