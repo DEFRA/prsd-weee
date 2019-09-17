@@ -162,7 +162,7 @@
         }
 
         [HttpGet]
-        public ActionResult PcsRemoved(Guid organisationId, Guid returnId)
+        public async Task<ActionResult> PcsRemoved(Guid organisationId, Guid returnId)
         {
             var removedSchemeList = this.TempData["RemovedSchemeList"] as List<SchemeData>;
             var selectedSchemes = this.TempData["SelectedSchemes"] as List<Guid>;
@@ -181,6 +181,12 @@
             this.TempData["SelectedSchemes"] = selectedSchemes;
             this.TempData["RemovedSchemes"] = removedSchemes;
 
+            using (var client = this.apiClient())
+            {
+                var @return = await client.SendAsync(this.User.GetAccessToken(), new GetReturn(returnId, false));
+
+                await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+            }
             return this.View(model);
         }
 
