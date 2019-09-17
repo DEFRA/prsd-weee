@@ -76,14 +76,14 @@
                                                     @for (var i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
                                                     {
                                                         <div class="govuk-checkboxes__item">
-                                                            <input type="checkbox" name="SelectedAuthority" value="@Model.Filter.CompetentAuthorityOptions[i].Id" class="govuk-checkboxes__input" id="@Model.Filter.CompetentAuthorityOptions[i].Id">
+                                                            @Html.CheckBoxFor(m => m.Filter.CompetentAuthorityOptions[i].Selected, new {@class = "govuk-checkboxes__input" })
                                                             <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.CompetentAuthorityOptions[i].Id">
                                                                 @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
                                                             </label>
                                                         </div>
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Id)
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Abbreviation)
-                                                        @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)
+                                                        @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)                                
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Selected)
                                                     }
                                                 </div>
