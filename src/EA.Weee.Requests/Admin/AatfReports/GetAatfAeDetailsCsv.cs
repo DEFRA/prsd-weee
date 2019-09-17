@@ -9,7 +9,7 @@
     {
         public int ComplianceYear { get; private set; }
 
-        public ReportFacilityType FacilityType { get; private set; }
+        public ReportFacilityType? FacilityType { get; private set; }
 
         public Guid? AuthorityId { get; private set; }
 
@@ -20,7 +20,7 @@
         public bool IsPublicRegister { get; private set; }
 
         public GetAatfAeDetailsCsv(int complianceYear,
-          ReportFacilityType facilityType,
+          ReportFacilityType? facilityType,
           Guid? authorityId,
           Guid? panArea,
           Guid? localArea, bool isPublicRegister)
