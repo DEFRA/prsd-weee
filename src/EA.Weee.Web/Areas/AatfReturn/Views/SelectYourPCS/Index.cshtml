@@ -85,7 +85,7 @@
                 <br>
 
                 <p>
-                    @Html.NavigationRouteLink("Clear selection", "Clear PCS selection", AatfRedirect.SelectPcsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, clearSelections = true }, null)
+                    @Html.NavigationRouteLink("Clear selection", "Clear PCS selection", AatfRedirect.SelectPcsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, reselect = Model.Reselect, clearSelections = true }, null)
                 </p>
 
                 @Html.HiddenFor(m => m.OrganisationId)
