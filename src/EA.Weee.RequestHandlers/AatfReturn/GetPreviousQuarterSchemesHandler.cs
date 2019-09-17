@@ -43,14 +43,11 @@
             // Find the last quarter submitted
             Quarter lastQ = allReturns.FirstOrDefault().Quarter;
 
-            List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
-
-            if (returnSchemes == null)
+            // If there are more than return for the last quarter, it means there are resubmissions so we ignore.
+            if (allReturns.Count(p => p.Quarter == lastQ) > 1)
             {
                 return new PreviousQuarterReturnResult();
             }
-
-            List<ReturnScheme> lastSchemes = new List<ReturnScheme>();
 
             // Grab the last submitted return
             Return lastReturn = allReturns.FirstOrDefault(p => p.Quarter == lastQ);
@@ -60,20 +57,27 @@
                 return new PreviousQuarterReturnResult();
             }
 
-            lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == lastReturn.Id));
+            List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
 
-            List<Guid> schemes = new List<Guid>();
-
-            foreach (ReturnScheme scheme in lastSchemes)
+            if (returnSchemes == null)
             {
-                schemes.Add(scheme.SchemeId);
+                return new PreviousQuarterReturnResult();
             }
+
+            List<ReturnScheme> lastSchemes = new List<ReturnScheme>();
+
+            lastSchemes.AddRange(returnSchemes.Where(p => p.ReturnId == lastReturn.Id));
 
             PreviousQuarterReturnResult result = new PreviousQuarterReturnResult()
             {
                 PreviousQuarter = new Core.DataReturns.Quarter(lastQ.Year, (Core.DataReturns.QuarterType)lastQ.Q),
-                PreviousSchemes = schemes
+                PreviousSchemes = lastSchemes.Select(p => p.SchemeId).ToList()
             };
+
+            //foreach (ReturnScheme scheme in lastSchemes)
+            //{
+            //    result.PreviousSchemes.Add(scheme.SchemeId);
+            //}
 
             return result;
         }
