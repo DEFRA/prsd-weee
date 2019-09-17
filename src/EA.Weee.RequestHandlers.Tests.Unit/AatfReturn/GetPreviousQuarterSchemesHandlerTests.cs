@@ -104,7 +104,7 @@
 
             List<ReturnScheme> returnSchemes = new List<ReturnScheme>()
             {
-                 A.Fake<ReturnScheme>(),
+                A.Fake<ReturnScheme>(),
                 A.Fake<ReturnScheme>(),
                 A.Fake<ReturnScheme>()
             };
@@ -185,6 +185,53 @@
 
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task HandleAsync_PreviousReturnHasResubmissions_ReturnsEmptyList()
+        {
+            Organisation requestedOrganisation = fixture.Build<Organisation>().With(o => o.OrganisationStatus, OrganisationStatus.Complete).Create();
+           
+            Quarter q3 = new Quarter(2019, QuarterType.Q3);
+            Quarter q4 = new Quarter(2019, QuarterType.Q4);
+
+            Return previousReturn = A.Fake<Return>();
+            A.CallTo(() => previousReturn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => previousReturn.Quarter).Returns(q3);
+            A.CallTo(() => previousReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => previousReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
+
+            Return previousResubmittedReturn = A.Fake<Return>();
+            A.CallTo(() => previousResubmittedReturn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => previousResubmittedReturn.Quarter).Returns(q3);
+            A.CallTo(() => previousResubmittedReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => previousResubmittedReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
+
+            Return currentReturn = A.Fake<Return>();
+            A.CallTo(() => currentReturn.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => currentReturn.Quarter).Returns(q4);
+            A.CallTo(() => currentReturn.Organisation).Returns(requestedOrganisation);
+            A.CallTo(() => currentReturn.ReturnStatus).Returns(Domain.AatfReturn.ReturnStatus.Submitted);
+
+            List<Return> returns = new List<Return>();
+      
+            returns.Add(previousReturn);
+            returns.Add(previousResubmittedReturn);
+            returns.Add(currentReturn);
+
+            A.CallTo(() => dataAccess.GetAll<Return>()).Returns(returns);
+
+            List<ReturnScheme> returnSchemes = new List<ReturnScheme>();
+
+            A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).Returns(returnSchemes);
+
+            GetPreviousQuarterSchemes request = new GetPreviousQuarterSchemes(requestedOrganisation.Id, currentReturn.Id);
+
+            PreviousQuarterReturnResult result = await handler.HandleAsync(request);
+
+            Assert.Equal(0, result.PreviousSchemes.Count);
+
+            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
