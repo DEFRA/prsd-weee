@@ -18,7 +18,13 @@
 
         public List<int> SelectedReturnStatus { get; set; }
 
-        public List<Guid> SelectedAuthority { get; set; }
+        public List<Guid> SelectedAuthority
+        {
+            get
+            {
+                return CompetentAuthorityOptions.Where(x => x.Selected).Select(x => x.Id).ToList();
+            }
+        }
 
         public List<UKCompetentAuthorityData> CompetentAuthorityOptions { get; set; }
     }
