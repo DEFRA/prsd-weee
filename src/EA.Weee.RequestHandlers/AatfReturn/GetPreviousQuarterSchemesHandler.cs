@@ -74,11 +74,6 @@
                 PreviousSchemes = lastSchemes.Select(p => p.SchemeId).ToList()
             };
 
-            //foreach (ReturnScheme scheme in lastSchemes)
-            //{
-            //    result.PreviousSchemes.Add(scheme.SchemeId);
-            //}
-
             return result;
         }
     }
