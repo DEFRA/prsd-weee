@@ -18,7 +18,8 @@
             return new AatfFilter
             {
                 ApprovalNumber = source.ApprovalNumber,
-                Name = source.Name
+                Name = source.Name,
+                SelectedAuthority = source.SelectedAuthority
             };
         }
     }
