@@ -18,14 +18,11 @@
             <h1 class="govuk-heading-l">
                 Select all the PCSs that you received WEEE from
             </h1>
-
+            @Html.Gds().ValidationSummary()
             @if (Model.PreviousQuarterData.PreviousSchemes.Count > 0)
             {
                 using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Get, new { id = "SelectPcsForm" }))
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.Gds().ValidationSummary()
-
                     @Html.HiddenFor(m => m.Reselect)
 
                     <div class="govuk-checkboxes">
@@ -52,7 +49,6 @@
             @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { reselect = Model.Reselect }))
             {
                 @Html.AntiForgeryToken()
-                @Html.Gds().ValidationSummary()
                 <h2 class="govuk-heading-m">These PCSs will be available to all of your AATFs</h2>
                 <div class="govuk-checkboxes">
                     @for (var i = 0; i < Model.SchemeList.Count; i++)
