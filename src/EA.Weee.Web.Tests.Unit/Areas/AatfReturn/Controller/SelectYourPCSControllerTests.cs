@@ -20,6 +20,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+
+    using AutoFixture;
+
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -30,8 +33,8 @@
         private readonly SelectYourPcsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        public List<SchemeData> SchemeList;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
+        private readonly Fixture fixture;
 
         public SelectYourPcsControllerTests()
         {
@@ -39,6 +42,7 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddReturnSchemeRequestCreator>();
+            fixture = new Fixture();
 
             controller = new SelectYourPcsController(() => weeeClient, breadcrumb, cache, requestCreator);
         }
@@ -62,7 +66,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async void IndexGet_GiveActionExecutes_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -302,6 +306,85 @@
             result.RouteName.Should().Be(AatfRedirect.Default);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidModelState_PreviousQuarterSelectionShouldBeRetrieved()
+        {
+            var model = new SelectYourPcsViewModel()
+            {
+                ReturnId = this.fixture.Create<Guid>(),
+                OrganisationId = this.fixture.Create<Guid>()
+            };
+
+            var previousQuarterReturnResult = this.fixture.Build<PreviousQuarterReturnResult>()
+                .With(p => p.PreviousQuarter, new Quarter(2019, QuarterType.Q1)).Create();
+
+            A.CallTo(
+                    () => weeeClient.SendAsync(
+                        A<string>._,
+                        A<GetPreviousQuarterSchemes>.That.Matches(p => p.ReturnId == model.ReturnId && p.OrganisationId == model.OrganisationId)))
+                .Returns(previousQuarterReturnResult);
+
+            this.controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.Index(model, true) as ViewResult;
+
+            var returnedModel = result.Model as SelectYourPcsViewModel;
+            returnedModel.PreviousQuarterData.Should().Be(previousQuarterReturnResult);
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_DefaultViewShouldBeReturned()
+        {
+            var result = await this.controller.PcsRemoved(this.fixture.Create<Guid>(), this.fixture.Create<Guid>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_ModelShouldBeReturned()
+        {
+            var organisationId = this.fixture.Create<Guid>();
+            var returnId = this.fixture.Create<Guid>();
+            var schemeData = this.fixture.CreateMany<SchemeData>().ToList();
+            var selectedSchemes = this.fixture.CreateMany<Guid>().ToList();
+            var removedSchemes = this.fixture.CreateMany<Guid>().ToList();
+
+            controller.TempData["RemovedSchemeList"] = schemeData;
+            controller.TempData["SelectedSchemes"] = selectedSchemes;
+            controller.TempData["RemovedSchemes"] = removedSchemes;
+
+            var result = await this.controller.PcsRemoved(organisationId, returnId) as ViewResult;
+
+            var model = result.Model as PcsRemovedViewModel;
+            model.OrganisationId.Should().Be(organisationId);
+            model.ReturnId.Should().Be(returnId);
+            model.RemovedSchemeList.Should().BeSameAs(schemeData);
+            model.RemovedSchemes.Should().BeSameAs(removedSchemes);
+            model.SelectedSchemes.Should().BeSameAs(selectedSchemes);
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_BreadCrumbShouldBeSet()
+        {
+            var returnId = this.fixture.Create<Guid>();
+            var organisationId = this.fixture.Create<Guid>();
+            var @return = this.fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(2019, QuarterType.Q1)).With(
+                r => r.QuarterWindow,
+                QuarterWindowTestHelper.GetDefaultQuarterWindow()).Create();
+
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId == returnId && r.ForSummary == false))).Returns(@return);
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+            await controller.PcsRemoved(organisationId, returnId);
+            SystemTime.Unfreeze();
+
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
         }
 
         [Fact]
