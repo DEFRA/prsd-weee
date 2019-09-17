@@ -15,7 +15,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
-
+        
         public GetPreviousQuarterSchemesHandler(IWeeeAuthorization authorization, IGenericDataAccess dataAccess)
         {
             this.authorization = authorization;
@@ -26,29 +26,34 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            // Get all returns
-            List<Return> allReturns = await dataAccess.GetAll<Return>();
+            IEnumerable<Return> allReturns = await dataAccess.GetAll<Return>();
+            var currentReturn = allReturns.First(r => r.Id == message.ReturnId);
+            
+            if (allReturns.Any(r => r.Quarter == currentReturn.Quarter && r.Id != currentReturn.Id))
+            {
+                return new PreviousQuarterReturnResult();
+            }
 
             // Filter the returns by the organisationId. Also ignore the return we are creating. Finally make sure they are submitted.
             // Then order them by the Quarter descending so that we can get the latest returns
-            allReturns = allReturns.Where(p => p.Organisation.Id == message.OrganisationId && p.Id != message.ReturnId && p.ReturnStatus == Domain.AatfReturn.ReturnStatus.Submitted)
-                .OrderByDescending(p => p.Quarter).ToList();
+            allReturns = allReturns.Where(p => p.Organisation.Id == message.OrganisationId 
+                                               && p.Id != message.ReturnId 
+                                               && p.ReturnStatus == Domain.AatfReturn.ReturnStatus.Submitted
+                                               && p.FacilityType.Value == currentReturn.FacilityType.Value
+                                               && p.Quarter.Year <= currentReturn.Quarter.Year)
+                .OrderByDescending(p => p.Quarter.Year)
+                .ThenByDescending(p => (int)p.Quarter.Q)
+                .ThenByDescending(p => p.SubmittedDate).ToList();
 
             // This is their first return
-            if (allReturns.Count == 0)
+            if (!allReturns.Any())
             {
                 return new PreviousQuarterReturnResult();
             }
 
             // Find the last quarter submitted
             Quarter lastQ = allReturns.FirstOrDefault().Quarter;
-
-            // If there are more than return for the last quarter, it means there are resubmissions so we ignore.
-            if (allReturns.Count(p => p.Quarter == lastQ) > 1)
-            {
-                return new PreviousQuarterReturnResult();
-            }
-
+            
             // Grab the last submitted return
             Return lastReturn = allReturns.FirstOrDefault(p => p.Quarter == lastQ);
 
@@ -57,7 +62,7 @@
                 return new PreviousQuarterReturnResult();
             }
 
-            List<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
+            IEnumerable<ReturnScheme> returnSchemes = await dataAccess.GetAll<ReturnScheme>();
 
             if (returnSchemes == null)
             {
