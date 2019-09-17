@@ -26,8 +26,11 @@
                     @Html.AntiForgeryToken()
                     @Html.Gds().ValidationSummary()
 
+                    @Html.HiddenFor(m => m.Reselect)
+
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
+                            <input type="hidden" name="reselect" value=@Model.Reselect />
                             <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="CopyPreviousSchemes" />
                             <label class="govuk-label govuk-checkboxes__label">
                                 Copy my options from the previous quarter @Model.PreviousQuarterData.PreviousQuarter.Year @Model.PreviousQuarterData.PreviousQuarter.Q.ToString()
