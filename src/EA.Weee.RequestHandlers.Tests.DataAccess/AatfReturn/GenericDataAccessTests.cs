@@ -155,7 +155,7 @@
 
                 var aatfInfo = await dataAccess.GetAll<Aatf>();
 
-                aatfInfo.Count.Should().Be(count);
+                aatfInfo.ToList().Count.Should().Be(count);
             }
         }
 
