@@ -1,6 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+
     using Attributes;
+
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -13,11 +20,6 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     [ValidateOrganisationActionFilter]
     [ValidateReturnCreatedActionFilter]
@@ -39,20 +41,20 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, bool reselect = false, bool copyPrevious = false, bool clearSelections = false)
         {
-            using (var client = apiClient())
+            using (var client = this.apiClient())
             {
                 var viewModel = new SelectYourPcsViewModel
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
-                    SchemeList = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal()),
-                    PreviousQuarterData = await client.SendAsync(User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
+                    SchemeList = await client.SendAsync(this.User.GetAccessToken(), new GetSchemesExternal()),
+                    PreviousQuarterData = await client.SendAsync(this.User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
                 };
 
                 if (reselect)
                 {
-                    GetReturnScheme request = new GetReturnScheme(returnId);
-                    var existing = await client.SendAsync(User.GetAccessToken(), request);
+                    var request = new GetReturnScheme(returnId);
+                    var existing = await client.SendAsync(this.User.GetAccessToken(), request);
 
                     viewModel.SelectedSchemes = existing.SchemeDataItems.Select(p => p.Id).ToList();
                     viewModel.Reselect = true;
@@ -69,14 +71,14 @@
                     viewModel.SelectedSchemes = new List<Guid>();
                 }
 
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+                var @return = await client.SendAsync(this.User.GetAccessToken(), new GetReturn(returnId, false));
 
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+                await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
-                TempData["currentQuarter"] = @return.Quarter;
-                TempData["currentQuarterWindow"] = @return.QuarterWindow;
+                this.TempData["currentQuarter"] = @return.Quarter;
+                this.TempData["currentQuarterWindow"] = @return.QuarterWindow;
 
-                return View("Index", viewModel);
+                return this.View("Index", viewModel);
             }
         }
 
@@ -84,60 +86,60 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SelectYourPcsViewModel viewModel, bool reselect = false)
         {
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+            await this.SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(this.TempData["currentQuarter"] as Quarter, this.TempData["currentQuarterWindow"] as QuarterWindow));
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (reselect)
                 {
-                    return await Reselect(viewModel);
+                    return await this.Reselect(viewModel);
                 }
 
-                using (var client = apiClient())
+                using (var client = this.apiClient())
                 {
-                    var requests = requestCreator.ViewModelToRequest(viewModel);
-                    await client.SendAsync(User.GetAccessToken(), requests);
+                    var requests = this.requestCreator.ViewModelToRequest(viewModel);
+                    await client.SendAsync(this.User.GetAccessToken(), requests);
                 }
 
                 return AatfRedirect.TaskList(viewModel.ReturnId);
             }
-            else
+
+            using (var client = this.apiClient())
             {
-                return View(viewModel);
+                viewModel.PreviousQuarterData = await client.SendAsync(
+                                                    this.User.GetAccessToken(),
+                                                    new GetPreviousQuarterSchemes(viewModel.OrganisationId, viewModel.ReturnId));
             }
+
+            return this.View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         private async Task<ActionResult> Reselect(SelectYourPcsViewModel viewModel)
         {
-            using (var client = apiClient())
+            using (var client = this.apiClient())
             {
-                SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
+                var existing = await client.SendAsync(this.User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
 
-                if (HaveSchemesBeenRemoved(viewModel, existing.SchemeDataItems.ToList()))
+                if (this.HaveSchemesBeenRemoved(viewModel, existing.SchemeDataItems.ToList()))
                 {
-                    PcsRemovedViewModel model = new PcsRemovedViewModel()
-                    {
-                        RemovedSchemeList = viewModel.SchemeList.Where(q => !viewModel.SelectedSchemes.Contains(q.Id) && existing.SchemeDataItems.Any(e => e.Id == q.Id)).ToList(),
-                        SelectedSchemes = viewModel.SelectedSchemes,
-                        RemovedSchemes = viewModel.SchemeList.Select(p => p.Id).Where(q => !viewModel.SelectedSchemes.Contains(q) && existing.SchemeDataItems.Any(e => e.Id == q)).ToList(),
-                        ReturnId = viewModel.ReturnId,
-                        OrganisationId = viewModel.OrganisationId
-                    };
+                    this.TempData["RemovedSchemeList"] = viewModel.SchemeList
+                        .Where(q => !viewModel.SelectedSchemes.Contains(q.Id) && existing.SchemeDataItems.Any(e => e.Id == q.Id)).ToList();
+                    this.TempData["SelectedSchemes"] = viewModel.SelectedSchemes;
+                    this.TempData["RemovedSchemes"] = viewModel.SchemeList.Select(p => p.Id)
+                        .Where(q => !viewModel.SelectedSchemes.Contains(q) && existing.SchemeDataItems.Any(e => e.Id == q)).ToList();
 
-                    return View("PcsRemoved", model);
+                    return RedirectToRoute(AatfRedirect.RemovedPcsRouteName, new { returnId = viewModel.ReturnId, organisationId = viewModel.OrganisationId });
                 }
 
-                return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
+                return await this.SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
             }
         }
 
         private async Task<ActionResult> SaveAndContinue(SchemeDataList existingSchemes, List<Guid> schemeIdsToAdd, Guid returnId)
         {
-            using (var client = apiClient())
+            using (var client = this.apiClient())
             {
-                foreach (SchemeData scheme in existingSchemes.SchemeDataItems)
+                foreach (var scheme in existingSchemes.SchemeDataItems)
                 {
                     if (schemeIdsToAdd.Contains(scheme.Id))
                     {
@@ -152,27 +154,53 @@
                         ReturnId = returnId,
                         SchemeIds = schemeIdsToAdd
                     };
-                    await client.SendAsync(User.GetAccessToken(), request);
+                    await client.SendAsync(this.User.GetAccessToken(), request);
                 }
+
                 return AatfRedirect.TaskList(returnId);
             }
+        }
+
+        [HttpGet]
+        public ActionResult PcsRemoved(Guid organisationId, Guid returnId)
+        {
+            var removedSchemeList = this.TempData["RemovedSchemeList"] as List<SchemeData>;
+            var selectedSchemes = this.TempData["SelectedSchemes"] as List<Guid>;
+            var removedSchemes = this.TempData["RemovedSchemes"] as List<Guid>;
+
+            var model = new PcsRemovedViewModel()
+            {
+                RemovedSchemeList = removedSchemeList,
+                SelectedSchemes = selectedSchemes,
+                RemovedSchemes = removedSchemes,
+                ReturnId = returnId,
+                OrganisationId = organisationId
+            };
+
+            this.TempData["RemovedSchemeList"] = removedSchemeList;
+            this.TempData["SelectedSchemes"] = selectedSchemes;
+            this.TempData["RemovedSchemes"] = removedSchemes;
+
+            return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PcsRemoved(PcsRemovedViewModel viewModel)
         {
-            await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(TempData["currentQuarter"] as Quarter, TempData["currentQuarterWindow"] as QuarterWindow));
+            await this.SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(this.TempData["currentQuarter"] as Quarter, this.TempData["currentQuarterWindow"] as QuarterWindow));
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
                 {
-                    using (var client = apiClient())
+                    using (var client = this.apiClient())
                     {
-                        SchemeDataList existing = await client.SendAsync(User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
-                        await client.SendAsync(User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes, ReturnId = viewModel.ReturnId });
-                        return await SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
+                        var existing = await client.SendAsync(this.User.GetAccessToken(), new GetReturnScheme(viewModel.ReturnId));
+
+                        await client.SendAsync(this.User.GetAccessToken(), new RemoveReturnScheme() { SchemeIds = viewModel.RemovedSchemes, ReturnId = viewModel.ReturnId });
+
+                        return await this.SaveAndContinue(existing, viewModel.SelectedSchemes, viewModel.ReturnId);
                     }
                 }
                 else
@@ -182,13 +210,13 @@
             }
             else
             {
-                return View(viewModel);
+                return this.View(viewModel);
             }
         }
 
         private bool HaveSchemesBeenRemoved(SelectYourPcsViewModel model, List<SchemeData> alreadySelected)
         {
-            foreach (SchemeData scheme in alreadySelected)
+            foreach (var scheme in alreadySelected)
             {
                 if (model.SelectedSchemes.Contains(scheme.Id) == false)
                 {
@@ -201,10 +229,10 @@
 
         private async Task SetBreadcrumb(Guid organisationId, string activity, string quarter)
         {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
-            breadcrumb.OrganisationId = organisationId;
-            breadcrumb.QuarterDisplayInfo = quarter;
+            this.breadcrumb.ExternalOrganisation = await this.cache.FetchOrganisationName(organisationId);
+            this.breadcrumb.ExternalActivity = activity;
+            this.breadcrumb.OrganisationId = organisationId;
+            this.breadcrumb.QuarterDisplayInfo = quarter;
         }
     }
 }
