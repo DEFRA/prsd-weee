@@ -9,8 +9,6 @@
         [Display(Name = "AE")]
         Ae = 2,
         [Display(Name = "PCS")]
-        Pcs = 3,
-        [Display(Name = "All")]
-        All = 4
+        Pcs = 3
     }
 }
