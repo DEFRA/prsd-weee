@@ -42,8 +42,10 @@
                 throw new ArgumentException(message);
             }
 
+            var facilityType = request.FacilityType != null ? (int)request.FacilityType : 4;
+
             List<AatfAeDetailsData> items = await context.StoredProcedures.GetAatfAeDetailsCsvData(
-                       request.ComplianceYear, (int)request.FacilityType,
+                       request.ComplianceYear, facilityType,
                        request.AuthorityId, request.LocalArea, request.PanArea);
 
             string type = request.FacilityType.ToString().ToUpper();
@@ -118,6 +120,13 @@
 
             var additionalText = string.Empty;
 
+            var facilityText = string.Empty;
+
+            if (request.FacilityType.HasValue)
+            {
+                facilityText = $"_{request.FacilityType.ToString().ToUpper()}";
+            }
+
             if (request.AuthorityId.HasValue)
             {
                 additionalParameters += $"_{(await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value)).Abbreviation}";
@@ -137,7 +146,7 @@
             }
 
             var fileName =
-                $"{request.ComplianceYear}{additionalParameters}_{request.FacilityType.ToString().ToUpper()}{additionalText}_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+                $"{request.ComplianceYear}{additionalParameters}{facilityText}{additionalText}_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {
