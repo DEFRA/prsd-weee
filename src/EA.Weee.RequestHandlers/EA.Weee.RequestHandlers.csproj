@@ -68,6 +68,7 @@
     <Compile Include="AatfReturn\AddReturnReportOnHandler.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
+    <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandler.cs" />
