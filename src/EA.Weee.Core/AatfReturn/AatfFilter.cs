@@ -14,5 +14,7 @@
         public string ApprovalNumber { get; set; }
 
         public List<Guid> SelectedAuthority { get; set; }
+
+        public List<int> SelectedStatus { get; set; }
     }
 }

@@ -110,20 +110,20 @@
                                                 </span>
                                                 <div class="govuk-checkboxes">
                                                     <div class="govuk-checkboxes__item">
-                                                        <input class="form-control govuk-checkboxes__input" id="approved" name="SelectedReturnStatus" type="checkbox" value="@AatfStatus.Approved.Value">
-                                                        <label class="govuk-label govuk-checkboxes__label" for="approved">
+                                                        @Html.CheckBoxFor(m => m.Filter.SelectApproved, new { @class = "govuk-checkboxes__input" })
+                                                        <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectApproved">
                                                             @AatfStatus.Approved.ToDisplayString()
                                                         </label>
                                                     </div>
                                                     <div class="govuk-checkboxes__item">
-                                                        <input class="form-control govuk-checkboxes__input" id="cancelled" name="SelectedReturnStatus" type="checkbox" value="@AatfStatus.Cancelled.Value">
-                                                        <label class="govuk-label govuk-checkboxes__label" for="cancelled">
+                                                        @Html.CheckBoxFor(m => m.Filter.SelectCancelled, new { @class = "govuk-checkboxes__input" })
+                                                        <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectCancelled">
                                                             @AatfStatus.Cancelled.ToDisplayString()
                                                         </label>
                                                     </div>
                                                     <div class="govuk-checkboxes__item">
-                                                        <input class="form-control govuk-checkboxes__input" id="suspended" name="SelectedReturnStatus" type="checkbox" value="@AatfStatus.Suspended.Value">
-                                                        <label class="govuk-label govuk-checkboxes__label" for="suspended">
+                                                        @Html.CheckBoxFor(m => m.Filter.SelectSuspended, new { @class = "govuk-checkboxes__input" })
+                                                        <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectSuspended">
                                                             @AatfStatus.Suspended.ToDisplayString()
                                                         </label>
                                                     </div>

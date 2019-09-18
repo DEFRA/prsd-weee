@@ -19,7 +19,8 @@
             {
                 ApprovalNumber = source.ApprovalNumber,
                 Name = source.Name,
-                SelectedAuthority = source.SelectedAuthority
+                SelectedAuthority = source.SelectedAuthority,
+                SelectedStatus = source.SelectedStatus
             };
         }
     }
