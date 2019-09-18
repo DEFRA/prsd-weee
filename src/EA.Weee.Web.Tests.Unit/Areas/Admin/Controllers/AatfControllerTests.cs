@@ -176,6 +176,9 @@
             Assert.Equal(facilityType, viewModel.FacilityType);
             Assert.Equal(null, viewModel.Filter.Name);
             Assert.Equal(null, viewModel.Filter.ApprovalNumber);
+            Assert.Equal(false, viewModel.Filter.SelectApproved);
+            Assert.Equal(false, viewModel.Filter.SelectCancelled);
+            Assert.Equal(false, viewModel.Filter.SelectSuspended);
         }
 
         [Theory]

@@ -38,7 +38,16 @@
                     a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower()))) 
                 .ToListAsync();
 
-            return aatfList.Where(x => filter.SelectedAuthority.Contains(x.CompetentAuthority.Id)).ToList();
+            if (filter.SelectedAuthority != null && filter.SelectedAuthority.Count > 0)
+            {
+                aatfList = aatfList.Where(x => filter.SelectedAuthority.Contains(x.CompetentAuthority.Id)).ToList();
+            }
+            if (filter.SelectedStatus != null && filter.SelectedStatus.Count > 0)
+            {
+                aatfList = aatfList.Where(x => filter.SelectedStatus.Contains(x.AatfStatus.Value)).ToList();
+            }
+            
+            return aatfList;           
         }
 
         public async Task<List<Aatf>> GetLatestAatfs()
