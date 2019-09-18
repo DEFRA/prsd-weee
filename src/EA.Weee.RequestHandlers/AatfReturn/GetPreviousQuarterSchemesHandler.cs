@@ -29,7 +29,10 @@
             IEnumerable<Return> allReturns = await dataAccess.GetAll<Return>();
             var currentReturn = allReturns.First(r => r.Id == message.ReturnId);
             
-            if (allReturns.Any(r => r.Quarter == currentReturn.Quarter && r.Id != currentReturn.Id))
+            if (allReturns.Any(r => r.Quarter == currentReturn.Quarter 
+                                    && r.Id != currentReturn.Id 
+                                    && r.Organisation.Id == currentReturn.Organisation.Id
+                                    && r.FacilityType.Value == currentReturn.FacilityType.Value))
             {
                 return new PreviousQuarterReturnResult();
             }
