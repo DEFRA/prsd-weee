@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Constant
 @model EA.Weee.Web.ViewModels.Shared.TitleViewModel
 @{
     bool showBreadcrumb =
@@ -180,7 +181,7 @@
         <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.Name): (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) Status: @Model.Breadcrumb.ExternalAatf.AatfStatusDisplay</div>
     }
 
-    if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
+    if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == BreadCrumbConstant.AatfReturn)
     {
         <div id="schemeBanner">
             <div class="govuk-grid-row">
