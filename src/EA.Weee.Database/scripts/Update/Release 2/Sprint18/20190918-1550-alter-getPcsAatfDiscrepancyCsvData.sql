@@ -221,7 +221,7 @@ SELECT DISTINCT
 			)
 		ORDER BY
 			[Quarter],
-			CASE ObligationType WHEN 'B2C' THEN 0 ELSE 1 END,
+			CASE (CASE WHEN A.Obligation IS NULL THEN P.ObligationType ELSE A.Obligation END) WHEN 'B2C' THEN 0 ELSE 1 END,
 			CategoryValue,
 			SchemeNameValue,
 			AatfName
