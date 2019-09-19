@@ -52,7 +52,7 @@
         {
             get
             {
-                return CompetentAuthorityOptions.Where(x => x.Selected).Select(x => x.Id).ToList();
+                return CompetentAuthorityOptions != null && CompetentAuthorityOptions.Count > 0 ? CompetentAuthorityOptions.Where(x => x.Selected).Select(x => x.Id).ToList() : new List<Guid>();
             }
         }
     }
