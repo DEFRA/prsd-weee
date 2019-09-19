@@ -51,7 +51,7 @@
             }
         }
 
-        public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class
+        public async Task<IEnumerable<TEntity>> GetAll<TEntity>() where TEntity : class
         {
             return await context.Set<TEntity>().ToListAsync();
         }

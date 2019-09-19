@@ -30,6 +30,10 @@
 
             @Html.Partial("_SchemeDetails")
 
+            <div>
+                <h2 class="govuk-heading-m">PCS contact details</h2>
+            </div>
+
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
                 @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
                 @Html.Gds().LabelFor(m => m.Contact.FirstName)

@@ -2,7 +2,7 @@
 {
     public static class BreadCrumbConstant
     {
-        public static string AatfReturn = "AATF return";
-        public static string AeReturn = "AE return";
+        public static string AatfReturn = "Manage AATF returns";
+        public static string AeReturn = "Manage AE returns";
     }
 }
