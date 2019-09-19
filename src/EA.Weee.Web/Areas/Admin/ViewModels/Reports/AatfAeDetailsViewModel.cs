@@ -16,7 +16,6 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Required(ErrorMessage = "Enter PCS, AATF or AE")]
         [Display(Name = "PCS, AATF or AE")]
         public string SelectedFacilityType { get; set; }
 

@@ -22,11 +22,11 @@
                 source.ReturnData.Quarter.Year)
             {
                 QuarterWindowEndDate = source.ReturnData.QuarterWindow.QuarterEnd,
-                QuarterWindowStartDate = source.ReturnData.QuarterWindow.WindowOpenDate,
+                QuarterWindowStartDate = source.ReturnData.QuarterWindow.QuarterStart,
                 Quarter = source.ReturnData.Quarter.Q.ToString()
             };
 
-            if (source.ReturnData.ReturnReportOns != null && source.ReturnData.ReturnReportOns.Count != 0)
+            if (AnyReturnReportsOn(source))
             {
                 foreach (var option in source.ReturnData.ReturnReportOns)
                 {
@@ -41,6 +41,11 @@
             }
 
             return model;
+        }
+
+        private bool AnyReturnReportsOn(ReportOptionsToSelectReportOptionsViewModelMapTransfer source)
+        {
+            return source.ReturnData.ReturnReportOns != null && source.ReturnData.ReturnReportOns.Count != 0;
         }
     }
 }

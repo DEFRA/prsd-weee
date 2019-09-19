@@ -20,6 +20,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+
+    using AutoFixture;
+
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -30,8 +33,8 @@
         private readonly SelectYourPcsController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        public List<SchemeData> SchemeList;
         private readonly IAddReturnSchemeRequestCreator requestCreator;
+        private readonly Fixture fixture;
 
         public SelectYourPcsControllerTests()
         {
@@ -39,6 +42,7 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddReturnSchemeRequestCreator>();
+            fixture = new Fixture();
 
             controller = new SelectYourPcsController(() => weeeClient, breadcrumb, cache, requestCreator);
         }
@@ -62,7 +66,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async void IndexGet_GiveActionExecutes_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -105,14 +109,14 @@
         [Fact]
         public async void IndexGet_ReselectIsTrue_ReselectActionCalledAndViewReturned()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
+            var result = await controller.Index(organisationId, returnId, true) as ViewResult;
 
             Assert.True(result.ViewName == "Index");
 
-            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+            var viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
@@ -121,20 +125,20 @@
         [Fact]
         public async void IndexGet_CopyPreviousIsTrue_ViewModelSelectedPcsSelectedAndViewReturned()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            List<SchemeData> schemeDatas = A.CollectionOfFake<SchemeData>(4).ToList();
+            var schemeDatas = A.CollectionOfFake<SchemeData>(4).ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeDatas);
 
-            List<Guid> selectedSchemes = new List<Guid>()
+            var selectedSchemes = new List<Guid>()
             {
                 schemeDatas.FirstOrDefault().Id
             };
 
-            Quarter q = new Quarter(2019, QuarterType.Q1);
+            var q = new Quarter(2019, QuarterType.Q1);
 
-            PreviousQuarterReturnResult previousQuarterReturnResult = new PreviousQuarterReturnResult()
+            var previousQuarterReturnResult = new PreviousQuarterReturnResult()
             {
                 PreviousSchemes = selectedSchemes,
                 PreviousQuarter = q
@@ -142,11 +146,11 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPreviousQuarterSchemes>._)).Returns(previousQuarterReturnResult);
 
-            ViewResult result = await controller.Index(organisationId, returnId, false, true) as ViewResult;
+            var result = await controller.Index(organisationId, returnId, false, true) as ViewResult;
 
             Assert.True(result.ViewName == "Index");
 
-            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+            var viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
@@ -158,14 +162,14 @@
         [Fact]
         public async void IndexGet_ClearSelectionsIsTrue_ViewModelSelectedPcsIsEmptyAndViewReturned()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            ViewResult result = await controller.Index(organisationId, returnId, false, false, true) as ViewResult;
+            var result = await controller.Index(organisationId, returnId, false, false, true) as ViewResult;
 
             Assert.True(result.ViewName == "Index");
 
-            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+            var viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(returnId, viewModel.ReturnId);
             Assert.Equal(organisationId, viewModel.OrganisationId);
@@ -176,8 +180,8 @@
         [Fact]
         public async void IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
 
             var quarterData = new Quarter(2019, QuarterType.Q1);
@@ -200,21 +204,21 @@
         [Fact]
         public async void IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            List<Guid> selectedSchemeIds = new List<Guid>()
+            var selectedSchemeIds = new List<Guid>()
             {
                 Guid.NewGuid(),
                 Guid.NewGuid()
             };
 
-            SchemeDataList schemeDataList = new SchemeDataList()
+            var schemeDataList = new SchemeDataList()
             {
                 SchemeDataItems = new List<SchemeData>()
             };
 
-            foreach (Guid scheme in selectedSchemeIds)
+            foreach (var scheme in selectedSchemeIds)
             {
                 schemeDataList.SchemeDataItems.Add(new SchemeData() { Id = scheme });
             }
@@ -222,9 +226,9 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(schemeDataList);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(A.Fake<List<SchemeData>>());
 
-            ViewResult result = await controller.Index(organisationId, returnId, true) as ViewResult;
+            var result = await controller.Index(organisationId, returnId, true) as ViewResult;
 
-            SelectYourPcsViewModel viewModel = result.Model as SelectYourPcsViewModel;
+            var viewModel = result.Model as SelectYourPcsViewModel;
 
             Assert.Equal(selectedSchemeIds, viewModel.SelectedSchemes);
 
@@ -233,65 +237,68 @@
         }
 
         [Fact]
-        public async void ReselectPost_SchemesRemoved()
+        public async void IndexPost_GivenSchemesRemoved_ShouldRedirectToRemovedPcsRoute()
         {
-            Guid returnId = Guid.NewGuid();
+            var existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
+            var reselectedSchemes = new List<Guid>();
 
-            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
-            List<Guid> reselectedSchemes = new List<Guid>();
-
-            foreach (SchemeData scheme in existingSchemes)
+            foreach (var scheme in existingSchemes)
             {
                 scheme.Id = Guid.NewGuid();
                 reselectedSchemes.Add(scheme.Id);
             }
 
-            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
+            var usersAlreadySavedSchemeDataList = new SchemeDataList()
             {
                 SchemeDataItems = existingSchemes
             };
 
-            List<Guid> removedPcs = new List<Guid>()
-            {
-                reselectedSchemes[reselectedSchemes.Count - 1]
-            };
-
+            var removedItem = reselectedSchemes.ElementAt(reselectedSchemes.Count - 1);
             reselectedSchemes.RemoveAt(reselectedSchemes.Count - 1);
 
-            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
+            var model = new SelectYourPcsViewModel()
             {
-                ReturnId = returnId,
+                ReturnId = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid(),
                 SchemeList = existingSchemes,
                 SelectedSchemes = reselectedSchemes
             };
 
             model.SelectedSchemes = reselectedSchemes;
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).Returns(usersAlreadySavedSchemeDataList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == model.ReturnId))).Returns(usersAlreadySavedSchemeDataList);
 
-            ViewResult result = await controller.Index(model, true) as ViewResult;
-            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "PcsRemoved");
+            var result = await controller.Index(model, true) as RedirectToRouteResult;
 
-            PcsRemovedViewModel resultModel = result.Model as PcsRemovedViewModel;
+            result.RouteName.Should().Be(AatfRedirect.RemovedPcsRouteName);
+            result.RouteValues["returnId"].Should().Be(model.ReturnId);
+            result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
 
-            Assert.Equal(removedPcs, resultModel.RemovedSchemeList.Select(p => p.Id));
-            Assert.Equal(model.ReturnId, returnId);
+            var removedSchemeList = controller.TempData["RemovedSchemeList"] as List<SchemeData>;
+            removedSchemeList.Count.Should().Be(1);
+            removedSchemeList.ElementAt(0).Id.Should().Be(removedItem);
+
+            controller.TempData["SelectedSchemes"].Should().Be(model.SelectedSchemes);
+
+            var removedSchemes = controller.TempData["RemovedSchemes"] as List<Guid>;
+            removedSchemes.Count().Should().Be(1);
+            removedSchemes.ElementAt(0).Should().Be(removedItem);
         }
 
         [Fact]
-        public async void ReselectPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
+        public async void IndexPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
         {
-            Guid returnId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
+            var reselectedSchemes = PrepareSaveSchemes(returnId);
 
-            SelectYourPcsViewModel model = new SelectYourPcsViewModel()
+            var model = new SelectYourPcsViewModel()
             {
                 ReturnId = returnId,
                 SelectedSchemes = reselectedSchemes
             };
 
-            RedirectToRouteResult result = await controller.Index(model, true) as RedirectToRouteResult;
+            var result = await controller.Index(model, true) as RedirectToRouteResult;
 
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["action"].Should().Be("Index");
@@ -302,17 +309,96 @@
         }
 
         [Fact]
+        public async void IndexPost_GivenInvalidModelState_PreviousQuarterSelectionShouldBeRetrieved()
+        {
+            var model = new SelectYourPcsViewModel()
+            {
+                ReturnId = this.fixture.Create<Guid>(),
+                OrganisationId = this.fixture.Create<Guid>()
+            };
+
+            var previousQuarterReturnResult = this.fixture.Build<PreviousQuarterReturnResult>()
+                .With(p => p.PreviousQuarter, new Quarter(2019, QuarterType.Q1)).Create();
+
+            A.CallTo(
+                    () => weeeClient.SendAsync(
+                        A<string>._,
+                        A<GetPreviousQuarterSchemes>.That.Matches(p => p.ReturnId == model.ReturnId && p.OrganisationId == model.OrganisationId)))
+                .Returns(previousQuarterReturnResult);
+
+            this.controller.ModelState.AddModelError("error", "error");
+
+            var result = await controller.Index(model, true) as ViewResult;
+
+            var returnedModel = result.Model as SelectYourPcsViewModel;
+            returnedModel.PreviousQuarterData.Should().Be(previousQuarterReturnResult);
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_DefaultViewShouldBeReturned()
+        {
+            var result = await this.controller.PcsRemoved(this.fixture.Create<Guid>(), this.fixture.Create<Guid>()) as ViewResult;
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_ModelShouldBeReturned()
+        {
+            var organisationId = this.fixture.Create<Guid>();
+            var returnId = this.fixture.Create<Guid>();
+            var schemeData = this.fixture.CreateMany<SchemeData>().ToList();
+            var selectedSchemes = this.fixture.CreateMany<Guid>().ToList();
+            var removedSchemes = this.fixture.CreateMany<Guid>().ToList();
+
+            controller.TempData["RemovedSchemeList"] = schemeData;
+            controller.TempData["SelectedSchemes"] = selectedSchemes;
+            controller.TempData["RemovedSchemes"] = removedSchemes;
+
+            var result = await this.controller.PcsRemoved(organisationId, returnId) as ViewResult;
+
+            var model = result.Model as PcsRemovedViewModel;
+            model.OrganisationId.Should().Be(organisationId);
+            model.ReturnId.Should().Be(returnId);
+            model.RemovedSchemeList.Should().BeSameAs(schemeData);
+            model.RemovedSchemes.Should().BeSameAs(removedSchemes);
+            model.SelectedSchemes.Should().BeSameAs(selectedSchemes);
+        }
+
+        [Fact]
+        public async void PcsRemovedGet_GiveActionExecutes_BreadCrumbShouldBeSet()
+        {
+            var returnId = this.fixture.Create<Guid>();
+            var organisationId = this.fixture.Create<Guid>();
+            var @return = this.fixture.Build<ReturnData>().With(r => r.Quarter, new Quarter(2019, QuarterType.Q1)).With(
+                r => r.QuarterWindow,
+                QuarterWindowTestHelper.GetDefaultQuarterWindow()).Create();
+
+            const string reportingPeriod = "2019 Q1 Jan - Mar";
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId == returnId && r.ForSummary == false))).Returns(@return);
+
+            SystemTime.Freeze(new DateTime(2019, 04, 01));
+            await controller.PcsRemoved(organisationId, returnId);
+            SystemTime.Unfreeze();
+
+            Assert.Equal(breadcrumb.ExternalActivity, BreadCrumbConstant.AatfReturn);
+
+            Assert.Contains(reportingPeriod, breadcrumb.QuarterDisplayInfo);
+        }
+
+        [Fact]
         public async void PcsRemovedPost_ModelStateNotValid_ReturnsViewWithViewModel()
         {
-            PcsRemovedViewModel viewModel = A.Dummy<PcsRemovedViewModel>();
+            var viewModel = A.Dummy<PcsRemovedViewModel>();
 
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            ViewResult result = await controller.PcsRemoved(viewModel) as ViewResult;
+            var result = await controller.PcsRemoved(viewModel) as ViewResult;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "PcsRemoved");
 
-            PcsRemovedViewModel resultModel = result.Model as PcsRemovedViewModel;
+            var resultModel = result.Model as PcsRemovedViewModel;
 
             Assert.Equal(viewModel, resultModel);
         }
@@ -320,11 +406,11 @@
         [Fact]
         public async void PcsRemovedPost_YesSelectedValue_ReturnsUserToTaskListCallsToSaveSchemesMade()
         {
-            Guid returnId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
 
-            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
+            var reselectedSchemes = PrepareSaveSchemes(returnId);
 
-            PcsRemovedViewModel model = new PcsRemovedViewModel()
+            var model = new PcsRemovedViewModel()
             {
                 ReturnId = returnId,
                 SelectedValue = "Yes",
@@ -335,7 +421,7 @@
                 }
             };
 
-            RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
+            var result = await controller.PcsRemoved(model) as RedirectToRouteResult;
 
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["action"].Should().Be("Index");
@@ -349,12 +435,12 @@
         [Fact]
         public async void PcsRemovedPost_NoSelectedValue_ReturnsToSelectPcs()
         {
-            Guid returnId = Guid.NewGuid();
-            Guid organisationId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
 
-            List<Guid> reselectedSchemes = PrepareSaveSchemes(returnId);
+            var reselectedSchemes = PrepareSaveSchemes(returnId);
 
-            PcsRemovedViewModel model = new PcsRemovedViewModel()
+            var model = new PcsRemovedViewModel()
             {
                 ReturnId = returnId,
                 SelectedValue = "No",
@@ -363,7 +449,7 @@
                 OrganisationId = organisationId
             };
 
-            RedirectToRouteResult result = await controller.PcsRemoved(model) as RedirectToRouteResult;
+            var result = await controller.PcsRemoved(model) as RedirectToRouteResult;
 
             result.RouteValues["organisationId"].Should().Be(organisationId);
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -373,10 +459,10 @@
 
         private List<Guid> PrepareSaveSchemes(Guid returnId)
         {
-            List<Guid> reselectedSchemes = new List<Guid>();
-            List<SchemeData> existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
+            var reselectedSchemes = new List<Guid>();
+            var existingSchemes = A.CollectionOfDummy<SchemeData>(2).ToList();
 
-            foreach (SchemeData scheme in existingSchemes)
+            foreach (var scheme in existingSchemes)
             {
                 scheme.Id = Guid.NewGuid();
                 reselectedSchemes.Add(scheme.Id);
@@ -384,12 +470,12 @@
 
             reselectedSchemes.Add(Guid.NewGuid());
 
-            SchemeDataList usersAlreadySavedSchemeDataList = new SchemeDataList()
+            var usersAlreadySavedSchemeDataList = new SchemeDataList()
             {
                 SchemeDataItems = existingSchemes
             };
 
-            List<AddReturnScheme> requests = new List<AddReturnScheme>()
+            var requests = new List<AddReturnScheme>()
             {
                 new AddReturnScheme()
                 {
