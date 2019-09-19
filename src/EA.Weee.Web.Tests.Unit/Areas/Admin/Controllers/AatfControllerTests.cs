@@ -81,8 +81,13 @@
         {
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
-            var result = await controller.ManageAatfs(new ManageAatfsViewModel());
+            var viewModel = new ManageAatfsViewModel()
+            {
+                Filter = filter
+            };
+            var result = await controller.ManageAatfs(viewModel);
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
@@ -109,9 +114,16 @@
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            await controller.ManageAatfs(new ManageAatfsViewModel());
+            var filter = fixture.Create<FilteringViewModel>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == null))).MustHaveHappenedOnceExactly();
+            var viewModel = new ManageAatfsViewModel()
+            {
+                Filter = filter
+            };
+
+            await controller.ManageAatfs(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter != null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -188,9 +200,10 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
             var viewModel = new ManageAatfsViewModel();
-
+            viewModel.Filter = filter;
             var result = await controller.ManageAatfs(viewModel) as ViewResult;
 
             var resultViewModel = result.Model as ManageAatfsViewModel;
@@ -217,10 +230,12 @@
         {
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
             var viewModel = new ManageAatfsViewModel()
             {
-                FacilityType = type
+                FacilityType = type,
+                Filter = filter
             };
 
             var result = await controller.ManageAatfs(viewModel) as ViewResult;
