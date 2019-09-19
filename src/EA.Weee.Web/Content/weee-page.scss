@@ -1056,6 +1056,12 @@ details summary::-ms-details-marker {
     left: -9999px !important;
 }
 
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .govuk-checkboxes__input_opacity {
+        opacity: 1;
+    }
+}
+
 .filter {
     @include govuk-responsive-padding(4);
     border: 5px solid #fff;
@@ -1066,7 +1072,6 @@ details summary::-ms-details-marker {
     }
 
     .govuk-checkboxes__input {
-        opacity: 1;
         border: 5px solid #fff;
         background-color: govuk-colour('grey-3');
     }
