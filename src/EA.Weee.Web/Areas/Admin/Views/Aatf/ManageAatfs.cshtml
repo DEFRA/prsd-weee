@@ -75,15 +75,19 @@
                                                 <div class="govuk-checkboxes">
                                                     @for (var i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
                                                     {
-                                                        <div class="govuk-checkboxes__item">
-                                                            @Html.CheckBoxFor(m => m.Filter.CompetentAuthorityOptions[i].Selected, new {@class = "govuk-checkboxes__input" })
+                                                        <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
+                                                            @Html.CheckBoxFor(m => m.Filter.CompetentAuthorityOptions[i].Selected, new { @class = "govuk-checkboxes__input" })
                                                             <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.CompetentAuthorityOptions[i].Id">
                                                                 @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
                                                             </label>
                                                         </div>
+                                                        if (i % 2 == 1)
+                                                        {
+                                                            <br />
+                                                        }
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Id)
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Abbreviation)
-                                                        @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)                                
+                                                        @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)
                                                         @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Selected)
                                                     }
                                                 </div>
@@ -93,7 +97,7 @@
                                 </tr>
                             </table>
                         </td>
-                        <td valign="top">
+                        <td>
                             <table>
                                 <tr class="govuk-table__row">
                                     <td><Label class="govuk-label form-label" for="Status_Name">Status</Label></td>
@@ -109,16 +113,16 @@
                                                     Select all that apply.
                                                 </span>
                                                 <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item" style="float:right">
+                                                        @Html.CheckBoxFor(m => m.Filter.SelectCancelled, new { @class = "govuk-checkboxes__input" })
+                                                        <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectCancelled">
+                                                            @AatfStatus.Cancelled.ToDisplayString()
+                                                        </label>
+                                                    </div>
                                                     <div class="govuk-checkboxes__item">
                                                         @Html.CheckBoxFor(m => m.Filter.SelectApproved, new { @class = "govuk-checkboxes__input" })
                                                         <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectApproved">
                                                             @AatfStatus.Approved.ToDisplayString()
-                                                        </label>
-                                                    </div>
-                                                    <div class="govuk-checkboxes__item">
-                                                        @Html.CheckBoxFor(m => m.Filter.SelectCancelled, new { @class = "govuk-checkboxes__input" })
-                                                        <label class="govuk-label govuk-checkboxes__label" for="@Model.Filter.SelectCancelled">
-                                                            @AatfStatus.Cancelled.ToDisplayString()
                                                         </label>
                                                     </div>
                                                     <div class="govuk-checkboxes__item">
