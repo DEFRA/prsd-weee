@@ -283,6 +283,24 @@
             viewModel.Filter.CompetentAuthorityOptions.Select(c => c.Id).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id));
         }
 
+        [Fact]
+        public async Task ApplyFilterPost_SelectedStatus_ViewModelSetCorrectly()
+        {
+            SetUpControllerContext(false);
+            var filter = fixture.Create<FilteringViewModel>();
+            filter.SelectApproved = true;
+            filter.SelectSuspended = true;
+
+            var result = await controller.ApplyFilter(filter);
+
+            var viewResult = (ViewResult)result;
+            var viewModel = (ManageAatfsViewModel)viewResult.Model;
+
+            viewModel.Filter.SelectedStatus.Count.Should().Be(2);
+            viewModel.Filter.SelectedStatus.Should().Contain(AatfStatus.Approved.Value);
+            viewModel.Filter.SelectedStatus.Should().Contain(AatfStatus.Suspended.Value);
+        }
+
         [Theory]
         [MemberData("FacilityTypeEnumValues")]
         [MemberData("FacilityTypeEnumValues")]
