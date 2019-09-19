@@ -268,6 +268,21 @@
             Assert.Equal(facilityType, viewModel.FacilityType);
         }
 
+       [Fact]
+        public async Task GetManageAatfs_CA_ViewModelSetCorrectly()
+        {
+            SetUpControllerContext(false);
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            var result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
+
+            var viewModel = result.Model as ManageAatfsViewModel;
+
+            viewModel.Filter.CompetentAuthorityOptions.Select(c => c.Abbreviation).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            viewModel.Filter.CompetentAuthorityOptions.Select(c => c.Id).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id));
+        }
+
         [Theory]
         [MemberData("FacilityTypeEnumValues")]
         [MemberData("FacilityTypeEnumValues")]
