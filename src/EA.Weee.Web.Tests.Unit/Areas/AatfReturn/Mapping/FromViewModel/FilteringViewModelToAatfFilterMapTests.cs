@@ -36,6 +36,8 @@
 
             Assert.Equal(viewModel.ApprovalNumber, result.ApprovalNumber);
             Assert.Equal(viewModel.Name, result.Name);
+            Assert.Equal(viewModel.SelectedAuthority, result.SelectedAuthority);
+            Assert.Equal(viewModel.SelectedStatus, result.SelectedStatus);
         }
     }
 }
