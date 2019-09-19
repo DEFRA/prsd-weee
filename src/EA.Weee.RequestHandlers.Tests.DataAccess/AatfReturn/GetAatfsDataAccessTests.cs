@@ -157,5 +157,119 @@
                 aatfList.Should().NotContain(aatf);
             }
         }
+
+        [Fact]
+        public async Task GetFilteredAatfsDataAccess_ByStatus_ReturnsFilteredAatfsList()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var dataAccess = new GetAatfsDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
+                var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
+                var organisation = Organisation.CreatePartnership("Koalas");
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
+                var aatfSize = AatfSize.Large;
+
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+                var aatf1 = new Aatf("KoalaBears1", competentAuthority, "WEE/AB1289YY/ATF", AatfStatus.Cancelled, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf, aatf1 });
+
+                var filteredListWithApprovedStatus = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedStatus = new List<int> { 1 } });
+                var filteredListWithCancelledStatus = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedStatus = new List<int> { 3 } });
+                var filteredListWithBothStatus = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedStatus = new List<int> { 1, 3 } });
+
+                filteredListWithApprovedStatus.Should().Contain(aatf);
+                filteredListWithApprovedStatus.Should().NotContain(aatf1);
+
+                filteredListWithCancelledStatus.Should().Contain(aatf1);
+                filteredListWithCancelledStatus.Should().NotContain(aatf);
+
+                filteredListWithBothStatus.Should().Contain(aatf);
+                filteredListWithBothStatus.Should().Contain(aatf1);
+            }
+        }
+
+        [Fact]
+        public async Task GetFilteredAatfsDataAccess_ByCA_ReturnsFilteredAatfsList()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var dataAccess = new GetAatfsDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthorityNIEA = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
+                var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
+                var organisation = Organisation.CreatePartnership("Koalas");
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
+                var aatfSize = AatfSize.Large;
+
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+                var aatf1 = new Aatf("KoalaBears1", competentAuthority, "WEE/AB1289YY/ATF", AatfStatus.Cancelled, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+                var aatf2 = new Aatf("KoalaBears2", competentAuthorityNIEA, "WEE/AB1289YP/ATF", AatfStatus.Cancelled, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf, aatf1, aatf2 });
+
+                var filteredListWithEA = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedAuthority = new List<Guid> { competentAuthority.Id } });
+                var filteredListWithNIEA = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedAuthority = new List<Guid> { competentAuthorityNIEA.Id } });
+                var filteredListWithBothCA = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedAuthority = new List<Guid> { competentAuthorityNIEA.Id, competentAuthority.Id } });
+
+                filteredListWithEA.Should().Contain(aatf);
+                filteredListWithEA.Should().Contain(aatf1);
+                filteredListWithEA.Should().NotContain(aatf2);
+
+                filteredListWithNIEA.Should().Contain(aatf2);
+                filteredListWithNIEA.Should().NotContain(aatf);
+                filteredListWithNIEA.Should().NotContain(aatf1);
+
+                filteredListWithBothCA.Should().Contain(aatf);
+                filteredListWithBothCA.Should().Contain(aatf1);
+                filteredListWithBothCA.Should().Contain(aatf2);
+            }
+        }
+        [Fact]
+        public async Task GetFilteredAatfsDataAccess_ByStatusCA_ReturnsFilteredAatfsList()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var dataAccess = new GetAatfsDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+                var competentAuthorityDataAccess = new CommonDataAccess(database.WeeeContext);
+                var competentAuthority = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var competentAuthorityNIEA = await competentAuthorityDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+
+                var country = await database.WeeeContext.Countries.SingleAsync(c => c.Name == "UK - England");
+                var aatfContact = new AatfContact("first", "last", "position", "address1", "address2", "town", "county", "postcode", country, "telephone", "email");
+                var organisation = Organisation.CreatePartnership("Koalas");
+                var aatfAddress = AddressHelper.GetAatfAddress(database);
+                var aatfSize = AatfSize.Large;
+
+                var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+                var aatf1 = new Aatf("KoalaBears1", competentAuthority, "WEE/AB1289YY/ATF", AatfStatus.Cancelled, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+                var aatf2 = new Aatf("KoalaBears2", competentAuthorityNIEA, "WEE/AB1289YP/ATF", AatfStatus.Cancelled, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First());
+
+                await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf, aatf1, aatf2 });
+
+                var filteredListWithEA = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedAuthority = new List<Guid> { competentAuthority.Id }, SelectedStatus = new List<int> { 1 } });
+                var filteredListWithNIEA = await dataAccess.GetFilteredAatfs(new Core.AatfReturn.AatfFilter { SelectedAuthority = new List<Guid> { competentAuthorityNIEA.Id }, SelectedStatus = new List<int> { 1 } });
+
+                filteredListWithEA.Should().Contain(aatf);
+                filteredListWithEA.Should().NotContain(aatf1);
+                filteredListWithEA.Should().NotContain(aatf2);
+
+                filteredListWithNIEA.Should().NotContain(aatf2);
+                filteredListWithNIEA.Should().NotContain(aatf);
+                filteredListWithNIEA.Should().NotContain(aatf1);
+            }
+        }
     }
 }
