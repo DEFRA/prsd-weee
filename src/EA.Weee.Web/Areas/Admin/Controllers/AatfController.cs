@@ -133,7 +133,6 @@
                         FacilityType = viewModel.FacilityType,
                         Filter = viewModel.Filter
                     };
-                    viewModel.Filter.CompetentAuthorityOptions = await GetCompetentAuthoritiesList();
                     return View(viewModel);
                 }
             }
