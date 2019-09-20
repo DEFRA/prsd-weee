@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -12,6 +10,8 @@
     using EA.Weee.Requests.Admin.Aatf;
     using Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class GetAatfObligatedDataHandler : IRequestHandler<GetAatfObligatedData, CSVFileData>
     {
@@ -67,13 +67,13 @@
             }
 
             var fileName = string.Format("{1}_{2}_{4}_Full data_{3:ddMMyyyy}_{3:HHmm}.csv",
-                 aatf.Name, 
-                 request.ComplianceYear, 
+                 aatf.Name,
+                 request.ComplianceYear,
                  (QuarterType)request.Quarter,
                  SystemTime.UtcNow,
                  aatf.ApprovalNumber);
 
-            string fileContent = DataTableCsvHelper.DataTableToCSV(obligatedData);
+            string fileContent = DataTableCsvHelper.DataTableToCsv(obligatedData);
 
             return new CSVFileData
             {

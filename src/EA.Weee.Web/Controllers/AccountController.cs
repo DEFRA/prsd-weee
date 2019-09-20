@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Authorization;
@@ -15,6 +10,11 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Account;
 
     [Authorize]
@@ -249,7 +249,7 @@
 
                 var result = await client.User.ResetPasswordRequestAsync(apiModel);
 
-                if (!result.ValidEmail)               
+                if (!result.ValidEmail)
                 {
                     ModelState.AddModelError("Email", "Email address not recognised.");
                     return View(model);

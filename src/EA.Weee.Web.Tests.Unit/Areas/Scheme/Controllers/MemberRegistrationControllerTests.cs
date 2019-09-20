@@ -1,5 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using Api.Client;
+    using Core.Scheme;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using Services;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -9,13 +16,6 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Api.Client;
-    using Core.Scheme;
-    using Core.Shared;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Prsd.Core.Mapper;
-    using Services;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -75,7 +75,7 @@
         private FakeMemberRegistrationController BuildFakeMemberRegistrationController()
         {
             var controller = new FakeMemberRegistrationController
-                (weeeClient,   
+                (weeeClient,
                 A.Fake<IWeeeCache>(),
                 A.Fake<BreadcrumbService>(),
                 A.Fake<CsvWriterFactory>(),
@@ -289,9 +289,9 @@
             .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
-            
+
             Assert.IsType<ViewResult>(result);
-            
+
             var view = (ViewResult)result;
 
             Assert.Equal("ViewErrorsAndWarnings", view.ViewName);
@@ -470,7 +470,7 @@
               .Returns(memberUploadErrorDatas);
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A.Dummy<Guid>(), A.Dummy<Guid>());
-     
+
             return ((MemberUploadResultViewModel)((ViewResult)result).Model).ErrorData;
         }
 

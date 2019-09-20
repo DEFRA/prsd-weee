@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
     using EA.Weee.Ibis;
     using Errors;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This is the default implementation of <see cref="IIbisFileDataGenerator"/>.

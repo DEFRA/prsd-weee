@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using FakeItEasy;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -53,7 +52,7 @@
             var handler = new OrganisationBySchemeIdHandler(weeeAuthorization, organisationDataAccess, mapper);
 
             var message = new OrganisationBySchemeId(Guid.NewGuid());
-            
+
             // Act
             var result = await handler.HandleAsync(message);
 

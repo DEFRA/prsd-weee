@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
+    using Api.Client;
+    using Infrastructure;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Infrastructure;
     using ViewModels.ManagePcsReturnsSubmissionWindow;
     using Weee.Requests.Test;
 
@@ -29,7 +29,7 @@
                     CurrentDate = settings.CurrentDate,
                     FixCurrentDate = settings.FixCurrentDate
                 });
-            }           
+            }
         }
 
         [ValidateAntiForgeryToken]

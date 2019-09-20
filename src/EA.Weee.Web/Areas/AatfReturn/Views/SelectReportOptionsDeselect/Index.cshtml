@@ -10,13 +10,14 @@
     <header class="hgroup">
         <h1 class="govuk-heading-l">Are you sure you want to remove these reporting options?</h1>
     </header>
-    <div class="govuk-!-padding-bottom-5"></div>
-    <div>
-        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-        <p class="important">
-            Any data entered against these options will be deleted
-        </p>
+    <div class="govuk-grid-column-full">
+        <div class="govuk-grid-row">
+            <p class="important-large">
+                Any data entered against these options will be deleted
+            </p>
+        </div>
     </div>
+    
     <div class="govuk-!-padding-bottom-5"></div>
     @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
     {
@@ -27,7 +28,7 @@
             }
             else
             {
-                @deselectedOption.Description
+                @deselectedOption.Title
             }
         </p>
     }

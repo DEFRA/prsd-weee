@@ -7,9 +7,9 @@
     public static class AatfRedirect
     {
         public static string SelectPcsRouteName = "aatf-select-pcs";
+        public static string RemovedPcsRouteName = "aatf-removed-pcs";
         public static string NonObligatedRouteName = "aatf-non-obligated";
         public static string NonObligatedDcfRouteName = "aatf-non-obligated-dcf";
-        public static string CheckReturnRouteName = "aatf-check";
         public static string Default = "aatf-default";
         public static string AatfSelectedRoute = "aatf-selected";
         public static string AatfSchemeSelectedRoute = "aatf-scheme-selected";
@@ -19,7 +19,7 @@
         public static string ReturnsRouteName = "aatf-returns";
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
-        public static string OrganisationRouteName = "aatf-organisation";
+        public static string Download = "returns-download";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -41,9 +41,9 @@
             return new RedirectToRouteResult(SelectReportOptionsDeselectRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organisationId, returnId = returnId }));
         }
 
-        public static RedirectToRouteResult SelectReportOptionsNil(Guid organsationId, Guid returnId)
+        public static RedirectToRouteResult SelectReportOptionsNil(Guid organisationId, Guid returnId)
         {
-            return new RedirectToRouteResult(SelectReportOptionsNilRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organsationId, returnId = returnId }));
+            return new RedirectToRouteResult(SelectReportOptionsNilRouteName, new RouteValueDictionary(new { action = "Index", organisationId = organisationId, returnId = returnId }));
         }
 
         public static RedirectToRouteResult ReusedOffSite(Guid returnId, Guid aatfId, Guid organisationId)
@@ -99,6 +99,11 @@
         public static RedirectToRouteResult CheckReturn(Guid returnId)
         {
             return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "CheckYourReturn", action = "Index", returnId = returnId }));
+        }
+
+        public static RedirectToRouteResult ReturnsSummaryDownloadObligatedData(Guid returnId)
+        {
+            return new RedirectToRouteResult(Default, new RouteValueDictionary(new { controller = "ReturnsSummary", action = "DownloadAllObligatedData", returnId = returnId }));
         }
 
         public static RedirectToRouteResult SubmittedReturn(Guid returnId)

@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Organisation
 {
+    using Core.Organisations;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.Organisations;
-    using EA.Weee.Web.ViewModels.Shared;
 
     public class YourOrganisationsViewModel
     {

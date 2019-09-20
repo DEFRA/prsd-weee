@@ -1,16 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     internal class AddSentOnAatfSiteHandler : IRequestHandler<AddSentOnAatfSite, Guid>

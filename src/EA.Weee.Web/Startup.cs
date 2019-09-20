@@ -5,6 +5,13 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
+    using Autofac;
+    using Autofac.Integration.Mvc;
+    using FluentValidation.Mvc;
+    using IdentityModel;
+    using Infrastructure;
+    using Owin;
+    using Services;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
     using System.Web;
@@ -12,14 +19,6 @@ namespace EA.Weee.Web
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
-    using Autofac;
-    using Autofac.Integration.Mvc;
-    using FluentValidation;
-    using FluentValidation.Mvc;
-    using IdentityModel;
-    using Infrastructure;
-    using Owin;
-    using Services;
 
     public partial class Startup
     {
@@ -33,7 +32,7 @@ namespace EA.Weee.Web
             builder.Register(c => configuration).As<ConfigurationService>().SingleInstance();
             builder.Register(c => configuration.CurrentConfiguration).As<IAppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
-           
+
             var container = AutofacBootstrapper.Initialize(builder);
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

@@ -1,0 +1,67 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AatfReports.AatfAePublicRegisterViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Download AATF / AE public register - GOV.UK";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download AATF / AE public register</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria</p>
+
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+            @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+            @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedFacilityType)">
+            @Html.Gds().LabelFor(m => m.SelectedFacilityType)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedFacilityType)
+            @Html.Gds().DropDownListFor(m => m.SelectedFacilityType, Model.FacilityTypes, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <p>
+            If there is a large amount of data for your selected criteria, it may take a while to download your results
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                                                                                   "Report download", "Download AATF / AE public register", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "AatfReports")
+    </p>
+}
+@section scripts {
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadAatfAePublicRegisterCsv", new
+                               {
+                                   complianceYear = Model.SelectedYear,
+                                   facilityType = Model.SelectedFacilityType,
+                                   authorityId = Model.CompetentAuthorityId
+                               }))";
+        </script>
+    }
+}

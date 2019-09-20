@@ -1,15 +1,16 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ChooseReportViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ChooseReportTypeModel
 @{
-    ViewBag.Title = "Choose Report";
+    var title = "Which report(s) would you like to view?";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 @section main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-            Which report would you like to view?
+            @title
         </h1>
     </header>
 

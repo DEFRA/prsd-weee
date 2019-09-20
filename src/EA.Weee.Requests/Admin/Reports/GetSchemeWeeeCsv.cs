@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin.Reports
 {
-    using System;
     using Core.Shared;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetSchemeWeeeCsv : IRequest<FileInfo>
     {

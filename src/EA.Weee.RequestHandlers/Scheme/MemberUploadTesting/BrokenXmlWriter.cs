@@ -10,7 +10,7 @@
     internal class BrokenXmlWriter : XmlTextWriter
     {
         public string BrokenElementName { get; private set; }
-        
+
         public BrokenXmlWriter(TextWriter textWriter, string brokenElementName)
             : base(textWriter)
         {

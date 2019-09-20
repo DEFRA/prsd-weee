@@ -4,14 +4,18 @@
     using Attributes;
     using Constant;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.ViewModels.Returns;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
 
@@ -21,7 +25,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMapper mapper; 
+        private readonly IMapper mapper;
 
         public ReturnsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMapper mapper)
         {
@@ -32,20 +36,36 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, int? selectedComplianceYear, string selectedQuarter)
         {
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturns(organisationId, FacilityType.Aatf));
 
-                var viewModel = mapper.Map<ReturnsViewModel>(@return);
-
-                viewModel.OrganisationName = (await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId))).OrganisationName;
+                var viewModel = mapper.Map<ReturnsViewModel>(new ReturnToReturnsViewModelTransfer() { ReturnsData = @return, SelectedQuarter = selectedQuarter, SelectedComplianceYear = selectedComplianceYear });
                 viewModel.OrganisationId = organisationId;
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(ReturnsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()
+                {
+                    OrganisationId = model.OrganisationId,
+                    Year = model.ComplianceYear,
+                    Quarter = model.Quarter,
+                    FacilityType = FacilityType.Aatf
+                });
+
+                return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }
         }
 
@@ -67,24 +87,6 @@
                 }
 
                 return AatfRedirect.TaskList(newId);
-            }
-        }
-  
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(ReturnsViewModel model)
-        {
-            using (var client = apiClient())
-            {
-                var aatfReturnId = await client.SendAsync(User.GetAccessToken(), new AddReturn()
-                {
-                    OrganisationId = model.OrganisationId,
-                    Year = model.ComplianceYear,
-                    Quarter = model.Quarter,
-                    FacilityType = FacilityType.Aatf
-                });
-
-                return AatfRedirect.SelectReportOptions(model.OrganisationId, aatfReturnId);
             }
         }
 

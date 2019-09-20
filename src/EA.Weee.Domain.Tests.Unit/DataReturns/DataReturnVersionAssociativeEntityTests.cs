@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
     using Domain.DataReturns;
     using FakeItEasy;
+    using System;
     using Xunit;
 
     public class DataReturnVersionAssociativeEntityTests

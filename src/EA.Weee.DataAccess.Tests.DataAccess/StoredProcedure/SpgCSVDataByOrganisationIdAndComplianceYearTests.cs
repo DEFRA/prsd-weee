@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.Lookup;
+    using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Lookup;
-    using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.Tests.Core.Model;
     using Xunit;
 
     public class SpgCSVDataByOrganisationIdAndComplianceYearTests
@@ -104,7 +104,7 @@
                 ModelHelper helper = new ModelHelper(db.Model);
 
                 Scheme scheme1 = helper.CreateScheme();
-                
+
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
@@ -117,7 +117,7 @@
                 // Act
                 List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
-                    
+
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
@@ -142,7 +142,7 @@
                 ModelHelper helper = new ModelHelper(db.Model);
 
                 Scheme scheme1 = helper.CreateScheme();
-                
+
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
@@ -155,7 +155,7 @@
                 // Act
                 List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
-                    
+
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);

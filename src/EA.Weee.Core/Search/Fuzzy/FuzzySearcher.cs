@@ -24,7 +24,7 @@
     {
         private const string Algorithm = "fuzzy";
         private readonly ISearchResultProvider<T> searchResultProvider;
-        
+
         protected readonly List<Synonym> Synonyms = new List<Synonym>();
         protected readonly List<CommonTerm> CommonTerms = new List<CommonTerm>();
 
@@ -71,7 +71,7 @@
             List<ResultTerm> resultTerms = new List<ResultTerm>();
 
             IEnumerable<string> words = Split(result);
-            
+
             foreach (string word in words)
             {
                 ITerm term = null;
@@ -101,7 +101,7 @@
                 {
                     term = new Word(word);
                 }
-                
+
                 ResultTerm resultTerm = new ResultTerm(term, relevance);
                 resultTerms.Add(resultTerm);
             }
@@ -194,7 +194,7 @@
                 if (!searchWord.IsPartial || searchWord.Value.Length >= resultValue.Length)
                 {
                     int distance = LevenshteinDistance.Compute(searchWord.Value, resultValue);
-                    
+
                     weightedDistance = (double)distance / (double)resultValue.Length;
                 }
                 else

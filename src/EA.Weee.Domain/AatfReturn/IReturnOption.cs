@@ -4,6 +4,6 @@
 
     public interface IReturnOption
     {
-        Guid ReturnId { get;  }
+        Guid ReturnId { get; }
     }
 }

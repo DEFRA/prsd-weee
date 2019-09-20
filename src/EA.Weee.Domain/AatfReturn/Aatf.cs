@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
     using Lookup;
     using Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
 
     public class Aatf : Entity
     {
@@ -40,23 +40,47 @@
 
         public virtual Guid? LocalAreaId { get; private set; }
 
+        public virtual Guid AatfId { get; private set; }
+
         public Aatf()
         {
         }
 
+        public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate, LocalArea localArea, PanArea panArea)
+        {
+            Name = name;
+            CompetentAuthority = competentAuthority;
+            ApprovalNumber = approvalNumber;
+            AatfStatus = aatfStatus;
+            Organisation = organisation;
+            Size = aatfSize;
+            ApprovalDate = approvalDate;
+            LocalArea = localArea;
+            if (localArea == null)
+            {
+                LocalAreaId = null;
+            }
+            PanArea = panArea;
+            if (panArea == null)
+            {
+                PanAreaId = null;
+            }
+        }
+
         public Aatf(string name,
-            UKCompetentAuthority competentAuthority,
-            string approvalNumber,
-            AatfStatus aatfStatus,
-            Organisation organisation,
-            AatfAddress aatfSiteAddress,
-            AatfSize aatfSize,
-            DateTime approvalDate,
-            AatfContact contact,
-            FacilityType facilityType,
-            Int16 complianceYear,
-            LocalArea localArea,
-            PanArea panArea)
+           UKCompetentAuthority competentAuthority,
+           string approvalNumber,
+           AatfStatus aatfStatus,
+           Organisation organisation,
+           AatfAddress aatfSiteAddress,
+           AatfSize aatfSize,
+           DateTime approvalDate,
+           AatfContact contact,
+           FacilityType facilityType,
+           Int16 complianceYear,
+           LocalArea localArea,
+           PanArea panArea,
+           Guid? aatfId = null)
         {
             Guard.ArgumentNotNullOrEmpty(() => name, name);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
@@ -81,27 +105,7 @@
             ComplianceYear = complianceYear;
             LocalArea = localArea;
             PanArea = panArea;
-        }
-
-        public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate, LocalArea localArea, PanArea panArea)
-        {
-            Name = name;
-            CompetentAuthority = competentAuthority;
-            ApprovalNumber = approvalNumber;
-            AatfStatus = aatfStatus;
-            Organisation = organisation;
-            Size = aatfSize;
-            ApprovalDate = approvalDate;
-            LocalArea = localArea;
-            if (localArea == null)
-            {
-                LocalAreaId = null;
-            }
-            PanArea = panArea;
-            if (panArea == null)
-            {
-                PanAreaId = null;
-            }
+            AatfId = aatfId == null ? Guid.NewGuid() : aatfId.Value;
         }
     }
 }

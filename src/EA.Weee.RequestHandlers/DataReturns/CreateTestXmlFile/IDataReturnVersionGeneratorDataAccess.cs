@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.CreateTestXmlFile
 {
+    using Domain.Producer;
+    using EA.Weee.Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Producer;
-    using EA.Weee.Domain.Scheme;
 
     public interface IDataReturnVersionGeneratorDataAccess
     {

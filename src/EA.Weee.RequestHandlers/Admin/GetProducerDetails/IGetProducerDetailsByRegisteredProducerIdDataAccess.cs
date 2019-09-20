@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Producer;
     using Domain.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IGetProducerDetailsByRegisteredProducerIdDataAccess
     {

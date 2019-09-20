@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchInvoiceRuns
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Charges;
     using Requests.Charges;
     using Security;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class FetchInvoiceRunsHandler : IRequestHandler<FetchInvoiceRuns, IReadOnlyList<InvoiceRunInfo>>
     {

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Authorization;
     using FakeItEasy;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Controllers;
     using Xunit;
 

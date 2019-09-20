@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
-    using DataAccess.StoredProcedure;
     using Domain.AatfReturn;
     using Domain.Admin.AatfReports;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -39,7 +38,7 @@
 
             await dataAccess.GetItemsAsync(id);
 
-            A.CallTo(() => context.StoredProcedures.GetAatfSubmissions(id)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => context.StoredProcedures.GetAatfSubmissions(id, aatf.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -52,7 +51,7 @@
             A.CallTo(() => aatf.Id).Returns(id);
             A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Aatf);
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
-            A.CallTo(() => context.StoredProcedures.GetAatfSubmissions(A<Guid>._)).Returns(aatfHistory);
+            A.CallTo(() => context.StoredProcedures.GetAatfSubmissions(A<Guid>._, A<short>._)).Returns(aatfHistory);
 
             var results = await dataAccess.GetItemsAsync(id);
 
@@ -71,7 +70,7 @@
 
             await dataAccess.GetItemsAsync(id);
 
-            A.CallTo(() => context.StoredProcedures.GetAeSubmissions(id)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => context.StoredProcedures.GetAeSubmissions(id, aatf.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -84,7 +83,7 @@
             A.CallTo(() => aatf.Id).Returns(id);
             A.CallTo(() => aatf.FacilityType).Returns(FacilityType.Ae);
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>() { aatf }));
-            A.CallTo(() => context.StoredProcedures.GetAeSubmissions(A<Guid>._)).Returns(aatfHistory);
+            A.CallTo(() => context.StoredProcedures.GetAeSubmissions(A<Guid>._, A<short>._)).Returns(aatfHistory);
 
             var results = await dataAccess.GetItemsAsync(id);
 

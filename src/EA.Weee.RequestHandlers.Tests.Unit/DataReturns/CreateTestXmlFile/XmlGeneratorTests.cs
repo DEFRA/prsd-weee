@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.CreateTestXmlFile
 {
-    using System.Diagnostics.CodeAnalysis;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Producer;
     using FakeItEasy;
     using RequestHandlers.DataReturns.CreateTestXmlFile;
+    using System.Diagnostics.CodeAnalysis;
     using Weee.Tests.Core.Xml;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;

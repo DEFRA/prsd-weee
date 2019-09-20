@@ -1,9 +1,17 @@
 ﻿namespace EA.Weee.Email.Tests.Unit
 {
-    using System.Net.Mail;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Domain.Organisation;
     using FakeItEasy;
     using Prsd.Email;
+    using System;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
+
+    using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
+
     using Xunit;
 
     public class WeeeEmailServiceTests
@@ -319,12 +327,40 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.cshtml", A<object>._))
                 .MustHaveHappened();
             A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationContactDetailsChanged.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(EntityType.Aatf)]
+        [InlineData(EntityType.Ae)]
+        [InlineData(EntityType.Pcs)]
+        public async Task SendOrganisationContactDetailsChanged_InvokesExecutorWithCorrectModel(EntityType entityType)
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            // Act
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "NAME", entityType);
+
+            // Assert
+            A.CallTo(
+                    () => builder.TemplateExecutor.Execute(
+                        "OrganisationContactDetailsChanged.cshtml",
+                        A<object>.That.Matches(
+                            a => a.GetPropertyValue<string>("Name") == "NAME" && a.GetPropertyValue<EntityType>("EntityType") == entityType)))
+                .MustHaveHappened();
+            A.CallTo(
+                    () => builder.TemplateExecutor.Execute(
+                        "OrganisationContactDetailsChanged.txt",
+                        A<object>.That.Matches(
+                            a => a.GetPropertyValue<string>("Name") == "NAME" && a.GetPropertyValue<EntityType>("EntityType") == entityType)))
                 .MustHaveHappened();
         }
 
@@ -336,7 +372,7 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged("a@b.com", A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged("a@b.com", A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create("a@b.com", A<string>._, A<EmailContent>._))
@@ -351,7 +387,7 @@
             var emailService = builder.Build();
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "TestPCS");
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), "TestPCS", A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.MessageCreator.Create(A.Dummy<string>(), "Change of contact details for TestPCS", A<EmailContent>._))
@@ -371,7 +407,7 @@
                 .Returns(mailMessage);
 
             // Act
-            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>());
+            await emailService.SendOrganisationContactDetailsChanged(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<EntityType>());
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, true))
@@ -464,6 +500,78 @@
 
             // Assert
             A.CallTo(() => builder.Sender.SendAsync(mailMessage, false)).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_InvokesExecutorWithCorrectTemplateNames()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var notificationService = builder.Build();
+
+            // Act
+            await notificationService.SendOrganisationUserRequestCompleted(A.Fake<OrganisationUser>(), true);
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", A<object>._))
+                .MustHaveHappened();
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.txt", A<object>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_CreatesMailMessageWithSpecifiedEmailAddress()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var notificationService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await notificationService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(organisationUser.User.Email, A<string>._, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_CreatesMailMessageWithCorrectSubject()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await emailService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.MessageCreator.Create(A<string>._, "Your request to access " + organisationUser.Organisation.OrganisationName, A<EmailContent>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task SendOrganisationUserRequestCompleted_ModelIsBuiltWithCorrectParameters()
+        {
+            // Arrange
+            var builder = new WeeeEmailServiceBuilder();
+            var emailService = builder.Build();
+
+            var organisationUser = A.Fake<OrganisationUser>();
+
+            // Act
+            await emailService.SendOrganisationUserRequestCompleted(organisationUser, true);
+
+            // Assert
+            A.CallTo(() => builder.TemplateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", A<object>.That.Matches(m => m.GetPropertyValue<bool>("ActiveUsers") == true
+            && m.GetPropertyValue<string>("FullName") == organisationUser.User.FullName
+            && m.GetPropertyValue<string>("OrganisationName") == organisationUser.Organisation.OrganisationName
+            && m.GetPropertyValue<bool>("Approved") == false
+            && m.GetPropertyValue<string>("ExternalUserLoginUrl") == builder.Configuration.ExternalUserLoginUrl)))
+                .MustHaveHappened();
         }
 
         private class WeeeEmailServiceBuilder

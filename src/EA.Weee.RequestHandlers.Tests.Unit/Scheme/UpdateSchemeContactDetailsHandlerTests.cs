@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
@@ -16,6 +13,9 @@
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -46,7 +46,7 @@
             Func<Task> action = async () => await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, A<EntityType>._))
                 .MustNotHaveHappened();
             action.Should().Throw<ArgumentException>();
         }
@@ -143,7 +143,7 @@
 
             Assert.Equal("FirstName", scheme.Contact.FirstName);
             Assert.Equal("LastName", scheme.Contact.LastName);
-            Assert.Equal("Position", scheme.Contact.Position); 
+            Assert.Equal("Position", scheme.Contact.Position);
             Assert.Equal("Address1", scheme.Address.Address1);
             Assert.Equal("Address2", scheme.Address.Address2);
             Assert.Equal("Town", scheme.Address.TownOrCity);
@@ -176,6 +176,8 @@
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.Contact).Returns(contact);
             A.CallTo(() => scheme.Address).Returns(schemeAddress);
+            A.CallTo(() => scheme.SchemeName).Returns("SchemeName");
+            A.CallTo(() => scheme.CompetentAuthority).Returns(new UKCompetentAuthority(Guid.NewGuid(), "name", "abb", country, "Email", null));
 
             A.CallTo(() => dataAccess.FetchSchemeAsync(A<Guid>._)).Returns(scheme);
             A.CallTo(() => dataAccess.FetchCountryAsync(countryId)).Returns(country);
@@ -211,7 +213,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("Email", "SchemeName", EntityType.Pcs))
                 .MustHaveHappened();
         }
 
@@ -268,7 +270,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, A<EntityType>._))
                 .MustNotHaveHappened();
         }
 
@@ -326,7 +328,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, EntityType.Pcs))
                 .MustHaveHappened();
         }
 
@@ -385,7 +387,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, EntityType.Pcs))
                 .MustNotHaveHappened();
         }
 
@@ -444,7 +446,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, A<EntityType>._))
                 .MustNotHaveHappened();
         }
 
@@ -510,7 +512,7 @@
 
             // Assert
             A.CallTo(() => dataAccess.FetchSchemeAsync(organisationId)).MustHaveHappened();
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("test@authorityEmail.gov.uk", "Test Scheme Name"))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("test@authorityEmail.gov.uk", "Test Scheme Name", EntityType.Pcs))
                 .MustNotHaveHappened();
         }
 
@@ -577,7 +579,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("test@authorityEmail.gov.uk", "Test Scheme Name"))
+            A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged("test@authorityEmail.gov.uk", "Test Scheme Name", EntityType.Pcs))
                 .MustHaveHappened();
         }
     }

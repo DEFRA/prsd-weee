@@ -26,7 +26,7 @@
 
         public string TradingName { get; set; }
         public string ChargeBandType { get; set; }
-        
+
         public bool VATRegistered { get; set; }
 
         public decimal? AnnualTurnover { get; set; }
@@ -108,7 +108,7 @@
         public string CompanyContactCountry { get; set; }
 
         //Principal place of business details
-        
+
         public string PPOBContactTitle { get; set; }
 
         public string PPOBContactForename { get; set; }

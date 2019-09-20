@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.SubmitReturnVersion
 {
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
+    using System.Threading.Tasks;
 
     public class SubmitReturnVersionDataAccess : ISubmitReturnVersionDataAccess
     {

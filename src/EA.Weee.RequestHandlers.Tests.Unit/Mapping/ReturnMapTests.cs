@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Scheme;
     using Domain.AatfReturn;
     using Domain.DataReturns;
@@ -13,8 +10,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
     using DomainAatf = Domain.AatfReturn.Aatf;
     using DomainScheme = Domain.Scheme.Scheme;

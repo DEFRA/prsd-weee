@@ -1,24 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
+    using AutoFixture;
+    using Core.Shared;
+    using DataAccess;
+    using DataAccess.StoredProcedure;
+    using EA.Weee.RequestHandlers.Admin.AatfReports;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core;
+    using Requests.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using AutoFixture;
-    using Core.Admin;
-    using Core.Shared;
-    using DataAccess;
-    using DataAccess.StoredProcedure;
-    using Domain;
-    using Domain.Lookup;
-    using EA.Weee.RequestHandlers.Admin.AatfReports;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Admin.Aatf;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Prsd.Core;
-    using RequestHandlers.Shared;
-    using Requests.Admin.AatfReports;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -80,7 +74,7 @@
 
             A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
 
-            var csvData1 = new NonObligatedWeeeReceivedAtAatfData()
+            var csvData1 = new NonObligatedWeeeReceivedCsvData()
             {
                 Year = fixture.Create<int>(),
                 Quarter = fixture.Create<string>(),
@@ -92,7 +86,7 @@
                 TotalNonObligatedWeeeReceivedFromDcf = fixture.Create<decimal>()
             };
 
-            var csvData2 = new NonObligatedWeeeReceivedAtAatfData()
+            var csvData2 = new NonObligatedWeeeReceivedCsvData()
             {
                 Year = fixture.Create<int>(),
                 Quarter = fixture.Create<string>(),
@@ -106,13 +100,13 @@
 
             var request = new GetUkNonObligatedWeeeReceivedAtAatfsDataCsv(2019, fixture.Create<string>());
 
-            A.CallTo(() => storedProcedures.GetNonObligatedWeeeReceivedAtAatf(request.ComplianceYear, request.AatfName)).Returns(new List<NonObligatedWeeeReceivedAtAatfData> { csvData1, csvData2 });
+            A.CallTo(() => storedProcedures.GetNonObligatedWeeeReceivedAtAatf(request.ComplianceYear, request.AatfName)).Returns(new List<NonObligatedWeeeReceivedCsvData> { csvData1, csvData2 });
 
             var data = await handler.HandleAsync(request);
 
             data.FileContent.Should()
                 .Contain(
-                    "Year,Quarter,Submitted by,Date submitted (GMT),Organisation name,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
+                    "Compliance year,Quarter,Submitted by,Date submitted (GMT),Organisation name,Category,Total non-obligated WEEE received (t),Non-obligated WEEE kept / retained by DCFs (t)");
             data.FileContent.Should().Contain($"{csvData1.Year},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrganisationName},{csvData1.Category},{csvData1.TotalNonObligatedWeeeReceived},{csvData1.TotalNonObligatedWeeeReceivedFromDcf}");
             data.FileContent.Should().Contain($"{csvData2.Year},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrganisationName},{csvData2.Category},{csvData2.TotalNonObligatedWeeeReceived},{csvData2.TotalNonObligatedWeeeReceivedFromDcf}");
         }

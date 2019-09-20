@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
-    using System;
-    using System.Security;
     using DataAccess.DataAccess;
     using FakeItEasy;
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Security;
     using Xunit;
 
     public class IsProducerRegisteredForComplianceYearTests

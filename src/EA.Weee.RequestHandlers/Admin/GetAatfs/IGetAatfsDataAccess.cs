@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
-    using Domain.AatfReturn;
 
     public interface IGetAatfsDataAccess
     {
@@ -13,5 +13,7 @@
         Task<List<Aatf>> GetAatfs();
 
         Task<List<Aatf>> GetFilteredAatfs(AatfFilter filter);
+
+        Task<List<Aatf>> GetLatestAatfs();
     }
 }

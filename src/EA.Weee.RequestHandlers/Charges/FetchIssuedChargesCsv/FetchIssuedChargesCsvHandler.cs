@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Producer;
     using EA.Prsd.Core.Mediator;
@@ -11,6 +7,9 @@
     using Prsd.Core;
     using Requests.Charges;
     using Security;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class FetchIssuedChargesCsvHandler : IRequestHandler<FetchIssuedChargesCsv, FileInfo>
     {
@@ -52,7 +51,7 @@
             string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
 
-            string schemeApprovalNumber = string.Empty;            
+            string schemeApprovalNumber = string.Empty;
             string fileName = string.Empty;
 
             if (message.SchemeId.HasValue)
@@ -62,8 +61,8 @@
                 schemeApprovalNumber = scheme.ApprovalNumber.Replace("/", string.Empty);
                 fileName = string.Format(
                     "{0}_{1}_issuedcharges_{2:ddMMyyyy_HHmm}.csv",
-                    message.ComplianceYear,                    
-                    schemeApprovalNumber,                   
+                    message.ComplianceYear,
+                    schemeApprovalNumber,
                     SystemTime.UtcNow);
             }
             else

@@ -1,0 +1,73 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ReportsFilterViewModel
+@{
+    ViewBag.Title = "Producer details";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download producer details</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
+
+        <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
+
+        @Html.Partial("_ReportSearchFilters")
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IncludeBrandNames)">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-visually-hidden">
+                    <h2 class="govuk-fieldset__heading">
+                        Include brand names?
+                    </h2>
+                </legend>
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input id="IncludeBrandNames" class="govuk-checkboxes__input" name="IncludeBrandNames" type="checkbox" value="true"/>
+                        <label class="govuk-label govuk-checkboxes__label" for="IncludeBrandNames">
+                            Include brand names?
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <p class="small">
+            If your selection criteria is broad, it may take a while to download your results
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                   "Report download", "Producer details", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerDetailsCsv", new
+                          {
+                complianceYear = Model.SelectedYear,
+                              schemeId = Model.SelectedScheme,
+                              authorityId = Model.SelectedAA,
+                              includeRemovedProducers = Model.IncludeRemovedProducer,
+                              includeBrandNames = Model.IncludeBrandNames
+                          }))";
+        </script>
+    }
+}

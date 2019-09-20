@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Producer;
@@ -12,6 +8,9 @@
     using Domain.Scheme;
     using EA.Weee.DataAccess.DataAccess;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
@@ -27,7 +26,7 @@
 
         public RegisteredProducerDataAccessTests()
         {
-            dbHelper = new DbContextHelper();            
+            dbHelper = new DbContextHelper();
             context = A.Fake<WeeeContext>();
 
             dataAccess = new RegisteredProducerDataAccess(context);
@@ -140,7 +139,7 @@
 
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));
             A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(new List<ProducerSubmission> { producerSubmission }));
-            
+
             var result = dataAccess.HasPreviousAmendmentCharge(ProducerRegistrationNumber, ComplianceYear, SchemeApprovalNumber);
 
             Assert.False(result);
@@ -206,7 +205,7 @@
         public void GetPreviousAmendmentCharge_GivenAnInitialInsertAndNoFurtherSubmissions_FalseShouldBeReturned()
         {
             var registeredProducer = RegisteredProducer(ComplianceYear);
-            
+
             A.CallTo(() => context.ProducerSubmissions).Returns(dbHelper.GetAsyncEnabledDbSet(
                 new List<ProducerSubmission> { ProducerSubmission(1, StatusType.Amendment, ComplianceYear, registeredProducer, DateTime.Now) }));
             A.CallTo(() => context.RegisteredProducers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<RegisteredProducer> { registeredProducer }));

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnComplianceYearsForScheme
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using Security;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Request = EA.Weee.Requests.DataReturns.FetchDataReturnComplianceYearsForScheme;
 
     public class FetchDataReturnComplianceYearsForSchemeHandler : IRequestHandler<Request, List<int>>
@@ -20,7 +20,7 @@
         }
 
         public async Task<List<int>> HandleAsync(Request message)
-        {            
+        {
             Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeByOrganisationIdAsync(message.PcsId);
             authorization.EnsureSchemeAccess(scheme.Id);
             return await dataAccess.GetDataReturnComplianceYearsForScheme(scheme.Id);

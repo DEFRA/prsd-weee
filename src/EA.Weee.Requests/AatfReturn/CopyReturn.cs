@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Requests.AatfReturn
 {
-    using System;
-    using Core.AatfReturn;
     using Prsd.Core.Mediator;
+    using System;
 
     public class CopyReturn : IRequest<Guid>
     {

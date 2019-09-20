@@ -2,10 +2,7 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
-    using System.Linq;
 
     public class AatfContactDataMap : IMap<AatfContactData, AatfContact>
     {

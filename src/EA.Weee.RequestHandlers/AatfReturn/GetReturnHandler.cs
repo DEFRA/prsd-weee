@@ -1,23 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
-    using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
-    using EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
-    using EA.Weee.RequestHandlers.AatfReturn.Specification;
-    using Factories;
-    using Prsd.Core;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn;
     using Security;
-    using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;
+    using System.Threading.Tasks;
 
     internal class GetReturnHandler : IRequestHandler<GetReturn, ReturnData>
     {

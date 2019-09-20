@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetAatfs
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetAatfsHandler : IRequestHandler<GetAatfs, List<AatfDataList>>
@@ -28,7 +28,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var aatfs = message.Filter == null ? await dataAccess.GetAatfs() : await dataAccess.GetFilteredAatfs(message.Filter);
+            var aatfs = message.Filter == null ? await dataAccess.GetLatestAatfs() : await dataAccess.GetFilteredAatfs(message.Filter);
 
             if (message.FacilityType == FacilityType.Aatf)
             {

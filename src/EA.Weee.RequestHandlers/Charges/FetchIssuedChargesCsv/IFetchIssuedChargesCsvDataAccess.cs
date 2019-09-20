@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Producer;
     using Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IFetchIssuedChargesCsvDataAccess : ICommonDataAccess
     {

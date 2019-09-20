@@ -14,7 +14,7 @@
         /// <param name="duration"></param>
         /// <returns></returns>
         Task Add(string cache, string key, object value, TimeSpan duration);
-        
+
         /// <summary>
         /// Fetches an object from the cache, casting it as the specified type.
         /// </summary>

@@ -1,22 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
-    using Core.AatfReturn;
     using Core.DataReturns;
-    using DataAccess.DataAccess;
     using Domain.AatfReturn;
-    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
-    using Microsoft.AspNet.Identity;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Specification;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Requests.AatfReturn;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Core.AatfReturn.FacilityType;
@@ -56,7 +51,7 @@
             handler = new AddReturnHandler(authorization,
                 A.Dummy<IReturnDataAccess>(),
                 A.Dummy<IGenericDataAccess>(),
-                A.Dummy<IUserContext>(), 
+                A.Dummy<IUserContext>(),
                 A.Dummy<IReturnFactoryDataAccess>(),
                 A.Dummy<IReturnFactory>());
 

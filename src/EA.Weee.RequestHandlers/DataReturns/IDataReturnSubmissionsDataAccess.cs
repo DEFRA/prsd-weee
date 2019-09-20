@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns
 {
-    using System.Threading.Tasks;
     using Domain.DataReturns;
+    using System.Threading.Tasks;
 
     public interface IDataReturnSubmissionsDataAccess
     {

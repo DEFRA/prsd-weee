@@ -143,7 +143,7 @@
         {
             var organisationId = Guid.NewGuid();
             var returns = A.CollectionOfFake<Return>(2);
-            
+
             foreach (var @return in returns)
             {
                 @return.FacilityType = Domain.AatfReturn.FacilityType.Ae;

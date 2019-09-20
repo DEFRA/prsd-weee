@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Submissions
 {
+    using RequestHandlers.Shared;
     using System;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-    using RequestHandlers.Shared;
     using Weee.Tests.Core.Model;
     using Xunit;
 

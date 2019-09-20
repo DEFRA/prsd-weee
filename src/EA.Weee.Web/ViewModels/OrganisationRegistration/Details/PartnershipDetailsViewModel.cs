@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
 {
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details.Base;
+    using System.ComponentModel.DataAnnotations;
 
     public class PartnershipDetailsViewModel : OrganisationViewModel
     {

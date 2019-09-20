@@ -25,9 +25,9 @@
         private readonly IWeeeCache cache;
         private readonly int maximumSearchResults;
 
-        public ProducersController(BreadcrumbService breadcrumb, 
-            ISearcher<ProducerSearchResult> producerSearcher, 
-            Func<IWeeeClient> apiClient, 
+        public ProducersController(BreadcrumbService breadcrumb,
+            ISearcher<ProducerSearchResult> producerSearcher,
+            Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             ConfigurationService configurationService)
         {

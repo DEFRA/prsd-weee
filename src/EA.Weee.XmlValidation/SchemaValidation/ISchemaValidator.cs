@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Xml.Linq;
-    using Core.Scheme;
     using XmlValidation.Errors;
 
     public interface ISchemaValidator

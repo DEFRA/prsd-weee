@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Core.Shared;
     using Domain.AatfReturn;
     using Prsd.Core.Mapper;
-    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class ReturnStatusMap : IMap<ReturnStatus, Core.AatfReturn.ReturnStatus>
     {

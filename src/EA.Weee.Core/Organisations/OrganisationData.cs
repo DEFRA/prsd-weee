@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
-    using System;
     using Shared;
+    using System;
 
     public class OrganisationData
     {
@@ -26,8 +26,6 @@
         public AddressData NotificationAddress { get; set; }
 
         public ContactData Contact { get; set; }
-
-        public bool HasOrganisationAddress { get; set; }
 
         public bool HasBusinessAddress { get; set; }
 

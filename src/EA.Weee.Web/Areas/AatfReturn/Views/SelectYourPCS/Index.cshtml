@@ -1,25 +1,54 @@
 ﻿@using System.Web.Mvc.Html
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectYourPcsViewModel
 @{
-    ViewBag.Title = "Select Your PCS - GOV.UK";
+    ViewBag.Title = "Select all the PCSs that you received WEEE from - GOV.UK";
 }
 
 <section id="main-content">
-    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { reselect = Model.Reselect }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
 
-        <div class="govuk-!-padding-bottom-5"></div>
-        <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
 
-                    <h1 class="govuk-heading-l">
-                        Select all the PCSs that you received WEEE from
-                    </h1>
-             
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+
+            <h1 class="govuk-heading-l">
+                Select all the PCSs that you received WEEE from
+            </h1>
+            @Html.Gds().ValidationSummary()
+            @if (Model.PreviousQuarterData.PreviousSchemes.Count > 0)
+            {
+                using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Get, new { id = "SelectPcsForm" }))
+                {
+                    @Html.HiddenFor(m => m.Reselect)
+
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input type="hidden" name="reselect" value=@Model.Reselect />
+                            <input type="checkbox" name="copyPrevious" value="true" class="govuk-checkboxes__input" id="CopyPreviousSchemes" />
+                            <label class="govuk-label govuk-checkboxes__label">
+                                Copy my selections from the previous quarter @Model.PreviousQuarterData.PreviousQuarter.Year @Model.PreviousQuarterData.PreviousQuarter.Q.ToString()
+                            </label>
+                            <input type="hidden" name="copyPrevious" value="false" />
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <div>
+                        <noscript>
+                            <button class="govuk-button" type="submit">Copy</button>
+                        </noscript>
+                    </div>
+                }
+            }
+
+            @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { reselect = Model.Reselect }))
+            {
+                @Html.AntiForgeryToken()
                 <h2 class="govuk-heading-m">These PCSs will be available to all of your AATFs</h2>
                 <div class="govuk-checkboxes">
                     @for (var i = 0; i < Model.SchemeList.Count; i++)
@@ -27,7 +56,7 @@
                         <div class="govuk-checkboxes__item">
                             @{
                                 var selectedOption = "";
-                                if (Model.Reselect && Model.SelectedSchemes != null)
+                                if ((Model.Reselect || Model.CopyPrevious) && Model.SelectedSchemes != null)
                                 {
                                     selectedOption = Model.SelectedSchemes.Count(p => p == Model.SchemeList[i].Id) > 0 ? "checked" : "";
                                 }
@@ -37,6 +66,7 @@
                                 @Model.SchemeList[i].SchemeName - @Model.SchemeList[i].ApprovalName
                             </label>
                         </div>
+
                         @Html.HiddenFor(m => Model.SchemeList[i].ApprovalName)
                         @Html.HiddenFor(m => Model.SchemeList[i].Id)
                         @Html.HiddenFor(m => Model.SchemeList[i].OrganisationId)
@@ -50,15 +80,24 @@
                         @Html.HiddenFor(m => Model.SchemeList[i].SchemeStatus)
                         @Html.HiddenFor(m => Model.SchemeList[i].Selected)
                     }
+
                 </div>
-            </fieldset>
-        </div>
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.ReturnId)
-        <button type="submit" class="govuk-button">
-            Save and continue
-        </button>
-    }
+                <br>
+
+                <p>
+                    @Html.NavigationRouteLink("Clear selection", "Clear PCS selection", AatfRedirect.SelectPcsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId, reselect = Model.Reselect, clearSelections = true }, null)
+                </p>
+
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.ReturnId)
+                <button type="submit" class="govuk-button">
+                    Save and continue
+                </button>
+            }
+        </fieldset>
+    </div>
+
+
     @if (!Model.Reselect)
     {
         @Html.RouteLink("Back", AatfRedirect.SelectReportOptionsRouteName, new { organisationId = Model.OrganisationId, returnId = Model.ReturnId }, new { @class = "govuk-back-link" });

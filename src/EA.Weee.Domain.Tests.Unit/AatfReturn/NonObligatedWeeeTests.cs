@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfReturn
 {
-    using System;
     using Domain.AatfReturn;
     using FluentAssertions;
+    using System;
     using Xunit;
 
     public class NonObligatedWeeeTests

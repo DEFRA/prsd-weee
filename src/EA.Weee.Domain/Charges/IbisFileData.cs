@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Domain.Charges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Prsd.Core;
     using Prsd.Core.Domain;
 

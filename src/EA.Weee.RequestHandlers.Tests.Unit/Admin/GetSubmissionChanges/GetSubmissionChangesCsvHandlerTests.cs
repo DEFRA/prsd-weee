@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSubmissionChanges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
-    using DataAccess;
     using DataAccess.StoredProcedure;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Admin.GetSubmissionChanges;
     using Requests.Admin.GetSubmissionChanges;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

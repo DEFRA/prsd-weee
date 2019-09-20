@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Web.Mvc;
     using Core.Scheme;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
@@ -24,6 +19,12 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Web.Mvc;
+    using AutoFixture;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -35,6 +36,7 @@
         private readonly IWeeeCache cache;
         private readonly IAddSelectReportOptionsRequestCreator requestCreator;
         private readonly IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel> mapper;
+        private readonly Fixture fixture;
 
         public SelectReportOptionsControllerTests()
         {
@@ -43,6 +45,7 @@
             cache = A.Fake<IWeeeCache>();
             requestCreator = A.Fake<IAddSelectReportOptionsRequestCreator>();
             mapper = A.Fake<IMap<ReportOptionsToSelectReportOptionsViewModelMapTransfer, SelectReportOptionsViewModel>>();
+            fixture = new Fixture();
 
             controller = new SelectReportOptionsController(() => weeeClient, breadcrumb, cache, requestCreator, mapper);
         }
@@ -112,7 +115,7 @@
             A.CallTo(() => model.ReportOnQuestions).Returns(reportsOn);
             A.CallTo(() => model.OrganisationId).Returns(organisationId);
             A.CallTo(() => model.ReturnId).Returns(returnId);
-            
+
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
@@ -235,7 +238,7 @@
             httpContext.RouteData.Values.Add("organisationId", organisationId);
             httpContext.RouteData.Values.Add("returnId", returnId);
 
-           var result = await controller.Index(model) as RedirectToRouteResult;
+            var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["returnId"].Should().Be(returnId);
@@ -302,7 +305,10 @@
 
             for (var i = 0; i < 5; i++)
             {
-                model.ReportOnQuestions.Add(new ReportOnQuestion(i + 1, A.Dummy<string>(), A.Dummy<string>(), null, A.Dummy<string>()));
+                model.ReportOnQuestions.Add(fixture.Build<ReportOnQuestion>()
+                    .With(r => r.Id, (int)i + 1)
+                    .With(r => r.Selected, false)
+                    .Create());
             }
 
             return model;

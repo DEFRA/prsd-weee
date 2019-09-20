@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AddAatf
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
 
     public abstract class AddFacilityViewModelBase : FacilityViewModelBase
     {
@@ -13,7 +14,7 @@
 
         public AatfContactData ContactData { get; set; }
 
-        public IEnumerable<short> ComplianceYearList => new List<short> { 2019 };
+        public IEnumerable<SelectListItem> ComplianceYearList { get; set; }
 
         public static new IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
         {

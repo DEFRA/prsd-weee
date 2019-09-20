@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System;
     using Prsd.Core.Domain;
+    using System;
 
     public class Partner : Entity, IEquatable<Partner>, IComparable<Partner>
     {
@@ -35,7 +35,7 @@
         }
 
         public int CompareTo(Partner other)
-        {            
+        {
             if (other == null)
             {
                 return 1;

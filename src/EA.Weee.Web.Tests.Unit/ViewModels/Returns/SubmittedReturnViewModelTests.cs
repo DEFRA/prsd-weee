@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns
 {
-    using System;
     using Core.AatfReturn;
     using Core.DataReturns;
     using FluentAssertions;
+    using System;
     using Web.ViewModels.Returns;
     using Weee.Tests.Core;
     using Xunit;

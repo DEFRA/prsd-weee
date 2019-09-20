@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
-    using System;
-    using System.Collections.Generic;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using System;
+    using System.Collections.Generic;
 
     public class DeleteReturnDataRequestCreator : IDeleteReturnDataRequestCreator
     {

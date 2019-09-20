@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.AatfReports
 {
+    using Core.AatfReturn;
+    using Extensions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Web.Mvc;
-    using Core.AatfReturn;
-    using Extensions;
 
     public class AatfAeReturnDataViewModel
     {
@@ -73,7 +72,7 @@
         public Guid? PanAreaId { get; set; }
         public IEnumerable<SelectListItem> PanAreaList { get; set; }
 
-        [Display(Name = "EA area")]
+        [Display(Name = "EA Area")]
         public Guid? LocalAreaId { get; set; }
 
         public IEnumerable<SelectListItem> LocalAreaList { get; set; }

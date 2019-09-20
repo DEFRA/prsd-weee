@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.DataReturns;
     using Domain.DataReturns;
     using FakeItEasy;
@@ -10,6 +7,9 @@
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
     using Requests.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
     using QuarterType = Core.DataReturns.QuarterType;
 
@@ -24,7 +24,7 @@
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
 
-            GetDataReturnSubmissionsHistoryResultsHandler handler = 
+            GetDataReturnSubmissionsHistoryResultsHandler handler =
                 new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
@@ -48,8 +48,8 @@
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             var authorization = A.Fake<IWeeeAuthorization>();
 
-            var handler = 
-                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+            var handler =
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
@@ -72,7 +72,7 @@
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
             var authorization = A.Fake<IWeeeAuthorization>();
 
-            var handler = 
+            var handler =
                 new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
@@ -97,7 +97,7 @@
             IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
 
-            GetDataReturnSubmissionsHistoryResultsHandler handler = 
+            GetDataReturnSubmissionsHistoryResultsHandler handler =
                 new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
@@ -110,7 +110,7 @@
             // Assert
             Assert.Equal(2, results.ResultCount);
         }
-        
+
         [Fact]
         public async void GetDataReturnSubmissionsHistoryResultHandler_MapsPropertiesToDataReturnSubmissionsHistoryResultObject()
         {
@@ -120,7 +120,7 @@
             var authorization = A.Fake<IWeeeAuthorization>();
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
 
-            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+            var handler = new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());
@@ -205,7 +205,7 @@
             var dataReturnVersionComparer = A.Fake<IDataReturnVersionComparer>();
 
             var handler =
-                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess, 
+                new GetDataReturnSubmissionsHistoryResultsHandler(authorization, resultsDataAccess,
                 submissionsDataAccess, dataReturnVersionComparer);
 
             var request = new GetDataReturnSubmissionsHistoryResults(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<int>());

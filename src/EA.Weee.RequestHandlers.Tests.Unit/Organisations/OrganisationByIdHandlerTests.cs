@@ -1,23 +1,20 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using EA.Weee.Security;
-    using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
     using Domain.Lookup;
-    using Domain.Organisation;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Security;
     using FakeItEasy;
-    using Mappings;
+    using FluentAssertions;
     using Prsd.Core.Mapper;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;

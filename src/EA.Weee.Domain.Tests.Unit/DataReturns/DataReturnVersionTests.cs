@@ -1,13 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
-    using System.Linq;
     using Domain.DataReturns;
-    using Domain.Producer;
     using Domain.Scheme;
     using Events;
     using FakeItEasy;
-    using Lookup;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class DataReturnVersionTests

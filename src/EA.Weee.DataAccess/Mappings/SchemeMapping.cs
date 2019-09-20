@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using Domain.Scheme;
+    using System.Data.Entity.ModelConfiguration;
 
     internal class SchemeMapping : EntityTypeConfiguration<Scheme>
     {

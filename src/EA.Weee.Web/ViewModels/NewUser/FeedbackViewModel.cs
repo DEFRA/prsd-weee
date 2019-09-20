@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.NewUser
 {
-    using System.ComponentModel.DataAnnotations;
     using Shared;
+    using System.ComponentModel.DataAnnotations;
 
     public class FeedbackViewModel : RadioButtonStringCollectionViewModel
     {
