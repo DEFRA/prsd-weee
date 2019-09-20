@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Returns
 {
-    using System;
     using Core.AatfReturn;
+    using System;
 
     public class SubmittedReturnViewModel : ReturnViewModelBase
     {

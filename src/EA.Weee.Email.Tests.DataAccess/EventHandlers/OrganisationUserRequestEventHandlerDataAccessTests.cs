@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.Email.Tests.DataAccess.EventHandlers
 {
     using EA.Weee.Email.EventHandlers;
-    using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;

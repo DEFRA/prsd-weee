@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Admin.AatfReports
 {
-    using System;
     using Core.AatfReturn;
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetAatfAeReturnDataCsv : IRequest<CSVFileData>
     {
@@ -26,12 +26,12 @@
         public bool IncludeReSubmissions { get; private set; }
 
         public GetAatfAeReturnDataCsv(int complianceYear,
-          int quarter, 
-          FacilityType facilityType, 
-          ReportReturnStatus? returnStatus, 
-          Guid? authorityId, 
-          Guid? panArea, 
-          Guid? localArea, 
+          int quarter,
+          FacilityType facilityType,
+          ReportReturnStatus? returnStatus,
+          Guid? authorityId,
+          Guid? panArea,
+          Guid? localArea,
           string aatfDataUrl,
           bool includeReSubmissions)
         {

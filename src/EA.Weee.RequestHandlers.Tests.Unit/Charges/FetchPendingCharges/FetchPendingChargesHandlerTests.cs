@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchPendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Charges;
     using Domain;
     using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -53,7 +52,7 @@
             var handler = new FetchPendingChargesHandler(
                 weeeAuthorization,
                 A.Dummy<ICommonDataAccess>());
-            
+
             // Act
             var result = await handler.HandleAsync(A.Dummy<Requests.Charges.FetchPendingCharges>());
 
@@ -177,10 +176,10 @@
             Assert.Collection(results.PendingCharges,
                 r1 =>
                 {
-                Assert.Equal("AAAA", r1.SchemeName);
-                Assert.Equal(2017, r1.ComplianceYear);
-                Assert.Equal(30, r1.TotalGBP);
-                Assert.Equal(submittedDate, r1.SubmittedDate);
+                    Assert.Equal("AAAA", r1.SchemeName);
+                    Assert.Equal(2017, r1.ComplianceYear);
+                    Assert.Equal(30, r1.TotalGBP);
+                    Assert.Equal(submittedDate, r1.SubmittedDate);
                 },
                 r2 =>
                 {

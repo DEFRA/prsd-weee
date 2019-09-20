@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Core.Validation
 {
+    using Configuration;
+    using Shared;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Configuration;
-    using Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class InternalEmailAddressAttribute : ValidationAttribute
@@ -37,7 +37,7 @@
                 // If the value is not a valid email address then it will not be validated.
                 return true;
             }
-            
+
             string domain = emailAddress.Split('@')[1];
 
             if (InternalDomains.InternalAllowedDomains.Any(allowedDomain => string.Equals(allowedDomain, domain, StringComparison.OrdinalIgnoreCase)))

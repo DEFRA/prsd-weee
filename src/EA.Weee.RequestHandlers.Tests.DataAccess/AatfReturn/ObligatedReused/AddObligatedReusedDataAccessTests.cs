@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn.ObligatedReused
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Weee.Tests.Core;
     using Xunit;
 

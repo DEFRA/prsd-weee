@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.UpdateSchemeInformation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Shared;
     using Domain;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Scheme.UpdateSchemeInformation;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -42,7 +39,7 @@
                 A.Dummy<IUpdateSchemeInformationDataAccess>());
 
             // Act
-            Func<Task<UpdateSchemeInformationResult>> testCode = async () => await handler.HandleAsync(A.Dummy<UpdateSchemeInformation>());
+            Func<Task<CreateOrUpdateSchemeInformationResult>> testCode = async () => await handler.HandleAsync(A.Dummy<UpdateSchemeInformation>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
@@ -79,7 +76,7 @@
                 new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.Equal("New scheme name", scheme.SchemeName);
@@ -92,7 +89,7 @@
             A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened();
 
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.Success, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
         /// <summary>
@@ -135,11 +132,11 @@
                 new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure, result.Result);
         }
 
         /// <summary>
@@ -195,11 +192,11 @@
                 new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure, result.Result);
 
             Assert.NotNull(result.IbisCustomerReferenceUniquenessFailure);
             Assert.Equal("WEE8643759", result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference);
@@ -263,11 +260,11 @@
                 new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.Success, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
         /// <summary>
@@ -326,11 +323,11 @@
                 new Guid("76BE711C-191D-4648-AFE7-4404D287535C"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.Success, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
         /// <summary>
@@ -376,11 +373,11 @@
                 new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
         }
 
         /// <summary>
@@ -426,11 +423,11 @@
                 new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure, result.Result);
         }
 
         /// <summary>
@@ -476,11 +473,11 @@
                 new Guid("61D93F16-A478-4F45-AE6B-2A581F0C0648"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.Success, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
 
         /// <summary>
@@ -526,11 +523,11 @@
                 new Guid("61D93F16-A478-4F45-AE6B-2A581F0C0648"),
                 SchemeStatus.Approved);
 
-            UpdateSchemeInformationResult result = await handler.HandleAsync(request);
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(UpdateSchemeInformationResult.ResultType.Success, result.Result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.Success, result.Result);
         }
     }
 }

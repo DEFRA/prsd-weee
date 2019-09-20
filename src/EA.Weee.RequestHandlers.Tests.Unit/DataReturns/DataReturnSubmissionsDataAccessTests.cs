@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
     using FakeItEasy;
     using RequestHandlers.DataReturns;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

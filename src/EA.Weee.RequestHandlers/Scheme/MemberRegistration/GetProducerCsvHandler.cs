@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Shared;
     using DataAccess;
@@ -10,6 +7,9 @@
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Security;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class GetProducerCSVHandler : IRequestHandler<GetProducerCSV, ProducerCSVFileData>
     {
@@ -57,7 +57,7 @@
             string fileContent = csvWriter.Write(items);
 
             var fileName = string.Format("{0}_fullmemberlist_{1}_{2}.csv", scheme.ApprovalNumber, request.ComplianceYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            
+
             return new ProducerCSVFileData
             {
                 FileContent = fileContent,

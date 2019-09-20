@@ -4,14 +4,15 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedViewModel
 @{
-    ViewBag.Title = "Reused WEEE - GOV.UK";
+    var title = "WEEE that has been reused as a whole appliance";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
             <h2 class="govuk-heading-l">
-                WEEE that has been reused as a whole appliance
+                @title
             </h2>
         </div>
     </header>
@@ -22,7 +23,7 @@
         Provide tonnage to 3 decimal places. For example 1.238
     </p>
 
-    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    @using (Html.BeginRouteForm(AatfRedirect.AatfSelectedRoute, FormMethod.Post))
     {
         @Html.Gds().ValidationSummary()
 
@@ -44,11 +45,11 @@
         @Html.HiddenFor(m => m.OrganisationId)
 
         @Html.AntiForgeryToken()
-        <form method="post" class="form" style="display: inline">
-            <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
-                Save and continue
-            </button>
-        </form>
+       
+        <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+            Save and continue
+        </button>
+        
     }
 
     @Scripts.Render("~/bundles/weee_tonnage_totals")

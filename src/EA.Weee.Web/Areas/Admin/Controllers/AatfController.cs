@@ -1,32 +1,38 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Internal;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Admin.DeleteAatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.Helper;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+
+    using EA.Weee.Web.Requests;
+    using EA.Weee.Web.ViewModels.Shared.Aatf;
+    using EA.Weee.Web.ViewModels.Shared.Aatf.Mapping;
+
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -37,6 +43,7 @@
         private readonly IEditFacilityDetailsRequestCreator detailsRequestCreator;
         private readonly IEditAatfContactRequestCreator contactRequestCreator;
         private readonly IWeeeCache cache;
+        private readonly IFacilityViewModelBaseValidatorWrapper validationWrapper;
 
         public AatfController(
             Func<IWeeeClient> apiClient,
@@ -44,7 +51,8 @@
             IMapper mapper,
             IEditFacilityDetailsRequestCreator detailsRequestCreator,
             IEditAatfContactRequestCreator contactRequestCreator,
-            IWeeeCache cache)
+            IWeeeCache cache,
+            IFacilityViewModelBaseValidatorWrapper validationWrapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -52,14 +60,17 @@
             this.detailsRequestCreator = detailsRequestCreator;
             this.contactRequestCreator = contactRequestCreator;
             this.cache = cache;
+            this.validationWrapper = validationWrapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(Guid id)
+        public async Task<ActionResult> Details(Guid id, string selectedTab = null)
         {
             using (var client = apiClient())
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                var years = await client.SendAsync(User.GetAccessToken(), new GetAatfComplianceYearsByAatfId(aatf.AatfId));
 
                 var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(aatf.Organisation.Id));
 
@@ -67,17 +78,34 @@
 
                 var submissionHistory = await client.SendAsync(User.GetAccessToken(), new GetAatfSubmissionHistory(id));
 
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var viewModel = mapper.Map<AatfDetailsViewModel>(new AatfDataToAatfDetailsViewModelMapTransfer(aatf)
                 {
                     OrganisationString = GenerateSharedAddress(aatf.Organisation.BusinessAddress),
                     AssociatedAatfs = associatedAatfs,
                     AssociatedSchemes = associatedSchemes,
-                    SubmissionHistory = submissionHistory
+                    SubmissionHistory = submissionHistory,
+                    ComplianceYearList = years,
+                    CurrentDate = currentDate
                 });
+
+                viewModel.SelectedTab = selectedTab;
 
                 SetBreadcrumb(aatf.FacilityType, aatf.Name);
 
                 return View(viewModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> FetchDetails(Guid aatfId, int selectedComplianceYear)
+        {
+            using (var client = apiClient())
+            {               
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfIdByComplianceYear(aatfId, selectedComplianceYear));
+
+                return RedirectToAction("Details", new { Id = aatf });
             }
         }
 
@@ -117,7 +145,7 @@
 
         private bool IsUserInternalAdmin()
         {
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(this.User);
+            var claimsPrincipal = new ClaimsPrincipal(this.User);
 
             return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
@@ -144,7 +172,9 @@
             {
                 var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                if (!aatf.CanEdit)
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                if (!aatf.CanEdit || !IsValidRecordToEdit(currentDate, aatf.ComplianceYear))
                 {
                     return new HttpForbiddenResult();
                 }
@@ -165,6 +195,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAatfDetails(AatfEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -172,6 +203,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ManageAeDetails(AeEditDetailsViewModel viewModel)
         {
             return await ManageFacilityDetails(viewModel);
@@ -185,24 +217,21 @@
             {
                 var contact = await client.SendAsync(User.GetAccessToken(), new GetAatfContact(id));
 
-                if (!contact.CanEditContactDetails)
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                var countries = await client.SendAsync(this.User.GetAccessToken(), new GetCountries(false));
+
+                if (!contact.CanEditContactDetails || !IsValidRecordToEdit(currentDate, aatf.ComplianceYear))
                 {
                     return new HttpForbiddenResult();
                 }
 
-                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+                var model = this.mapper.Map<AatfEditContactAddressViewModel>(new AatfEditContactTransfer() { AatfData = aatf, Countries = countries, CurrentDate = currentDate });
 
-                var viewModel = new AatfEditContactAddressViewModel()
-                {
-                    AatfId = id,
-                    ContactData = contact,
-                    FacilityType = facilityType,
-                    AatfName = aatf.Name
-                };
-
-                viewModel.ContactData.AddressData.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                 SetBreadcrumb(facilityType, aatf.Name);
-                return View(viewModel);
+                return View(model);
             }
         }
 
@@ -210,17 +239,18 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(AatfEditContactAddressViewModel viewModel)
         {
-            SetBreadcrumb(viewModel.FacilityType, viewModel.AatfName);
+            SetBreadcrumb(viewModel.AatfData.FacilityType, viewModel.AatfData.Name);
 
             if (ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
                     var request = contactRequestCreator.ViewModelToRequest(viewModel);
+                    request.SendNotification = false;
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.AatfId }) + "#contactDetails");
+                    return Redirect(Url.Action("Details", new { area = "Admin", Id = viewModel.Id }) + "#contactDetails");
                 }
             }
 
@@ -233,29 +263,79 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.NotAllowed)]
         public async Task<ActionResult> Delete(Guid id, Guid organisationId, FacilityType facilityType)
         {
-            var aatfData = await cache.FetchAatfData(organisationId, id);
-
-            SetBreadcrumb(facilityType, aatfData.Name);
-
             using (var client = apiClient())
             {
-                CanAatfBeDeletedFlags canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
 
-                DeleteViewModel viewModel = new DeleteViewModel()
+                SetBreadcrumb(facilityType, aatf.Name);
+
+                var canDelete = await client.SendAsync(User.GetAccessToken(), new CheckAatfCanBeDeleted(id));
+
+                var viewModel = new DeleteViewModel()
                 {
                     AatfId = id,
                     OrganisationId = organisationId,
                     FacilityType = facilityType,
-                    CanDeleteFlags = canDelete,
-                    AatfName = aatfData.Name,
+                    DeletionData = canDelete,
+                    AatfName = aatf.Name,
                     OrganisationName = await cache.FetchOrganisationName(organisationId)
                 };
 
                 return View(viewModel);
             }
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> UpdateApproval(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var aatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(id));
+
+                SetBreadcrumb(aatf.FacilityType, aatf.Name);
+
+                var request = (EditAatfDetails)TempData["aatfRequest"];
+
+                var approvalDateFlags = await client.SendAsync(User.GetAccessToken(), new CheckAatfApprovalDateChange(id, request.Data.ApprovalDate.Value));
+
+                var viewModel = mapper.Map<UpdateApprovalViewModel>(new UpdateApprovalDateViewModelMapTransfer() { AatfData = aatf, CanApprovalDateBeChangedFlags = approvalDateFlags, Request = request });
+
+                TempData["aatfRequest"] = request;
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateApproval(UpdateApprovalViewModel model)
+        {
+            SetBreadcrumb(model.FacilityType, model.AatfName);
+
+            if (ModelState.IsValid)
+            {
+                if (model.SelectedValue.Equals("Yes"))
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), model.Request);
+
+                        await cache.InvalidateAatfCache(model.OrganisationId);
+
+                        return Redirect(Url.Action("Details", new { id = model.AatfId }));
+                    }
+                }
+                else
+                {
+                    return RedirectToAction(nameof(ManageAatfDetails), new { id = model.AatfId });
+                }
+            }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -266,21 +346,25 @@
             {
                 await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
 
+                await cache.InvalidateOrganisationSearch();
+
+                await cache.InvalidateAatfCache(viewModel.OrganisationId);
+
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> Download(Guid returnId,  int complianceYear, int quarter, Guid aatfId)
+        public async Task<ActionResult> Download(Guid returnId, int complianceYear, int quarter, Guid aatfId)
         {
             CSVFileData fileData;
-            
+
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), new GetAatfObligatedData(complianceYear, quarter, returnId, aatfId));
             }
 
-            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
@@ -314,13 +398,18 @@
 
             using (var client = apiClient())
             {
-                bool doesApprovalNumberExist = false;
+                var doesApprovalNumberExist = false;
 
                 var existingAatf = await client.SendAsync(User.GetAccessToken(), new GetAatfById(viewModel.Id));
 
                 if (existingAatf.ApprovalNumber != viewModel.ApprovalNumber)
                 {
-                    doesApprovalNumberExist = await client.SendAsync(User.GetAccessToken(), new CheckApprovalNumberIsUnique(viewModel.ApprovalNumber));
+                    var result = await validationWrapper.Validate(User.GetAccessToken(), viewModel);
+
+                    if (!result.IsValid)
+                    {
+                        doesApprovalNumberExist = true;
+                    }
                 }
 
                 if (ModelState.IsValid && !doesApprovalNumberExist)
@@ -330,6 +419,19 @@
                     viewModel.LocalAreaList = await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
 
                     var request = detailsRequestCreator.ViewModelToRequest(viewModel);
+
+                    if (existingAatf.ApprovalDate != viewModel.ApprovalDate)
+                    {
+                        var approvalDateFlags = await client.SendAsync(User.GetAccessToken(),
+                            new CheckAatfApprovalDateChange(existingAatf.Id, viewModel.ApprovalDate.Value));
+
+                        if (approvalDateFlags.HasFlag(CanApprovalDateBeChangedFlags.DateChanged))
+                        {
+                            TempData["aatfRequest"] = request;
+
+                            return RedirectToAction(nameof(UpdateApproval), new { id = existingAatf.Id, organisationId = existingAatf.Organisation.Id });
+                        }
+                    }
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
@@ -357,6 +459,7 @@
                 {
                     ModelState.AddModelError("ApprovalNumber", Constants.ApprovalNumberExistsError);
                 }
+
                 return View(nameof(ManageAatfDetails), viewModel);
             }
         }
@@ -402,6 +505,11 @@
                 default:
                     break;
             }
+        }
+
+        private bool IsValidRecordToEdit(DateTime currentDate, int complianceYear)
+        {
+            return currentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(currentDate, true).Any(x => x.Equals(complianceYear)) ? true : false;
         }
     }
 }

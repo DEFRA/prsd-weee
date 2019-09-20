@@ -8,7 +8,6 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using Core.Shared;
     using Xunit;
 
     public class ReturnToReturnViewModelMapTests
@@ -56,12 +55,12 @@
         [Fact]
         public void Map_GivenValidSource_PropertiesShouldBeMapped()
         {
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, false, Guid.NewGuid()));
-            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)1.234, true, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)10000.234, false, Guid.NewGuid()));
+            mapperTestNonObligatedData.Add(new NonObligatedData(0, (decimal)20000.234, true, Guid.NewGuid()));
 
-            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 1.234m, 1.234m));
-            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
-            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 1.234m, 1.234m));
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestScheme, mapperTestAatf, 0, 10000.234m, 20000.234m));
+            mapperTestObligatedReusedData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 10000.234m, 20000.234m));
+            mapperTestObligatedSentOnData.Add(new WeeeObligatedData(Guid.NewGuid(), null, mapperTestAatf, 0, 10000.234m, 20000.234m));
 
             mapperTestAatfList.Add(mapperTestAatf);
 
@@ -88,17 +87,125 @@
             result.Quarter.Should().Be(mapperTestQuarter.Q.ToString());
             result.Year.Should().Be(mapperTestYear.ToString());
             result.Period.Should().Be(mapperTestPeriod);
-            result.NonObligatedTonnageTotal.Should().Be("1.234");
-            result.NonObligatedTonnageTotalDcf.Should().Be("1.234");
-            result.AatfsData[0].WeeeReceived.B2B.Should().Be("1.234");
-            result.AatfsData[0].WeeeReceived.B2C.Should().Be("1.234");
-            result.AatfsData[0].WeeeReused.B2B.Should().Be("1.234");
-            result.AatfsData[0].WeeeReused.B2C.Should().Be("1.234");
-            result.AatfsData[0].WeeeSentOn.B2B.Should().Be("1.234");
-            result.AatfsData[0].WeeeSentOn.B2C.Should().Be("1.234");
+            result.NonObligatedTonnageTotal.Should().Be("10,000.234");
+            result.NonObligatedTonnageTotalDcf.Should().Be("20,000.234");
+            result.ObligatedB2BTotal.Should().Be("10,000.234");
+            result.ObligatedB2CTotal.Should().Be("20,000.234");
+            result.AatfsData[0].WeeeReceived.B2B.Should().Be("10,000.234");
+            result.AatfsData[0].WeeeReceived.B2C.Should().Be("20,000.234");
+            result.AatfsData[0].WeeeReused.B2B.Should().Be("10,000.234");
+            result.AatfsData[0].WeeeReused.B2C.Should().Be("20,000.234");
+            result.AatfsData[0].WeeeSentOn.B2B.Should().Be("10,000.234");
+            result.AatfsData[0].WeeeSentOn.B2C.Should().Be("20,000.234");
             result.AatfsData[0].SchemeData[0].Received.B2B.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2B);
             result.AatfsData[0].SchemeData[0].Received.B2C.Should().BeEquivalentTo(result.AatfsData[0].WeeeReceived.B2C);
             result.ReportOnDisplayOptions.DisplayObligatedReceived.Should().Be(true);
+        }
+
+        [Theory]
+        [InlineData(ReportOnQuestionEnum.WeeeSentOn)]
+        [InlineData(ReportOnQuestionEnum.WeeeReceived)]
+        [InlineData(ReportOnQuestionEnum.WeeeReused)]
+        public void Map_GivenObligatedDisplayOptions_ShowDownloadObligatedLinkShouldBeTrue(ReportOnQuestionEnum reportQuestion)
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)reportQuestion, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenAllObligatedDisplayOptions_ShowDownloadObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>()
+                {
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeSentOn, Guid.NewGuid()),
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReceived, Guid.NewGuid()),
+                    new ReturnReportOn((int)ReportOnQuestionEnum.WeeeReused, Guid.NewGuid())
+                }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNonObligatedDisplayOptions_ShowDownloadNonObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.NonObligated, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNonObligatedDcfDisplayOptions_ShowDownloadNonObligatedLinkShouldBeTrue()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>() { new ReturnReportOn((int)ReportOnQuestionEnum.NonObligatedDcf, Guid.NewGuid()) }
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNoNonObligatedDcfDisplayOptions_ShowDownloadNonObligatedLinkShouldBeFalse()
+        {
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = new List<ReturnReportOn>()
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadNonObligatedDataLink.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenNoObligatedDisplayOptions_ShowDownloadObligatedShouldBeFalse()
+        {
+            var reportedOnList = new List<ReturnReportOn> {new ReturnReportOn(4, Guid.NewGuid()), new ReturnReportOn(5, Guid.NewGuid()) };
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                ReturnReportOns = reportedOnList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ShowDownloadObligatedDataLink.Should().Be(false);
         }
 
         [Fact]
@@ -456,6 +563,54 @@
             var result = map.Map(returnData);
 
             result.ObligatedTotal.Should().Be("3.000");
+        }
+
+        [Fact]
+        public void Map_GivenReceivedData_ObligatedB2BTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 300000m, 20000m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedB2BTotal.Should().Be("300,000.000");
+        }
+
+        [Fact]
+        public void Map_GivenReceivedData_ObligatedB2CTotalIsCorrect()
+        {
+            mapperTestAatfList.Add(mapperTestAatf);
+
+            mapperTestObligatedReceivedData.Add(new WeeeObligatedData(Guid.NewGuid(), mapperTestAatf, 1, 3m, 20000m));
+
+            var returnData = new ReturnData()
+            {
+                Id = mapperTestId,
+                Quarter = mapperTestQuarter,
+                QuarterWindow = mapperTestQuarterWindow,
+                NonObligatedData = mapperTestNonObligatedData,
+                ObligatedWeeeReceivedData = mapperTestObligatedReceivedData,
+                ObligatedWeeeReusedData = mapperTestObligatedReusedData,
+                ObligatedWeeeSentOnData = mapperTestObligatedSentOnData,
+                Aatfs = mapperTestAatfList
+            };
+
+            var result = map.Map(returnData);
+
+            result.ObligatedB2CTotal.Should().Be("20,000.000");
         }
 
         [Fact]

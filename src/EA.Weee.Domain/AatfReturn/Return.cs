@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Domain.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
     using DataReturns;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using Organisation;
+    using System;
     using User;
 
     public partial class Return : Entity
@@ -75,7 +74,7 @@
         public virtual DateTime? SubmittedDate { get; set; }
 
         public virtual string CreatedById { get; private set; }
-        
+
         public virtual string SubmittedById { get; set; }
 
         public virtual User CreatedBy { get; set; }

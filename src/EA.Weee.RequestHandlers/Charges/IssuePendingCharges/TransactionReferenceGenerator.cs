@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Threading.Tasks;
     using EA.Weee.DataAccess;
+    using System.Threading.Tasks;
 
     public class TransactionReferenceGenerator : ITransactionReferenceGenerator
     {

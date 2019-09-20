@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -16,6 +12,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using FacilityType = Core.AatfReturn.FacilityType;
 
@@ -54,7 +54,7 @@
         {
             var request = new GetAatfs(fixture.Create<FacilityType>());
             await handler.HandleAsync(request);
-            A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetLatestAatfs()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -73,10 +73,10 @@
         {
             var aatfs = CreateAatfAeList();
 
-            A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);
+            A.CallTo(() => dataAccess.GetLatestAatfs()).Returns(aatfs);
 
             var request = new GetAatfs(facilityType);
-            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType, (Int16)2019);
+            var returnDataList = new AatfDataList(A.Dummy<Guid>(), A.Dummy<string>(), A.Dummy<UKCompetentAuthorityData>(), A.Dummy<string>(), A.Dummy<Core.AatfReturn.AatfStatus>(), A.Dummy<OrganisationData>(), facilityType, (Int16)2019, Guid.NewGuid(), null);
 
             A.CallTo(() => fakeMapper.Map(A<Aatf>._)).Returns(returnDataList);
 

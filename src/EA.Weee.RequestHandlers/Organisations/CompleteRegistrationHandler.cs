@@ -1,19 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class CompleteRegistrationHandler : IRequestHandler<CompleteRegistration, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-  
+
         public CompleteRegistrationHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
             this.authorization = authorization;
@@ -33,11 +33,11 @@
             var organisation = await context.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
 
             organisation.CompleteRegistration();
-            
+
             var scheme = new Scheme(message.OrganisationId, message.AddressId, message.ContactId);
-            
+
             context.Schemes.Add(scheme);
-           
+
             await context.SaveChangesAsync();
             return organisation.Id;
         }

@@ -24,9 +24,9 @@
                 if (context.Request != null &&
                     context.Request.Form != null &&
                     context.Request.Form.AllKeys.Intersect(sensitiveFieldNames, StringComparer.InvariantCultureIgnoreCase).Any())
-                    {
-                        ReplaceSensitiveFormFields(args, context);
-                    }
+                {
+                    ReplaceSensitiveFormFields(args, context);
+                }
             }
         }
 

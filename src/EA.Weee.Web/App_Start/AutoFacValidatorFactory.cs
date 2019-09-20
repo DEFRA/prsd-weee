@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web
 {
-    using System;
     using Autofac;
     using FluentValidation;
+    using System;
 
     public class AutofacValidatorFactory : IValidatorFactory
     {

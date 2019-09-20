@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
@@ -18,14 +19,18 @@
 
         Task UpdateContact(AatfContact oldDetails, AatfContactData newDetails, Country country);
 
-        Task<bool> DoesAatfHaveData(Guid aatfId);
+        Task<bool> HasAatfData(Guid aatfId);
 
-        Task<bool> DoesAatfOrganisationHaveMoreAatfs(Guid aatfId);
+        Task<bool> HasAatfOrganisationOtherAeOrAatf(Aatf aatf);
 
-        Task<bool> DoesAatfOrganisationHaveActiveUsers(Guid aatfId);
+        Task RemoveAatf(Guid aatfId);
 
-        Task DeleteAatf(Guid aatfId);
+        Task RemoveAatfData(Aatf aatf, IEnumerable<int> quarters);
 
-        Task DeleteOrganisation(Guid organisationId);
+        Task<List<short>> GetComplianceYearsForAatfByAatfId(Guid aatfId);
+
+        Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, short complianceYear);
+
+        Task<bool> IsLatestAatf(Guid id, Guid aatfId);
     }
 }

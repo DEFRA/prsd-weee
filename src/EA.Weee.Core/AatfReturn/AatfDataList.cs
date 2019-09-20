@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.AatfReturn;
-    using System;
-    using Domain.Organisation;
     using Organisations;
+    using System;
 
     public class AatfDataList
     {
@@ -27,7 +24,13 @@
 
         public virtual FacilityType FacilityType { get; private set; }
 
-        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear)
+        public string NameWithComplianceYear => $"{Name} ({ComplianceYear})";
+
+        public Guid AatfId { get; set; }
+
+        public DateTime? ApprovalDate { get; set; }
+
+        public AatfDataList(Guid id, string name, UKCompetentAuthorityData competentAuthority, string approvalNumber, AatfStatus aatfStatus, OrganisationData organisation, FacilityType facilityType, Int16 complianceYear, Guid aatfId, DateTime? approvalDate)
         {
             this.Id = id;
             this.Name = name;
@@ -38,6 +41,8 @@
             this.Organisation = organisation;
             this.FacilityType = facilityType;
             this.ComplianceYear = complianceYear;
+            this.AatfId = aatfId;
+            this.ApprovalDate = approvalDate;
         }
     }
 }

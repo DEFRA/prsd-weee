@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using System;
-    using System.Threading.Tasks;
-    using Domain;
     using Domain.Organisation;
-    using Domain.Scheme;
     using Email;
     using Organisations;
     using Prsd.Core.Mediator;
-    using Requests.Organisations;
     using Requests.Scheme;
     using Security;
+    using System;
+    using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
+
     using Weee.Security;
 
     public class UpdateSchemeContactDetailsHandler : IRequestHandler<UpdateSchemeContactDetails, bool>
@@ -41,7 +41,7 @@
             {
                 var errorMessage = $"A scheme with organisation id \"{message.SchemeData.OrganisationId}\" could not be found.";
 
-                throw new ArgumentException(errorMessage);                
+                throw new ArgumentException(errorMessage);
             }
 
             var contact = new Contact(
@@ -74,9 +74,9 @@
             if (message.SendNotificationOnChange &&
                 (contactChanged || schemeAddressChanged) && scheme.CompetentAuthority != null)
             {
-                await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName);
+                await weeeEmailService.SendOrganisationContactDetailsChanged(scheme.CompetentAuthority.Email, scheme.SchemeName, EntityType.Pcs);
             }
-           
+
             return true;
         }
     }

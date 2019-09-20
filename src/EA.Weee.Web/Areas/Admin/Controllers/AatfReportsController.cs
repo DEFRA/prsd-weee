@@ -1,35 +1,107 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Base;
     using Core.AatfReturn;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Requests.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Services;
-    using ViewModels.Home;
+    using ViewModels.Reports;
     using Weee.Requests.Admin;
-    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Shared;
 
-    public class AatfReportsController : AdminController
+    public class AatfReportsController : ReportsBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
 
-        public AatfReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
+        public AatfReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb) : base(apiClient, breadcrumb)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                switch (userStatus)
+                {
+                    case UserStatus.Active:
+                        return RedirectToAction("ChooseReport", "AatfReports");
+                    case UserStatus.Inactive:
+                    case UserStatus.Pending:
+                    case UserStatus.Rejected:
+                        return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
+                    default:
+                        throw new NotSupportedException(
+                            $"Cannot determine result for user with status '{userStatus}'");
+                }
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ChooseReport()
+        {
+            SetBreadcrumb();
+
+            var model = new ChooseAatfReportViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChooseReport(ChooseAatfReportViewModel model)
+        {
+            SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            switch (model.SelectedValue)
+            {
+                case Reports.AatfAeReturnData:
+                    return RedirectToAction(nameof(AatfAeReturnData), "AatfReports");
+
+                case Reports.AatfObligatedData:
+                    return RedirectToAction(nameof(AatfObligatedData), "AatfReports");
+
+                case Reports.UkNonObligatedWeeeData:
+                    return RedirectToAction(nameof(UkNonObligatedWeeeReceived), "AatfReports");
+
+                case Reports.AatfNonObligatedData:
+                    return RedirectToAction(nameof(AatfNonObligatedData), "AatfReports");
+
+                case Reports.AatfSentOnData:
+                    return RedirectToAction(nameof(AatfSentOnData), "AatfReports");
+
+                case Reports.AatfReuseSitesData:
+                    return RedirectToAction(nameof(AatfReuseSites), "AatfReports");
+
+                case Reports.AatfAePublicRegister:
+                    return RedirectToAction(nameof(AatfAePublicRegister), "AatfReports");
+
+                case Reports.UkWeeeDataAtAatfs:
+                    return RedirectToAction(nameof(UkWeeeDataAtAatfs), "AatfReports");
+
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         [HttpGet]
@@ -321,11 +393,11 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfSentOnDataCsv(int complianceYear,
-            string obligationType, string aatfName, Guid? authorityId, Guid? panArea)
+            string obligationType, Guid? authorityId, Guid? panArea)
         {
             CSVFileData fileData;
 
-            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, aatfName, authorityId, panArea);
+            var request = new GetAllAatfSentOnDataCsv(complianceYear, obligationType, authorityId, panArea);
             using (var client = apiClient())
             {
                 fileData = await client.SendAsync(User.GetAccessToken(), request);
@@ -335,6 +407,45 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> AatfAePublicRegister()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new AatfAePublicRegisterViewModel();
+            await PopulateFilters(model);
+
+            return View("AatfAePublicRegister", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AatfAePublicRegister(AatfAePublicRegisterViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAatfAePublicRegisterCsv(int complianceYear,
+            ReportFacilityType facilityType, Guid authorityId)
+        {
+            CSVFileData fileData;
+
+            var request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authorityId, null, null, true);
+            using (var client = apiClient())
+            {
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            var data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+        }
         private async Task PopulateFilters(AatfSentOnDataViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
@@ -345,7 +456,7 @@
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
-         private async Task PopulateFilters(AatfReuseSitesViewModel model)
+        private async Task PopulateFilters(AatfReuseSitesViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
             var authorities = await FetchAuthorities();
@@ -354,7 +465,7 @@
             {
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
-        } 
+        }
 
         private async Task PopulateFilters(AatfObligatedDataViewModel model)
         {
@@ -380,66 +491,12 @@
         {
             model.ComplianceYears = await ComplianceYears();
         }
-
-        private async Task<List<int>> FetchComplianceYearsForAatfReturns()
+      
+        private async Task PopulateFilters(AatfAePublicRegisterViewModel model)
         {
-            var request = new GetAatfReturnsActiveComplianceYears();
-            using (var client = apiClient())
-            {
-                var items = await client.SendAsync(User.GetAccessToken(), request);
-                return items;
-            }
-        }
-
-        private IEnumerable<int> FetchAllAatfComplianceYears()
-        {
-            return Enumerable.Range(2019, DateTime.Now.Year - 2018)
-                .OrderByDescending(year => year)
-                .ToList();
-        }
-
-        private void SetBreadcrumb()
-        {
-            breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
-        }
-
-        private async Task<SelectList> PatAreaList()
-        {
-            return new SelectList(await FetchPatAreas(), "Id", "Name");
-        }
-
-        private async Task<SelectList> LocalAreaList()
-        {
-            return new SelectList(await FetchLocalAreas(), "Id", "Name");
-        }
-
-        private async Task<SelectList> CompetentAuthoritiesList()
-        {
-            return new SelectList(await FetchAuthorities(), "Id", "Abbreviation");
-        }
-
-        private async Task<IList<PanAreaData>> FetchPatAreas()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
-            }
-        }
-
-        private async Task<IList<LocalAreaData>> FetchLocalAreas()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
-            }
-        }
-
-        private async Task<IList<UKCompetentAuthorityData>> FetchAuthorities()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-            }
+            model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatf());
+            model.FacilityTypes = new SelectList(EnumHelper.GetValues(typeof(FacilityType)), "Key", "Value");
+            model.CompetentAuthoritiesList = await CompetentAuthoritiesList();
         }
     }
 }

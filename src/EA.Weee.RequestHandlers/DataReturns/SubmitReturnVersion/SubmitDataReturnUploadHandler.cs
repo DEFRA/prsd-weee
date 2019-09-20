@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.SubmitReturnVersion
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using FetchDataReturnForSubmission;
     using Prsd.Core.Mediator;
     using Requests.DataReturns;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     internal class SubmitDataReturnUploadHandler : IRequestHandler<SubmitDataReturnUpload, Guid>
     {

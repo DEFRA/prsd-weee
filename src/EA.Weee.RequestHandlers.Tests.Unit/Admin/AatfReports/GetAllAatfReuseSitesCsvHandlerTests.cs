@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.AatfReports
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using EA.Prsd.Core;
@@ -13,6 +9,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Requests.Admin.AatfReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -21,16 +21,16 @@
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly GetAllAatfReuseSitesCsvHandler handler;
-        private readonly ICommonDataAccess commanDataAccess;
+        private readonly ICommonDataAccess commonDataAccess;
 
         public GetAllAatfReuseSitesCsvHandlerTests()
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             context = A.Fake<WeeeContext>();
             csvWriterFactory = A.Fake<CsvWriterFactory>();
-            commanDataAccess = A.Fake<ICommonDataAccess>();
+            commonDataAccess = A.Fake<ICommonDataAccess>();
 
-            handler = new GetAllAatfReuseSitesCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            handler = new GetAllAatfReuseSitesCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
         }
 
         [Fact]
@@ -40,7 +40,7 @@
 
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new GetAllAatfReuseSitesCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            var handler = new GetAllAatfReuseSitesCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
             var request = new GetAllAatfReuseSitesCsv(complianceYear, null, null);
 
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -126,8 +126,9 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileContent.Should().Contain($"{csvData1.Abbreviation},{csvData1.PanName},{csvData1.LaName},{csvData1.ComplianceYear},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.OrgName},{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.SiteName},\"{csvData1.SiteAddress}\"");
-            data.FileContent.Should().Contain($"{csvData2.Abbreviation},{csvData2.PanName},{csvData2.LaName},{csvData2.ComplianceYear},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.OrgName},{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.SiteName},\"{csvData2.SiteAddress}\"");
+            data.FileContent.Should().Contain("Appropriate authority,WROS Pan Area Team,EA Area,Compliance year,Quarter,Submitted by,Date submitted (GMT),Name of AATF,Approval number,Organisation name,Reuse site name,Reuse site address");
+            data.FileContent.Should().Contain($"{csvData1.Abbreviation},{csvData1.PanName},{csvData1.LaName},{csvData1.ComplianceYear},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrgName},{csvData1.SiteName},\"{csvData1.SiteAddress}\"");
+            data.FileContent.Should().Contain($"{csvData2.Abbreviation},{csvData2.PanName},{csvData2.LaName},{csvData2.ComplianceYear},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.OrgName},{csvData2.SiteName},\"{csvData2.SiteAddress}\"");
         }
     }
 }

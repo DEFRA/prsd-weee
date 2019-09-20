@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Http.Results;
     using Core.Routing;
     using Domain;
     using Domain.Admin;
@@ -19,6 +14,11 @@
     using Microsoft.AspNet.Identity;
     using RequestHandlers.Admin;
     using Security;
+    using System;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Http.Results;
     using Xunit;
 
     public class UnauthenticatedUserControllerTests

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Threading.Tasks;
-    using Domain.Admin.AatfReports;
 
     public interface IStoredProcedures
     {
@@ -14,7 +14,7 @@
             bool includeBrandNames, Guid? schemeId = null, Guid? competentAuthorityId = null);
 
         Task<int> SpgNextIbisTransactionNumber();
-        
+
         Task<List<ProducerPublicRegisterCSVData>> SpgProducerPublicRegisterCSVDataByComplianceYear(int complianceYear);
 
         Task<List<ProducerAmendmentsHistoryCSVData>> SpgProducerAmendmentsCSVDataByPRN(string prn);
@@ -29,7 +29,7 @@
 
         Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
 
-        Task<List<NonObligatedWeeeReceivedAtAatfData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf);
+        Task<List<NonObligatedWeeeReceivedCsvData>> GetNonObligatedWeeeReceivedAtAatf(int complianceYear, string aatf);
 
         Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
 
@@ -42,18 +42,26 @@
 
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);
 
-        Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId);
+        Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId, short complianceYear);
 
         Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter, int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea, bool includeResubmissions);
 
-        Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId);
+        Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId, short complianceYear);
 
         Task<DataTable> GetAllAatfObligatedCsvData(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea, int columnType);
 
+        Task<DataTable> GetReturnObligatedCsvData(Guid returnId);
+
+        Task<List<NonObligatedWeeeReceivedCsvData>> GetReturnNonObligatedCsvData(Guid returnId);
+
         Task<DataTable> GetAatfObligatedCsvData(Guid returnId, int complianceYear, int quarter, Guid aatfId);
 
-        Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string aatfName, string obligationType, Guid? authority, Guid? panArea);
-        
+        Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string obligationType, Guid? authority, Guid? panArea);
+
         Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea);
+
+        Task<List<AatfAeDetailsData>> GetAatfAeDetailsCsvData(int complianceYear, int facilityType, Guid? authority, Guid? area, Guid? panArea);
+
+        Task<List<PcsAatfComparisonDataCsvData>> GetPcsAatfComparisonDataCsvData(int complianceYear, int? quarter, string obligationType);
     }
 }

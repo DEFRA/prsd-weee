@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.DataAccess
 {
-    using FakeItEasy;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;

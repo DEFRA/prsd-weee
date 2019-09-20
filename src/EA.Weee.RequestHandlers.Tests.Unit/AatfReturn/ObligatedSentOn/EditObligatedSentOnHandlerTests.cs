@@ -13,7 +13,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -61,8 +60,8 @@
 
             var returnAmounts = new List<WeeeSentOnAmount>()
             {
-                new WeeeSentOnAmount(A.Dummy<int>(), A.Dummy<decimal?>(), A.Dummy<decimal?>(), A.Dummy<Guid>()),
-                new WeeeSentOnAmount(A.Dummy<int>(), A.Dummy<decimal?>(), A.Dummy<decimal?>(), A.Dummy<Guid>())
+                new WeeeSentOnAmount(A.Dummy<WeeeSentOn>(), A.Dummy<int>(), A.Dummy<decimal?>(), A.Dummy<decimal?>()),
+                new WeeeSentOnAmount(A.Dummy<WeeeSentOn>(), A.Dummy<int>(), A.Dummy<decimal?>(), A.Dummy<decimal?>())
             };
 
             A.CallTo(() => genericDataAccess.GetById<WeeeSentOnAmount>(updatedValues.ElementAt(0).Id)).Returns(returnAmounts.ElementAt(0));

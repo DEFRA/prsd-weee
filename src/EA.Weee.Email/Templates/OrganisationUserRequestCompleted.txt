@@ -6,7 +6,7 @@ Your request to access the Waste Electrical and Electronic Equipment (WEEE) onli
 
 @(Model.Approved ? string.Format("To access this organisation and perform activities sign in to the WEEE online service at {0}", @Model.ExternalUserLoginUrl) : "If you have any queries about this rejection, please contact the organisation's administrator.") 
 
-@(Model.Approved ? string.Format("Sign in to the WEEE online service to perform activities at {0}", @Model.ExternalUserLoginUrl) : "If you have any queries about this rejection, please contact the organisation's administrator.") 
+@(Model.Approved ? string.Format("Sign in to the WEEE online service to perform activities at {0}", @Model.ExternalUserLoginUrl) : (Model.ActiveUsers ? "If you have any queries about this rejection, please contact the organisation's administrator." : "If you have any queries about this rejection, contact your environmental regulator.")) 
 
 This is an automated email; do not reply.
 

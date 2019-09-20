@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfReturn;
@@ -14,6 +11,9 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     [ValidateOrganisationActionFilter]
     [ValidateReturnCreatedActionFilter]

@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.AatfTaskList
 {
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
     public class FetchObligatedWeeeForReturnDataAccess : IFetchObligatedWeeeForReturnDataAccess
     {
         private readonly WeeeContext context;
@@ -33,7 +33,7 @@
 
         public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturn(Guid weeeSentOnId)
         {
-            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOnId == weeeSentOnId).ToListAsync();
+            return await context.WeeeSentOnAmount.Where(a => a.WeeeSentOn.Id == weeeSentOnId).ToListAsync();
         }
 
         public async Task<List<WeeeSentOnAmount>> FetchObligatedWeeeSentOnForReturnByReturn(Guid returnId)

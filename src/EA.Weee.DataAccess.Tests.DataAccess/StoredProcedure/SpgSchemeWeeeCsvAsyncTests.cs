@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Lookup;
-    using Domain.Obligation;
     using EA.Weee.Core.Shared;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
-    using Weee.Domain.Organisation;
     using Weee.Tests.Core.Model;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class SpgSchemeWeeeCsvAsyncTests
     {

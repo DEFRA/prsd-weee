@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Requests
 {
-    using System.Linq;
     using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.Requests;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using FluentAssertions;
+    using System.Linq;
     using Xunit;
 
     public class EditFacilityDetailsRequestCreatorTests
@@ -40,6 +40,8 @@
             result.Data.Size.Should().Be(AatfSize.Large);
             result.Data.FacilityType.Should().Be(viewModel.FacilityType);
             result.Data.ApprovalDate.Should().Be(viewModel.ApprovalDate.GetValueOrDefault());
+            result.Data.AatfSizeValue.Should().Be(viewModel.SizeValue);
+            result.Data.AatfStatusValue.Should().Be(viewModel.StatusValue);
         }
     }
 }

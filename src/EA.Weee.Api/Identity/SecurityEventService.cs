@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using System;
-    using System.Threading.Tasks;
     using IdentityServer3.Core.Events;
     using IdentityServer3.Core.Services;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// An implmentation of Identity Servers's IEventService interface which routes

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetActiveComplianceYears
 {
+    using DataAccess;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
 
     public class GetAatfReturnsActiveComplianceYearsDataAccess : IGetAatfReturnsActiveComplianceYearsDataAccess
     {
@@ -22,6 +22,15 @@
                     .Select(r => r.Quarter.Year)
                     .Distinct()
                     .OrderByDescending(year => year)
+                    .ToListAsync();
+        }
+
+        public async Task<List<int>> GetAatfAe()
+        {
+            return await context.Aatfs
+                    .Select(r => (int)r.ComplianceYear)
+                    .Distinct()
+                    .OrderBy(year => year)
                     .ToListAsync();
         }
     }

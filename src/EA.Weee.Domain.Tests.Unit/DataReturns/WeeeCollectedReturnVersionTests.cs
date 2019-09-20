@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using System;
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;

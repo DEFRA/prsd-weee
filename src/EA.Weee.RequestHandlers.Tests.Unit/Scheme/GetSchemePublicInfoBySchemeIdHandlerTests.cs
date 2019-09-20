@@ -1,19 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using DataAccess.DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Mapper;
-    using RequestHandlers.Scheme;
     using RequestHandlers.Scheme.GetSchemePublicInfo;
-    using RequestHandlers.Security;
     using Requests.Scheme;
-    using Weee.Tests.Core;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemePublicInfoBySchemeIdHandlerTests

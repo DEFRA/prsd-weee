@@ -5,40 +5,46 @@
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ObligatedSentOnValuesCopyPasteViewModel
 
 @{
-    ViewBag.Title = "Copy and Paste Obligated Sent On WEEE - GOV.UK";
+    var aatfName = Model.SiteName;
+
+    ViewBag.Title = "WEEE sent to " + aatfName + " for treatment - GOV.UK";
 }
 
-<section id="main-content">
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">WEEE sent to @Model.SiteName for treatment</h1>
-        </div>
-    </header>
-    <p class="govuk-body">
-        Provide tonnage to 3 decimal places for 14 categories. For example 1.238
-    </p>
-    <p class="govuk-body">
-        You can copy the WEEE in tonnes from an Excel spreadsheet
-    </p>
-    <p class="govuk-body">
-        Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
-    </p>
-    @using (Html.BeginRouteForm(AatfRedirect.AatfSchemeSelectedRoute, FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
+    <section id="main-content">
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">WEEE sent to @Model.SiteName for treatment</h1>
+            </div>
+        </header>
+        <p class="govuk-body">
+            Provide tonnage to 3 decimal places for 14 categories. For example 1.238
+        </p>
+        <p class="govuk-body">
+            You can copy the WEEE in tonnes from an Excel spreadsheet
+        </p>
+        <p class="govuk-body">
+            Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
+        </p>
+        @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.WeeeSentOnId)
+            @Html.HiddenFor(m => m.AatfId)
+            @Html.HiddenFor(m => m.SiteName)
+            @Html.HiddenFor(m => m.ReturnId)
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2c-entry">B2C (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s" id="b2c-entry">B2C (tonnes)</h2>
+                    <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2C values" id="B2cPastedValues" name="B2cPastedValues" style="height: 400px;" aria-labelledby="b2c-entry"></textarea>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <h2 class="govuk-heading-s" id="b2b-entry">B2B (tonnes)</h2>
+                    <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
+                </div>
             </div>
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="b2b-entry">B2B (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste B2B values" id="B2bPastedValues" name="B2bPastedValues" style="height: 400px;" aria-labelledby="b2b-entry"></textarea>
-            </div>
-        </div>
 
 
             <button type="submit" class="govuk-button" id="aatf-task-list">
@@ -47,5 +53,5 @@
             <div>
                 <a href="@(Url.UrlFor<ObligatedSentOnController>(u => u.Index(Model.ReturnId, Model.OrganisationId, Model.WeeeSentOnId, Model.AatfId, Model.SiteName)))">Cancel</a>
             </div>
-    }
-</section>
+        }
+    </section>

@@ -4,7 +4,7 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModelBase
 @{
     ViewBag.Title = "Edit PCS";
 }
@@ -26,34 +26,8 @@
 
     @Html.Gds().ValidationSummary()
 
-    if (Model.IsChangeableStatus)
-    {
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
-        @Html.Gds().LabelFor(m => m.SchemeName)
-        @Html.Gds().ValidationMessageFor(m => m.SchemeName)
-        @Html.Gds().TextBoxFor(m => m.SchemeName, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
-    </div>
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
-        @Html.Gds().LabelFor(m => m.ApprovalNumber)
-        @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
-        @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @class = "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
-    </div>
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
-        @Html.Gds().LabelFor(m => m.IbisCustomerReference, "(optional for SEPA, NIEA, NRW)")
-        @Html.Gds().ValidationMessageFor(m => m.IbisCustomerReference)
-        @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @class= "govuk-!-width-one-half", @maxlength = EnvironmentAgencyMaxFieldLengths.IbisBillingReference })
-    </div>
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ObligationType)">
-        @Html.Gds().LabelFor(m => m.ObligationType)
-        @Html.Gds().ValidationMessageFor(m => m.ObligationType)
-        @Html.Gds().DropDownListFor(m => m.ObligationType, Model.ObligationTypeSelectList, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
-    </div>
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
-        @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
-        @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
-        @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
-    </div>
-    }
+    @Html.Partial("_SchemeDetails")
+
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Status)">
         @Html.Gds().LabelFor(m => m.Status)
         @Html.Gds().ValidationMessageFor(m => m.Status)
@@ -75,9 +49,9 @@
         @(this.WeeeGds().Submit("Save and Continue"))
     }
     <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null)))">Back</a>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null, null)))">Back</a>
     </p>
-    }
+}
 
 
 @section scripts {
@@ -92,4 +66,4 @@
             }
         });
     </script>
-    }
+}

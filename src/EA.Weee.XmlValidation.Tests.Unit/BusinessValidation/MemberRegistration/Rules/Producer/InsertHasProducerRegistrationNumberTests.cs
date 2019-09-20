@@ -27,22 +27,22 @@
             Assert.Equal(ErrorLevel.Error, result.ErrorLevel);
         }
 
-         [Theory]
-         [InlineData(null, "TestCompany")]
-         [InlineData("", "TestCompany")]
-         public void Insert_RegistrationNumberIsNullOrEmpty_PassesValidation(string registrationNumber, string tradingName)
-         {
-             var producer = new producerType
-             {
-                 tradingName = tradingName,
-                 status = statusType.I,
-                 registrationNo = registrationNumber
-             };
+        [Theory]
+        [InlineData(null, "TestCompany")]
+        [InlineData("", "TestCompany")]
+        public void Insert_RegistrationNumberIsNullOrEmpty_PassesValidation(string registrationNumber, string tradingName)
+        {
+            var producer = new producerType
+            {
+                tradingName = tradingName,
+                status = statusType.I,
+                registrationNo = registrationNumber
+            };
 
-             var validationResult = Rule().Evaluate(producer);
+            var validationResult = Rule().Evaluate(producer);
 
-             Assert.True(validationResult.IsValid);
-         }
+            Assert.True(validationResult.IsValid);
+        }
 
         private InsertHasProducerRegistrationNumber Rule()
         {

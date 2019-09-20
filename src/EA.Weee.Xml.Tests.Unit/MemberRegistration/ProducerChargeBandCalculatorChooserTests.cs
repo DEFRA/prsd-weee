@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
+    using EA.Weee.Xml.MemberRegistration;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Lookup;
-    using EA.Weee.Xml.MemberRegistration;
-    using FakeItEasy;
     using Xunit;
     public class ProducerChargeBandCalculatorChooserTests
     {
@@ -18,7 +17,7 @@
 
             var calculators =
                 new List<IProducerChargeBandCalculator>() { producerChargeBandCalculator };
-            
+
             producerChargeBandCalculatorChooser = new ProducerChargeBandCalculatorChooser(calculators);
         }
 

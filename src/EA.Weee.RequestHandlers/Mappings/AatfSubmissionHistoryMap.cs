@@ -2,7 +2,6 @@
 {
     using Core.Admin.AatfReports;
     using Core.DataReturns;
-    using Core.Shared;
     using Domain.Admin.AatfReports;
     using Prsd.Core.Mapper;
 

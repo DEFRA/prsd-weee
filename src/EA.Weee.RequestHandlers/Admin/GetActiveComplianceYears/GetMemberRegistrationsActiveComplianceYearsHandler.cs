@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetActiveComplianceYears
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Prsd.Core.Mediator;
     using Requests.Admin.GetActiveComplianceYears;
     using Security;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     internal class GetMemberRegistrationsActiveComplianceYearsHandler : IRequestHandler<GetMemberRegistrationsActiveComplianceYears, List<int>>
     {

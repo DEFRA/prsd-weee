@@ -3,11 +3,7 @@
     using EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Domain;
     using FakeItEasy;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
     using Xml.MemberRegistration;

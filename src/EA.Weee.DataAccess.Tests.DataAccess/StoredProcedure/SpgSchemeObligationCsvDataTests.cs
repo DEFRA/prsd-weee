@@ -448,7 +448,7 @@
 
                 var memberUpload2001s2 = helper.CreateSubmittedMemberUpload(scheme2);
                 memberUpload2001s2.ComplianceYear = 2001;
-                 helper.CreateProducerAsCompany(memberUpload2001s2, "PRN123", "B2B");
+                helper.CreateProducerAsCompany(memberUpload2001s2, "PRN123", "B2B");
 
                 db.Model.SaveChanges();
 

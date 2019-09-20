@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Test
 {
-    using System;
     using Prsd.Core.Mediator;
+    using System;
 
     public class UpdatePcsSubmissionWindowSettings : IRequest<bool>
     {

@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.Returns.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using Core.Shared;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class TonnageUtilitiesTests
@@ -79,7 +78,7 @@
         [Fact]
         public void SumTotals_GivenNullValues_EmptyTonnageShouldBeReturned()
         {
-            var result = tonnageUtilities.SumTotals(new List<decimal?>() {null, null});
+            var result = tonnageUtilities.SumTotals(new List<decimal?>() { null, null });
 
             result.Should().Be("-");
         }

@@ -2,13 +2,14 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteSummaryListViewModel
 @{
-    ViewBag.Title = "Reused WEEE - GOV.UK";
+    var title = "WEEE reused as a whole appliance";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 <section id="main-content">
     <header class="hgroup">
         <div>
-            <h1 class="govuk-heading-l">WEEE reused as a whole appliance</h1>
+            <h1 class="govuk-heading-l">@title</h1>
         </div>
     </header>
 
@@ -17,12 +18,12 @@
     </p>
 
     <div class="govuk-table">
-        <div class="govuk-grid-column-one-half" id="weee-data-entry-table">
+        <div class="govuk-grid-column-one-half weee-data-entry-table">
             <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                <div class="govuk-grid-column-one-third" style="word-break:break-word">
+                <div class="govuk-grid-column-one-third" style="word-break:break-all">
                     B2C (tonnes)
                 </div>
-                <div class="govuk-grid-column-one-third" style="word-break:break-word">
+                <div class="govuk-grid-column-one-third" style="word-break:break-all">
                     B2B (tonnes)
                 </div>
                 <div class="govuk-grid-column-one-third">

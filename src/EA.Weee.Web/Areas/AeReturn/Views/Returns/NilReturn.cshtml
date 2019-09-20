@@ -4,7 +4,8 @@
 @using EA.Weee.Web.Areas.AeReturn.Controllers
 @model EA.Weee.Web.ViewModels.Returns.SubmittedReturnViewModel
 @{
-    ViewBag.Title = "Confirm no whole WEEE exported - GOV.UK";
+    var period = Model.Period;
+    ViewBag.Title = "You have stated that no whole WEEE has been exported in " + period + " - GOV.UK";
 }
 
 <section id="main-content">

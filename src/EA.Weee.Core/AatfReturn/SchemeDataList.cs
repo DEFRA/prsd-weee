@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System.Collections.Generic;
     using Core.Scheme;
     using Organisations;
     using Prsd.Core;
+    using System.Collections.Generic;
 
     public class SchemeDataList
     {

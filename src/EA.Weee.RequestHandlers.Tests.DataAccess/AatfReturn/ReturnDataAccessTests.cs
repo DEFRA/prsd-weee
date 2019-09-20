@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.DataReturns;
-    using Domain.User;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -127,7 +124,7 @@
         }
 
         private Return CreateReturn(DatabaseWrapper database, Organisation organisation)
-        { 
+        {
             var quarter = new Quarter(2019, QuarterType.Q1);
 
             return new Domain.AatfReturn.Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);

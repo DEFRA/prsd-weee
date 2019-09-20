@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Producer;
+    using System.Threading.Tasks;
 
     public interface IDataReturnVersionBuilderDataAccess
     {

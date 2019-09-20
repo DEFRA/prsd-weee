@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.DataReturns;
     using Domain.DataReturns;
     using Domain.Error;
     using EA.Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using QuarterType = EA.Weee.Core.DataReturns.QuarterType;
     using Request = EA.Weee.Requests.DataReturns.FetchDataReturnForSubmission;
 

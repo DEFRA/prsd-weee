@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using Lookup;
     using Obligation;
     using Prsd.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public class WeeeDeliveredAmount : ReturnItem, IEquatable<WeeeDeliveredAmount>
     {

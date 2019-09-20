@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.AatfReturn
 {
+    using Domain.AatfReturn;
+    using FluentAssertions;
+    using RequestHandlers.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
-    using FluentAssertions;
-    using RequestHandlers.AatfReturn;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -39,7 +39,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                await dataAccess.RemoveReturnScheme(new List<Guid>() {scheme.Id}, @return.Id);
+                await dataAccess.RemoveReturnScheme(new List<Guid>() { scheme.Id }, @return.Id);
 
                 database.WeeeContext.ReturnScheme.Count(r => r.SchemeId == scheme.Id).Should().Be(0);
                 database.WeeeContext.WeeeReceived.Count(r => r.SchemeId == scheme.Id).Should().Be(0);

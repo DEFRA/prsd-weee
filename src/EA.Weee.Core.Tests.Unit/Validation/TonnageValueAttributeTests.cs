@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
+    using Core.Validation;
+    using DataReturns;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Core.Validation;
-    using DataReturns;
-    using FluentAssertions;
     using Xunit;
 
     public class TonnageValueAttributeTests

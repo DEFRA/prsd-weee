@@ -71,8 +71,11 @@
             bundles.Add(new StyleBundle("~/Content/remove-site").Include(
                 "~/Content/remove-site.css"));
 
-            bundles.Add(new StyleBundle("~/Content/weee-returns-mobile").Include(
-                "~/Content/weee-returns-mobile.css"));
+            bundles.Add(new StyleBundle("~/Content/weee-returns-aatf-mobile").Include(
+                "~/Content/weee-returns-aatf-mobile.css"));
+
+            bundles.Add(new StyleBundle("~/Content/weee-returns-ae-mobile").Include(
+                "~/Content/weee-returns-ae-mobile.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

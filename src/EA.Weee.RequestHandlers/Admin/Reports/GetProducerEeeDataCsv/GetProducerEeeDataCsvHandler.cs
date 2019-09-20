@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetProducerEeeDataCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
-    using DataAccess;
     using DataAccess.StoredProcedure;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetProducerEeeDataCsvHandler : IRequestHandler<GetProducerEeeDataCsv, CSVFileData>
     {
@@ -79,10 +78,10 @@
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer country", i => i.ProducerCountry);
-           
+
             string totalEEEtitle = string.Format("Total EEE {0} (t)", obligationType);
             csvWriter.DefineColumn(totalEEEtitle, i => i.TotalTonnage);
-            
+
             foreach (int category in Enumerable.Range(1, 14))
             {
                 foreach (int quarterType in Enumerable.Range(1, 4))
@@ -105,7 +104,7 @@
 
                 case ObligationType.B2C:
                     return "B2C";
-                
+
                 default:
                     throw new NotSupportedException();
             }

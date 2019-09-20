@@ -3,7 +3,8 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SelectReportOptionsViewModel
 @{
-    ViewBag.Title = "AATF return reporting options - GOV.UK";
+    var title = "What do you need to report for " + @Model.Year + " " + @Model.Period + "?";
+    ViewBag.Title = title + " - GOV.UK";
     var message = string.Empty;
 }
 
@@ -15,7 +16,7 @@
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">  
                     <h1 class="govuk-heading-l">
-                        What do you need to report for @Model.Year @Model.Period?
+                        @title
                     </h1>              
                 <p id="all-apply-hint">
                     Select all that apply
@@ -25,11 +26,12 @@
                     {
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].AlternativeDescription)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Description)
+                        @Html.HiddenFor(m => m.ReportOnQuestions[i].Title)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Question)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].ParentId)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].Id)
                         @Html.HiddenFor(m => m.ReportOnQuestions[i].OriginalSelected)
-                        @Html.HiddenFor(m => m.HasSelectedOptions)
+                        @Html.HiddenFor(m => m.HasSelectedOptions, new { id = i + "_HasSelectedOptions" })
 
                         if (!Model.ReportOnQuestions.Select(x => x.Id).Contains(Model.ReportOnQuestions[i].ParentId ?? default(int)))
                         {
@@ -39,25 +41,10 @@
                                 }
                                 <input type="checkbox" name="ReportOnQuestions[@i].Selected" value="true" class="govuk-checkboxes__input" id="Option-@Model.ReportOnQuestions[i].Id" @selectedOption />
                                 <label class="govuk-label govuk-checkboxes__label govuk-!-font-size-24" for="Option-@Model.ReportOnQuestions[i].Id">
-                                    @Model.ReportOnQuestions[i].Description
+                                    @Model.ReportOnQuestions[i].Title
                                     <br />
                                     <span class="govuk-body govuk-!-font-size-16" style="padding-top: 10px">
-                                        @switch (i)
-                                        {
-                                            case 0:
-                                                message = "This is WEEE from designated collection facilities (DCFs), distributors and final holders which a PCS has arranged for you to treat";
-                                                break;
-                                            case 1:
-                                                message = "This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere";
-                                                break;
-                                            case 2:
-                                                message = "This is WEEE that has been refurbished or repaired to the point it is no longer waste";
-                                                break;
-                                            case 3:
-                                                message = "This is WEEE that you received at your AATF(s) other than from or on behalf of a PCS. It should not include WEEE that has already been reported by another AATF(s).";
-                                                break;
-                                        }
-                                        @message
+                                        @Model.ReportOnQuestions[i].Description
                                     </span>
                                 </label>
                             </div>
@@ -70,22 +57,22 @@
 
                             <div id="dcfSection" class="dcf-section @errorClass">
                                 <h2 class="govuk-heading-m govuk-!-font-size-24 govuk-!-font-weight-regular">
-                                    @Model.ReportOnQuestions[i].Description?
+                                    @Model.ReportOnQuestions[i].Title
                                 </h2>
                                 <p class="govuk-body govuk-!-font-size-16">
-                                    This is WEEE that a local authority who is a DCF operator (for example at a civic amenity site / household waste collection site) has been allowed to keep / retain under regulation 53 and has sent to you for treatment
+                                    @Model.ReportOnQuestions[i].Description
                                 </p>
                                 <div class="govuk-form-group" id="WeeeReusedOptions">
                                     <fieldset class="govuk-fieldset inline">
                                         <legend class="govuk-visually-hidden">Confirm if this WEEE has been been sent to you from a DCF operator</legend>
                                         <div class="govuk-radios govuk-radios--inline">
                                             <div class="govuk-radios__item">
-                                                <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes" @yesSelectedOption>
+                                                <input id="possibleValues_0_" name="possibleValues[0]" type="hidden" value="Yes">
                                                 <input class="govuk-radios__input" id="DcfSelectedValue-0" name="DcfSelectedValue" type="radio" value="Yes" @yesSelectedOption>
                                                 <label for="DcfSelectedValue-0" class="govuk-label govuk-radios__label">Yes</label>
                                             </div>
                                             <div class="govuk-radios__item">
-                                                <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No" @noSelectedOption>
+                                                <input id="possibleValues_1_" name="possibleValues[1]" type="hidden" value="No">
                                                 <input class="govuk-radios__input" id="DcfSelectedValue-1" name="DcfSelectedValue" type="radio" value="No" @noSelectedOption>
                                                 <label for="DcfSelectedValue-1" class="govuk-label govuk-radios__label">No</label>
                                             </div>

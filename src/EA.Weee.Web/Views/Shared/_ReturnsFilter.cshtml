@@ -1,0 +1,40 @@
+﻿@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.Returns.ReturnsViewModel
+
+@{
+    var form = ViewData["form"] as string;
+}
+
+@using (Html.BeginRouteForm(form, FormMethod.Get, new {id = "ReturnsQueryParameterForm"}))
+{
+    <div class="govuk-grid-column-full">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">
+                    select compliance year and quarter
+            </legend>
+            <div class="govuk-grid-row">
+
+                <div class="govuk-form-group govuk-!-width-one-half govuk-!-display-inline @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+                    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear, new { @for="ReturnsExternalSelectedComplianceYear" }):&nbsp;&nbsp;</span>
+                    @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+                    <span class="text-margin">
+                        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new {@class = "govuk-!-width-one-quarter", id = "ReturnsExternalSelectedComplianceYear"})
+                    </span>
+                </div>
+
+                <div class="govuk-form-group  govuk-!-width-one-half govuk-!-display-inline @Html.Gds().FormGroupClass(m => m.SelectedQuarter)">
+                    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedQuarter, new { @for="ReturnsExternalSelectedQuarter" }):</span>
+                    @Html.Gds().ValidationMessageFor(m => m.SelectedQuarter)
+                    <span class="text-margin">
+                        @Html.Gds().DropDownListFor(m => m.SelectedQuarter, new SelectList(Model.QuarterList), new {@class = "govuk-!-width-one-quarter", id = "ReturnsExternalSelectedQuarter"})
+                    </span>
+                </div>
+                <noscript>
+                    <button class="govuk-button" type="submit">Filter</button>
+                </noscript>
+                <div class="govuk-!-padding-bottom-5"></div>
+            </div>
+        </fieldset>
+    </div>
+}

@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Principal;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Infrastructure;
@@ -14,6 +8,12 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Principal;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.NewUser;
 
     [Authorize]
@@ -91,7 +91,7 @@
                         {
                             throw;
                         }
-                      
+
                         foreach (var modelState in ViewData.ModelState.Values.ToList())
                         {
                             List<int> errorsToRemoveIndex = new List<int>();
@@ -114,7 +114,7 @@
                             }
                             foreach (string error in errorsToAdd)
                             {
-                               modelState.Errors.Add(error);
+                                modelState.Errors.Add(error);
                             }
                         }
                     }
@@ -157,8 +157,8 @@
 
             var collection = new List<string>
             {
-                FeedbackOptions.VerySatisfied, 
-                FeedbackOptions.Satisfied, 
+                FeedbackOptions.VerySatisfied,
+                FeedbackOptions.Satisfied,
                 FeedbackOptions.NeitherSatisfiedOrDissatisfied,
                 FeedbackOptions.Dissatisfied,
                 FeedbackOptions.VeryDissatisfied

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
@@ -26,14 +25,9 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            Aatf existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber);
+            var existing = await dataAccess.FetchByApprovalNumber(message.ApprovalNumber, message.ComplianceYear);
 
-            if (existing == null)
-            {
-                return false;
-            }
-
-            return true;
+            return existing != null;
         }
     }
 }

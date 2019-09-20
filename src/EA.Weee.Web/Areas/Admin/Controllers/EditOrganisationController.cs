@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -18,7 +15,10 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class EditOrganisationController : AdminController
     {
@@ -60,7 +60,7 @@
                 };
 
                 model.BusinessAddress.Countries = countries;
-                
+
                 return View(model);
             }
         }
@@ -263,7 +263,7 @@
 
         private RedirectToRouteResult RedirectScheme(Guid schemeId)
         {
-            return RedirectToAction("Overview", "Scheme", new { schemeId = schemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
+            return RedirectToAction("Overview", "Scheme", new {schemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
         }
 
         private ActionResult RedirectToAatf(Guid aatfId)

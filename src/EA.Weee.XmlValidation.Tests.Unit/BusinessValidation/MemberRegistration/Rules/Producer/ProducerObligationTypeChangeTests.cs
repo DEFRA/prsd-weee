@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.Shared;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Domain.DataReturns;
-    using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
     using Xml.MemberRegistration;
-    using XmlValidation.BusinessValidation;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer;
     using Xunit;

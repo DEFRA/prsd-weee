@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.Shared;
     using QuerySets;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xml.MemberRegistration;
-    using ObligationType = Domain.Obligation.ObligationType;
 
     public class ProducerObligationTypeChange : IProducerObligationTypeChange
     {

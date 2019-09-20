@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Organisations
 {
-    using System;
-    using System.Linq;
     using EA.Weee.Core.Organisations;
     using FluentAssertions;
+    using System;
+    using System.Linq;
     using Xunit;
 
     public class OrganisationDataTests

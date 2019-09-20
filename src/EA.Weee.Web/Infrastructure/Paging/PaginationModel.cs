@@ -35,7 +35,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
         public int TotalItemCount { get; internal set; }
 
         public IList<PaginationLink> PaginationLinks { get; private set; }
-        
+
         public PagerOptions Options { get; internal set; }
 
         public PaginationModel()

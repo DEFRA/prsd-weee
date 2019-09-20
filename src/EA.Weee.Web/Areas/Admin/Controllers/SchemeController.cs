@@ -1,33 +1,41 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Security;
+    using EA.Weee.Web.Areas.Admin.Controllers.Attributes;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Filters;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using Mappings.ToViewModel;
     using ViewModels.Scheme;
     using ViewModels.Scheme.Overview;
     using ViewModels.Scheme.Overview.ContactDetails;
     using ViewModels.Scheme.Overview.MembersData;
     using ViewModels.Scheme.Overview.OrganisationDetails;
     using ViewModels.Scheme.Overview.PcsDetails;
+    using ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
+    using Weee.Requests.Admin;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
+    using GetSchemes = Weee.Requests.Scheme.GetSchemes;
 
     public class SchemeController : AdminController
     {
@@ -44,11 +52,18 @@
             this.mapper = mapper;
         }
 
+        private bool IsUserInternalAdmin()
+        {
+            var claimsPrincipal = new ClaimsPrincipal(this.User);
+
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+        }
+
         [HttpGet]
         public async Task<ActionResult> ManageSchemes()
         {
-            await SetBreadcrumb(null);
-            return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
+            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+            return View(new ManageSchemesViewModel { Schemes = await GetSchemes(), CanAddPcs = IsUserInternalAdmin() });
         }
 
         [HttpPost]
@@ -57,8 +72,8 @@
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(null);
-                return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
+                await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                return View(new ManageSchemesViewModel { Schemes = await GetSchemes(), CanAddPcs = IsUserInternalAdmin() });
             }
 
             return RedirectToAction("Overview", new { schemeId = viewModel.Selected.Value });
@@ -73,9 +88,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null)
+        public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null, string clickedTab = null)
         {
-            await SetBreadcrumb(schemeId);
+            await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
 
             if (overviewDisplayOption == null)
             {
@@ -85,6 +100,10 @@
             using (var client = apiClient())
             {
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                var associatedAatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfsByOrganisationId(scheme.OrganisationId));
+
+                var associatedSchemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesByOrganisationId(scheme.OrganisationId));
 
                 switch (overviewDisplayOption.Value)
                 {
@@ -96,7 +115,11 @@
                     case OverviewDisplayOption.OrganisationDetails:
 
                         var orgDetails = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
-                       
+                        var associatedEntities = mapper.Map<AssociatedEntitiesViewModel>(new AssociatedEntitiesViewModelTransfer()
+                        {
+                            AssociatedAatfs = associatedAatfs, AssociatedSchemes = associatedSchemes, SchemeId = schemeId
+                        });
+
                         switch (orgDetails.OrganisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
@@ -104,6 +127,7 @@
                                 soleTraderModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 soleTraderModel.SchemeId = schemeId;
                                 soleTraderModel.SchemeName = scheme.SchemeName;
+                                soleTraderModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/SoleTraderDetailsOverview", soleTraderModel);
 
                             case OrganisationType.Partnership:
@@ -111,6 +135,7 @@
                                 partnershipModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 partnershipModel.SchemeId = schemeId;
                                 partnershipModel.SchemeName = scheme.SchemeName;
+                                partnershipModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/PartnershipDetailsOverview", partnershipModel);
 
                             case OrganisationType.RegisteredCompany:
@@ -119,6 +144,7 @@
                                 registeredCompanyModel.CanEditOrganisation = orgDetails.CanEditOrganisation;
                                 registeredCompanyModel.SchemeId = schemeId;
                                 registeredCompanyModel.SchemeName = scheme.SchemeName;
+                                registeredCompanyModel.AssociatedEntities = associatedEntities;
                                 return View("Overview/RegisteredCompanyDetailsOverview", registeredCompanyModel);
                         }
 
@@ -137,6 +163,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> EditScheme(Guid? schemeId)
         {
             if (schemeId.HasValue)
@@ -152,7 +179,7 @@
 
                     List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(scheme.OrganisationId));
 
-                    var model = new SchemeViewModel
+                    var model = new SchemeViewModelBase
                     {
                         CompetentAuthorities = await GetCompetentAuthorities(),
                         ApprovalNumber = scheme.ApprovalName,
@@ -169,7 +196,7 @@
 
                     model.StatusSelectList = new SelectList(GetStatuses(scheme.SchemeStatus), "Key", "Value");
 
-                    await SetBreadcrumb(schemeId);
+                    await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                     return View(model);
                 }
             }
@@ -195,7 +222,7 @@
             return statuses;
         }
 
-        private async Task<SchemeViewModel> SetSchemeStatusAndCompetentAuthorities(Guid schemeId, SchemeViewModel model)
+        private async Task<SchemeViewModelBase> SetSchemeStatusAndCompetentAuthorities(Guid schemeId, SchemeViewModelBase model)
         {
             using (var client = apiClient())
             {
@@ -209,7 +236,8 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModel model)
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModelBase model)
         {
             if (model.Status == SchemeStatus.Rejected)
             {
@@ -224,13 +252,13 @@
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
-            {   
+            {
                 model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
-                await SetBreadcrumb(schemeId);
+                await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                 return View(model);
             }
 
-            UpdateSchemeInformationResult result;
+            CreateOrUpdateSchemeInformationResult result;
             using (var client = apiClient())
             {
                 UpdateSchemeInformation request = new UpdateSchemeInformation(
@@ -250,42 +278,153 @@
 
             switch (result.Result)
             {
-                case UpdateSchemeInformationResult.ResultType.Success:
+                case CreateOrUpdateSchemeInformationResult.ResultType.Success:
                     return RedirectToAction("Overview", new { schemeId });
 
-                case UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
+                case CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
-                        ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
-                        
-                        await SetBreadcrumb(schemeId);
+                        ModelState.AddModelError("ApprovalNumber", "Approval number already exists");
+
+                        await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                         model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                         return View(model);
                     }
 
-                case UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
+                case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
                     {
                         string errorMessage = string.Format(
-                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2}).",
+                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2})",
                             result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference,
                             result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName,
                             result.IbisCustomerReferenceUniquenessFailure.OtherSchemeApprovalNumber);
 
                         ModelState.AddModelError("IbisCustomerReference", errorMessage);
 
-                        await SetBreadcrumb(schemeId);
+                        await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                         model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                         return View(model);
                     }
 
-                case UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
-                    ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference.");
+                case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
+                    ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference");
 
-                    await SetBreadcrumb(schemeId);
+                    await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                     model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
                     return View(model);
 
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateOrganisationHasNoSchemeFilterAttribute]
+        public async Task<ActionResult> AddScheme(Guid organisationId)
+        {
+            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+            using (var client = apiClient())
+            {
+                AddSchemeViewModel viewModel = new AddSchemeViewModel()
+                {
+                    CompetentAuthorities = await GetCompetentAuthorities(),
+                    ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(organisationId)),
+                    OrganisationId = organisationId,
+                    OrganisationName = (await cache.FetchOrganisationName(organisationId)),
+                    IsChangeableStatus = true,
+                    OrganisationAddress = new AddressData()
+                };
+
+                viewModel.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public async Task<ActionResult> AddScheme(AddSchemeViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.CompetentAuthorities = await GetCompetentAuthorities();
+                    model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
+                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                    await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                    return View(model);
+                }
+
+                CreateScheme request = new CreateScheme(
+                    model.OrganisationId,
+                    model.SchemeName,
+                    model.ApprovalNumber,
+                    model.IbisCustomerReference,
+                    model.ObligationType.Value,
+                    model.CompetentAuthorityId,
+                    SchemeStatus.Approved);
+
+                CreateOrUpdateSchemeInformationResult result = await client.SendAsync(User.GetAccessToken(), request);
+
+                await cache.InvalidateOrganisationSearch();
+
+                switch (result.Result)
+                {
+                    case CreateOrUpdateSchemeInformationResult.ResultType.Success:
+
+                        SchemeData orgData = new SchemeData()
+                        {
+                            OrganisationId = model.OrganisationId,
+                            Contact = model.Contact,
+                            Address = model.OrganisationAddress,
+                        };
+
+                        await client.SendAsync(User.GetAccessToken(), new UpdateSchemeContactDetails(orgData));
+
+                        return RedirectToAction("ManageSchemes");
+
+                    case CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
+                        {
+                            ModelState.AddModelError("ApprovalNumber", "Approval number already exists");
+
+                            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                            model.CompetentAuthorities = await GetCompetentAuthorities();
+                            model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
+                            model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                            return View(model);
+                        }
+
+                    case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
+                        {
+                            string errorMessage = string.Format(
+                                "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2})",
+                                result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference,
+                                result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName,
+                                result.IbisCustomerReferenceUniquenessFailure.OtherSchemeApprovalNumber);
+
+                            ModelState.AddModelError("IbisCustomerReference", errorMessage);
+
+                            await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                            model.CompetentAuthorities = await GetCompetentAuthorities();
+                            model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
+                            model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                            return View(model);
+                        }
+
+                    case CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure:
+                        ModelState.AddModelError("IbisCustomerReference", "Enter a customer billing reference");
+
+                        await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
+                        model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                        return View(model);
+
+                    default:
+                        throw new NotSupportedException();
+                }
             }
         }
 
@@ -320,7 +459,7 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid schemeId, Guid orgId)
         {
-            await SetBreadcrumb(schemeId);
+            await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
 
             var model = new ManageContactDetailsViewModel();
             using (var client = apiClient())
@@ -330,7 +469,7 @@
                 {
                     return new HttpForbiddenResult();
                 }
-                
+
                 var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
                 model.OrganisationAddress = scheme.Address;
@@ -347,7 +486,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(ManageContactDetailsViewModel model)
         {
-            await SetBreadcrumb(model.SchemeId);
+            await SetBreadcrumb(model.SchemeId, InternalUserActivity.ManageScheme);
 
             if (!ModelState.IsValid)
             {
@@ -375,7 +514,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewOrganisationDetails(Guid schemeId, Guid orgId)
         {
-            await SetBreadcrumb(schemeId);
+            await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
 
             using (var client = apiClient())
             {
@@ -402,7 +541,7 @@
         public async Task<ActionResult> ConfirmRejection(Guid schemeId)
         {
             var model = new ConfirmRejectionViewModel();
-            await SetBreadcrumb(schemeId);
+            await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
             return View(model);
         }
 
@@ -412,7 +551,7 @@
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(schemeId);
+                await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                 return View(model);
             }
 
@@ -437,7 +576,7 @@
         public async Task<ActionResult> ConfirmWithdrawn(Guid schemeId)
         {
             var model = new ConfirmWithdrawnViewModel();
-            await SetBreadcrumb(schemeId);
+            await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
             return View(model);
         }
 
@@ -447,7 +586,7 @@
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(schemeId);
+                await SetBreadcrumb(schemeId, InternalUserActivity.ManageScheme);
                 return View(model);
             }
 
@@ -468,9 +607,9 @@
             return RedirectToAction("ManageSchemes");
         }
 
-        private async Task SetBreadcrumb(Guid? schemeId)
+        private async Task SetBreadcrumb(Guid? schemeId, string activity)
         {
-            breadcrumb.InternalActivity = "Manage PCSs";
+            breadcrumb.InternalActivity = activity;
 
             if (schemeId.HasValue)
             {

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Shared;
     using Web.Areas.Admin.ViewModels.Scheme;
     using Xunit;
 
@@ -44,9 +44,9 @@
             Assert.True(isValid);
         }
 
-        private SchemeViewModel ValidSchemeViewModel()
+        private SchemeViewModelBase ValidSchemeViewModel()
         {
-            return new SchemeViewModel
+            return new SchemeViewModelBase
             {
                 ApprovalNumber = "WEE/AA0123AA/SCH",
                 CompetentAuthorities = new List<UKCompetentAuthorityData>(),

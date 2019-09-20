@@ -16,7 +16,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, new { organisationId = Model.OrganisationId }))
+                @using (Html.BeginForm("Index", "Returns", FormMethod.Post, null))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.OrganisationId)
@@ -30,10 +30,10 @@
 
                 <div>
                     @this.WeeeGds().CreateProgressiveDisclosure("I need to submit a return for a different quarter",
-                   "If you want to start a different return other than the one available, contact your environmental regulator",
-                   "Hidden content",
-                   "Progressive disclosure",
-                   "I need to submit a return for a different quarter (AE)")
+                        "If you want to start a different return other than the one available, contact your environmental regulator",
+                        "Hidden content",
+                        "Progressive disclosure",
+                        "I need to submit a return for a different quarter (AE)")
                 </div>
             </div>
         </div>
@@ -45,51 +45,60 @@
         </p>
     }
 
-    @if (Model.Returns.Count > 0)
+    @if (Model.NumberOfReturns > 0)
     {
+        @Html.Partial("_ReturnsFilter", Model, new ViewDataDictionary { { "form", AeRedirect.ReturnsRouteName } })
 
-
-        <table class="govuk-table prsd-table-collapse">
-            <caption class="govuk-table__caption govuk-visually-hidden">Manage AE returns</caption>
-            <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
-                    <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body prsd-table-collapse">
-
-                @for (var returnCount = 0; returnCount < Model.Returns.Count; returnCount++)
-                {
-                    var item = Model.Returns[returnCount];
-
-                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
-                        <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
-                            @{
-                                if (item.ReturnsListDisplayOptions.DisplayContinue)
-                                {
-                                    @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
-                                }
-                            }
-                        </td>
+        if (Model.Returns.Count > 0)
+        {
+            <table class="govuk-table prsd-table-collapse">
+                <caption class="govuk-table__caption govuk-visually-hidden">Manage AE returns</caption>
+                <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
+                    <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Year</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Quarter</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Created by</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted date (GMT)</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Submitted by</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col">Status</th>
+                        <th class="govuk-table__header prsd-table-collapse" scope="col"><span class="govuk-visually-hidden">Continue / edit</span></th>
                     </tr>
-                }
+                </thead>
+                <tbody class="govuk-table__body prsd-table-collapse">
 
-            </tbody>
-        </table>
+                    @for (var returnCount = 0; returnCount < Model.Returns.Count; returnCount++)
+                    {
+                        var item = Model.Returns[returnCount];
+
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Year</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.Quarter</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.CreatedBy</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedDate</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.SubmittedBy</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">@item.ReturnViewModel.ReturnStatus.ToDisplayString()</td>
+                            <td class="govuk-table__cell prsd-table-collapse prsd-table-collapse-cell">
+                                @{
+                                    if (item.ReturnsListDisplayOptions.DisplayContinue)
+                                    {
+                                        @Html.ActionLink("Continue", "ExportedWholeWeee", "Returns", new { organisationId = @Model.OrganisationId, returnId = item.ReturnViewModel.ReturnId }, null)
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>
+                There are no AE returns for the selected compliance year and reporting quarter
+            </p>
+        }
     }
-    else if (Model.NotStartedAnySubmissionsYet)
+    else
     {
         <p>
             You have not yet started any AE returns
@@ -98,33 +107,7 @@
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId }, new { title = "Perform another activity page navigation" })
     </p>
-    <style type="text/css">
-
-        @@media only screen and (max-width: 1020px) {
-            td:nth-of-type(1):before {
-                content: "Year";
-            }
-
-            td:nth-of-type(2):before {
-                content: "Quarter";
-            }
-
-            td:nth-of-type(3):before {
-                content: "Created by";
-            }
-
-            td:nth-of-type(4):before {
-                content: "Submitted date (GMT)";
-            }
-
-            td:nth-of-type(5):before {
-                content: "Submitted by";
-            }
-
-            td:nth-of-type(6):before {
-                content: "Status";
-            }
-        }
-    </style>
 
 </section>
+
+@Styles.Render("~/Content/weee-returns-ae-mobile")

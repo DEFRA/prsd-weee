@@ -1,29 +1,47 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
+    using Core.AatfReturn;
+    using Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Tests.Core;
+    using FakeItEasy;
+    using FluentAssertions;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
+    using RequestHandlers.AatfReturn.Specification;
+    using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.AatfReturn;
-    using Domain.AatfReturn;
-    using FakeItEasy;
-    using FluentAssertions;
-    using RequestHandlers.AatfReturn.Specification;
-    using Requests.AatfReturn;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfInfoByOrganisationRequestHandlerTests
     {
-        private readonly GetAatfInfoByOrganisationRequestHandler handler;
+        private GetAatfInfoByOrganisationRequestHandler handler;
         private readonly IMap<Aatf, AatfData> mapper;
         private readonly IGenericDataAccess dataAccess;
+        private readonly IWeeeAuthorization authorization;
 
         public GetAatfInfoByOrganisationRequestHandlerTests()
         {
             mapper = A.Fake<IMap<Aatf, AatfData>>();
             dataAccess = A.Fake<IGenericDataAccess>();
-            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, dataAccess);
+            authorization = A.Fake<IWeeeAuthorization>();
+            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, dataAccess, authorization);
+        }
+
+        [Fact]
+        public async void HandleAsync_NoOrganisationOrInternalAccess_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
+
+            handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<Aatf, AatfData>>(), A.Fake<IGenericDataAccess>(), authorization);
+
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
+
+            await action.Should().ThrowAsync<SecurityException>();
         }
 
         [Fact]

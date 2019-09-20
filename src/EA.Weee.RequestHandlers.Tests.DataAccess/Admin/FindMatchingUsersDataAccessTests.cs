@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
     using Core.Helpers;
     using Domain.User;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.User;
     using RequestHandlers.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;

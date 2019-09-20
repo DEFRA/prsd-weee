@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.GenerateDomainObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Linq;
     using Domain;
     using Domain.Error;
     using Domain.Scheme;
@@ -10,6 +7,9 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;
@@ -98,7 +98,7 @@
             Assert.Equal(scheme, result.Scheme);
             Assert.Equal("File name", result.FileName);
         }
-        
+
         [Theory]
         [InlineData(countryType.UKENGLAND, "UK - ENGLAND")]
         [InlineData(countryType.ISLEOFMAN, "ISLE OF MAN")]
@@ -359,10 +359,10 @@
         {
             var authorisedRepresentative = new authorisedRepresentativeType()
             {
-                 overseasProducer = new overseasProducerType()
-                 {
-                      overseasProducerName = "Test overseas producer"
-                 }
+                overseasProducer = new overseasProducerType()
+                {
+                    overseasProducerName = "Test overseas producer"
+                }
             };
 
             var builder = new GenerateFromXmlBuilder();

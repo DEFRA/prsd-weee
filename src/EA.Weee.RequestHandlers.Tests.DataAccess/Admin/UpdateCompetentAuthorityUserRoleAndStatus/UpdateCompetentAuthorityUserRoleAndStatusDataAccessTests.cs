@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain.User;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

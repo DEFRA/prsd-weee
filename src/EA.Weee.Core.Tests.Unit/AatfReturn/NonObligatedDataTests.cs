@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Core.AatfReturn;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class NonObligatedDataTests

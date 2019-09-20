@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
 
     public static class AsyncHelpers
     {
@@ -33,7 +31,7 @@
             synch.BeginMessageLoop();
             SynchronizationContext.SetSynchronizationContext(oldContext);
         }
-       
+
         public static T RunSync<T>(Func<Task<T>> task)
         {
             var oldContext = SynchronizationContext.Current;

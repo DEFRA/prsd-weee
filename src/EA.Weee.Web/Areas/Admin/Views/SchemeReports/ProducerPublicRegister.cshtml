@@ -1,0 +1,50 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.ProducerPublicRegisterViewModel
+@{
+    ViewBag.Title = "Producer Public Register";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Download producer public register</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Your report will contain the latest details registered for each producer within the chosen compliance year.</p>
+
+        <p>Your results will be provided as a CSV file download.</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+        <p>
+            If there are a large number of producers for your selected criteria, it may take a while to download your results
+        </p>
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+           "Report download", "Producer public register", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerPublicRegisterCsv", new { complianceYear = Model.SelectedYear }))";
+        </script>
+    }
+}

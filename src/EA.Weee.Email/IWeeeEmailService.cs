@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Email
 {
-    using System.Threading.Tasks;
     using Domain.Organisation;
+    using System.Threading.Tasks;
+
+    using EA.Weee.Core.Shared;
 
     public interface IWeeeEmailService
     {
@@ -11,7 +13,7 @@
 
         Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName, string userName);
 
-        Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
+        Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser, bool activeUsers);
 
         Task<bool> SendSchemeMemberSubmitted(string emailAddress, string schemeName, int complianceYear, int numberOfWarnings);
 
@@ -21,7 +23,7 @@
 
         Task<bool> SendTestEmail(string emailAddress);
 
-        Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string schemeName);
+        Task<bool> SendOrganisationContactDetailsChanged(string emailAddress, string name, EntityType entityType);
 
         Task<bool> SendOrganisationUserRequestToEA(string emailAddress, string organisationName, string userName);
     }

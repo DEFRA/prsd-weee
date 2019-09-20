@@ -1,26 +1,26 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports.GetUkWeeeAtAatfsCsv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Admin.Helpers;
-    using EA.Weee.Requests.Admin.Reports;
     using Prsd.Core;
     using Requests.Admin.AatfReports;
     using Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class GetUkWeeeAtAatfsCsvHandler : IRequestHandler<GetUkWeeeAtAatfsCsv, FileInfo>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetUkWeeeAtAatfsCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly Dictionary<int, string> categories = ReportHelper.GetCategoryDisplayNames();
 
         public GetUkWeeeAtAatfsCsvHandler(
             IWeeeAuthorization authorization,
@@ -46,9 +46,7 @@
 
             var data = Encoding.UTF8.GetBytes(content);
 
-            var fileName = string.Format("{0}_UK WEEE received at AATFs_{1:ddMMyyyy_HHmm}.csv",
-                message.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{message.ComplianceYear}_UK WEEE received at AATFs_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new FileInfo(fileName, data);
         }
@@ -58,7 +56,7 @@
             var csvWriter = csvWriterFactory.Create<CsvResult>();
 
             csvWriter.DefineColumn("Quarter", x => x.TimePeriod);
-            csvWriter.DefineColumn("Category", x => ReportHelper.CategoryDisplayNames[x.Category]);
+            csvWriter.DefineColumn("Category", x => categories[(int)x.Category]);
             csvWriter.DefineColumn("B2C received for treatment (t)", x => x.B2cForTreatment);
             csvWriter.DefineColumn("B2C for reuse (t)", x => x.B2cForReuse);
             csvWriter.DefineColumn("B2C sent to AATF/ATF (t)", x => x.B2cForAatf);

@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
-    using System.Threading.Tasks;
-    using Charges;
     using Domain.Lookup;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
@@ -16,6 +13,7 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
     using Shared;
+    using System.Threading.Tasks;
 
     public class AddAatfRequestHandler : IRequestHandler<AddAatf, bool>
     {
@@ -28,8 +26,8 @@
         public AddAatfRequestHandler(
             IWeeeAuthorization authorization,
             IGenericDataAccess dataAccess,
-            IMap<AatfAddressData, AatfAddress> addressMapper, 
-            IMap<AatfContactData, AatfContact> contactMapper, 
+            IMap<AatfAddressData, AatfAddress> addressMapper,
+            IMap<AatfContactData, AatfContact> contactMapper,
             ICommonDataAccess commonDataAccess)
         {
             this.authorization = authorization;
@@ -66,22 +64,22 @@
                 panArea = await commonDataAccess.FetchLookup<PanArea>(message.Aatf.PanAreaData.Id);
             }
 
-            var aatf = new Aatf(
-                message.Aatf.Name,
-                competentAuthority,
-                message.Aatf.ApprovalNumber,
-                Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Aatf.AatfStatus.Value),
-                organisation,
-                siteAddress,
-                Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
-                message.Aatf.ApprovalDate.GetValueOrDefault(),
-                contact,
-                message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
-                message.Aatf.ComplianceYear,
-                localArea,
-                panArea);
+            var aatf = new Domain.AatfReturn.Aatf(
+            message.Aatf.Name,
+            competentAuthority,
+            message.Aatf.ApprovalNumber,
+            Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(message.Aatf.AatfStatus.Value),
+            organisation,
+            siteAddress,
+            Enumeration.FromValue<Domain.AatfReturn.AatfSize>(message.Aatf.Size.Value),
+            message.Aatf.ApprovalDate.GetValueOrDefault(),
+            contact,
+            message.Aatf.FacilityType.ToDomainEnumeration<Domain.AatfReturn.FacilityType>(),
+            message.Aatf.ComplianceYear,
+            localArea,
+            panArea, message.AatfId);
 
-            await dataAccess.Add<Aatf>(aatf);
+            await dataAccess.Add<Domain.AatfReturn.Aatf>(aatf);
 
             return true;
         }

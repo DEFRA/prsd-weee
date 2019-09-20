@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Extensions
 {
-    using System.Linq;
     using Domain.Producer;
+    using System.Linq;
 
     public static class ProducerSubmissionExtensions
     {

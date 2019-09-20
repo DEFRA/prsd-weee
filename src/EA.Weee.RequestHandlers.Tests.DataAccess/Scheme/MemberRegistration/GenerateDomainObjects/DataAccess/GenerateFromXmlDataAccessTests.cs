@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess
 {
-    using System;
-    using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
+    using System;
     using Weee.Tests.Core.Model;
     using Xunit;
 
