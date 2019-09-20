@@ -29,8 +29,6 @@
     .prsd-table tbody td {
         padding-left: 10px;
     }
-
-   
 </style>
 
 <header class="hgroup">
@@ -40,142 +38,142 @@
 </header>
 @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
 {
-<div class="filter">
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.Filter.FacilityType)
-    <div class="govuk-label">Filter by:</div>
-    <br />
-    <table class="govuk-table">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td>
-                    <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
-                    @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
-                </td>
-                <td>
-                    @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
-                    @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
-                </td>
-            </tr>
-            <tr><td colspan="2">&nbsp;</td></tr>
-            <tr class="govuk-table__row">
-                <td>
-                    <table>
-                        <tr class="govuk-table__row">
-                            <td><Label class="govuk-label form-label" for="Appropriate authority_Name">Appropriate authority</Label></td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td>
-                                <div class="govuk-form-group">
-                                    <fieldset class="govuk-fieldset">
-                                        <legend class="govuk-fieldset__legend govuk-visually-hidden">
-                                            select @Model.FacilityType.ToString() appropriate authority
-                                        </legend>
-                                        <span id="aatf-appropriate-authority" class="govuk-hint govuk-visually-hidden">
-                                            Select all that apply.
-                                        </span>
-                                        <div class="govuk-checkboxes">
-                                            @for (var i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
-                                            {
+    <div class="filter">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Filter.FacilityType)
+        <div class="govuk-label">Filter by:</div>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        <Label class="govuk-label form-label" for="Filter_Name">Name of @Model.FacilityType.ToDisplayString()</Label>
+                        @Html.TextBoxFor(m => m.Filter.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
+                        @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
+                    </td>
+                </tr>
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr class="govuk-table__row">
+                    <td>
+                        <table>
+                            <tr class="govuk-table__row">
+                                <td><Label class="govuk-label form-label" for="Appropriate authority_Name">Appropriate authority</Label></td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <td>
+                                    <div class="govuk-form-group">
+                                        <fieldset class="govuk-fieldset">
+                                            <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                                                select @Model.FacilityType.ToString() appropriate authority
+                                            </legend>
+                                            <span id="aatf-appropriate-authority" class="govuk-hint govuk-visually-hidden">
+                                                Select all that apply.
+                                            </span>
+                                            <div class="govuk-checkboxes">
+                                                @for (var i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
+                                                {
 
+                                                    <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
+                                                        @{
+                                                            var id = "Filter_CompetentAuthorityOptions_" + @i + "__Selected";
+                                                            var name = "Filter.CompetentAuthorityOptions[" + @i + "].Selected";
+                                                            var isChecked = Model.Filter.SelectedAuthority.Contains(Model.Filter.CompetentAuthorityOptions[i].Id) ? "checked" : "";
+                                                        }
+
+                                                        <input class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="@id" name="@name" type="checkbox" value="true" @isChecked>
+
+                                                        <label class="govuk-label govuk-checkboxes__label" for="@id">
+                                                            @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
+                                                            &nbsp;
+                                                        </label>
+                                                        <input name="@name" type="hidden" value="false">
+                                                    </div>
+                                                    @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Id)
+                                                    @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Abbreviation)
+                                                    @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)
+                                                }
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr class="govuk-table__row">
+                                <td><Label class="govuk-label form-label" for="Status_Name">Status</Label></td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <td>
+                                    <div class="govuk-form-group">
+                                        <fieldset class="govuk-fieldset" aria-describedby="aatf-status">
+                                            <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                                                select @Model.FacilityType.ToString() status
+                                            </legend>
+                                            <span id="aatf-status" class="govuk-hint govuk-visually-hidden">
+                                                Select all that apply.
+                                            </span>
+                                            <div class="govuk-checkboxes" style="display: inline-block;">
                                                 <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
                                                     @{
-                                                        var id = "Filter_CompetentAuthorityOptions_" + @i + "__Selected";
-                                                        var name = "Filter.CompetentAuthorityOptions[" + @i + "].Selected";
-                                                        var isChecked = Model.Filter.SelectedAuthority.Contains(Model.Filter.CompetentAuthorityOptions[i].Id) ? "checked" : "";
+                                                        var approvedChecked = Model.Filter.SelectApproved ? "checked" : "";
                                                     }
-
-                                                    <input class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="@id" name="@name" type="checkbox" value="true" @isChecked>
-
-                                                    <label class="govuk-label govuk-checkboxes__label" for="@id">
-                                                        @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
-                                                        &nbsp;
+                                                    <input @approvedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectApproved" name="Filter.SelectApproved" type="checkbox" value="true">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectApproved">
+                                                        @AatfStatus.Approved.ToDisplayString()
                                                     </label>
-                                                    <input name="@name" type="hidden" value="false">
+                                                    <input name="Filter.SelectApproved" type="hidden" value="false">
                                                 </div>
-                                                @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Id)
-                                                @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Abbreviation)
-                                                @Html.HiddenFor(m => @Model.Filter.CompetentAuthorityOptions[i].Name)
-                                            }
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td>
-                    <table>
-                        <tr class="govuk-table__row">
-                            <td><Label class="govuk-label form-label" for="Status_Name">Status</Label></td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td>
-                                <div class="govuk-form-group">
-                                    <fieldset class="govuk-fieldset" aria-describedby="aatf-status">
-                                        <legend class="govuk-fieldset__legend govuk-visually-hidden">
-                                            select @Model.FacilityType.ToString() status
-                                        </legend>
-                                        <span id="aatf-status" class="govuk-hint govuk-visually-hidden">
-                                            Select all that apply.
-                                        </span>
-                                        <div class="govuk-checkboxes" style="display: inline-block;">
-                                            <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
-                                                @{
-                                                    var approvedChecked = Model.Filter.SelectApproved ? "checked" : "";
-                                                }
-                                                <input @approvedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectApproved" name="Filter.SelectApproved" type="checkbox" value="true">
-                                                <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectApproved">
-                                                    @AatfStatus.Approved.ToDisplayString()
-                                                </label>
-                                                <input name="Filter.SelectApproved" type="hidden" value="false">
+                                                <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
+                                                    @{
+                                                        var cancelledChecked = Model.Filter.SelectCancelled ? "checked" : "";
+                                                    }
+                                                    <input @cancelledChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectCancelled" name="Filter.SelectCancelled" type="checkbox" value="true">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectCancelled">
+                                                        @AatfStatus.Cancelled.ToDisplayString()
+                                                    </label>
+                                                    <input name="Filter.SelectCancelled" type="hidden" value="false">
+                                                </div>
+                                                <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
+                                                    @{
+                                                        var suspendedChecked = Model.Filter.SelectSuspended ? "checked" : "";
+                                                    }
+                                                    <input @suspendedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectSuspended" name="Filter.SelectSuspended" type="checkbox" value="true">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectSuspended">
+                                                        @AatfStatus.Suspended.ToDisplayString()
+                                                    </label>
+                                                    <input name="Filter.SelectSuspended" type="hidden" value="false">
+                                                </div>
                                             </div>
-                                            <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
-                                                @{
-                                                    var cancelledChecked = Model.Filter.SelectCancelled ? "checked" : "";
-                                                }
-                                                <input @cancelledChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectCancelled" name="Filter.SelectCancelled" type="checkbox" value="true">
-                                                <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectCancelled">
-                                                    @AatfStatus.Cancelled.ToDisplayString()
-                                                </label>
-                                                <input name="Filter.SelectCancelled" type="hidden" value="false">
-                                            </div>
-                                            <div class="govuk-checkboxes__item" style="display: inline-block; width: 25%;">
-                                                @{
-                                                    var suspendedChecked = Model.Filter.SelectSuspended ? "checked" : "";
-                                                }
-                                                <input @suspendedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectSuspended" name="Filter.SelectSuspended" type="checkbox" value="true">
-                                                <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectSuspended">
-                                                    @AatfStatus.Suspended.ToDisplayString()
-                                                </label>
-                                                <input name="Filter.SelectSuspended" type="hidden" value="false">
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                                        </fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <table class="govuk-table govuk-!-width-one-quarter buttons">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td>
-                    @(this.WeeeGds().Submit("Apply"))
-                </td>
-                <td>
-                    <div class="left-cleared">
-                        @Html.ActionLink("Clear", "ClearFilter", new { facilityType = Model.FacilityType }, new { @class = "govuk-button cancel" })
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Apply"))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Clear", "ClearFilter", new { facilityType = Model.FacilityType }, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 }
 
 @using (Html.BeginForm(actionName: "ManageAatfs", controllerName: "Aatf", method: FormMethod.Post))
@@ -189,6 +187,14 @@
     @Html.HiddenFor(m => m.Filter.SelectCancelled)
     @Html.HiddenFor(m => m.Filter.SelectSuspended)
     @Html.HiddenFor(m => m.FacilityType)
+
+    for (int i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
+    {
+        @Html.HiddenFor(m => m.Filter.CompetentAuthorityOptions[i].Id)
+        @Html.HiddenFor(m => m.Filter.CompetentAuthorityOptions[i].Selected)
+        @Html.HiddenFor(m => m.Filter.CompetentAuthorityOptions[i].Abbreviation)
+        @Html.HiddenFor(m => m.Filter.CompetentAuthorityOptions[i].Name)
+    }
     <div>
         <fieldset class="prsd-table-fieldset">
             <legend class="govuk-visually-hidden">@Html.Raw("Which " + @Model.FacilityType.ToDisplayString() + " would you like to manage?")</legend>
