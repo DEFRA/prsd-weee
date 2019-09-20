@@ -4,25 +4,25 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin.AatfReports;
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.Shared;
+    using ViewModels.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
         private readonly IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap;
+        private readonly IMapper mapper;
 
-        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities, 
-            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap)
+        public AatfDataToAatfDetailsViewModelMap(IAddressUtilities addressUtilities,
+            IMap<AatfSubmissionHistoryData, AatfSubmissionHistoryViewModel> aatfSubmissionHistoryMap, IMapper mapper)
         {
             this.addressUtilities = addressUtilities;
             this.aatfSubmissionHistoryMap = aatfSubmissionHistoryMap;
+            this.mapper = mapper;
         }
 
         public AatfDetailsViewModel Map(AatfDataToAatfDetailsViewModelMapTransfer source)
@@ -30,7 +30,7 @@
             Guard.ArgumentNotNull(() => source, source);
             Guard.ArgumentNotNull(() => source.AatfData, source.AatfData);
 
-            AatfDetailsViewModel viewModel = new AatfDetailsViewModel()
+            var viewModel = new AatfDetailsViewModel()
             {
                 Id = source.AatfData.Id,
                 Name = source.AatfData.Name,
@@ -48,21 +48,13 @@
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),
                 ContactAddressLong = addressUtilities.FormattedAddress(source.AatfData.Contact.AddressData, false),
                 PanArea = source.AatfData.PanAreaData,
-                LocalArea = source.AatfData.LocalAreaData
+                LocalArea = source.AatfData.LocalAreaData,
+                ComplianceYearList = source.ComplianceYearList,
+                AatfId = source.AatfData.AatfId,
+                SelectedComplianceYear = source.AatfData.ComplianceYear,
+                CurrentDate = source.CurrentDate,
+                AssociatedEntities = mapper.Map<AssociatedEntitiesViewModel>(new AssociatedEntitiesViewModelTransfer() { AatfId = source.AatfData.AatfId, AssociatedAatfs = source.AssociatedAatfs, AssociatedSchemes = source.AssociatedSchemes })
             };
-
-            if (source.AssociatedAatfs != null)
-            {
-                var associatedAEs = source.AssociatedAatfs.Where(a => a.FacilityType == FacilityType.Ae && a.Id != source.AatfData.Id).ToList();
-                source.AssociatedAatfs = source.AssociatedAatfs.Where(a => a.Id != source.AatfData.Id && a.FacilityType == FacilityType.Aatf).ToList();
-                viewModel.AssociatedAatfs = source.AssociatedAatfs;
-                viewModel.AssociatedAes = associatedAEs;
-            }
-
-            if (source.AssociatedSchemes != null)
-            {
-                viewModel.AssociatedSchemes = source.AssociatedSchemes;
-            }
 
             if (source.AatfData.ApprovalDate != default(DateTime))
             {

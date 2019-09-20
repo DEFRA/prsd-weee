@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System.Linq;
     using DataAccess;
     using Domain.Scheme;
+    using System.Linq;
 
     public class TotalChargeCalculatorDataAccess : ITotalChargeCalculatorDataAccess
     {
@@ -15,8 +15,8 @@
 
         public bool CheckSchemeHasAnnualCharge(Scheme scheme, int deserializedcomplianceYear)
         {
-            return context.MemberUploads.Any(m => m.HasAnnualCharge 
-                                                  && m.Scheme.OrganisationId == scheme.OrganisationId 
+            return context.MemberUploads.Any(m => m.HasAnnualCharge
+                                                  && m.Scheme.OrganisationId == scheme.OrganisationId
                                                   && m.ComplianceYear == deserializedcomplianceYear
                                                   && m.IsSubmitted);
         }

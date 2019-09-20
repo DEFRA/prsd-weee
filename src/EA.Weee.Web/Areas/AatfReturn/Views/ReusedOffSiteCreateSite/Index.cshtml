@@ -4,7 +4,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteCreateSiteViewModel
 @{
-    ViewBag.Title = "Reused WEEE - GOV.UK";
+    ViewBag.Title = "Which site received the WEEE for reuse? - GOV.UK";
 }
 
 <section id="main-content">
@@ -16,7 +16,6 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
-        @Html.HiddenFor(m => m.AddressData.Id)
         @Html.HiddenFor(m => m.SiteId)
         @Html.EditorFor(m => m.AddressData)
 

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Producer;
     using ReturnVersionBuilder;
     using Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using ErrorLevel = Core.Shared.ErrorLevel;
     using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;

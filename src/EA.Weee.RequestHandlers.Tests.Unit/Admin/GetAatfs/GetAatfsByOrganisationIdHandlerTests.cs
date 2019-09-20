@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
@@ -19,6 +14,11 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfsByOrganisationIdHandlerTests
@@ -127,9 +127,9 @@
 
             var aatfDatas = new List<AatfDataList>()
             {
-                new AatfDataList(Guid.NewGuid(), "B", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019),
-                new AatfDataList(Guid.NewGuid(), "A", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019),
-                new AatfDataList(Guid.NewGuid(), "C", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019)
+                new AatfDataList(Guid.NewGuid(), "B", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
+                new AatfDataList(Guid.NewGuid(), "A", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null),
+                new AatfDataList(Guid.NewGuid(), "C", A.Fake<UKCompetentAuthorityData>(), "TEST", A.Fake<Core.AatfReturn.AatfStatus>(), A.Fake<OrganisationData>(), Core.AatfReturn.FacilityType.Aatf, (Int16)2019, Guid.NewGuid(), null)
             }.ToArray();
 
             A.CallTo(() => dataAccess.GetAatfs()).Returns(aatfs);

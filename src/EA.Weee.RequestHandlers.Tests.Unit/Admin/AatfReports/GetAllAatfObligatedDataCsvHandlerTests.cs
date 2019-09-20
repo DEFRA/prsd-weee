@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -12,11 +9,13 @@
     using FluentAssertions;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.AatfReports;
-    using Requests.Admin.Reports;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     public class GetAllAatfObligatedDataCsvHandlerTests
-    {      
+    {
         [Fact]
         public async Task GetAllAatfObligatedDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
@@ -74,7 +73,7 @@
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 0, string.Empty, string.Empty, null, null);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);
@@ -101,7 +100,7 @@
             var request = new GetAllAatfObligatedDataCsv(complianceYear, columnType, obligationType, aatfName, authority, panArea);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);
@@ -114,13 +113,13 @@
             var context = A.Fake<WeeeContext>();
             var commanDataAccess = A.Fake<ICommonDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
-            int complianceYear = 2019;
-                
+            var complianceYear = 2019;
+
             var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, string.Empty, string.Empty, null, null);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
             Assert.Contains("2019", data.FileName);
@@ -131,21 +130,23 @@
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
-            var commanDataAccess = A.Fake<ICommonDataAccess>();
+            var commonDataAccess = A.Fake<ICommonDataAccess>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
-            int complianceYear = 2019;
-            string obligationType = "B2C";
-            string aatfName = "A1";
+            const int complianceYear = 2019;
+            const string obligationType = "B2C";
+            const string aatfName = "A1";
             SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
 
-            var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commanDataAccess);
+            var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
             var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, obligationType, aatfName, null, null);
 
             // Act
-            CSVFileData data = await handler.HandleAsync(request);
+            var data = await handler.HandleAsync(request);
 
             // Assert
-            data.FileName.Should().Be("2019_B2C_View obligated WEEE data_01022019_1101.csv");
+            data.FileName.Should().Be("2019_B2C_AATF obligated WEEE data_01022019_1101.csv");
+
+            SystemTime.Unfreeze();
         }
     }
 }

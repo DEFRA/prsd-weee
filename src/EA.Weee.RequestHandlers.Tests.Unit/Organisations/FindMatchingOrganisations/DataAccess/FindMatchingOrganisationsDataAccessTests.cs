@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.FindMatchingOrganisations.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
     using Domain.Organisation;
     using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;

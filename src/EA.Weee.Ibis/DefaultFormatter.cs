@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Ibis
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// A formatter that sanitizes input by replacing any double quotes with single quotes and
     /// encodes input by wrapping all values in double quotes.

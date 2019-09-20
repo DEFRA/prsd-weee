@@ -47,8 +47,8 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.Mvc5.4.0.2\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
@@ -59,28 +59,11 @@
     <Reference Include="Autofac.Integration.Owin, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.Owin.4.2.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.WebApi, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.WebApi2.4.2.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+    <Reference Include="Autofac.Integration.WebApi, Version=4.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.4.3.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.19029-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Email, Version=1.0.19029.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Email.1.0.19029-develop1\lib\net451\EA.Prsd.Email.dll</HintPath>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -91,13 +74,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.8.1.3\lib\net45\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.8.4.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.Mvc, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.Mvc5.8.1.3\lib\net45\FluentValidation.Mvc.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.Mvc5.8.4.0\lib\net45\FluentValidation.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.ValidatorAttribute, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.1.3\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.4.0\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidator, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidator.2.0.4\lib\netstandard1.3\FluentValidator.dll</HintPath>
@@ -118,32 +101,32 @@
       <HintPath>..\packages\LowercaseDashedRouteExt.1.4\lib\net40\LowercaseDashedRouting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.5.3.0\lib\net451\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.5.5.0\lib\net461\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.3.0\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.5.0\lib\net461\Microsoft.IdentityModel.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.3.0\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.5.0\lib\net461\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.4.0.0\lib\net451\Microsoft.Owin.Security.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.0\lib\net451\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.4.0.0\lib\net451\Microsoft.Owin.Security.Jwt.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Jwt, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.4.0.1\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.0\lib\net451\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -165,26 +148,26 @@
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
     </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
     </Reference>
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.3.0\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.5.0\lib\net461\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
@@ -203,8 +186,8 @@
       <HintPath>..\packages\MvcNavigationHelpers.0.0.0.5\lib\net45\MvcNavigationHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -226,7 +209,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -234,8 +217,8 @@
     <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.5.0\lib\netstandard1.0\System.Text.Encodings.Web.dll</HintPath>
@@ -283,7 +266,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -325,26 +308,64 @@
     <Compile Include="Areas\AatfReturn\AatfReturnAreaRegistration.cs" />
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
+    <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
+    <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AddPcsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationSchemeBaseActionFilterAttribute.cs" />
+    <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationHasNoSchemeFilterAttribute.cs" />
+    <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReportsBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SchemeReportsController.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\FilteringViewModelToUserFilterMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfSubmissionHistoryDataToViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AssociatedEntitiesViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\AssociatedEntitiesViewModelTransfer.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAatfViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\CopyAatfDataToCopyAeViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\MappingHelper.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\AatfDataToAeEditDetailsViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\UpdateApprovalDateViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Admin\Helper\AatfHelper.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\AatfAeDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAePublicRegisterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\ChooseAatfReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\NonObligatedWeeeReceivedAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfSentOnDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AatfReports\PcsAatfDataDifferenceViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AeEditDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateAatfDetailsTransferViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Aatf\UpdateApprovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\DeleteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\FacilityViewModelBase.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\Base\OrganisationViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Base\OrganisationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\OrgAlreadyHasSchemeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAatfViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyAeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\CopyAatf\CopyFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditSoleTraderOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfReuseSitesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkWeeeDataAtAatfViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfAeReturnDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\UkNonObligatedWeeeReceivedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AatfReports\AatfObligatedDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportTypeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\AddSchemeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Shared\AssociatedEntitiesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\FilteringViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
@@ -353,7 +374,10 @@
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
+    <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnsViewModelTransfer.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
+    <Compile Include="ViewModels\Shared\Aatf\Mapping\AatfEditContactMap.cs" />
+    <Compile Include="ViewModels\Shared\Aatf\Mapping\AatfEditContactTransfer.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
@@ -463,26 +487,26 @@
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageFacilityModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\ManageAatfsViewModel.cs" />
-    <Compile Include="Areas\Admin\Requests\EditAatfContactRequestCreator.cs" />
-    <Compile Include="Areas\Admin\Requests\IEditAatfContactRequestCreator.cs" />
+    <Compile Include="Requests\EditAatfContactRequestCreator.cs" />
+    <Compile Include="Requests\IEditAatfContactRequestCreator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Aatf\AatfDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Aatf\AatfEditContactAddressViewModel.cs" />
+    <Compile Include="ViewModels\Shared\Aatf\AatfEditContactAddressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AddAatf\AddAatfViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\RegisteredCompanyDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Details\PartnershipDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\Type\OrganisationTypeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Details\PartnershipDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ManagePendingChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchResultsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddAatf\SearchViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\SearchResultsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\SearchViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditOrganisationDetailsViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\MissingProducerDataViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\MissingProducerDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\EditPartnershipOrganisationDetailsViewModel.cs" />
@@ -509,12 +533,12 @@
     <Compile Include="Extensions\GdsExtensions.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ChooseSchemeReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducerPublicRegisterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\SchemeObligationDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\SchemeObligationDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
@@ -526,8 +550,8 @@
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\_ReportSearchFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -589,7 +613,21 @@
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Object\defineProperty.js" />
     <Content Include="Content\govuk_frontend\package\vendor\polyfills\Window.js" />
     <Content Include="Content\remove-site.css" />
-    <None Include="Content\weee-returns-mobile.scss" />
+    <Content Include="Areas\Admin\Views\Shared\_AatfDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
+    <Content Include="Content\weee-returns-ae-mobile.scss" />
+    <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
+    <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\AatfReports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\AatfAeDetails.cshtml" />
+    <Content Include="Areas\Aatf\Views\ContactDetails\Index.cshtml" />
+    <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -647,8 +685,8 @@
     <Content Include="Areas\Admin\Views\Producers\_detailsResults.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Index.cshtml" />
     <Content Include="Areas\Admin\Views\TestEmail\Success.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\SchemeObligationData.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\MissingProducerData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\SchemeObligationData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\MissingProducerData.cshtml" />
     <Content Include="Content\weee\_button.scss" />
     <Content Include="Content\weee\_conditional.scss" />
     <Content Include="Content\weee\_css3.scss" />
@@ -940,19 +978,19 @@
     <Content Include="Areas\AatfReturn\Views\ReusedRemoveSite\Index.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Returns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\ManageContactDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactData.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AatfContactData.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_CountryPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\ReturnsSummary\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\Search.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\SearchResults.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\Search.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHolding\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Aatf\ManageAatfDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfContactAddressData.cshtml" />
     <Content Include="Areas\Admin\Views\AddAatf\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\AatfAddressData.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\Type.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\PartnershipDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\Type.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\PartnershipDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
@@ -969,7 +1007,7 @@
     <Content Include="Areas\Admin\Views\Aatf\Delete.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectYourPcs\PcsRemoved.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_AatfCheckReturnButton.cshtml" />
-    <Content Include="Areas\Admin\Views\AddAatf\SoleTraderDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\AddOrganisation\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AeApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\UkWeeeDataAtAatfs.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_SummaryPartial.cshtml" />
@@ -979,6 +1017,13 @@
     <Content Include="Areas\Admin\Views\AatfReports\AatfNonObligatedData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfSentOnData.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfReuseSites.cshtml" />
+    <Content Include="Areas\Admin\Views\CopyAatf\Copy.cshtml" />
+    <Content Include="Areas\Aatf\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\Aatf\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Aatf\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\ContactDetails\Edit.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1093,7 +1138,7 @@
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
@@ -1114,14 +1159,14 @@
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerEeeData.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\ProducerEeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\_ProducersDataReportFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\UkWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\UkWeeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\UkEeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\SchemeReports\UkEeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\CannotSubmitDataReturn.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmWithdrawn.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\PcsDetailsOverview.cshtml" />
@@ -1153,17 +1198,8 @@
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
-    <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
-    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
-    <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
-    <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
     <Content Include="Views\Account\AccountActivated.cshtml" />
     <Content Include="Views\Account\AccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\PendingOrganisations.cshtml" />
@@ -1196,8 +1232,6 @@
     <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
-    <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
     <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
     <Content Include="Views\Shared\_WeeeFooter.cshtml" />
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
@@ -1255,7 +1289,7 @@
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModelBase.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Routelink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Tab.cs" />
@@ -1379,6 +1413,22 @@
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
+      <Project>{333c65b9-ebb6-4d04-921e-89094f80e2e3}</Project>
+      <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
+      <Project>{212c8803-bfe2-4091-81b0-b25be91c1c04}</Project>
+      <Name>EA.Prsd.Core.Web.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
+      <Project>{67eb0694-6149-4a6f-89de-144f24802c7f}</Project>
+      <Name>EA.Prsd.Core.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
+      <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
+      <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
@@ -1449,7 +1499,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
@@ -1467,7 +1518,8 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
-    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-mobile.scss &gt; Content\weee-returns-mobile.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-aatf-mobile.scss &gt; Content\weee-returns-aatf-mobile.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I content\govuk-frontend\ Content\weee-returns-ae-mobile.scss &gt; Content\weee-returns-ae-mobile.css" />
     <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
@@ -1481,9 +1533,13 @@
     <CreateItem Include="Content\weee-page-ie8.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
-    <CreateItem Include="Content\weee-returns-mobile.css">
-        <Output ItemName="Content" TaskParameter="Include" />
+    <CreateItem Include="Content\weee-returns-aatf-mobile.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-returns-ae-mobile.css">
+      <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
-  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

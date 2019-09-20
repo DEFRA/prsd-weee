@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.CheckYourReturn
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using NonObligated;
     using Security;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Request = Requests.AatfReturn.NonObligated.FetchNonObligatedWeeeForReturnRequest;
 
     public class FetchNonObligatedWeeeForReturnRequestHandler : IRequestHandler<Request, List<decimal?>>

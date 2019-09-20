@@ -1,18 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
-    using System;
-    using System.Collections.Generic;
     using Core.Organisations;
     using Domain.AatfReturn;
     using Domain.Lookup;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Mappings;
     using FakeItEasy;
     using FluentAssertions;
-    using Weee.Tests.Core.Model;
+    using System;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 

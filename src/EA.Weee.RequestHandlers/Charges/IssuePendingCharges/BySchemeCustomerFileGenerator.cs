@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
+    using Domain.Charges;
+    using Errors;
+    using Ibis;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Charges;
-    using Errors;
-    using Ibis;
     using Scheme = EA.Weee.Domain.Scheme.Scheme;
 
     /// <summary>

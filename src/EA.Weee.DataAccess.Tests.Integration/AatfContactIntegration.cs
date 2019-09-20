@@ -1,27 +1,28 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.ObligatedReused;
+    using RequestHandlers.Factories;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using AatfContact = Domain.AatfReturn.AatfContact;
-    using WeeeReused = Domain.AatfReturn.WeeeReused;
-    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
-    using WeeeReusedSite = Domain.AatfReturn.WeeeReusedSite;
 
     public class AatfContactIntegration
     {
+        private readonly IQuarterWindowFactory quarterWindowFactory;
+        public AatfContactIntegration()
+        {
+            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+        }
+
         [Fact]
         public async void UpdateDetails_GivenDetailsToUpdate_ContextShouldContainUpdatedDetails()
         {
@@ -33,7 +34,7 @@
 
                 var aatfAddress = new AatfContact("FirstName", "LastName", "Position", "Address1", "Address2", "Town", "County", "PO12ST34", country, "Telephone", "Email");
 
-                var dataAccess = new AatfDataAccess(context);
+                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext), quarterWindowFactory);
 
                 var aatfId = await CreateContact(database, aatfAddress);
 

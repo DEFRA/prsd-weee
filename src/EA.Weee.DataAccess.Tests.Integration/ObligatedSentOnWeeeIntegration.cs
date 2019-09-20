@@ -3,17 +3,13 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
-    using Country = Domain.Country;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
     using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
 
@@ -95,9 +91,9 @@
                 weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, (int)category, (decimal?)category, (decimal?)category + 1));
             }
 
-           await dataAccess.Submit(weeeSentOnAmount);
+            await dataAccess.Submit(weeeSentOnAmount);
 
-           return weeeSentOn.Id;
+            return weeeSentOn.Id;
         }
     }
 }

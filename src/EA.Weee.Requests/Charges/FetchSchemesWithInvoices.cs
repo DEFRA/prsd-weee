@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System.Collections.Generic;
     using Core.Scheme;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This request returns the names of each scheme for the specified authority

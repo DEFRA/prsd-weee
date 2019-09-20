@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Integration.RazorHelpers
 {
-    using System.Web.Mvc;
     using RazorEngine.Templating;
+    using System.Web.Mvc;
 
     public class MvcTemplateBase<T> : HtmlTemplateBase<T>
     {

@@ -6,8 +6,9 @@
     public enum CanAatfBeDeletedFlags
     {
         HasData = 1,
-        OrganisationHasMoreAatfs = 2,
-        HasActiveUsers = 4,
-        Yes = 8
+        OrganisationHasActiveUsers = 2,
+        CanDelete = 4,
+        CanDeleteOrganisation = 8,
+        IsNotLatest = 10
     }
 }

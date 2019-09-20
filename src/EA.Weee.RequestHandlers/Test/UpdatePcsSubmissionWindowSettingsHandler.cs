@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Test
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Configuration;
     using Factories;
     using Prsd.Core.Mediator;
     using Requests.Test;
+    using System;
+    using System.Threading.Tasks;
 
     public class UpdatePcsSubmissionWindowSettingsHandler : IRequestHandler<UpdatePcsSubmissionWindowSettings, bool>
     {

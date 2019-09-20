@@ -4,6 +4,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddAatf.Details;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using Xunit;
 
     public class PartnershipDetailsViewModelTests

@@ -1,0 +1,106 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.AatfAeDetailsViewModel
+@{
+    var title = "Download AATF / AE / PCS / organisation details";
+
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria</p>
+       
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedFacilityType)">
+            @Html.Gds().LabelFor(m => m.SelectedFacilityType)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedFacilityType)
+            @Html.Gds().DropDownListFor(m => m.SelectedFacilityType, Model.FacilityTypes, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+            @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+            @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group competent-authority-hidden">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+                @Html.Gds().LabelFor(m => m.PanAreaId)
+                @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { autocomplete = "false" })
+            </div>
+        </div>
+
+        <div class="govuk-form-group competent-authority-hidden">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.LocalAreaId)">
+                @Html.Gds().LabelFor(m => m.LocalAreaId)
+                @Html.Gds().DropDownListFor(m => m.LocalAreaId, Model.LocalAreaList, string.Empty, new { autocomplete = "false" })
+            </div>
+        </div>
+
+        <p>
+            If there is a large amount of data for your selected criteria, it may take a while to download your results
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                                                                   "Report download", "Download AATF / AE / PCS organisation details", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "Reports")
+    </p>
+}
+@section scripts {
+    <script type="text/javascript">
+        function competentAuthoritySelection() {
+            var competentAuthority = $("#CompetentAuthorityId option:selected").html();
+
+            if (competentAuthority === "EA") {
+                $(".competent-authority-hidden").css("display", "block");
+
+                $('a[href*="PanAreaId"]').parent().css("display", "");
+                $('a[href*="LocalAreaId"]').parent().css("display", "");
+            }
+            else {
+                $(".competent-authority-hidden").css("display", "none");
+                $(".competent-authority-hidden").find("select").val('');
+
+                $('a[href*="PanAreaId"]').parent().css("display", "none");
+                $('a[href*="LocalAreaId"]').parent().css("display", "none");
+            }
+        }
+        competentAuthoritySelection();
+
+        $("#CompetentAuthorityId").change(function () {
+            competentAuthoritySelection();
+        });
+
+    </script>
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadAatfAeDetailsCsv", new
+                               {
+                                   complianceYear = Model.SelectedYear,
+                                   facilityType = Model.SelectedFacilityType,
+                                   authorityId = Model.CompetentAuthorityId,
+                                   panAreaId = Model.PanAreaId,
+                                   localAreaId = Model.LocalAreaId
+                               }))";
+        </script>
+    }
+}

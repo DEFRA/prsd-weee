@@ -3,16 +3,12 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Core.Shared;
     using Xunit;
 
     public class ReturnAndSchemeDataToReceivedPcsViewModelMapTests
@@ -64,7 +60,7 @@
                 new SchemeData() { Id = mapperTestScheme.Id, SchemeName = mapperTestScheme.Name, ApprovalName = mapperTestAatf.ApprovalNumber },
                 new SchemeData() { Id = mapperTestScheme2.Id, SchemeName = mapperTestScheme2.Name, ApprovalName = mapperTestAatf.ApprovalNumber }
             };
-                        
+
             var transfer = new ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer()
             {
                 ReturnId = returnId,
@@ -77,7 +73,7 @@
 
             A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
                                                 .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme.Id && w.Aatf.Id == mapperTestAatf.Id))))
-                                                .Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468"});
+                                                .Returns(new ObligatedCategoryValue() { B2B = "2.468", B2C = "2.468" });
 
             A.CallTo(() => tonnageUtilities.SumObligatedValues(A<List<WeeeObligatedData>>
                                                 .That.Matches(l => l.Exists(w => w.Scheme.Id == mapperTestScheme2.Id && w.Aatf.Id == mapperTestAatf.Id))))

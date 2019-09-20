@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.AatfReports
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -13,6 +11,8 @@
     using EA.Weee.Requests.Admin.AatfReports;
     using Prsd.Core.Mediator;
     using Security;
+    using System;
+    using System.Threading.Tasks;
     public class GetAllAatfReuseSitesCsvHandler : IRequestHandler<GetAllAatfReuseSitesCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
@@ -36,16 +36,6 @@
                 var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
-            PanArea panArea = null;
-            UKCompetentAuthority authority = null;
-            if (request.AuthorityId != null)
-            {
-                authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
-            }
-            if (request.PanArea != null)
-            {
-                panArea = await commonDataAccess.FetchLookup<PanArea>((Guid)request.PanArea);
-            }
 
             var reuseSitesData = await weeContext.StoredProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AuthorityId, request.PanArea);
 
@@ -53,30 +43,31 @@
 
             csvWriter.DefineColumn(@"Appropriate authority", i => i.Abbreviation);
             csvWriter.DefineColumn(@"WROS Pan Area Team", i => i.PanName);
-            csvWriter.DefineColumn(@"EA area", i => i.LaName);
+            csvWriter.DefineColumn(@"EA Area", i => i.LaName);
             csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Submitted by", i => i.SubmittedBy);
             csvWriter.DefineColumn(@"Date submitted (GMT)", i => i.SubmittedDate);
-            csvWriter.DefineColumn(@"Organisation name", i => i.OrgName);
             csvWriter.DefineColumn(@"Name of AATF", i => i.Name);
             csvWriter.DefineColumn(@"Approval number", i => i.ApprovalNumber);
+            csvWriter.DefineColumn(@"Organisation name", i => i.OrgName);
             csvWriter.DefineColumn(@"Reuse site name", i => i.SiteName);
             csvWriter.DefineColumn(@"Reuse site address", i => i.SiteAddress);
 
             var fileContent = csvWriter.Write(reuseSitesData);
 
-            var fileName = string.Format("{0}", request.ComplianceYear);
-            if (request.AuthorityId != null)
+            var fileName = $"{request.ComplianceYear}";
+            if (request.AuthorityId.HasValue)
             {
+                var authority = await commonDataAccess.FetchCompetentAuthorityById(request.AuthorityId.Value);
                 fileName += "_" + authority.Abbreviation;
             }
-            if (request.PanArea != null)
+            if (request.PanArea.HasValue)
             {
+                var panArea = await commonDataAccess.FetchLookup<PanArea>(request.PanArea.Value);
                 fileName += "_" + panArea.Name;
             }
-            fileName += string.Format("_AATF using reuse sites_{0:ddMMyyyy_HHmm}.csv",
-                               SystemTime.UtcNow);
+            fileName += $"_AATF using reuse sites_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {

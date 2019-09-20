@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
@@ -10,6 +7,9 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class AddAddressToOrganisationHandler : IRequestHandler<AddAddressToOrganisation, Guid>
     {
@@ -67,7 +67,7 @@
             }
 
             await db.SaveChangesAsync();
-                
+
             return GetAddressId(addresstype, organisation, address);
         }
 

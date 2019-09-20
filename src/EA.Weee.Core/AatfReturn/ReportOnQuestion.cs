@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
-    using System;
-    using System.Collections.Generic;
-
     public class ReportOnQuestion
     {
-        public ReportOnQuestion(int id, string question, string description, int? parentId, string alternativeDescription)
+        public ReportOnQuestion(int id, string question, string description, int? parentId, string alternativeDescription, string title)
         {
             Id = id;
             Question = question;
             Description = description;
             ParentId = parentId;
             AlternativeDescription = alternativeDescription;
+            Title = title;
         }
 
         public ReportOnQuestion()
@@ -23,6 +21,8 @@
         public string Question { get; set; }
 
         public string Description { get; set; }
+
+        public string Title { get; set; }
 
         public int? ParentId { get; set; }
 

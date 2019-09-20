@@ -10,12 +10,14 @@
 
         public Guid OrganisationId { get; set; }
 
-        public CanAatfBeDeletedFlags CanDeleteFlags { get; set; }
+        public AatfDeletionData DeletionData { get; set; }
 
         public FacilityType FacilityType { get; set; }
 
         public string AatfName { get; set; }
 
         public string OrganisationName { get; set; }
+
+        public bool ActiveUsers { get; set; }
     }
 }

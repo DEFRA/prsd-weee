@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain.Producer;
+    using Domain.Producer.Classification;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Lookup;
-    using Domain.Producer;
-    using Domain.Producer.Classification;
 
     public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
     {
@@ -77,7 +76,7 @@
             {
                 return SubmissionsAfterDate(producerRegistrationNumber, complianceYear, schemeApprovalNumber, StatusType.Amendment, insert.UpdatedDate);
             }
-        
+
             // insert can be null as amendment can be first charge in the year
             var initialAmendment = context.ProducerSubmissions.Where(p =>
                 p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber

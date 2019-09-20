@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSchemes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using FakeItEasy;
@@ -13,6 +8,11 @@
     using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -70,6 +70,25 @@
 
             result.Should().HaveCount(2);
             result.Should().BeEquivalentTo(schemeDataList);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_OnlyNotPendingSchemesShouldBeReturned()
+        {
+            var notPendingScheme = A.Fake<Scheme>();
+            var pendingScheme = A.Fake<Scheme>();
+            A.CallTo(() => pendingScheme.SchemeStatus).Returns(SchemeStatus.Pending);
+
+            var schemeList = new List<Scheme>() { notPendingScheme, pendingScheme};
+
+            A.CallTo(() => dataAccess.GetSchemes()).Returns(schemeList);
+            A.CallTo(() => schemeMap.Map(pendingScheme)).Returns(new SchemeData());
+            A.CallTo(() => schemeMap.Map(notPendingScheme)).Returns(new SchemeData() { SchemeStatus = Core.Shared.SchemeStatus.Approved });
+
+            var result = await handler.HandleAsync(A.Dummy<GetSchemesByOrganisationId>());
+
+            result.Should().HaveCount(1);
+            result.Count(s => s.SchemeStatus == Core.Shared.SchemeStatus.Pending).Should().Be(0);
         }
     }
 }

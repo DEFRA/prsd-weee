@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Email.Tests.Unit
 {
-    using System;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
     using FakeItEasy;
     using Prsd.Email;
     using Serilog;
     using Serilog.Events;
+    using System;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
     using Xunit;
-    
+
     public class WeeeSenderTests
     {
         [Theory]

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Shared
 {
-    using System;
     using Core.Shared;
     using Prsd.Core.Mediator;
+    using System;
 
     public class GetUKCompetentAuthorityById : IRequest<UKCompetentAuthorityData>
     {

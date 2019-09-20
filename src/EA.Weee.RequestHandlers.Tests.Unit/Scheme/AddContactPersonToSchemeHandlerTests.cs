@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -58,7 +56,7 @@
                                                                                 && c.LastName.Equals(message.ContactPerson.LastName) &&
                                                                                 c.Position.Equals(message.ContactPerson.Position))))
                 .Returns(contactId);
-        
+
             var result = await handler.HandleAsync(message);
 
             A.CallTo(() => dataAccess.Add<Contact>(A<Contact>.That.Matches(c => c.FirstName.Equals(message.ContactPerson.FirstName)

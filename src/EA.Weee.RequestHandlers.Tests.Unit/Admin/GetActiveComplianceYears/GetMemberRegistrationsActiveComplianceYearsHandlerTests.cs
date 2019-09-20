@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetActiveComplianceYears
 {
-    using System.Security;
-    using System.Threading.Tasks;
     using FakeItEasy;
     using RequestHandlers.Admin.GetActiveComplianceYears;
     using RequestHandlers.Security;
     using Requests.Admin.GetActiveComplianceYears;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetMemberRegistrationsActiveComplianceYearsHandlerTests

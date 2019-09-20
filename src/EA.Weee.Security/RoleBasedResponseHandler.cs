@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Security
 {
+    using DataAccess;
+    using Prsd.Core.Domain;
     using System.Data.Entity;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Prsd.Core.Domain;
 
     public class RoleRequestHandler : IRoleBasedResponseHandler
     {

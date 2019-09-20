@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchSchemesWithInvoices
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Shared;
     using Domain;
@@ -11,11 +7,14 @@
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Mapper;
-    using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchSchemesWithInvoices;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
     using Requests.Charges;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -51,7 +50,7 @@
             UKCompetentAuthority competentAuthority =
                 new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", new Country(Guid.NewGuid(), "UK - England"), "test@sfwltd.co.uk", 0);
             var scheme1 = A.Fake<Scheme>();
-            
+
             A.CallTo(() => scheme1.CompetentAuthority).Returns(competentAuthority);
             var scheme2 = A.Fake<Scheme>();
             A.CallTo(() => scheme2.CompetentAuthority).Returns(competentAuthority);

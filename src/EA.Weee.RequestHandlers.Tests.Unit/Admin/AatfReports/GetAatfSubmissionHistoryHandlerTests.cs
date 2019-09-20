@@ -1,29 +1,23 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetAatfs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Admin.AatfReports;
     using Core.DataReturns;
     using Domain.Admin.AatfReports;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.AatfReports;
-    using Requests.Admin;
     using Requests.Admin.Aatf;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
-    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class GetAatfSubmissionHistoryHandlerTests
     {

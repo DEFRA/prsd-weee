@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme
 {
+    using Core.Scheme;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Core.Scheme;
 
     public class ManageSchemesViewModel
     {
@@ -11,5 +11,7 @@
 
         [Required(ErrorMessage = "You must select a scheme to manage")]
         public Guid? Selected { get; set; }
+
+        public bool CanAddPcs { get; set; }
     }
 }

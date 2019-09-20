@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin
 {
-    using System.Threading.Tasks;
     using Core.Configuration;
     using FakeItEasy;
     using RequestHandlers.Admin;
     using Requests.Admin;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

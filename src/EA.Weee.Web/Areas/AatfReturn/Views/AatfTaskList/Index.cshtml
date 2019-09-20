@@ -6,7 +6,8 @@
 
 @model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
 @{
-    ViewBag.Title = "AATF task list  - GOV.UK";
+    var opertatorName = Model.Organisation.Name;
+    ViewBag.Title = "AATF return task list for " + opertatorName + " - GOV.UK";
     var displayObligatedGroup = Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedSentOn || Model.ReportOnDisplayOptions.DisplayObligatedReused;
 }
 
@@ -31,7 +32,7 @@
         </tbody>
     </table>
 
-    @if (displayObligatedGroup)
+    @if (displayObligatedGroup && Model.AatfsData.Any())
     {
         <h2 class="govuk-heading-m">Obligated WEEE</h2>
         <div class="govuk-table govuk-grid-column-full">
@@ -247,7 +248,7 @@
         </h2>
     }
     <div class="govuk-!-padding-bottom-7"></div>
-    @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, FormMethod.Post, new { style = "display: inline" }))
+    @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post, new { style = "display: inline" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using System;
     using EA.Prsd.Core.Domain;
     using Prsd.Core;
+    using System;
 
     public class AatfDeliveryLocation : Entity, IEquatable<AatfDeliveryLocation>
     {

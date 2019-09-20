@@ -106,10 +106,36 @@
         enableTime: false,
         allowInput: true,
         dateFormat: "d/m/Y",
+        altFormat: "d/m/Y",
+        disableMobile: "true",
         locale: "en"
 	    }
     );
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    var parameter = getUrlParameter("clickedTab");
+    if (parameter !== "") {
+        $("#" + parameter).focus();
+    }
+
+    $("#ReturnsExternalSelectedComplianceYear").change(function() {
+        $("#ReturnsQueryParameterForm").submit();
+    });
+    $("#ReturnsExternalSelectedQuarter").change(function () {
+        $("#ReturnsQueryParameterForm").submit();
+    });
+    $("#CopyPreviousSchemes").change(function () {
+        $("#SelectPcsForm").submit();
+    });
 });
+
+
 
 //USAGE: $("#form").serializeFiles();
 (function ($) {

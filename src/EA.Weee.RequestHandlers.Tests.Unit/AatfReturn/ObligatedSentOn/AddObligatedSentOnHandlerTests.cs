@@ -1,31 +1,30 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedSentOn
 {
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
 
     public class AddObligatedSentOnHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IObligatedSentOnDataAccess addObligatedSentOnDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public AddObligatedSentOnHandlerTests()
         {
+            genericDataAccess = A.Fake<IGenericDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
             addObligatedSentOnDataAccess = A.Dummy<IObligatedSentOnDataAccess>();
         }
@@ -35,7 +34,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess);
+            var handler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess, genericDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddObligatedSentOn>());
 
@@ -49,7 +48,7 @@
             var weeeSentOnId = Guid.NewGuid();
             var siteAddress = A.Fake<AatfAddress>();
             var aatfReturn = ReturnHelper.GetReturn();
-            
+
             var weeeSentOn = new WeeeSentOn(
                 aatf.Id,
                 aatfReturn.Id,
@@ -79,7 +78,7 @@
                 weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
-            var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess);
+            var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess, genericDataAccess);
 
             await requestHandler.HandleAsync(obligatedWeeeRequest);
 

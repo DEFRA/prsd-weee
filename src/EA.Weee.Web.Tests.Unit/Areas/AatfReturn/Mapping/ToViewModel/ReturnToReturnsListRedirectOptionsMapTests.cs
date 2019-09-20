@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using Core.AatfReturn;
     using Core.Scheme;
-    using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
 

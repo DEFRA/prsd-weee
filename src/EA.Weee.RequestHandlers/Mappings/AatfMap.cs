@@ -3,6 +3,7 @@
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Lookup;
@@ -59,17 +60,19 @@
 
             var organisation = organisationMap.Map(source.Organisation);
 
-            Core.AatfReturn.FacilityType facilityType = facilityMap.Map(source.FacilityType);
+            var facilityType = facilityMap.Map(source.FacilityType);
 
             var panArea = panAreaMap.Map(source.PanArea);
-            
+
             var localArea = localAreaMap.Map(source.LocalArea);
 
             return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), panArea, localArea)
             {
                 Contact = contact,
                 Organisation = organisation,
-                FacilityType = facilityType
+                FacilityType = facilityType,
+                AatfId = source.AatfId,
+                AatfStatusDisplay = aatfStatus.ToDisplayString()
             };
         }
     }

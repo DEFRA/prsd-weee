@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using System;
     using Shared;
+    using System;
 
     public class CompetentAuthorityUserData
     {

@@ -4,33 +4,34 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class AddObligatedSentOnHandler : IRequestHandler<AddObligatedSentOn, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IObligatedSentOnDataAccess obligatedSentOnDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public AddObligatedSentOnHandler(IWeeeAuthorization authorization,
-            IObligatedSentOnDataAccess obligatedSentOnDataAccess)
+            IObligatedSentOnDataAccess obligatedSentOnDataAccess,
+            IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.obligatedSentOnDataAccess = obligatedSentOnDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddObligatedSentOn message)
         {
             authorization.EnsureCanAccessExternalArea();
 
+            var weeeSent = await genericDataAccess.GetById<WeeeSentOn>(message.WeeeSentOnId);
             var aatfWeeeSentOnAmount = new List<WeeeSentOnAmount>();
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeSentOnAmount.Add(new WeeeSentOnAmount(categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage, message.WeeeSentOnId));
+                aatfWeeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSent, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
             }
 
             await obligatedSentOnDataAccess.Submit(aatfWeeeSentOnAmount);

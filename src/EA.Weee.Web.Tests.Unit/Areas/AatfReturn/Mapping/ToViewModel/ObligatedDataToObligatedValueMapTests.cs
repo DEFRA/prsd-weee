@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
     using Xunit;
 
@@ -29,7 +29,7 @@
         [Fact]
         public void Map_GivenNullWeeeDataValues_ArgumentNullExceptionExpected()
         {
-            Action act = () => map.Map(new ObligatedDataToObligatedValueMapTransfer() {ObligatedCategoryValues = A.Fake<IList<ObligatedCategoryValue>>() });
+            Action act = () => map.Map(new ObligatedDataToObligatedValueMapTransfer() { ObligatedCategoryValues = A.Fake<IList<ObligatedCategoryValue>>() });
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -148,5 +148,5 @@
             result.ElementAt(8).B2B.Should().Be("10.010");
             result.ElementAt(8).B2C.Should().Be("10.010");
         }
-    }       
+    }
 }

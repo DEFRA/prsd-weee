@@ -1,0 +1,29 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.OrgAlreadyHasSchemeViewModel
+@{
+    const string title = "This organisation already operates a PCS, it's not possible to add another PCS to the same organisation";
+    ViewBag.Title = title + " - GOV.UK";
+}
+<header class="hgroup">
+    <div>
+        <h1 class="govuk-heading-l">@title</h1>
+    </div>
+</header>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <p>
+        <a class="govuk-button" href="@(Url.UrlFor<AddOrganisationController>(u => u.SearchResults(Model.SearchTerm, EntityType.Pcs)))">Return to search results</a>
+    </p>
+
+    <p>
+        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
+    </p>
+}
+

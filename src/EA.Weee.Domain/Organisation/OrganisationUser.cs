@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
-    using System;
     using Domain.User;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Events;
+    using System;
 
     public class OrganisationUser : Entity
     {

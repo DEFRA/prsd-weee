@@ -2,17 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Web.Mvc;
-    using Core.Admin.AatfReports;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.Admin.Helper;
+    using Scheme.Overview.OrganisationDetails;
+    using Shared;
 
-    public class AatfDetailsViewModel
+    public class AatfDetailsViewModel : OrganisationDetailsOverviewViewModel
     {
         public Guid Id { get; set; }
+
+        public Guid AatfId { get; set; }
 
         public string Name { get; set; }
 
@@ -34,7 +39,7 @@
         public AatfSize Size { get; set; }
 
         public OrganisationData Organisation { get; set; }
-        
+
         [AllowHtml]
         public string OrganisationAddress { get; set; }
 
@@ -76,19 +81,6 @@
 
         public FacilityType FacilityType { get; set; }
 
-        public List<AatfDataList> AssociatedAatfs { get; set; }
-
-        public List<AatfDataList> AssociatedAes { get; set; }
-
-        public List<Core.Scheme.SchemeData> AssociatedSchemes { get; set; }
-
-        public bool HasAnyRelatedEntities => IsNotNullOrEmpty(AssociatedAatfs) || IsNotNullOrEmpty(AssociatedAes) || IsNotNullOrEmpty(AssociatedSchemes);
-
-        private bool IsNotNullOrEmpty<T>(IList<T> entityList)
-        {
-            return entityList != null && entityList.Any();
-        }
-
         public bool HasPatArea => PanArea != null;
 
         public bool HasLocalArea => LocalArea != null;
@@ -107,5 +99,32 @@
                 return false;
             }
         }
+
+        [DisplayName("Compliance year")]
+        public Int16 SelectedComplianceYear { get; set; }
+
+        public IEnumerable<short> ComplianceYearList { get; set; }
+
+        public DateTime CurrentDate { get; set; }
+
+        public bool IsLatestComplianceYear => ComplianceYearList != null && ComplianceYear == ComplianceYearList.First();
+
+        public bool ShowCopyLink
+        {
+            get
+            {
+                if (IsLatestComplianceYear)
+                {
+                   var list = AatfHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
+
+                   return list.Any() ? true : false;
+                }
+                return false;
+            }
+        }
+
+        public bool IsValidComplianceYear => CurrentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(CurrentDate, true).Any(x => x.Equals(ComplianceYear)) ? true : false;
+
+        public string SelectedTab { get; set; }
     }
 }

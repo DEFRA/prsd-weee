@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
+    using Domain.DataReturns;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
 
     public interface IQuarterWindowFactory
     {
@@ -14,5 +14,7 @@
         Task<QuarterWindow> GetAnnualQuarter(Quarter quarter);
 
         Task<QuarterWindow> GetNextQuarterWindow(QuarterType q, int year);
+
+        Task<QuarterType> GetAnnualQuarterForDate(DateTime date);
     }
 }

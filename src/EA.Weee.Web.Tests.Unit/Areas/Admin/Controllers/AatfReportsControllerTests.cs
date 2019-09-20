@@ -1,5 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using Api.Client;
+    using AutoFixture;
+    using Core.AatfReturn;
+    using Core.Admin;
+    using Core.Shared;
+    using EA.Weee.Core.Admin.AatfReports;
+    using EA.Weee.Requests.Admin.AatfReports;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -7,20 +18,12 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Api.Client;
-    using AutoFixture;
-    using Core.AatfReturn;
-    using Core.Admin;
-    using Core.Shared;
-    using EA.Weee.Requests.Admin.AatfReports;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AatfReports;
-    using FakeItEasy;
-    using FluentAssertions;
-    using Services;
+    using Prsd.Core.Mediator;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
+    using Web.Areas.Admin.ViewModels.SchemeReports;
     using Web.Infrastructure;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -39,15 +42,113 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
+
             controller = new AatfReportsController(() => weeeClient, breadcrumb);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void AatfReportsController_ShouldInheritFromAdminController()
+        public void AatfReportsController_ShouldInheritFromReportBaseController()
         {
-            typeof(AatfReportsController).Should().BeDerivedFrom<AdminController>();
+            typeof(AatfReportsController).Should().BeDerivedFrom<ReportsBaseController>();
+        }
+
+        [Theory]
+        [InlineData(UserStatus.Inactive)]
+        [InlineData(UserStatus.Pending)]
+        [InlineData(UserStatus.Rejected)]
+        public async Task GetIndex_WhenUserIsNotActive_RedirectsToInternalUserAuthorizationRequired(UserStatus userStatus)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(userStatus);
+
+            var result = await controller.Index();
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be("InternalUserAuthorisationRequired");
+            redirectResult.RouteValues["controller"].Should().Be("Account");
+            redirectResult.RouteValues["userStatus"].Should().Be(userStatus);
+        }
+
+        [Fact]
+        public async Task GetIndex_WhenUserIsActive_RedirectsToChooseReport()
+        {
+            var result = await controller.Index();
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be("ChooseReport");
+            redirectResult.RouteValues["controller"].Should().Be("AatfReports");
+        }
+
+        [Fact]
+        public void GetChooseReport_Always_ReturnsChooseReportView()
+        {
+            var result = controller.ChooseReport();
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+
+            var viewModel = viewResult.Model as ChooseAatfReportViewModel;
+            viewModel.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void PostChooseReport_ModelIsInvalid_ReturnsChooseReportView()
+        {
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = controller.ChooseReport(A.Dummy<ChooseAatfReportViewModel>());
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(Reports.AatfAeReturnData, "AatfAeReturnData")]
+        [InlineData(Reports.AatfObligatedData, "AatfObligatedData")]
+        [InlineData(Reports.UkWeeeDataAtAatfs, "UkWeeeDataAtAatfs")]
+        [InlineData(Reports.AatfSentOnData, "AatfSentOnData")]
+        [InlineData(Reports.AatfReuseSitesData, "AatfReuseSites")]
+        [InlineData(Reports.UkNonObligatedWeeeData, "UkNonObligatedWeeeReceived")]
+        [InlineData(Reports.AatfNonObligatedData, "AatfNonObligatedData")]
+        [InlineData(Reports.AatfAePublicRegister, "AatfAePublicRegister")]
+        public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
+        {
+            var model = new ChooseAatfReportViewModel() { SelectedValue = selectedValue };
+
+            var result = controller.ChooseReport(model);
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.RouteValues["action"].Should().Be(expectedAction);
+            redirectResult.RouteValues["controller"].Should().Be("AatfReports");
+        }
+
+        [Fact]
+        public void GetChooseReport_Always_ReturnsCorrectList()
+        {
+            var result = controller.ChooseReport();
+
+            var viewResult = result as ViewResult;
+
+            viewResult.ViewName.Should().BeEmpty();
+
+            var viewModel = viewResult.Model as ChooseAatfReportViewModel;
+            viewModel.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void PostChooseReport_WithInvalidSelectedValue_ThrowsNotSupportedException()
+        {
+            var model = new ChooseAatfReportViewModel() { SelectedValue = "SOME INVALID VALUE" };
+            Func<ActionResult> testCode = () => controller.ChooseReport(model);
+
+            Assert.Throws<NotSupportedException>(testCode);
         }
 
         [Fact]
@@ -416,7 +517,7 @@
         public async Task PostUkWeeeDataAtAatfs_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Arrange
-           var viewModel = new UkWeeeDataAtAatfViewModel();
+            var viewModel = new UkWeeeDataAtAatfViewModel();
 
             // Act
             var result = await controller.UkWeeeDataAtAatfs(viewModel);
@@ -582,7 +683,7 @@
             var panAreas = fixture.CreateMany<PanAreaData>().ToList();
             var localAreas = fixture.CreateMany<LocalAreaData>().ToList();
             var years = fixture.CreateMany<int>().ToList();
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).Returns(years);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).Returns(panAreas);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).Returns(localAreas);
@@ -990,7 +1091,6 @@
         {
             const int complianceYear = 2015;
             const string obligation = "b2c";
-            const string aatf = "aatf";
             var authority = fixture.Create<Guid>();
             var panArea = fixture.Create<Guid>();
             var csvData = new CSVFileData
@@ -999,10 +1099,9 @@
                 FileName = "test.csv"
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>.That.Matches(g => g.AATFName.Equals(aatf)
-            && g.AuthorityId.Equals(authority) && g.ComplianceYear.Equals(complianceYear) && g.ObligationType.Equals(obligation) && g.PanArea.Equals(panArea)))).Returns(csvData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfSentOnDataCsv>.That.Matches(g => g.AuthorityId.Equals(authority) && g.ComplianceYear.Equals(complianceYear) && g.ObligationType.Equals(obligation) && g.PanArea.Equals(panArea)))).Returns(csvData);
 
-            var fileResult = await controller.DownloadAatfSentOnDataCsv(complianceYear, obligation, aatf, authority, panArea) as FileContentResult;
+            var fileResult = await controller.DownloadAatfSentOnDataCsv(complianceYear, obligation, authority, panArea) as FileContentResult;
 
             fileResult.ContentType.Should().Be("text/csv");
             fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
@@ -1158,7 +1257,7 @@
                 FileName = "test.csv"
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfReuseSitesCsv>.That.Matches(g => g.AuthorityId.Equals(authority) 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllAatfReuseSitesCsv>.That.Matches(g => g.AuthorityId.Equals(authority)
             && g.ComplianceYear.Equals(complianceYear) && g.PanArea.Equals(panArea)))).Returns(csvData);
 
             var fileResult = await controller.DownloadAatfReuseSitesCsv(complianceYear, authority, panArea) as FileContentResult;
@@ -1166,6 +1265,142 @@
             fileResult.ContentType.Should().Be("text/csv");
             fileResult.FileContents.Should().Contain(new UTF8Encoding().GetBytes(csvData.FileContent));
             fileResult.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvData.FileName));
+        }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_ReturnsAatfAePublicRegisterViewModel()
+        {
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            var result = await controller.AatfAePublicRegister();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
+
+            var model = viewResult.Model as AatfAePublicRegisterViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+
+            Assert.Collection(model.FacilityTypes,
+               s1 => Assert.Equal("AATF", s1.Text),
+               s2 => Assert.Equal("AE", s2.Text));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            var result = await controller.AatfAePublicRegister();
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task GetAatfAePublicRegister_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAePublicRegister();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithInvalidViewModel_ReturnsAatfAePublicRegisterViewModel()
+        {
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            var years = fixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "AatfAePublicRegister");
+
+            var model = viewResult.Model as AatfAePublicRegisterViewModel;
+            Assert.NotNull(model);
+
+            model.ComplianceYears.Select(c => c.Text).Should().BeEquivalentTo(years.Select(y => y.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Text).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            model.CompetentAuthoritiesList.Select(c => c.Value).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id.ToString()));
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Act
+            var result = await controller.AatfAePublicRegister(new AatfAePublicRegisterViewModel());
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostAatfAePublicRegister_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            // Act
+            await controller.AatfAePublicRegister(A.Dummy<AatfAePublicRegisterViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        [Fact]
+        public async Task GetDownloadAatfAePublicRegisterCsv_GivenActionParameters_CsvShouldBeReturned()
+        {
+            var complianceYear = fixture.Create<int>();
+            ReportFacilityType facilityType = fixture.Create<ReportFacilityType>();
+            var authority = fixture.Create<Guid>();
+            var isPublicRegister = fixture.Create<bool>();
+
+            var fileData = fixture.Create<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeDetailsCsv>.That.Matches(g =>
+                g.ComplianceYear.Equals(complianceYear) && g.FacilityType.Equals(facilityType)
+                && g.AuthorityId.Equals(authority) && g.IsPublicRegister.Equals(isPublicRegister)))).Returns(fileData);
+
+            var result = await controller.DownloadAatfAePublicRegisterCsv(complianceYear, facilityType, authority) as FileContentResult;
+
+            result.FileContents.Should().Contain(new UTF8Encoding().GetBytes(fileData.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(fileData.FileName));
+            result.ContentType.Should().Be("text/csv");
         }
     }
 }

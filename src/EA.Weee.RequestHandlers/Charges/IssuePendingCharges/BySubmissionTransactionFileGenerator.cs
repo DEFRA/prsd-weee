@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
+    using Domain.Charges;
+    using EA.Weee.Ibis;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Charges;
-    using EA.Weee.Ibis;
     using MemberUpload = EA.Weee.Domain.Scheme.MemberUpload;
 
     /// <summary>

@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn
 {
-    using System.Security.Policy;
-    using Areas.AatfReturn;
     using Controllers;
     using Infrastructure;
     using System.Web.Mvc;
@@ -36,6 +34,12 @@
                 name: AatfRedirect.SelectPcsRouteName,
                 url: "aatf-return/{organisationId}/select-pcs/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "SelectYourPcs" },
+                namespaces: new[] { typeof(SelectYourPcsController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfRedirect.RemovedPcsRouteName,
+                url: "aatf-return/{organisationId}/removed-pcs/{returnId}/{action}",
+                defaults: new { action = "PcsRemoved", controller = "SelectYourPcs" },
                 namespaces: new[] { typeof(SelectYourPcsController).Namespace });
 
             context.MapLowercaseDashedRoute(
@@ -81,6 +85,12 @@
                 namespaces: new[] { typeof(ReturnsController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfRedirect.Download,
+                url: "aatf-return/returns-download/{returnId}/",
+                defaults: new { action = "Download", controller = "ReturnsSummary" },
+                namespaces: new[] { typeof(ReturnsSummaryController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfRedirect.ReturnsRouteName,
                 url: "aatf-return/returns/{organisationId}/{action}",
                 defaults: new { action = "Index", controller = "Returns" },
@@ -90,7 +100,7 @@
                 name: AatfRedirect.Default,
                 url: "aatf-return/{controller}/{returnId}/{action}",
                 defaults: new { action = "Index", controller = "AatfTaskList" },
-                namespaces: new[] { typeof(AatfTaskListController).Namespace }); 
+                namespaces: new[] { typeof(AatfTaskListController).Namespace });
         }
     }
 }

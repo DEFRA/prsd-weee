@@ -1,16 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Aatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public abstract class FacilityViewModelBase : IValidatableObject
     {
         public Guid Id { get; set; }
+
+        public Guid AatfId { get; set; }
 
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
@@ -32,14 +34,14 @@
 
         public IEnumerable<PanAreaData> PanAreaList { get; set; }
 
-        [Display(Name = "WROS pan area team")]
+        [Display(Name = "WROS Pan Area Team")]
         public Guid? PanAreaId { get; set; }
 
         public IEnumerable<AatfStatus> StatusList { get; set; }
 
         public IEnumerable<LocalAreaData> LocalAreaList { get; set; }
 
-        [Display(Name = "EA area")]
+        [Display(Name = "EA Area")]
         public Guid? LocalAreaId { get; set; }
 
         [Required]
@@ -83,7 +85,7 @@
             nameof(ApprovalDate)
         };
 
-        public FacilityViewModelBase()
+        protected FacilityViewModelBase()
         {
             SiteAddressData = new AatfAddressData();
         }
@@ -116,7 +118,7 @@
                     if (instance.LocalAreaId == null)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Enter EA area", new List<string> { nameof(instance.LocalAreaId) }));
+                            new ValidationResult($"Enter EA Area", new List<string> { nameof(instance.LocalAreaId) }));
                     }
 
                     if (instance.PanAreaId == null)

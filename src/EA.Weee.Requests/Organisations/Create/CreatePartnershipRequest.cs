@@ -3,6 +3,6 @@
     using Base;
 
     public class CreatePartnershipRequest : CreateOrganisationRequest
-    {       
+    {
     }
 }

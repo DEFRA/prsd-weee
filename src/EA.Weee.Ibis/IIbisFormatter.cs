@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Ibis
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// An IIbisFormatter is capable of sanitizing and encoding string data such
     /// that it can be written to an Ibis file.

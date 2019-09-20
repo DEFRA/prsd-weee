@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Scheme;
@@ -17,12 +11,20 @@
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Prsd.Core.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+
+    using EA.Weee.Core.AatfReturn;
+
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
     using Web.ViewModels.Shared.Submission;
-    using Weee.Requests.AatfReturn;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
@@ -102,16 +104,18 @@
                 if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
                 {
                     activities.Add(PcsAction.ViewSubmissionHistory);
-                }              
+                }
 
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
                 {
                     activities.Add(PcsAction.ManageAatfReturns);
+                    activities.Add(PcsAction.ManageAatfContactDetails);
                 }
 
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
                 {
                     activities.Add(PcsAction.ManageAeReturns);
+                    activities.Add(PcsAction.ManageAeContactDetails);
                 }
 
                 activities.Add(PcsAction.ViewOrganisationDetails);
@@ -197,12 +201,20 @@
                 {
                     return AeRedirect.ReturnsList(viewModel.OrganisationId);
                 }
+                if (viewModel.SelectedValue == PcsAction.ManageAatfContactDetails)
+                {
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Aatf });
+                }
+                if (viewModel.SelectedValue == PcsAction.ManageAeContactDetails)
+                {
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Ae });
+                }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null, false);
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
-            await SetShowLinkToCreateOrJoinOrganisation(viewModel);
-            return View(viewModel);
+            await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]
@@ -492,7 +504,7 @@
                 page = 1;
             }
 
-            var model = new SubmissionHistoryViewModel {OrderBy = orderBy};
+            var model = new SubmissionHistoryViewModel { OrderBy = orderBy };
 
             using (var client = apiClient())
             {
@@ -548,7 +560,7 @@
                 page = 1;
             }
 
-            var model = new DataReturnSubmissionHistoryViewModel {OrderBy = orderBy};
+            var model = new DataReturnSubmissionHistoryViewModel { OrderBy = orderBy };
 
             using (var client = apiClient())
             {

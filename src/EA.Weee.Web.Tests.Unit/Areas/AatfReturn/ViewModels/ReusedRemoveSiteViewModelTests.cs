@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.ViewModels
 {
-    using System;
-    using System.Web.Mvc;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using FluentAssertions;
+    using System;
+    using System.Web.Mvc;
     using Xunit;
 
     public class ReusedRemoveSiteViewModelTests

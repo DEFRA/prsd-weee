@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
-    using System;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Obligation;
+    using System;
     using Xunit;
 
     public class SchemeTests
@@ -143,7 +143,7 @@
         {
             var scheme = new Scheme(Guid.Empty);
             var address = new Address("address1", "address2", "town", "county", "postcode", A.Dummy<Country>(), "telephone", "email");
-            
+
             scheme.AddOrUpdateAddress(address);
 
             scheme.HasAddress.Should().BeTrue();

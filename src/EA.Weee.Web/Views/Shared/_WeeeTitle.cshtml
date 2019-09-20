@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Constant
 @model EA.Weee.Web.ViewModels.Shared.TitleViewModel
 @{
     bool showBreadcrumb =
@@ -70,26 +71,26 @@
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          "External activity link",
-                                          Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                          "Navigation",
-                                          "External activity",
-                                          null,
-                                             new Dictionary<string, object>{ {"title", "External activity link"} })) :
-                                        @Model.Breadcrumb.ExternalActivity
-</li>
+                                                  "External activity link",
+                                                  Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                                  "Navigation",
+                                                  "External activity",
+                                                  null,
+                                                     new Dictionary<string, object> { { "title", "External activity link" } })) :
+                                    @Model.Breadcrumb.ExternalActivity
+                                </li>
                             }
 
                             @if (Model.Breadcrumb.InternalActivity != null)
                             {
                                 <li>
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                          "Internal activity link",
-                                          Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                          "Navigation",
-                                          "Internal activity",
-                                          null,
-                                          null)):
+                                                  "Internal activity link",
+                                                  Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                                  "Navigation",
+                                                  "Internal activity",
+                                                  null,
+                                                  null)):
                                     @Model.Breadcrumb.InternalActivity
                                 </li>
                             }
@@ -175,7 +176,12 @@
         <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
     }
 
-    if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == "AATF return")
+    if (Model.Breadcrumb.ExternalAatf != null)
+    {
+        <div id="schemeBanner">@(Model.Breadcrumb.ExternalAatf.Name): (@(Model.Breadcrumb.ExternalAatf.ApprovalNumber)) Status: @Model.Breadcrumb.ExternalAatf.AatfStatusDisplay</div>
+    }
+
+    if (Model.Breadcrumb.QuarterDisplayInfo != null && Model.Breadcrumb.ExternalActivity == BreadCrumbConstant.AatfReturn)
     {
         <div id="schemeBanner">
             <div class="govuk-grid-row">

@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.Charges;
+    using System.Collections.Generic;
 
     public class IbisFileDataGeneratorResult
     {

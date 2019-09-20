@@ -2,14 +2,13 @@
 {
     using DataAccess;
     using Domain.AatfReturn;
+    using Prsd.Core.Domain;
+    using Specification;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Prsd.Core.Domain;
-    using Specification;
 
     public class GenericDataAccess : IGenericDataAccess
     {
@@ -44,15 +43,15 @@
             }
         }
 
-        public void RemoveMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
+        public void RemoveMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            foreach (var amount in amounts)
+            foreach (var amount in entities)
             {
                 context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
             }
         }
 
-        public async Task<List<TEntity>> GetAll<TEntity>() where TEntity : class
+        public async Task<IEnumerable<TEntity>> GetAll<TEntity>() where TEntity : class
         {
             return await context.Set<TEntity>().ToListAsync();
         }

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
     using Prsd.Core;
+    using Prsd.Core.Domain;
     using Scheme;
     using System;
     using System.Collections.Generic;
-    using Prsd.Core.Domain;
 
     public class RegisteredProducer : Entity, IEquatable<RegisteredProducer>
     {
@@ -76,7 +76,7 @@
                    ComplianceYear == other.ComplianceYear &&
                    Scheme.ApprovalNumber == other.Scheme.ApprovalNumber &&
                    Removed == other.Removed &&
-                   RemovedDate == other.RemovedDate;                   
+                   RemovedDate == other.RemovedDate;
         }
 
         public override bool Equals(object obj)

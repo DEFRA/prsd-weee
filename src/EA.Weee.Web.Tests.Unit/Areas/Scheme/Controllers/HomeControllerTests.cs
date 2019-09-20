@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Scheme;
@@ -16,6 +11,14 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+
+    using EA.Weee.Core.AatfReturn;
+
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -26,6 +29,8 @@
     using Weee.Requests.Users;
     using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
+
+    using AddressData = EA.Weee.Core.Shared.AddressData;
 
     public class HomeControllerTests
     {
@@ -113,7 +118,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(new OrganisationData
               {
-                 SchemeId = Guid.NewGuid()
+                  SchemeId = Guid.NewGuid()
               });
 
             var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
@@ -248,6 +253,40 @@
 
             Assert.Equal("Summary", routeValues["action"]);
             Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAatfFacilityType()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ManageAatfContactDetails
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+            Assert.Equal(FacilityType.Aatf, routeValues["facilityType"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAeFacilityType()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ManageAeContactDetails
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+            Assert.Equal(FacilityType.Ae, routeValues["facilityType"]);
         }
 
         [Fact]
@@ -1095,7 +1134,7 @@
             var organisationData = new OrganisationData() { HasAatfs = false };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);          
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
 
             var result = await HomeControllerSetupForAATFReturns(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
 

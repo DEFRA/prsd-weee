@@ -1,0 +1,51 @@
+﻿@using MvcNavigationHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Extensions
+@model EA.Weee.Web.Areas.Admin.ViewModels.CopyAatf.CopyFacilityViewModelBase
+@{
+    ViewBag.Title = "Copy " + Model.FacilityType.ToDisplayString() + " for new compliance year - GOV.UK";
+}
+<section id="main-content">
+    <h1 class="govuk-heading-l">Copy @Model.FacilityType.ToDisplayString() for new compliance year</h1>
+    @using (Html.BeginForm(actionName: Model.FacilityType == EA.Weee.Core.AatfReturn.FacilityType.Aatf ? "CopyAatfDetails" : "CopyAeDetails", controllerName: "CopyAatf", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.FacilityType)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.SiteAddressData.Id)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ComplianceYear)">
+            @Html.Gds().LabelFor(m => m.ComplianceYear)
+            @Html.Gds().ValidationMessageFor(m => m.ComplianceYear)
+            @Html.Gds().DropDownListFor(m => m.ComplianceYear, Model.ComplianceYearList, string.Empty, new { @class = "govuk-!-width-one-third", autocomplete = "false" })
+        </div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
+            @Html.Gds().LabelForOverridden(m => m.Name, Model.GetType())
+            @Html.Gds().ValidationMessageFor(m => m.Name)
+            @Html.Gds().TextBoxFor(m => m.Name, new { @class = "govuk-!-width-one-third", @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+        @Html.Partial("_AatfDetails")
+        <div>
+            <h2 class="govuk-heading-m">@Model.FacilityType.ToDisplayString() contact details</h2>
+        </div>
+        @Html.EditorFor(m => m.ContactData)
+
+        <div class="govuk-!-padding-bottom-6"></div>
+        <button type="submit" name="save" class="govuk-button" id="site-details">
+            Save and continue
+        </button>
+        <div class="govuk-!-padding-bottom-6"></div>
+        <p>
+            <a href="@(Url.Action("Details", new { controller = "Aatf", area = "Admin", Id = Model.Id }))">Back</a>
+        </p>
+    }
+</section>
+
+@section scripts {
+    @Scripts.Render("~/bundles/hide-classes-when-competent-authory-is-not-ea")
+}

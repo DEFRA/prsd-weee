@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
+    using DataAccess;
+    using Domain.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.AatfReturn;
-    using DataAccess;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
 
     public class ReturnDataAccess : IReturnDataAccess
     {

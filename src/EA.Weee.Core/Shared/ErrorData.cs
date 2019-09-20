@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Shared
 {
-    using System;
     using Prsd.Core;
+    using System;
     public class ErrorData : IEquatable<ErrorData>
     {
         public ErrorData(string description, ErrorLevel errorLevel)

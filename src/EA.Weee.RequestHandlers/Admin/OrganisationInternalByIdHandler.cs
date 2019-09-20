@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Organisations;
@@ -10,8 +7,10 @@
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Security;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class OrganisationInternalByIdHandler : IRequestHandler<GetInternalOrganisation, OrganisationData>
     {

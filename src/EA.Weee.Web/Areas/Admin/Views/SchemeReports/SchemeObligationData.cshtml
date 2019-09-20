@@ -1,0 +1,51 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.SchemeObligationDataViewModel
+@{
+    ViewBag.Title = "Download PCS Obligation Data";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@ViewBag.Title</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria</p>
+        <p>All data is reported in tonnes (t) to three decimal places</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <p>
+            If there is a large amount of returns data for your selected criteria, it may take a while to download your results
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+           "Report download", "PCS obligation data", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        @Html.ActionLink("Back", "ChooseReport", "SchemeReports")
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadSchemeObligationDataCsv", new { complianceYear = Model.SelectedYear }))";
+        </script>
+    }
+}

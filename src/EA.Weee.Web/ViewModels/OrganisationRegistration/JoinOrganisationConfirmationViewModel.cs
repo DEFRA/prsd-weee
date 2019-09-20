@@ -5,7 +5,7 @@
     public class JoinOrganisationConfirmationViewModel
     {
         public JoinOrganisationConfirmationViewModel()
-        {   
+        {
         }
 
         [Required]

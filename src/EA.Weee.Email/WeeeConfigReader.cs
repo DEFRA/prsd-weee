@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Email
 {
-    using System.Configuration;
     using EA.Prsd.Email;
+    using System.Configuration;
 
     public class WeeeConfigReader : ConfigReader, IWeeeEmailConfiguration
     {

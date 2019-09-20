@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedGeneric
 {
+    using Domain.AatfReturn;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
 
     public interface IObligatedDataAccess<in T> where T : ObligatedAmount
     {
