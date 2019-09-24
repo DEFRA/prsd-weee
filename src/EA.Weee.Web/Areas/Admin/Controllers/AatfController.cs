@@ -1,10 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
@@ -19,20 +27,11 @@
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Requests;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-
-    using EA.Weee.Web.Requests;
     using EA.Weee.Web.ViewModels.Shared.Aatf;
     using EA.Weee.Web.ViewModels.Shared.Aatf.Mapping;
-
     using Weee.Requests.Admin.Aatf;
 
     public class AatfController : AdminController
@@ -114,7 +113,7 @@
         {
             SetBreadcrumb(facilityType, null);
 
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel { FacilityType = facilityType } });
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel { FacilityType = facilityType, CompetentAuthorityOptions = await GetCompetentAuthoritiesList() } });
         }
 
         [HttpPost]
@@ -374,6 +373,15 @@
             {
                 var mappedFilter = filter != null ? mapper.Map<AatfFilter>(filter) : null;
                 return await client.SendAsync(User.GetAccessToken(), new GetAatfs(facilityType, mappedFilter));
+            }
+        }
+
+        private async Task<List<UKCompetentAuthorityData>> GetCompetentAuthoritiesList()
+        {
+            using (var client = apiClient())
+            {
+                var authorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+                return authorities.ToList();
             }
         }
 
