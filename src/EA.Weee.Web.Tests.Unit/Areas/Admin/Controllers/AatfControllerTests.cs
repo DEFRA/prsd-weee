@@ -81,8 +81,13 @@
         {
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
-            var result = await controller.ManageAatfs(new ManageAatfsViewModel());
+            var viewModel = new ManageAatfsViewModel()
+            {
+                Filter = filter
+            };
+            var result = await controller.ManageAatfs(viewModel);
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
@@ -109,9 +114,16 @@
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
 
-            await controller.ManageAatfs(new ManageAatfsViewModel());
+            var filter = fixture.Create<FilteringViewModel>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter == null))).MustHaveHappenedOnceExactly();
+            var viewModel = new ManageAatfsViewModel()
+            {
+                Filter = filter
+            };
+
+            await controller.ManageAatfs(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetAatfs>.That.Matches(a => a.Filter != null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -176,6 +188,9 @@
             Assert.Equal(facilityType, viewModel.FacilityType);
             Assert.Equal(null, viewModel.Filter.Name);
             Assert.Equal(null, viewModel.Filter.ApprovalNumber);
+            Assert.Equal(false, viewModel.Filter.SelectApproved);
+            Assert.Equal(false, viewModel.Filter.SelectCancelled);
+            Assert.Equal(false, viewModel.Filter.SelectSuspended);
         }
 
         [Theory]
@@ -185,9 +200,10 @@
         {
             SetUpControllerContext(userHasInternalAdminClaims);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
             var viewModel = new ManageAatfsViewModel();
-
+            viewModel.Filter = filter;
             var result = await controller.ManageAatfs(viewModel) as ViewResult;
 
             var resultViewModel = result.Model as ManageAatfsViewModel;
@@ -214,10 +230,12 @@
         {
             SetUpControllerContext(false);
             controller.ModelState.AddModelError(string.Empty, "Validation message");
+            var filter = fixture.Create<FilteringViewModel>();
 
             var viewModel = new ManageAatfsViewModel()
             {
-                FacilityType = type
+                FacilityType = type,
+                Filter = filter
             };
 
             var result = await controller.ManageAatfs(viewModel) as ViewResult;
@@ -263,6 +281,39 @@
             var viewModel = result.Model as ManageAatfsViewModel;
 
             Assert.Equal(facilityType, viewModel.FacilityType);
+        }
+
+       [Fact]
+        public async Task GetManageAatfs_CA_ViewModelSetCorrectly()
+        {
+            SetUpControllerContext(false);
+            var competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).Returns(competentAuthorities);
+
+            var result = await controller.ManageAatfs(FacilityType.Aatf) as ViewResult;
+
+            var viewModel = result.Model as ManageAatfsViewModel;
+
+            viewModel.Filter.CompetentAuthorityOptions.Select(c => c.Abbreviation).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Abbreviation.ToString()));
+            viewModel.Filter.CompetentAuthorityOptions.Select(c => c.Id).Should().BeEquivalentTo(competentAuthorities.Select(y => y.Id));
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_SelectedStatus_ViewModelSetCorrectly()
+        {
+            SetUpControllerContext(false);
+            var filter = fixture.Create<FilteringViewModel>();
+            filter.SelectApproved = true;
+            filter.SelectSuspended = true;
+
+            var result = await controller.ApplyFilter(filter);
+
+            var viewResult = (ViewResult)result;
+            var viewModel = (ManageAatfsViewModel)viewResult.Model;
+
+            viewModel.Filter.SelectedStatus.Count.Should().Be(2);
+            viewModel.Filter.SelectedStatus.Should().Contain(AatfStatus.Approved.Value);
+            viewModel.Filter.SelectedStatus.Should().Contain(AatfStatus.Suspended.Value);
         }
 
         [Theory]

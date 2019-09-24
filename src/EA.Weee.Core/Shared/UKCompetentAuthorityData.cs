@@ -15,5 +15,7 @@
         public string Email { get; set; }
 
         public decimal? AnnualChargeAmount { get; set; }
+
+        public bool Selected { get; set; }
     }
 }
