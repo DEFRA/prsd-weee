@@ -83,7 +83,7 @@
                                                             var isChecked = Model.Filter.SelectedAuthority.Contains(Model.Filter.CompetentAuthorityOptions[i].Id) ? "checked" : "";
                                                         }
 
-                                                        <input class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="@id" name="@name" type="checkbox" value="true" @isChecked>
+                                                        <input class="govuk-checkboxes__input" id="@id" name="@name" type="checkbox" value="true" @isChecked>
 
                                                         <label class="govuk-label govuk-checkboxes__label" for="@id">
                                                             @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
@@ -122,7 +122,7 @@
                                                     @{
                                                         var approvedChecked = Model.Filter.SelectApproved ? "checked" : "";
                                                     }
-                                                    <input @approvedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectApproved" name="Filter.SelectApproved" type="checkbox" value="true">
+                                                    <input @approvedChecked class="govuk-checkboxes__input" id="Filter_SelectApproved" name="Filter.SelectApproved" type="checkbox" value="true">
                                                     <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectApproved">
                                                         @AatfStatus.Approved.ToDisplayString()
                                                     </label>
@@ -132,7 +132,7 @@
                                                     @{
                                                         var cancelledChecked = Model.Filter.SelectCancelled ? "checked" : "";
                                                     }
-                                                    <input @cancelledChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectCancelled" name="Filter.SelectCancelled" type="checkbox" value="true">
+                                                    <input @cancelledChecked class="govuk-checkboxes__input" id="Filter_SelectCancelled" name="Filter.SelectCancelled" type="checkbox" value="true">
                                                     <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectCancelled">
                                                         @AatfStatus.Cancelled.ToDisplayString()
                                                     </label>
@@ -142,7 +142,7 @@
                                                     @{
                                                         var suspendedChecked = Model.Filter.SelectSuspended ? "checked" : "";
                                                     }
-                                                    <input @suspendedChecked class="govuk-checkboxes__input govuk-checkboxes__input_opacity" id="Filter_SelectSuspended" name="Filter.SelectSuspended" type="checkbox" value="true">
+                                                    <input @suspendedChecked class="govuk-checkboxes__input" id="Filter_SelectSuspended" name="Filter.SelectSuspended" type="checkbox" value="true">
                                                     <label class="govuk-label govuk-checkboxes__label" for="Filter_SelectSuspended">
                                                         @AatfStatus.Suspended.ToDisplayString()
                                                     </label>
