@@ -25,8 +25,7 @@
         public async Task<IEnumerable<PartialAatfReturn>> FetchPartialAatfReturnsForComplianceYearAsync(int complianceYear)
         {
             var returns = await context.Returns
-                .Where(r => r.Quarter.Year == complianceYear)
-                .Where(r => r.SubmittedDate.HasValue)
+                .Where(r => r.SubmittedDate.HasValue && r.Quarter.Year == complianceYear && r.FacilityType == Domain.AatfReturn.FacilityType.Aatf)
                 .GroupBy(r => r.Organisation.Id)
                 .SelectMany(orgGroup =>
                     orgGroup.GroupBy(r => r.Quarter.Q)
