@@ -29,14 +29,25 @@
 
         public async Task<List<Aatf>> GetFilteredAatfs(AatfFilter filter)
         {
-            return await context.Aatfs.GroupBy(a => a.AatfId)
+            var aatfList = await context.Aatfs.GroupBy(a => a.AatfId)
                 .Select(x => x.OrderByDescending(a => a.ComplianceYear).FirstOrDefault())
                 .Where(a =>
                 (filter.Name == null || filter.Name.Trim() == string.Empty ||
                     a.Name.ToLower().Contains(filter.Name.ToLower())) &&
                 (filter.ApprovalNumber == null || filter.ApprovalNumber.Trim() == string.Empty ||
-                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower())))
+                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower()))) 
                 .ToListAsync();
+
+            if (filter.SelectedAuthority != null && filter.SelectedAuthority.Count > 0)
+            {
+                aatfList = aatfList.Where(x => filter.SelectedAuthority.Contains(x.CompetentAuthority.Id)).ToList();
+            }
+            if (filter.SelectedStatus != null && filter.SelectedStatus.Count > 0)
+            {
+                aatfList = aatfList.Where(x => filter.SelectedStatus.Contains(x.AatfStatus.Value)).ToList();
+            }
+            
+            return aatfList;           
         }
 
         public async Task<List<Aatf>> GetLatestAatfs()
