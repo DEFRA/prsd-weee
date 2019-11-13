@@ -1,13 +1,3 @@
-USE [EA.Weee]
-GO
-/****** Object:  StoredProcedure [AATF].[getAllAatfObligatedCsvData]    Script Date: 11/11/2019 14:59:16 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
---				the limits of the specified parameters.Get the latest submitted return
-
--- =============================================
 ALTER PROCEDURE [AATF].[getAllAatfObligatedCsvData]
 	@ComplianceYear INT,
 	@AatfName nvarchar(256),
@@ -386,3 +376,4 @@ DROP TABLE #ObligatedData
 DROP TABLE #TotalReused
 
 END
+GO
