@@ -139,5 +139,3 @@ ORDER BY
 	r.ComplianceYear, r.[Quarter], OrganisationName, fr.CategoryId
 END
 GO
-
-
