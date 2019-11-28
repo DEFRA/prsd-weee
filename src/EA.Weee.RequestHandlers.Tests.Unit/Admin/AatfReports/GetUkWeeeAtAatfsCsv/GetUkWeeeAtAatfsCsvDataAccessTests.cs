@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
+    using DomainFacilityType = EA.Weee.Domain.AatfReturn.FacilityType;
 
     public class GetUkWeeeAtAatfsCsvDataAccessTests
     {
@@ -41,6 +42,58 @@
             var returns = new List<Return>
             {
                 CreateReturn(idQ1, year, QuarterType.Q1)
+            };
+            var returnsDbSet = helper.GetAsyncEnabledDbSet(returns);
+            A.CallTo(() => context.Returns).Returns(returnsDbSet);
+
+            var received = new List<WeeeReceived>
+            {
+                CreateWeeeReceived(idQ1, out var categoryReceived, out var receivedB2bQ1, out var receivedB2cQ1)
+            };
+            var receivedDbSet = helper.GetAsyncEnabledDbSet(received);
+            A.CallTo(() => context.WeeeReceived).Returns(receivedDbSet);
+
+            var reused = new List<WeeeReused>
+            {
+                CreateWeeeReused(idQ1, out var categoryReused, out var reusedB2bQ1, out var reusedB2cQ1)
+            };
+            var reusedDbSet = helper.GetAsyncEnabledDbSet(reused);
+            A.CallTo(() => context.WeeeReused).Returns(reusedDbSet);
+
+            var sentOn = new List<WeeeSentOn>
+            {
+                CreateWeeeSentOn(idQ1, out var categorySentOn, out var sentOnB2bQ1, out var sentOnB2cQ1)
+            };
+            var sentOnDbSet = helper.GetAsyncEnabledDbSet(sentOn);
+            A.CallTo(() => context.WeeeSentOn).Returns(sentOnDbSet);
+
+            // Act
+            var results = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(year);
+
+            // Assert
+            Assert.Equal(1, results.Count());
+
+            var result = results.First();
+            Assert.Equal(year, result.Quarter.Year);
+            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ1, receivedB2cQ1);
+            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ1, reusedB2cQ1);
+            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ1, sentOnB2cQ1);
+        }
+
+        [Fact]
+        public async Task FetchPartialAatfReturnsForComplianceYearAsync_ReturnsReceivedReusedAndSentOnFiltersOutAeData()
+        {
+            // Arrange
+            var year = 1900 + fixture.Create<int>();
+            var idQ1 = fixture.Create<Guid>();
+
+            var returns = new List<Return>
+            {
+                CreateReturn(idQ1, year, QuarterType.Q1),
+                CreateReturn(idQ1, year, QuarterType.Q1, facilityType: DomainFacilityType.Ae)
             };
             var returnsDbSet = helper.GetAsyncEnabledDbSet(returns);
             A.CallTo(() => context.Returns).Returns(returnsDbSet);
@@ -290,7 +343,7 @@
             Assert.False(results.Any());
         }
 
-        private Return CreateReturn(Guid id, int year, QuarterType quarter, Organisation organisation = null, DateTime? submittedDate = null)
+         private Return CreateReturn(Guid id, int year, QuarterType quarter, Organisation organisation = null, DateTime? submittedDate = null, DomainFacilityType facilityType = null)
         {
             var @return = A.Fake<Return>();
             A.CallTo(() => @return.Id).Returns(id);
@@ -304,6 +357,12 @@
             }
 
             A.CallTo(() => @return.Organisation).Returns(organisation);
+
+            if (facilityType == null)
+            {
+                facilityType = DomainFacilityType.Aatf;
+            }
+            A.CallTo(() => @return.FacilityType).Returns(facilityType);
 
             return @return;
         }
