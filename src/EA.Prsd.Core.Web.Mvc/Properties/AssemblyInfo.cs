@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("MVC elements for EA.Prsd.Core.Web")]
 [assembly: AssemblyCompany("SFW")]
 [assembly: AssemblyProduct("EA.Prsd.Core.Web.Mvc")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
