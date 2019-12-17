@@ -1,17 +1,18 @@
 ﻿namespace EA.Prsd.Core.Web.OAuth
 {
+    using Extensions;
     using System;
     using System.Threading.Tasks;
     using IdentityModel.Client;
-
+    
     public class OAuthClient : IOAuthClient
     {
         private readonly TokenClient oauth2Client;
 
         public OAuthClient(string baseUrl, string clientId, string clientSecret)
         {
-            var baseUri = new Uri(baseUrl);
-            var address = new Uri(baseUri, "/connect/token/");
+            var baseUri = new Uri(baseUrl.EnsureTrailingSlash());
+            var address = new Uri(baseUri, "connect/token/");
 
             oauth2Client = new TokenClient(address.ToString(), clientId, clientSecret);
         }
