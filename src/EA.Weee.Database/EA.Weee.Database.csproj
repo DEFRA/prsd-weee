@@ -57,6 +57,7 @@
     <Content Include="scripts\Everytime\0011-InsertWeeeCategory.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\AzureMigration\20191218-1015-create-sessions-table.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903141.annual-charge.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903143.rollback-2019-ea-charges.sql" />
@@ -312,8 +313,8 @@
     <Content Include="scripts\Update\Release 2\Sprint17\20190916-0948-delete-schemes.sql" />
     <Content Include="scripts\Update\Release 2\Sprint17\20190917-1141-alter-getPcsAatfDiscrepancyCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Sprint18\20190920-1027-alter-getPcsAatfDiscrepancyCsvData.sql" />
-    <Content Include="scripts\Update\Release 2\Support01\20191029-1059-alter-getNonObligatedWeeeReceived.sql" />
-    <Content Include="scripts\Update\Release 2\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
+    <Content Include="scripts\Update\Support01\20191029-1059-alter-getNonObligatedWeeeReceived.sql" />
+    <Content Include="scripts\Update\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
