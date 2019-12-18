@@ -5,6 +5,7 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Api
 {
+    using System.Linq;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
@@ -21,6 +22,7 @@ namespace EA.Weee.Api
     using System.Web;
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
+    using System.Web.Http.Filters;
 
     public class Startup
     {
@@ -53,7 +55,7 @@ namespace EA.Weee.Api
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
             config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
-            config.Filters.Add(new ElmahHandleErrorApiAttribute());
+            config.Filters.AddRange(new FilterConfig(configurationService.CurrentConfiguration).Collection);
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new DefaultContractResolver { IgnoreSerializableAttribute = true };
 

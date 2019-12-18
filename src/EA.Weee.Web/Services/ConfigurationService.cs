@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using Microsoft.Azure;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -95,7 +96,7 @@
 
         protected virtual string GetAppSetting(string settingName)
         {
-            return WebConfigurationManager.AppSettings[settingName];
+            return CloudConfigurationManager.GetSetting(settingName);
         }
 
         protected virtual ConnectionStringSettings GetConnectionString(string settingName)
