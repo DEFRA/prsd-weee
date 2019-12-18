@@ -42,5 +42,7 @@
         int MaximumAatfOrganisationSearchResults { get; set; }
 
         int MaximumProducerOrganisationSearchResults { get; set; }
+
+        bool MaintenanceMode { get; set; }
     }
 }

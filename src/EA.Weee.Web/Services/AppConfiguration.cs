@@ -60,5 +60,8 @@
 
         [DefaultValue(10)]
         public int MaximumProducerOrganisationSearchResults { get; set; }
+
+        [DefaultValue(false)]
+        public bool MaintenanceMode { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Api.Services
 {
+    using Microsoft.Azure;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -10,10 +11,8 @@
     using System.Web.Configuration;
 
     // https://github.com/NuGet/NuGetGallery
-    public class ConfigurationService
+    public class ConfigurationService : ConfigurationServiceBase
     {
-        private const string SettingPrefix = "Weee.";
-
         private AppConfiguration currentConfiguration;
 
         public AppConfiguration CurrentConfiguration
@@ -95,7 +94,7 @@
 
         protected virtual string GetAppSetting(string settingName)
         {
-            return WebConfigurationManager.AppSettings[settingName];
+            return CloudConfigurationManager.GetSetting(settingName);
         }
 
         protected virtual ConnectionStringSettings GetConnectionString(string settingName)
