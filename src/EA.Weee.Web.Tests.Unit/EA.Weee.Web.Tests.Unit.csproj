@@ -274,6 +274,7 @@
     <Compile Include="Areas\Test\ManagePcsReturnsSubmissionWindowControllerTests.cs" />
     <Compile Include="Areas\Test\TestControllerBaseTests.cs" />
     <Compile Include="Extensions\ModelStateExtensionsTests.cs" />
+    <Compile Include="Filters\MaintenanceModeFilterAttributeTests.cs" />
     <Compile Include="Infrastructure\ARedirectTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\OverriddenFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
