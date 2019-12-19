@@ -12,11 +12,9 @@
     public class MaintenanceModeFilterAttributeTests
     {
         private readonly MaintenanceModeFilterAttribute filter;
-        private readonly ActionExecutedContext context;
 
         public MaintenanceModeFilterAttributeTests()
         {
-            context = A.Fake<ActionExecutedContext>();
             filter = new MaintenanceModeFilterAttribute();
         }
 
@@ -24,30 +22,34 @@
         public void OnActionExecuted_GivenNotMaintenanceAction_ShouldRedirectToMaintenanceAction()
         {
             var routeData = new RouteData();
-            routeData.Values.Add("action", "NotMaintenance");
-            routeData.Values.Add("controller", "NotError");
+            routeData.Values.Add("action", string.Empty);
+            routeData.Values.Add("controller", string.Empty);
 
-            A.CallTo(() => context.RouteData).Returns(routeData);
+            var context = Context(routeData);
 
             filter.OnActionExecuted(context);
 
-            context.RouteData.Values["action"].Should().Be("Maintenance");
-            context.RouteData.Values["controller"].Should().Be("Error");
+            var result = context.Result as RedirectToRouteResult;
+            result.RouteValues["action"].Should().Be("Maintenance");
+            result.RouteValues["controller"].Should().Be("Errors");
         }
 
         [Fact]
-        public void OnActionExecuted_GivenMaintenanceAction_ShouldRouteDataShouldBeMaintenanceAction()
+        public void OnActionExecuted_GivenMaintenanceAction_RouteDataShouldBeNull()
         {
             var routeData = new RouteData();
             routeData.Values.Add("action", "Maintenance");
-            routeData.Values.Add("controller", "Error");
+            routeData.Values.Add("controller", "Errors");
 
-            A.CallTo(() => context.RouteData).Returns(routeData);
+            var context = Context(routeData);
 
             filter.OnActionExecuted(context);
+            context.Result.GetType().Should().Be(typeof(EmptyResult));
+        }
 
-            context.RouteData.Values["action"].Should().Be("Maintenance");
-            context.RouteData.Values["controller"].Should().Be("Error");
+        public ActionExecutedContext Context(RouteData route)
+        {
+            return new ActionExecutedContext(new ControllerContext(A.Fake<HttpContextBase>(), route, A.Fake<ControllerBase>()), A.Fake<ActionDescriptor>(), false, null);
         }
     }
 }
