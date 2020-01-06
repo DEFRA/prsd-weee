@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Filters
 {
-    using System.Security.Claims;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
