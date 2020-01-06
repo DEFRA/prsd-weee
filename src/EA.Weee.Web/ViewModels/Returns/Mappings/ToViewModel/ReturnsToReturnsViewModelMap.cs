@@ -146,7 +146,7 @@
                     QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
                     return
-                        $"Returns have been started or submitted for all open quarters. You can start submitting your {source.CurrentDate.Year} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
+                        $"Returns have been started or submitted for all open quarters. You can start submitting your {source.NextWindow.WindowOpenDate.Year} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
                 }
             }
             return NotExpectedError;
