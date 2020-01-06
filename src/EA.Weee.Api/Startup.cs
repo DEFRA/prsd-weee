@@ -83,10 +83,11 @@ namespace EA.Weee.Api
             {
                 Factory = factory,
                 RequireSsl = false,
+                EnableWelcomePage = false,
                 EventsOptions = new EventsOptions()
                 {
                     RaiseSuccessEvents = true,
-                    RaiseFailureEvents = true
+                    RaiseFailureEvents = true,
                 }
             };
         }
