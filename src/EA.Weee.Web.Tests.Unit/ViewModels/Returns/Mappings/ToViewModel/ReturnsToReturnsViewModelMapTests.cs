@@ -269,10 +269,10 @@
                 new Quarter(2018, QuarterType.Q1),
                 new Quarter(2018, QuarterType.Q2),
                 new Quarter(2018, QuarterType.Q3),
-                new Quarter(2019, QuarterType.Q4)
+                new Quarter(2018, QuarterType.Q4)
             };
 
-            var nextQuarter = QuarterWindowTestHelper.GetQuarterOneWindow(2020);
+            var nextQuarter = QuarterWindowTestHelper.GetQuarterOneWindow(2019);
 
             var returnData = new List<ReturnData>()
             {
