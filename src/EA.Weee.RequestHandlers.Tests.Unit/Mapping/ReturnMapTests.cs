@@ -379,7 +379,7 @@
             var date = new DateTime(2019, 4, 1);
 
             var @returnQuarterWindow = A.Fake<ReturnQuarterWindow>();
-            QuarterWindow window = new QuarterWindow(DateTime.Now, DateTime.Now.AddDays(3), QuarterType.Q1);
+            QuarterWindow window = new QuarterWindow(date, date.AddMonths(3), QuarterType.Q1);
             Return ret = A.Fake<Return>();
 
             Quarter q = new Quarter(2018, QuarterType.Q1);
@@ -417,8 +417,8 @@
 
         public Domain.DataReturns.QuarterWindow GetQuarterWindow()
         {
-            var startTime = DateTime.Now;
-            var endTime = DateTime.Now.AddDays(1);
+            var startTime = new DateTime(2020, 4, 1);
+            var endTime = new DateTime(2020, 7, 16);
             var quarterWindow = new Domain.DataReturns.QuarterWindow(startTime, endTime, QuarterType.Q1);
 
             return quarterWindow;
