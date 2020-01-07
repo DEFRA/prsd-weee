@@ -4,7 +4,14 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '@Config.CurrentConfiguration.GoogleAnalyticsAccountId', 'auto');
-  ga('send', 'pageview');
+    ga('create', '@Config.CurrentConfiguration.GoogleAnalyticsAccountId', 'auto');
+    ga('create', 'UA-145652997-1', 'auto', 'govuk_shared', { 'allowLinker': true });
+    ga('govuk_shared.require', 'linker');
+    ga('govuk_shared.linker.set', 'anonymizeIp', true);
+    ga('govuk_shared.linker.set', 'allowAdFeatures', false);
+    ga('govuk_shared.linker:autoLink', ['www.gov.uk', 'www.nationalarchives.gov.uk', 'www.daera-ni.gov.uk', 'www.data.gov.uk', 'www.environment-agency.gov.uk']);
+
+    ga('send', 'pageview');
+    ga('govuk_shared.send', 'pageview');
 
 </script>
