@@ -6,6 +6,7 @@ using Microsoft.Owin;
 namespace EA.Weee.Api
 {
     using System.Linq;
+    using System.Net;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
@@ -50,6 +51,8 @@ namespace EA.Weee.Api
             builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
 
             var container = AutofacBootstrapper.Initialize(builder, config);
+            System.Net.ServicePointManager.SecurityProtocol |=
+                SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             // Web API
             config.MapHttpAttributeRoutes();
