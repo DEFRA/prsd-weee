@@ -23,6 +23,7 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;
     using Weee.Requests.Admin;
@@ -31,18 +32,16 @@
     public class AccountControllerTests
     {
         private readonly IWeeeClient apiClient;
-        private readonly IOAuthClient oauthClient;
+        private readonly IOAuthClientCredentialClient oauthClientCredential;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IUserInfoClient userInfoClient;
         private readonly IExternalRouteService externalRouteService;
         private readonly IWeeeAuthorization weeeAuthorization;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
-            oauthClient = A.Fake<IOAuthClient>();
+            oauthClientCredential = A.Fake<IOAuthClientCredentialClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
-            userInfoClient = A.Fake<IUserInfoClient>();
             externalRouteService = A.Fake<IExternalRouteService>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
         }
@@ -65,10 +64,18 @@
         {
             var model = ValidModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
+            var token = A.Fake<TokenResponse>();
+            var accessToken = "token";
+
+            A.CallTo(() => oauthClientCredential.GetClientCredentialsAsync()).Returns(token);
 
             var userCreationData = new InternalUserCreationData();
-            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
-                .Invokes((InternalUserCreationData u) => userCreationData = u)
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._, token.AccessToken))
+                .Invokes((InternalUserCreationData u, string t) =>
+                {
+                    userCreationData = u;
+                    accessToken = token.AccessToken;
+                })
                 .Returns(Task.FromResult(A.Dummy<string>()));
 
             A.CallTo(() => apiClient.User).Returns(newUser);
@@ -97,7 +104,7 @@
 
             await AccountController().Create(model);
 
-            A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._))
+            A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._, A<string>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
@@ -154,7 +161,7 @@
             var model = ValidModel();
 
             var newUser = A.Fake<IUnauthenticatedUser>();
-            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._, A<string>._))
                 .Throws(new ApiException(HttpStatusCode.BadRequest, new ApiError()));
             A.CallTo(() => apiClient.User).Returns(newUser);
 
@@ -221,14 +228,14 @@
         {
             // Arrange
             IWeeeClient apiClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
                 .Returns(false);
 
             IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
             IAuthenticationManager authenticationManager = A.Dummy<IAuthenticationManager>();
             IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
 
-            var controller = new AccountController(() => apiClient, authenticationManager, externalRouteService, weeeAuthorization);
+            var controller = new AccountController(() => apiClient, authenticationManager, externalRouteService, weeeAuthorization, () => oauthClientCredential);
 
             // Act
             var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
@@ -244,14 +251,14 @@
         public async Task AdminAccount_ActiveUserAccount_ActivatesTheAccount()
         {
             // Arrange
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
                 .Returns(true);
 
             // Act
             var result = await AccountController().ActivateUserAccount(A.Dummy<Guid>(), A.Dummy<string>());
 
             // Assert
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             ViewResult viewResult = result as ViewResult;
@@ -268,6 +275,7 @@
 
             var userId = Guid.NewGuid();
             string code = "Code";
+            var accessToken = "token";
 
             var viewUserRoute = A.Fake<ViewCompetentAuthorityUserRoute>();
             A.CallTo(() => externalRouteService.ViewCompetentAuthorityUserRoute)
@@ -275,15 +283,19 @@
 
             ActivatedUserAccountData activatedUserAccountData = null;
 
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
-                .Invokes((ActivatedUserAccountData a) => activatedUserAccountData = a)
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
+                .Invokes((ActivatedUserAccountData a, string b) =>
+                {
+                    activatedUserAccountData = a;
+                    accessToken = b;
+                })
                 .Returns(true);
 
             // Act
             await controller.ActivateUserAccount(userId, code);
 
             // Assert
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, accessToken))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(activatedUserAccountData);
@@ -362,7 +374,7 @@
         {
             // Arrange
             IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Returns(true);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
@@ -377,7 +389,7 @@
             ActionResult result = await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             // Assert
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -401,7 +413,7 @@
             });
 
             IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Throws(badRequestException);
 
             A.CallTo(() => apiClient.User)
@@ -427,7 +439,7 @@
         {
             // Arrange
             IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Returns(true);
 
             A.CallTo(() => apiClient.User)
@@ -502,7 +514,8 @@
                 () => apiClient,
                 authenticationManager,
                 externalRouteService,
-                weeeAuthorization);
+                weeeAuthorization,
+                () => oauthClientCredential);
 
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
