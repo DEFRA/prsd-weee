@@ -22,6 +22,10 @@
 
         public string ApiClientId { get; set; }
 
+        public string ApiClientCredentialSecret { get; set; }
+
+        public string ApiClientCredentialId { get; set; }
+
         [DefaultValue(60)]
         public double ApiTimeoutInSeconds { get; set; }
 

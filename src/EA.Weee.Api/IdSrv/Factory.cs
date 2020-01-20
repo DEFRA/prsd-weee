@@ -17,7 +17,7 @@
             factory.ScopeStore = new Registration<IScopeStore>(scopeStore);
             var clientStore = new InMemoryClientStore(Clients.Get(config));
             factory.ClientStore = new Registration<IClientStore>(clientStore);
-
+            
             var efConfig = new EntityFrameworkServiceOptions
             {
                 ConnectionString = "Weee.DefaultConnection",

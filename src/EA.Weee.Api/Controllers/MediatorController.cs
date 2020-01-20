@@ -16,6 +16,7 @@
     using System.Web.Http;
 
     [RoutePrefix("api")]
+    [Authorize]
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;
