@@ -18,6 +18,10 @@
 
         string ApiClientId { get; set; }
 
+        string ApiClientCredentialSecret { get; set; }
+
+        string ApiClientCredentialId { get; set; }
+
         double ApiTimeoutInSeconds { get; set; }
 
         string TruncateEmailAfterPlus { get; set; }

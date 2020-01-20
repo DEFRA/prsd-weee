@@ -21,6 +21,7 @@
     {
         private readonly IOAuthClient oathClient;
         private readonly IWeeeClient weeeClient;
+        private readonly IOAuthClientCredentialClient oathClientCredential;
         private readonly IAuthenticationManager authenticationManager;
         private readonly IExternalRouteService externalRouteService;
         private readonly IAppConfiguration appConfig;
@@ -29,6 +30,7 @@
         {
             oathClient = A.Fake<IOAuthClient>();
             weeeClient = A.Fake<IWeeeClient>();
+            oathClientCredential = A.Fake<IOAuthClientCredentialClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
             externalRouteService = A.Fake<IExternalRouteService>();
             appConfig = A.Fake<IAppConfiguration>();
@@ -115,7 +117,7 @@
             var newUser = A.Fake<IUnauthenticatedUser>();
 
             var userCreationData = new InternalUserCreationData();
-            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._, A<string>._))
                 .Invokes((InternalUserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A.Dummy<string>()));
 
@@ -162,7 +164,8 @@
                 () => weeeClient,
                 authenticationManager,
                 externalRouteService,
-                appConfig);
+                appConfig,
+                () => oathClientCredential);
         }
 
         private NewUserController GetMockNewUserController(object viewModel)
@@ -172,7 +175,8 @@
                 () => new WeeeClient("test", TimeSpan.FromSeconds(60)),
                 null,
                 externalRouteService,
-                appConfig);
+                appConfig,
+                () => oathClientCredential);
 
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);

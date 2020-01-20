@@ -15,20 +15,28 @@
             this.httpClient = httpClient;
         }
 
-        public async Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData)
+        public async Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
+
             var response = await httpClient.PostAsJsonAsync(Controller + "CreateInternalUser", userCreationData);
+
             return await response.CreateResponseAsync<string>();
         }
 
-        public async Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData)
+        public async Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
+
             var response = await httpClient.PostAsJsonAsync(Controller + "CreateExternalUser", userCreationData);
+
             return await response.CreateResponseAsync<string>();
         }
 
-        public async Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedUserAccountData)
+        public async Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedUserAccountData, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
+
             var response = await httpClient.PostAsJsonAsync(Controller + "ActivateUserAccount", activatedUserAccountData);
 
             return await response.CreateResponseAsync<bool>();
@@ -60,8 +68,10 @@
             return await response.CreateResponseAsync<bool>();
         }
 
-        public async Task<bool> ResendActivationEmailByUserId(string userId, string emailAddress, string activationBaseUrl)
+        public async Task<bool> ResendActivationEmailByUserId(string userId, string emailAddress, string activationBaseUrl, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
+
             string url = Controller + "ResendActivationEmailByUserId";
 
             ResendActivationEmailByUserIdRequest model = new ResendActivationEmailByUserIdRequest()
@@ -76,22 +86,25 @@
             return await response.CreateResponseAsync<bool>();
         }
 
-        public async Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData)
+        public async Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
             var response = await httpClient.PostAsJsonAsync(Controller + "ResetPassword", passwordResetData);
 
             return await response.CreateResponseAsync<bool>();
         }
 
-        public async Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest)
+        public async Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
             var response = await httpClient.PostAsJsonAsync(Controller + "ResetPasswordRequest", passwordResetRequest);
 
             return await response.CreateResponseAsync<PasswordResetRequestResult>();
         }
 
-        public async Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData passwordResetData)
+        public async Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData passwordResetData, string accessToken)
         {
+            httpClient.SetBearerToken(accessToken);
             var response = await httpClient.PostAsJsonAsync(Controller + "IsPasswordResetTokenValid", passwordResetData);
 
             return await response.CreateResponseAsync<bool>();

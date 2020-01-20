@@ -19,7 +19,7 @@
 
             return new List<Client>
             {
-                new IdentityServer3.Core.Models.Client
+                new Client
                 {
                     ClientName = "WEEE Web",
                     ClientId = clientId,
@@ -31,7 +31,27 @@
                         new Secret(config.ApiSecret.Sha256())
                     },
                     AccessTokenLifetime = 10805, // 3 hour,
-                    AllowAccessToAllScopes = true
+                    AllowAccessToAllScopes = true,
+                    AllowClientCredentialsOnly = true
+                },
+                new Client
+                {
+                    ClientName = "WEEE Web Unauthenticated",
+                    ClientId = ConfigurationManager.AppSettings["Weee.ApiClientCredentialId"],
+                    Enabled = true,
+                    AccessTokenType = AccessTokenType.Reference,
+                    Flow = Flows.ClientCredentials,
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret(ConfigurationManager.AppSettings["Weee.ApiClientCredentialSecret"].Sha256())
+                    },
+                    AccessTokenLifetime = 10805, // 3 hour,
+                    AllowAccessToAllScopes = false,
+                    AllowedScopes =
+                    {
+                        "api2",
+                        "api1"
+                    }
                 }
             };
         }

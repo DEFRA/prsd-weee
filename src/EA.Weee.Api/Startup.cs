@@ -67,7 +67,7 @@ namespace EA.Weee.Api
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
                 Authority = configurationService.CurrentConfiguration.SiteRoot,
-                RequiredScopes = new[] { "api1" },
+                RequiredScopes = new[] { "api1", "api2" },
                 ValidationMode = ValidationMode.ValidationEndpoint
             });
 
@@ -91,7 +91,7 @@ namespace EA.Weee.Api
                 {
                     RaiseSuccessEvents = true,
                     RaiseFailureEvents = true,
-                }
+                },
             };
         }
     }

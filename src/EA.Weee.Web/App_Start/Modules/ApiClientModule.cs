@@ -30,6 +30,13 @@
             {
                 var cc = c.Resolve<IComponentContext>();
                 var config = cc.Resolve<IAppConfiguration>();
+                return new OAuthClientCredentialClient(config.ApiUrl, config.ApiClientCredentialId, config.ApiClientCredentialSecret);
+            }).As<IOAuthClientCredentialClient>();
+
+            builder.Register(c =>
+            {
+                var cc = c.Resolve<IComponentContext>();
+                var config = cc.Resolve<IAppConfiguration>();
                 return new UserInfoClient(config.ApiUrl);
             }).As<IUserInfoClient>();
         }

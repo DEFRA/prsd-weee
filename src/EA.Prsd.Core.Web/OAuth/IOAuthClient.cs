@@ -7,5 +7,6 @@ namespace EA.Prsd.Core.Web.OAuth
     {
         Task<TokenResponse> GetAccessTokenAsync(string username, string password);
         Task<TokenResponse> GetRefreshTokenAsync(string refreshToken);
+        Task<TokenResponse> GetClientCredentialsAsync();
     }
 }
