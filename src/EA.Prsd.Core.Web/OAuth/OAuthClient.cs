@@ -27,10 +27,5 @@
         {
             return await Oauth2Client.RequestRefreshTokenAsync(refreshToken);
         }
-
-        public async Task<TokenResponse> GetClientCredentialsAsync()
-        {
-            return await Oauth2Client.RequestClientCredentialsAsync("openid");
-        }
     }
 }
