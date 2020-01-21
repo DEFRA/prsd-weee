@@ -327,7 +327,9 @@
                 ResetPasswordRoute route = externalRouteService.InternalUserResetPasswordRoute;
                 PasswordResetRequest apiModel = new PasswordResetRequest(model.Email, route);
 
-                var result = await client.User.ResetPasswordRequestAsync(apiModel, User.GetAccessToken());
+                var token = await apiClientCredential().GetClientCredentialsAsync();
+
+                var result = await client.User.ResetPasswordRequestAsync(apiModel, token.AccessToken);
 
                 if (!result.ValidEmail)
                 {

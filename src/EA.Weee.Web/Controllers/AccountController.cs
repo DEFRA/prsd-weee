@@ -129,9 +129,11 @@
                     ModelState.AddModelError("Email", "The email address does not match the address for your account.");
                     return View("AccountActivationFailed", model);
                 }
-
-                ViewBag.Email = model.Email;
-                return View("AccountActivationRequested");
+                else
+                {
+                    ViewBag.Email = model.Email;
+                    return View("AccountActivationRequested");
+                }
             }
         }
 
