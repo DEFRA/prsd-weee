@@ -9,7 +9,7 @@
         {
         }
 
-        public new async Task<TokenResponse> GetClientCredentialsAsync()
+        public async Task<TokenResponse> GetClientCredentialsAsync()
         {
             return await Oauth2Client.RequestClientCredentialsAsync("api2");
         }
