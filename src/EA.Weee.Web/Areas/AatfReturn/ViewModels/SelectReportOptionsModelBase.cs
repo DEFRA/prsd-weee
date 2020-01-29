@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    [Serializable]
     public abstract class SelectReportOptionsModelBase
     {
         protected SelectReportOptionsModelBase()
