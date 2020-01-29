@@ -4,6 +4,7 @@
     using Shared;
     using System;
 
+    [Serializable]
     public class SchemeData
     {
         public Guid Id { get; set; }
