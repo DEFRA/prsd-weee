@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.Core.DataReturns
 {
+    using System;
+
+    [Serializable]
     public enum QuarterType
     {
         Q1 = 1,

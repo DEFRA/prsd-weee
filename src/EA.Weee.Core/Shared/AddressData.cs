@@ -6,6 +6,7 @@
     using System.ComponentModel.DataAnnotations;
     using Validation;
 
+    [Serializable]
     public class AddressData : IValidatableObject
     {
         public Guid Id { get; set; }

@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using DataReturns;
     using Validation;
 
+    [Serializable]
     public class NonObligatedCategoryValue : CategoryValue
     {
         [TonnageValue("CategoryId")]
