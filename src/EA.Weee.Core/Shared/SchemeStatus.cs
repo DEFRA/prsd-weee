@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Core.Shared
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
+    [Serializable]
     public enum SchemeStatus
     {
         [Display(Name = "Pending")]
