@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class ReturnReportOn
     {
         public ReturnReportOn(int reportOnQuestionId, Guid returnId)

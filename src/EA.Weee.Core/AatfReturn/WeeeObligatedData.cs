@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public sealed class WeeeObligatedData
     {
         public Guid Id { get; set; }
