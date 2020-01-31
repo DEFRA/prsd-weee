@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
     using System;
+
+    [Serializable]
     public class Scheme
     {
         public Scheme(Guid id, string name)

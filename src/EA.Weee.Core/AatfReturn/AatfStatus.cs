@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using Prsd.Core.Domain;
 
+    [Serializable]
     public class AatfStatus : Enumeration
     {
         public static readonly AatfStatus Approved = new AatfStatus(1, "Approved");

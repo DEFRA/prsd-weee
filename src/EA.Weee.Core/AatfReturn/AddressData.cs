@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    [Serializable]
     public abstract class AddressData
     {
         public Guid Id { get; set; }

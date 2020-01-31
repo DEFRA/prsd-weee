@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
+
+    [Serializable]
     public class ReportOnQuestion
     {
         public ReportOnQuestion(int id, string question, string description, int? parentId, string alternativeDescription, string title)

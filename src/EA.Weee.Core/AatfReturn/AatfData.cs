@@ -5,6 +5,7 @@
     using EA.Weee.Core.Organisations;
     using System;
 
+    [Serializable]
     public class AatfData
     {
         public AatfData(Guid id, string name, string approvalNumber, Int16 complianceYear, UKCompetentAuthorityData competentAuthority = null, AatfStatus status = null, AatfAddressData siteAddress = null, AatfSize size = null, DateTime approvalDate = default(DateTime), PanAreaData panAreaData = null, LocalAreaData localAreaData = null)

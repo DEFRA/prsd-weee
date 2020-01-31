@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class PanAreaData
     {
         public Guid Id { get; set; }

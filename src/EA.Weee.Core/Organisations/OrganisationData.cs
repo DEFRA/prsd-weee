@@ -3,6 +3,7 @@
     using Shared;
     using System;
 
+    [Serializable]
     public class OrganisationData
     {
         public virtual Guid Id { get; set; }

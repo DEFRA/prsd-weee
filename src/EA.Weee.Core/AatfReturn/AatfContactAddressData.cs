@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class AatfContactAddressData : AddressData
     {
         public override string Name { get; set; }
