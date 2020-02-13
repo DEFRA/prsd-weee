@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Prsd.Core.Domain;
 
     public class ApplicationUserManager : ApplicationUserManagerBase<ApplicationUser>
     {
@@ -21,7 +22,7 @@
         private readonly WeeeContext context;
 
         protected ApplicationUserManager()
-            : base(null, null)
+            : base(null, null, null)
         {
         }
 
@@ -30,8 +31,9 @@
             ISecurityEventAuditor auditSecurityEventService,
             IDataProtectionProvider dataProtectionProvider,
             ConfigurationService configurationService,
-            WeeeContext context)
-            : base(store, auditSecurityEventService)
+            WeeeContext context,
+            IUserContext userContext)
+            : base(store, auditSecurityEventService, userContext)
         {
             this.configurationService = configurationService;
             this.context = context;
