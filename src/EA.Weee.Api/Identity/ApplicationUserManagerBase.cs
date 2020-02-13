@@ -5,20 +5,25 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
+    using Prsd.Core.Domain;
 
     /// <summary>
     /// A base class which raises events on an IAuditSecurityAuditor relating to user creation,
     /// user updates, account verification and claim issueing.
     /// </summary>
     /// <typeparam name="TUser"></typeparam>
-    public abstract class ApplicationUserManagerBase<TUser> : UserManager<TUser> where TUser : class, Microsoft.AspNet.Identity.IUser<string>
+    public abstract class ApplicationUserManagerBase<TUser> : UserManager<TUser>
+        where TUser : class, Microsoft.AspNet.Identity.IUser<string>
     {
         private readonly ISecurityEventAuditor auditSecurityEventService;
+        private readonly IUserContext userContext;
 
-        public ApplicationUserManagerBase(IUserStore<TUser> store, ISecurityEventAuditor auditSecurityEventService)
+        public ApplicationUserManagerBase(IUserStore<TUser> store, ISecurityEventAuditor auditSecurityEventService,
+            IUserContext userContext)
             : base(store)
         {
             this.auditSecurityEventService = auditSecurityEventService;
+            this.userContext = userContext;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -34,7 +39,7 @@
         {
             IdentityResult result = await base.UpdateAsync(user);
 
-            string userId = GetCurrentUserId();
+            string userId = userContext.UserId.ToString();
 
             await auditSecurityEventService.UserUpdated(userId, user);
 
@@ -57,34 +62,6 @@
             await auditSecurityEventService.EmailConfirmed(userId);
 
             return result;
-        }
-
-        private static string GetCurrentUserId()
-        {
-            if (HttpContext.Current == null)
-            {
-                return null;
-            }
-
-            ClaimsPrincipal claimsPrincipal = HttpContext.Current.User as ClaimsPrincipal;
-
-            if (claimsPrincipal != null)
-            {
-                foreach (var identity in claimsPrincipal.Identities)
-                {
-                    if (string.Equals(identity.AuthenticationType, "BEARER", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var idClaim = identity.FindFirst("sub");
-
-                        if (idClaim != null)
-                        {
-                            return idClaim.Value;
-                        }
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }
