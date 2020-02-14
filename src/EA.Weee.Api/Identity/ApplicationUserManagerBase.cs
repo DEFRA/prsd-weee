@@ -39,7 +39,7 @@
         {
             IdentityResult result = await base.UpdateAsync(user);
 
-            string userId = userContext.UserId.ToString();
+            string userId = GetCurrentUserId();
 
             await auditSecurityEventService.UserUpdated(userId, user);
 
@@ -62,6 +62,11 @@
             await auditSecurityEventService.EmailConfirmed(userId);
 
             return result;
+        }
+
+        private string GetCurrentUserId()
+        {
+            return HttpContext.Current == null ? null : userContext?.UserId.ToString();
         }
     }
 }
