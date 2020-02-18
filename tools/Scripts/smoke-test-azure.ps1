@@ -7,16 +7,17 @@ param
     [uri]$Url = $null,
 
     [Parameter(Mandatory=$true)]
-    [uri]$ApiUrl = $null,
-
-    [Parameter(Mandatory=$true)]
     [string]$SiteUsername = $null,
 
     [Parameter(Mandatory=$true)]
     [string]$SitePassword = $null,
 
     [Parameter(Mandatory=$true)]
-    [string]$TestEmail = $null   
+    [string]$TestEmail = $null,
+
+    [Parameter(Mandatory=$true)]
+    [uri]$ApiUrl = $null
+
 )
 
 $exitCode = 0;
