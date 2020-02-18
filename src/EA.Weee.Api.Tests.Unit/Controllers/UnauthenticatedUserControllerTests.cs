@@ -18,11 +18,26 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using System.Web.Http;
     using System.Web.Http.Results;
+    using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class UnauthenticatedUserControllerTests
     {
+        [Fact]
+        public void Controller_ShouldHaveAuthorizeAttribute()
+        {
+            typeof(UnauthenticatedUserController).Should().BeDecoratedWith<AuthorizeAttribute>();
+        }
+
+        [Fact]
+        public void Controller_ShouldNotHaveAnonymousActions()
+        {
+            AttributeHelper.ShouldNotHaveAnonymousMethods(typeof(UnauthenticatedUserController));
+        }
+
         [Fact]
         public async Task CreateInternalUser_WithValidModel_IssuesCanAccessInternalAreaClaim()
         {
