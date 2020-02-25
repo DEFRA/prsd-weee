@@ -66,7 +66,15 @@
 
         private string GetCurrentUserId()
         {
-            return HttpContext.Current == null ? null : userContext?.UserId.ToString();
+            if (HttpContext.Current != null)
+            {
+                if (userContext != null)
+                {
+                    return userContext.UserId.ToString();
+                }
+            }
+
+            return Guid.Empty.ToString();
         }
     }
 }
