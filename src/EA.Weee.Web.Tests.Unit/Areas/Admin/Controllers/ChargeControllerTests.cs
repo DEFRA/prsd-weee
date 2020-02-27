@@ -15,13 +15,21 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using FluentAssertions;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Charge;
     using Weee.Requests.Charges;
     using Xunit;
 
     public class ChargeControllerTests
     {
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(ChargeController).Should().BeDerivedFrom<AdminController>();
+        }
+
         /// <summary>
         /// This test ensures that the OnActionExecuting method will throw an
         /// InvalidOperationException if the application configuration has "EnableInvoicing"
