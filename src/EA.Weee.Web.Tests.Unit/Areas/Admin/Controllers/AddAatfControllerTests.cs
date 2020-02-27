@@ -23,6 +23,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
     using FakeItEasy;
     using FluentAssertions;
     using FluentValidation.Results;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Infrastructure;
     using Xunit;
 
@@ -46,6 +47,12 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             validationWrapper = A.Fake<IFacilityViewModelBaseValidatorWrapper>();
 
             controller = new AddAatfController(() => weeeClient, breadcrumbService, cache, validationWrapper);
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(AddAatfController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

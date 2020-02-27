@@ -9,8 +9,10 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using FluentAssertions;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Submissions;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared.Submission;
@@ -26,6 +28,12 @@
         public SubmissionsControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(SubmissionsController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

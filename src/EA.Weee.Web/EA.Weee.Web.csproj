@@ -330,7 +330,6 @@
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
-    <Compile Include="Areas\Admin\Controllers\AddPcsController.cs" />
     <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationSchemeBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationHasNoSchemeFilterAttribute.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfController.cs" />

@@ -23,8 +23,10 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using FluentAssertions;
     using IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Account;
     using Weee.Requests.Admin;
     using Xunit;
@@ -44,6 +46,12 @@
             authenticationManager = A.Fake<IAuthenticationManager>();
             externalRouteService = A.Fake<IExternalRouteService>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
+        }
+
+        [Fact]
+        public void AccountController_ShouldInheritFromAdminBaseController()
+        {
+            typeof(AccountController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]
