@@ -14,6 +14,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using FluentAssertions;
+    using Web.Areas.Admin.Controllers.Base;
     using Xunit;
 
     public class ProducersControllerTests
@@ -32,6 +34,12 @@
             configurationService = A.Fake<ConfigurationService>();
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults).Returns(10);
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(ProducersController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

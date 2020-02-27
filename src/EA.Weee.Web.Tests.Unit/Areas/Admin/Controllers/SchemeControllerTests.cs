@@ -28,6 +28,7 @@
     using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.Mappings.ToViewModel;
     using Web.Areas.Admin.ViewModels.Scheme;
     using Web.Areas.Admin.ViewModels.Scheme.Overview;
@@ -76,6 +77,12 @@
                 .Returns(new ContactDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<MembersDataOverviewViewModel>(A<SchemeData>._))
                 .Returns(new MembersDataOverviewViewModel());
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(SchemeController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]
