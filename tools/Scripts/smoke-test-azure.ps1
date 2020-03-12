@@ -37,7 +37,7 @@ Try
       }
       catch [System.Net.WebException]
       {
-          if (!($_.Exception.Response.StatusCode.value__-eq 401))
+          if (!($_.Exception.Response.StatusCode.value__-eq 403))
           {
             $failedTests += "Mediator auth check failed";
           }
