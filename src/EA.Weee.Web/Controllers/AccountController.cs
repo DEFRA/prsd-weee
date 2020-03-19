@@ -15,22 +15,25 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.OAuth;
     using ViewModels.Account;
 
     [Authorize]
     public class AccountController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly Func<IOAuthClientCredentialClient> apiClientCredential;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
 
         public AccountController(Func<IWeeeClient> apiClient,
             IWeeeAuthorization weeeAuthorization,
-            IExternalRouteService externalRouteService)
+            IExternalRouteService externalRouteService, Func<IOAuthClientCredentialClient> apiClientCredential)
         {
             this.apiClient = apiClient;
             this.weeeAuthorization = weeeAuthorization;
             this.externalRouteService = externalRouteService;
+            this.apiClientCredential = apiClientCredential;
         }
 
         [HttpGet]
@@ -107,7 +110,6 @@
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserAccountActivationFailed(Guid id, AccountActivationRequestViewModel model)
         {
@@ -120,7 +122,7 @@
             {
                 string activationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl;
 
-                var result = await client.User.ResendActivationEmailByUserId(id.ToString(), model.Email, activationBaseUrl);
+                var result = await client.User.ResendActivationEmailByUserId(id.ToString(), model.Email, activationBaseUrl, User.GetAccessToken());
 
                 if (!result)
                 {
@@ -136,12 +138,11 @@
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
         {
             using (var client = apiClient())
             {
-                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
+                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }, User.GetAccessToken());
 
                 if (!result)
                 {
@@ -167,7 +168,10 @@
                     UserId = id
                 };
 
-                bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData);
+                var response = await apiClientCredential().GetClientCredentialsAsync();
+
+                bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData, response.AccessToken);
+
                 return View(!result ? "ResetPasswordExpired" : "ResetPassword");
             }
         }
@@ -193,7 +197,9 @@
 
                 try
                 {
-                    bool result = await client.User.ResetPasswordAsync(passwordResetData);
+                    var response = await apiClientCredential().GetClientCredentialsAsync();
+
+                    bool result = await client.User.ResetPasswordAsync(passwordResetData, response.AccessToken);
                     return View(!result ? "ResetPasswordExpired" : "ResetPasswordComplete");
                 }
                 catch (ApiBadRequestException ex)
@@ -241,13 +247,14 @@
             {
                 return View(model);
             }
-
+            var access = await apiClientCredential().GetClientCredentialsAsync();
+            
             using (var client = apiClient())
             {
                 ResetPasswordRoute route = externalRouteService.ExternalUserResetPasswordRoute;
                 PasswordResetRequest apiModel = new PasswordResetRequest(model.Email, route);
 
-                var result = await client.User.ResetPasswordRequestAsync(apiModel);
+                var result = await client.User.ResetPasswordRequestAsync(apiModel, access.AccessToken);
 
                 if (!result.ValidEmail)
                 {

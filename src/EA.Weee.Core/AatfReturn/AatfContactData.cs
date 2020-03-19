@@ -5,6 +5,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
+    [Serializable]
     public class AatfContactData
     {
         public AatfContactData()

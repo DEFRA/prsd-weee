@@ -13,6 +13,7 @@ namespace EA.Weee.Web
     using Owin;
     using Services;
     using System.ComponentModel.DataAnnotations;
+    using System.Net;
     using System.Reflection;
     using System.Web;
     using System.Web.Helpers;
@@ -50,7 +51,7 @@ namespace EA.Weee.Web
             MvcHandler.DisableMvcResponseHeader = true;
 
             AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, configuration.CurrentConfiguration);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
@@ -59,6 +60,8 @@ namespace EA.Weee.Web
             ApplicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             FluentValidationModelValidatorProvider.Configure();
+
+            System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
     }
 }

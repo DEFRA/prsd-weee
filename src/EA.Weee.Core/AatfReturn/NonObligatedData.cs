@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class NonObligatedData
     {
         public NonObligatedData(int categoryId, decimal? tonnage, bool dcf, Guid id)

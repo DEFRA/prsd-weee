@@ -29,7 +29,7 @@
                 returnQuarter
             };
 
-            QuarterWindow nextQuarter = new QuarterWindow(DateTime.Now, DateTime.Now.AddMonths(2), QuarterType.Q1);
+            QuarterWindow nextQuarter = new QuarterWindow(new DateTime(2020, 4, 1), new DateTime(2020, 7, 16), QuarterType.Q1);
 
             var returnsData = new ReturnsData(returnsList, returnQuarter, openQuarters, nextQuarter, DateTime.Now);
 

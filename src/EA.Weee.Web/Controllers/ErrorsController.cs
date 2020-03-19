@@ -50,5 +50,11 @@
 
             return authState.DefaultLoginAction;
         }
+
+        [HttpGet]
+        public ActionResult Maintenance()
+        {
+            return View();
+        }
     }
 }
