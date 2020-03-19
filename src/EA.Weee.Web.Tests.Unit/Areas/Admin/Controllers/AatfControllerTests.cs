@@ -40,6 +40,7 @@
     using EA.Weee.Web.ViewModels.Shared.Aatf.Mapping;
 
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.Requests;
     using Web.Areas.Admin.ViewModels.Aatf;
     using Xunit;
@@ -74,6 +75,12 @@
             var url = fixture.Create<string>();
             var helperCall = A.CallTo(() => helper.Action("Details", A<object>._));
             helperCall.Returns(url);
+        }
+
+        [Fact]
+        public void AatfController_ShouldInheritFromAdminBaseController()
+        {
+            typeof(AatfController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

@@ -22,6 +22,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly Func<IOAuthClientCredentialClient> oauthClientCredential;
         private readonly IExternalRouteService externalRouteService;
         private readonly IAppConfiguration appConfig;
 
@@ -29,13 +30,15 @@
             Func<IWeeeClient> apiClient,
             IAuthenticationManager authenticationManager,
             IExternalRouteService externalRouteService,
-            IAppConfiguration appConfig)
+            IAppConfiguration appConfig,
+            Func<IOAuthClientCredentialClient> oauthClientCredential)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.externalRouteService = externalRouteService;
             this.appConfig = appConfig;
+            this.oauthClientCredential = oauthClientCredential;
         }
 
         [HttpGet]
@@ -75,7 +78,9 @@
 
                     try
                     {
-                        var userId = await client.User.CreateExternalUserAsync(userCreationData);
+                        var response = await oauthClientCredential().GetClientCredentialsAsync();
+
+                        await client.User.CreateExternalUserAsync(userCreationData, response.AccessToken);
 
                         var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
 

@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using Prsd.Core.Domain;
 
+    [Serializable]
     public class AatfSize : Enumeration
     {
         public static readonly AatfSize Small = new AatfSize(1, "Small");

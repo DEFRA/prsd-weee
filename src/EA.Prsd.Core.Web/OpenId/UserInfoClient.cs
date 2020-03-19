@@ -1,5 +1,6 @@
 ﻿namespace EA.Prsd.Core.Web.OpenId
 {
+    using Extensions;
     using System;
     using System.Threading.Tasks;
     using IdentityModel.Client;
@@ -16,7 +17,7 @@
         public async Task<UserInfoResponse> GetUserInfoAsync(string accessToken)
         {
             var userInfoClient = new IdentityModel.Client.UserInfoClient(
-                new Uri(baseUrl + "/connect/userinfo"), accessToken);
+                new Uri(baseUrl.EnsureTrailingSlash() + "connect/userinfo"), accessToken);
 
             return await userInfoClient.GetAsync();
         }

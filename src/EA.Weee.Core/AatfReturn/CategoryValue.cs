@@ -4,6 +4,7 @@
     using Helpers;
     using System;
 
+    [Serializable]
     public class CategoryValue
     {
         public Guid Id { get; set; }

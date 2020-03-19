@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class LocalAreaData
     {
         public Guid Id { get; set; }

@@ -10,6 +10,7 @@
     using System;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Home;
     using Web.ViewModels.Shared;
     using Xunit;
@@ -21,6 +22,12 @@
         public HomeControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(HomeController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Theory]

@@ -17,6 +17,7 @@
     using System.Web.Http;
 
     [RoutePrefix("api/UnauthenticatedUser")]
+    [Authorize]
     public class UnauthenticatedUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
@@ -36,7 +37,6 @@
             this.getAdminUserDataAccess = getAdminUserDataAccess;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("CreateInternalUser")]
         public async Task<IHttpActionResult> CreateInternalUser(InternalUserCreationData model)
@@ -73,7 +73,6 @@
             return Ok(user.Id);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("CreateExternalUser")]
         public async Task<IHttpActionResult> CreateExternalUser(ExternalUserCreationData model)
@@ -110,7 +109,6 @@
             return Ok(user.Id);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("ActivateUserAccount")]
         public async Task<IHttpActionResult> ActivateUserAccount(ActivatedUserAccountData model)
@@ -161,7 +159,6 @@
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("ResendActivationEmailByUserId")]
         public async Task<IHttpActionResult> ResendActivationEmailByUserId(ResendActivationEmailByUserIdRequest model)
         {
@@ -222,7 +219,6 @@
             return Ok(result.Succeeded);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("ResetPasswordRequest")]
         public async Task<IHttpActionResult> ResetPasswordRequest(PasswordResetRequest model)
@@ -245,7 +241,6 @@
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("IsPasswordResetTokenValid")]
         public async Task<IHttpActionResult> IsPasswordResetTokenValid(PasswordResetData model)

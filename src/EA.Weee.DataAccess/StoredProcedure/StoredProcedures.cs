@@ -599,6 +599,7 @@
             SqlParameter quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? 0);
             SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
 
+            context.Database.CommandTimeout = 180;
             return await context.Database
                .SqlQuery<PcsAatfComparisonDataCsvData>(
                    "[AATF].[getPcsAatfDiscrepancyCsvData] @ComplianceYear, @Quarter, @ObligationType",

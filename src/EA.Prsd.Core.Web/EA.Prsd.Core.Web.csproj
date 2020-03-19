@@ -65,8 +65,11 @@
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
     <Compile Include="ClaimTypes.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TokenResponseExtensions.cs" />
+    <Compile Include="OAuth\IOAuthClientCredentialClient.cs" />
     <Compile Include="OAuth\IOAuthClient.cs" />
+    <Compile Include="OAuth\OAuthClientCredentialClient.cs" />
     <Compile Include="OAuth\OAuthClient.cs" />
     <Compile Include="OpenId\IUserInfoClient.cs" />
     <Compile Include="OpenId\UserInfoClient.cs" />

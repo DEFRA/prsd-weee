@@ -221,7 +221,7 @@
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
-    <Compile Include="Areas\Admin\Controllers\AddPcsControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeReportsControllerTests.cs" />
@@ -274,11 +274,13 @@
     <Compile Include="Areas\Test\ManagePcsReturnsSubmissionWindowControllerTests.cs" />
     <Compile Include="Areas\Test\TestControllerBaseTests.cs" />
     <Compile Include="Extensions\ModelStateExtensionsTests.cs" />
+    <Compile Include="Filters\MaintenanceModeFilterAttributeTests.cs" />
     <Compile Include="Infrastructure\ARedirectTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\OverriddenFacilityViewModelBase.cs" />
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />

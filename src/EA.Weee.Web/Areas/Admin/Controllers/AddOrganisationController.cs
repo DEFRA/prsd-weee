@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Base;
     using Core.Organisations;
     using Core.Search;
     using Core.Shared;
@@ -23,7 +24,7 @@
     using Weee.Requests.Shared;
 
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
-    public class AddOrganisationController : Controller
+    public class AddOrganisationController : AdminController
     {
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly Func<IWeeeClient> apiClient;

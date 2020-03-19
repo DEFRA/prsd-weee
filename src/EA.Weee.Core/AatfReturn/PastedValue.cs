@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Core.AatfReturn
 {
+    using System;
     using EA.Weee.Core.DataReturns;
 
+    [Serializable]
     public class PastedValue : CategoryValue
     {
         public string Tonnage { get; set; }

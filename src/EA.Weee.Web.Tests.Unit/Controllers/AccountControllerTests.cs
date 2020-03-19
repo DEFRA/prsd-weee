@@ -14,12 +14,14 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.OAuth;
     using Web.Controllers;
     using Xunit;
 
     public class AccountControllerTests
     {
         private readonly IWeeeClient apiClient;
+        private readonly IOAuthClientCredentialClient oauthClientCredentialClient;
         private readonly IUnauthenticatedUser unauthenticatedUserClient;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
@@ -27,6 +29,7 @@
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
+            oauthClientCredentialClient = A.Fake<IOAuthClientCredentialClient>();
             unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             externalRouteService = A.Fake<IExternalRouteService>();
@@ -37,7 +40,8 @@
             return new AccountController(
                 () => apiClient,
                 weeeAuthorization,
-                externalRouteService);
+                externalRouteService,
+                () => oauthClientCredentialClient);
         }
 
         [Fact]
@@ -45,13 +49,13 @@
         {
             // Arrange
             IWeeeClient apiClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
                 .Returns(false);
 
             IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
             IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
 
-            var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService);
+            var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService, () => oauthClientCredentialClient);
 
             // Act
             var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
@@ -82,7 +86,7 @@
         {
             var passwordResetModel = new ResetPasswordModel();
 
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Returns(true);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
@@ -93,7 +97,7 @@
 
             await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -118,7 +122,7 @@
                 ModelState = modelState
             });
 
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Throws(badRequestException);
 
             A.CallTo(() => apiClient.User)
@@ -139,7 +143,7 @@
         public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsResetPasswordCompleteView()
         {
             // Arrange
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
                 .Returns(true);
 
             A.CallTo(() => apiClient.User)

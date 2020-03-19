@@ -20,6 +20,7 @@
     using Services.Caching;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.AddOrganisation;
     using Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using Web.Areas.Admin.ViewModels.AddOrganisation.Type;
@@ -51,6 +52,12 @@
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumAatfOrganisationSearchResults).Returns(5);
 
             controller = new AddOrganisationController(organisationSearcher, () => weeeClient, breadcrumbService, cache, configurationService);
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(AddOrganisationController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

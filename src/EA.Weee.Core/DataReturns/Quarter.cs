@@ -4,6 +4,7 @@
     using System.Diagnostics;
 
     [DebuggerDisplay("{Year} {Q}")]
+    [Serializable]
     public class Quarter : IComparable<Quarter>, IEquatable<Quarter>
     {
         public int Year { get; private set; }

@@ -8,6 +8,7 @@
     using Validation;
 
     [Validator(typeof(SelectReportOptionsViewModelValidator))]
+    [Serializable]
     public class SelectReportOptionsViewModel : SelectReportOptionsModelBase
     {
         public SelectReportOptionsViewModel()

@@ -5,6 +5,8 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Api
 {
+    using System.Linq;
+    using System.Net;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
@@ -21,6 +23,7 @@ namespace EA.Weee.Api
     using System.Web;
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
+    using System.Web.Http.Filters;
 
     public class Startup
     {
@@ -48,12 +51,14 @@ namespace EA.Weee.Api
             builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
 
             var container = AutofacBootstrapper.Initialize(builder, config);
+            System.Net.ServicePointManager.SecurityProtocol |=
+                SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             // Web API
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
             config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
-            config.Filters.Add(new ElmahHandleErrorApiAttribute());
+            config.Filters.AddRange(new FilterConfig(configurationService.CurrentConfiguration).Collection);
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new DefaultContractResolver { IgnoreSerializableAttribute = true };
 
@@ -62,7 +67,7 @@ namespace EA.Weee.Api
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
                 Authority = configurationService.CurrentConfiguration.SiteRoot,
-                RequiredScopes = new[] { "api1" },
+                RequiredScopes = new[] { "api1", "api2" },
                 ValidationMode = ValidationMode.ValidationEndpoint
             });
 
@@ -81,11 +86,12 @@ namespace EA.Weee.Api
             {
                 Factory = factory,
                 RequireSsl = false,
+                EnableWelcomePage = false,
                 EventsOptions = new EventsOptions()
                 {
                     RaiseSuccessEvents = true,
-                    RaiseFailureEvents = true
-                }
+                    RaiseFailureEvents = true,
+                },
             };
         }
     }
