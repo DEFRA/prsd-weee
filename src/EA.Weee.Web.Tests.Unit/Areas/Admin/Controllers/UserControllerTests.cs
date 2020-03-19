@@ -15,6 +15,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
+    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;
     using Weee.Requests.Users;
@@ -36,6 +37,12 @@
             apiClient = () => weeeClient;
             mapper = A.Fake<IMapper>();
             controller = new UserController(apiClient, A.Fake<BreadcrumbService>(), mapper);
+        }
+
+        [Fact]
+        public void Controller_ShouldInheritFromAdminBaseController()
+        {
+            typeof(UserController).Should().BeDerivedFrom<AdminController>();
         }
 
         [Fact]

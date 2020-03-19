@@ -2,7 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-
+    
+    [Serializable]
     [Flags]
     public enum ObligationType
     {

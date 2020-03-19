@@ -57,6 +57,7 @@
     <Content Include="scripts\Everytime\0011-InsertWeeeCategory.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\Release 3 Azure migration\20191218-1015-create-sessions-table.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903141.annual-charge.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903143.rollback-2019-ea-charges.sql" />

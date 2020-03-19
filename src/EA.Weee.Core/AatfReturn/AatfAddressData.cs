@@ -4,6 +4,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
+    [Serializable]
     public class AatfAddressData : AddressData
     {
         [Required(ErrorMessage = "Enter AATF / ATF site name")]

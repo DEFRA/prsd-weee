@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class UKCompetentAuthorityData
     {
         public Guid Id { get; set; }

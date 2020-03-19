@@ -3,6 +3,7 @@
     using EA.Weee.Core;
     using IdentityServer3.Core.Models;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Security.Claims;
 
     internal static class Scopes
@@ -30,13 +31,19 @@
                         new ScopeClaim(WeeeClaimTypes.OrganisationAccess),
                         new ScopeClaim(WeeeClaimTypes.SchemeAccess)
                     }
-                }
+                },
+                new Scope()
+                {
+                    Name = "api2",
+                    DisplayName = "WEEE API Unauthenticated",
+                    Type = ScopeType.Resource,
+                    Emphasize = true
+                },
+                StandardScopes.OpenId,
+                StandardScopes.AllClaims,
+                StandardScopes.Profile,
+                StandardScopes.OfflineAccess
             };
-
-            scopes.Add(StandardScopes.OpenId);
-            scopes.Add(StandardScopes.AllClaims);
-            scopes.Add(StandardScopes.Profile);
-            scopes.Add(StandardScopes.OfflineAccess);
 
             return scopes;
         }

@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
+    [Serializable]
     public class ContactData
     {
         public Guid Id { get; set; }

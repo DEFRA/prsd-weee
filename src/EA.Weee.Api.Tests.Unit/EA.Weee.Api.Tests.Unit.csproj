@@ -47,6 +47,12 @@
     <Reference Include="AutoFixture.AutoFakeItEasy, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoFixture.AutoFakeItEasy.4.11.0\lib\net452\AutoFixture.AutoFakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Contrib.WebApi, Version=1.0.10.25, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.Contrib.WebApi.1.0.10.25\lib\net45\Elmah.Contrib.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -122,8 +128,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\MediatorControllerTests.cs" />
     <Compile Include="Controllers\UnauthenticatedUserControllerTests.cs" />
+    <Compile Include="Filters\MaintenanceModeFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup\FilterConfigTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -170,6 +179,10 @@
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -177,6 +190,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

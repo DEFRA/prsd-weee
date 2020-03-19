@@ -22,6 +22,10 @@
 
         public string ApiClientId { get; set; }
 
+        public string ApiClientCredentialSecret { get; set; }
+
+        public string ApiClientCredentialId { get; set; }
+
         [DefaultValue(60)]
         public double ApiTimeoutInSeconds { get; set; }
 
@@ -60,5 +64,8 @@
 
         [DefaultValue(10)]
         public int MaximumProducerOrganisationSearchResults { get; set; }
+
+        [DefaultValue(false)]
+        public bool MaintenanceMode { get; set; }
     }
 }

@@ -5,22 +5,20 @@
 
     public interface IUnauthenticatedUser
     {
-        Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData);
+        Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData, string accessToken);
 
-        Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData);
+        Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData, string accessToken);
 
-        Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedAccountData);
+        Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedAccountData, string token);
 
-        Task<string> GetUserAccountActivationTokenAsync(string accessToken);
-
-        Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData);
+        Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData, string accessToken);
 
         Task<bool> ResendActivationEmail(string accessToken, string activationBaseUrl);
 
-        Task<bool> ResendActivationEmailByUserId(string userId, string emailAddress, string activationBaseUrl);
+        Task<bool> ResendActivationEmailByUserId(string userId, string emailAddress, string activationBaseUrl, string token);
 
-        Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest);
+        Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest, string token);
 
-        Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData model);
+        Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData model, string accessToken);
     }
 }

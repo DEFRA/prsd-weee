@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
 
+    [Serializable]
     public abstract class Enumeration : IComparable
     {
         private int value;

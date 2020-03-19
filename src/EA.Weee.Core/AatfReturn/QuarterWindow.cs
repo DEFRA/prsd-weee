@@ -3,6 +3,7 @@
     using DataReturns;
     using System;
 
+    [Serializable]
     public class QuarterWindow
     {
         public DateTime WindowOpenDate { get; private set; }

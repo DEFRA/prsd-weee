@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
 
+    [Serializable]
     public class ReturnData
     {
         public Guid Id { get; set; }
@@ -38,7 +39,7 @@
 
         public DateTime CreatedDate { get; set; }
 
-        public Core.AatfReturn.ReturnStatus ReturnStatus { get; set; }
+        public ReturnStatus ReturnStatus { get; set; }
 
         public Guid OrganisationId { get; set; }
 
