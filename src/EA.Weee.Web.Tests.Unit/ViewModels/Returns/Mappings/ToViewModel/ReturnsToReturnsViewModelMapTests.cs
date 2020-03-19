@@ -252,7 +252,7 @@
 
             SystemTime.Freeze(new DateTime(2019, 07, 11));
 
-            var returnsData = new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now);
+            var returnsData = new ReturnsData(returnData, null, openQuarters, nextQuarter, new DateTime(2019, 3, 1));
 
             var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
 
@@ -301,7 +301,7 @@
             var openQuarters = new List<Quarter>();
             var nextQuarter = QuarterWindowTestHelper.GetDefaultQuarterWindow();
 
-            var returnsData = new ReturnsData(returnData, null, openQuarters, nextQuarter, DateTime.Now);
+            var returnsData = new ReturnsData(returnData, null, openQuarters, nextQuarter, new DateTime(2019, 3, 1));
 
             var result = returnsMap.Map(new ReturnToReturnsViewModelTransfer() { ReturnsData = returnsData });
 
