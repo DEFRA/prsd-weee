@@ -397,6 +397,7 @@
         public async Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            context.Database.CommandTimeout = 180;
 
             return await context.Database
                 .SqlQuery<SchemeObligationCsvData>(
