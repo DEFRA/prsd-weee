@@ -226,6 +226,7 @@
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             var obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            context.Database.CommandTimeout = 180;
 
             return await context.Database
                 .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType",
@@ -238,6 +239,7 @@
         public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            context.Database.CommandTimeout = 180;
 
             return await context.Database
                 .SqlQuery<UkEeeCsvData>(
@@ -260,6 +262,7 @@
             var command = context.Database.Connection.CreateCommand();
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.CommandText = "[Producer].[spgProducerEeeHistoryCsvDataByPRN]";
+            command.CommandTimeout = 180;
 
             var prnParameter = command.CreateParameter();
             prnParameter.DbType = System.Data.DbType.String;
@@ -385,6 +388,7 @@
         {
             var schemeIdParameter = new SqlParameter("@SchemeID", schemeId);
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            context.Database.CommandTimeout = 180;
 
             return await context.Database
                 .SqlQuery<DataReturnSummaryCsvData>(
@@ -415,6 +419,7 @@
             var obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
             var quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? DBNull.Value);
             var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+            context.Database.CommandTimeout = 180;
 
             return await context.Database
                 .SqlQuery<MissingProducerDataCsvData>(
