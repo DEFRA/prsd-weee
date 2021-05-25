@@ -192,7 +192,11 @@
 
         private async Task CopyReturnNonObligated(CopyReturn message, Return returnCopy)
         {
-            var nonObligated = await context.NonObligatedWeee.Where(n => n.ReturnId == message.ReturnId).ToListAsync();
+            var nonObligated = await context.NonObligatedWeee
+                .Where(n => n.ReturnId == message.ReturnId)
+                .GroupBy(n => n.CategoryId)
+                .Select(g => g.First())
+                .ToListAsync();
             nonObligated.ForEach(n => n.UpdateReturn(returnCopy));
 
             context.NonObligatedWeee.AddRange(nonObligated);
