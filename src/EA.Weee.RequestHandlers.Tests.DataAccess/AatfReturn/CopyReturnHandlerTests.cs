@@ -124,7 +124,7 @@
                 copiedReturn.ParentId.Should().Be(@return.Id);
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -142,7 +142,7 @@
                 copiedReportsOn.Select(r => r.ReportOnQuestionId).ToList().Should().Contain(originalReports.Select(r => r.ReportOnQuestionId).ToList());
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -166,40 +166,57 @@
                 }
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
         public async Task HandleAsync_GivenReturnNonObligatedWithDuplicatedCategory_CopiedReturnShouldHaveDistinctCategoryWithSameValues()
         {
-            // Create duplicate entries
-            nonObligatedWeeCreator = (t) => new List<NonObligatedWeee>()
+            // Create non-obligated WEEE list with duplicate entries
+            nonObligatedWeeCreator = (p) => new List<NonObligatedWeee>()
             {
-                new NonObligatedWeee(t.@return, 1, true, 20),
-                new NonObligatedWeee(t.@return, 2, false, 30),
-                new NonObligatedWeee(t.@return, 1, true, 20),
-                new NonObligatedWeee(t.@return, 2, false, 30)
+                new NonObligatedWeee(@return, 1, true, 20),
+                new NonObligatedWeee(@return, 2, false, 30),
+                new NonObligatedWeee(@return, 1, true, 20),
+                new NonObligatedWeee(@return, 2, false, 30)
             };
 
             void Assertion(Guid id)
             {
+                var nonObligatedExpectedList = new List<NonObligatedWeee>()
+                {
+                    new NonObligatedWeee(@return, 1, true, 20),
+                    new NonObligatedWeee(@return, 2, false, 30)
+                };
+
                 var copiedNonObligated = database.WeeeContext.NonObligatedWeee.Where(r => r.ReturnId == copiedReturn.Id).ToList();
 
                 var originalNonObligated = database.WeeeContext.NonObligatedWeee.Where(r => r.ReturnId == @return.Id).ToList();
 
-                originalNonObligated.Count().Should().NotBe(0);
-                copiedNonObligated.Count().Should().Be(originalNonObligated.Count() / 2);
-                copiedNonObligated.Select(r => r.Id).ToList().Should().NotContain(originalNonObligated.Select(r => r.Id).ToList());
+                // Assert that the original non-obligated WEEE entries still exist (by comparing with a newly created set)
+                originalNonObligated.Count().Should().Be(nonObligatedWeeCreator(this).Count());
 
-                foreach (var copiedNonObligatedWeee in copiedNonObligated)
-                {
-                    originalNonObligated.Where(n =>
-                        n.Tonnage == copiedNonObligatedWeee.Tonnage && n.CategoryId == copiedNonObligatedWeee.CategoryId
-                                                                    && n.Dcf == copiedNonObligatedWeee.Dcf).Should().NotBeNull();
-                }
+                // Assert that there are the expected number of non-obligated WEEE records
+                copiedNonObligated.Count().Should().Be(nonObligatedExpectedList.Count());
+
+                // Assert that they are all new objects, none of them are the original objects
+                copiedNonObligated
+                    .Except(originalNonObligated)
+                    .Count()
+                    .Should()
+                    .Be(copiedNonObligated.Count());
+
+                // Assert that the values in the copied entries match the expected
+                copiedNonObligated
+                    .All(actual => nonObligatedExpectedList
+                        .Any(expected => expected.CategoryId == actual.CategoryId
+                        && expected.Dcf == actual.Dcf
+                        && expected.Tonnage == actual.Tonnage))
+                    .Should()
+                    .BeTrue();
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -237,7 +254,7 @@
                 }
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -453,7 +470,7 @@
                 }
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -505,7 +522,7 @@
                     .NotContain(copiedWeeeReusedSites.Select(r => r.Address.Id).ToList());
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -523,7 +540,7 @@
                 copiedReturnScheme.Select(r => r.SchemeId).ToList().Should().Contain(originalReturnScheme.Select(r => r.SchemeId).ToList());
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -535,7 +552,7 @@
                 copiedReturn.Organisation.Should().Be(@return.Organisation);
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
         [Fact]
@@ -548,10 +565,10 @@
                 originalReturn.Equals(@return).Should().BeTrue();
             }
 
-            await ActAndAssert(Assertion);
+            await ArrangeActAndCallAssertions(Assertion);
         }
 
-        private async Task ActAndAssert(Action<Guid> assertions)
+        private async Task ArrangeActAndCallAssertions(Action<Guid> assertions)
         {
             using (database = new DatabaseWrapper())
             {
