@@ -10,6 +10,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
     using FakeItEasy;
+    using FakeItEasy.Configuration;
     using FluentAssertions;
     using RequestHandlers.AatfReturn.NonObligated;
     using Xunit;
@@ -25,6 +26,13 @@
         private readonly Guid organisationId = Guid.NewGuid();
         private readonly Return @return;
 
+        private AddNonObligated message;
+        private List<NonObligatedWeee> existingRecords;
+        private IEnumerable<NonObligatedWeee> submittedCollection;
+        private IReturnValueConfiguration<System.Threading.Tasks.Task<EA.Weee.Domain.AatfReturn.Return>> getReturnById;
+        private IReturnValueArgumentValidationConfiguration<System.Threading.Tasks.Task<System.Collections.Generic.List<EA.Weee.Domain.AatfReturn.NonObligatedWeee>>> fetchNonObligated;
+        private IReturnValueArgumentValidationConfiguration<System.Threading.Tasks.Task> sumbitCall;
+
         public AddNonObligatedHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
@@ -38,101 +46,53 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet()
         {
+            existingRecords = new List<NonObligatedWeee>();
+            message = CreateMessage(CreateMessageNonObligatedFullSet());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(new List<NonObligatedWeee>());
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedFullSet()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
-            
-            // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
-            sumbitCall.MustHaveHappened();
 
+            // Assert
+            AssertMandatoryCall();
+            sumbitCall.MustHaveHappened();
             submittedCollection.Count().Should().Be(message.CategoryValues.Count());
         }
 
         [Fact]
         public async void HandleAsync_AddNonObligate_PartialSet_PreExistingNonConflicting()
         {
+            existingRecords = CreateRepoNonObligatedHalfSet(false);
+            message = CreateMessage(CreateMessageNonObligatedHalfSet());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = CreateRepoNonObligatedHalfSet(false);
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedHalfSet()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustHaveHappened();
-            submittedCollection.Count().Should().Be(message.CategoryValues.Count());
+            this.submittedCollection.Count().Should().Be(message.CategoryValues.Count());
         }
 
         [Fact]
         public async void HandleAsync_AddNonObligate_PartialSet_PreExistingConflicting()
         {
+            existingRecords = CreateRepoNonObligatedFullSet();
+            message = CreateMessage(CreateMessageNonObligatedHalfSet());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = CreateRepoNonObligatedFullSet();
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedHalfSet()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -140,33 +100,17 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_PreExistingConflicting()
         {
+            existingRecords = CreateRepoNonObligatedFullSet();
+            message = CreateMessage(CreateMessageNonObligatedFullSet());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = CreateRepoNonObligatedFullSet();
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedFullSet()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -174,69 +118,35 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_Duplicating()
         {
+            existingRecords = new List<NonObligatedWeee>();
+            message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = new List<NonObligatedWeee>();
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustHaveHappened();
-
-            //submittedCollection.Count().Should().NotBe(message.CategoryValues.Count());
             submittedCollection.Count().Should().Be(message.CategoryValues.Count() / 2);
         }
 
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_DuplicatingAndConflicting()
         {
+            existingRecords = CreateRepoNonObligatedFullSet();
+            message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = CreateRepoNonObligatedFullSet();
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -244,35 +154,48 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_PartialConflicting()
         {
+            existingRecords = CreateRepoNonObligatedHalfSet(false);
+            message = CreateMessage(CreateMessageNonObligatedFullSet());
+
             // Arrange
-            var getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
-            getReturnById.Returns(@return);
-
-            var existingRecords = CreateRepoNonObligatedHalfSet(false);
-            var fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            fetchNonObligated.Returns(existingRecords);
-
-            IEnumerable<NonObligatedWeee> submittedCollection = null;
-
-            var sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
-            sumbitCall.Invokes(a => submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
-
-            var message = new AddNonObligated()
-            {
-                Dcf = false,
-                OrganisationId = this.organisationId,
-                ReturnId = this.returnId,
-                CategoryValues = CreateMessageNonObligatedFullSet()
-            };
+            Arrange();
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            getReturnById.MustHaveHappened();
-            fetchNonObligated.MustHaveHappened();
+            AssertMandatoryCall();
             sumbitCall.MustHaveHappened();
             submittedCollection.Count().Should().Be(message.CategoryValues.Count() - existingRecords.Count());
+        }
+
+        private AddNonObligated CreateMessage(IList<NonObligatedValue> values)
+        {
+            return new AddNonObligated()
+            {
+                Dcf = false,
+                OrganisationId = this.organisationId,
+                ReturnId = this.returnId,
+                CategoryValues = values
+            };
+        }
+
+        private void Arrange()
+        {
+            this.getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
+            this.getReturnById.Returns(@return);
+
+            this.fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
+            this.fetchNonObligated.Returns(existingRecords);
+
+            this.sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
+            this.sumbitCall.Invokes(a => this.submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
+        }
+
+        private void AssertMandatoryCall()
+        {
+            getReturnById.MustHaveHappened();
+            fetchNonObligated.MustHaveHappened();
         }
 
         private List<NonObligatedValue> CreateMessageNonObligatedFullSet()
