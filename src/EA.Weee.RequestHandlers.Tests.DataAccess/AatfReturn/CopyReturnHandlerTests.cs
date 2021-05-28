@@ -173,7 +173,7 @@
         public async Task HandleAsync_GivenReturnNonObligatedWithDuplicatedCategory_CopiedReturnShouldHaveDistinctCategoryWithSameValues()
         {
             // Create non-obligated WEEE list with duplicate entries
-            nonObligatedWeeCreator = (p) => new List<NonObligatedWeee>()
+            nonObligatedWeeeCreator = (p) => new List<NonObligatedWeee>()
             {
                 new NonObligatedWeee(@return, 1, true, 20),
                 new NonObligatedWeee(@return, 2, false, 30),
@@ -194,7 +194,7 @@
                 var originalNonObligated = database.WeeeContext.NonObligatedWeee.Where(r => r.ReturnId == @return.Id).ToList();
 
                 // Assert that the original non-obligated WEEE entries still exist (by comparing with a newly created set)
-                originalNonObligated.Count().Should().Be(nonObligatedWeeCreator(this).Count());
+                originalNonObligated.Count().Should().Be(nonObligatedWeeeCreator(this).Count());
 
                 // Assert that there are the expected number of non-obligated WEEE records
                 copiedNonObligated.Count().Should().Be(nonObligatedExpectedList.Count());
@@ -738,7 +738,7 @@
             await database.WeeeContext.SaveChangesAsync();
         }
 
-        private Func<CopyReturnHandlerTests, List<NonObligatedWeee>> nonObligatedWeeCreator = (t) => new List<NonObligatedWeee>()
+        private Func<CopyReturnHandlerTests, List<NonObligatedWeee>> nonObligatedWeeeCreator = (t) => new List<NonObligatedWeee>()
             {
                 new NonObligatedWeee(t.@return, 1, true, 20),
                 new NonObligatedWeee(t.@return, 2, false, 30)
@@ -746,7 +746,7 @@
 
         private async Task AddNonObligated()
         {
-            var nonObligated = nonObligatedWeeCreator(this);
+            var nonObligated = nonObligatedWeeeCreator(this);
 
             database.WeeeContext.NonObligatedWeee.AddRange(nonObligated);
 

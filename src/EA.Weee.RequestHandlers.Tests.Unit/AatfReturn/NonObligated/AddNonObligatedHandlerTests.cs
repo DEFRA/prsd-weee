@@ -17,46 +17,36 @@
 
     public class AddNonObligatedHandlerTests
     {
-        private readonly IWeeeAuthorization authorization;
-        private readonly INonObligatedDataAccess nonObligatedDataAccess;
-        private readonly IReturnDataAccess returnDataAccess;
-        private readonly AddNonObligatedHandler handler;
-
-        private readonly Guid returnId = Guid.NewGuid();
+        private readonly int numberOfCategories = 14;
         private readonly Guid organisationId = Guid.NewGuid();
-        private readonly Return @return;
+        private readonly Guid returnId = Guid.NewGuid();
+        private readonly Return @return = new Return(new Organisation(), new Quarter(2019, QuarterType.Q4), "someone", FacilityType.Aatf);
 
-        private AddNonObligated message;
-        private List<NonObligatedWeee> existingRecords;
+        private AddNonObligatedHandler handler;
         private IEnumerable<NonObligatedWeee> submittedCollection;
-        private IReturnValueConfiguration<System.Threading.Tasks.Task<EA.Weee.Domain.AatfReturn.Return>> getReturnById;
-        private IReturnValueArgumentValidationConfiguration<System.Threading.Tasks.Task<System.Collections.Generic.List<EA.Weee.Domain.AatfReturn.NonObligatedWeee>>> fetchNonObligated;
+        private INonObligatedDataAccess nonObligatedDataAccess;
+        private IReturnDataAccess returnDataAccess;
+        private IReturnValueArgumentValidationConfiguration<System.Threading.Tasks.Task<List<NonObligatedWeee>>> fetchNonObligated;
         private IReturnValueArgumentValidationConfiguration<System.Threading.Tasks.Task> sumbitCall;
+        private IReturnValueConfiguration<System.Threading.Tasks.Task<Return>> getReturnById;
+        private IWeeeAuthorization authorization;
 
         public AddNonObligatedHandlerTests()
         {
-            this.authorization = A.Fake<IWeeeAuthorization>();
-            this.nonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
-            this.returnDataAccess = A.Fake<IReturnDataAccess>();
-            this.handler = new AddNonObligatedHandler(authorization, nonObligatedDataAccess, returnDataAccess);
-            var org = new Organisation();
-            this.@return = new Return(new Organisation(), new Quarter(2019, QuarterType.Q4), "someone", FacilityType.Aatf);
         }
 
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet()
         {
-            existingRecords = new List<NonObligatedWeee>();
-            message = CreateMessage(CreateMessageNonObligatedFullSet());
-
             // Arrange
-            Arrange();
+            Arrange(new List<NonObligatedWeee>());
+            var message = CreateMessage(CreateMessageNonObligatedFullSet());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustHaveHappened();
             submittedCollection.Count().Should().Be(message.CategoryValues.Count());
         }
@@ -64,17 +54,15 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_PartialSet_PreExistingNonConflicting()
         {
-            existingRecords = CreateRepoNonObligatedHalfSet(false);
-            message = CreateMessage(CreateMessageNonObligatedHalfSet());
-
             // Arrange
-            Arrange();
+            Arrange(CreateRepoNonObligatedHalfSet(false));
+            var message = CreateMessage(CreateMessageNonObligatedHalfSet());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustHaveHappened();
             this.submittedCollection.Count().Should().Be(message.CategoryValues.Count());
         }
@@ -82,17 +70,15 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_PartialSet_PreExistingConflicting()
         {
-            existingRecords = CreateRepoNonObligatedFullSet();
-            message = CreateMessage(CreateMessageNonObligatedHalfSet());
-
             // Arrange
-            Arrange();
+            Arrange(CreateRepoNonObligatedFullSet());
+            var message = CreateMessage(CreateMessageNonObligatedHalfSet());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -100,17 +86,15 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_PreExistingConflicting()
         {
-            existingRecords = CreateRepoNonObligatedFullSet();
-            message = CreateMessage(CreateMessageNonObligatedFullSet());
-
             // Arrange
-            Arrange();
+            Arrange(CreateRepoNonObligatedFullSet());
+            var message = CreateMessage(CreateMessageNonObligatedFullSet());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -118,17 +102,15 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_Duplicating()
         {
-            existingRecords = new List<NonObligatedWeee>();
-            message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
-
             // Arrange
-            Arrange();
+            Arrange(new List<NonObligatedWeee>());
+            var message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustHaveHappened();
             submittedCollection.Count().Should().Be(message.CategoryValues.Count() / 2);
         }
@@ -136,17 +118,15 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_DuplicatingAndConflicting()
         {
-            existingRecords = CreateRepoNonObligatedFullSet();
-            message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
-
             // Arrange
-            Arrange();
+            Arrange(CreateRepoNonObligatedFullSet());
+            var message = CreateMessage(CreateMessageNonObligatedFullSet().Concat(CreateMessageNonObligatedFullSet()).ToList());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustNotHaveHappened();
             submittedCollection.Should().BeNull();
         }
@@ -154,17 +134,17 @@
         [Fact]
         public async void HandleAsync_AddNonObligate_FullSet_PartialConflicting()
         {
-            existingRecords = CreateRepoNonObligatedHalfSet(false);
-            message = CreateMessage(CreateMessageNonObligatedFullSet());
 
             // Arrange
-            Arrange();
+            var existingRecords = CreateRepoNonObligatedHalfSet(false);
+            Arrange(existingRecords);
+            var message = CreateMessage(CreateMessageNonObligatedFullSet());
 
             // Act
             bool result = await this.handler.HandleAsync(message);
 
             // Assert
-            AssertMandatoryCall();
+            AssertMandatory();
             sumbitCall.MustHaveHappened();
             submittedCollection.Count().Should().Be(message.CategoryValues.Count() - existingRecords.Count());
         }
@@ -180,19 +160,25 @@
             };
         }
 
-        private void Arrange()
+        private void Arrange(List<NonObligatedWeee> existing)
         {
+            this.authorization = A.Fake<IWeeeAuthorization>();
+            this.nonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
+            this.returnDataAccess = A.Fake<IReturnDataAccess>();
+
             this.getReturnById = A.CallTo(() => this.returnDataAccess.GetById(this.returnId));
             this.getReturnById.Returns(@return);
 
             this.fetchNonObligated = A.CallTo(() => this.nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(this.returnId));
-            this.fetchNonObligated.Returns(existingRecords);
+            this.fetchNonObligated.Returns(existing);
 
             this.sumbitCall = A.CallTo(() => this.nonObligatedDataAccess.Submit(A<IEnumerable<NonObligatedWeee>>.Ignored));
             this.sumbitCall.Invokes(a => this.submittedCollection = a.GetArgument<IEnumerable<NonObligatedWeee>>("nonObligated"));
+
+            this.handler = new AddNonObligatedHandler(this.authorization, this.nonObligatedDataAccess, this.returnDataAccess);
         }
 
-        private void AssertMandatoryCall()
+        private void AssertMandatory()
         {
             getReturnById.MustHaveHappened();
             fetchNonObligated.MustHaveHappened();
@@ -205,11 +191,13 @@
 
         private List<NonObligatedValue> CreateMessageNonObligatedHalfSet(bool isFirstHalf = true)
         {
-            return Enumerable.Range(isFirstHalf ? 1 : 8, 7).Select(n => new NonObligatedValue(n, CreateTonnageForCategory(n), false, Guid.NewGuid())).ToList();
-        }
-        private int CreateTonnageForCategory(int category)
-        {
-            return category * 25;
+            int halfCategoryCount = numberOfCategories / 2;
+            int startCountAt = 1;
+            if (isFirstHalf)
+            {
+                startCountAt += halfCategoryCount;
+            }
+            return Enumerable.Range(startCountAt, halfCategoryCount).Select(n => new NonObligatedValue(n, CreateTonnageForCategory(n), false, Guid.NewGuid())).ToList();
         }
 
         private List<NonObligatedWeee> CreateRepoNonObligatedFullSet()
@@ -219,7 +207,18 @@
 
         private List<NonObligatedWeee> CreateRepoNonObligatedHalfSet(bool isFirstHalf = true)
         {
-            return Enumerable.Range(isFirstHalf ? 1 : 8, 7).Select(n => new NonObligatedWeee(this.@return, n, false, CreateTonnageForCategory(n))).ToList();
+            int halfCategoryCount = numberOfCategories / 2;
+            int startCountAt = 1;
+            if (isFirstHalf)
+            {
+                startCountAt += halfCategoryCount;
+            }
+            return Enumerable.Range(startCountAt, halfCategoryCount).Select(n => new NonObligatedWeee(this.@return, n, false, CreateTonnageForCategory(n))).ToList();
+        }
+
+        private int CreateTonnageForCategory(int category)
+        {
+            return category * 25;
         }
     }
 }
