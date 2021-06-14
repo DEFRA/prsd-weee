@@ -63,7 +63,7 @@
 
                 var nonObDataAccess = new NonObligatedDataAccess(database.WeeeContext);
 
-                await nonObDataAccess.Submit(nonObligatedWee);
+                await nonObDataAccess.AddUpdateAndClean(@return.Id, nonObligatedWee);
 
                 var dataAccess = new NonObligatedDataAccess(database.WeeeContext);
 

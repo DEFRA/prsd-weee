@@ -104,6 +104,7 @@
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandlerTests.cs" />
     <Compile Include="AatfReturn\Internal\AatfDataAccessTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandlerTests.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligatedWeeeHandlerTestsBase.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandlerTests.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandlerTests.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
     <Compile Include="Mapping\LocalAreaMapTests.cs" />
+    <Compile Include="Mapping\NonObligatedObjectMapperTests.cs" />
     <Compile Include="Mapping\PanAreaMapTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Mapping\AatfMapTests.cs" />
