@@ -1,34 +1,28 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
-    using System.Threading.Tasks;
 
     internal class EditNonObligatedHandler : IRequestHandler<EditNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly INonObligatedDataAccess dataAccess;
 
-        public EditNonObligatedHandler(IWeeeAuthorization authorization, INonObligatedDataAccess dataAccess, IGenericDataAccess genericDataAccess)
+        public EditNonObligatedHandler(IWeeeAuthorization authorization, INonObligatedDataAccess dataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
-            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditNonObligated message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            foreach (var nonObligatedValue in message.CategoryValues)
-            {
-                var value = await genericDataAccess.GetById<NonObligatedWeee>(nonObligatedValue.Id);
-
-                await dataAccess.UpdateAmount(value, nonObligatedValue.Tonnage);
-            }
+            await dataAccess.UpdateAmountForIds(message.CategoryValues.Select(v => new Tuple<Guid, decimal?>(v.Id, v.Tonnage)));
 
             return true;
         }
