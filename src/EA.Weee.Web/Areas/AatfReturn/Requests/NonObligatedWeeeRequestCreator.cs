@@ -32,7 +32,8 @@
             {
                 return new EditNonObligated()
                 {
-                    CategoryValues = nonObligatedRequestValues
+                    CategoryValues = nonObligatedRequestValues,
+                    ReturnId = viewModel.ReturnId
                 };
             }
 

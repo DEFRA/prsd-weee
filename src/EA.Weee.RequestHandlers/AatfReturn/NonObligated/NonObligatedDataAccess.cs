@@ -17,41 +17,41 @@
             this.context = context;
         }
 
-        public Task Remove(IEnumerable<NonObligatedWeee> nonObligated)
+        public async Task AddUpdateAndClean(Guid returnId, IEnumerable<NonObligatedWeee> nonObligated)
         {
-            context.NonObligatedWeee.RemoveRange(nonObligated);
-            return context.SaveChangesAsync();
-        }
+            var allAssociatedWithReturn = await FetchAllNonObligatedWeeeForReturn(returnId);
+            var toAdd = new List<NonObligatedWeee>();
+            var toRemove = allAssociatedWithReturn.Where(a => !nonObligated.Any(n => n.Id == a.Id));
 
-        public Task Submit(IEnumerable<NonObligatedWeee> nonObligated)
-        {
-            foreach (var nonObligatedWeee in nonObligated)
+            // Update
+            foreach (var n in nonObligated)
             {
-                context.NonObligatedWeee.Add(nonObligatedWeee);
+                var existing = allAssociatedWithReturn.FirstOrDefault(e => e.Id == n.Id);
+                if (existing == null)
+                {
+                    toAdd.Add(n);
+                }
+                else
+                {
+                    existing.UpdateTonnage(n.Tonnage);
+                }
             }
 
-            return context.SaveChangesAsync();
-        }
+            // Add missing
+            context.NonObligatedWeee.AddRange(toAdd);
 
-        public Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage)
-        {
-            amount.UpdateTonnage(tonnage);
+            // Remove unwanted
+            context.NonObligatedWeee.RemoveRange(toRemove);
 
-            return context.SaveChangesAsync();
-        }
+            // Save
+            await context.SaveChangesAsync();
 
-        public Task UpdateAmountForIds(IEnumerable<Tuple<Guid, decimal?>> amounts)
-        {
-            foreach (var amount in amounts)
-            {
-                context.NonObligatedWeee.First(n => n.Id == amount.Item1).UpdateTonnage(amount.Item2);
-            }
-            return context.SaveChangesAsync();
+            return;
         }
 
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
         {
-            return EnsureNoDuplicateData(await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Select(now => now).ToListAsync());
+            return EnsureNoDuplicateData(await FetchAllNonObligatedWeeeForReturn(returnId));
         }
 
         public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
@@ -68,6 +68,11 @@
                 fetchedData = grouped.Select(g => g.OrderByDescending(n => n.Tonnage).First()).ToList();
             }
             return fetchedData;
+        }
+
+        private async Task<List<NonObligatedWeee>> FetchAllNonObligatedWeeeForReturn(Guid returnId)
+        {
+            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Select(now => now).ToListAsync();
         }
     }
 }

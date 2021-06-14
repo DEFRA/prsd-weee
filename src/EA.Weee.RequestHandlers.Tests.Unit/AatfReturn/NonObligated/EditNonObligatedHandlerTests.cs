@@ -1,70 +1,40 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.NonObligated
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.NonObligated;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
-    using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
 
-    public class EditNonObligatedHandlerTests
+    public class EditNonObligatedHandlerTests : NonObligatedWeeeHandlerTestsBase<EditNonObligatedHandler, EditNonObligated>
     {
-        private readonly INonObligatedDataAccess nonObligatedDataAccess;
-        private readonly EditNonObligatedHandler handler;
-
-        public EditNonObligatedHandlerTests()
+        [Fact]
+        public async Task HandleAsync_EditNonObligatedHandler()
         {
-            var authorization = A.Fake<IWeeeAuthorization>();
-            this.nonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
-            handler = new EditNonObligatedHandler(authorization, nonObligatedDataAccess);
+            await ArrangeActAssert();
         }
 
-        [Fact]
-        public async Task HandleAsync_NoExternalAccess_ThrowsSecurityException()
+        protected override IRequestHandler<EditNonObligated, bool> CreateHandler(INonObligatedDataAccess nonObligateDataAccess, 
+            IReturnDataAccess returnDataAccess, 
+            IWeeeAuthorization weeeAuthorization,
+            IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapValue)
         {
-            var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-
-            var handlerLocal = new EditNonObligatedHandler(authorization, nonObligatedDataAccess);
-
-            Func<Task> action = async () => await handlerLocal.HandleAsync(A.Dummy<EditNonObligated>());
-
-            await action.Should().ThrowAsync<SecurityException>();
+            return new EditNonObligatedHandler(weeeAuthorization, nonObligateDataAccess, mapValue, returnDataAccess);
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenMessageContainingUpdatedAmounts_AmountsAreUpdatedCorrectly()
+        protected override EditNonObligated CreateMessage(Guid returnId, IList<NonObligatedValue> categoryValues)
         {
-            var updatedValues = new List<NonObligatedValue>()
+            return new EditNonObligated()
             {
-                new NonObligatedValue(A.Dummy<int>(), 1, false, Guid.NewGuid()),
-                new NonObligatedValue(A.Dummy<int>(), 2, false, Guid.NewGuid())
+                ReturnId = returnId,
+                CategoryValues = categoryValues
             };
-
-            var message = new EditNonObligated()
-            {
-                CategoryValues = updatedValues
-            };
-
-            var sig = A.CallTo(() => nonObligatedDataAccess.UpdateAmountForIds(A<IEnumerable<Tuple<Guid, decimal?>>>.Ignored));
-            IEnumerable<Tuple<Guid, decimal?>> repoCallValue = null;
-
-            sig.Invokes((p) => repoCallValue = p.Arguments.Get<IEnumerable<Tuple<Guid, decimal?>>>(0));
-
-            await handler.HandleAsync(message);
-
-            sig.MustHaveHappened(Repeated.Exactly.Once);
-            Assert.NotNull(repoCallValue);
-            Assert.Equal(updatedValues.Count(), repoCallValue.Count());
-            Assert.True(updatedValues.All(n => repoCallValue.Any(t => t.Item1 == n.Id && t.Item2 == n.Tonnage)));
-            Assert.True(repoCallValue.All(t => updatedValues.Any(n => t.Item1 == n.Id && t.Item2 == n.Tonnage)));
         }
     }
 }

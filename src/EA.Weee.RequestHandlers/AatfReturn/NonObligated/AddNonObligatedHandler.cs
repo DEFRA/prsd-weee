@@ -1,25 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
-    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Domain.AatfReturn;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.NonObligated;
     using Security;
 
-    internal class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
+    public class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
+        private readonly IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper;
 
         public AddNonObligatedHandler(IWeeeAuthorization authorization,
             INonObligatedDataAccess nonObligatedDataAccess,
-            IReturnDataAccess returnDataAccess)
+            IReturnDataAccess returnDataAccess,
+            IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper)
         {
             this.authorization = authorization;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.returnDataAccess = returnDataAccess;
+            this.mapper = mapper;
         }
 
         public async Task<bool> HandleAsync(AddNonObligated message)
@@ -28,26 +32,9 @@
 
             var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
-            // Check that the data we are adding does not have any duplicate categories in
-            var nonObligatedWee = message.CategoryValues
-                .GroupBy(n => n.CategoryId)
-                .Select(g => g.FirstOrDefault())
-                .Where(n => n != null)
-                .Select(n => new NonObligatedWeee(aatfReturn, n.CategoryId, message.Dcf, n.Tonnage));
+            var nonObligatedWeees = mapper.Map(message.CategoryValues, aatfReturn);
 
-            // Ensure we are not adding additional non-obligated WEEE, if there are existing, delete them
-            var existingToDelete = (await nonObligatedDataAccess.FetchNonObligatedWeeeForReturn(message.ReturnId))
-                .GroupBy(n => n.CategoryId, (cat, col) => new { cat, col })
-                .Where(g => nonObligatedWee.Any(f => f.CategoryId == g.cat))
-                .SelectMany(g => g.col);
-
-            if (existingToDelete.Count() > 0)
-            {
-                await nonObligatedDataAccess.Remove(existingToDelete);
-            }
-
-            // Add the non-Obligated WEEE that should be there
-            await nonObligatedDataAccess.Submit(nonObligatedWee);
+            await nonObligatedDataAccess.AddUpdateAndClean(message.ReturnId, nonObligatedWeees);
 
             return true;
         }
