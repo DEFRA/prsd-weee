@@ -18,16 +18,13 @@
     public class EditNonObligatedHandlerTests
     {
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly EditNonObligatedHandler handler;
 
         public EditNonObligatedHandlerTests()
         {
             var authorization = A.Fake<IWeeeAuthorization>();
             this.nonObligatedDataAccess = A.Fake<INonObligatedDataAccess>();
-            this.genericDataAccess = A.Fake<IGenericDataAccess>();
-
-            handler = new EditNonObligatedHandler(authorization, nonObligatedDataAccess, genericDataAccess);
+            handler = new EditNonObligatedHandler(authorization, nonObligatedDataAccess);
         }
 
         [Fact]
@@ -35,7 +32,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handlerLocal = new EditNonObligatedHandler(authorization, nonObligatedDataAccess, genericDataAccess);
+            var handlerLocal = new EditNonObligatedHandler(authorization, nonObligatedDataAccess);
 
             Func<Task> action = async () => await handlerLocal.HandleAsync(A.Dummy<EditNonObligated>());
 
@@ -56,19 +53,18 @@
                 CategoryValues = updatedValues
             };
 
-            var returnAmounts = new List<NonObligatedWeee>()
-            {
-                new NonObligatedWeee(A.Fake<Return>(), 1, false, 1),
-                new NonObligatedWeee(A.Fake<Return>(), 2, false, 2)
-            };
+            var sig = A.CallTo(() => nonObligatedDataAccess.UpdateAmountForIds(A<IEnumerable<Tuple<Guid, decimal?>>>.Ignored));
+            IEnumerable<Tuple<Guid, decimal?>> repoCallValue = null;
 
-            A.CallTo(() => genericDataAccess.GetById<NonObligatedWeee>(updatedValues.ElementAt(0).Id)).Returns(returnAmounts.ElementAt(0));
-            A.CallTo(() => genericDataAccess.GetById<NonObligatedWeee>(updatedValues.ElementAt(1).Id)).Returns(returnAmounts.ElementAt(1));
+            sig.Invokes((p) => repoCallValue = p.Arguments.Get<IEnumerable<Tuple<Guid, decimal?>>>(0));
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => nonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(0), 1)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => nonObligatedDataAccess.UpdateAmount(returnAmounts.ElementAt(1), 2)).MustHaveHappened(Repeated.Exactly.Once);
+            sig.MustHaveHappened(Repeated.Exactly.Once);
+            Assert.NotNull(repoCallValue);
+            Assert.Equal(updatedValues.Count(), repoCallValue.Count());
+            Assert.True(updatedValues.All(n => repoCallValue.Any(t => t.Item1 == n.Id && t.Item2 == n.Tonnage)));
+            Assert.True(repoCallValue.All(t => updatedValues.Any(n => t.Item1 == n.Id && t.Item2 == n.Tonnage)));
         }
     }
 }
