@@ -4,6 +4,5 @@
 
     public class EditNonObligated : NonObligated
     {
-        public Guid ReturnId { get; set; }
     }
 }

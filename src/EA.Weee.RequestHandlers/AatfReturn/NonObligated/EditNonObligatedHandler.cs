@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
@@ -12,14 +13,13 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
-        //private readonly INonObligatedObjectMapper mapper;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper;
+        private readonly IMapWithParameter<EditNonObligated, Return, IEnumerable<Tuple<Guid, decimal?>>> mapper;
 
         public EditNonObligatedHandler(IWeeeAuthorization authorization, 
             INonObligatedDataAccess nonObligatedDataAccess,
-            IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper, 
-            IReturnDataAccess returnDataAccess)
+            IReturnDataAccess returnDataAccess,
+            IMapWithParameter<EditNonObligated, Return, IEnumerable<Tuple<Guid, decimal?>>> mapper)
         {
             this.authorization = authorization;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
@@ -33,10 +33,9 @@
 
             var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
-            //var nonObligatedWeees = mapper.MapEditNonObligated(message, aatfReturn);
-            var nonObligatedWeees = mapper.Map(message.CategoryValues, aatfReturn);
+            var idsToAmounts = mapper.Map(message, aatfReturn);
 
-            await nonObligatedDataAccess.AddUpdateAndClean(message.ReturnId, nonObligatedWeees);
+            await nonObligatedDataAccess.UpdateNonObligatedWeeeAmounts(message.ReturnId, idsToAmounts);
 
             return true;
         }

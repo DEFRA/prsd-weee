@@ -11,6 +11,8 @@
 
         Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId);
 
-        Task AddUpdateAndClean(Guid returnId, IEnumerable<NonObligatedWeee> nonObligated);
+        Task InsertNonObligatedWeee(Guid returnId, IEnumerable<NonObligatedWeee> nonObligated);
+
+        Task UpdateNonObligatedWeeeAmounts(Guid returnId, IEnumerable<Tuple<Guid, decimal?>> amounts);
     }
 }

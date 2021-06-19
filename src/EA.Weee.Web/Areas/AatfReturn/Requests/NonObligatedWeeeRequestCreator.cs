@@ -37,7 +37,13 @@
                 };
             }
 
-            return new AddNonObligated() { CategoryValues = nonObligatedRequestValues, OrganisationId = viewModel.OrganisationId, Dcf = viewModel.Dcf, ReturnId = viewModel.ReturnId };
+            return new AddNonObligated()
+            {
+                CategoryValues = nonObligatedRequestValues,
+                OrganisationId = viewModel.OrganisationId,
+                Dcf = viewModel.Dcf,
+                ReturnId = viewModel.ReturnId
+            };
         }
     }
 }

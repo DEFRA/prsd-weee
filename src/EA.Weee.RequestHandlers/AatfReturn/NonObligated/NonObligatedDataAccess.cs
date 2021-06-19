@@ -17,62 +17,81 @@
             this.context = context;
         }
 
-        public async Task AddUpdateAndClean(Guid returnId, IEnumerable<NonObligatedWeee> nonObligated)
+        public async Task InsertNonObligatedWeee(Guid returnId, IEnumerable<NonObligatedWeee> nonObligatedWeees)
         {
-            var allAssociatedWithReturn = await FetchAllNonObligatedWeeeForReturn(returnId);
-            var toAdd = new List<NonObligatedWeee>();
-            var toRemove = allAssociatedWithReturn.Where(a => !nonObligated.Any(n => n.Id == a.Id));
+            var allAssociatedWithReturn = await FetchNonObligatedWeeeForReturn(returnId);
 
-            // Update
-            foreach (var n in nonObligated)
+            foreach (var noWeee in nonObligatedWeees)
             {
-                var existing = allAssociatedWithReturn.FirstOrDefault(e => e.Id == n.Id);
-                if (existing == null)
+                var group = allAssociatedWithReturn.Where(e => e.Dcf == noWeee.Dcf && e.CategoryId == noWeee.CategoryId);
+                if (group.Count() == 0)
                 {
-                    toAdd.Add(n);
+                    context.NonObligatedWeee.Add(noWeee);
                 }
                 else
                 {
-                    existing.UpdateTonnage(n.Tonnage);
+                    group.First().UpdateTonnage(noWeee.Tonnage);
+                    context.NonObligatedWeee.RemoveRange(group.Skip(1)); // Remove any additional ones
                 }
             }
 
-            // Add missing
-            context.NonObligatedWeee.AddRange(toAdd);
-
-            // Remove unwanted
-            context.NonObligatedWeee.RemoveRange(toRemove);
-
-            // Save
             await context.SaveChangesAsync();
 
             return;
         }
 
+        public async Task UpdateNonObligatedWeeeAmounts(Guid returnId, IEnumerable<Tuple<Guid, decimal?>> amounts)
+        {
+            var allAssociatedWithReturn = await FetchNonObligatedWeeeForReturn(returnId);
+
+            var toRemove = new List<NonObligatedWeee>();
+
+            foreach (var amount in amounts)
+            {
+                var existing = allAssociatedWithReturn.FirstOrDefault(n => n.Id == amount.Item1);
+                if (existing == null)
+                {
+                    throw new Exception("Unable to find a non-obligated WEEE with ID:" + amount.Item1.ToString() + " for Return: " + returnId.ToString());
+                }
+                existing.UpdateTonnage(amount.Item2);
+                toRemove.AddRange(allAssociatedWithReturn.Where(n => n.CategoryId == existing.CategoryId && n.Dcf == existing.Dcf && n != existing));
+            }
+
+            context.NonObligatedWeee.RemoveRange(toRemove);
+            await context.SaveChangesAsync();
+            return;
+        }
+
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
         {
-            return EnsureNoDuplicateData(await FetchAllNonObligatedWeeeForReturn(returnId));
+            return await FetchNonObligatedWeeeForReturnWithDuplicates(returnId);
         }
 
         public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
         {
-            return EnsureNoDuplicateData(await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Where(now => now.Dcf == dcf).ToListAsync())
-                .Select(now => now.Tonnage).ToList();
+            return (await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, dcf)).Select(n => n.Tonnage).ToList();
         }
 
-        private List<NonObligatedWeee> EnsureNoDuplicateData(List<NonObligatedWeee> fetchedData)
+        public async Task<List<NonObligatedWeee>> FetchAllNonObligateWeeeForReturn(Guid returnId)
         {
-            var grouped = fetchedData.GroupBy(n => n.CategoryId);
-            if (grouped.Any(g => g.Count() > 1))
-            {
-                fetchedData = grouped.Select(g => g.OrderByDescending(n => n.Tonnage).First()).ToList();
-            }
-            return fetchedData;
+            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).ToListAsync();
         }
 
-        private async Task<List<NonObligatedWeee>> FetchAllNonObligatedWeeeForReturn(Guid returnId)
+        public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithDuplicates(Guid returnId)
         {
-            return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).Select(now => now).ToListAsync();
+            var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
+            var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
+            return notDcf.Concat(isDcf).ToList();
+        }
+
+        public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithoutDuplicates(Guid returnId, bool dcf)
+        {
+            return await context.NonObligatedWeee
+                .Where(now => now.ReturnId == returnId && now.Dcf == dcf)
+                .GroupBy(n => n.CategoryId)
+                .Select(g => g.FirstOrDefault())
+                .Where(n => n != null)
+                .ToListAsync();
         }
     }
 }

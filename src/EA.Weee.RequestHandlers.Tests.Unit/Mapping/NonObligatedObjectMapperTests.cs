@@ -1,40 +1,74 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
+    using System;
+    using System.Linq;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Requests.AatfReturn.NonObligated;
-    using System;
-    using System.Linq;
     using Xunit;
 
     public class NonObligatedObjectMapperTests
     {
-        private readonly NonObligatedObjectMapper mapper = new NonObligatedObjectMapper();
+        private readonly Guid returnId = Guid.NewGuid();
+        private readonly NonObligatedWeeeMap mapper = new NonObligatedWeeeMap();
+        private readonly Return aatfReturn = new Return(new Organisation(), new Domain.DataReturns.Quarter(2019, Domain.DataReturns.QuarterType.Q4), "someone", FacilityType.Aatf);
+        private readonly NonObligatedValue[] values = new NonObligatedValue[]
+                {
+                    new NonObligatedValue(1, 100, false, Guid.NewGuid()),
+                    new NonObligatedValue(2, 200, false, Guid.NewGuid())
+                };
 
-        [Fact]
-        public void Map_NonObligatedObjectMapper()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_AddNonObligated(bool isDcf)
         {
             // Arrange
-            var aatfReturn = new Return(new Organisation(), new Domain.DataReturns.Quarter(2019, Domain.DataReturns.QuarterType.Q4), "someone", FacilityType.Aatf);
-            var categoryValues = new NonObligatedValue[]
+            bool dcf = true;
+            var request = new AddNonObligated()
             {
-                new NonObligatedValue(1, 100, false, Guid.Empty),
-                new NonObligatedValue(2, 200, false, Guid.Empty)
+                CategoryValues = values,
+                ReturnId = returnId,
+                Dcf = dcf,
+                OrganisationId = Guid.NewGuid()
             };
 
             // Act
-            var response = mapper.Map(categoryValues, aatfReturn);
+            var response = mapper.Map(request, aatfReturn);
 
             // Assert
-            Assert.Equal(categoryValues.Length, response.Count());
-            foreach (var expected in categoryValues)
+            Assert.Equal(request.CategoryValues.Count(), response.Count());
+            foreach (var expected in request.CategoryValues)
             {
                 var actual = response.FirstOrDefault(r => r.CategoryId == expected.CategoryId);
                 Assert.NotNull(actual);
                 Assert.Equal(expected.Tonnage, actual.Tonnage);
-                Assert.Equal(expected.Dcf, actual.Dcf);
+                Assert.Equal(dcf, actual.Dcf);
                 Assert.Equal(aatfReturn, actual.Return);
+            }
+        }
+
+        [Fact]
+        public void Map_EditNonObligated()
+        {
+            // Arrange
+            var request = new EditNonObligated()
+            {
+                CategoryValues = values,
+                ReturnId = returnId
+            };
+
+            // Act
+            var response = mapper.Map(request, aatfReturn);
+
+            // Assert
+            Assert.Equal(values.Count(), response.Count());
+            foreach (var expected in request.CategoryValues)
+            {
+                var actual = response.FirstOrDefault(r => r.Item1 == expected.Id);
+                Assert.NotNull(actual);
+                Assert.Equal(expected.Tonnage, actual.Item2);
             }
         }
     }
