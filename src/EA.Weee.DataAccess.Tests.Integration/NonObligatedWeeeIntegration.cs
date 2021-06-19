@@ -26,51 +26,42 @@
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
+                // Arrange
                 var context = database.WeeeContext;
-
                 var name = "Test Name" + Guid.NewGuid();
                 var tradingName = "Test Trading Name" + Guid.NewGuid();
                 const string crn = "ABC12345";
-
                 var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
                 context.Organisations.Add(organisation);
-
                 await context.SaveChangesAsync();
-
                 var quarter = new Quarter(2019, QuarterType.Q1);
                 var aatfReturn = new Return(organisation, quarter, database.Model.AspNetUsers.First().Id, FacilityType.Aatf);
-
                 var categoryValues = new List<NonObligatedValue>();
-
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
                     categoryValues.Add(new NonObligatedValue((int)category, (int)category, dcf, Guid.NewGuid()));
                 }
-
                 var nonObligatedRequest = new AddNonObligated
                 {
                     ReturnId = aatfReturn.Id,
                     OrganisationId = organisation.Id,
                     CategoryValues = categoryValues
                 };
-
                 var nonObligatedWee = new List<NonObligatedWeee>();
-
                 foreach (var categoryValue in nonObligatedRequest.CategoryValues)
                 {
                     nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, categoryValue.Dcf, categoryValue.Tonnage));
                 }
-
                 var dataAccess = new NonObligatedDataAccess(database.WeeeContext);
 
-                await dataAccess.AddUpdateAndClean(aatfReturn.Id, nonObligatedWee);
+                // Act
+                await dataAccess.InsertNonObligatedWeee(aatfReturn.Id, nonObligatedWee);
 
+                // Assert
                 var thisTestNonObligatedWeeeArray =
                     context.NonObligatedWeee.Where(o => o.ReturnId == aatfReturn.Id).ToArray();
-
                 Assert.NotNull(thisTestNonObligatedWeeeArray);
                 Assert.NotEmpty(thisTestNonObligatedWeeeArray);
-
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
                     var foundCategory = thisTestNonObligatedWeeeArray.FirstOrDefault(o => o.CategoryId == (int)category);

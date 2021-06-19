@@ -13,12 +13,12 @@
         private readonly IWeeeAuthorization authorization;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
-        private readonly IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper;
+        private readonly IMapWithParameter<AddNonObligated, Return, IEnumerable<NonObligatedWeee>> mapper;
 
         public AddNonObligatedHandler(IWeeeAuthorization authorization,
             INonObligatedDataAccess nonObligatedDataAccess,
             IReturnDataAccess returnDataAccess,
-            IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapper)
+            IMapWithParameter<AddNonObligated, Return, IEnumerable<NonObligatedWeee>> mapper)
         {
             this.authorization = authorization;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
@@ -32,9 +32,9 @@
 
             var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
-            var nonObligatedWeees = mapper.Map(message.CategoryValues, aatfReturn);
+            var nonObligatedWeees = mapper.Map(message, aatfReturn);
 
-            await nonObligatedDataAccess.AddUpdateAndClean(message.ReturnId, nonObligatedWeees);
+            await nonObligatedDataAccess.InsertNonObligatedWeee(message.ReturnId, nonObligatedWeees);
 
             return true;
         }

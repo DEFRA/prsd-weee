@@ -1,39 +1,28 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.NonObligated
 {
-    using System;
-    using System.Collections.Generic;
     using Domain.AatfReturn;
     using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
+    using FakeItEasy;
     using RequestHandlers.AatfReturn.NonObligated;
-    using Xunit;
+    using System.Collections.Generic;
 
     public class AddNonObligatedHandlerTests : NonObligatedWeeeHandlerTestsBase<AddNonObligatedHandler, AddNonObligated>
     {
-        [Fact]
-        public async void HandleAsync_AddNonObligatedHandler()
+        protected override void ArrangeSpecifics()
         {
-            await ArrangeActAssert();
-        }
-
-        protected override IRequestHandler<AddNonObligated, bool> CreateHandler(INonObligatedDataAccess nonObligateDataAccess,
-            IReturnDataAccess returnDataAccess,
-            IWeeeAuthorization weeeAuthorization,
-            IMapWithParameter<IEnumerable<NonObligatedValue>, Return, IEnumerable<NonObligatedWeee>> mapValue)
-        {
-            return new AddNonObligatedHandler(weeeAuthorization, nonObligateDataAccess, returnDataAccess, mapValue);
-        }
-
-        protected override AddNonObligated CreateMessage(Guid returnId, IList<NonObligatedValue> categoryValues)
-        {
-            return new AddNonObligated()
+            var addMessage = new AddNonObligated()
             {
-                ReturnId = returnId,
-                CategoryValues = categoryValues
+                ReturnId = ReturnId,
             };
+            this.message = addMessage;
+            var mapperReturn = new NonObligatedWeee[] { };
+            var editMapperFake = A.Fake<IMapWithParameter<AddNonObligated, Return, IEnumerable<NonObligatedWeee>>>();
+            this.mapperFake = editMapperFake;
+            var editMapperCall = A.CallTo(() => editMapperFake.Map(addMessage, AatfReturn));
+            editMapperCall.Returns(mapperReturn);
+            this.mapperCall = editMapperCall;
+            this.nonObligatedWeeeRepoCall = A.CallTo(() => NonObligatedWeeeRepoFake.InsertNonObligatedWeee(ReturnId, mapperReturn));
         }
     }
 }

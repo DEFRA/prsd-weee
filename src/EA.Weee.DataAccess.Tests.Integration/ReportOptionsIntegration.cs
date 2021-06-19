@@ -386,7 +386,7 @@
                 nonObligatedWee.Add(new NonObligatedWeee(@return, (int)category, true, (decimal?)category));
             }
 
-            await dataAccess.AddUpdateAndClean(@return.Id, nonObligatedWee);
+            await dataAccess.InsertNonObligatedWeee(@return.Id, nonObligatedWee);
         }
 
         private List<Core.AatfReturn.ReportOnQuestion> CreateReportQuestions()
