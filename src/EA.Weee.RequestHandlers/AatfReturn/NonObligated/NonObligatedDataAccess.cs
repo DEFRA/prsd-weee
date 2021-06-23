@@ -42,7 +42,7 @@
 
         public async Task UpdateNonObligatedWeeeAmounts(Guid returnId, IEnumerable<Tuple<Guid, decimal?>> amounts)
         {
-            var allAssociatedWithReturn = await FetchNonObligatedWeeeForReturn(returnId);
+            var allAssociatedWithReturn = await FetchAllNonObligateWeeeForReturn(returnId);
 
             var toRemove = new List<NonObligatedWeee>();
 
@@ -64,7 +64,10 @@
 
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
         {
-            return await FetchNonObligatedWeeeForReturnWithDuplicates(returnId);
+            //return await FetchNonObligatedWeeeForReturnWithDuplicates(returnId);
+            var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
+            var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
+            return notDcf.Concat(isDcf).ToList();
         }
 
         public async Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf)
@@ -77,12 +80,12 @@
             return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).ToListAsync();
         }
 
-        public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithDuplicates(Guid returnId)
-        {
-            var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
-            var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
-            return notDcf.Concat(isDcf).ToList();
-        }
+        //public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithDuplicates(Guid returnId)
+        //{
+        //    var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
+        //    var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
+        //    return notDcf.Concat(isDcf).ToList();
+        //}
 
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithoutDuplicates(Guid returnId, bool dcf)
         {
