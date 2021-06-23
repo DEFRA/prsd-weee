@@ -145,7 +145,7 @@
     <Compile Include="AatfReturn\GetReturnStatusHandlerTests.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\GetReturnHandlerTests.cs" />
-    <Compile Include="AatfReturn\NonObligated\AddNonObligatedDataAccessTests.cs" />
+    <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccessTests.cs" />
     <Compile Include="AatfReturn\AddReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandlerTests.cs" />
