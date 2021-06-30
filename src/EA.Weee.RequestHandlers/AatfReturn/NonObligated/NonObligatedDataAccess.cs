@@ -64,7 +64,6 @@
 
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId)
         {
-            //return await FetchNonObligatedWeeeForReturnWithDuplicates(returnId);
             var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
             var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
             return notDcf.Concat(isDcf).ToList();
@@ -79,13 +78,6 @@
         {
             return await context.NonObligatedWeee.Where(now => now.ReturnId == returnId).ToListAsync();
         }
-
-        //public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithDuplicates(Guid returnId)
-        //{
-        //    var notDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, false);
-        //    var isDcf = await FetchNonObligatedWeeeForReturnWithoutDuplicates(returnId, true);
-        //    return notDcf.Concat(isDcf).ToList();
-        //}
 
         public async Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturnWithoutDuplicates(Guid returnId, bool dcf)
         {
