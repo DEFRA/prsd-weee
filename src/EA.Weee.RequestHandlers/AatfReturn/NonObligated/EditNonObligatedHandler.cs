@@ -1,34 +1,41 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.NonObligated;
-    using System.Threading.Tasks;
 
-    internal class EditNonObligatedHandler : IRequestHandler<EditNonObligated, bool>
+    public class EditNonObligatedHandler : IRequestHandler<EditNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
-        private readonly INonObligatedDataAccess dataAccess;
+        private readonly INonObligatedDataAccess nonObligatedDataAccess;
+        private readonly IReturnDataAccess returnDataAccess;
+        private readonly IMapWithParameter<EditNonObligated, Return, IEnumerable<Tuple<Guid, decimal?>>> mapper;
 
-        public EditNonObligatedHandler(IWeeeAuthorization authorization, INonObligatedDataAccess dataAccess, IGenericDataAccess genericDataAccess)
+        public EditNonObligatedHandler(IWeeeAuthorization authorization, 
+            INonObligatedDataAccess nonObligatedDataAccess,
+            IReturnDataAccess returnDataAccess,
+            IMapWithParameter<EditNonObligated, Return, IEnumerable<Tuple<Guid, decimal?>>> mapper)
         {
             this.authorization = authorization;
-            this.dataAccess = dataAccess;
-            this.genericDataAccess = genericDataAccess;
+            this.nonObligatedDataAccess = nonObligatedDataAccess;
+            this.mapper = mapper;
+            this.returnDataAccess = returnDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditNonObligated message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            foreach (var nonObligatedValue in message.CategoryValues)
-            {
-                var value = await genericDataAccess.GetById<NonObligatedWeee>(nonObligatedValue.Id);
+            var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
-                await dataAccess.UpdateAmount(value, nonObligatedValue.Tonnage);
-            }
+            var idsToAmounts = mapper.Map(message, aatfReturn);
+
+            await nonObligatedDataAccess.UpdateNonObligatedWeeeAmounts(message.ReturnId, idsToAmounts);
 
             return true;
         }
