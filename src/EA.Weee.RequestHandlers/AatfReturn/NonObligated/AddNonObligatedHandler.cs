@@ -1,25 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.NonObligated
 {
-    using Domain.AatfReturn;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Domain.AatfReturn;
     using Prsd.Core.Mediator;
     using Requests.AatfReturn.NonObligated;
     using Security;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
-    internal class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
+    public class AddNonObligatedHandler : IRequestHandler<AddNonObligated, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly INonObligatedDataAccess nonObligatedDataAccess;
         private readonly IReturnDataAccess returnDataAccess;
+        private readonly IMapWithParameter<AddNonObligated, Return, IEnumerable<NonObligatedWeee>> mapper;
 
         public AddNonObligatedHandler(IWeeeAuthorization authorization,
             INonObligatedDataAccess nonObligatedDataAccess,
-            IReturnDataAccess returnDataAccess)
+            IReturnDataAccess returnDataAccess,
+            IMapWithParameter<AddNonObligated, Return, IEnumerable<NonObligatedWeee>> mapper)
         {
             this.authorization = authorization;
             this.nonObligatedDataAccess = nonObligatedDataAccess;
             this.returnDataAccess = returnDataAccess;
+            this.mapper = mapper;
         }
 
         public async Task<bool> HandleAsync(AddNonObligated message)
@@ -28,14 +32,9 @@
 
             var aatfReturn = await returnDataAccess.GetById(message.ReturnId);
 
-            var nonObligatedWee = new List<NonObligatedWeee>();
+            var nonObligatedWeees = mapper.Map(message, aatfReturn);
 
-            foreach (var categoryValue in message.CategoryValues)
-            {
-                nonObligatedWee.Add(new NonObligatedWeee(aatfReturn, categoryValue.CategoryId, message.Dcf, categoryValue.Tonnage));
-            }
-
-            await nonObligatedDataAccess.Submit(nonObligatedWee);
+            await nonObligatedDataAccess.InsertNonObligatedWeee(message.ReturnId, nonObligatedWeees);
 
             return true;
         }

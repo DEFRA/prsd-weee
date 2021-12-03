@@ -13,7 +13,8 @@
         private readonly INonObligatedDataAccess dataAccess;
 
         public FetchNonObligatedWeeeForReturnRequestHandler(
-            INonObligatedDataAccess dataAccess, IWeeeAuthorization authDataAccess)
+            INonObligatedDataAccess dataAccess,
+            IWeeeAuthorization authDataAccess)
         {
             this.dataAccess = dataAccess;
             this.authorization = authDataAccess;

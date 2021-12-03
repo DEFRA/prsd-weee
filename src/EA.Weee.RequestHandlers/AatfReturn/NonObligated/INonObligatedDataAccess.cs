@@ -7,12 +7,12 @@
 
     public interface INonObligatedDataAccess
     {
-        Task Submit(IEnumerable<NonObligatedWeee> nonObligated);
-
-        Task UpdateAmount(NonObligatedWeee amount, decimal? tonnage);
-
         Task<List<decimal?>> FetchNonObligatedWeeeForReturn(Guid returnId, bool dcf);
 
         Task<List<NonObligatedWeee>> FetchNonObligatedWeeeForReturn(Guid returnId);
+
+        Task InsertNonObligatedWeee(Guid returnId, IEnumerable<NonObligatedWeee> nonObligated);
+
+        Task UpdateNonObligatedWeeeAmounts(Guid returnId, IEnumerable<Tuple<Guid, decimal?>> amounts);
     }
 }
