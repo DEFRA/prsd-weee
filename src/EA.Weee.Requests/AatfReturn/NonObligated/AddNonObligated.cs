@@ -6,8 +6,6 @@
     {
         public bool Dcf { get; set; }
 
-        public Guid ReturnId { get; set; }
-
         public Guid OrganisationId { get; set; }
     }
 }
