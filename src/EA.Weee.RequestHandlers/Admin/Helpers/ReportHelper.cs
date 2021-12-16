@@ -20,7 +20,7 @@
 
                 DisplayAttribute displayName = field.GetCustomAttribute<DisplayAttribute>();
 
-                if (enumValue < 9)
+                if (enumValue <= 9)
                 {
                     var categoryNumber = "0" + Convert.ToString(enumValue);
                     categories.Add((int)category, $"{categoryNumber}. {displayName.Name}");
