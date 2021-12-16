@@ -40,7 +40,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName, bool? isEditDetails = false, bool? isEditTonnage = false)
         {
             using (var client = apiClient())
             {
@@ -56,6 +56,10 @@
                     WeeeSentOnId = weeeSentOnId,
                     PastedData = TempData["pastedValues"] as ObligatedCategoryValue
                 });
+
+                model.IsEditDetails = isEditDetails;
+                model.IsEditTonnage = isEditTonnage;
+
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
                 TempData["currentQuarter"] = @return.Quarter;
                 TempData["currentQuarterWindow"] = @return.QuarterWindow;
