@@ -30,7 +30,7 @@
             return await context.Aatfs
                     .Select(r => (int)r.ComplianceYear)
                     .Distinct()
-                    .OrderBy(year => year)
+                    .OrderByDescending(year => year)
                     .ToListAsync();
         }
     }

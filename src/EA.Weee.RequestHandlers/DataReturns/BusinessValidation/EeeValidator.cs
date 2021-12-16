@@ -40,8 +40,8 @@
             if (producer == null)
             {
                 var errorMessage = string.Format(
-                    "The producer with producer registration number {0} is not a registered member of your producer compliance scheme for {1}. "
-                    + "Remove this producer from your return, or ensure they are a registered member of your scheme.",
+                    "The producer with producer registration number (PRN) {0} is not a registered member of your producer compliance scheme for {1}. "
+                    + "Remove this producer from your return XML, or ensure they are a registered member of your scheme.",
                     producerRegistrationNumber,
                     quarter.Year);
 
@@ -63,7 +63,7 @@
             if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var errorMessage = string.Format(
-                "The producer name {0} registered with producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
+                "The producer name {0} in your return XML for producer registration number {1} for {2} does not match the registered producer name {3}. Ensure the registration number and producer name in your return XML match the registered details.",
                 producerName,
                 producerRegistrationNumber,
                 quarter.Year,
@@ -82,7 +82,7 @@
             if (!producer.CurrentSubmission.ObligationType.HasFlag(obligationType))
             {
                 var errorMessage = string.Format(
-                "Producer registration number {0} {1} has submitted a {2} return for one or more categories but is only registered for {3}. Amend the return or submit an update for the producer's details.",
+                "Producer registration number (PRN) {0} {1} has submitted a {2} return for one or more categories but is only registered for {3}. Amend the return XML or submit an update for the producer's details.",
                 producerRegistrationNumber,
                 producerName,
                 obligationType,
