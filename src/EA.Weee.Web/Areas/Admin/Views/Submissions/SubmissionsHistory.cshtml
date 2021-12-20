@@ -30,6 +30,13 @@
 
     <div class="govuk-form-group" id="submissionResults"></div>
 
+    <div class="govuk-form-group" id="noPCSResults">
+        <p>
+            <u>Why are there no PCS in the dropdown list?</u> <br />
+            In order to be shown in the list, a PCS must be currently in the Approved status or, if it is in Withdrew status it must have submissions present for the selected compliance year.
+        </p>
+    </div>
+
     <p class="left-cleared">
         <a href="javascript:history.back();">Back</a>
     </p>
@@ -41,6 +48,7 @@
             var selectedYear = $("#SelectedYear").val();
             var selectedScheme = $("#SelectedScheme").val();
             FetchSubmissionResults(selectedYear, selectedScheme);
+            $('#noPCSResults').hide();
         });
 
         function FetchSubmissionResults(selectedYear, selectedScheme) {
@@ -55,16 +63,40 @@
             });
         }
 
-        $("#SelectedYear")
-            .change(function () {
+        function FectSchemeForComplainceYear(selectedYear) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("FetchSchemeForComplainceYear")',
+                cache: false,
+                data: { complianceYear: selectedYear, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    // Clear options
+                    $("#SelectedScheme").find("option").remove();
+
+                    // Loop through JSON response
+                    $.each(data, function (index, item) {
+                        $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    })
+
+                    if (data.length == 0) {
+                        $('#noPCSResults').show();
+                    } else {
+                        $('#noPCSResults').hide();
+                    }
+
+                    var selectedScheme = $("#SelectedScheme").val();
+                    FetchSubmissionResults(selectedYear, selectedScheme);
+                }
+            });
+        }
+
+        $("#SelectedYear").change(function () {
 
                 var selectedYear = $(this).val();
-                var selectedScheme = $("#SelectedScheme").val();
-                FetchSubmissionResults(selectedYear, selectedScheme);
+                FectSchemeForComplainceYear(selectedYear);
             });
 
-        $("#SelectedScheme")
-            .change(function () {
+        $("#SelectedScheme").change(function () {
                 var selectedScheme = $(this).val();
                 var selectedYear = $("#SelectedYear").val();
                 FetchSubmissionResults(selectedYear, selectedScheme);
