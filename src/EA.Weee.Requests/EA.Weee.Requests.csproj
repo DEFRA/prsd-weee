@@ -109,9 +109,10 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYears.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
+    <Compile Include="Admin\GetEEEWEEEDataReturnSchemesByComplianceYear.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
     <Compile Include="Admin\GetLocalAreas.cs" />
-    <Compile Include="Admin\GetMemberRegisteredSchemesByComplianceYear.cs" />
+    <Compile Include="Admin\GetMemberRegistrationSchemesByComplianceYear.cs" />
     <Compile Include="Admin\GetProducerComplianceYear.cs" />
     <Compile Include="Admin\GetProducerEeeDataHistoryCsv.cs" />
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />

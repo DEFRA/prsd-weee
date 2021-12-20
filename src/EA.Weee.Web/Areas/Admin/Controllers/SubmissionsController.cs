@@ -27,8 +27,7 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
-    using static EA.Weee.Requests.Admin.GetMemberRegisteredSchemesByComplianceYear;
-    using GetSchemes = Weee.Requests.Admin.GetSchemes;
+    using static EA.Weee.Requests.Admin.GetSchemes;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
@@ -109,8 +108,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
 
-                    //GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-                    GetMemberRegisteredSchemesByComplianceYear getSchemesRequest = new GetMemberRegisteredSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
+                    GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     SubmissionsHistoryViewModel model = new SubmissionsHistoryViewModel
@@ -155,7 +153,7 @@
             {
                 try
                 {
-                    GetMemberRegisteredSchemesByComplianceYear getSchemesRequest = new GetMemberRegisteredSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                    GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
@@ -276,7 +274,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
 
-                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
@@ -296,6 +294,33 @@
                         throw;
                     }
                     return View();
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchDataReturnSchemeForComplainceYear(int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                try
+                {
+                    GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+
+                    IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
+
+                    return Json(schemeNames, JsonRequestBehavior.AllowGet);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return Json(new { string.Empty });
                 }
             }
         }
