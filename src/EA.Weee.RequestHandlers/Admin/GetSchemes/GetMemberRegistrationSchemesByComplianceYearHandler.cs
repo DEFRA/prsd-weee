@@ -3,31 +3,33 @@
     using Core.Scheme;
     using Domain.Scheme;
     using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Requests.Admin;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Security;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using static EA.Weee.Requests.Admin.GetMemberRegisteredSchemesByComplianceYear;
+    using static EA.Weee.Requests.Admin.GetSchemes;
 
-    public class GetMemberRegistrationSchemesByComplianceYear : IRequestHandler<GetMemberRegisteredSchemesByComplianceYear, List<SchemeData>>
+    public class GetMemberRegistrationSchemesByComplianceYearHandler : IRequestHandler<GetMemberRegistrationSchemesByComplianceYear, List<SchemeData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly WeeeContext context;
+        private readonly ISchemeDataAccess schemeDataAccess;
 
-        public GetMemberRegistrationSchemesByComplianceYear(IWeeeAuthorization authorization, IMap<Scheme, SchemeData> schemeMap, WeeeContext context)
+        public GetMemberRegistrationSchemesByComplianceYearHandler(IWeeeAuthorization authorization, IMap<Scheme, SchemeData> schemeMap, WeeeContext context, ISchemeDataAccess schemeDataAccess)
         {
             this.authorization = authorization;
             this.schemeMap = schemeMap;
             this.context = context;
+            this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<List<SchemeData>> HandleAsync(GetMemberRegisteredSchemesByComplianceYear request)
+        public async Task<List<SchemeData>> HandleAsync(GetMemberRegistrationSchemesByComplianceYear request)
         {
             authorization.EnsureCanAccessInternalArea();
             Func<Scheme, bool> filter;
@@ -45,13 +47,7 @@
                     throw new NotSupportedException();
             }
 
-            List<string> schemes = await context.MemberUploads
-                .Where(mu => mu.IsSubmitted)
-                .Where(mu => mu.ComplianceYear.HasValue && mu.ComplianceYear.Value == request.ComplianceYear)
-                .Select(mu => (string)mu.Scheme.SchemeName)
-                .Distinct()
-                .OrderByDescending(year => year)
-                .ToListAsync();
+            List<string> schemes = await schemeDataAccess.GetMemberRegistrationSchemesByComplianceYear(request.ComplianceYear);
 
             return context.Schemes
                 .Where(t => schemes.Contains(t.SchemeName))

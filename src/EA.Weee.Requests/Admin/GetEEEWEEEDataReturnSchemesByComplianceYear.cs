@@ -3,20 +3,15 @@
     using Core.Scheme;
     using Prsd.Core.Mediator;
     using System.Collections.Generic;
+    using static EA.Weee.Requests.Admin.GetSchemes;
 
-    public class GetMemberRegisteredSchemesByComplianceYear : IRequest<List<SchemeData>>
+    public class GetEEEWEEEDataReturnSchemesByComplianceYear : IRequest<List<SchemeData>>
     {
-        public enum FilterType
-        {
-            Approved,
-            ApprovedOrWithdrawn
-        }
-
         public FilterType Filter { get; private set; }
 
         public int ComplianceYear { get; set; }
 
-        public GetMemberRegisteredSchemesByComplianceYear(FilterType filter, int complianceYear)
+        public GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType filter, int complianceYear)
         {
             Filter = filter;
             ComplianceYear = complianceYear;
