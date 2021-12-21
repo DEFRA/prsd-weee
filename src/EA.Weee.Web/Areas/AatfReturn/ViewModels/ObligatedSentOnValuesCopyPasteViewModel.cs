@@ -17,5 +17,9 @@
         public String[] B2bPastedValues { get; set; }
 
         public String[] B2cPastedValues { get; set; }
+
+        public bool? IsEditDetails { get; set; }
+
+        public bool? IsEditTonnage { get; set; }
     }
 }
