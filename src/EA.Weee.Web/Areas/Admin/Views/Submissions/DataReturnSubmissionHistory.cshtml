@@ -31,13 +31,6 @@
         <div class="govuk-form-group" id="submissionResults"></div>
     </div>
 
-    <div class="govuk-form-group" id="noPCSResults">
-        <p>
-            <u>Why are there no PCS in the dropdown list?</u> <br />
-            In order to be shown in the list, a PCS must be currently in the Approved status or, if it is in Withdrew status it must have submissions present for the selected compliance year.
-        </p>
-    </div>
-
     <p class="left-cleared">
         <a href="javascript:history.back();">Back</a>
     </p>
@@ -49,7 +42,6 @@
             var selectedYear = $("#SelectedYear").val();
             var selectedScheme = $("#SelectedScheme").val();
             FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
-            $('#noPCSResults').hide();
         });
 
         function FetchDataReturnSubmissionResults(selectedYear, selectedScheme) {
@@ -78,12 +70,6 @@
                     $.each(data, function (index, item) {
                         $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
                     })
-
-                    if (data.length == 0) {
-                        $('#noPCSResults').show();
-                    } else {
-                        $('#noPCSResults').hide();
-                    }
 
                     var selectedScheme = $("#SelectedScheme").val();
                     FetchSubmissionResults(selectedYear, selectedScheme);
