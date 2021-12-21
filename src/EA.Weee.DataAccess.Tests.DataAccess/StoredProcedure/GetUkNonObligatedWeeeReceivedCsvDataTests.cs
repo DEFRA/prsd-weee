@@ -117,7 +117,7 @@
                         if (quarter == 5)
                         {
                             results.ElementAt(index).Quarter.Should().Be($"2019");
-                            results.ElementAt(index).Category.Should().Be($"{(int)value}. {value.ToDisplayString()}");
+                            results.ElementAt(index).Category.Should().Be($"{categoryNumber}. {value.ToDisplayString()}");
                             if (dcf)
                             {
                                 results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((int)value * 4 * 4);
