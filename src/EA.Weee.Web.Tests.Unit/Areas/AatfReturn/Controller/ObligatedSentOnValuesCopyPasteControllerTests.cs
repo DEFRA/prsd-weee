@@ -134,7 +134,9 @@
                 ReturnId = returnId,
                 AatfId = aatfId,
                 B2bPastedValues = new string[1],
-                B2cPastedValues = new string[1]
+                B2cPastedValues = new string[1],
+                IsEditDetails = false,
+                IsEditTonnage = false
             };
 
             httpContext.RouteData.Values.Add("returnId", returnId);
@@ -165,7 +167,9 @@
                 ReturnId = returnId,
                 AatfId = aatfId,
                 B2bPastedValues = pastedValues,
-                B2cPastedValues = pastedValues
+                B2cPastedValues = pastedValues,
+                IsEditDetails = false,
+                IsEditTonnage = false
             };
 
             await controller.Index(viewModel);
@@ -189,7 +193,9 @@
                 ReturnId = returnId,
                 AatfId = aatfId,
                 B2bPastedValues = new string[1] { "2\n" },
-                B2cPastedValues = new string[1]
+                B2cPastedValues = new string[1],
+                IsEditDetails = false,
+                IsEditTonnage = false
             };
 
             await controller.Index(viewModel);
@@ -213,7 +219,9 @@
                 ReturnId = returnId,
                 AatfId = aatfId,
                 B2bPastedValues = new string[1],
-                B2cPastedValues = new string[1]
+                B2cPastedValues = new string[1],
+                IsEditDetails = false,
+                IsEditTonnage = false
             };
 
             await controller.Index(viewModel);
