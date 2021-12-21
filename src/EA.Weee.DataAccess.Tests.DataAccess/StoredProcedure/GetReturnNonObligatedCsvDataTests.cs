@@ -119,13 +119,14 @@
                 for (var countValue = 0; countValue < values.Count(); countValue++)
                 {
                     var value = values.ElementAt(countValue);
+                    var categoryNumber = ((int)value <= 9) ? "0" + Convert.ToString((int)value) : Convert.ToString((int)value);
                     results.ElementAt(countValue).Year.Should().Be(2019);
                     results.ElementAt(countValue).Quarter.Should().Be("Q1");
                     results.ElementAt(countValue).SubmittedBy.Should()
                         .Be($"{db.Model.AspNetUsers.First().FirstName} {db.Model.AspNetUsers.First().Surname}");
                     results.ElementAt(countValue).SubmittedDate.Should().Be(date);
                     results.ElementAt(countValue).OrganisationName.Should().Be(organisation.Name);
-                    results.ElementAt(countValue).Category.Should().Be($"{countValue + 1}. {value.ToDisplayString()}");
+                    results.ElementAt(countValue).Category.Should().Be($"{categoryNumber}. {value.ToDisplayString()}");
                     results.ElementAt(countValue).TotalNonObligatedWeeeReceived.Should().Be((decimal)value);
                     results.ElementAt(countValue).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((decimal)value + 1);
                 }
