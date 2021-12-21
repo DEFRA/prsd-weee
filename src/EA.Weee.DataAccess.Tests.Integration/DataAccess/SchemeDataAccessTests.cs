@@ -152,6 +152,40 @@
         }
 
         [Fact]
+        public async void GetMemberRegistrationSchemesByComplianceYear_For_The_SubmittedMemberUploads()
+        {
+            const int firstComplianceYear = 1921;
+            const int secondComplianceYear = 1922;
+
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(databaseWrapper.Model);
+
+                var scheme = modelHelper.CreateScheme();
+
+                var firstMemberUpload = modelHelper.CreateMemberUpload(scheme);
+                firstMemberUpload.IsSubmitted = true;
+                firstMemberUpload.ComplianceYear = firstComplianceYear;
+
+                var secondMemberUpload = modelHelper.CreateMemberUpload(scheme);
+                secondMemberUpload.IsSubmitted = true;
+                secondMemberUpload.ComplianceYear = secondComplianceYear;
+
+                await databaseWrapper.Model.SaveChangesAsync();
+
+                // Act
+                var dataAccess = new SchemeDataAccess(databaseWrapper.WeeeContext);
+
+                var result = await dataAccess.GetMemberRegistrationSchemesByComplianceYear(firstComplianceYear);
+
+                // Assert
+                Assert.Equal(1, result.Count);
+                Assert.Equal(scheme.SchemeName, result[0]);
+            }
+        }
+
+        [Fact]
         public async void GetComplianceYearsWithSubmittedDataReturns_SchemeHasNoDataReturns_ReturnsNoYears()
         {
             using (var databaseWrapper = new DatabaseWrapper())
@@ -270,6 +304,41 @@
                 Assert.Equal(2, result.Count);
                 Assert.Contains(firstComplianceYear, result);
                 Assert.Contains(secondComplianceYear, result);
+            }
+        }
+
+        [Fact]
+        public async void GetEEEWEEEDataReturnSchemesByComplianceYear_For_The_SubmittedMemberUploads()
+        {
+            const int firstComplianceYear = 1765;
+            const int secondComplianceYear = 1766;
+            const int quarter = 4;
+
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(databaseWrapper.Model);
+
+                var scheme = modelHelper.CreateScheme();
+                var firstDataReturn = modelHelper.CreateDataReturn(scheme, firstComplianceYear, quarter);
+                var secondDataReturn = modelHelper.CreateDataReturn(scheme, secondComplianceYear, quarter);
+
+                modelHelper.CreateDataReturnVersion(scheme, firstComplianceYear, quarter, true,
+                    firstDataReturn);
+
+                modelHelper.CreateDataReturnVersion(scheme, secondComplianceYear, quarter, true,
+                    secondDataReturn);
+
+                await databaseWrapper.Model.SaveChangesAsync();
+
+                // Act
+                var dataAccess = new SchemeDataAccess(databaseWrapper.WeeeContext);
+
+                var result = await dataAccess.GetEEEWEEEDataReturnSchemesByComplianceYear(secondComplianceYear);
+
+                // Assert
+                Assert.Equal(1, result.Count);
+                Assert.Equal(scheme.SchemeName, result[0]);
             }
         }
     }
