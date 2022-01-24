@@ -14,5 +14,9 @@
         Task<IList<int>> GetComplianceYearsWithSubmittedDataReturns(Guid schemeId);
 
         Task<Scheme> GetSchemeOrDefaultByOrganisationId(Guid organisationId);
+
+        Task<List<string>> GetMemberRegistrationSchemesByComplianceYear(int complianceYear);
+
+        Task<List<string>> GetEEEWEEEDataReturnSchemesByComplianceYear(int complianceYear);
     }
 }

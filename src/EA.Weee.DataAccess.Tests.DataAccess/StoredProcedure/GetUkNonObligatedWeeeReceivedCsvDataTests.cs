@@ -51,8 +51,9 @@
                     for (var countValue = 0; countValue < values.Count(); countValue++)
                     {
                         var value = values.ElementAt(countValue);
+                        var categoryNumber = ((int)value <= 9) ? "0" + Convert.ToString((int)value) : Convert.ToString((int)value); 
                         results.ElementAt(index).Quarter.Should().Be(quarter <= 4 ? $"Q{quarter}" : "2019");
-                        results.ElementAt(index).Category.Should().Be($"{(int)value}. {value.ToDisplayString()}");
+                        results.ElementAt(index).Category.Should().Be($"{categoryNumber}. {value.ToDisplayString()}");
                         results.ElementAt(index).TotalNonObligatedWeeeReceived.Should().BeNull();
                         results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().BeNull();
                         index++;
@@ -112,10 +113,11 @@
                     for (var countValue = 0; countValue < values.Count(); countValue++)
                     {
                         var value = values.ElementAt(countValue);
+                        var categoryNumber = ((int)value <= 9) ? "0" + Convert.ToString((int)value) : Convert.ToString((int)value);
                         if (quarter == 5)
                         {
                             results.ElementAt(index).Quarter.Should().Be($"2019");
-                            results.ElementAt(index).Category.Should().Be($"{(int)value}. {value.ToDisplayString()}");
+                            results.ElementAt(index).Category.Should().Be($"{categoryNumber}. {value.ToDisplayString()}");
                             if (dcf)
                             {
                                 results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((int)value * 4 * 4);
@@ -128,7 +130,7 @@
                         else
                         {
                             results.ElementAt(index).Quarter.Should().Be($"Q{quarter}");
-                            results.ElementAt(index).Category.Should().Be($"{(int)value}. {value.ToDisplayString()}");
+                            results.ElementAt(index).Category.Should().Be($"{categoryNumber}. {value.ToDisplayString()}");
                             if (dcf)
                             {
                                 results.ElementAt(index).TotalNonObligatedWeeeReceivedFromDcf.Should().Be((int)value * 2 * 2);

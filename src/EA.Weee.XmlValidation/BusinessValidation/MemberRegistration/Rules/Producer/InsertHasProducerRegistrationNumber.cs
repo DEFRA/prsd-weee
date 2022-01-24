@@ -12,7 +12,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "You cannot add a producer registration number (PRN) for {0} when adding the producer for the first time. To add {0} as a new producer, remove the PRN - or if the producer already exists, amend its details using status 'A' not 'I'.",
+                            "You cannot add a producer registration number (PRN) for {0} when registering the producer for the very first time. To register {0} as a brand new producer, remove the PRN - or if the producer has been registered previously, register them or amend their details using status 'A' not 'I'.",
                             producer.GetProducerName()));
             }
 

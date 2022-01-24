@@ -114,8 +114,9 @@
                 foreach (var nonObligatedCategoryValue in CategoryValues())
                 {
                     var categoryValue = results.First(r => r.CategoryId.Equals(nonObligatedCategoryValue.CategoryId));
+                    var categoryNumber = (nonObligatedCategoryValue.CategoryId <= 9) ? "0" + Convert.ToString(nonObligatedCategoryValue.CategoryId) : Convert.ToString(nonObligatedCategoryValue.CategoryId);
 
-                    categoryValue.Category.Should().Be($"{nonObligatedCategoryValue.CategoryId}. {nonObligatedCategoryValue.CategoryDisplay}");
+                    categoryValue.Category.Should().Be($"{categoryNumber}. {nonObligatedCategoryValue.CategoryDisplay}");
                 }
             }
         }

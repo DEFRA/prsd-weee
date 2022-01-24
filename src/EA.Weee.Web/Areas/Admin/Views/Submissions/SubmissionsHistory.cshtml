@@ -55,16 +55,34 @@
             });
         }
 
-        $("#SelectedYear")
-            .change(function () {
+        function FectSchemeForComplainceYear(selectedYear) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("FetchSchemeForComplainceYear")',
+                cache: false,
+                data: { complianceYear: selectedYear, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    // Clear options
+                    $("#SelectedScheme").find("option").remove();
+
+                    // Loop through JSON response
+                    $.each(data, function (index, item) {
+                        $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    })
+
+                    var selectedScheme = $("#SelectedScheme").val();
+                    FetchSubmissionResults(selectedYear, selectedScheme);
+                }
+            });
+        }
+
+        $("#SelectedYear").change(function () {
 
                 var selectedYear = $(this).val();
-                var selectedScheme = $("#SelectedScheme").val();
-                FetchSubmissionResults(selectedYear, selectedScheme);
+                FectSchemeForComplainceYear(selectedYear);
             });
 
-        $("#SelectedScheme")
-            .change(function () {
+        $("#SelectedScheme").change(function () {
                 var selectedScheme = $(this).val();
                 var selectedYear = $("#SelectedYear").val();
                 FetchSubmissionResults(selectedYear, selectedScheme);
