@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Release 4\20211210-1403-report-category-name-change.sql" />
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />

@@ -14,15 +14,15 @@
 
             // Assert
             Assert.Equal(14, dictionary.Count);
-            Assert.Equal("1. Large household appliances", dictionary[(int)WeeeCategory.LargeHouseholdAppliances]);
-            Assert.Equal("2. Small household appliances", dictionary[(int)WeeeCategory.SmallHouseholdAppliances]);
-            Assert.Equal("3. IT and telecommunications equipment", dictionary[(int)WeeeCategory.ITAndTelecommsEquipment]);
-            Assert.Equal("4. Consumer equipment", dictionary[(int)WeeeCategory.ConsumerEquipment]);
-            Assert.Equal("5. Lighting equipment", dictionary[(int)WeeeCategory.LightingEquipment]);
-            Assert.Equal("6. Electrical and electronic tools", dictionary[(int)WeeeCategory.ElectricalAndElectronicTools]);
-            Assert.Equal("7. Toys, leisure and sports equipment", dictionary[(int)WeeeCategory.ToysLeisureAndSports]);
-            Assert.Equal("8. Medical devices", dictionary[(int)WeeeCategory.MedicalDevices]);
-            Assert.Equal("9. Monitoring and control instruments", dictionary[(int)WeeeCategory.MonitoringAndControlInstruments]);
+            Assert.Equal("01. Large household appliances", dictionary[(int)WeeeCategory.LargeHouseholdAppliances]);
+            Assert.Equal("02. Small household appliances", dictionary[(int)WeeeCategory.SmallHouseholdAppliances]);
+            Assert.Equal("03. IT and telecommunications equipment", dictionary[(int)WeeeCategory.ITAndTelecommsEquipment]);
+            Assert.Equal("04. Consumer equipment", dictionary[(int)WeeeCategory.ConsumerEquipment]);
+            Assert.Equal("05. Lighting equipment", dictionary[(int)WeeeCategory.LightingEquipment]);
+            Assert.Equal("06. Electrical and electronic tools", dictionary[(int)WeeeCategory.ElectricalAndElectronicTools]);
+            Assert.Equal("07. Toys, leisure and sports equipment", dictionary[(int)WeeeCategory.ToysLeisureAndSports]);
+            Assert.Equal("08. Medical devices", dictionary[(int)WeeeCategory.MedicalDevices]);
+            Assert.Equal("09. Monitoring and control instruments", dictionary[(int)WeeeCategory.MonitoringAndControlInstruments]);
             Assert.Equal("10. Automatic dispensers", dictionary[(int)WeeeCategory.AutomaticDispensers]);
             Assert.Equal("11. Display equipment", dictionary[(int)WeeeCategory.DisplayEquipment]);
             Assert.Equal("12. Appliances containing refrigerants", dictionary[(int)WeeeCategory.CoolingApplicancesContainingRefrigerants]);

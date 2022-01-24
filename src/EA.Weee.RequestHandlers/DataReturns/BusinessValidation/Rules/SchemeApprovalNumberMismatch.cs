@@ -13,7 +13,7 @@
             if (xmlSchemeApprovalNumber != scheme.ApprovalNumber)
             {
                 var errorMessage = string.Format(
-                    "The PCS approval number {0} you have provided does not match with the PCS. Review the PCS approval number.",
+                    "The PCS approval number {0} you have provided does not match with the PCS you are logged in for. Review the PCS approval number.",
                     xmlSchemeApprovalNumber);
 
                 result.Add(new ErrorData(errorMessage, ErrorLevel.Error));
