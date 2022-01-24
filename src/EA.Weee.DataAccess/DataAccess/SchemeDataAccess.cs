@@ -49,5 +49,29 @@
                 .Distinct()
                 .ToListAsync();
         }
+
+        public async Task<List<string>> GetMemberRegistrationSchemesByComplianceYear(int complianceYear)
+        {
+            return await context.MemberUploads
+                .Where(mu => mu.IsSubmitted)
+                .Where(mu => mu.ComplianceYear.HasValue && mu.ComplianceYear.Value == complianceYear)
+                .Select(mu => (string)mu.Scheme.SchemeName)
+                .Distinct()
+                .OrderByDescending(year => year)
+                .ToListAsync();
+        }
+
+        public async Task<List<string>> GetEEEWEEEDataReturnSchemesByComplianceYear(int complianceYear)
+        {
+            return await context.DataReturns
+                .Where(dr => dr.Scheme != null)
+                .Where(dr => dr.Quarter.Year == complianceYear)
+                .Where(dr => dr.CurrentVersion != null)
+                .Where(dr => dr.CurrentVersion.SubmittedDate.HasValue)
+                .Select(dr => (string)dr.Scheme.SchemeName)
+                .Distinct()
+                .OrderByDescending(year => year)
+                .ToListAsync();
+        }
     }
 }

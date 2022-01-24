@@ -69,6 +69,8 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
+    <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />

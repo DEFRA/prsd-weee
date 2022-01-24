@@ -34,6 +34,8 @@
             @Html.HiddenFor(m => m.AatfId)
             @Html.HiddenFor(m => m.SiteName)
             @Html.HiddenFor(m => m.ReturnId)
+            @Html.HiddenFor(m => m.IsEditDetails)
+            @Html.HiddenFor(m => m.IsEditTonnage)
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
@@ -51,7 +53,7 @@
                 Continue
             </button>
             <div>
-                <a href="@(Url.UrlFor<ObligatedSentOnController>(u => u.Index(Model.ReturnId, Model.OrganisationId, Model.WeeeSentOnId, Model.AatfId, Model.SiteName)))">Cancel</a>
+                <a href="@(Url.UrlFor<ObligatedSentOnController>(u => u.Index(Model.ReturnId, Model.OrganisationId, Model.WeeeSentOnId, Model.AatfId, Model.SiteName, Model.IsEditDetails, Model.IsEditTonnage)))">Cancel</a>
             </div>
         }
     </section>
