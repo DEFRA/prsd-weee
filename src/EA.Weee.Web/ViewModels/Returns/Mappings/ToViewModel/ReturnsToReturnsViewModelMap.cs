@@ -145,8 +145,18 @@
                 {
                     QuarterType nextQuarter = WorkOutNextQuarter(source.OpenQuarters);
 
+                    int startYear;
+                    if (nextQuarter == QuarterType.Q4)
+                    {
+                        startYear = source.NextWindow.WindowOpenDate.Year - 1;
+                    }
+                    else
+                    {
+                        startYear = source.NextWindow.WindowOpenDate.Year;
+                    }
+
                     return
-                        $"Returns have been started or submitted for all open quarters. You can start submitting your {source.NextWindow.WindowOpenDate.Year} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
+                        $"Returns have been started or submitted for all open quarters. You can start submitting your {startYear} {nextQuarter} returns on {source.NextWindow.WindowOpenDate.ToReadableDateTime()}.";
                 }
             }
             return NotExpectedError;

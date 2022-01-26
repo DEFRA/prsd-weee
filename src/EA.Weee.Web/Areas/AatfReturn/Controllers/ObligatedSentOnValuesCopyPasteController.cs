@@ -29,7 +29,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid organisationId, Guid weeeSentOnId, Guid aatfId, string siteName, bool? isEditDetails = false, bool? isEditTonnage = false)
         {
             using (IWeeeClient client = apiClient())
             {
@@ -42,6 +42,10 @@
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
                 };
+
+                viewModel.IsEditDetails = isEditDetails;
+                viewModel.IsEditTonnage = isEditTonnage;
+
                 await SetBreadcrumb(returnData.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(returnData.Quarter, returnData.QuarterWindow));
                 return View(viewModel);
             }
@@ -59,7 +63,7 @@
                 TempData["pastedValues"] = new ObligatedCategoryValue() { B2B = b2bContent, B2C = b2cContent };
             }
 
-            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.SiteName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId));
+            return await Task.Run<ActionResult>(() => AatfRedirect.ObligatedSentOn(viewModel.SiteName, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, viewModel.WeeeSentOnId, viewModel.IsEditDetails.Value, viewModel.IsEditTonnage.Value));
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
