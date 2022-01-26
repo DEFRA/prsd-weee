@@ -6,6 +6,7 @@
     using Core.DataReturns;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Requests.Admin;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -26,7 +27,7 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
-    using GetSchemes = Weee.Requests.Admin.GetSchemes;
+    using static EA.Weee.Requests.Admin.GetSchemes;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
@@ -107,7 +108,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
 
-                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     SubmissionsHistoryViewModel model = new SubmissionsHistoryViewModel
@@ -142,6 +143,33 @@
         public Task<ActionResult> FetchSubmissionResults(int year, Guid schemeId)
         {
             return RetrieveSubmissionResults(year, schemeId, SubmissionsHistoryOrderBy.SubmissionDateDescending);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchSchemeForComplainceYear(int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                try
+                {
+                    GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+
+                    IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
+
+                    return Json(schemeNames, JsonRequestBehavior.AllowGet);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return Json(new { string.Empty });
+                }
+            }
         }
 
         /// <summary>
@@ -246,7 +274,7 @@
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
 
-                    GetSchemes getSchemesRequest = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
@@ -266,6 +294,33 @@
                         throw;
                     }
                     return View();
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchDataReturnSchemeForComplainceYear(int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                try
+                {
+                    GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+
+                    IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
+
+                    return Json(schemeNames, JsonRequestBehavior.AllowGet);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return Json(new { string.Empty });
                 }
             }
         }

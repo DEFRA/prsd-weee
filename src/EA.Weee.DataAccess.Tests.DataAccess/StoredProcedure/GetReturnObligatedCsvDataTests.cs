@@ -146,7 +146,8 @@
                 for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
                 {
                     var value = CategoryValues().ElementAt(countValue);
-                    AssertSubmittedRow(results, aatf, db, countValue, $"{value.CategoryId}. {value.CategoryDisplay}", B2C);
+                    var categoryNumber = (value.CategoryId <= 9) ? "0" + Convert.ToString(value.CategoryId) : Convert.ToString(value.CategoryId);
+                    AssertSubmittedRow(results, aatf, db, countValue, $"{categoryNumber}. {value.CategoryDisplay}", B2C);
                 }
 
                 results.Dispose();
@@ -178,7 +179,8 @@
                 for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
                 {
                     var value = CategoryValues().ElementAt(countValue);
-                    AssertCreatedRow(results, aatf, countValue, $"{value.CategoryId}. {value.CategoryDisplay}", B2C);
+                    var categoryNumber = (value.CategoryId <= 9) ? "0" + Convert.ToString(value.CategoryId) : Convert.ToString(value.CategoryId);
+                    AssertCreatedRow(results, aatf, countValue, $"{categoryNumber}. {value.CategoryDisplay}", B2C);
                 }
 
                 results.Dispose();

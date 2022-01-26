@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Release 4\20211210-1403-report-category-name-change.sql" />
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
@@ -315,6 +316,7 @@
     <Content Include="scripts\Update\Release 2\Sprint18\20190920-1027-alter-getPcsAatfDiscrepancyCsvData.sql" />
     <Content Include="scripts\Update\Release 2\Support01\20191029-1059-alter-getNonObligatedWeeeReceived.sql" />
     <Content Include="scripts\Update\Release 2\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
+    <Content Include="scripts\Update\Release 4\20210706-1645-missing-producer-data-report-changes.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

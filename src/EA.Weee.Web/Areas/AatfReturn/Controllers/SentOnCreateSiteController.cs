@@ -39,7 +39,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId, bool? isEditDetails = false, bool? isEditTonnage = false)
         {
             using (var client = apiClient())
             {
@@ -53,7 +53,25 @@
 
                 var countryData = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
 
-                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer() { CountryData = countryData, Return = @return, AatfId = aatfId, WeeeSentOnData = weeeSentOn });
+                var viewModel = mapper.Map(new ReturnAndAatfToSentOnCreateSiteViewModelMapTransfer()
+                {
+                    CountryData = countryData,
+                    Return = @return,
+                    AatfId = aatfId,
+                    WeeeSentOnData = weeeSentOn
+                });
+
+                viewModel.IsEditDetails = isEditDetails;
+                viewModel.IsEditTonnage = isEditTonnage;
+
+                if (isEditTonnage.Value)
+                {
+                    var request = requestCreator.ViewModelToRequest(viewModel);
+
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
+                }
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
@@ -66,7 +84,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel, bool? noJavascriptCopy)
+        public virtual async Task<ActionResult> Index(SentOnCreateSiteViewModel viewModel, bool? noJavascriptCopy, bool? isEditDetails = false, bool? isEditTonnage = false)
         {
             if (NoJavascriptCopy(noJavascriptCopy))
             {
@@ -78,11 +96,22 @@
                 {
                     using (var client = apiClient())
                     {
-                        var request = requestCreator.ViewModelToRequest(viewModel);
+                        if (isEditDetails.Value)
+                        {
+                            var request = requestCreator.ViewModelToRequest(viewModel);
 
-                        var result = await client.SendAsync(User.GetAccessToken(), request);
+                            await client.SendAsync(User.GetAccessToken(), request);
 
-                        return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
+                            return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
+                        }
+                        else
+                        {
+                            var request = requestCreator.ViewModelToRequest(viewModel);
+
+                            var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                            return AatfRedirect.ObligatedSentOn(viewModel.SiteAddressData.Name, viewModel.OrganisationId, viewModel.AatfId, viewModel.ReturnId, result);
+                        }
                     }
                 }
             }

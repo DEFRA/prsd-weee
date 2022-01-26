@@ -18,5 +18,9 @@
         public AatfAddressData SiteAddressData { get; set; }
 
         public OperatorAddressData OperatorAddressData { get; set; }
+
+        public bool? IsEditDetails { get; set; }
+
+        public bool? IsEditTonnage { get; set; }
     }
 }

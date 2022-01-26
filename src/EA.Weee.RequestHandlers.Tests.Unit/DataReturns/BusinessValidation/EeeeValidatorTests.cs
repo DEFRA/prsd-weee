@@ -125,7 +125,7 @@
             // Assert
             Assert.NotNull(error);
             Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
-            Assert.Contains("does not match the registered producer name of", error.Description);
+            Assert.Contains("The producer name IncorrectProducerName in your return XML for producer registration number PRN1234 for 2016 does not match the registered producer name ProducerName123. Ensure the registration number and producer name in your return XML match the registered details.", error.Description);
             Assert.Contains("ProducerName123", error.Description);
             Assert.Contains("IncorrectProducerName", error.Description);
             Assert.Contains("PRN1234", error.Description);

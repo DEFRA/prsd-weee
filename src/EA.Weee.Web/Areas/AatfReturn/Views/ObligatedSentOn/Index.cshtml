@@ -29,7 +29,7 @@
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
-                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, siteName = Model.SiteName, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
+                @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, siteName = Model.SiteName, isEditDetails = Model.IsEditDetails, isEditTonnage = Model.IsEditTonnage, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
             </div>
         </div>
 
@@ -39,6 +39,8 @@
         @Html.HiddenFor(m => m.SiteAddressId)
         @Html.HiddenFor(m => m.WeeeSentOnId)
         @Html.HiddenFor(m => m.SiteName)
+        @Html.HiddenFor(m => m.IsEditDetails)
+        @Html.HiddenFor(m => m.IsEditTonnage)
 
         @Html.AntiForgeryToken()
 
@@ -46,7 +48,7 @@
         <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
             Save and continue
         </button>
-      
+
     }
 
     @Scripts.Render("~/bundles/weee_tonnage_totals")
@@ -54,5 +56,12 @@
         TonnageTotals('B2C');
         TonnageTotals('B2B');
     </script>
-    @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "SentOnCreateSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId }, new { @class = "govuk-back-link" })
+    @if (Model.IsEditTonnage.Value)
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    }
+    else
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { controller = "SentOnCreateSite", action = "Index", returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId }, new { @class = "govuk-back-link" })
+    }
 </section>
