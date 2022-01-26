@@ -61,9 +61,9 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ReusedOffSiteCreateSite", action = "Edit", returnId = returnId, aatfId = aatfId, organisationId = organisationId, siteId = siteId }));
         }
 
-        public static RedirectToRouteResult ObligatedSentOn(string siteName, Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId)
+        public static RedirectToRouteResult ObligatedSentOn(string siteName, Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId, bool? isEditDetails = false, bool? isEditTonnage = false)
         {
-            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedSentOn", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId, weeeSentOnId = weeeSentOnId, siteName = siteName }));
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "ObligatedSentOn", action = "Index", returnId = returnId, aatfId = aatfId, organisationId = organisationId, weeeSentOnId = weeeSentOnId, siteName = siteName, isEditDetails = isEditDetails, isEditTonnage = isEditTonnage }));
         }
 
         public static RedirectToRouteResult SentOnCreateSiteOperator(Guid organisationId, Guid aatfId, Guid returnId, Guid weeeSentOnId)

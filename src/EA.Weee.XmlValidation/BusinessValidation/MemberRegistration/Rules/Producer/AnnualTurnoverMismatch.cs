@@ -23,7 +23,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "The annualTurnover amount and annualTurnoverBand for {0} are not compatible. Review your file.",
+                            "The annualTurnover amount and annualTurnoverBand for {0} are not compatible. Review your return XML.",
                             producer.GetProducerName()), ErrorLevel.Warning);
             }
 

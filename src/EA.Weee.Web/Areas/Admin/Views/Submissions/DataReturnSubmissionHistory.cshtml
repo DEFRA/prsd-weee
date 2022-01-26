@@ -26,11 +26,11 @@
         </p>
     </div>
 
-    
+
     <div class="govuk-grid-column-full">
         <div class="govuk-form-group" id="submissionResults"></div>
     </div>
-    
+
     <p class="left-cleared">
         <a href="javascript:history.back();">Back</a>
     </p>
@@ -52,6 +52,27 @@
                 data: { year: selectedYear, schemeId: selectedScheme, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
                 success: function (data) {
                     $('#submissionResults').html(data);
+                }
+            });
+        }
+
+        function FectSchemeForComplainceYear(selectedYear) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("FetchDataReturnSchemeForComplainceYear")',
+                cache: false,
+                data: { complianceYear: selectedYear, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    // Clear options
+                    $("#SelectedScheme").find("option").remove();
+
+                    // Loop through JSON response
+                    $.each(data, function (index, item) {
+                        $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    })
+
+                    var selectedScheme = $("#SelectedScheme").val();
+                    FetchSubmissionResults(selectedYear, selectedScheme);
                 }
             });
         }

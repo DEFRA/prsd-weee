@@ -26,6 +26,10 @@
 
         public Guid ReturnId { get; set; }
 
+        public bool? IsEditDetails { get; set; }
+
+        public bool? IsEditTonnage { get; set; }
+
         public IList<ObligatedCategoryValue> CategoryValues { get; set; }
 
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
