@@ -37,6 +37,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,13 +49,20 @@
     <Compile Include="AuthorizationModule.cs" />
     <Compile Include="AutofacDeferredEventDispatcher.cs" />
     <Compile Include="AutofacEventDispatcher.cs" />
+    <Compile Include="AutofacExtensions.cs" />
     <Compile Include="AutofacMappingEngine.cs" />
     <Compile Include="AutofacMediator.cs" />
     <Compile Include="CustomRegistrationExtensions.cs" />
+    <Compile Include="EnvironmentResolver.cs" />
     <Compile Include="EventDispatcherModule.cs" />
+    <Compile Include="HostEnvironmentType.cs" />
+    <Compile Include="IEnvironmentResolver.cs" />
+    <Compile Include="IoCApplication.cs" />
     <Compile Include="MappingModule.cs" />
     <Compile Include="MediatrModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistrationHelpers.cs" />
+    <Compile Include="ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
