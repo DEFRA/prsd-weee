@@ -69,6 +69,9 @@
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Elmah.FallbackErrorLog, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.FallbackErrorLog.1.0.2.0\lib\net35\Elmah.FallbackErrorLog.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -382,6 +385,7 @@
     <Compile Include="Filters\MaintenanceModeFilterAttribute.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
     <Compile Include="Infrastructure\DisplayHelper.cs" />
+    <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
@@ -561,6 +565,7 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\_ReportSearchFilters.cshtml" />
