@@ -14,7 +14,6 @@ namespace EA.Weee.Api
     using IdentityServer3.Core.Configuration;
     using IdentityServer3.Core.Logging;
     using IdSrv;
-    using Logging;
     using Microsoft.Owin.Security.DataProtection;
     using Newtonsoft.Json.Serialization;
     using Owin;
@@ -24,6 +23,8 @@ namespace EA.Weee.Api
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
     using System.Web.Http.Filters;
+    using Infrastructure.Infrastructure;
+    using LoggerConfigurationExtensions = Logging.LoggerConfigurationExtensions;
 
     public class Startup
     {
@@ -32,8 +33,8 @@ namespace EA.Weee.Api
             var config = new HttpConfiguration();
             var configurationService = new ConfigurationService();
 #if DEBUG
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Debug()
+            Log.Logger = LoggerConfigurationExtensions.Debug(new LoggerConfiguration()
+                    .WriteTo)
                 .CreateLogger();
 
             config.Services.Add(typeof(IExceptionLogger), new DebugExceptionLogger());
@@ -49,6 +50,7 @@ namespace EA.Weee.Api
             builder.Register(c => configurationService.CurrentConfiguration).As<AppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
             builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
+            builder.RegisterType<ElmahSqlLogger>().AsSelf().InstancePerRequest();
 
             var container = AutofacBootstrapper.Initialize(builder, config);
             System.Net.ServicePointManager.SecurityProtocol |=

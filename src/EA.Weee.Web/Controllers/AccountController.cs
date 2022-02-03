@@ -60,14 +60,20 @@
         {
             if (ModelState.IsValid)
             {
-                var loginResult = await weeeAuthorization.SignIn(model.Email, model.Password, model.RememberMe);
-
-                if (loginResult.Successful)
+                try
                 {
-                    return this.LoginRedirect(loginResult.DefaultLoginAction, model.ReturnUrl);
-                }
+                    var loginResult = await weeeAuthorization.SignIn(model.Email, model.Password, model.RememberMe);
 
-                ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
+                    if (loginResult.Successful)
+                    {
+                        return this.LoginRedirect(loginResult.DefaultLoginAction, model.ReturnUrl);
+                    }
+
+                    ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
+                }
+                catch (Exception ex)
+                {
+                }
             }
 
             return View(model);
