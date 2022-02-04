@@ -60,7 +60,6 @@
         {
             if (ModelState.IsValid)
             {
-   
                 var loginResult = await weeeAuthorization.SignIn(model.Email, model.Password, model.RememberMe);
 
                 if (loginResult.Successful)
