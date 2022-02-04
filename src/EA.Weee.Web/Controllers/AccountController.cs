@@ -69,7 +69,6 @@
                 }
 
                 ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
-
             }
 
             return View(model);
