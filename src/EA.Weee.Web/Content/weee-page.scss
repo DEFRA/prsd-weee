@@ -185,9 +185,8 @@ input[type="file"].form-control {
     border: none;
     padding: 0;
     color: govuk-colour('blue');
-    font-family: $NTA-Light;
+    font-family: $govuk-font-family;
     cursor: pointer;
-
     @include govuk-font(19);
     text-decoration: underline;
 }
@@ -391,7 +390,7 @@ input[type="file"].form-control {
 }
 
 .ui-menu-item {
-    font-family: $NTA-Light;
+    font-family: $govuk-font-family;
 }
 
 
