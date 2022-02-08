@@ -1,8 +1,6 @@
-$govuk-assets-path: "../content/govuk_frontend/";
-$govuk-images-path: "../content/govuk_frontend/images/";
-$govuk-fonts-path: "../content/govuk_frontend/fonts/";
+$govuk-use-legacy-font: true;
 
-@import "govuk_frontend/package/all";
+@import "govuk_frontend/all";
 
 @import "weee/errors";
 
