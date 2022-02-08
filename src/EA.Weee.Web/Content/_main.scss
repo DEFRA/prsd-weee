@@ -1,4 +1,5 @@
-$govuk-use-legacy-font: true;
+$govuk-new-link-styles: true;
+$govuk-assets-path: "../content/govuk_frontend/assets/";
 
 @import "govuk_frontend/all";
 
