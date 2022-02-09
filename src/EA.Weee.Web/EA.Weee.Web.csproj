@@ -650,6 +650,11 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
+    <None Include="Scripts\jquery-3.6.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.6.0.js" />
+    <Content Include="Scripts\jquery-3.6.0.min.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.js" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
     <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
@@ -1024,7 +1029,6 @@
     <Content Include="Areas\Admin\Views\AddOrganisation\RegisteredCompanyDetails.cshtml" />
     <Content Include="Areas\AeReturn\Views\web.config" />
     <Content Include="Areas\AeReturn\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\AeReturn\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\AeReturn\Views\Returns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_AatfApprovalDateProgressiveDisclosure.cshtml" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsNil\Index.cshtml" />
@@ -1057,18 +1061,13 @@
     <Content Include="Areas\Aatf\Views\ContactDetails\Edit.cshtml" />
     <None Include="Content\remove-site.scss" />
     <Content Include="Areas\AatfReturn\Views\SelectReportOptionsDeselect\Index.cshtml" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\hide-classes-when-competent-authory-is-not-ea.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jquery-migrate-3.0.0.js" />
     <Content Include="Scripts\jquery-migrate-3.0.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.6.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -1480,6 +1479,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
+    <Folder Include="Areas\AeReturn\Views\Shared\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
   <PropertyGroup>
