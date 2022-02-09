@@ -112,11 +112,11 @@
 
             A.CallTo(() => weeeSentOn.AatfId).Returns(aatfId);
             A.CallTo(() => weeeSentOn.ReturnId).Returns(returnId);
-            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn }));
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn, new WeeeSentOn(), new WeeeSentOn() }));
 
             var result = await dataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId);
 
-            result.Should().BeEquivalentTo(weeeSentOn);
+            result.Should().BeEquivalentTo(new List<WeeeSentOn>() { weeeSentOn });
         }
 
         [Fact]

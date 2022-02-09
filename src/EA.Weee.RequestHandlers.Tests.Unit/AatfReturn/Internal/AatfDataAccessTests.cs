@@ -371,7 +371,7 @@
 
             var result = await dataAccess.GetComplianceYearsForAatfByAatfId(aatfId);
 
-            result.Should().BeEquivalentTo(aatf.ComplianceYear);
+            result.Should().Contain(2019);
             result.Count.Should().Be(1);
         }
 
