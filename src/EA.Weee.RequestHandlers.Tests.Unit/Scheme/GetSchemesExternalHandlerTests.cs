@@ -59,7 +59,7 @@
 
             var result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.GetCompleteSchemes()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetCompleteSchemes()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

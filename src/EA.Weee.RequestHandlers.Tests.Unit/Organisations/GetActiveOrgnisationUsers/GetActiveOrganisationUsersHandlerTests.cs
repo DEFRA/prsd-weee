@@ -35,7 +35,7 @@
 
             var result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.FetchActiveOrganisationUsers(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchActiveOrganisationUsers(request.OrganisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -55,7 +55,7 @@
 
             foreach (var user in users)
             {
-                A.CallTo(() => mapper.Map(user)).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => mapper.Map(user)).MustHaveHappened(1, Times.Exactly);
             }
         }
 

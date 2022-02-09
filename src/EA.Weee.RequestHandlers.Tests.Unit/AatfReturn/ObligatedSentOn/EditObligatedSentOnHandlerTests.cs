@@ -69,8 +69,8 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => obligatedSentOnDataAccess.UpdateAmounts(returnAmounts.ElementAt(0), 1, 2)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => obligatedSentOnDataAccess.UpdateAmounts(returnAmounts.ElementAt(1), 3, 4)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => obligatedSentOnDataAccess.UpdateAmounts(returnAmounts.ElementAt(0), 1, 2)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => obligatedSentOnDataAccess.UpdateAmounts(returnAmounts.ElementAt(1), 3, 4)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

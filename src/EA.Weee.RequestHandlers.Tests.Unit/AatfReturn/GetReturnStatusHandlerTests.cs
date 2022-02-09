@@ -78,7 +78,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => returnDataAccess.GetById(message.ReturnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.GetById(message.ReturnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -101,7 +101,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => mapper.Map<EA.Weee.Core.AatfReturn.ReturnStatus>(@return.ReturnStatus)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<EA.Weee.Core.AatfReturn.ReturnStatus>(@return.ReturnStatus)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

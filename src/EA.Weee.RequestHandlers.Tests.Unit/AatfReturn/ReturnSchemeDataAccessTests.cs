@@ -34,7 +34,7 @@
             await dataAccess.Submit(items);
 
             A.CallTo(() => context.ReturnScheme.AddRange(items)).MustHaveHappened().Then(
-                A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -143,10 +143,10 @@
 
             await dataAccess.RemoveReturnScheme(schemeIds, returnId);
 
-            A.CallTo(() => context.WeeeReceived.Remove(weee)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
-            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.WeeeReceived.Remove(weee)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
+            A.CallTo(() => context.ReturnScheme.Remove(returnSchemeMatch)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
     }
 }

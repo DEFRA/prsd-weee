@@ -36,8 +36,8 @@
             var type = Core.AatfReturn.FacilityType.Aatf;
             await handler.HandleAsync(new GetAatfByOrganisationFacilityType(id, type));
 
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationAndFacilityTypeSpecification>.That.Matches(c => c.OrganisationId == id))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationAndFacilityTypeSpecification>.That.Matches(c => c.FacilityType.Equals(type)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationAndFacilityTypeSpecification>.That.Matches(c => c.OrganisationId == id))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationAndFacilityTypeSpecification>.That.Matches(c => c.FacilityType.Equals(type)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -55,7 +55,7 @@
 
             for (var i = 0; i < aatfs.Count; i++)
             {
-                A.CallTo(() => mapper.Map(aatfs.ElementAt(i))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => mapper.Map(aatfs.ElementAt(i))).MustHaveHappened(1, Times.Exactly);
             }
         }
 

@@ -35,7 +35,7 @@
             await GetManageableOrganisationUsersHandler().HandleAsync(new GetManageableOrganisationUsers(organisationId));
 
             A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -82,7 +82,7 @@
                         .HandleAsync(new GetManageableOrganisationUsers(organisationId));
 
             A.CallTo(() => mapper.Map(A<OrganisationUser>._))
-                .MustHaveHappened(Repeated.Exactly.Times(noOfUsers));
+                .MustHaveHappened(noOfUsers, Times.Exactly);
 
             Assert.Equal(noOfUsers, result.Count);
         }
