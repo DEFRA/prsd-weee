@@ -106,7 +106,7 @@
 
             A.CallTo(() => mapper.Map(A<ReturnDataToSelectReportOptionsNilViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
                                                                                                                && t.ReturnId == returnId
-                                                                                                               && t.ReturnData == returnData))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                                               && t.ReturnData == returnData))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -117,7 +117,7 @@
             await controller.Index(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(model.ReturnId) && c.NilReturn.Equals(true))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

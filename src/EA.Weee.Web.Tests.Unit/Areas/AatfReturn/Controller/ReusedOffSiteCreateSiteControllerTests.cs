@@ -109,7 +109,7 @@
             var result = await controller.Index(A.Dummy<Guid>(), returnId, aatfId, A.Dummy<Guid?>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfSite>.That.Matches(c => c.AatfId.Equals(aatfId) && c.ReturnId.Equals(returnId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -117,7 +117,7 @@
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -142,7 +142,7 @@
                 x.ReturnId.Equals(returnId) &&
                 x.SiteId.Equals(siteId) &&
                 x.Countries.Equals(country) &&
-                x.ReturnedSites.Equals(summary)))).MustHaveHappened(Repeated.Exactly.Once);
+                x.ReturnedSites.Equals(summary)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -197,7 +197,7 @@
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -208,7 +208,7 @@
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

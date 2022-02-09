@@ -49,7 +49,7 @@
         {
             var result = await handler.HandleAsync(A.Dummy<GetSchemesByOrganisationId>());
 
-            A.CallTo(() => dataAccess.GetSchemes()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetSchemes()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

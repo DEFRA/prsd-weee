@@ -119,7 +119,7 @@
             await controller.Index(returnId, A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(g => g.ReturnId.Equals(returnId))))
-            .MustHaveHappened(Repeated.Exactly.Once);
+            .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -157,7 +157,7 @@
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnAndSchemeDataToReceivedPcsViewModelMapTransfer>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

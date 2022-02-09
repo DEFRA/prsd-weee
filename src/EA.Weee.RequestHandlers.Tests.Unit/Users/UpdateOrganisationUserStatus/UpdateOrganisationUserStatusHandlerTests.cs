@@ -88,10 +88,10 @@
                     .HandleAsync(new UpdateOrganisationUserStatus(organisationUserId, userStatus));
 
             A.CallTo(() => weeeAuthorization.EnsureInternalOrOrganisationAccess(A<Guid>._))
-                .MustHaveHappened(Repeated.Exactly.Once)
+                .MustHaveHappened(1, Times.Exactly)
                 .Then(
                     A.CallTo(() => dataAccess.ChangeOrganisationUserStatus(organisationUser, userStatus))
-                        .MustHaveHappened(Repeated.Exactly.Once));
+                        .MustHaveHappened(1, Times.Exactly));
         }
 
         private UpdateOrganisationUserStatusHandler UpdateOrganisationUserStatusHandler()

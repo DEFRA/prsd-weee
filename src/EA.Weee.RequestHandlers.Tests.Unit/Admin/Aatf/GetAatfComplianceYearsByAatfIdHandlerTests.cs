@@ -44,7 +44,7 @@
         {
             var result = await handler.HandleAsync(A.Dummy<GetAatfComplianceYearsByAatfId>());
 
-            A.CallTo(() => dataAccess.GetComplianceYearsForAatfByAatfId(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetComplianceYearsForAatfByAatfId(A.Dummy<Guid>())).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

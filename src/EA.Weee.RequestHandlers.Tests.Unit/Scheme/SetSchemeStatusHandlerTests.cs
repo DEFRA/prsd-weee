@@ -81,7 +81,7 @@
             await SetSchemeStatusHandler().HandleAsync(new SetSchemeStatus(scheme.Id, status));
 
             Assert.Equal(status.ToDomainEnumeration<Domain.Scheme.SchemeStatus>(), context.Schemes.Single().SchemeStatus);
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly);
         }
 
         private SetSchemeStatusHandler SetSchemeStatusHandler()

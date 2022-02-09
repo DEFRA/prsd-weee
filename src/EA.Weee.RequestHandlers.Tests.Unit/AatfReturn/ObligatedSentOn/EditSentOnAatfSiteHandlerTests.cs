@@ -59,7 +59,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => offSiteDataAccess.Update(value, A<SiteAddressData>._, country)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => offSiteDataAccess.Update(value, A<SiteAddressData>._, country)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -82,7 +82,7 @@
                 && o.CountyOrRegion == request.OperatorAddressData.CountyOrRegion
                 && o.Postcode == request.OperatorAddressData.Postcode
                 && o.CountryName == request.OperatorAddressData.CountryName
-                && o.CountryId == request.OperatorAddressData.CountryId), country)).MustHaveHappened(Repeated.Exactly.Once);
+                && o.CountryId == request.OperatorAddressData.CountryId), country)).MustHaveHappened(1, Times.Exactly);
         }
 
         private static EditSentOnAatfSite CreateRequest()

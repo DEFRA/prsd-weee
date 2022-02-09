@@ -58,7 +58,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddEeeOutputAmount(A<string>._, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(3));
+                 .MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]
@@ -92,7 +92,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddWeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(2));
+                 .MustHaveHappened(2, Times.Exactly);
         }
 
         [Fact]
@@ -126,7 +126,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddWeeeCollectedAmount(WeeeCollectedAmountSourceType.Distributor, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(2));
+                 .MustHaveHappened(2, Times.Exactly);
         }
 
         [Fact]
@@ -160,7 +160,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddWeeeCollectedAmount(WeeeCollectedAmountSourceType.FinalHolder, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(2));
+                 .MustHaveHappened(2, Times.Exactly);
         }
 
         [Fact]
@@ -204,7 +204,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddAatfDeliveredAmount(A<string>._, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(3));
+                 .MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]
@@ -248,7 +248,7 @@
             await builder.Create().Build(schemeReturn);
 
             A.CallTo(() => builder.DataReturnVersionBuilder.AddAeDeliveredAmount(A<string>._, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                 .MustHaveHappened(Repeated.Exactly.Times(3));
+                 .MustHaveHappened(3, Times.Exactly);
         }
 
         [Fact]

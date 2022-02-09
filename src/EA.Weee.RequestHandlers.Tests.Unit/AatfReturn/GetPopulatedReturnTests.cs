@@ -113,7 +113,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
-            A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -125,7 +125,7 @@
 
             var result = await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
-            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(@return.Quarter)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -135,7 +135,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
-            A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchNonObligatedWeeeDataAccess.FetchNonObligatedWeeeForReturn(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -145,7 +145,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
-            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReceivedForReturn(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -155,7 +155,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
-            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchObligatedWeeeDataAccess.FetchObligatedWeeeReusedForReturn(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -167,7 +167,7 @@
 
             var result = await populatedReturn.GetReturnData(@return.Id, false);
 
-            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -181,7 +181,7 @@
 
             var result = await populatedReturn.GetReturnData(@return.Id, true);
 
-            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(@return.Id)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(A<Return>._)).MustNotHaveHappened();
         }
 
@@ -196,7 +196,7 @@
 
             var result = await populatedReturn.GetReturnData(@return.Id, true);
 
-            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnQuarterWindow(@return)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => fetchAatfDataAccess.FetchAatfByReturnId(A<Guid>._)).MustNotHaveHappened();
         }
 
@@ -207,7 +207,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, false);
 
-            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -217,7 +217,7 @@
 
             var result = await populatedReturn.GetReturnData(returnId, A.Dummy<bool>());
 
-            A.CallTo(() => genericDataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(s => s.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.GetManyByExpression(A<ReturnReportOnByReturnIdSpecification>.That.Matches(s => s.ReturnId.Equals(returnId)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -253,7 +253,7 @@
                                                                                 && c.ObligatedWeeeSentOnList.Equals(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)
                                                                                 && c.ReturnSchemes.Equals(returnSchemes)
-                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -289,7 +289,7 @@
                                                                                 && c.ObligatedWeeeSentOnList.Equals(obligatedSentOnValues)
                                                                                 && c.Return.Equals(@return)
                                                                                 && c.ReturnSchemes.Equals(returnSchemes)
-                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                && c.ReturnReportOns.Equals(reportsOn)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

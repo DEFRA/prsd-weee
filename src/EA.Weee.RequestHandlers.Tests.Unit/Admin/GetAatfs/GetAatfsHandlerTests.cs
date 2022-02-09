@@ -54,7 +54,7 @@
         {
             var request = new GetAatfs(fixture.Create<FacilityType>());
             await handler.HandleAsync(request);
-            A.CallTo(() => dataAccess.GetLatestAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetLatestAatfs()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -63,7 +63,7 @@
             var filter = fixture.Create<AatfFilter>();
             var request = new GetAatfs(fixture.Create<FacilityType>(), filter);
             await handler.HandleAsync(request);
-            A.CallTo(() => dataAccess.GetFilteredAatfs(filter)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetFilteredAatfs(filter)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
