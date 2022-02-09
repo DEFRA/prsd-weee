@@ -18,7 +18,7 @@
 
             // JQuery 3.x.x is used for all other browsers.
             bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
-                    "~/Scripts/jquery-3.3.1.js",
+                    "~/Scripts/jquery-3.6.0.js",
                     "~/Scripts/jquery-migrate-3.0.0.js",
                     "~/Scripts/jquery.unobtrusive-ajax.js",
                     "~/Scripts/jquery-ui-{version}.js",
