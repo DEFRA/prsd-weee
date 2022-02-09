@@ -89,7 +89,7 @@
             var obligatedValues = new NonObligatedCategoryValues();
             var returnList = new List<NonObligatedCategoryValue>();
 
-            A.CallTo(() => categoryMap.Map(A<NonObligatedDataToNonObligatedValueMapTransfer>.That.Matches(c => c.NonObligatedDataValues.IsSameOrEqualTo(nonObDataList)))).Returns(returnList);
+            A.CallTo(() => categoryMap.Map(A<NonObligatedDataToNonObligatedValueMapTransfer>.That.Matches(c => c.NonObligatedDataValues.Equals(nonObDataList)))).Returns(returnList);
 
             var result = mapper.Map(transfer);
 

@@ -48,7 +48,7 @@
             // Assert
             A.CallTo(() => weeeEmailService.SendOrganisationContactDetailsChanged(A<string>._, A<string>._, A<EntityType>._))
                 .MustNotHaveHappened();
-            action.Should().Throw<ArgumentException>();
+            action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]

@@ -51,7 +51,7 @@
 
             var result = await dataAccess.GetSelectedSchemesByReturnId(returnId);
 
-            result.Should().BeEquivalentTo(returnSchemeMatch);
+            result.Should().BeEquivalentTo(new List<ReturnScheme>() { returnSchemeMatch });
         }
 
         [Fact]

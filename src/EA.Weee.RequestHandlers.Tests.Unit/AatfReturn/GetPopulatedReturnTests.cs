@@ -307,9 +307,9 @@
 
             await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
-            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.Equals(expectedDate))))
                 .MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(systemDate)))).MustNotHaveHappened();
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.Equals(systemDate)))).MustNotHaveHappened();
 
             SystemTime.Unfreeze();
         }
@@ -327,7 +327,7 @@
 
             await populatedReturn.GetReturnData(A.Dummy<Guid>(), A.Dummy<bool>());
 
-            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.IsSameOrEqualTo(expectedDate))))
+            A.CallTo(() => mapper.Map(A<ReturnQuarterWindow>.That.Matches(r => r.SystemDateTime.Equals(expectedDate))))
                 .MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
