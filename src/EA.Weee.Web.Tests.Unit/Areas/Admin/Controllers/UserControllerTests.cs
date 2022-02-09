@@ -145,9 +145,9 @@
             var model = ((ViewResult)result).Model;
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetRoles>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
@@ -189,10 +189,10 @@
             var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
@@ -221,10 +221,10 @@
             var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationUserStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
@@ -253,7 +253,7 @@
             var result = await controller.Edit(id, model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
                 .MustNotHaveHappened();

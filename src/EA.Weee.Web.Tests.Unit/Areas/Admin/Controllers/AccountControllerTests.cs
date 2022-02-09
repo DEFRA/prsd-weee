@@ -113,10 +113,10 @@
             await AccountController().Create(model);
 
             A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._, A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -154,7 +154,7 @@
             var result = await AccountController().Create(ValidModel());
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -228,7 +228,7 @@
 
             // Assert
             A.CallTo(() => user.ResendActivationEmail("accessToken", "activationBaseUrl"))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -267,7 +267,7 @@
 
             // Assert
             A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
@@ -304,7 +304,7 @@
 
             // Assert
             A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._, accessToken))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(activatedUserAccountData);
             Assert.Equal(userId, activatedUserAccountData.Id);
@@ -398,7 +398,7 @@
 
             // Assert
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

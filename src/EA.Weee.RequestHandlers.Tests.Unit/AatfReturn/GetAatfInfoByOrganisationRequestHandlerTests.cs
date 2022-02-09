@@ -51,7 +51,7 @@
 
             await handler.HandleAsync(new GetAatfByOrganisation(id));
 
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationSpecification>.That.Matches(c => c.OrganisationId == id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationSpecification>.That.Matches(c => c.OrganisationId == id))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -65,7 +65,7 @@
 
             for (var i = 0; i < aatfs.Count; i++)
             {
-                A.CallTo(() => mapper.Map(aatfs.ElementAt(i))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => mapper.Map(aatfs.ElementAt(i))).MustHaveHappened(1, Times.Exactly);
             }
         }
 

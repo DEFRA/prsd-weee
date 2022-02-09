@@ -56,7 +56,7 @@
             var result = mapper.Map(returnData);
 
             var expectedTuple = (returnData.ReturnStatus, returnData.QuarterWindow, returnData.SystemDateTime);
-            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -71,7 +71,7 @@
 
             var result = mapper.Map(returnData);
 
-            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericMapper.Map<ReturnsListDisplayOptions>(expectedTuple)).MustHaveHappened(1, Times.Exactly);
             result.ReturnsListDisplayOptions.Should().Be(returnsListDisplayOptions);
         }
 
@@ -82,7 +82,7 @@
 
             var result = mapper.Map(returnViewModel);
 
-            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -95,7 +95,7 @@
 
             var result = mapper.Map(returnViewModel);
 
-            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnListRedirectMap.Map(returnViewModel)).MustHaveHappened(1, Times.Exactly);
             result.ReturnsListRedirectOptions.Should().Be(returnsListRedirectOptions);
         }
     }

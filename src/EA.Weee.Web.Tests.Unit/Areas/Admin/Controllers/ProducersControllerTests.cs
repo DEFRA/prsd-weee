@@ -574,7 +574,7 @@
             await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);
 
             A.CallTo(() => cache.InvalidateProducerSearch())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -608,7 +608,7 @@
             // Assert
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.IsType<RedirectToRouteResult>(result);
 

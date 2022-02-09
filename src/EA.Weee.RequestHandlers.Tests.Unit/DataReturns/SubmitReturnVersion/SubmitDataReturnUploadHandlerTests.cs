@@ -46,7 +46,7 @@
             await handler.HandleAsync(A.Dummy<SubmitDataReturnUpload>());
 
             A.CallTo(() => submitReturnVersionDataAccess.Submit(dataReturnVersion))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
     }
 }

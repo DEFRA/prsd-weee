@@ -63,8 +63,8 @@
 
             dataAccess.Submit(site);
 
-            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -138,8 +138,8 @@
                 newSite.TownOrCity,
                 newSite.CountyOrRegion,
                 newSite.Postcode,
-                country)).MustHaveHappened(Repeated.Exactly.Once)
-            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                country)).MustHaveHappened(1, Times.Exactly)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
     }
 }

@@ -57,7 +57,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.GetSelectedSchemesByReturnId(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -68,7 +68,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.GetOrganisationByReturnId(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.GetOrganisationByReturnId(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -79,8 +79,8 @@
 
             await handler.HandleAsync(A.Dummy<GetReturnScheme>());
 
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(0).Scheme)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(1).Scheme)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(0).Scheme)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(schemeList.ElementAt(1).Scheme)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -92,7 +92,7 @@
 
             await handler.HandleAsync(A.Dummy<GetReturnScheme>());
 
-            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

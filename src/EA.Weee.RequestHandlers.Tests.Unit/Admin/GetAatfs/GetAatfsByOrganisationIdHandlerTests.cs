@@ -54,7 +54,7 @@
         {
             var result = await handler.HandleAsync(A.Dummy<GetAatfsByOrganisationId>());
 
-            A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAatfs()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -68,7 +68,7 @@
 
             foreach (var aatf in aatfs)
             {
-                A.CallTo(() => aatfmap.Map(aatf)).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => aatfmap.Map(aatf)).MustHaveHappened(1, Times.Exactly);
             }
         }
 

@@ -139,7 +139,7 @@
             var result = await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeData.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchSchemeAsync(schemeData.OrganisationId)).MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal("FirstName", scheme.Contact.FirstName);
             Assert.Equal("LastName", scheme.Contact.LastName);
@@ -153,7 +153,7 @@
             Assert.Equal("012345678", scheme.Address.Telephone);
             Assert.Equal("email@domain.com", scheme.Address.Email);
 
-            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.SaveAsync()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

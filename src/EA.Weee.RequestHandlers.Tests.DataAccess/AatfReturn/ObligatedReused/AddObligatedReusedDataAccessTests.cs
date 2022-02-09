@@ -49,7 +49,7 @@
         {
             dataAccess.Submit(new List<WeeeReusedAmount>());
 
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly);
         }
     }
 }
