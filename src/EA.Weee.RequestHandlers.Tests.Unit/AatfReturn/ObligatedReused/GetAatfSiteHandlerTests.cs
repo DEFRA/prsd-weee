@@ -88,8 +88,8 @@
 
             await handler.HandleAsync(A.Dummy<GetAatfSite>());
 
-            A.CallTo(() => mapper.Map(A<AatfAddressObligatedAmount>.That.Matches(a => a.AatfAddresses.IsSameOrEqualTo(aatfAddresses)
-                                                                                        && a.WeeeReusedAmounts.IsSameOrEqualTo(weeeReusedAmounts)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<AatfAddressObligatedAmount>.That.Matches(a => a.AatfAddresses.Equals(aatfAddresses)
+                                                                                        && a.WeeeReusedAmounts.Equals(weeeReusedAmounts)))).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private List<AatfAddress> AatfAddresses()

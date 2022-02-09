@@ -14,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Text;
     using System.Web.Mvc;
     using Core.Admin;
     using Weee.Requests.AatfReturn.Reports;
@@ -171,7 +172,7 @@
             var result = await controller.Download(returnId, true) as FileContentResult;
 
             result.FileDownloadName.Should().Be(file.FileName);
-            result.FileContents.Should().BeEquivalentTo(file.FileContent);
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(file.FileContent));
         }
 
         [Fact]
@@ -197,7 +198,7 @@
             var result = await controller.Download(returnId, false) as FileContentResult;
 
             result.FileDownloadName.Should().Be(file.FileName);
-            result.FileContents.Should().BeEquivalentTo(file.FileContent);
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(file.FileContent));
         }
     }
 }
