@@ -586,8 +586,6 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.7.0.min.css" />
@@ -731,8 +729,6 @@
     <Content Include="Content\weee\_conditional.scss" />
     <Content Include="Content\weee\_css3.scss" />
     <Content Include="Content\weee\_font_stack.scss" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\details-element-polyfill.js" />
     <Content Include="Scripts\flatpickr.js" />
     <Content Include="Scripts\flatpickr.uk.js" />
