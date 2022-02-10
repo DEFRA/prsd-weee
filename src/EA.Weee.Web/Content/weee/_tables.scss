@@ -1,4 +1,4 @@
-@import "../govuk_frontend/package/helpers/media-queries";
+@import "../govuk_frontend/helpers/media-queries";
 
 .gov-uk-no-bottom-border {
     border-bottom: none;
@@ -10,7 +10,7 @@
 
     thead {
         th {
-            background: govuk-colour('grey-3');
+            background: govuk-colour('light-grey');
             padding-left: 15px;
             border: 5px solid govuk-colour('white');
         }
@@ -22,7 +22,7 @@
 
     tbody {
         td {
-            background: govuk-colour('grey-4');
+            background: govuk-colour('light-grey');
             padding-left: 15px;
             border-bottom: none;
             border: 3px solid govuk-colour('white');
