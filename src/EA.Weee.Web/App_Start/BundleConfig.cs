@@ -27,8 +27,7 @@
                     "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
-                    "~/Scripts/govuk_frontend/govuk-frontend-2.7.0.min.js",
-                    "~/Scripts/govuk_frontend/html5shiv.js",
+                    "~/Scripts/govuk_frontend/govuk-frontend-4.0.0.min.js",
                     "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
@@ -54,12 +53,6 @@
 
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
-
-            bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
-                      "~/Content/weee-page-ie6.css"));
-
-            bundles.Add(new StyleBundle("~/Content/weee-page-ie7").Include(
-                      "~/Content/weee-page-ie7.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page-ie8").Include(
                       "~/Content/weee-page-ie8.css"));
