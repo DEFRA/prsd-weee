@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-
-namespace EA.Prsd.Core.Web.Mvc.Tests
+﻿namespace EA.Prsd.Core.Web.Mvc.Tests
 {
-    using System.Linq.Expressions;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
-    using System.Web.Mvc.Html;
     using Helpers;
     using RazorHelpers;
     using ViewModels;
-    using FakeItEasy;
     using FluentAssertions;
+    using Xunit;
 
     public class GdsPassswordTests
     {
