@@ -4,6 +4,12 @@
     border-bottom: none;
 }
 
+.govuk-table__cell--thick {
+    padding: 10px 20px 10px 0;
+    border-bottom: 2px solid #bfc1c3;
+    text-align: left;
+}
+
 .prsd-table {
     background: govuk-colour('white');
     position: relative;
