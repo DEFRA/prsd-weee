@@ -378,6 +378,7 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
+    <Compile Include="Controllers\OrganisationsController.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\MaintenanceModeFilterAttribute.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
@@ -1249,6 +1250,7 @@
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
+    <Content Include="Views\Organisations\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
