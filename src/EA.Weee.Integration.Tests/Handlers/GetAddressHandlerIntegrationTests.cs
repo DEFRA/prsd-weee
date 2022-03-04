@@ -120,6 +120,11 @@
             };
 
             private It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
+
+            private It shouldFail = () =>
+            {
+                true.Should().BeFalse();
+            };
         }
     }
 }
