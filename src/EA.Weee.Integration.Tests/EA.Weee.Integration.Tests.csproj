@@ -113,10 +113,12 @@
     <Compile Include="Builders\OrganisationUserDbSetup.cs" />
     <Compile Include="Builders\OrganisationDbSetup.cs" />
     <Compile Include="Builders\UserDbSetup.cs" />
+    <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestClass.cs" />
+    <Compile Include="Handlers\GetAddressHandlerIntegrationTests.cs" />
+    <Compile Include="TestBase.cs" />
     <Compile Include="TestDataProtectionProvider.cs" />
     <Compile Include="TestingClass.cs" />
     <Compile Include="TestUserContext.cs" />

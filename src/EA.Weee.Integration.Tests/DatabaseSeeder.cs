@@ -52,7 +52,7 @@
 
                     var output = cscProcess.StandardOutput.ReadToEnd();
 
-                    if (!output.Contains("usdDatabaseVersion"))
+                    if (!output.Contains("usdDatabaseVersion") || output.Contains("CREATE DATABASE permission denied in database"))
                     {
                         throw new Exception(output);
                     }
