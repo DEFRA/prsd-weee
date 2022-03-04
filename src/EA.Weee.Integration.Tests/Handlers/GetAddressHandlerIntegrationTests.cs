@@ -67,6 +67,7 @@
                 _result.TownOrCity.Should().Be(_organisation.BusinessAddress.TownOrCity);
                 _result.Telephone.Should().Be(_organisation.BusinessAddress.Telephone);
             };
+
         }
 
         [Component]
