@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Integration.Tests.Base
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity;
     using System.Data.SqlClient;
@@ -16,6 +17,7 @@
     using Domain.Organisation;
     using IoC;
     using Microsoft.AspNet.Identity;
+    using netDumbster.smtp;
     using NUnit.Framework;
     using Prsd.Core.Autofac;
 
@@ -33,6 +35,9 @@
         private static IContainer _requestHandlerContainer;
         public static CommonTestQueryProcessor Query => CommonTestQueryProcessor.Value;
         protected static Lazy<CommonTestQueryProcessor> CommonTestQueryProcessor = new Lazy<CommonTestQueryProcessor>(() => new CommonTestQueryProcessor());
+        private static SimpleSmtpServer _smtpServer;
+        private static SmtpMessage _emailSent;
+        private static readonly List<SmtpMessage> EmailsSent = new List<SmtpMessage>();
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
 
@@ -240,6 +245,45 @@
                     throw;
                 }
             }
+        }
+
+        public static SmtpMessage GetEmailFromMailCatcher()
+        {
+            return _emailSent;
+        }
+
+        public static SmtpMessage[] GetEmailsFromMailCatcher()
+        {
+            return EmailsSent.ToArray();
+        }
+
+        public static void UseMailCatcher()
+        {
+            _smtpServer?.Stop();
+            _smtpServer = SimpleSmtpServer.Start(5124);
+            _smtpServer.MessageReceived += _smtpServer_MessageReceived;
+            _smtpServer.ClearReceivedEmail();
+            _emailSent = null;
+            EmailsSent.Clear();
+        }
+
+        private static void _smtpServer_MessageReceived(object sender, MessageReceivedArgs e)
+        {
+            _emailSent = e.Message;
+            EmailsSent.Add(e.Message);
+        }
+
+        protected static void Act(Action action)
+        {
+            _emailSent = null;
+            EmailsSent.Clear();
+
+            _smtpServer?.ClearReceivedEmail();
+
+            CatchException(action);
+
+            if (_emailSent != null)
+                Console.WriteLine("Email content: " + GetEmailFromMailCatcher().MessageParts.FirstOrDefault()?.BodyData);
         }
 
         public override void Dispose()
