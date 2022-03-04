@@ -211,6 +211,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
+      <Project>{333C65B9-EBB6-4D04-921E-89094F80E2E3}</Project>
+      <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core.DataAccess\EA.Prsd.Core.DataAccess.csproj">
       <Project>{c5ef212b-402c-4586-992b-d051626e3747}</Project>
       <Name>EA.Prsd.Core.DataAccess</Name>
