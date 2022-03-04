@@ -25,12 +25,14 @@
     /// </summary>
     [TestFixture(Category = "IntegrationTest")]
     [Category("IntegrationTest")]
-    public class IntegrationTestBase
+    public class IntegrationTestBase : TestBase
     {
         public static HostEnvironmentType CurrentHostEnvironment = HostEnvironmentType.Console;
         public static IocApplication CurrentAppUnderTest = IocApplication.Unknown;
         protected static IntegrationTestSetupBuilder Test;
         private static IContainer _requestHandlerContainer;
+        public static CommonTestQueryProcessor Query => CommonTestQueryProcessor.Value;
+        protected static Lazy<CommonTestQueryProcessor> CommonTestQueryProcessor = new Lazy<CommonTestQueryProcessor>(() => new CommonTestQueryProcessor());
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
 
@@ -177,7 +179,11 @@
                 {
                     Console.WriteLine($"Failed to recreate database {ex.Message}");
                     TestingStatus.IsDbSeedingFaulted = true;
+
+                    throw new DatabaseSeedingFailureException();
                 }
+
+                TestingStatus.IsDbReseeded = true;
             }
 
             protected static IContainer InitIoC(bool resetIoC = false, bool installIoC = true)
@@ -234,6 +240,10 @@
                     throw;
                 }
             }
+        }
+
+        public override void Dispose()
+        {
         }
     }
 }
