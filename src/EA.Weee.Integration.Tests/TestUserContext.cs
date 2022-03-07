@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace EA.Weee.Integration.Tests
+﻿namespace EA.Weee.Integration.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using Prsd.Core.Domain;

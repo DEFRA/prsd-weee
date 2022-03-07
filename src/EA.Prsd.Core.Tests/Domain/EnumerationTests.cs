@@ -57,7 +57,7 @@
         [Fact]
         public void InvalidValueShouldThrowApplicationException()
         {
-            Action shouldThrowApplicationException = () => Enumeration.FromValue<ExampleEnumeration>(-1);
+            void shouldThrowApplicationException() => Enumeration.FromValue<ExampleEnumeration>(-1);
             Assert.Throws<ApplicationException>(shouldThrowApplicationException);
         }
 
@@ -76,7 +76,7 @@
         [Fact]
         public void InvalidDisplayNameShouldThrowApplicationException()
         {
-            Action shouldThrowApplicationException = () => Enumeration.FromDisplayName<ExampleEnumeration>("Some invalid display text");
+            void shouldThrowApplicationException() => Enumeration.FromDisplayName<ExampleEnumeration>("Some invalid display text");
             Assert.Throws<ApplicationException>(shouldThrowApplicationException);
         }
     }

@@ -11,21 +11,21 @@
     {
         protected override OrganisationUser Instantiate()
         {
-            Instance = new OrganisationUser(Guid.Empty, Guid.Empty, UserStatus.Pending);
+            instance = new OrganisationUser(Guid.Empty, Guid.Empty, UserStatus.Pending);
 
-            return Instance;
+            return instance;
         }
 
         public OrganisationUserDbSetup WithUserIdAndOrganisationId(Guid userId, Guid organisationId)
         {
-            Instance.UpdateUserIdAndOrganisationId(userId, organisationId);
+            instance.UpdateUserIdAndOrganisationId(userId, organisationId);
 
             return this;
         }
 
         public OrganisationUserDbSetup WithStatus(UserStatus status)
         {
-            Instance.UpdateUserStatus(status);
+            instance.UpdateUserStatus(status);
 
             return this;
         }

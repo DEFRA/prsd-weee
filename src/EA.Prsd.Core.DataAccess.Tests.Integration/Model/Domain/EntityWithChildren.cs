@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using EA.Prsd.Core.Domain;
-
-namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain
+﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain
 {
+    using EA.Prsd.Core.Domain;
+    using System;
+
     public class EntityWithChildren : Entity
     {
         public virtual SimpleEntity SimpleEntityA { get; private set; }

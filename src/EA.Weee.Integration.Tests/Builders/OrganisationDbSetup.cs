@@ -11,15 +11,15 @@
         {
             var address = OrganisationAddressDbSetup.Init().Create();
 
-            Instance = Organisation.CreateRegisteredCompany(Faker.Company.Name(), Faker.RandomNumber.Next(10000000, 999999999999999).ToString());
+            instance = Organisation.CreateRegisteredCompany(Faker.Company.Name(), Faker.RandomNumber.Next(10000000, 999999999999999).ToString());
 
             var newAddress = DbContext.Addresses.First(a => a.Id.Equals(address.Id));
             
-            Instance.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, newAddress);
+            instance.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, newAddress);
             
-            Instance.OrganisationStatus = OrganisationStatus.Complete;
+            instance.OrganisationStatus = OrganisationStatus.Complete;
          
-            return Instance;
+            return instance;
         }
     }
 }

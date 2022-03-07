@@ -14,17 +14,4 @@
             return new TestDataProtector();
         }
     }
-
-    public class TestDataProtector : IDataProtector
-    {
-        public byte[] Protect(byte[] userData)
-        {
-            return userData;
-        }
-
-        public byte[] Unprotect(byte[] protectedData)
-        {
-            return protectedData;
-        }
-    }
 }

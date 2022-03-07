@@ -1,7 +1,7 @@
-﻿using EA.Prsd.Core.Domain;
-
-namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain
+﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain
 {
+    using EA.Prsd.Core.Domain;
+
     public class TestEnumeration : Enumeration
     {
         public static readonly TestEnumeration A = new TestEnumeration(1, "A");

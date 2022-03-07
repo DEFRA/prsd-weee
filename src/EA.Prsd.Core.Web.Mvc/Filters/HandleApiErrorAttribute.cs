@@ -27,8 +27,7 @@
 
             if (apiException == null)
             {
-                var aggregateException = filterContext.Exception as AggregateException;
-                if (aggregateException != null)
+                if (filterContext.Exception is AggregateException aggregateException)
                 {
                     apiException = aggregateException.InnerException as ApiException;
                 }

@@ -25,8 +25,7 @@
 
         public async Task Resolve()
         {
-            IEvent e;
-            while (events.TryDequeue(out e))
+            while (events.TryDequeue(out IEvent e))
             {
                 await HandleEvent(e);
             }
