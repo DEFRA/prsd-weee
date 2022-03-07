@@ -28,8 +28,8 @@
 
             dataAccess.Submit(list);
 
-            A.CallTo(() => context.Set<WeeeReceivedAmount>().AddRange(A<IEnumerable<WeeeReceivedAmount>>.That.Matches(c => c.Equals(list)))).MustHaveHappened(Repeated.Exactly.Once).Then(
-                    A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.Set<WeeeReceivedAmount>().AddRange(A<IEnumerable<WeeeReceivedAmount>>.That.Matches(c => c.Equals(list)))).MustHaveHappened(1, Times.Exactly).Then(
+                    A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -41,8 +41,8 @@
 
             dataAccess.UpdateAmounts(weeeReceivedAmount, 99, 100);
 
-            A.CallTo(() => weeeReceivedAmount.UpdateTonnages(99, 100)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => weeeReceivedAmount.UpdateTonnages(99, 100)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
     }
 }

@@ -92,7 +92,7 @@
             await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -153,7 +153,7 @@
             }
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -217,7 +217,7 @@
             }
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -258,7 +258,7 @@
             await MemberRegistrationController().Summary(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -402,7 +402,7 @@
 
             fakeController.InvokeOnActionExecuting(context);
 
-            A.CallTo(() => fakeActionDescriptor.ActionName).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeActionDescriptor.ActionName).MustHaveHappened(1, Times.Exactly);
 
             object dummyObject;
             A.CallTo(() => fakeActionParameters.TryGetValue(A<string>._, out dummyObject)).MustNotHaveHappened();

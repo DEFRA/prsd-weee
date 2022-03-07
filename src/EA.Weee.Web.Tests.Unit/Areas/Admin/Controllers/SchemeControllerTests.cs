@@ -185,10 +185,10 @@
             var result = await controller.EditScheme(schemeId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.IsType<ViewResult>(result);
             var model = ((ViewResult)result).Model;
@@ -280,7 +280,7 @@
             var result = await SchemeController().GetProducerCsv(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
 
             Assert.IsType<FileContentResult>(result);
         }
@@ -305,7 +305,7 @@
             });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
 
             var model = ((ViewResult)result).Model as SchemeViewModelBase;
 
@@ -339,7 +339,7 @@
             });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
 
             var model = ((ViewResult)result).Model as SchemeViewModelBase;
 
@@ -414,8 +414,8 @@
 
             var result = await controller.EditScheme(A.Dummy<Guid>(), model);
 
-            A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
 
             // Assert
             var redirectResult = result as RedirectToRouteResult;
@@ -515,7 +515,7 @@
             ActionResult result = await controller.AddScheme(organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.IsType<ViewResult>(result);
             var model = ((ViewResult)result).Model;
@@ -602,7 +602,7 @@
 
             ActionResult result = await controller.AddScheme(model);
 
-            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
 
             // Assert
             RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
@@ -652,7 +652,7 @@
             Assert.Equal("Approval number already exists", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -704,7 +704,7 @@
                 controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-               .MustHaveHappened(Repeated.Exactly.Once);
+               .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -749,7 +749,7 @@
                 "Enter a customer billing reference", controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-              .MustHaveHappened(Repeated.Exactly.Once);
+              .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -843,9 +843,9 @@
             });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
-            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(SchemeStatus.Rejected, status);
             Assert.IsType<RedirectToRouteResult>(result);
@@ -905,9 +905,9 @@
             });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
-            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(SchemeStatus.Withdrawn, status);
             Assert.IsType<RedirectToRouteResult>(result);
@@ -997,8 +997,8 @@
             var result = await schemeController.ManageContactDetails(schemeId, organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>.That.Matches(c => c.SchemeId.Equals(schemeId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
@@ -1028,7 +1028,7 @@
             var result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(countries, manageContactDetailsViewModel.OrganisationAddress.Countries);
 
@@ -1059,7 +1059,7 @@
             var result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
             Assert.IsType(typeof(RedirectToRouteResult), result);

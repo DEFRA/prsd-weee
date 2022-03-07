@@ -50,7 +50,7 @@
 
             await handler.HandleAsync(new GetAatfContact(id));
 
-            A.CallTo(() => dataAccess.GetContact(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetContact(id)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -62,7 +62,7 @@
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfContact>());
 
-            A.CallTo(() => dataAccess.GetContact(A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetContact(A<Guid>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -74,7 +74,7 @@
 
             await handler.HandleAsync(A.Dummy<GetAatfContact>());
 
-            A.CallTo(() => mapper.Map(A<AatfContact>.That.IsSameAs(aatfContact))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<AatfContact>.That.IsSameAs(aatfContact))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]

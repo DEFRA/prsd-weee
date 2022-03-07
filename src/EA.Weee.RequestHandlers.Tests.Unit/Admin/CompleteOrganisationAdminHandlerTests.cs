@@ -81,12 +81,12 @@
 
             // Assert
             A.CallTo(() => dataAccess.FetchOrganisationAsync(organisationId))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(OrganisationStatus.Complete, organisation.OrganisationStatus);
 
             A.CallTo(() => dataAccess.SaveAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(result, true);
         }

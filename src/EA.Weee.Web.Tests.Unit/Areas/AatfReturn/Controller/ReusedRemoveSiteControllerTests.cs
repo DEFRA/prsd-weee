@@ -129,7 +129,7 @@
 
             await controller.Index(viewModel);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveAatfSite>.That.Matches(r => r.SiteId == viewModel.SiteId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveAatfSite>.That.Matches(r => r.SiteId == viewModel.SiteId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -155,7 +155,7 @@
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToReusedRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
                 && t.ReturnId == returnId
                 && t.AatfId == aatfId
-                && t.SiteId == siteAddressData.Id))).MustHaveHappened(Repeated.Exactly.Once);
+                && t.SiteId == siteAddressData.Id))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

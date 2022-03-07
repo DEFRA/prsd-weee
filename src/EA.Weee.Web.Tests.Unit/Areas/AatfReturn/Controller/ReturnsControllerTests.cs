@@ -89,7 +89,7 @@
             await controller.Index(organisationId, A.Dummy<int?>(), A.Dummy<string>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>.That.Matches(r => r.OrganisationId.Equals(organisationId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -101,7 +101,7 @@
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<int?>(), A.Dummy<string>());
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returns))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returns))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -118,7 +118,7 @@
 
             A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returns &&
                                                                                                               r.SelectedComplianceYear == selectedComplianceYear &&
-                                                                                                              r.SelectedQuarter == selectedQuarter))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                                              r.SelectedQuarter == selectedQuarter))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -156,7 +156,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturn>.That
                     .Matches(c => c.OrganisationId.Equals(model.OrganisationId)
                     && c.Quarter.Equals(model.Quarter)
-                    && c.Year.Equals(model.ComplianceYear)))).MustHaveHappened(Repeated.Exactly.Once);
+                    && c.Year.Equals(model.ComplianceYear)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

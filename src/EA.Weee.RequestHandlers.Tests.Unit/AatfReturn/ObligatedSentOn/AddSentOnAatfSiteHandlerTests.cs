@@ -70,7 +70,7 @@
             && w.OperatorAddress.CountyOrRegion.Equals(siteRequest.OperatorAddressData.CountyOrRegion)
             && w.OperatorAddress.Postcode.Equals(siteRequest.OperatorAddressData.Postcode)
             && w.OperatorAddress.TownOrCity.Equals(siteRequest.OperatorAddressData.TownOrCity)
-            && w.OperatorAddress.Country.Equals(countryOP)))).MustHaveHappened(Repeated.Exactly.Once);
+            && w.OperatorAddress.Country.Equals(countryOP)))).MustHaveHappened(1, Times.Exactly);
         }
 
         private AddSentOnAatfSite AddSentOnAatfSiteRequest()

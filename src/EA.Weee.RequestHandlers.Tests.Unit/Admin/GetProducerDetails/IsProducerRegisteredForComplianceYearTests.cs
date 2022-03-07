@@ -42,7 +42,7 @@
             await IsProducerRegisteredForComplianceYearHandler().HandleAsync(request);
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         private IsProducerRegisteredForComplianceYearHandler IsProducerRegisteredForComplianceYearHandler()

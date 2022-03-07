@@ -117,7 +117,7 @@
 
             await this.handler.HandleAsync(request);
 
-            A.CallTo(() => this.dataAccess.GetAatfById(request.AatfId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.dataAccess.GetAatfById(request.AatfId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

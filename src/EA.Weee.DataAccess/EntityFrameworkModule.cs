@@ -2,14 +2,33 @@
 {
     using Autofac;
     using DataAccess;
+    using EA.Prsd.Core.Autofac;
     using EA.Prsd.Core.Domain;
     using StoredProcedure;
 
     public class EntityFrameworkModule : Module
     {
+        private readonly EnvironmentResolver environment;
+
+        public EntityFrameworkModule(EnvironmentResolver environment)
+        {
+            this.environment = environment;
+        }
+
+        public EntityFrameworkModule()
+        {
+            this.environment = new EnvironmentResolver()
+            {
+                HostEnvironment = HostEnvironmentType.Owin,
+                IocApplication = IocApplication.RequestHandler,
+                IsTestRun = false
+            };
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeeeContext>().AsSelf().InstancePerRequest();
+            builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
+
             builder.RegisterType<WeeeTransactionAdapter>().As<IWeeeTransactionAdapter>()
                 .InstancePerRequest();
 
