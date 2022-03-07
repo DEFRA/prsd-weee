@@ -76,13 +76,13 @@
 
             // Assert
             A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => builder.RemoveProducerDataAccess.SaveChangesAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

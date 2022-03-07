@@ -415,7 +415,7 @@
 
             await controller.Details(aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfsByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -472,7 +472,7 @@
             A.CallTo(() => mapper.Map<AatfDetailsViewModel>(A<AatfDataToAatfDetailsViewModelMapTransfer>.That.Matches(a => a.AssociatedAatfs == associatedAatfs
             && a.AssociatedSchemes == associatedSchemes
             && a.OrganisationString == controller.GenerateSharedAddress(aatfData.Organisation.BusinessAddress)
-            && a.ComplianceYearList == yearList))).MustHaveHappened(Repeated.Exactly.Once);
+            && a.ComplianceYearList == yearList))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -519,7 +519,7 @@
 
             await controller.Details(aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesByOrganisationId>.That.Matches(a => a.OrganisationId == aatfData.Organisation.Id))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -566,7 +566,7 @@
 
             await controller.Details(aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfComplianceYearsByAatfId>.That.Matches(a => a.AatfId == aatfData.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfComplianceYearsByAatfId>.That.Matches(a => a.AatfId == aatfData.AatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -613,7 +613,7 @@
 
             await controller.Details(aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -725,7 +725,7 @@
 
             var result = await controller.FetchDetails(aatfId, 2019);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfIdByComplianceYear>.That.Matches(c => c.AatfId.Equals(aatfId) && c.ComplianceYear == 2019))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfIdByComplianceYear>.That.Matches(c => c.AatfId.Equals(aatfId) && c.ComplianceYear == 2019))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -840,9 +840,9 @@
 
             await controller.ManageAatfDetails(viewModel);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -922,7 +922,7 @@
 
             var result = await controller.ManageAatfDetails(viewModel);
 
-            A.CallTo(() => validationWrapper.Validate(A<string>._, A<AatfEditDetailsViewModel>.That.Matches(p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => validationWrapper.Validate(A<string>._, A<AatfEditDetailsViewModel>.That.Matches(p => p.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1241,7 +1241,7 @@
 
             var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfContact>.That.Matches(c => c.AatfId.Equals(aatfId)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1256,7 +1256,7 @@
 
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(c => c.UKRegionsOnly.Equals(false)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1266,7 +1266,7 @@
             var aatfId = Guid.NewGuid();
             var result = await controller.ManageContactDetails(aatfId, FacilityType.Aatf);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(c => c.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfById>.That.Matches(c => c.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1371,7 +1371,7 @@
 
             await controller.ManageContactDetails(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1382,7 +1382,7 @@
 
             await controller.ManageContactDetails(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1514,7 +1514,7 @@
             Assert.Equal(aatfName, viewModel.AatfName);
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Delete");
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CheckAatfCanBeDeleted>.That.Matches(a => a.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1555,7 +1555,7 @@
             result.RouteValues["action"].Should().Be("ManageAatfs");
             result.RouteValues["facilityType"].Should().Be(viewModel.FacilityType);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<DeleteAnAatf>.That.Matches(a => a.AatfId == viewModel.AatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -1722,7 +1722,7 @@
 
             var result = await controller.Download(A.Dummy<Guid>(), 2019, 1, A.Dummy<Guid>());
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfObligatedData>._)).MustHaveHappened(1, Times.Exactly);
 
             var fileResult = result as FileResult;
             Assert.NotNull(fileResult);

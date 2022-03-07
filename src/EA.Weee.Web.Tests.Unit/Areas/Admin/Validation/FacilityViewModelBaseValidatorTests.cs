@@ -48,7 +48,7 @@
 
             var validationResult = validator.Validate(viewModel);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -83,7 +83,7 @@
 
             var validationResult = validator.Validate(viewModel);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CheckApprovalNumberIsUnique>.That.Matches(c => c.ApprovalNumber == viewModel.ApprovalNumber))).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

@@ -85,7 +85,7 @@
 
             await this.controller.Index(A.Dummy<Guid>(), aatfId, this.fixture.Create<FacilityType>());
 
-            A.CallTo(() => this.apiClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.apiClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

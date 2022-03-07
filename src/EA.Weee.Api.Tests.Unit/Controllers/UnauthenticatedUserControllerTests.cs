@@ -146,7 +146,7 @@
             var result = (OkNegotiatedContentResult<PasswordResetRequestResult>)await controller.ResetPasswordRequest(A.Fake<PasswordResetRequest>());
             var passwordResetRequestResult = result.Content;
 
-            A.CallTo(() => userManager.FindByEmailAsync(A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => userManager.FindByEmailAsync(A<string>._)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => userManager.GeneratePasswordResetTokenAsync(A<string>._)).MustNotHaveHappened();
             Assert.False(passwordResetRequestResult.ValidEmail);
             Assert.Null(passwordResetRequestResult.PasswordResetToken);

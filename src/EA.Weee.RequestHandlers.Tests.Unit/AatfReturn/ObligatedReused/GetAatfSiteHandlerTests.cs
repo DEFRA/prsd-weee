@@ -50,7 +50,7 @@
 
             await handler.HandleAsync(new GetAatfSite(id, id));
 
-            A.CallTo(() => dataAccess.GetAddresses(id, id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAddresses(id, id)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -62,7 +62,7 @@
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfSite>());
 
-            A.CallTo(() => dataAccess.GetAddresses(A<Guid>._, A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAddresses(A<Guid>._, A<Guid>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -74,7 +74,7 @@
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfSite>());
 
-            A.CallTo(() => dataAccess.GetObligatedWeeeForReturnAndAatf(A<Guid>._, A<Guid>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetObligatedWeeeForReturnAndAatf(A<Guid>._, A<Guid>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -88,8 +88,8 @@
 
             await handler.HandleAsync(A.Dummy<GetAatfSite>());
 
-            A.CallTo(() => mapper.Map(A<AatfAddressObligatedAmount>.That.Matches(a => a.AatfAddresses.IsSameOrEqualTo(aatfAddresses)
-                                                                                        && a.WeeeReusedAmounts.IsSameOrEqualTo(weeeReusedAmounts)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<AatfAddressObligatedAmount>.That.Matches(a => a.AatfAddresses.Equals(aatfAddresses)
+                                                                                        && a.WeeeReusedAmounts.Equals(weeeReusedAmounts)))).MustHaveHappened(1, Times.Exactly);
         }
 
         private List<AatfAddress> AatfAddresses()

@@ -39,7 +39,7 @@
 
             // Assert
             A.CallTo(() => emailService.SendSchemeMemberSubmitted(emailAddress, A<string>._, A<int>._, A<int>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -70,7 +70,7 @@
 
             // Assert
             A.CallTo(() => emailService.SendSchemeMemberSubmitted(A<string>._, "Test Scheme Name", A<int>._, A<int>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -99,7 +99,7 @@
 
             // Assert
             A.CallTo(() => emailService.SendSchemeMemberSubmitted(A<string>._, A<string>._, 2015, A<int>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -130,7 +130,7 @@
 
             // Assert
             A.CallTo(() => emailService.SendSchemeMemberSubmitted(A<string>._, A<string>._, A<int>._, 5))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
     }
 }

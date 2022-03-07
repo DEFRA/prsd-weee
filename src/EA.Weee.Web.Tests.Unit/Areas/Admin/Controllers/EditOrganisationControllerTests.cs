@@ -171,7 +171,7 @@
             var result = await controller.EditRegisteredCompanyOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             countries.Should().BeSameAs(viewModel.BusinessAddress.Countries);
 
@@ -205,7 +205,7 @@
             var result = await controller.EditRegisteredCompanyOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<RedirectToRouteResult>();
@@ -256,7 +256,7 @@
             var result = await controller.EditPartnershipOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             countries.Should().BeSameAs(viewModel.BusinessAddress.Countries);
 
@@ -288,7 +288,7 @@
             var result = await controller.EditPartnershipOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<RedirectToRouteResult>();
@@ -339,7 +339,7 @@
             var result = await controller.EditSoleTraderOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             countries.Should().BeSameAs(viewModel.BusinessAddress.Countries);
 
@@ -371,7 +371,7 @@
             var result = await controller.EditSoleTraderOrganisationDetails(viewModel);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<RedirectToRouteResult>();

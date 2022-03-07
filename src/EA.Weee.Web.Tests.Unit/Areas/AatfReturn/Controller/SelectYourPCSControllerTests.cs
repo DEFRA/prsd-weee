@@ -232,8 +232,8 @@
 
             Assert.Equal(selectedSchemeIds, viewModel.SelectedSchemes);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturnScheme>.That.Matches(p => p.ReturnId == returnId))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -305,7 +305,7 @@
             result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteName.Should().Be(AatfRedirect.Default);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -428,8 +428,8 @@
             result.RouteValues["controller"].Should().Be("AatfTaskList");
             result.RouteName.Should().Be(AatfRedirect.Default);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeIds == model.RemovedSchemes && p.ReturnId == returnId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddReturnScheme>.That.Matches(p => p.ReturnId == returnId && p.SchemeIds == reselectedSchemes))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveReturnScheme>.That.Matches(p => p.SchemeIds == model.RemovedSchemes && p.ReturnId == returnId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

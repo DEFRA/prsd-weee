@@ -66,7 +66,7 @@
 
             await controller.Index(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -145,7 +145,7 @@
 
             await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName);
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(@return)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(@return)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -189,7 +189,7 @@
 
             await controller.Index(returnId, organisationId, weeeSentOnId, aatfId, siteName);
 
-            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(returnData) && t.PastedData == obligatedCategoryValue))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnToObligatedViewModelMapTransfer>.That.Matches(t => t.ReturnId.Equals(returnId) && t.AatfId.Equals(aatfId) && t.WeeeSentOnId.Equals(weeeSentOnId) && t.OrganisationId.Equals(organisationId) && t.SiteName.Equals(siteName) && t.ReturnData.Equals(returnData) && t.PastedData == obligatedCategoryValue))).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

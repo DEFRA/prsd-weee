@@ -95,7 +95,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
         }
 
@@ -128,7 +128,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
@@ -144,7 +144,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, !annualCharge, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, !annualCharge, ref totalCharges)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -191,7 +191,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, scheme, 2019, true, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, scheme, 2019, true, ref totalCharges)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -211,7 +211,7 @@
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => totalChargeCalculator.TotalCalculatedCharges(Message, A<Scheme>.Ignored, A<int>.Ignored, A<bool>._, ref totalCharges)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -280,7 +280,7 @@
 
             A.CallTo(() => upload.SetProcessTime(new TimeSpan()))
                 .WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -300,7 +300,7 @@
             await handler.HandleAsync(Message);
 
             A.CallTo(() => generator.GenerateMemberUpload(A<ProcessXmlFile>._, A<List<MemberUploadError>>._, A<decimal>._, A<Scheme>._, true))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -312,7 +312,7 @@
             await handler.HandleAsync(Message);
 
             A.CallTo(() => generator.GenerateMemberUpload(A<ProcessXmlFile>._, A<List<MemberUploadError>>._, A<decimal>._, A<Scheme>._, false))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         public static ProducerSubmission TestProducer(string tradingName)
