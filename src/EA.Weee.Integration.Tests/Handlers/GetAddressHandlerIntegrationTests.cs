@@ -115,13 +115,11 @@
             };
 
             private Because of = () =>
-            {
+            { 
                 CatchExceptionAsync(() => _handler.HandleAsync(new GetAddress(_organisation.BusinessAddress.Id, _organisation.Id)));
             };
 
             private It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
-
-            private It shouldFail = () => true.Should().BeFalse();
         }
     }
 }
