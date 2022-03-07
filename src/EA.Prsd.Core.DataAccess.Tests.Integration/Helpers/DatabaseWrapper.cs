@@ -1,12 +1,10 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration.Helpers
 {
-    using System;
-    using System.Data.Common;
-    using System.Transactions;
-    using DataAccess.Tests.Integration;
-    using Model;
+    using EA.Prsd.Core.DataAccess.Tests.Integration.Model;
     using EA.Prsd.Core.Domain;
     using FakeItEasy;
+    using System;
+    using System.Transactions;
 
     /// <summary>
     /// Provides a disposable wrapper for integration tests against a real test

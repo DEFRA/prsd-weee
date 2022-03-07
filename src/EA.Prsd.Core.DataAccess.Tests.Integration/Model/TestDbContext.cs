@@ -1,17 +1,18 @@
-﻿using System.Data.Entity;
-using EA.Prsd.Core.DataAccess.Extensions;
-using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
-using EA.Prsd.Core.Domain.Auditing;
-
-namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model
+﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration.Model
 {
+    using EA.Prsd.Core.DataAccess.Extensions;
+    using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
+    using EA.Prsd.Core.Domain.Auditing;
+    using System.Data.Entity;
+
     public class TestDbContext : DbContext
     {
-        public TestDbContext() : base("name=Core.TestConnection") { }
+        public TestDbContext() : base("name=Core.TestConnection") 
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
             var assembly = typeof(TestDbContext).Assembly;
             var coreAssembly = typeof(AuditorExtensions).Assembly;
 

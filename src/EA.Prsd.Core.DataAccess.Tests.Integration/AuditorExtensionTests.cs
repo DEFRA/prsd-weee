@@ -7,9 +7,9 @@
     using EA.Prsd.Core.DataAccess.Tests.Integration.Helpers;
     using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
     using EA.Prsd.Core.Domain.Auditing;
-    using Xunit;
     using Model;
-
+    using Xunit;
+    
     public class AuditorExtensionTests
     {
         public AuditorExtensionTests()
@@ -227,11 +227,11 @@
 
                 //Assert
                 //Audit Log stores correct json, with foreign key
-                Guid ewfId = database.TestContext.ForeignIdEntities.Single().Id;
-                Guid seId = database.TestContext.SimpleEntities.Single(s => s.Data == "Simple Entity").Id;
-                String expectedJson = "{\\\"Id\\\":\\\"" + ewfId + "\\\",\\\"SimpleEntityId\\\":\\\"" + seId + "\\\",\\\"RowVersion\\\":null}";
+                Guid foreignId = database.TestContext.ForeignIdEntities.Single().Id;
+                Guid entityId = database.TestContext.SimpleEntities.Single(s => s.Data == "Simple Entity").Id;
+                String expectedJson = "{\\\"Id\\\":\\\"" + foreignId + "\\\",\\\"SimpleEntityId\\\":\\\"" + entityId + "\\\",\\\"RowVersion\\\":null}";
                 Assert.Matches(expectedJson,
-                    database.TestContext.AuditLogs.Single(al => al.RecordId == ewfId).NewValue);
+                    database.TestContext.AuditLogs.Single(al => al.RecordId == foreignId).NewValue);
             }
         }
 
@@ -256,12 +256,12 @@
 
                 //Assert
                 //Audit Log stores correct json, with foreign keys
-                Guid ewcId = database.TestContext.ParentEntities.Single().Id;
-                Guid sBId = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B").Id;
+                Guid parentEntityId = database.TestContext.ParentEntities.Single().Id;
+                Guid simpleEntityId = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B").Id;
                 String expectedJson =
-                    "{\\\"Id\\\":\\\"" + ewcId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + sBId + "\\\",\\\"RowVersion\\\":null}";
+                    "{\\\"Id\\\":\\\"" + parentEntityId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + simpleEntityId + "\\\",\\\"RowVersion\\\":null}";
                 Assert.Matches(expectedJson,
-                    database.TestContext.AuditLogs.Single(al => al.RecordId == ewcId).NewValue);
+                    database.TestContext.AuditLogs.Single(al => al.RecordId == parentEntityId).NewValue);
             }
         }
 
@@ -283,9 +283,9 @@
                 await database.TestContext.SaveChangesAsync();
 
                 // Update exisiting EntityWithChildren with new child entity
-                SimpleEntity sBv2 = new SimpleEntity("Simple B Version 2");
-                database.TestContext.SimpleEntities.Add(sBv2);
-                ewc.UpdateSimpleEntityB(sBv2);
+                SimpleEntity simpleEntityVersion2 = new SimpleEntity("Simple B Version 2");
+                database.TestContext.SimpleEntities.Add(simpleEntityVersion2);
+                ewc.UpdateSimpleEntityB(simpleEntityVersion2);
                 database.TestContext.SetEntityId();
 
                 //Act
@@ -294,12 +294,12 @@
 
                 //Assert
                 //Audit Log stores correct new json, with foreign keys
-                Guid ewcId = database.TestContext.ParentEntities.Single().Id;
-                Guid sBv2Id = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B Version 2").Id;
+                Guid parentEntityId = database.TestContext.ParentEntities.Single().Id;
+                Guid simpeEntityVersion2Id = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B Version 2").Id;
                 String expectedNewJson =
-                    "{\\\"Id\\\":\\\"" + ewcId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + sBv2Id + "\\\",\\\"RowVersion\\\":.*}";
+                    "{\\\"Id\\\":\\\"" + parentEntityId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + simpeEntityVersion2Id + "\\\",\\\"RowVersion\\\":.*}";
                 List<AuditLog> orderedLogs = database.TestContext.AuditLogs.OrderBy(a => a.EventDate).ToList();
-                Assert.Matches(expectedNewJson, orderedLogs.Last(al => al.RecordId == ewcId).NewValue);
+                Assert.Matches(expectedNewJson, orderedLogs.Last(al => al.RecordId == parentEntityId).NewValue);
             }
         }
 
@@ -321,9 +321,9 @@
                 await database.TestContext.SaveChangesAsync();
 
                 // Update exisiting EntityWithChildren with new child entity
-                SimpleEntity sBv2 = new SimpleEntity("Simple B Version 2");
-                database.TestContext.SimpleEntities.Add(sBv2);
-                ewc.UpdateSimpleEntityB(sBv2);
+                SimpleEntity simpleEntityVersion2 = new SimpleEntity("Simple B Version 2");
+                database.TestContext.SimpleEntities.Add(simpleEntityVersion2);
+                ewc.UpdateSimpleEntityB(simpleEntityVersion2);
                 database.TestContext.SetEntityId();
 
                 //Act
@@ -332,12 +332,12 @@
 
                 //Assert
                 //Audit Log stores correct original json, with foreign keys
-                Guid ewcId = database.TestContext.ParentEntities.Single().Id;
-                Guid sBId = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B").Id;
+                Guid parentEntityId = database.TestContext.ParentEntities.Single().Id;
+                Guid simpleEntityId = database.TestContext.SimpleEntities.Single(se => se.Data == "Simple B").Id;
                 String expectedOriginalJson =
-                    "{\\\"Id\\\":\\\"" + ewcId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + sBId + "\\\",\\\"RowVersion\\\":.*}";
+                    "{\\\"Id\\\":\\\"" + parentEntityId + "\\\",\\\"SimpleEntityBId\\\":\\\"" + simpleEntityId + "\\\",\\\"RowVersion\\\":.*}";
                 List<AuditLog> orderedLogs = database.TestContext.AuditLogs.OrderBy(a => a.EventDate).ToList();
-                Assert.Matches(expectedOriginalJson, orderedLogs.Last(al => al.RecordId == ewcId).OriginalValue);
+                Assert.Matches(expectedOriginalJson, orderedLogs.Last(al => al.RecordId == parentEntityId).OriginalValue);
             }
         }
     }

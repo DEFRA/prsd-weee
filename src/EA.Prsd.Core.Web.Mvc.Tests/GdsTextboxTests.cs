@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-
-namespace EA.Prsd.Core.Web.Mvc.Tests
+﻿namespace EA.Prsd.Core.Web.Mvc.Tests
 {
-    using System.Linq.Expressions;
-    using System.Text.RegularExpressions;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using Helpers;
-    using RazorHelpers;
-    using ViewModels;
-    using FakeItEasy;
+    using EA.Prsd.Core.Web.Mvc.RazorHelpers;
+    using EA.Prsd.Core.Web.Mvc.Tests.Helpers;
+    using EA.Prsd.Core.Web.Mvc.Tests.ViewModels;
     using FluentAssertions;
+    using System.Web.Mvc;
+    using Xunit;
 
     public class GdsTextboxTests
     {
@@ -28,5 +19,4 @@ namespace EA.Prsd.Core.Web.Mvc.Tests
             control.ToString().Should().Contain("class").And.Contain("govuk-input");
         }
     }
-
 }

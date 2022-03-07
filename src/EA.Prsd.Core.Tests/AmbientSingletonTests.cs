@@ -69,7 +69,6 @@ namespace EA.Prsd.Core.Tests
         {
             var singleton = new AmbientSingleton<string>("foo") {Value = "bar"};
 
-
             Assert.Equal("bar", singleton.Value);
         }
 
@@ -78,16 +77,16 @@ namespace EA.Prsd.Core.Tests
         {
             var singleton = new AmbientSingleton<string>("foo");
 
-            var value1 = "";
-            var value2 = "";
+            var value1 = string.Empty;
+            var value2 = string.Empty;
 
-            Action action1 = () =>
+            void action1()
             {
                 singleton.Value = "bar";
                 value1 = singleton.Value;
-            };
+            }
 
-            Action action2 = () => value2 = singleton.Value;
+            void action2() => value2 = singleton.Value;
 
             var tasks = new[] { Task.Factory.StartNew(action1), Task.Factory.StartNew(action2) };
 
