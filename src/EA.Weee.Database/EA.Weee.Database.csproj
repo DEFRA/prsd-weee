@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.Database</RootNamespace>
     <AssemblyName>EA.Weee.Database</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
@@ -48,16 +48,17 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="scripts\Update\Release 4\20211210-1403-report-category-name-change.sql" />
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\placeholder.txt" />
+    <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\placeholder.txt" />
+    <Content Include="scripts\Update\Release 4\20211210-1403-report-category-name-change.sql" />
     <Content Include="scripts\Everytime\0008-InsertLocalAreaData.sql" />
     <Content Include="scripts\Everytime\0009-InsertPanAreaData.sql" />
     <Content Include="scripts\Everytime\0010-InsertReportOnQuestionData.sql" />
     <Content Include="scripts\Everytime\0011-InsertWeeeCategory.sql" />
-    <Content Include="scripts\Everytime\placeholder.txt" />
-    <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Release 3 Azure migration\20191218-1015-create-sessions-table.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\2019031412.set-annual-charge.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903141.annual-charge.sql" />
@@ -66,7 +67,6 @@
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\20190314v1.updates-reg-ppob-country.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\20190319v2.update_SpgInvoiceRunChargeBreakdown.sql" />
     <Content Include="scripts\Update\Release 1\SROC-hot-fix\201903251-ProducerSubmissionStatus.sql" />
-    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Release 1\Sprint21\20160112-0934-CreateSpgProducersEEEDataCsv.sql" />
     <Content Include="scripts\Update\Release 1\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
     <Content Include="scripts\Everytime\0007-InsertQuarterWindowTemplates.sql" />
@@ -369,10 +369,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
-  <Import Project="..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.1.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

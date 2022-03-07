@@ -24,7 +24,7 @@
             Request().Map(new PCSFileUploadViewModel { File = file });
 
             A.CallTo(() => fileConverter.Convert(file))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         private ProcessXmlFileRequest Request()

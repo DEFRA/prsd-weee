@@ -14,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Text;
     using System.Web.Mvc;
     using Core.Admin;
     using Weee.Requests.AatfReturn.Reports;
@@ -73,7 +74,7 @@
             await controller.Index(returnId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(g => g.ReturnId.Equals(returnId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -88,7 +89,7 @@
 
             await controller.Index(A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -171,7 +172,7 @@
             var result = await controller.Download(returnId, true) as FileContentResult;
 
             result.FileDownloadName.Should().Be(file.FileName);
-            result.FileContents.Should().BeEquivalentTo(file.FileContent);
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(file.FileContent));
         }
 
         [Fact]
@@ -197,7 +198,7 @@
             var result = await controller.Download(returnId, false) as FileContentResult;
 
             result.FileDownloadName.Should().Be(file.FileName);
-            result.FileContents.Should().BeEquivalentTo(file.FileContent);
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(file.FileContent));
         }
     }
 }

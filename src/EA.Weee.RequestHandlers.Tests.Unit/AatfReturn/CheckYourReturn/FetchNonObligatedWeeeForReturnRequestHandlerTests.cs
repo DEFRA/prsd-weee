@@ -57,7 +57,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.FetchNonObligatedWeeeForReturn(returnId, dcf)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchNonObligatedWeeeForReturn(returnId, dcf)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

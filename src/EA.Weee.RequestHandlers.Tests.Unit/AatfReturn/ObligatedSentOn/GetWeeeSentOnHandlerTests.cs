@@ -55,7 +55,7 @@
 
             await handler.HandleAsync(new GetWeeeSentOn(aatfId, returnId, null));
 
-            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -101,8 +101,8 @@
 
             for (var i = 0; i < sentOnList.Count; i++)
             {
-                A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(sentOnList[i].OperatorAddress))).MustHaveHappened(Repeated.Exactly.Once);
-                A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(sentOnList[i].SiteAddress))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(sentOnList[i].OperatorAddress))).MustHaveHappened(1, Times.Exactly);
+                A.CallTo(() => addressMapper.Map(A<AatfAddress>.That.IsSameAs(sentOnList[i].SiteAddress))).MustHaveHappened(1, Times.Exactly);
             }
         }
     }

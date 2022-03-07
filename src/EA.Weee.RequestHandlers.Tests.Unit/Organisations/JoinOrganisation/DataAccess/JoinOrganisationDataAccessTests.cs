@@ -127,7 +127,7 @@
                     .JoinOrganisation(organisationUser);
 
             A.CallTo(() => context.SaveChangesAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.True(result.Successful);
         }
@@ -145,7 +145,7 @@
                     .JoinOrganisation(organisationUser);
 
             A.CallTo(() => context.SaveChangesAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.True(result.Successful);
         }

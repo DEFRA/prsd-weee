@@ -169,12 +169,13 @@
             A.CallTo(() => aatfSubmissionHistoryMap.Map(aatSubmissionHistoryData.ElementAt(0))).Returns(aatSubmissionHistoryViewModel.ElementAt(0));
             A.CallTo(() => aatfSubmissionHistoryMap.Map(aatSubmissionHistoryData.ElementAt(1))).Returns(aatSubmissionHistoryViewModel.ElementAt(1));
 
-            var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>().Create();
+            var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>()
+                .With(s => s.SubmissionHistory, aatSubmissionHistoryData).Create();
 
             var result = map.Map(source);
 
-            result.SubmissionHistoryData.ElementAt(0).Should().Equals(aatSubmissionHistoryViewModel.ElementAt(0));
-            result.SubmissionHistoryData.ElementAt(1).Should().Equals(aatSubmissionHistoryViewModel.ElementAt(1));
+            result.SubmissionHistoryData.ElementAt(0).Should().BeEquivalentTo(aatSubmissionHistoryViewModel.ElementAt(0));
+            result.SubmissionHistoryData.ElementAt(1).Should().BeEquivalentTo(aatSubmissionHistoryViewModel.ElementAt(1));
         }
 
         [Fact]

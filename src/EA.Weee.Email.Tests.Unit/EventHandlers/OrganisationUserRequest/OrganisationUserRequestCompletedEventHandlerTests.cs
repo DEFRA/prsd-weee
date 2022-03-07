@@ -33,7 +33,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.FetchActiveOrganisationUsers(request.OrganisationUser.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchActiveOrganisationUsers(request.OrganisationUser.OrganisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
@@ -53,7 +53,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => emailService.SendOrganisationUserRequestCompleted(request.OrganisationUser, activeUsers)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => emailService.SendOrganisationUserRequestCompleted(request.OrganisationUser, activeUsers)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

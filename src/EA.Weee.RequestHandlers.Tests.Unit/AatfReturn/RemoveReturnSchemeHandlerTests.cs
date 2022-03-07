@@ -53,7 +53,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeIds, returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.RemoveReturnScheme(schemeIds, returnId)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }
