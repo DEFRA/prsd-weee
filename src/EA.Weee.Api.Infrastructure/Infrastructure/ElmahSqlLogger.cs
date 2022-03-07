@@ -20,21 +20,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using EA.Weee.Api.Client.Entities;
-using EA.Weee.DataAccess;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Elmah;
 
 namespace EA.Weee.Api.Infrastructure.Infrastructure
 {
+    using EA.Weee.Api.Client.Entities;
+    using EA.Weee.DataAccess;
+    using Elmah;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Xml;
+
     public class ElmahSqlLogger
     {
         private readonly WeeeContext context;

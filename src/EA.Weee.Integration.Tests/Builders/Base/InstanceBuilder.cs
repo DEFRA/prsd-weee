@@ -16,7 +16,7 @@
         where T : class
         where K : InstanceBuilder<T, K>
     {
-        protected T Instance = null;
+        protected T instance = null;
         public IContainer Container; // only use this if you want to
 
         protected InstanceBuilder()
@@ -40,13 +40,13 @@
             {
                 action?.Invoke(builder);
             }
-            builder.Instance = builder.Instantiate();
+            builder.instance = builder.Instantiate();
             return builder;
         }
 
         public K With(Action<T> action)
         {
-            action(Instance);
+            action(instance);
             return (K)this;
         }
 
@@ -58,10 +58,13 @@
         /// <returns>type of the instance you're building</returns>
         public virtual T Create()
         {
-            if (Instance == null)
+            if (instance == null)
+            {
                 throw new NotImplementedException(
                     "Please create and call methods in your derived class to build the initial instance with default values");
-            return Instance;
+            }
+                
+            return instance;
         }
     }
 }

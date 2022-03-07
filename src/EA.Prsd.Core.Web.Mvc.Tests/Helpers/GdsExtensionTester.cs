@@ -11,7 +11,7 @@
         {
         }
 
-        public new static string GetPropertyName<TProperty>(HtmlHelper htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        public static new string GetPropertyName<TProperty>(HtmlHelper htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
             return Gds<TModel>.GetPropertyName(htmlHelper, expression);
         }

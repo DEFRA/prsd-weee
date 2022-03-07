@@ -340,7 +340,7 @@
       <Name>EA.Weee.Api.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Infrastructure\EA.Weee.Api.Infrastructure.csproj">
-      <Project>{77720566-4F8C-4284-8A91-B94495468A8F}</Project>
+      <Project>{77720566-4f8c-4284-8a91-b94495468a8f}</Project>
       <Name>EA.Weee.Api.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">

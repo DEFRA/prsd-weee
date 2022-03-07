@@ -21,7 +21,6 @@
     using NUnit.Framework;
     using Prsd.Core.Autofac;
 
-
     /// <summary>
     /// Contains all shared code for integration tests
     /// </summary>
@@ -31,12 +30,12 @@
     {
         public static HostEnvironmentType CurrentHostEnvironment = HostEnvironmentType.Console;
         public static IocApplication CurrentAppUnderTest = IocApplication.Unknown;
-        protected static IntegrationTestSetupBuilder Test;
-        private static IContainer _requestHandlerContainer;
-        public static CommonTestQueryProcessor Query => CommonTestQueryProcessor.Value;
-        protected static Lazy<CommonTestQueryProcessor> CommonTestQueryProcessor = new Lazy<CommonTestQueryProcessor>(() => new CommonTestQueryProcessor());
-        private static SimpleSmtpServer _smtpServer;
-        private static SmtpMessage _emailSent;
+        protected static IntegrationTestSetupBuilder test;
+        private static IContainer requestHandlerContainer;
+        public static CommonTestQueryProcessor Query => commonTestQueryProcessor.Value;
+        protected static Lazy<CommonTestQueryProcessor> commonTestQueryProcessor = new Lazy<CommonTestQueryProcessor>(() => new CommonTestQueryProcessor());
+        private static SimpleSmtpServer smtpServer;
+        private static SmtpMessage emailSent;
         private static readonly List<SmtpMessage> EmailsSent = new List<SmtpMessage>();
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
@@ -48,7 +47,7 @@
 
         public static IntegrationTestSetupBuilder SetupTest(IocApplication app)
         {
-            return Test = new IntegrationTestSetupBuilder(app);
+            return test = new IntegrationTestSetupBuilder(app);
         }
 
         public static IContainer Container
@@ -58,7 +57,7 @@
                 switch (CurrentAppUnderTest)
                 {
                     case IocApplication.RequestHandler:
-                        return _requestHandlerContainer;
+                        return requestHandlerContainer;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(CurrentAppUnderTest), CurrentAppUnderTest, null);
                 }
@@ -68,7 +67,7 @@
                 switch (CurrentAppUnderTest)
                 {
                     case IocApplication.RequestHandler:
-                        _requestHandlerContainer = value;
+                        requestHandlerContainer = value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(CurrentAppUnderTest), CurrentAppUnderTest, null);
@@ -82,8 +81,6 @@
             {
                 CurrentAppUnderTest = application;
                 CurrentHostEnvironment = HostEnvironmentType.Console;
-
-                
             }
 
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
@@ -105,7 +102,7 @@
                 return this;
             }
 
-            protected static IContainer Init(IocApplication app, bool resetIoC = false, bool installIoC = true, bool reseedDb = false)
+            protected static IContainer Init(IocApplication app, bool resetIoC = false, bool installIoC = true)
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 CurrentAppUnderTest = app;
@@ -214,15 +211,12 @@
                     ServiceLocator.Container = Container = iocFactory.GetOrCreateContainer(environment);
                 }
 
-                
-
                 return Container;
             }
         }
 
         public static void RunSql(string sql)
         {
-     
             using (var db = new SqlConnection(ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ToString()))
             {
                 try
@@ -249,7 +243,7 @@
 
         public static SmtpMessage GetEmailFromMailCatcher()
         {
-            return _emailSent;
+            return emailSent;
         }
 
         public static SmtpMessage[] GetEmailsFromMailCatcher()
@@ -259,31 +253,33 @@
 
         public static void UseMailCatcher()
         {
-            _smtpServer?.Stop();
-            _smtpServer = SimpleSmtpServer.Start(5124);
-            _smtpServer.MessageReceived += _smtpServer_MessageReceived;
-            _smtpServer.ClearReceivedEmail();
-            _emailSent = null;
+            smtpServer?.Stop();
+            smtpServer = SimpleSmtpServer.Start(5124);
+            smtpServer.MessageReceived += SmtpServer_MessageReceived;
+            smtpServer.ClearReceivedEmail();
+            emailSent = null;
             EmailsSent.Clear();
         }
 
-        private static void _smtpServer_MessageReceived(object sender, MessageReceivedArgs e)
+        private static void SmtpServer_MessageReceived(object sender, MessageReceivedArgs e)
         {
-            _emailSent = e.Message;
+            emailSent = e.Message;
             EmailsSent.Add(e.Message);
         }
 
         protected static void Act(Action action)
         {
-            _emailSent = null;
+            emailSent = null;
             EmailsSent.Clear();
 
-            _smtpServer?.ClearReceivedEmail();
+            smtpServer?.ClearReceivedEmail();
 
             CatchException(action);
 
-            if (_emailSent != null)
+            if (emailSent != null)
+            {
                 Console.WriteLine("Email content: " + GetEmailFromMailCatcher().MessageParts.FirstOrDefault()?.BodyData);
+            }
         }
 
         public override void Dispose()

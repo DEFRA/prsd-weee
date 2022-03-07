@@ -11,7 +11,7 @@
         protected override AatfAddress Instantiate()
         {
             var country = DbContext.Countries.First(c => c.Name.Equals("UK - England"));
-            Instance = new AatfAddress(Faker.Company.Name(),
+            instance = new AatfAddress(Faker.Company.Name(),
                 Faker.Address.StreetAddress(),
                 Faker.Address.SecondaryAddress(),
                 Faker.Address.City(),
@@ -19,7 +19,7 @@
                 Faker.Address.UkPostCode(),
                 country);
 
-            return Instance;
+            return instance;
         }
     }
 }

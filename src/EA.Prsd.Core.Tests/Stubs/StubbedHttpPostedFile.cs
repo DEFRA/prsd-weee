@@ -4,16 +4,16 @@
 
     public class StubbedHttpPostedFile : HttpPostedFileBase
     {
-        private readonly string _contentType;
+        private readonly string contentType;
 
         public override string ContentType
         {
-            get { return _contentType; }
+            get { return contentType; }
         }
 
         public StubbedHttpPostedFile(string contentType)
         {
-            _contentType = contentType;
+            this.contentType = contentType;
         }
     }
 }
