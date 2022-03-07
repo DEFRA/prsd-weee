@@ -43,8 +43,9 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email1", organisation.Name, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email2", organisation.Name, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email1", organisation.Name, A<string>._))
+                .MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => emailService.SendOrganisationUserRequestToEA("email2", organisation.Name, A<string>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -61,7 +62,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => emailService.SendOrganisationUserRequest(A<string>._, A<string>._, A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => emailService.SendOrganisationUserRequest(A<string>._, A<string>._, A<string>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -71,7 +72,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.FetchOrganisation(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchOrganisation(request.OrganisationId)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

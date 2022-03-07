@@ -72,7 +72,7 @@
             await GetSchemeStatusHandler().HandleAsync(new GetSchemeStatus(schemeId));
 
             A.CallTo(() => mapper.Map(A<Domain.Scheme.SchemeStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         private GetSchemeStatusHandler GetSchemeStatusHandler()

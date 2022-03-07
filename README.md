@@ -35,7 +35,7 @@ To initialise git flow for the project, you need to run:
 
 #### Local system dependencies
 
-1. Visual Studio 2013+.
+1. Visual Studio 2017+.
 2. SQL Server Express 2014.
 3. .NET 4.5.2 SDK.
 
@@ -59,9 +59,13 @@ The WEEE project uses [AliaSQL](https://github.com/ClearMeasure/AliaSQL) to mana
 2. Open the App.config of this project. In the appSettings, set the value for 'DatabaseServer' as the database server to be used. The local SQL server express database (.\SQLEXPRESS) will be used if this value is not set.
 3. You can alter the value of 'DatabaseName' if you wish the database to be created with a different name.
 4. Run the database project (this can be in debug mode). You will be shown a list of possible actions. Choose 'Create', which will run the scripts to create the database.
+5. The EA.Weee.Integration.Tests project creates a EA.Weee.Integration database while executing. To enable this, run the following command within SQL Management studio against your .\SQLEXPRESS instance to provide create database access.
 
 <!-- End of list -->
 
+    USE master;
+    GRANT CREATE ANY DATABASE TO weeedeveloper;
+    
 #### Setup the API certificate
 
 The EA.Weee.Api project runs over SSL on post 44502 and requires a certificate to be setup.

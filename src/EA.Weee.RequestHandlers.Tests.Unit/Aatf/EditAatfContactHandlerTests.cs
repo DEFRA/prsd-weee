@@ -107,7 +107,7 @@
 
             await this.handler.HandleAsync(updateRequest);
 
-            A.CallTo(() => this.aatfDataAccess.UpdateContact(returnContact, updateRequest.ContactData, country)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.aatfDataAccess.UpdateContact(returnContact, updateRequest.ContactData, country)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

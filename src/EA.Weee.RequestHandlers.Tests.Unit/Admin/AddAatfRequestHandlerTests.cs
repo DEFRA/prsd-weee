@@ -170,7 +170,7 @@
                 && Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(c.AatfStatus.Value) == Enumeration.FromValue<Domain.AatfReturn.AatfStatus>(aatf.AatfStatus.Value)
                 && c.ApprovalDate == aatf.ApprovalDate
                 && c.ComplianceYear == aatf.ComplianceYear
-                && c.FacilityType == expectedFacilityType))).MustHaveHappened(Repeated.Exactly.Once);
+                && c.FacilityType == expectedFacilityType))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(true);
         }
@@ -275,7 +275,7 @@
                     && c.ApprovalDate == aatf.ApprovalDate
                     && c.ComplianceYear == aatf.ComplianceYear
                     && c.FacilityType == expectedFacilityType
-                    && c.AatfId == aatfId))).MustHaveHappened(Repeated.Exactly.Once);
+                    && c.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(true);
         }

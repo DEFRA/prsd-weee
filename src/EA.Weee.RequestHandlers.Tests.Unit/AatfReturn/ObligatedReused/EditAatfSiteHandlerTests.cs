@@ -76,7 +76,7 @@
 
             await handler.HandleAsync(updateRequest);
 
-            A.CallTo(() => aatfSiteDataAccess.Update(returnAdress, updateRequest.AddressData, country)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => aatfSiteDataAccess.Update(returnAdress, updateRequest.AddressData, country)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

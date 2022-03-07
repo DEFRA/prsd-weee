@@ -43,7 +43,7 @@
         {
             await handler.HandleAsync(new GetReportOnQuestion());
 
-            A.CallTo(() => dataAccess.GetAll<ReportOnQuestion>()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAll<ReportOnQuestion>()).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

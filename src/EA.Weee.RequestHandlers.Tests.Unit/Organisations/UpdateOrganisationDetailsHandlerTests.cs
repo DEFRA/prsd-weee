@@ -102,7 +102,7 @@
 
             // Assert
             A.CallTo(() => dataAccess.FetchOrganisationAsync(new Guid("9a310218-311b-460d-bd50-9d246c237dcc")))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal("CompanyName", organisation.Name);
             Assert.Equal("123456789", organisation.CompanyRegistrationNumber);
@@ -116,7 +116,7 @@
             Assert.Equal("email@domain.com", organisation.BusinessAddress.Email);
 
             A.CallTo(() => dataAccess.SaveAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Equal(result, true);
         }
