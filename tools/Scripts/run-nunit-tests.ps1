@@ -10,24 +10,19 @@ param
     [string]$TestDllsPath = $null,
 
     [Parameter(Mandatory=$true)]
-    [string]$OutputPath = $null,
-
-    [Parameter(Mandatory=$true)]
-    [string]$junitXsltPath = $null
+    [string]$OutputPath = $null
 )
 
 $nunit = dir $PackagesPath -recurse | where { $_.PSIsContainer -eq $false -and $_.Name -eq "nunit3-console.exe" } | foreach { $_.FullName } | sort -descending 
 
 $testDlls = dir $TestDllsPath -recurse | where { $_.Name -like "EA.Weee.Integration.Tests.dll" } | Get-Unique | foreach { "`"" + $_.FullName +"`"" } 
 
-$junitXsltPath = dir $junitXsltPath -recurse | where { $_.Name -like "nunit3-xunit.xslt" } | Get-Unique | foreach { "`"" + $_.FullName +"`"" } 
-
 write-host $testDlls
 write-host "Found nunit test dlls"
 
 # As with build the paths may contain spaces and must be enclosed by ' for the iex to work
 $testDllString = ([string]::Join(" ", $testDlls))
-$testOutDir = "'" + $OutputPath + "\nunit-test-results.xml;transform=" + $junitXsltPath + "'"
+$testOutDir = "'" + $OutputPath + "\nunit-test-results.xml'"
 
 $testConsole = $nunit
 
