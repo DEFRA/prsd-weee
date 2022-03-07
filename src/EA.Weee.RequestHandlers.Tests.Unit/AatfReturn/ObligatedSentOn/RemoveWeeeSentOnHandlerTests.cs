@@ -60,8 +60,8 @@
 
             await handler.HandleAsync(new RemoveWeeeSentOn(weeeSentOnId));
 
-            A.CallTo(() => genericDataAccess.Remove(weeeSentOn)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => genericDataAccess.RemoveMany(weeeSentOnAmount)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.Remove(weeeSentOn)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => genericDataAccess.RemoveMany(weeeSentOnAmount)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

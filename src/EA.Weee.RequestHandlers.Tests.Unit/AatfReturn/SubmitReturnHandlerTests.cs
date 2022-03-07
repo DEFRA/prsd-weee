@@ -91,7 +91,7 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.GetById<Return>(message.ReturnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -119,8 +119,8 @@
 
             await handler.HandleAsync(message);
 
-            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), nilReturn)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => @return.UpdateSubmitted(userId.ToString(), nilReturn)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -157,7 +157,7 @@
             await handler.HandleAsync(message);
 
             A.CallTo(() => genericDataAccess.AddMany<ReturnAatf>(A<IEnumerable<ReturnAatf>>.That.Matches(a => a.ElementAt(0).Return.Equals(@return) && a.ElementAt(0).Aatf.Equals(aatfs.ElementAt(0))))).MustHaveHappened()
-                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         public Return GetReturn()

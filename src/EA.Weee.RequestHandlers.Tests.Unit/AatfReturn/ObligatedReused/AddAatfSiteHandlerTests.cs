@@ -74,7 +74,7 @@
                 && w.Address.TownOrCity.Equals(siteRequest.AddressData.TownOrCity)
                 && w.Address.Postcode.Equals(siteRequest.AddressData.Postcode)
                 && w.Address.Country.Equals(country)
-                && w.WeeeReused.Equals(weeReused)))).MustHaveHappened(Repeated.Exactly.Once);
+                && w.WeeeReused.Equals(weeReused)))).MustHaveHappened(1, Times.Exactly);
         }
 
         private AddAatfSite AddAatfSiteRequest()

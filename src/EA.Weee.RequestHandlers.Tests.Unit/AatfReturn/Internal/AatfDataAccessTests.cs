@@ -130,8 +130,8 @@
                 newSite.AddressData.Postcode,
                 country,
                 newSite.Telephone,
-                newSite.Email)).MustHaveHappened(Repeated.Exactly.Once)
-            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                newSite.Email)).MustHaveHappened(1, Times.Exactly)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Theory]
@@ -350,9 +350,9 @@
 
             await dataAccess.RemoveAatf(aatfId);
 
-            A.CallTo(() => genericDataAccess.Remove(aatf)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => genericDataAccess.Remove(returnAatf)).MustHaveHappened(Repeated.Exactly.Once))
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => genericDataAccess.Remove(aatf)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => genericDataAccess.Remove(returnAatf)).MustHaveHappened(1, Times.Exactly))
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -371,7 +371,7 @@
 
             var result = await dataAccess.GetComplianceYearsForAatfByAatfId(aatfId);
 
-            result.Should().BeEquivalentTo(aatf.ComplianceYear);
+            result.Should().Contain(2019);
             result.Count.Should().Be(1);
         }
 

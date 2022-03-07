@@ -94,8 +94,8 @@
 
             Guid result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(organisationId);
         }
@@ -118,8 +118,8 @@
 
             Guid result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(organisationId);
         }
@@ -143,8 +143,8 @@
 
             Guid result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(organisationId);
         }
@@ -169,8 +169,8 @@
 
             Guid result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(1, Times.Exactly);
 
             result.Should().Be(organisationId);
         }
