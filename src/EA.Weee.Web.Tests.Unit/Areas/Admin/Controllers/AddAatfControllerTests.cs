@@ -152,10 +152,10 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
                 && p.Aatf.SiteAddress == aatfData.SiteAddress
                 && p.Aatf.Size == aatfData.Size
                 && p.Aatf.ApprovalDate == aatfData.ApprovalDate
-                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteOrganisationAdmin>.That.Matches(
-                 p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+                 p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             await controller.AddAatf(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -296,10 +296,10 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
                 && p.Aatf.SiteAddress == aatfData.SiteAddress
                 && p.Aatf.Size == aatfData.Size
                 && p.Aatf.ApprovalDate == aatfData.ApprovalDate
-                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+                && p.AatfContact == viewModel.ContactData))).MustHaveHappened(1, Times.Exactly);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteOrganisationAdmin>.That.Matches(
-                p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(Repeated.Exactly.Once);
+                p => p.OrganisationId == viewModel.OrganisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -338,7 +338,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             await controller.AddAe(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]

@@ -51,7 +51,7 @@
 
             var result = await handler.HandleAsync(new GetAddress(id, A.Dummy<Guid>()));
 
-            A.CallTo(() => dataAccess.GetById<Address>(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetById<Address>(id)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -76,7 +76,7 @@
 
             var result = await handler.HandleAsync(new GetAddress(id, A.Dummy<Guid>()));
 
-            A.CallTo(() => mapper.Map(address)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(address)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

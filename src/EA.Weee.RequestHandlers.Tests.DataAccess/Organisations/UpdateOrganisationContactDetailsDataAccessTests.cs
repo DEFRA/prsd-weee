@@ -128,7 +128,7 @@
 
             // Assert
             A.CallTo(() => context.SaveChangesAsync())
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

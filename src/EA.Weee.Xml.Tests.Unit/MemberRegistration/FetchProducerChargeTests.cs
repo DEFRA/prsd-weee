@@ -33,7 +33,7 @@
         {
             await fetchProducerCharge.GetCharge(band);
 
-            A.CallTo(() => producerChargeCalculatorDataAccess.FetchCurrentChargeBandAmount(band)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => producerChargeCalculatorDataAccess.FetchCurrentChargeBandAmount(band)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]

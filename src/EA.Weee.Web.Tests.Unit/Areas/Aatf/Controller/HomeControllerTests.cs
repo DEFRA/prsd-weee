@@ -116,7 +116,7 @@
 
             await controller.Index(organisationId, fixture.Create<FacilityType>());
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -134,7 +134,7 @@
 
             await controller.Index(organisationId, facilityType);
 
-            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<AatfDataToHomeViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

@@ -110,7 +110,7 @@
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), weeeSentOnId);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -120,7 +120,7 @@
 
             await controller.Index(returnId, A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -180,7 +180,7 @@
 
             await controller.Index(model, null);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, request)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, request)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -216,7 +216,7 @@
 
             await controller.Index(model, javascript);
 
-            A.CallTo(() => requestCreator.ViewModelToRequest(model)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => requestCreator.ViewModelToRequest(model)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

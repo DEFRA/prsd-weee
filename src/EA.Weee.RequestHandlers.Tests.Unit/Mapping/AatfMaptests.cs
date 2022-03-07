@@ -76,7 +76,7 @@
             result.Id.Should().Be(id);
             result.FacilityType.ToDisplayString().Should().Be(type.DisplayName);
 
-            A.CallTo(() => this.typeMapper.Map(type)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.typeMapper.Map(type)).MustHaveHappened(1, Times.Exactly);
             result.ComplianceYear.Should().Be(complianceYear);
             result.AatfStatus.Should().Be(Core.AatfReturn.AatfStatus.Approved);
             result.Size.Should().Be(Core.AatfReturn.AatfSize.Large);

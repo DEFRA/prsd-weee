@@ -54,7 +54,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.GetById(request.ReturnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.GetById(request.ReturnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

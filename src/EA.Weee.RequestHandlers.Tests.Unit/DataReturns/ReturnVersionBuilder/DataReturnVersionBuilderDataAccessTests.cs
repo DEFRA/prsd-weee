@@ -172,7 +172,7 @@
             Assert.Same(result1, result3);
             Assert.Same(result1, result4);
             A.CallTo(() => aatfDeliveryLocations.Add(A<AatfDeliveryLocation>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
@@ -333,7 +333,7 @@
             Assert.Same(result1, result3);
             Assert.Same(result1, result4);
             A.CallTo(() => aeDeliveryLocations.Add(A<AeDeliveryLocation>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
     }
 }
