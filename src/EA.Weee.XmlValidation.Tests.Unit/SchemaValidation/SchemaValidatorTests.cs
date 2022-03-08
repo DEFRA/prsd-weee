@@ -71,7 +71,7 @@
             var result = SchemaValidator().Validate(new byte[1], string.Empty, string.Empty, A.Dummy<string>());
 
             A.CallTo(() => namespaceValidator.Validate(A<XNamespace>._, A<XNamespace>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
 
             Assert.Contains(error, result);
         }

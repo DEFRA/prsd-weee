@@ -351,7 +351,7 @@
             await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

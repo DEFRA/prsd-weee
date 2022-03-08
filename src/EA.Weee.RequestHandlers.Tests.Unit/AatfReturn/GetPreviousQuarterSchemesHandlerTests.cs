@@ -133,8 +133,8 @@
 
             result.PreviousSchemes.Should().Contain(returnSchemes.Where(p => p.ReturnId == previousReturn.Id).Select(p => p.SchemeId));
 
-            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -183,8 +183,8 @@
 
             Assert.Equal(0, result.PreviousSchemes.Count);
 
-            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -231,7 +231,7 @@
 
             Assert.Equal(0, result.PreviousSchemes.Count);
 
-            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

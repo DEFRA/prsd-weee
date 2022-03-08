@@ -34,6 +34,13 @@
             }
         }
 
+        // Only user for integration tests
+        public void UpdateUserIdAndOrganisationId(Guid userId, Guid organisationId)
+        {
+            UserId = userId.ToString();
+            OrganisationId = organisationId;
+        }
+
         public void UpdateUserStatus(UserStatus userStatus)
         {
             if (userStatus == UserStatus)

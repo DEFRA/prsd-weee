@@ -48,7 +48,7 @@
 
             var result = await handler.HandleAsync(new GetReturn(returnId, forSummary));
 
-            A.CallTo(() => populatedReturn.GetReturnData(returnId, forSummary)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => populatedReturn.GetReturnData(returnId, forSummary)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

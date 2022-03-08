@@ -57,7 +57,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -93,7 +93,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A2)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A2)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -129,7 +129,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D3)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D3)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -169,7 +169,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -207,7 +207,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -243,7 +243,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C2)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C2)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -279,7 +279,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D2)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D2)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -319,7 +319,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -357,7 +357,7 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]

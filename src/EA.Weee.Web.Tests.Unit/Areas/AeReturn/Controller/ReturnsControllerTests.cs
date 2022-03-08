@@ -78,7 +78,7 @@
             await controller.Index(organisationId, fixture.Create<int?>(), fixture.Create<string>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturns>.That.Matches(r => r.OrganisationId.Equals(organisationId))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -90,7 +90,7 @@
 
             await controller.Index(fixture.Create<Guid>(), fixture.Create<int?>(), fixture.Create<string>());
 
-            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returnsData))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returnsData))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -107,7 +107,7 @@
 
             A.CallTo(() => mapper.Map<ReturnsViewModel>(A<ReturnToReturnsViewModelTransfer>.That.Matches(r => r.ReturnsData == returns &&
                                                                                                               r.SelectedComplianceYear == selectedComplianceYear &&
-                                                                                                              r.SelectedQuarter == selectedQuarter))).MustHaveHappened(Repeated.Exactly.Once);
+                                                                                                              r.SelectedQuarter == selectedQuarter))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -303,7 +303,7 @@
             await controller.NilReturnConfirm(model);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitReturn>.That.Matches(c => c.ReturnId.Equals(model.ReturnId) && c.NilReturn.Equals(true))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

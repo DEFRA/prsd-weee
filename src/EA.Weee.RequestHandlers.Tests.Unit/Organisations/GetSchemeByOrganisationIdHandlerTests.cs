@@ -51,7 +51,7 @@
 
             var result = await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -78,7 +78,7 @@
 
             var result = await handler.HandleAsync(request);
 
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

@@ -91,7 +91,7 @@
             await controller.Index(A.Dummy<Guid>());
             SystemTime.Unfreeze();
 
-            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map<ReturnViewModel>(@return)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

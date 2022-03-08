@@ -60,7 +60,7 @@
             var result = await handler.HandleAsync(message);
 
             A.CallTo(() => dataAccess.Add<Contact>(A<Contact>.That.Matches(c => c.FirstName.Equals(message.ContactPerson.FirstName)
-            && c.LastName.Equals(message.ContactPerson.LastName) && c.Position.Equals(message.ContactPerson.Position)))).MustHaveHappened(Repeated.Exactly.Once).Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            && c.LastName.Equals(message.ContactPerson.LastName) && c.Position.Equals(message.ContactPerson.Position)))).MustHaveHappened(1, Times.Exactly).Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
 
             result.Should().Be(contactId);
         }
@@ -90,7 +90,7 @@
             contact.LastName.Should().Be(message.ContactPerson.LastName);
             contact.Position.Should().Be(message.ContactPerson.Position);
 
-            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

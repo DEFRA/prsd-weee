@@ -100,7 +100,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == request.Year && (int)c.Quarter.Q == (int)quarterType && c.Organisation.Equals(organisation) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.Submit(A<Return>.That.Matches(c => c.Quarter.Year == request.Year && (int)c.Quarter.Q == (int)quarterType && c.Organisation.Equals(organisation) && c.CreatedById.Equals(userId.ToString())))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -114,7 +114,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
