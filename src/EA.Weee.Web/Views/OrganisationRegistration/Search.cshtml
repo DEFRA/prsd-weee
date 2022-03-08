@@ -13,21 +13,26 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        
+
         @Html.HiddenFor(m => m.SelectedOrganisationId);
-        
-    <p>
-        Search for your registered company, partnership, sole trader or individual name.
-    </p>
+
+        <p>
+            Search for your registered company, partnership, sole trader or individual name.
+        </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-one-half", @maxLength = CommonMaxFieldLengths.DefaultString }) <!-- SG Change, form control forces 50% width -->
             <button type="submit" class="govuk-button">
-                <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search"/>
+                <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search" />
             </button>
         </div>
+
+        <p>
+            @Html.ActionLink("Show all organisations in the database", "Index", "Organisations")
+        </p>
+
 
         if (Model.ShowPerformAnotherActivityLink)
         {

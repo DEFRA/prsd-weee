@@ -151,6 +151,7 @@
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Admin\GetAatfsByOrganisationId.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers.cs" />
+    <Compile Include="Organisations\GetAllOrganisations.cs" />
     <Compile Include="Organisations\GetContact.cs" />
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />

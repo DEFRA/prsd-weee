@@ -386,6 +386,7 @@
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrganisationNameStatusViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnsViewModelTransfer.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
