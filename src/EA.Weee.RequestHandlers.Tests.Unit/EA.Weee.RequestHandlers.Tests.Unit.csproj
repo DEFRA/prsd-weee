@@ -292,7 +292,6 @@
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
-    <Compile Include="Organisations\GetAllOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetContactHandlerTests.cs" />
     <Compile Include="Organisations\GetAddressHandlerTests.cs" />
