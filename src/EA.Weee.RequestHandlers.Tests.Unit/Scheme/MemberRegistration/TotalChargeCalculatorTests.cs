@@ -41,7 +41,7 @@
         {
             totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, A.Dummy<bool>(), ref totalCharge);
 
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

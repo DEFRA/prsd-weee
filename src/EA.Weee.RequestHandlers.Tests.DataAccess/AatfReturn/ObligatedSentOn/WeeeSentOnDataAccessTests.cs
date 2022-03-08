@@ -58,8 +58,8 @@
 
             dataAccess.Submit(site);
 
-            A.CallTo(() => context.WeeeSentOn.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.WeeeSentOn.Add(site)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -112,11 +112,11 @@
 
             A.CallTo(() => weeeSentOn.AatfId).Returns(aatfId);
             A.CallTo(() => weeeSentOn.ReturnId).Returns(returnId);
-            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn }));
+            A.CallTo(() => context.WeeeSentOn).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeSentOn>() { weeeSentOn, new WeeeSentOn(), new WeeeSentOn() }));
 
             var result = await dataAccess.GetWeeeSentOnByReturnAndAatf(aatfId, returnId);
 
-            result.Should().BeEquivalentTo(weeeSentOn);
+            result.Should().BeEquivalentTo(new List<WeeeSentOn>() { weeeSentOn });
         }
 
         [Fact]
@@ -147,7 +147,7 @@
 
             await dataAccess.UpdateWithOperatorAddress(weeeSentOn, operatorAddress);
 
-            A.CallTo(() => weeeSentOn.UpdateWithOperatorAddress(operatorAddress)).MustHaveHappened(Repeated.Exactly.Once).Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => weeeSentOn.UpdateWithOperatorAddress(operatorAddress)).MustHaveHappened(1, Times.Exactly).Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
     }
 }

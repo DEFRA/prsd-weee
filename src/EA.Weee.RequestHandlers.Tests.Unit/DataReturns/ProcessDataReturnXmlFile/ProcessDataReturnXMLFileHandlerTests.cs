@@ -83,7 +83,7 @@
 
             // Assert
             A.CallTo(() => builder.DataAccess.AddAndSaveAsync(A<DataReturnUpload>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         private class ProcessDataReturnXmlFileHandlerBuilder

@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Mappings;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -62,8 +63,8 @@
 
             dataAccess.Submit(site);
 
-            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(Repeated.Exactly.Once)
-                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+            A.CallTo(() => context.WeeeReusedSite.Add(site)).MustHaveHappened(1, Times.Exactly)
+                .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
 
         [Fact]
@@ -71,12 +72,18 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
+            var reusedId = Guid.NewGuid();
+            var addressId = Guid.NewGuid();
 
             var aatfAddressMatch = A.Fake<AatfAddress>();
+            A.CallTo(() => aatfAddressMatch.Id).Returns(addressId);
+
             var weeeReused = A.Fake<WeeeReused>();
+            A.CallTo(() => weeeReused.Id).Returns(reusedId);
+
             var weeeReusedSite = A.Fake<WeeeReusedSite>();
 
-            A.CallTo(() => context.AatfAddress).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<AatfAddress>() { aatfAddressMatch }));
+            A.CallTo(() => context.AatfAddress).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<AatfAddress>() { aatfAddressMatch, new AatfAddress() }));
             A.CallTo(() => weeeReused.AatfId).Returns(aatfId);
             A.CallTo(() => weeeReused.ReturnId).Returns(returnId);
             A.CallTo(() => context.WeeeReused).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<WeeeReused>() { weeeReused }));
@@ -87,7 +94,7 @@
 
             var result = await dataAccess.GetAddresses(aatfId, returnId);
 
-            result.Should().BeEquivalentTo(aatfAddressMatch);
+            result.Should().BeEquivalentTo(new List<AatfAddress>() { aatfAddressMatch });
         }
 
         [Fact]
@@ -131,8 +138,8 @@
                 newSite.TownOrCity,
                 newSite.CountyOrRegion,
                 newSite.Postcode,
-                country)).MustHaveHappened(Repeated.Exactly.Once)
-            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(Repeated.Exactly.Once));
+                country)).MustHaveHappened(1, Times.Exactly)
+            .Then(A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened(1, Times.Exactly));
         }
     }
 }

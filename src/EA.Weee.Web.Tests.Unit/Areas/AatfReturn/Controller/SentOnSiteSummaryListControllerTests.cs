@@ -106,7 +106,7 @@
             await controller.Index(A.Dummy<Guid>(), returnId, aatfId);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(g => g.ReturnId.Equals(returnId) && g.AatfId.Equals(aatfId))))
-            .MustHaveHappened(Repeated.Exactly.Once);
+            .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -141,7 +141,7 @@
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

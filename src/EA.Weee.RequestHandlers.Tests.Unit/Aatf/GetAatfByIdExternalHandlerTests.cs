@@ -57,7 +57,7 @@
 
             await handler.HandleAsync(new GetAatfByIdExternal(aatfId));
 
-            A.CallTo(() => dataAccess.FetchById(aatfId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => dataAccess.FetchById(aatfId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -69,7 +69,7 @@
 
             await handler.HandleAsync(A.Dummy<GetAatfByIdExternal>());
 
-            A.CallTo(() => mapper.Map(aatf)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(aatf)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

@@ -58,7 +58,7 @@
 
             foreach (var schemeId in schemeIds)
             {
-                A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(schemeId)).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(schemeId)).MustHaveHappened(1, Times.Exactly);
             }
         }
 
@@ -71,7 +71,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.GetById(returnId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -89,7 +89,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => returnSchemeDataAccess.Submit(A<List<ReturnScheme>>.That.Matches(c => c.First().ReturnId == @return.Id && c.First().SchemeId == scheme.Id))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnSchemeDataAccess.Submit(A<List<ReturnScheme>>.That.Matches(c => c.First().ReturnId == @return.Id && c.First().SchemeId == scheme.Id))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
