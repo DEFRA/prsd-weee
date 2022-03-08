@@ -25,8 +25,7 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            //return await ShowOrganisations();
-            return await ShowAllOrganisations();
+            return await ShowOrganisations();
         }
 
         [HttpPost]
@@ -80,19 +79,6 @@
             return RedirectToAction("Search", "OrganisationRegistration");
         }
 
-        /// <summary>
-        /// Returns a view which points to the index, with a populated ViewModel containing all organisations within the system
-        /// </summary>
-        /// <returns></returns>
-        private async Task<ActionResult> ShowAllOrganisations()
-        {
-            var orgs = await GetAllOrganisations();
-
-            AllOrganisationsViewModel model = new AllOrganisationsViewModel() { Organisations = orgs };
-
-            return View("Index", model);
-        }
-
         [ChildActionOnly]
         public ActionResult _Pending(bool alreadyLoaded, IEnumerable<OrganisationUserData> inaccessibleOrganisations)
         {
@@ -132,24 +118,6 @@
             return organisations
                 .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
                 .OrderBy(o => o.Organisation.OrganisationName);
-        }
-
-        /// <summary>
-        /// Returns a List collection of all organisations within the system
-        /// </summary>
-        /// <returns>A List collection of OrganisationData</returns>
-        private async Task<List<OrganisationData>> GetAllOrganisations()
-        {
-            List<OrganisationData> organisations;
-
-            using (var client = apiClient())
-            {
-                organisations = await client.SendAsync(
-                                            User.GetAccessToken(),
-                                            new GetAllOrganisations());
-            }
-
-            return organisations;
         }
 
         /// <summary>
