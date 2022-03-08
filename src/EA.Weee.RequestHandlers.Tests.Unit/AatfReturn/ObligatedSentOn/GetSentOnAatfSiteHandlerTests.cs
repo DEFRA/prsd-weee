@@ -49,7 +49,7 @@
 
             await handler.HandleAsync(new GetSentOnAatfSite(id));
 
-            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnSiteAddress(id)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnSiteAddress(id)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -61,7 +61,7 @@
 
             await handler.HandleAsync(A.Dummy<GetSentOnAatfSite>());
 
-            A.CallTo(() => mapper.Map(A<AatfAddress>.That.IsSameAs(address))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<AatfAddress>.That.IsSameAs(address))).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

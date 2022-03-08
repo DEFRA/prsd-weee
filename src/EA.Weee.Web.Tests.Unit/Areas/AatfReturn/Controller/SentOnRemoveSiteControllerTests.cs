@@ -129,7 +129,7 @@
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
                 && t.ReturnId == returnId
                 && t.AatfId == aatfId
-                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(Repeated.Exactly.Once);
+                && t.WeeeSentOn == weeeSentOn))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -143,7 +143,7 @@
 
             await controller.Index(viewModel);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveWeeeSentOn>.That.Matches(r => r.WeeeSentOnId == viewModel.WeeeSentOnId))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<RemoveWeeeSentOn>.That.Matches(r => r.WeeeSentOnId == viewModel.WeeeSentOnId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

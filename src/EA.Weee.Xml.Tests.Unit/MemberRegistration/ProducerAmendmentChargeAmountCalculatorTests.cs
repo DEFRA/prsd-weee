@@ -39,7 +39,7 @@
             await calculator.GetProducerChargeBand(schemeType, producerType);
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -51,7 +51,7 @@
             await calculator.GetProducerChargeBand(schemeType, producerType);
 
             A.CallTo(() => registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -63,7 +63,7 @@
             await calculator.GetProducerChargeBand(schemeType, producerType);
 
             A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

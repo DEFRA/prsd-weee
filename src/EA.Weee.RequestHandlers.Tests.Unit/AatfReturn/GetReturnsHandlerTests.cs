@@ -69,7 +69,7 @@
 
             var result = await handler.HandleAsync(new GetReturns(organisationId, Core.AatfReturn.FacilityType.Aatf));
 
-            A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         public async Task HandleAsync_GivenOrganisation_GetPopulatedReturnsShouldBeCalled()
@@ -89,8 +89,8 @@
 
             var result = await handler.HandleAsync(new GetReturns(organisationId, Core.AatfReturn.FacilityType.Aatf));
 
-            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -163,13 +163,13 @@
 
             if (facilityType == Core.AatfReturn.FacilityType.Ae)
             {
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(0).Id, false))).MustHaveHappened(1, Times.Exactly);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(1).Id, false))).MustHaveHappened(1, Times.Exactly);
             }
 
             if (facilityType == Core.AatfReturn.FacilityType.Aatf)
             {
-                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(2).Id, false))).MustHaveHappened(Repeated.Exactly.Once);
+                A.CallTo((() => populatedReturn.GetReturnData(returns.ElementAt(2).Id, false))).MustHaveHappened(1, Times.Exactly);
             }
         }
 
@@ -202,7 +202,7 @@
             result.OpenQuarters[0].Q.Should().Be(QuarterType.Q1);
             result.OpenQuarters[0].Year.Should().Be(returnQuarter.Year);
 
-            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(date)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(date)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -231,7 +231,7 @@
 
             result.NextWindow.WindowOpenDate.Should().Be(nextWindow.StartDate);
             result.NextWindow.WindowClosedDate.Should().Be(nextWindow.EndDate);
-            A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(openWindows[0].QuarterType, date.Year)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => quarterWindowFactory.GetNextQuarterWindow(openWindows[0].QuarterType, date.Year)).MustHaveHappened(1, Times.Exactly);
         }
     }
 }

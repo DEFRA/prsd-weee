@@ -223,10 +223,10 @@
                s2 => Assert.Equal("AE", s2.Text),
                s3 => Assert.Equal("PCS", s3.Text));
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfAeActiveComplianceYears>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPanAreas>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLocalAreas>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -368,7 +368,7 @@
                 s1 => Assert.Equal("B2B", s1.Text),
                 s2 => Assert.Equal("B2C", s2.Text));
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

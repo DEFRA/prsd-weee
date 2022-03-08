@@ -466,7 +466,7 @@
                && p.Aatf.SiteAddress == aatf.SiteAddress
                && p.Aatf.Size == aatf.Size
                && p.Aatf.ApprovalDate == aatf.ApprovalDate
-               && p.AatfContact == viewModel.ContactData))).MustHaveHappened(Repeated.Exactly.Once);
+               && p.AatfContact == viewModel.ContactData))).MustHaveHappened(1, Times.Exactly);
         }
 
         private CopyAatfViewModel CreateCopyAatfViewModel()

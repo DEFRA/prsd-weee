@@ -168,7 +168,7 @@
             var result = await handler.HandleAsync(updateRequest);
 
             A.CallTo(() => commonDataAccess.FetchLookup<LocalArea>(A<Guid>._)).MustNotHaveHappened();
-            A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>.That.Matches(a => a.LocalArea == null))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>.That.Matches(a => a.LocalArea == null))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -181,7 +181,7 @@
             var result = await handler.HandleAsync(updateRequest);
 
             A.CallTo(() => commonDataAccess.FetchLookup<PanArea>(A<Guid>._)).MustNotHaveHappened();
-            A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>.That.Matches(a => a.PanArea == null))).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => aatfDataAccess.UpdateDetails(A<Aatf>._, A<Aatf>.That.Matches(a => a.PanArea == null))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

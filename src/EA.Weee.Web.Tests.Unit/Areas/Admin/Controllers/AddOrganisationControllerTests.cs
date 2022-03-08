@@ -243,7 +243,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateOrganisationAdmin>.That.Matches(
                 p => p.BusinessName == viewModel.BusinessTradingName
                 && p.Address == viewModel.Address
-                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(Repeated.Exactly.Once);
+                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -328,7 +328,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateOrganisationAdmin>.That.Matches(
                 p => p.BusinessName == viewModel.CompanyName
                 && p.Address == viewModel.Address
-                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(Repeated.Exactly.Once);
+                && p.OrganisationType == viewModel.OrganisationType.GetValueFromDisplayName<OrganisationType>()))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -364,7 +364,7 @@
 
             await controller.RegisteredCompanyDetails(viewModel);
 
-            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

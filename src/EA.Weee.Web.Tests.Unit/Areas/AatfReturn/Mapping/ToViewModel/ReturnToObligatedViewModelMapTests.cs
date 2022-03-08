@@ -155,8 +155,8 @@
             };
 
             A.CallTo(() => categoryMap.Map(A<ObligatedDataToObligatedValueMapTransfer>.That.Matches(
-                c => c.WeeeDataValues.IsSameOrEqualTo(weeeDataValues.Where(w => w.Aatf.Id == transfer.AatfId && w.Scheme.Id == transfer.SchemeId)) &&
-                     c.ObligatedCategoryValues.IsSameOrEqualTo(obligatedValues)))).Returns(returnList);
+                c => c.WeeeDataValues.Equals(weeeDataValues.Where(w => w.Aatf.Id == transfer.AatfId && w.Scheme.Id == transfer.SchemeId)) &&
+                     c.ObligatedCategoryValues.Equals(obligatedValues)))).Returns(returnList);
 
             var result = mapper.Map(transfer);
 
@@ -191,7 +191,7 @@
             var weeDataValues = transfer.ReturnData.ObligatedWeeeSentOnData.Where(ow => ow.WeeeSentOnId.Equals(id));
 
             A.CallTo(() => categoryMap.Map(A<ObligatedDataToObligatedValueMapTransfer>
-                    .That.Matches(o => o.WeeeDataValues.IsSameOrEqualTo(weeDataValues)))).Returns(obligated);
+                    .That.Matches(o => o.WeeeDataValues.Equals(weeDataValues)))).Returns(obligated);
 
             var result = mapper.Map(transfer);
 

@@ -98,7 +98,7 @@
             await AccountController().ResetPassword(A.Dummy<Guid>(), A.Dummy<string>(), passwordResetModel);
 
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+                .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

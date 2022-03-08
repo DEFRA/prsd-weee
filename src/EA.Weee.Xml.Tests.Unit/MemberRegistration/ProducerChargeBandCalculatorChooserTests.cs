@@ -29,7 +29,7 @@
 
             producerChargeBandCalculatorChooser.GetProducerChargeBand(schemeType, producerType);
 
-            A.CallTo(() => producerChargeBandCalculator.IsMatch(schemeType, producerType)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => producerChargeBandCalculator.IsMatch(schemeType, producerType)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -42,7 +42,7 @@
 
             producerChargeBandCalculatorChooser.GetProducerChargeBand(schemeType, producerType);
 
-            A.CallTo(() => producerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => producerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

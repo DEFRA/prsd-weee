@@ -39,7 +39,7 @@
             var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.A)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -82,7 +82,7 @@
             var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.B)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -125,7 +125,7 @@
             var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -168,7 +168,7 @@
             var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.D)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -211,7 +211,7 @@
             var result = await producerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
 
             // Assert
-            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.E)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
