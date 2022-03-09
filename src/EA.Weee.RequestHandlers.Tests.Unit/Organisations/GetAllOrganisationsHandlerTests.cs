@@ -43,6 +43,7 @@
 
         private DbSet<Organisation> CreateOrgs()
         {
+            // Creates one of each type of organisation available in the system
             return helper.GetAsyncEnabledDbSet(new[]
             {
                 orgHelper.GetOrganisationWithDetails("Test Organisation", "Test Org", "CO12345678", OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
