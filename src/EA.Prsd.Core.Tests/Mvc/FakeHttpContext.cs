@@ -6,7 +6,14 @@
 
     internal class FakeHttpContext : HttpContextBase
     {
-        private Dictionary<object, object> _items = new Dictionary<object, object>();
-        public override IDictionary Items { get { return _items; } }
+        private readonly Dictionary<object, object> fakeItems = new Dictionary<object, object>();
+
+        public override IDictionary Items 
+        { 
+            get 
+            { 
+                return fakeItems; 
+            } 
+        }
     }
 }

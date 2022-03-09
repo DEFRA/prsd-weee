@@ -7,13 +7,17 @@
 
     public class GdsDateHelperTests
     {
-        Gds<TestViewModel> gds;
+        private readonly Gds<TestViewModel> gds;
 
         public GdsDateHelperTests()
         {
             var viewDataContainer = new FakeViewDataContainer();
-            var viewContext = new ViewContext();
-            viewContext.HttpContext = new FakeHttpContext();
+
+            var viewContext = new ViewContext
+            {
+                HttpContext = new FakeHttpContext()
+            };
+
             viewDataContainer.ViewData.Model = new TestViewModel() 
             { 
                 JanFirst2016 = new DateTime(2016, 1, 1),
@@ -68,42 +72,42 @@
         [Fact]
         public void DisplayDateFor_ExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayDateFor(null);
+            void action() => gds.DisplayDateFor(null);
             Assert.Throws<ArgumentNullException>("expression", action);
         }
 
         [Fact]
         public void DisplayShortDateFor_ExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayShortDateFor(null);
+            void action() => gds.DisplayShortDateFor(null);
             Assert.Throws<ArgumentNullException>("expression", action);
         }
 
         [Fact]
         public void DisplayDateRangeFor_FromDateExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayDateRangeFor(null, m => m.JanFirst2016);
+            void action() => gds.DisplayDateRangeFor(null, m => m.JanFirst2016);
             Assert.Throws<ArgumentNullException>("fromDateExpression", action);
         }
 
         [Fact]
         public void DisplayDateRangeFor_ToDateExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayDateRangeFor(m => m.JanFirst2016, null);
+            void action() => gds.DisplayDateRangeFor(m => m.JanFirst2016, null);
             Assert.Throws<ArgumentNullException>("toDateExpression", action);
         }
 
         [Fact]
         public void DisplayShortDateRangeFor_FromDateExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayShortDateRangeFor(null, m => m.JanFirst2016);
+            void action() => gds.DisplayShortDateRangeFor(null, m => m.JanFirst2016);
             Assert.Throws<ArgumentNullException>("fromDateExpression", action);
         }
 
         [Fact]
         public void DisplayShortDateRangeFor_ToDateExpressionIsNull_ThrowsArgumentNullException()
         {
-            Action action = () => gds.DisplayShortDateRangeFor(m => m.JanFirst2016, null);
+            void action() => gds.DisplayShortDateRangeFor(m => m.JanFirst2016, null);
             Assert.Throws<ArgumentNullException>("toDateExpression", action);
         }
 

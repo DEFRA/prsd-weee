@@ -7,7 +7,7 @@
     {
         protected override User Instantiate()
         {
-            return Instance;
+            return instance;
         }
     }
 }

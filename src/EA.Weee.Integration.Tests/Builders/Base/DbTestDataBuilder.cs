@@ -31,27 +31,29 @@
 
         public override T Create()
         {
-            if (Instance == null)
+            if (instance == null)
+            {
                 throw new Exception("Failed to create instance of " + typeof(T));
-
+            }
+                
             Guard.ArgumentNotNull(() => DbContext, DbContext);
 
             try
             {
-                DbContext.Set<T>().Add(Instance);
+                DbContext.Set<T>().Add(instance);
             }
             catch (Exception)
             {
-                EnsureAttachedToEf(Instance);
+                EnsureAttachedToEf(instance);
             }
 
             DbContext.SaveChanges(); // N.B. may only work if we have a connected db context
 
-            Console.WriteLine("Created test " + typeof(T) + ": " + Instance);
+            Console.WriteLine("Created test " + typeof(T) + ": " + instance);
 
             DbContext.Dispose();
 
-            return Instance;
+            return instance;
         }
 
         public DbEntityEntry<T> EnsureAttachedToEf(T entity)

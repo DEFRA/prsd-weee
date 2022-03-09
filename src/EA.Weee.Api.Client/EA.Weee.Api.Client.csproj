@@ -82,12 +82,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ErrorLog.cs" />
+    <Compile Include="Actions\IErrorLog.cs" />
     <Compile Include="Actions\ISmokeTest.cs" />
     <Compile Include="Actions\SmokeTest.cs" />
     <Compile Include="Actions\UnauthenticatedUser.cs" />
     <Compile Include="Actions\IUnauthenticatedUser.cs" />
+    <Compile Include="Entities\ErrorData.cs" />
     <Compile Include="Entities\ExternalUserCreationData.cs" />
     <Compile Include="Entities\InternalUserCreationData.cs" />
+    <Compile Include="Entities\PagedErrorDataList.cs" />
     <Compile Include="Entities\PasswordResetData.cs" />
     <Compile Include="Entities\PasswordResetRequest.cs" />
     <Compile Include="Entities\PasswordResetRequestResult.cs" />

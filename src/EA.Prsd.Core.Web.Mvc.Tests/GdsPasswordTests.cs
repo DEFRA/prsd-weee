@@ -1,10 +1,10 @@
 ﻿namespace EA.Prsd.Core.Web.Mvc.Tests
 {
-    using System.Web.Mvc;
-    using Helpers;
-    using RazorHelpers;
-    using ViewModels;
+    using EA.Prsd.Core.Web.Mvc.RazorHelpers;
+    using EA.Prsd.Core.Web.Mvc.Tests.Helpers;
+    using EA.Prsd.Core.Web.Mvc.Tests.ViewModels;
     using FluentAssertions;
+    using System.Web.Mvc;
     using Xunit;
 
     public class GdsPassswordTests
@@ -27,5 +27,4 @@
             control.ToString().Should().Contain("autocomplete=\"off\"");
         }
     }
-
 }
