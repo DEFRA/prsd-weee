@@ -66,6 +66,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Elmah.Contrib.WebApi.1.0.10.25\lib\net45\Elmah.Contrib.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Elmah.FallbackErrorLog, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.FallbackErrorLog.1.0.2.0\lib\net35\Elmah.FallbackErrorLog.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -253,6 +256,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="IMPORTANT.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -263,6 +267,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Modules\SecurityModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
+    <Compile Include="Controllers\ErrorLogController.cs" />
     <Compile Include="Controllers\SmokeTestController.cs" />
     <Compile Include="Controllers\WarmUpController.cs" />
     <Compile Include="Filters\MaintenanceModeFilter.cs" />
@@ -315,7 +320,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="App_Readme\" />
     <Folder Include="Documents\" />
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +338,10 @@
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Api.Infrastructure\EA.Weee.Api.Infrastructure.csproj">
+      <Project>{77720566-4f8c-4284-8a91-b94495468a8f}</Project>
+      <Name>EA.Weee.Api.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>

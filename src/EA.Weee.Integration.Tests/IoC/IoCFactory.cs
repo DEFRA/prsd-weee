@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EA.Weee.Integration.Tests.IoC
+﻿namespace EA.Weee.Integration.Tests.IoC
 {
-    using System.ComponentModel;
+    using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using Api.Identity;
     using Api.Modules;
@@ -17,12 +15,11 @@ namespace EA.Weee.Integration.Tests.IoC
     using Prsd.Core.Domain;
     using RequestHandlers;
     using RequestHandlers.Charges.IssuePendingCharges;
-    using RequestHandlers.Shared.DomainUser;
     using IContainer = Autofac.IContainer;
 
     public class IoCFactory
     {
-        static readonly Dictionary<string, IContainer> ContainerCache = new Dictionary<string, IContainer>();
+        private static readonly Dictionary<string, IContainer> ContainerCache = new Dictionary<string, IContainer>();
 
         public void RemoveContainer(EnvironmentResolver environment)
         {
@@ -32,10 +29,12 @@ namespace EA.Weee.Integration.Tests.IoC
         private string GetKey(EnvironmentResolver environment)
         {
             if (environment.IocApplication == IocApplication.Unknown || environment.HostEnvironment == HostEnvironmentType.Unknown)
+            {
                 throw new ArgumentException("Unknown environment or application", nameof(environment));
+            }
+                
             return $"{(int)environment.IocApplication}-{(int)environment.HostEnvironment}";
         }
-
 
         public bool IsContainerExisting(EnvironmentResolver environment)
         {
@@ -60,7 +59,6 @@ namespace EA.Weee.Integration.Tests.IoC
             }
             return false;
         }
-
 
         public IContainer OverrideContainerWithNew(EnvironmentResolver environment)
         {
@@ -103,11 +101,6 @@ namespace EA.Weee.Integration.Tests.IoC
                 default:
                     throw new ArgumentOutOfRangeException(nameof(environment.IocApplication), environment.IocApplication, null);
             }
-
-
-            //container.Register(Component.For<ITestConfig>().FromAppConfig("Test."));
-            //TestBase.SetupLogger();
-            //container.Register(Component.For<ILog>().Instance(TestBase.LoggerMock.Object));
 
             return ContainerCache[key] = container.Build();
         }
