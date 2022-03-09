@@ -9,7 +9,7 @@
         protected override Address Instantiate()
         {
             var country = DbContext.Countries.First(c => c.Name.Equals("UK - England"));
-            Instance = new Address(Faker.Address.StreetAddress(),
+            instance = new Address(Faker.Address.StreetAddress(),
                 Faker.Address.SecondaryAddress(),
                 Faker.Address.City(),
                 Faker.Address.UkCounty(),
@@ -18,7 +18,7 @@
                 Faker.RandomNumber.Next(10000).ToString(),
                 Faker.Internet.Email());
 
-            return Instance;
+            return instance;
         }
     }
 }

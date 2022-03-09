@@ -12,7 +12,7 @@
         {
             var country = DbContext.Countries.First(c => c.Name.Equals("UK - England"));
 
-            Instance = new AatfContact(Faker.Name.First(),
+            instance = new AatfContact(Faker.Name.First(),
                 Faker.Name.Last(),
                 Faker.Lorem.GetFirstWord(),
                 Faker.Address.StreetAddress(),
@@ -24,7 +24,7 @@
                 Faker.Phone.Number(),
                 Faker.Internet.Email());
 
-            return Instance;
+            return instance;
         }
     }
 }

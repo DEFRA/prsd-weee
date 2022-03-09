@@ -9,7 +9,7 @@
     public abstract class TestBase : IDisposable
     {
         public static Exception Exception;
-        protected static StringBuilder Log = new StringBuilder();
+        protected static StringBuilder log = new StringBuilder();
 
         public static void ShouldNotThrowException()
         {
@@ -19,7 +19,10 @@
         public static void ShouldNotThrowException(string because)
         {
             if (Exception != null)
+            {
                 Console.WriteLine(Exception);
+            }
+                
             Exception.Should().BeNull(because);
         }
 
@@ -31,7 +34,10 @@
         public static void ShouldThrowException(string because)
         {
             if (Exception != null)
+            {
                 Console.WriteLine(Exception);
+            }
+                
             Exception.Should().NotBeNull(because);
         }
 
@@ -43,7 +49,10 @@
         public static void ShouldThrowException<T>(string because) where T : Exception
         {
             if (Exception != null)
+            {
                 Console.WriteLine(Exception);
+            }
+                
             Exception.Should().NotBeNull(because);
             Exception.Should().BeOfType<T>(because);
         }
@@ -78,7 +87,6 @@
                 Console.WriteLine(ex);
             }
         }
-
 
         public static void SetupLogger()
         {

@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using Autofac;
     using Base;
-    using Base.EA.Weee.Integration.Tests;
     using Builders;
     using Domain;
     using Domain.Organisation;
@@ -17,111 +16,107 @@
     using Requests.Organisations;
     using AddressData = Core.Shared.AddressData;
 
-    
     public class GetAddressHandlerIntegrationTest : IntegrationTestBase
     {
         [Component]
         public class WhenIGetAddressWhereAddressExists : WeeeContextSpecification
         {
-            private static IRequestHandler<GetAddress, AddressData> _handler;
-            private static AddressData _result;
-            private static Organisation _organisation;
-            private static Country _country;
+            private static IRequestHandler<GetAddress, AddressData> handler;
+            private static AddressData result;
+            private static Organisation organisation;
+            private static Country country;
 
-            private Establish context = () =>
+            private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
-                _organisation = OrganisationDbSetup.Init().Create();
+                organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init()
-                    .WithUserIdAndOrganisationId(UserId, _organisation.Id)
+                    .WithUserIdAndOrganisationId(UserId, organisation.Id)
                     .WithStatus(UserStatus.Active)
                     .Create();
 
-                _handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
+                handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
             };
 
-            private Because of = () =>
+            private readonly Because of = () =>
             {
-                _result = Task.Run(async () => await _handler.HandleAsync(new GetAddress(_organisation.BusinessAddress.Id, _organisation.Id))).Result;
+                result = Task.Run(async () => await handler.HandleAsync(new GetAddress(organisation.BusinessAddress.Id, organisation.Id))).Result;
 
-                _country = Query.GetCountryById(_result.CountryId);
+                country = Query.GetCountryById(result.CountryId);
             };
 
-            private It shouldReturnAddress = () =>
+            private readonly It shouldReturnAddress = () =>
             {
-                _result.Should().NotBeNull();
+                result.Should().NotBeNull();
             };
 
-            private It shouldHaveReturnExpectedPropertyValues = () =>
+            private readonly It shouldHaveReturnExpectedPropertyValues = () =>
             {
-                _result.Id.Should().Be(_organisation.BusinessAddressId.Value);
-                _result.Address1.Should().Be(_organisation.BusinessAddress.Address1);
-                _result.Address2.Should().Be(_organisation.BusinessAddress.Address2);
-                _result.CountryName.Should().Be(_country.Name);
-                _result.CountryId.Should().Be(_organisation.BusinessAddress.CountryId);
-                _result.CountyOrRegion.Should().Be(_organisation.BusinessAddress.CountyOrRegion);
-                _result.Email.Should().Be(_organisation.BusinessAddress.Email);
-                _result.Postcode.Should().Be(_organisation.BusinessAddress.Postcode);
-                _result.TownOrCity.Should().Be(_organisation.BusinessAddress.TownOrCity);
-                _result.Telephone.Should().Be(_organisation.BusinessAddress.Telephone);
+                result.Id.Should().Be(organisation.BusinessAddressId.Value);
+                result.Address1.Should().Be(organisation.BusinessAddress.Address1);
+                result.Address2.Should().Be(organisation.BusinessAddress.Address2);
+                result.CountryName.Should().Be(country.Name);
+                result.CountryId.Should().Be(organisation.BusinessAddress.CountryId);
+                result.CountyOrRegion.Should().Be(organisation.BusinessAddress.CountyOrRegion);
+                result.Email.Should().Be(organisation.BusinessAddress.Email);
+                result.Postcode.Should().Be(organisation.BusinessAddress.Postcode);
+                result.TownOrCity.Should().Be(organisation.BusinessAddress.TownOrCity);
+                result.Telephone.Should().Be(organisation.BusinessAddress.Telephone);
             };
-
         }
 
         [Component]
         public class WhenIGetAddressWhereAddressDoesNotExist : WeeeContextSpecification
         {
-            private static IRequestHandler<GetAddress, AddressData> _handler;
-            private static Organisation _organisation;
+            private static IRequestHandler<GetAddress, AddressData> handler;
+            private static Organisation organisation;
 
-            private Establish context = () =>
+            private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
-                _organisation = OrganisationDbSetup.Init().Create();
+                organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init()
-                    .WithUserIdAndOrganisationId(UserId, _organisation.Id)
+                    .WithUserIdAndOrganisationId(UserId, organisation.Id)
                     .WithStatus(UserStatus.Active)
                     .Create();
 
-                _handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
+                handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
             };
 
-            private Because of = () =>
+            private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => _handler.HandleAsync(new GetAddress(Guid.NewGuid(), _organisation.Id)));
+                CatchExceptionAsync(() => handler.HandleAsync(new GetAddress(Guid.NewGuid(), organisation.Id)));
             };
 
-            private It shouldHaveCaughtArgumentException = ShouldThrowException<ArgumentException>;
+            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<ArgumentException>;
         }
 
         [Component]
         public class WhenIGetAddressWhereUserIsNotAuthorised : WeeeContextSpecification
         {
-            private static IRequestHandler<GetAddress, AddressData> _handler;
-            private static Organisation _organisation;
+            private static IRequestHandler<GetAddress, AddressData> handler;
+            private static Organisation organisation;
 
-            private Establish context = () =>
+            private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
-                _organisation = OrganisationDbSetup.Init().Create();
+                organisation = OrganisationDbSetup.Init().Create();
                 
-                _handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
+                handler = Container.Resolve<IRequestHandler<GetAddress, AddressData>>();
             };
 
-            private Because of = () =>
+            private readonly Because of = () =>
             { 
-                CatchExceptionAsync(() => _handler.HandleAsync(new GetAddress(_organisation.BusinessAddress.Id, _organisation.Id)));
+                CatchExceptionAsync(() => handler.HandleAsync(new GetAddress(organisation.BusinessAddress.Id, organisation.Id)));
             };
 
-            private It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
-
-            private It shouldFail = () => true.Should().BeFalse();
+            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
         }
     }
 }

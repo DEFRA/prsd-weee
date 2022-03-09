@@ -21,7 +21,7 @@
             var newAddress = DbContext.AatfAddress.First(a => a.Id.Equals(address.Id));
             var newContact = DbContext.AatfContacts.First(c => c.Id.Equals(contact.Id));
 
-            Instance = new Aatf(Faker.Company.Name(),
+            instance = new Aatf(Faker.Company.Name(),
                 auth,
                 $"WEE/AA{Faker.RandomNumber.Next(1000, 9999)}ZZ/ATF",
                 AatfStatus.Approved,
@@ -35,20 +35,20 @@
                 localArea,
                 panArea);
 
-            return Instance;
+            return instance;
         }
 
         protected AatfDbSetup WithOrganisation(Organisation organisation)
         {
-            Instance.UpdateDetails(Instance.Name,
-                Instance.CompetentAuthority,
-                Instance.ApprovalNumber,
-                Instance.AatfStatus,
+            instance.UpdateDetails(instance.Name,
+                instance.CompetentAuthority,
+                instance.ApprovalNumber,
+                instance.AatfStatus,
                 organisation,
-                Instance.Size,
-                Instance.ApprovalDate,
-                Instance.LocalArea,
-                Instance.PanArea);
+                instance.Size,
+                instance.ApprovalDate,
+                instance.LocalArea,
+                instance.PanArea);
 
             return this;
         }
