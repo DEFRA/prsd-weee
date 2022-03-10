@@ -35,6 +35,7 @@
                     "~/Scripts/vendor/modernizr.custom.77028.js",
                     "~/Scripts/flatpickr.js",
                     "~/Scripts/flatpickr.uk.js",
+                    "~/Scripts/auto-complete.min.js",
                     "~/Scripts/weee-application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
@@ -66,7 +67,8 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                             "~/Content/flatpickr.css",
-                            "~/Content/weee-page.css"));
+                            "~/Content/weee-page.css",
+                            "~/Content/auto-complete.css"));
 
             bundles.Add(new StyleBundle("~/Content/remove-site").Include(
                 "~/Content/remove-site.css"));

@@ -10,9 +10,9 @@
     public partial class Gds<TModel>
     {
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IEnumerable<SelectListItem> selectList)
+            IEnumerable<SelectListItem> selectList, bool withLookAhead = false)
         {
-            return DropDownListFor(expression, selectList, new RouteValueDictionary());
+            return DropDownListFor(expression, selectList, new RouteValueDictionary(), withLookAhead);
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
@@ -26,30 +26,47 @@
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IEnumerable<SelectListItem> selectList, object htmlAttributes)
+            IEnumerable<SelectListItem> selectList, object htmlAttributes, bool withLookAhead = false)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            return DropDownListFor(expression, selectList, routeValueDictionary);
+            return DropDownListFor(expression, selectList, routeValueDictionary, withLookAhead);
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IEnumerable<SelectListItem> selectList,
             string optionLabel,
-            object htmlAttributes)
+            object htmlAttributes,
+            bool withLookAhead = false)
         {
-            var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            var routeValueDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             AddFormControlCssClass(routeValueDictionary);
             GdsExtensions.AddClass(routeValueDictionary, "govuk-select");
+            AddLookAhead(expression, routeValueDictionary, withLookAhead);
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValueDictionary);
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IEnumerable<SelectListItem> selectList,
-            IDictionary<string, object> htmlAttributes)
+            IDictionary<string, object> htmlAttributes,
+            bool withLookAhead = false)
         {
             AddFormControlCssClass(htmlAttributes);
             GdsExtensions.AddClass(htmlAttributes, "govuk-select");
+
+            AddLookAhead(expression, htmlAttributes, withLookAhead);
             return htmlHelper.DropDownListFor(expression, selectList, htmlAttributes);
+        }
+
+        private void AddLookAhead<TValue>(Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes, bool withLookAhead)
+        {
+            if (withLookAhead)
+            {
+                GdsExtensions.AddClass(htmlAttributes, "gds-auto-complete");
+
+                var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+                var labeledBy = $"{htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)}-label";
+                htmlAttributes.Add("aria-labelledby", labeledBy);
+            }
         }
     }
 }
