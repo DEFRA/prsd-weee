@@ -333,6 +333,8 @@
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="RazorHelpers\GdsDropDownUnitTests.cs" />
+    <Compile Include="RazorHelpers\GdsLabelUnitTests.cs" />
     <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
@@ -428,6 +430,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc.Tests\EA.Prsd.Core.Web.Mvc.Tests.csproj">
+      <Project>{4c53b930-0e67-43b9-a753-187110c263b3}</Project>
+      <Name>EA.Prsd.Core.Web.Mvc.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
       <Project>{212c8803-bfe2-4091-81b0-b25be91c1c04}</Project>
       <Name>EA.Prsd.Core.Web.Mvc</Name>
