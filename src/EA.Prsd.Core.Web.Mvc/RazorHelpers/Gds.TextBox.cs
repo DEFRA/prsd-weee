@@ -25,8 +25,7 @@
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IDictionary<string, object> htmlAttributes)
         {
-            AddFormControlCssClass(htmlAttributes);
-    /* SG */
+            GdsExtensions.AddFormControlCssClass(htmlAttributes);
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 
             return htmlHelper.TextBoxFor(expression, htmlAttributes);
