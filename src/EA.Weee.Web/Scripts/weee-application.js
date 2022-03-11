@@ -133,6 +133,67 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
+
+    var selectElements = document.querySelectorAll(".gds-auto-complete");
+
+    selectElements.forEach(function(element) {
+        var items = Array.from(element.options).map(el => el.textContent || el.innerText);
+
+        // get the default selected value
+        var selected = null;
+        for (var optionsCount = 0; optionsCount < element.options.length; optionsCount++) {
+            var opt = element.options[optionsCount];
+            if (opt.selected === true) {
+                selected = opt.text;
+                break;
+            }
+        }
+        
+        var newElement = document.createElement("div");
+        newElement.setAttribute("class", "govuk-!-width-one-half");
+        element.parentNode.insertBefore(newElement, element);
+        var existingId = element.id;
+
+        accessibleAutocomplete({
+            showAllValues: true,
+            id: element.id,
+            source: items,
+            defaultValue: selected,
+            //source: suggest,
+            element: newElement,
+            onConfirm: function (confirmed) {
+
+                function isNullOrWhitespace(input) {
+                    if (typeof input === "undefined" || input == null) return true;
+                    return input.replace(/\s/g, "").length < 1;
+                }
+
+                var selectedValue = document.getElementById(existingId).value;
+                var postBackElement = document.getElementById(existingId + "-select");
+                
+                if (!isNullOrWhitespace(selectedValue)) {
+                    
+                    for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
+                        var findSelectedOption = postBackElement.options[postBackOptions];
+
+                        var text = findSelectedOption.textContent || findSelectedOption.innerText;
+                        if (text === selectedValue) {
+                            postBackElement.value = findSelectedOption.value;
+
+                        }
+                    }
+                } else {
+                    postBackElement.value = null;
+                }
+            },
+            dropdownArrow: function (config) {
+                return '<svg class="autocomplete__dropdown-arrow-down" viewBox="0 0 512 512" ><path d="M256,298.3L256,298.3L256,298.3l174.2-167.2c4.3-4.2,11.4-4.1,15.8,0.2l30.6,29.9c4.4,4.3,4.5,11.3,0.2,15.5L264.1,380.9  c-2.2,2.2-5.2,3.2-8.1,3c-3,0.1-5.9-0.9-8.1-3L35.2,176.7c-4.3-4.2-4.2-11.2,0.2-15.5L66,131.3c4.4-4.3,11.5-4.4,15.8-0.2L256,298.3  z"/></svg>'
+            }
+        });
+
+        element.style.display = "none";
+        element.id = element.id + "-select";
+    });
 });
 
 

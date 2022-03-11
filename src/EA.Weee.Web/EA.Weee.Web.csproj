@@ -592,6 +592,7 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Content\auto-complete.css" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.7.0.min.css" />
@@ -693,6 +694,7 @@
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
+    <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
