@@ -63,6 +63,12 @@
 
             labelTag.MergeAttributes(htmlAttributes);
 
+            if (!labelTag.Attributes.ContainsKey("id"))
+            {
+                labelTag.Attributes.Add("id",
+                    $"{htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)}-label");
+            }
+            
             labelTag.Attributes.Add("for",
                 htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
 
