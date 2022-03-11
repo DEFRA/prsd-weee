@@ -300,6 +300,9 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -404,6 +407,7 @@
     <Compile Include="Infrastructure\DisplayHelper.cs" />
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.TextBoxWithIcon.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
@@ -593,6 +597,8 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="Content\flatpickr.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\govuk-frontend-ie8-2.7.0.min.css" />
     <Content Include="Content\govuk_frontend\images\favicon.ico" />
@@ -692,6 +698,12 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
