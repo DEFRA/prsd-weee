@@ -20,7 +20,7 @@
             string optionLabel)
         {
             var routeValues = new RouteValueDictionary();
-            AddFormControlCssClass(routeValues);
+            GdsExtensions.AddFormControlCssClass(routeValues);
             GdsExtensions.AddClass(routeValues, "govuk-select");
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValues);
         }
@@ -38,7 +38,7 @@
             object htmlAttributes)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            AddFormControlCssClass(routeValueDictionary);
+            GdsExtensions.AddFormControlCssClass(routeValueDictionary);
             GdsExtensions.AddClass(routeValueDictionary, "govuk-select");
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValueDictionary);
         }
@@ -47,7 +47,7 @@
             IEnumerable<SelectListItem> selectList,
             IDictionary<string, object> htmlAttributes)
         {
-            AddFormControlCssClass(htmlAttributes);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes);
             GdsExtensions.AddClass(htmlAttributes, "govuk-select");
             return htmlHelper.DropDownListFor(expression, selectList, htmlAttributes);
         }

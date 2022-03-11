@@ -16,25 +16,6 @@ namespace EA.Prsd.Core.Web.Mvc.RazorHelpers
             this.htmlHelper = htmlHelper;
         }
 
-        protected static void AddFormControlCssClass(IDictionary<string, object> htmlAttributes)
-        {
-            if (htmlAttributes.ContainsKey("class"))
-            {
-                if (!htmlAttributes["class"].ToString().Contains("govuk-!-width-one-half"))
-                {
-                    htmlAttributes["class"] += " govuk-!-width-one-half";
-                }
-                if (!htmlAttributes["class"].ToString().Contains("form-control"))
-                {
-                    htmlAttributes["class"] += " form-control";
-                }
-            }
-            else
-            {
-                htmlAttributes.Add("class", "govuk-!-width-one-half form-control");
-            }
-        }
-
         /// <summary>
         /// Should return a property name which will be contained in the View Data dictionary for a property access expression.
         /// e.g. for:
