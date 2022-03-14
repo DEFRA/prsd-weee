@@ -15,7 +15,7 @@
             var address = OrganisationAddressDbSetup.Init().Create();
             var contact = OrganisationContactDbSetup.Init().Create();
 
-            var organisation = DbContext.Organisations.First(o => o.Name.Equals("Integration Test Company"));
+            var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var newAddress = DbContext.Addresses.First(a => a.Id.Equals(address.Id));
             var newContact = DbContext.Contacts.First(c => c.Id.Equals(contact.Id));
 
@@ -33,7 +33,7 @@
             return instance;
         }
 
-        protected SchemeDbSetup WithOrganisation(Organisation organisation)
+        public SchemeDbSetup WithOrganisation(Organisation organisation)
         {
             instance.UpdateOrganisation(organisation);
 
