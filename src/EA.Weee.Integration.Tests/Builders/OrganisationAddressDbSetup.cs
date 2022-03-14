@@ -15,7 +15,7 @@
                 Faker.Address.UkCounty(),
                 Faker.Address.UkPostCode(),
                 country,
-                Faker.RandomNumber.Next(10000).ToString(),
+                "01483 878787",
                 Faker.Internet.Email());
 
             return instance;
