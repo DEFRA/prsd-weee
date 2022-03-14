@@ -131,5 +131,16 @@
 
             SchemeStatus = status;
         }
+
+        /// <summary>
+        /// Should only be used for integration tests
+        /// </summary>
+        /// <param name="organisation"></param>
+        public void UpdateOrganisation(Organisation organisation)
+        {
+            Guard.ArgumentNotNull(() => organisation, organisation);
+
+            Organisation = organisation;
+        }
     }
 }
