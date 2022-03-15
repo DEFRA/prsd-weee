@@ -11,7 +11,7 @@
         {
             var address = OrganisationAddressDbSetup.Init().Create();
 
-            instance = Organisation.CreateRegisteredCompany(Faker.Company.Name(), Faker.RandomNumber.Next(10000000, 999999999999999).ToString());
+            instance = Organisation.CreateRegisteredCompany(Faker.Company.Name(), Faker.RandomNumber.Next(10000000, 9999999999).ToString());
 
             var newAddress = DbContext.Addresses.First(a => a.Id.Equals(address.Id));
             

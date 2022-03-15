@@ -76,6 +76,10 @@
     <Compile Include="Admin\AatfReports\AatfSubmissionHistory.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
+    <Compile Include="Evidence\Note.cs" />
+    <Compile Include="Evidence\Protocol.cs" />
+    <Compile Include="Evidence\NoteStatus.cs" />
+    <Compile Include="Evidence\WasteType.cs" />
     <Compile Include="Lookup\AreaBase.cs" />
     <Compile Include="Lookup\LocalArea.cs" />
     <Compile Include="Lookup\PanArea.cs" />
@@ -168,6 +172,7 @@
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
