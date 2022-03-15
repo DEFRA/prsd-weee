@@ -14,7 +14,9 @@
     using Dapper;
     using DataAccess;
     using DataAccess.Identity;
+    using Domain.AatfReturn;
     using Domain.Organisation;
+    using Domain.Scheme;
     using IoC;
     using Microsoft.AspNet.Identity;
     using netDumbster.smtp;
@@ -39,6 +41,10 @@
         private static readonly List<SmtpMessage> EmailsSent = new List<SmtpMessage>();
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
+
+        public static Scheme DefaultScheme { get; set; }
+
+        public static Aatf DefaultAatf { get; set; }
 
         public static ClaimsPrincipal Principal { get; set; }
         public static ApplicationUser User { get; set; }
@@ -85,14 +91,13 @@
 
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
             {
-                return WithIoC()
+                return WithIoC(resetDb)
                     .WithTestData(resetDb);
             }
 
             public IntegrationTestSetupBuilder WithTestData(bool reset = false)
             {
                 ResetTestDatabaseData(reset);
-
                 return this;
             }
 
@@ -125,7 +130,6 @@
                     // check if DB exists before anything
                     RunSql("USE master; SELECT * FROM sys.databases WHERE name = 'EA.Weee.Integration'");
 
-                    const string company = "Integration Test Company";
                     if (hardReset)
                     {
                         new DatabaseSeeder().RebuildDatabase();
@@ -161,18 +165,29 @@
                     var testUserContextUpdater = Container.Resolve<Action<TestUserContext>>();
                     testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id)));
 
-                    OrganisationDbSetup.Init().With(o =>
-                        o.UpdateRegisteredCompanyDetails(company,
-                            Faker.RandomNumber.Next(10000000, 99999999).ToString(), "trading")).Create();
-
                     var weeContext = Container.Resolve<WeeeContext>();
-                    DefaultIntegrationOrganisation = weeContext.Organisations.First(o => o.Name.Equals(company));
+                    DefaultIntegrationOrganisation = weeContext.Organisations.FirstOrDefault(o => o.Name.Equals(TestingConstants.TestCompanyName));
+                    DefaultScheme = weeContext.Schemes.FirstOrDefault(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
+                    DefaultAatf = weeContext.Aatfs.FirstOrDefault(a => a.Name.Equals(TestingConstants.TestCompanyName));
 
                     if (DefaultIntegrationOrganisation == null)
                     {
                         DefaultIntegrationOrganisation = OrganisationDbSetup.Init().With(o =>
-                            o.UpdateRegisteredCompanyDetails(company,
+                            o.UpdateRegisteredCompanyDetails(TestingConstants.TestCompanyName,
                                 Faker.RandomNumber.Next(10000000, 99999999).ToString(), "trading")).Create();
+                    }
+
+                    if (DefaultScheme == null)
+                    {
+                        DefaultScheme = SchemeDbSetup.Init()
+                            .With(s => s.UpdateScheme(TestingConstants.TestCompanyName, s.ApprovalNumber, s.IbisCustomerReference, s.ObligationType, s.CompetentAuthority))
+                            .Create();
+                    }
+
+                    if (DefaultAatf == null)
+                    {
+                        DefaultAatf = AatfDbSetup.Init().With(a => a.UpdateDetails(TestingConstants.TestCompanyName, a.CompetentAuthority, a.ApprovalNumber, a.AatfStatus,
+                                a.Organisation, a.Size, a.ApprovalDate, a.LocalArea, a.PanArea)).Create();
                     }
 
                     Console.WriteLine("Test database reseeded");
@@ -198,8 +213,6 @@
                 };
 
                 var iocFactory = new IoCFactory();
-
-                // Default user Id // can be overridden
 
                 if (resetIoC)
                 {
