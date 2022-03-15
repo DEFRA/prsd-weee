@@ -72,8 +72,7 @@
     padding: 8px $govuk-radios-label-padding-left-right govuk-spacing(1);
     cursor: pointer;
     // remove 300ms pause on mobile
-    -ms-touch-action: manipulation;
-        touch-action: manipulation;
+    touch-action: manipulation;
   }
 
   // ( ) Radio ring
@@ -165,14 +164,6 @@
         margin-right: govuk-spacing(4);
         float: left;
         clear: none;
-      }
-    }
-
-    // Prevent inline modifier being used with conditional reveals
-    &.govuk-radios--conditional {
-      .govuk-radios__item {
-        margin-right: 0;
-        float: none;
       }
     }
   }

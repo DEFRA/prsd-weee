@@ -71,11 +71,7 @@
 
       margin: auto 0;
 
-      -webkit-transform: rotate(45deg);
-
-          -ms-transform: rotate(45deg);
-
-              transform: rotate(45deg);
+      transform: rotate(45deg);
 
       border: solid;
       border-width: $chevron-border-width $chevron-border-width 0 0;
@@ -128,9 +124,6 @@
       }
 
       .govuk-breadcrumbs__list {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
         display: flex;
       }
     }
