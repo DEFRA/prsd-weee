@@ -1,17 +1,4 @@
-@import "main";
-
-// ==========================================================================
-// GOV.UK template styles
-// ==========================================================================
-// Override here until updated in the GOV.UK template
-
-/*#global-header-bar {
-    @include govuk-width-container;
-}
-
-#global-header-bar .inner-block {
-    padding: 0;
-}*/
+@import "_main";
 
 p {
     @extend .govuk-body;
@@ -19,28 +6,6 @@ p {
 
 a {
     @extend .govuk-link;
-}
-// ==========================================================================
-// Service Design Manual styles
-// ==========================================================================
-@import "service-design-manual/helpers/page-header";
-
-// ==========================================================================
-// Elements page styles
-// ==========================================================================
-
-// These are example styles, used only for the Elements index page
-
-// Headings
-// Used with heading-large = 36px
-.heading-with-border {
-    border-top: 1px solid $govuk-border-colour;
-    padding-top: em(45, 36);
-}
-
-// Use for paragraphs before lists
-.lead-in {
-    margin-bottom: 0;
 }
 
 .unordered-list-xml {
@@ -84,7 +49,7 @@ a {
 }
 
 #global-cookie-message p {
-    font-family: "nta", Arial, sans-serif;
+    font-family: $govuk-font-family;
     font-size: 16px;
     line-height: 1.25;
     font-weight: 400;
@@ -95,269 +60,6 @@ a {
 
 .js-enabled #global-cookie-message {
     display: none;
-}
-
-// Example boxes
-// ==========================================================================
-
-.example {
-    @include govuk-clearfix;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid govuk-colour('grey-2');
-    margin-top: $govuk-gutter-half;
-    margin-bottom: $govuk-gutter*1.5;
-    padding-top: $govuk-gutter;
-    padding-right: $govuk-gutter-half;
-    padding-bottom: $govuk-gutter-half;
-    padding-left: $govuk-gutter-half;
-
-    @include govuk-media-query($from: tablet) {
-        padding-top: $govuk-gutter*1.5;
-        padding-right: $govuk-gutter;
-        padding-bottom: $govuk-gutter;
-        padding-left: $govuk-gutter;
-    }
-
-    &:before {
-        content: "EXAMPLE";
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: em(4) em(15) em(4) em(15);
-
-        @include govuk-font(14);
-        background: govuk-colour('grey-2');
-        color: white;
-    }
-    // Blue text for heading sizes
-    .highlight {
-        font-style: normal;
-        color: govuk-colour-organisations('hm-government');
-    }
-    // Fix grid layout within example boxes for IE7 and below
-    // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
-    @mixin example-box-column($width) {
-        width: (($govuk-page-width - $govuk-gutter) * $width) - $govuk-gutter;
-    }
-
-    @include ie-lte(7) {
-        // Set example box width to 900px (removing left and right padding)
-        $example-box-width: $govuk-page-width - ($govuk-gutter * 2);
-        width: $example-box-width;
-        // Recalculate grid column widths
-        .column-quarter {
-            @include example-box-column( 1/4 );
-        }
-
-        .column-one-half {
-            @include example-box-column( 1/2 );
-        }
-
-        .column-third {
-            @include example-box-column( 1/3 );
-        }
-
-        .column-two-thirds {
-            @include example-box-column( 2/3 );
-        }
-        // Scale images to fit grid columns
-        img {
-            width: 100%;
-        }
-    }
-}
-
-
-// 1. Layout
-// ==========================================================================
-
-.example-grid p {
-    width: 100%;
-    background: file-url("examples/grid.png") 0 0 repeat;
-    margin-bottom: 0;
-    height: 30px;
-
-    @include govuk-media-query($from: tablet) {
-        height: 60px;
-    }
-
-    overflow: hidden;
-    text-indent: -999em;
-}
-
-// 2. Typography
-// ==========================================================================
-
-
-// 3. Colour
-// ==========================================================================
-
-// Colour swatches
-.swatch {
-    width: 60px;
-    height: 60px;
-    @include border-radius(100%);
-
-    @include govuk-media-query($from: mobile) {
-        clear: both;
-        float: left;
-        margin-right: $govuk-gutter-half;
-        margin-bottom: $govuk-gutter-half;
-    }
-
-    @include govuk-media-query($from: tablet) {
-        margin: 0 auto $govuk-gutter-half auto;
-    }
-}
-
-$palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-purple')), ("fuschia", govuk-colour('bright-purple')), ("pink", govuk-colour('pink')), ("baby-pink", govuk-colour('light-pink')), ("red", govuk-colour('red')), ("mellow-red", govuk-colour('bright-red')), ("orange", govuk-colour('orange')), ("brown", govuk-colour('brown')), ("yellow", govuk-colour('yellow')), ("green", govuk-colour('green')), ("grass-green", govuk-colour('light-green')), ("turquoise", govuk-colour('turquoise')), ("light-blue", govuk-colour('light-blue')) );
-
-@mixin color-swatches {
-    @each $color in $palette {
-        $color-name: nth($color, 1);
-        $color-var: nth($color, 2);
-
-        .swatch-#{$color-name} {
-            background-color: $color-var;
-        }
-    }
-}
-
-@include color-swatches;
-
-.swatch-alpha {
-    background-color: govuk-colour('pink');
-}
-
-.swatch-beta {
-    background-color: govuk-colour('orange');
-}
-
-.swatch-discovery {
-    background-color: govuk-colour('bright-purple');
-}
-
-.swatch-live {
-    background-color: govuk-colour('light-green');
-}
-
-.swatch-error {
-    background-color: govuk-colour('red');
-}
-
-.swatch-focus {
-    background-color: govuk-colour('yellow');
-}
-
-.swatch-button-colour {
-    background-color: $govuk-button-colour;
-}
-
-.swatch-black {
-    background-color: govuk-colour('black');
-}
-
-.swatch-grey-1 {
-    background-color: govuk-colour('grey-1');
-}
-
-.swatch-grey-2 {
-    background-color: govuk-colour('grey-2');
-}
-
-.swatch-grey-3 {
-    //background-color: govuk-colour('grey-3');
-}
-
-.swatch-grey-4 {
-    background-color: govuk-colour('grey-4');
-}
-
-.swatch-white {
-    background-color: govuk-colour('white');
-    border: 1px solid govuk-colour('grey-3');
-}
-
-.swatch-text-colour {
-    background-color: $govuk-text-colour;
-}
-
-.swatch-text-secondary {
-    background-color: $govuk-secondary-text-colour;
-}
-
-.swatch-page-colour {
-    background-color: govuk-colour('white');
-    border: 1px solid govuk-colour('grey-3');
-}
-
-.swatch-button-colour {
-    background-color: $govuk-button-colour;
-}
-
-.swatch-link-colour {
-    background-color: $govuk-link-colour;
-}
-
-.swatch-link-colour-visited {
-    background-color: $govuk-link-visited-colour;
-}
-
-.swatch-link-colour-hover {
-    background-color: $govuk-link-hover-colour;
-}
-
-.swatch-border-colour {
-    background-color: $govuk-border-colour;
-}
-
-.swatch-panel-colour {
-    background-color: govuk-colour('grey-3');
-}
-
-.swatch-highlight-colour {
-    background-color: govuk-colour('grey-4');
-}
-
-// Colour swatch layout
-.swatch-wrapper {
-    @include govuk-media-query($from: tablet) {
-        float: left;
-        width: 20%;
-        text-align: center;
-    }
-
-    .govuk-heading-s {
-        margin-bottom: em(10);
-    }
-
-    ul {
-        padding-bottom: $govuk-gutter-half;
-
-        @include govuk-media-query($from: mobile) {
-            min-height: 50px;
-            padding-top: 10px;
-        }
-    }
-
-    li {
-        @include govuk-font(16);
-    }
-
-    b {
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-}
-
-
-// 4. Images and icons
-// ==========================================================================
-
-.example-images img {
-    max-width: 100%;
-    vertical-align: top;
 }
 
 th.sorted-ascending, th.sorted-descending {
@@ -394,77 +96,10 @@ p.important-large {
     min-height: 42px;
 }
 
-// 5. Data
-// ==========================================================================
-
-.data .bold-xlarge,
-.data .bold-xxlarge {
-    line-height: 0.8;
-}
-
-.example .data p {
-    margin-bottom: 0;
-}
-
-
-// 6. Forms
-// ==========================================================================
-.form-instruction {
-    margin-bottom: 1.66667em;
-}
-
-.progress-indicator {
-    font-family: $NTA-Light;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    color: #6f777b;
-    margin: 30px 0 15px;
-}
 
 input[type="file"].form-control {
     border: 0px;
 }
-
-// 7. Buttons
-// ==========================================================================
-
-// Increase spacing under buttons in example boxes
-.example-button .button {
-    margin-bottom: 15px;
-}
-
-// Remove top margin from "Creating buttons" example
-.example-button .govuk-heading-s {
-    margin-top: 0;
-}
-
-// Make swatch wrapper full width for "Creating buttons" example
-.example-button .swatch-wrapper {
-    width: 100%;
-}
-
-// Remove bottom padding to keep "Creating buttons" example
-.example-button ul {
-    padding-bottom: 0;
-}
-
-
-// 9. Alpha beta banners
-// ==========================================================================
-// Alpha
-.phase-banner-alpha {
-    //@include govuk-phase-banner;
-}
-
-// Beta
-.phase-banner-beta {
-    //@include govuk-phase-banner;
-}
-
-// Related Content
-// ==========================================================================
 
 .related {
     border-top: 10px solid govuk-colour('blue');
@@ -480,8 +115,6 @@ input[type="file"].form-control {
     }
 }
 
-// Custom
-// ==========================================================================
 
 .hgroup {
     h2.subtitle {
@@ -534,13 +167,8 @@ input[type="file"].form-control {
     }
 }
 
-.return-link {
-    margin-top: $govuk-gutter;
-}
 
-.table-divider {
-    color: $govuk-border-colour;
-}
+
 
 .validation-summary-errors {
 }
@@ -555,9 +183,8 @@ input[type="file"].form-control {
     border: none;
     padding: 0;
     color: govuk-colour('blue');
-    font-family: $NTA-Light;
+    font-family: $govuk-font-family;
     cursor: pointer;
-
     @include govuk-font(19);
     text-decoration: underline;
 }
@@ -594,11 +221,6 @@ input[type="file"].form-control {
     margin-bottom: 10px;
 }
 
-.two-thirds {
-    @extend .govuk-\!-width-two-thirds;
-    //width: $two-thirds;
-}
-
 .spinner-image {
     vertical-align: middle;
     margin-right: 20px;
@@ -607,19 +229,6 @@ input[type="file"].form-control {
     display: none;
 }
 
-.panel-indent-danger {
-    clear: both;
-    border-left: 4px solid red;
-    padding: 10px;
-    margin: 10px;
-}
-
-.panel-indent-warning {
-    clear: both;
-    border-left: 4px solid #ffd800;
-    padding: 10px;
-    margin: 10px;
-}
 
 .warning-details-summary {
     color: govuk-colour('black');
@@ -644,13 +253,11 @@ input[type="file"].form-control {
 .warning-list-container {
     background-color: #FFD990;
     margin-left: -5px;
-    /*    border-left: 3px;*/
 }
 
 .error-list-container {
     background-color: #FDE3E6;
     margin-left: -5px;
-    /*border-left: 3px;*/
 }
 
 .warning-list-container > ul {
@@ -691,18 +298,6 @@ input[type="file"].form-control {
     color: govuk-colour('black');
 }
 
-.summary_error {
-    color: black !important;
-}
-
-details summary::-ms-details-marker {
-    display: none;
-}
-
-.summary_error:focus {
-    background: none !important;
-    outline: none;
-}
 
 .error-details-summary:focus {
     background: none !important;
@@ -716,10 +311,7 @@ details summary::-ms-details-marker {
 
 .error-list-container {
     background-color: #FDE3E6;
-    //padding-bottom: 10px;
     padding-left: 3px;
-    //margin-bottom: 5px;
-    /*margin-top: -20px;*/
 }
 
 .error-list-container > ul {
@@ -753,11 +345,6 @@ details summary::-ms-details-marker {
     font-size: 48px;
     color: govuk-colour('white');
     font-weight: 700;
-}
-
-.important-image {
-    vertical-align: middle;
-    margin-right: 20px;
 }
 
 .username-title-display {
@@ -801,28 +388,9 @@ details summary::-ms-details-marker {
 }
 
 .ui-menu-item {
-    font-family: $NTA-Light;
+    font-family: $govuk-font-family;
 }
 
-.grey-text {
-    word-wrap: break-word;
-    font-size: 16px;
-    color: #6F777B;
-    font-family: 'Arial Regular', 'Arial';
-    font-weight: 400;
-    font-style: normal;
-    text-align: left;
-}
-
-.black-text {
-    word-wrap: break-word;
-    font-size: 16px;
-    color: #0B0C0C;
-    font-family: 'Arial Regular', 'Arial';
-    font-weight: 400;
-    font-style: normal;
-    text-align: left;
-}
 
 /* Taken from http://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/ */
 
@@ -845,32 +413,15 @@ details summary::-ms-details-marker {
     width: 100%;
 }
 
-.checkbox-inherit {
-    position: inherit;
-}
-
-.checkbox-inherit input {
-    position: inherit;
-}
-
 #schemeBanner {
     margin-top: 3px;
     padding: 5px 10px;
-    background: govuk-colour('grey-3');
+    background: govuk-colour('light-grey');
     font-size: 16px;
 
     @include govuk-font(16);
 }
 
-.secondaryHeaderContent {
-    margin-top: 45px;
-    margin-bottom: 20px;
-}
-
-.related-section-title {
-    font-weight: 700;
-    font-size: 19px;
-}
 
 .left-cleared {
     clear: left;
@@ -898,13 +449,6 @@ details summary::-ms-details-marker {
     display: none;
 }
 
-#unset-padding {
-    padding-right: 0;
-}
-
-.collapsible-padding-left {
-    padding-left: 34px;
-}
 
 .collapsible-padding-right {
     padding-right: 0px;
@@ -912,142 +456,6 @@ details summary::-ms-details-marker {
 
 .collapsible-font-size {
     font-size: 1.0rem;
-}
-
-.section-tabs {
-    @include govuk-clearfix;
-    border-bottom: 1px solid $govuk-border-colour;
-    margin: 1.5em 0;
-
-    @include govuk-media-query($from: mobile) {
-        border-bottom: none;
-        margin: $govuk-gutter 0;
-    }
-
-    ul {
-        position: relative;
-        top: 1px;
-        margin: 0;
-        padding: 0;
-
-
-        li {
-            margin: 0;
-            padding: 0;
-            float: left;
-            display: inline;
-            list-style: none;
-
-            @include govuk-media-query($from: mobile) {
-                float: none;
-                display: block;
-            }
-        }
-
-        a {
-            @include govuk-font(19);
-            font-weight: normal;
-            font-size: 16px !important;
-            color: #000;
-            display: block;
-            overflow: hidden;
-            margin: 5px 5px 6px 0;
-            padding: 5px 0;
-            text-decoration: none;
-            background: govuk-colour('grey-3');
-            border: 1px solid govuk-colour('grey-3');
-            border-bottom: none;
-
-            &:hover,
-            &:focus {
-                .label {
-                    text-decoration: underline;
-                }
-            }
-
-            @include govuk-media-query($from: mobile) {
-                @include govuk-font(16);
-                border-bottom: 1px solid $govuk-border-colour;
-                width: 98.5%;
-                @include calc(width, "100% - 10px");
-                margin: 5px 0 0 0;
-                padding: 5px 0 5px 5px;
-                text-decoration: underline;
-                font-weight: normal;
-            }
-
-            @include govuk-media-query($from: tablet) {
-                padding: 11px 14px 9px 9px;
-            }
-
-            @include ie(6) {
-                float: left;
-            }
-        }
-
-        li.active a {
-            background: govuk-colour('white');
-            padding: 10px 9px 10px;
-            margin: 0 5px 0 0;
-            border-color: $govuk-border-colour;
-            font-size: 16px;
-
-            @include govuk-media-query($from: mobile) {
-                border-bottom: 1px solid $govuk-border-colour;
-                width: 98.5%;
-                @include calc(width, "100% - 10px");
-                padding: 5px 0 5px 5px;
-                margin: 5px 0 0 0;
-                text-decoration: none;
-                font-weight: normal;
-            }
-
-            @include govuk-media-query($from: tablet) {
-                padding: 16px 19px 15px 14px;
-            }
-
-            &:focus {
-                outline: none;
-            }
-
-            .label {
-                text-decoration: none;
-            }
-        }
-
-        &.two-tabs li {
-            width: 50%;
-
-            @include govuk-media-query($from: desktop) {
-                width: auto;
-                min-width: 33.333%;
-            }
-
-            @include ie(7) {
-                min-width: 0%;
-            }
-        }
-    }
-
-    &.plain-tabs {
-        .tab-navigation {
-            ul li {
-                a {
-                    background-color: govuk-colour('white');
-                    border: none;
-                    text-decoration: underline;
-                    font-weight: normal;
-                    font-size: 16px;
-                }
-
-                &.active a {
-                    border: 1px solid govuk-colour('grey-3');
-                    border-bottom: none;
-                    font-size: 16px;
-                }
-            }
-        }
-    }
 }
 
 .hide {
@@ -1059,7 +467,7 @@ details summary::-ms-details-marker {
 .filter {
     @include govuk-responsive-padding(4);
     border: 5px solid #fff;
-    background-color: govuk-colour('grey-3');
+    background-color: govuk-colour('light-grey');
 
     .govuk-label {
         font-weight: $govuk-font-weight-bold;
@@ -1067,7 +475,7 @@ details summary::-ms-details-marker {
 
     .govuk-checkboxes__input {
         border: 5px solid #fff;
-        background-color: govuk-colour('grey-3');
+        background-color: govuk-colour('light-grey');
     }
 
     .buttons {
@@ -1077,7 +485,7 @@ details summary::-ms-details-marker {
         }
 
         .cancel {
-            background-color: govuk-colour('grey-1')
+            background-color: govuk-colour('dark-grey')
         }
 
         margin-bottom: 0;
@@ -1121,8 +529,6 @@ details summary::-ms-details-marker {
     text-align: right;
 }
 
-.summary-row {
-}
 
 .tasklist-row {
     padding-bottom: 0 !important;

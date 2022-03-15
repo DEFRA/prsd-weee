@@ -1,65 +1,5 @@
-﻿@import "../govuk_frontend/package/helpers/colour";
+﻿@import "../govuk_frontend/helpers/colour";
 
-.gov-border {
-    margin-top: em(8, 3);
-    border-top: 10px solid $govuk-link-colour;
-
-    h2 {
-        margin-top: em(3, 5);
-        margin-bottom: em(3, 5);
-    }
-
-    .govuk-heading-s {
-        margin-top: 0;
-        margin-bottom: em(3, 5);
-    }
-
-    h6 {
-        color: $govuk-secondary-text-colour;
-    }
-
-    h6:first-child {
-        margin-top: em(4,5);
-    }
-}
-
-.record-action-section {
-    margin-top: em(8, 3);
-
-    h3 {
-        margin-top: em(4, 5);
-        margin-bottom: em(3, 5);
-    }
-
-    ul li {
-        margin-top: em(3, 7);
-    }
-}
-
-.large-space-top {
-    margin-top: 2.5em;
-}
-
-.toggle {
-    font-weight: bold;
-}
-
-.toggle-cell {
-    cursor: pointer;
-}
-
-.toggle-row {
-    background-color: #EEE;
-}
-
-.toggle-row:hover {
-    background-color: #AAA;
-}
-
-.accessibly-hidden {
-    position: absolute;
-    left: -999em;
-}
 
 .colored-header-bar {
     width: 100%;
@@ -86,7 +26,7 @@
     font-weight: normal;
     text-decoration: underline;
     font-size: 16px;
-    color: govuk-colour("grey-1");
+    color: govuk-colour("dark-grey");
     margin-right: 5px;
 }
 
@@ -134,9 +74,9 @@ h2 + hr{
 }
 
 hr.grey {
-    background-color: govuk-colour('grey-2');
+    background-color: govuk-colour('mid-grey');
     border: 0 none;
-    color: govuk-colour("grey-2");
+    color: govuk-colour('mid-grey');
     height: 1px;
 }
 
