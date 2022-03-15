@@ -1,9 +1,3 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-	typeof define === 'function' && define.amd ? define('GOVUKFrontend', factory) :
-	(factory());
-}(this, (function () { 'use strict';
-
 (function(undefined) {
 
     // Detection from https://raw.githubusercontent.com/Financial-Times/polyfill-service/master/packages/polyfill-library/polyfills/DOMTokenList/detect.js
@@ -11,7 +5,7 @@
       'DOMTokenList' in this && (function (x) {
         return 'classList' in x ? !x.classList.toggle('x', false) && !x.className : true;
       })(document.createElement('x'))
-    );
+    )
 
     if (detect) return
 
@@ -268,5 +262,3 @@
     }(this));
 
 }).call('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});
-
-})));

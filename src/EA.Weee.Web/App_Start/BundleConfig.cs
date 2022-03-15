@@ -27,7 +27,7 @@
                     "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
-                    "~/Scripts/govuk_frontend/govuk-frontend-4.0.0.min.js",
+                    "~/Scripts/govuk_frontend/govuk-frontend-4.0.1.min.js",
                     "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
