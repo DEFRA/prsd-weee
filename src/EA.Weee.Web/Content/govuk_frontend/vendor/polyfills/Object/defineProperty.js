@@ -1,9 +1,3 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-	typeof define === 'function' && define.amd ? define('GOVUKFrontend', factory) :
-	(factory());
-}(this, (function () { 'use strict';
-
 (function(undefined) {
 
 // Detection from https://github.com/Financial-Times/polyfill-service/blob/master/packages/polyfill-library/polyfills/Object/defineProperty/detect.js
@@ -19,7 +13,7 @@ var detect = (
   		return false
   	}
   }())
-);
+)
 
 if (detect) return
 
@@ -90,5 +84,3 @@ if (detect) return
 }(Object.defineProperty));
 })
 .call('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});
-
-})));

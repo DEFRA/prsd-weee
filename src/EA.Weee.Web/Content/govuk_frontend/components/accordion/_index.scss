@@ -22,15 +22,12 @@
   }
 
   .govuk-accordion__section-button {
+    @include govuk-font($size: 24, $weight: bold);
     @include govuk-text-colour;
 
     display: block;
     margin-bottom: 0;
     padding-top: govuk-spacing(3);
-  }
-
-  .govuk-accordion__section-heading-text {
-    @include govuk-font($size: 24, $weight: bold);
   }
 
   // Remove the bottom margin from the last item inside the content
@@ -161,11 +158,7 @@
         width: govuk-px-to-rem(6px);
         height: govuk-px-to-rem(6px);
 
-        -webkit-transform: rotate(-45deg);
-
-            -ms-transform: rotate(-45deg);
-
-                transform: rotate(-45deg);
+        transform: rotate(-45deg);
 
         border-top: govuk-px-to-rem(2px) solid;
         border-right: govuk-px-to-rem(2px) solid;
@@ -181,17 +174,13 @@
 
     // Rotate icon to create "Down" version
     .govuk-accordion-nav__chevron--down {
-      -webkit-transform: rotate(180deg);
-          -ms-transform: rotate(180deg);
-              transform: rotate(180deg);
+      transform: rotate(180deg);
 
       // IE8 fallback of arrow icon
       @include govuk-if-ie8 {
         &:after {
           content: "\25BC"; // "▼"
-          -webkit-transform: none;
-              -ms-transform: none;
-                  transform: none;
+          transform: none;
         }
       }
     }
@@ -305,7 +294,8 @@
 
     // Add toggle link with Chevron icon on left.
     .govuk-accordion__section-toggle {
-      @include govuk-font($size: 19);
+      @include govuk-typography-responsive($size: 19);
+      @include govuk-typography-weight-regular;
       color: $govuk-link-colour;
     }
 
