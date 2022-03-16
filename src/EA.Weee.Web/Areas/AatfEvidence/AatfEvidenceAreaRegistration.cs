@@ -20,8 +20,14 @@
                 namespaces: new[] { typeof(HoldingController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.Create,
+                url: "aatf-evidence/{organisationId}/manage-evidence-notes/create-evidence-note",
+                defaults: new { action = "Create", controller = "Note" },
+                namespaces: new[] { typeof(NoteController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.Default,
-                url: "aatf-evidence/{aatfId}/choose-site/",
+                url: "aatf-evidence/{organisationId}/choose-site/",
                 defaults: new { action = "Index", controller = "SelectYourAatf" },
                 namespaces: new[] { typeof(SelectYourAatfController).Namespace });
         }

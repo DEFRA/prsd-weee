@@ -1,0 +1,132 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfEvidence.ViewModels.CreateNoteViewModel
+@{
+    ViewBag.Title = "Create evidence note";
+}
+
+<section id="main-content">
+    @Html.RouteLink("Back", AatfEvidenceRedirect.Default, new { @class = "govuk-back-link" })
+
+    <h1 class="govuk-heading-l govuk-!-padding-top-5">
+        Enter evidence note details
+    </h1>
+
+    @using (Html.BeginForm("Create", "Note", FormMethod.Post))
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full govuk-body-m">Period in which WEEE was received for treatment</div>
+
+                    <div class="govuk-grid-column-one-half">
+
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
+                            @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
+                            @Html.Gds().ValidationMessageFor(m => m.StartDate)
+                            @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+                        </div>
+
+                    </div>
+
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EndDate)">
+                            @Html.Gds().LabelFor(m => m.EndDate, new { @class = "govuk-label--s" })
+                            @Html.Gds().ValidationMessageFor(m => m.EndDate)
+                            @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="govuk-grid-row govuk-!-padding-top-3">
+                    <div class="govuk-form-group govuk-grid-column-one-half @Html.Gds().FormGroupClass(m => m.ReceivedId)">
+                        @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
+                        @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
+                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(new List<string>(), "Id", "Name"), string.Empty, useHalfWidth: false)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="govuk-grid-column-full">
+                <p class="govuk-!-padding-top-5">
+                    Input tonnage below
+                    <br />
+                    Provide tonnage to 3 decimal places. For example 1.238
+                </p>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Total received (tonnes)</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Re-used as whole appliances (tonnes)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="govuk-table__body">
+
+                        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+                        {
+                            var category = Model.CategoryValues[i];
+
+                            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                                <td class="govuk-table__cell">
+                                    @(@category.CategoryId). @category.CategoryDisplay
+                                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                                    @Html.HiddenFor(m => m.CategoryValues[i].Id)
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
+                                        <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
+                                        @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
+                                        <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
+                                        @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <h2 class="govuk-heading-s">Total</h2>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <h2 class="govuk-heading-s weee-tonnage-right-aligned-display" id="tonneTotalReceived">0.000 tonnes</h2>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <h2 class="govuk-heading-s weee-tonnage-right-aligned-display" id="tonneTotalReUsed">0.000 tonnes</h2>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="govuk-!-margin-top-3">
+
+                    <button type="submit" class="govuk-button" id="submit-note-button" name="action" style="display: none" value="submit1">
+                        Submit evidence note
+                    </button>
+
+                    <button type="submit" class="govuk-button govuk-button--secondary" id="create-note-button" name="action" value="submit2">
+                        Save as draft
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+    }
+
+</section>
