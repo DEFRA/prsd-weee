@@ -90,14 +90,14 @@
 
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            return htmlHelper.ValidationMessageFor(expression, null, new { @class = "govuk-error-message error-message" }, "span");
+            return htmlHelper.ValidationMessageFor(expression, null, new { @class = "govuk-error-message error-message" }, "p");
         }
 
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression,
             string validationMessage)
         {
             return htmlHelper.ValidationMessageFor(expression, validationMessage, new { @class = "govuk-error-message error-message" },
-                "span");
+                "p");
         }
 
         private string GetJavascriptEnabledBlankSummary()
@@ -111,7 +111,7 @@
 
         private string GetJavascriptDisabledErrorSummary(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title'>";
+            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title' role='alert'>";
 
             var errorTitle = GetErrorSummaryHeading(modelErrors);
 
