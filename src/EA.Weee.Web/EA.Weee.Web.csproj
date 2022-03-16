@@ -310,7 +310,9 @@
     <Compile Include="Areas\AatfEvidence\AatfEvidenceAreaRegistration.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AatfEvidence\Controllers\NoteController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\SelectYourAatfController.cs" />
+    <Compile Include="Areas\AatfEvidence\ViewModels\CreateNoteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
@@ -702,6 +704,7 @@
     <Content Include="Areas\AatfEvidence\Views\Holding\Index.cshtml" />
     <Content Include="Areas\AatfEvidence\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AatfEvidence\Views\SelectYourAatf\Index.cshtml" />
+    <Content Include="Areas\AatfEvidence\Views\Note\Create.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
