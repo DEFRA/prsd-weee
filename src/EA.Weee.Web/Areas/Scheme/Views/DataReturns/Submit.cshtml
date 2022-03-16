@@ -81,7 +81,7 @@
 
     @if (hasErrors)
     {
-        <details class="govuk-details weee-upload-error" aria-live="polite">
+        <details class="govuk-details weee-upload-error" data-module="govuk-details" aria-live="polite">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary error-details-summary error-details-summary-title govuk-!-font-weight-bold", "Data return errors", "View data return errors");
@@ -103,7 +103,7 @@
 
     @if (hasWarnings)
     {
-        <details role="group" class="govuk-details weee-upload-warning">
+        <details role="group" class="govuk-details weee-upload-warning" data-module="govuk-details">
             <summary class="govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small">View @warningCount @warningText</summary>
             <div class="warning-list-container">
                 <ul>
