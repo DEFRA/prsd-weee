@@ -307,6 +307,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\AatfEvidence\AatfEvidenceAreaRegistration.cs" />
+    <Compile Include="Areas\AatfEvidence\Controllers\AatfEvidenceBaseController.cs" />
+    <Compile Include="Areas\AatfEvidence\Controllers\HoldingController.cs" />
+    <Compile Include="Areas\AatfEvidence\Controllers\SelectYourAatfController.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
@@ -401,6 +405,7 @@
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\MaintenanceModeFilterAttribute.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
+    <Compile Include="Infrastructure\AatfEvidenceRedirect.cs" />
     <Compile Include="Infrastructure\DisplayHelper.cs" />
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
@@ -693,6 +698,10 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
+    <Content Include="Areas\AatfEvidence\Views\web.config" />
+    <Content Include="Areas\AatfEvidence\Views\Holding\Index.cshtml" />
+    <Content Include="Areas\AatfEvidence\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AatfEvidence\Views\SelectYourAatf\Index.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -1479,6 +1488,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\AatfEvidence\Views\Shared\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
