@@ -74,7 +74,7 @@
 
                 var handler = new GetSchemesExternalHandler(dataAccess, mapper, A.Fake<IWeeeAuthorization>());
 
-                var request = new GetSchemesExternal();
+                var request = new GetSchemesExternal(true);
 
                 var schemeDataList = new List<SchemeData>();
 
