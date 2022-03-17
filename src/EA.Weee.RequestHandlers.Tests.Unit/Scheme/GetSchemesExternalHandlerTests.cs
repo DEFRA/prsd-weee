@@ -26,16 +26,16 @@
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly IWeeeAuthorization authorization;
         private GetSchemesExternalHandler handler;
-        private readonly WeeeContext context;
         private SchemeData schemeData1;
         private SchemeData schemeData2;
         private SchemeData schemeData3;
+
         public GetSchemesExternalHandlerTests()
         {
             dataAccess = A.Fake<RequestHandlers.Scheme.IGetSchemesDataAccess>();
             schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
             authorization = A.Fake<IWeeeAuthorization>();
-            context = A.Fake<WeeeContext>();
+            A.Fake<WeeeContext>();
 
             handler = new GetSchemesExternalHandler(dataAccess, schemeMap, authorization);
         }
@@ -55,7 +55,7 @@
         [Fact]
         public async Task HandleAsync_GivenGetSchemeExternalRequest_ListOfSchemesShouldBeReturned()
         {
-            var request = new GetSchemesExternal();
+            var request = new GetSchemesExternal(true);
 
             var result = await handler.HandleAsync(request);
 
@@ -65,7 +65,7 @@
         [Fact]
         public async Task HandleAsync_GivenGetSchemeExternalRequest_ReturnsSchemesSortedBySchemeNameAsync()
         {
-            var request = new GetSchemesExternal();
+            var request = new GetSchemesExternal(true);
 
             Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
             Scheme scheme1 = new Scheme(organisation);

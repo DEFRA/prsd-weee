@@ -51,7 +51,7 @@
                 {
                     OrganisationId = organisationId,
                     ReturnId = returnId,
-                    SchemeList = await client.SendAsync(this.User.GetAccessToken(), new GetSchemesExternal()),
+                    SchemeList = await client.SendAsync(this.User.GetAccessToken(), new GetSchemesExternal(true)),
                     PreviousQuarterData = await client.SendAsync(this.User.GetAccessToken(), new GetPreviousQuarterSchemes(organisationId, returnId))
                 };
 

@@ -6,5 +6,11 @@
 
     public class GetSchemesExternal : IRequest<List<SchemeData>>
     {
+        public bool IncludeWithdrawn { get; private set; }
+
+        public GetSchemesExternal(bool includeWithDrawn)
+        {
+            IncludeWithdrawn = includeWithDrawn;
+        }
     }
 }
