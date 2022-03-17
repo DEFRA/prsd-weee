@@ -26,11 +26,18 @@
                 ObligationType.B2B,
                 auth);
 
-            instance.SetStatus(SchemeStatus.Approved);
+            instance.SetStatus(SchemeStatus.Pending);
             instance.AddOrUpdateAddress(newAddress);
             instance.AddOrUpdateMainContactPerson(newContact);
 
             return instance;
+        }
+
+        public SchemeDbSetup WithStatus(SchemeStatus status)
+        {
+            instance.SetStatus(status);
+
+            return this;
         }
 
         public SchemeDbSetup WithOrganisation(Organisation organisation)
