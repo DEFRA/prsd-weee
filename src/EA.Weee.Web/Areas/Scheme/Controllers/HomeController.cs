@@ -106,6 +106,10 @@
                     activities.Add(PcsAction.ViewSubmissionHistory);
                 }
 
+                if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfEvidenceNotes);
+                }
                 if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
                 {
                     activities.Add(PcsAction.ManageAatfReturns);
@@ -208,6 +212,10 @@
                 if (viewModel.SelectedValue == PcsAction.ManageAeContactDetails)
                 {
                     return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Ae });
+                }
+                if (viewModel.SelectedValue == PcsAction.ManageAatfEvidenceNotes)
+                {
+                    return this.RedirectToAction("Index", "Holding", new { area = "AatfEvidence", organisationId = viewModel.OrganisationId});
                 }
             }
 
