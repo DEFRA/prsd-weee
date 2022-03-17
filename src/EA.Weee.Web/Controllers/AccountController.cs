@@ -86,8 +86,6 @@
         [HttpGet]
         public ActionResult UserAccountActivationRequired()
         {
-            string email = User.GetEmailAddress();
-
             ViewBag.UserEmailAddress = User.GetEmailAddress();
 
             return View("AccountActivationRequired");
