@@ -17,11 +17,13 @@
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Weee.Security;
     using IoC;
     using Microsoft.AspNet.Identity;
     using netDumbster.smtp;
     using NUnit.Framework;
     using Prsd.Core.Autofac;
+    using Prsd.Core.Domain;
 
     /// <summary>
     /// Contains all shared code for integration tests
@@ -87,6 +89,19 @@
             {
                 CurrentAppUnderTest = application;
                 CurrentHostEnvironment = HostEnvironmentType.Console;
+            }
+
+            public IntegrationTestSetupBuilder WithExternalUserAccess()
+            {
+                if (Principal == null)
+                {
+                    throw new InvalidOperationException("Principal must have been set to login as particular user type");
+                }
+                
+                var identity = (ClaimsIdentity)Principal.Identity;
+                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessExternalArea));
+
+                return this;
             }
 
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
@@ -165,6 +180,8 @@
                     var testUserContextUpdater = Container.Resolve<Action<TestUserContext>>();
                     testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id)));
 
+                    var userc = Container.Resolve<IUserContext>();
+                    Principal = userc.Principal;
                     var weeContext = Container.Resolve<WeeeContext>();
                     DefaultIntegrationOrganisation = weeContext.Organisations.FirstOrDefault(o => o.Name.Equals(TestingConstants.TestCompanyName));
                     DefaultScheme = weeContext.Schemes.FirstOrDefault(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));

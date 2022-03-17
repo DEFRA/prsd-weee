@@ -7,23 +7,24 @@
 
     public class TestUserContext : IUserContext
     {
+        public ClaimsPrincipal BackingPrincipal;
+
         public TestUserContext(Guid userId)
         {
-            this.UserId = userId;
+            UserId = userId;
+
+            var identity = new ClaimsIdentity(new List<Claim>(), "integration");
+
+            BackingPrincipal = new ClaimsPrincipal(identity);
+        }
+
+        public TestUserContext(ClaimsIdentity identity)
+        {
+            BackingPrincipal = new ClaimsPrincipal(identity);
         }
 
         public Guid UserId { get; }
 
-        public ClaimsPrincipal Principal
-        {
-            get
-            {
-                var identity = new ClaimsIdentity(new List<Claim>(), "integration");
-                
-                var principal = new ClaimsPrincipal(identity);
-                
-                return principal;
-            }
-        }
+        public ClaimsPrincipal Principal => BackingPrincipal;
     }
 }
