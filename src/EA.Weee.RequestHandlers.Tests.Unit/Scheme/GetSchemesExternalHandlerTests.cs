@@ -14,6 +14,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
@@ -26,16 +27,16 @@
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly IWeeeAuthorization authorization;
         private GetSchemesExternalHandler handler;
-        private readonly WeeeContext context;
         private SchemeData schemeData1;
         private SchemeData schemeData2;
         private SchemeData schemeData3;
+
         public GetSchemesExternalHandlerTests()
         {
             dataAccess = A.Fake<RequestHandlers.Scheme.IGetSchemesDataAccess>();
             schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
             authorization = A.Fake<IWeeeAuthorization>();
-            context = A.Fake<WeeeContext>();
+            A.Fake<WeeeContext>();
 
             handler = new GetSchemesExternalHandler(dataAccess, schemeMap, authorization);
         }
@@ -52,10 +53,12 @@
             await action.Should().ThrowAsync<SecurityException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenGetSchemeExternalRequest_ListOfSchemesShouldBeReturned()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task HandleAsync_GivenGetSchemeExternalRequest_ListOfSchemesShouldBeReturned(bool includeWithdrawn)
         {
-            var request = new GetSchemesExternal();
+            var request = new GetSchemesExternal(includeWithdrawn);
 
             var result = await handler.HandleAsync(request);
 
@@ -63,9 +66,9 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenGetSchemeExternalRequest_ReturnsSchemesSortedBySchemeNameAsync()
+        public async Task HandleAsync_GivenGetSchemeExternalRequestWithIncludingWithDrawn_ReturnsSchemesSortedBySchemeNameAsync()
         {
-            var request = new GetSchemesExternal();
+            var request = new GetSchemesExternal(true);
 
             Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
             Scheme scheme1 = new Scheme(organisation);
@@ -79,12 +82,19 @@
             Scheme scheme3 = new Scheme(organisation);
             scheme3.UpdateScheme("Scheme C", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
             scheme3.SetStatus(SchemeStatus.Approved);
+            scheme3.SetStatus(SchemeStatus.Withdrawn);
+
+            Scheme scheme4 = new Scheme(organisation);
+            scheme4.UpdateScheme("Scheme Z", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme4.SetStatus(SchemeStatus.Pending);
+            scheme4.SetStatus(SchemeStatus.Rejected);
 
             var results = new List<Domain.Scheme.Scheme>()
             {
                 scheme1,
                 scheme2,
-                scheme3
+                scheme3,
+                scheme4
             };
             A.CallTo(() => dataAccess.GetCompleteSchemes()).Returns(results);
 
@@ -104,16 +114,77 @@
             schemeData3.SchemeName = "Scheme C";
             schemeData3.SchemeStatus = Core.Shared.SchemeStatus.Approved;
             A.CallTo(() => schemeMap.Map(scheme3)).Returns(schemeData3);
+            A.CallTo(() => schemeMap.Map(scheme4)).Returns(new SchemeData());
 
             handler = new GetSchemesExternalHandler(dataAccess, schemeMap, authorization);
 
             var result = await handler.HandleAsync(request);
 
-            Assert.Collection(
-              result,
-              (element1) => Assert.Equal("Scheme A", element1.SchemeName),
-              (element2) => Assert.Equal("Scheme C", element2.SchemeName),
-              (element3) => Assert.Equal("Scheme D", element3.SchemeName));
+            var expectedSchemeNames = new List<string>() { "Scheme A", "Scheme C", "Scheme D" };
+            result.Select(r => r.SchemeName).Should().BeEquivalentTo(expectedSchemeNames);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenGetSchemeExternalRequestWithExcludingWithDrawn_ReturnsSchemesSortedBySchemeNameAsync()
+        {
+            var request = new GetSchemesExternal(false);
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test Organisation");
+            Scheme scheme1 = new Scheme(organisation);
+            scheme1.UpdateScheme("Scheme D", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme1.SetStatus(SchemeStatus.Approved);
+
+            Scheme scheme2 = new Scheme(organisation);
+            scheme2.UpdateScheme("Scheme A", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme2.SetStatus(SchemeStatus.Approved);
+
+            Scheme scheme3 = new Scheme(organisation);
+            scheme3.UpdateScheme("Scheme C", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme3.SetStatus(SchemeStatus.Approved);
+            scheme3.SetStatus(SchemeStatus.Withdrawn);
+
+            Scheme scheme4 = new Scheme(organisation);
+            scheme4.UpdateScheme("Scheme Z", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme4.SetStatus(SchemeStatus.Approved);
+            scheme4.SetStatus(SchemeStatus.Withdrawn);
+
+            Scheme scheme5 = new Scheme(organisation);
+            scheme5.UpdateScheme("Scheme Z", "WEE/11AAAA11/SCH", "WEE1234567", ObligationType.Both, A.Dummy<UKCompetentAuthority>());
+            scheme5.SetStatus(SchemeStatus.Pending);
+            scheme5.SetStatus(SchemeStatus.Rejected);
+
+            var results = new List<Domain.Scheme.Scheme>()
+            {
+                scheme1,
+                scheme2,
+                scheme3,
+                scheme4,
+                scheme5
+            };
+
+            A.CallTo(() => dataAccess.GetCompleteSchemes()).Returns(results);
+
+            IMap<Scheme, SchemeData> schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
+
+            schemeData1 = A.Fake<SchemeData>();
+            schemeData1.SchemeName = "Scheme D";
+            schemeData1.SchemeStatus = Core.Shared.SchemeStatus.Approved;
+            A.CallTo(() => schemeMap.Map(scheme1)).Returns(schemeData1);
+
+            schemeData2 = A.Fake<SchemeData>();
+            schemeData2.SchemeName = "Scheme A";
+            schemeData2.SchemeStatus = Core.Shared.SchemeStatus.Approved;
+            A.CallTo(() => schemeMap.Map(scheme2)).Returns(schemeData2);
+            A.CallTo(() => schemeMap.Map(scheme3)).Returns(new SchemeData());
+            A.CallTo(() => schemeMap.Map(scheme4)).Returns(new SchemeData());
+            A.CallTo(() => schemeMap.Map(scheme5)).Returns(new SchemeData());
+
+            handler = new GetSchemesExternalHandler(dataAccess, schemeMap, authorization);
+
+            var result = await handler.HandleAsync(request);
+
+            var expectedSchemeNames = new List<string>() { "Scheme A", "Scheme D" };
+            result.Select(r => r.SchemeName).Should().BeEquivalentTo(expectedSchemeNames);
         }
     }
 }
