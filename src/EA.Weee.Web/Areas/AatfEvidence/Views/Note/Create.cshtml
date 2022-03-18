@@ -80,17 +80,17 @@
                                     @Html.HiddenFor(m => m.CategoryValues[i].Id)
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2C)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
                                         <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
-                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2C)
-                                        @Html.TextBoxFor(m => m.CategoryValues[i].B2C, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
+                                        @Html.TextBoxFor(m => m.CategoryValues[i].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].B2B)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
                                         <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
-                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].B2B)
-                                        @Html.TextBoxFor(m => m.CategoryValues[i].B2B, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
+                                        @Html.TextBoxFor(m => m.CategoryValues[i].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                             </tr>
@@ -114,13 +114,7 @@
 
                 <div class="govuk-!-margin-top-3">
 
-                    <button type="submit" class="govuk-button" id="submit-note-button" name="action" style="display: none" value="submit1">
-                        Submit evidence note
-                    </button>
-
-                    <button type="submit" class="govuk-button govuk-button--secondary" id="create-note-button" name="action" value="submit2">
-                        Save as draft
-                    </button>
+                    @this.WeeeGds().SecondaryButton("Save as draft")
 
                 </div>
             </div>
