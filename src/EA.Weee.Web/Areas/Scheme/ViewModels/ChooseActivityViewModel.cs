@@ -12,7 +12,7 @@
         public Guid? SchemeId { get; set; }
         public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
 
-        [Required(ErrorMessage = "Select an activity")]
+        [Required(ErrorMessage = "Select the activity you would like to do")]
         public override string SelectedValue { get; set; }
 
         public ChooseActivityViewModel()
