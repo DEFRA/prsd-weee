@@ -9,13 +9,13 @@
     using System.Web.Routing;
     using Xunit;
 
-    public class ValidateReturnActionFilterAttributeTests
+    public class ValidateReturnBaseActionFilterAttributeTests
     {
         private readonly ValidateReturnTestActionFilterAttribute attribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
 
-        public ValidateReturnActionFilterAttributeTests()
+        public ValidateReturnBaseActionFilterAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
             attribute = new ValidateReturnTestActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
