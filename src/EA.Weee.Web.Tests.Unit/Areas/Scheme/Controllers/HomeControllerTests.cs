@@ -739,7 +739,7 @@
 
             var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
 
-            Assert.Contains(PcsAction.ManageAatfEvidenceNotes, result);
+            result.Should().Contain(PcsAction.ManageAatfEvidenceNotes);
         }
 
         [Fact]
@@ -753,11 +753,11 @@
 
             var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
 
-            Assert.DoesNotContain(PcsAction.ManageAatfEvidenceNotes, result);
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
 
         [Fact]
-        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_ReturnsAATFEvidenceNotesOption()
+        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_DoesNotReturnsAATFEvidenceNotesOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(new OrganisationData
@@ -765,9 +765,9 @@
                   HasAatfs = true
               });
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
 
-            Assert.Contains(PcsAction.ManageAatfEvidenceNotes, result);
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
 
         [Fact]
@@ -779,9 +779,9 @@
                   HasAatfs = false
               });
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
 
-            Assert.DoesNotContain(PcsAction.ManageAatfEvidenceNotes, result);
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
 
         [Fact]
@@ -797,7 +797,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             // TODO - This is a place holder, please update to correct page once implemented
-            Assert.Equal("Index", routeValues["action"]);
+            routeValues["action"].Should().Be("Index");
         }
 
         private HomeController HomeControllerSetupForAATFEvidenceNotes(bool enableAATFEvidenceNotes = false)
