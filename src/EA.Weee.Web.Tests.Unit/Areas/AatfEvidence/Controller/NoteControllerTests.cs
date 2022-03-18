@@ -1,18 +1,25 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Controller
 {
+    using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
+    using Constant;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
+    using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using Web.Areas.AatfEvidence.Controllers;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class NoteControllerTests
     {
         private readonly IWeeeClient weeeClient;
+        private readonly IMapper mapper;
         private readonly NoteController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -23,9 +30,10 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMapper>();
             fixture = new Fixture();
 
-            controller = new NoteController();
+            controller = new NoteController(mapper, breadcrumb, cache, () => weeeClient);
         }
 
         [Fact]
@@ -35,13 +43,42 @@
         }
 
         [Fact]
-        public void CreateGet_DefaultViewShouldBeReturned()
+        public async Task CreateGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = controller.Create() as ViewResult;
+            var result = await controller.Create(A.Dummy<Guid>()) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateGet_BreadcrumbShouldBeSet()
+        {
+            //arrange
+            var organisationName = Faker.Company.Name();
+            var organisationId = Guid.NewGuid();
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            //act
+            await controller.Create(organisationId);
+
+            //assert
+            breadcrumb.ExternalActivity.Should().Be("TODO:fix");
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task CreateGet_SchemesListShouldBeRetrieved()
+        {
+            //act
+            await controller.Create(A.Dummy<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
         }
     }
 }
