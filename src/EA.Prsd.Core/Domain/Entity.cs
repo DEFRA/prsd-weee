@@ -38,8 +38,7 @@
         {
             if (IsPersistent())
             {
-                var entity = obj as Entity;
-                return (entity != null) && (Id == entity.Id);
+                return (obj is Entity entity) && (Id == entity.Id);
             }
 
             return base.Equals(obj);

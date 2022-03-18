@@ -61,15 +61,13 @@
         {
             var indexProperty = GetIndexedPropertyName(methodExpression.Body);
 
-            var expressionBody = expression.Body as MemberExpression;
-
-            if (expressionBody == null)
+            if (!(expression.Body is MemberExpression expressionBody))
             {
                 return null;
             }
 
             // CHECK THIS
-            var nameToCheck = string.Format("{0}.{1}", indexProperty, expressionBody.Member.Name);
+            var nameToCheck = $"{indexProperty}.{expressionBody.Member.Name}";
 
             if (string.IsNullOrWhiteSpace(nameToCheck))
             {
@@ -167,7 +165,7 @@
             tagBuilder.AddCssClass("error-summary-heading");
             tagBuilder.Attributes.Add("id", "error-summary-title");
 
-            var modelErrorsCountString = string.Empty;
+            string modelErrorsCountString;
             if (modelErrorsCount > 1)
             {
                 modelErrorsCountString = modelErrorsCount + " errors";
