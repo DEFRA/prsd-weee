@@ -2,28 +2,44 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using Core.AatfEvidence;
     using Core.AatfReturn;
 
     public class CreateNoteViewModel
     {
+        [Required]
+        [Display(Name = "Start date")]
+        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
 
+        [Required]
+        [Display(Name = "End date")]
+        [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
+        [Required]
+        [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
-        public IList<ObligatedCategoryValue> CategoryValues { get; set; }
+        public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
         public CreateNoteViewModel()
         {
-            AddCategoryValues(new ObligatedCategoryValues());
+            AddCategoryValues(new EvidenceCategoryValues());
         }
 
-        private void AddCategoryValues(ObligatedCategoryValues obligatedCategories)
+        public bool Edit
         {
-            CategoryValues = new List<ObligatedCategoryValue>();
+            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
 
-            foreach (var categoryValue in obligatedCategories)
+        private void AddCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
+        {
+            CategoryValues = new List<EvidenceCategoryValue>();
+
+            foreach (var categoryValue in evidenceCategoryValues)
             {
                 CategoryValues.Add(categoryValue);
             }

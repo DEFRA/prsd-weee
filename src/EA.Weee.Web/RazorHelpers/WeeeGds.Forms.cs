@@ -5,6 +5,7 @@
     using System.Text;
     using System.Web;
     using System.Web.Mvc;
+    using Prsd.Core.Web.Mvc.RazorHelpers;
 
     public partial class WeeeGds<TModel>
     {
@@ -73,6 +74,44 @@
             img.Attributes.Add("class", "spinner-image");
 
             return img.ToString(TagRenderMode.SelfClosing);
+        }
+
+        public MvcHtmlString SecondaryButton(string innerHtml,
+            object htmlAttributes = null)
+        {
+            return SecondaryButton(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        }
+
+        public MvcHtmlString Button(string innerHtml,
+            object htmlAttributes = null)
+        {
+            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        }
+
+        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes)
+        {
+            var builder = new TagBuilder("button")
+            {
+                InnerHtml = innerHtml
+            };
+            builder.AddCssClass("govuk-button");
+            builder.MergeAttributes(htmlAttributes);
+            
+            return MvcHtmlString.Create(builder.ToString());
+        }
+
+        public MvcHtmlString SecondaryButton(string innerHtml, IDictionary<string, object> htmlAttributes)
+        {
+            var builder = new TagBuilder("button")
+            {
+                InnerHtml = innerHtml
+            };
+            builder.AddCssClass("govuk-button--secondary");
+            builder.AddCssClass("govuk-button");
+            
+            builder.MergeAttributes(htmlAttributes);
+
+            return MvcHtmlString.Create(builder.ToString());
         }
     }
 }
