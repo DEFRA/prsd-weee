@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
     using Core.Scheme;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
@@ -32,7 +33,17 @@
 
             var schemes = await dataAccess.GetCompleteSchemes();
 
-            return schemes.Where(s => (s.SchemeStatus == SchemeStatus.Approved) || (s.SchemeStatus == SchemeStatus.Withdrawn))
+            Func<Scheme, bool> filter;
+            if (message.IncludeWithdrawn)
+            {
+                filter = s => (s.SchemeStatus == SchemeStatus.Approved) || (s.SchemeStatus == SchemeStatus.Withdrawn);
+            }
+            else
+            {
+                filter = s => s.SchemeStatus == SchemeStatus.Approved;
+            }
+           
+            return schemes.Where(filter)
                 .Select(s => schemeMap.Map(s))
                 .OrderBy(sd => sd.SchemeName)
                 .ToList();

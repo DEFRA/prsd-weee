@@ -13,6 +13,7 @@
     using FakeItEasy;
     using System;
     using System.Collections.Generic;
+    using FluentAssertions;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using Organisation = Domain.Organisation.Organisation;
@@ -22,7 +23,7 @@
     public class GetSchemesExternalDataAccessTests
     {
         [Fact]
-        public async void GetSchemesExternalHandlerHandleAsync_GivenGetSchemeExternalRequest_ReturnListOfSchemesThatAreApprovedOrWithdrawn()
+        public async void GetSchemesExternalHandlerHandleAsync_GivenGetSchemeExternalRequest_ToIncludeWithdrawnSchemes_ReturnListOfSchemesThatAreApprovedOrWithdrawn()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -50,8 +51,7 @@
                 var schemeApproved = new Scheme(organisationApproved.Id);
                 schemeApproved.SetStatus(SchemeStatus.Approved);
                 context.Schemes.Add(schemeApproved);
-                var schemeApprovedData = mapper.Map(schemeApproved);
-
+  
                 var schemePending = new Scheme(organisationPending.Id);
                 schemePending.SetStatus(SchemeStatus.Pending);
                 context.Schemes.Add(schemePending);
@@ -60,7 +60,6 @@
                 schemeWithdrawn.SetStatus(SchemeStatus.Approved);
                 schemeWithdrawn.SetStatus(SchemeStatus.Withdrawn);
                 context.Schemes.Add(schemeWithdrawn);
-                var schemeWithdrawnData = mapper.Map(schemeWithdrawn);
 
                 var schemeRejected = new Scheme(organisationRejected.Id);
                 schemeRejected.SetStatus(SchemeStatus.Rejected);
@@ -70,15 +69,16 @@
 
                 var dataAccess = new GetSchemesDataAccess(database.WeeeContext);
 
-                var results = await dataAccess.GetCompleteSchemes();
-
                 var handler = new GetSchemesExternalHandler(dataAccess, mapper, A.Fake<IWeeeAuthorization>());
 
-                var request = new GetSchemesExternal();
-
-                var schemeDataList = new List<SchemeData>();
+                var request = new GetSchemesExternal(true);
 
                 var result = await handler.HandleAsync(request);
+
+                result.Should().Contain(s => s.Id.Equals(schemeApproved.Id));
+                result.Should().Contain(s => s.Id.Equals(schemeWithdrawn.Id));
+                result.Should().NotContain(s => s.Id.Equals(schemePending.Id));
+                result.Should().NotContain(s => s.Id.Equals(schemeRejected.Id));
             }
         }
     }
