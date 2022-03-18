@@ -239,6 +239,7 @@
     <Compile Include="Areas\AatfEvidence\Mapping\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\NoteControllerTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\SelectYourAatfControllerTests.cs" />
+    <Compile Include="Areas\AatfEvidence\ViewModel\CreateNoteViewModelTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
     <Compile Include="RazorHelpers\GdsDropDownUnitTests.cs" />
     <Compile Include="RazorHelpers\GdsLabelUnitTests.cs" />
+    <Compile Include="RazorHelpers\WeeeGdsFormTests.cs" />
     <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
@@ -482,7 +484,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AatfEvidence\ViewModels\" />
     <Folder Include="Areas\Admin\DataAnnotations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
