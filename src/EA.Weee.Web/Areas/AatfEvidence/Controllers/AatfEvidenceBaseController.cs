@@ -3,7 +3,7 @@
     using EA.Weee.Web.Areas.AatfEvidence.Attributes;
     using Web.Controllers.Base;
 
-    [ValidateReturnActionFilterAttribute]
+    [ValidateEvidenceEnabledAttribute]
     public abstract class AatfEvidenceBaseController : ExternalSiteController
     {
     }

@@ -5,7 +5,7 @@
     using System;
     using System.Web.Mvc;
 
-    public class ValidateReturnActionFilterAttribute : ActionFilterAttribute
+    public class ValidateEvidenceEnabledAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
 
