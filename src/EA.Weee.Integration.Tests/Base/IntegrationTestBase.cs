@@ -143,7 +143,7 @@
                 try
                 {
                     // check if DB exists before anything
-                    RunSql("USE master; SELECT * FROM sys.databases WHERE name = 'EA.Weee.Integration'");
+                    RunSql($"USE master; SELECT * FROM sys.databases WHERE name = '{ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]}'");
 
                     if (hardReset)
                     {
@@ -257,7 +257,10 @@
                 }
                 catch (SqlException ex)
                 {
-                    if (ex.Message.Contains("No process is on the other end of the pipe"))
+                    Console.WriteLine($"Run SQL: {ex.Message}");
+
+                    if (ex.Message.Contains("No process is on the other end of the pipe") ||
+                        ex.Message.Contains("Cannot open database"))
                     {
                         // rebuild the db
                         new DatabaseSeeder().RebuildDatabase();
@@ -265,7 +268,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.Out.WriteLine($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
+                    Console.WriteLine($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
                     throw;
                 }
             }

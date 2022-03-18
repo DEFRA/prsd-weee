@@ -11,11 +11,11 @@
         protected override AatfAddress Instantiate()
         {
             var country = DbContext.Countries.First(c => c.Name.Equals("UK - England"));
-            instance = new AatfAddress(Faker.Company.Name(),
-                Faker.Address.StreetAddress(),
-                Faker.Address.SecondaryAddress(),
-                Faker.Address.City(),
-                Faker.Address.UkCounty(),
+            instance = new AatfAddress("Aatf address",
+                "Address 1",
+                "Address 2",
+                "London",
+                "Greater London",
                 Faker.Address.UkPostCode(),
                 country);
 
