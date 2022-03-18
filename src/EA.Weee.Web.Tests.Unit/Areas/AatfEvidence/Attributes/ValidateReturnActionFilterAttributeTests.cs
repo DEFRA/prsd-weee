@@ -1,0 +1,63 @@
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Attributes
+{
+    using Api.Client;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Services;
+    using System;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+    using Xunit;
+
+    public class ValidateReturnActionFilterAttributeTests
+    {
+        private readonly ValidateReturnTestActionFilterAttribute attribute;
+        private readonly ActionExecutingContext context;
+        private readonly IWeeeClient client;
+
+        public ValidateReturnActionFilterAttributeTests()
+        {
+            client = A.Fake<IWeeeClient>();
+            attribute = new ValidateReturnTestActionFilterAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
+            context = A.Fake<ActionExecutingContext>();
+
+            var routeData = new RouteData();
+            routeData.Values.Add("returnId", Guid.NewGuid());
+            A.CallTo(() => context.RouteData).Returns(routeData);
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFReturns).Returns(true);
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnableAatfReturnIsFalse_InvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFReturns).Returns(false);
+
+            Action action = () => attribute.OnActionExecuting(context);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("AATF returns are not enabled.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenNoReturnIdId_ArgumentExceptionExpected()
+        {
+            Action action = () => attribute.OnActionExecuting(context);
+
+            A.CallTo(() => context.RouteData).Returns(new RouteData());
+
+            action.Should().Throw<ArgumentException>().WithMessage("No return ID was specified.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenReturnIdIsNotGuid_ArgumentExceptionExpected()
+        {
+            Action action = () => attribute.OnActionExecuting(context);
+
+            var routeData = new RouteData();
+            routeData.Values.Add("returnId", 1);
+
+            A.CallTo(() => context.RouteData).Returns(routeData);
+
+            action.Should().Throw<ArgumentException>().WithMessage("The specified return ID is not valid.");
+        }
+    }
+}
