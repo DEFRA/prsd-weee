@@ -6,7 +6,9 @@
 }
 
 @section main_content
-{   
+{
+    @Html.Gds().ValidationSummary()
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             What activity would you like to do?
@@ -16,17 +18,17 @@
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
+
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.SchemeId)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
             @this.WeeeGds().RadioButtonsFor(
-                m => m.SelectedValue,
-                Model.PossibleValues,
-                "What activity would you like to do?",
-                RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Stacked)
+                     m => m.SelectedValue,
+                     Model.PossibleValues,
+                     "What activity would you like to do?",
+                     RadioButtonLegend.VisuallyHidden,
+                     RadioButtonLayout.Stacked)
         </div>
 
         @(this.WeeeGds().Submit("Continue"))
@@ -34,9 +36,9 @@
 
     @if (Model.ShowLinkToCreateOrJoinOrganisation)
     {
-    <p>
-        <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Access another organisation</a>
-    </p>
-}
+        <p>
+            <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Access another organisation</a>
+        </p>
+    }
 }
 
