@@ -84,6 +84,7 @@
                     container.RegisterModule(new EventDispatcherModule());
                     container.RegisterModule(new SecurityModule(environment));
                     container.RegisterModule(new EntityFrameworkModule(environment));
+                    container.RegisterModule(new MappingModule());
                     container.RegisterType<WeeeIdentityContext>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserManager>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>();
