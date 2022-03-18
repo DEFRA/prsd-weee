@@ -232,6 +232,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfEvidence\Attributes\ValidateReturnActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\AatfEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\SelectYourAatfControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
