@@ -103,6 +103,8 @@
                     throw new ArgumentOutOfRangeException(nameof(environment.IocApplication), environment.IocApplication, null);
             }
 
+            Console.WriteLine($"Finished Installing IoC...");
+
             return ContainerCache[key] = container.Build();
         }
 
