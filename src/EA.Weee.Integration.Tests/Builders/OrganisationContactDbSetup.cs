@@ -8,9 +8,9 @@
     {
         protected override Contact Instantiate()
         {
-            instance = new Contact(Faker.Name.First(),
-                Faker.Name.Last(),
-                Faker.Company.CatchPhrase().Substring(0, 20));
+            instance = new Contact("Contact first name",
+                "Contact surname",
+                "Contact position");
 
             return instance;
         }
