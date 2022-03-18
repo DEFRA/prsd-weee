@@ -312,6 +312,8 @@
     <Compile Include="Areas\AatfEvidence\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\NoteController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\SelectYourAatfController.cs" />
+    <Compile Include="Areas\AatfEvidence\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
+    <Compile Include="Areas\AatfEvidence\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\AatfEvidence\ViewModels\CreateNoteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
