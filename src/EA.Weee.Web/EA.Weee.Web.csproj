@@ -308,6 +308,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\AatfEvidence\AatfEvidenceAreaRegistration.cs" />
+    <Compile Include="Areas\AatfEvidence\Attributes\ValidateEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfEvidence\Controllers\SelectYourAatfController.cs" />

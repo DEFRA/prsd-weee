@@ -156,8 +156,6 @@
 
         private string GetErrorSummaryHeading(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var modelErrorsCount = modelErrors.Count();
-
             var tagBuilder = new TagBuilder("h2");
 
             tagBuilder.AddCssClass("govuk-error-summary__title");
@@ -165,17 +163,7 @@
             tagBuilder.AddCssClass("error-summary-heading");
             tagBuilder.Attributes.Add("id", "error-summary-title");
 
-            string modelErrorsCountString;
-            if (modelErrorsCount > 1)
-            {
-                modelErrorsCountString = modelErrorsCount + " errors";
-            }
-            else
-            {
-                modelErrorsCountString = "1 error";
-            }
-
-            tagBuilder.SetInnerText(string.Format("You have {0} on this page", modelErrorsCountString));
+            tagBuilder.SetInnerText("There is a problem");
 
             return tagBuilder.ToString();
         }
