@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Controller
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using Api.Client;
     using AutoFixture;
@@ -6,6 +6,7 @@
     using FluentAssertions;
     using Services;
     using Services.Caching;
+    using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
     using Xunit;
 
@@ -24,7 +25,7 @@
             cache = A.Fake<IWeeeCache>();
             fixture = new Fixture();
 
-            controller = new SelectYourAatfController();
+//            controller = new SelectYourAatfController();
         }
 
         [Fact]

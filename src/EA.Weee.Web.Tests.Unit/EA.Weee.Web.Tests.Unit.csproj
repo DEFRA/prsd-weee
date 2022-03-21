@@ -232,9 +232,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\AatfEvidence\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Controller\AatfEvidenceBaseControllerTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Controller\SelectYourAatfControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\SelectYourAatfControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
@@ -478,6 +478,8 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\AatfEvidence\Attributes\" />
+    <Folder Include="Areas\AatfEvidence\Controller\" />
     <Folder Include="Areas\AatfEvidence\Mapping\" />
     <Folder Include="Areas\AatfEvidence\ViewModels\" />
     <Folder Include="Areas\Admin\DataAnnotations\" />
