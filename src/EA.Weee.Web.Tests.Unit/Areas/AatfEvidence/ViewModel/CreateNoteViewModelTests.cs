@@ -21,7 +21,9 @@
         [InlineData("StartDate", "Start date")]
         [InlineData("EndDate", "End date")]
         [InlineData("ReceivedId", "Recipient")]
-        public void CreateNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string description)
+        [InlineData("ProtocolValue", "Actual or protocol")]
+        [InlineData("WasteTypeValue", "Type of waste")]
+        public void CreateNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
             typeof(CreateNoteViewModel)
                 .GetProperty(property)
@@ -33,7 +35,7 @@
         [InlineData("StartDate")]
         [InlineData("EndDate")]
         [InlineData("ReceivedId")]
-        public void CreateNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property)
+        public void CreateNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property)
         {
             typeof(CreateNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>();
         }

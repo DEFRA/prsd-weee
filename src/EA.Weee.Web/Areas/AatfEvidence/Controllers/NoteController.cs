@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Infrastructure;
+    using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
@@ -30,12 +31,14 @@
         {
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes));
+
+                await SetBreadcrumb(organisationId, "TODO:fix");
+
+                return View(model);
             }
-
-            await SetBreadcrumb(organisationId, "TODO:fix");
-
-            return View(new CreateNoteViewModel());
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
