@@ -45,7 +45,25 @@
                     <div class="govuk-form-group govuk-grid-column-one-half @Html.Gds().FormGroupClass(m => m.ReceivedId)">
                         @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                         @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(new List<string>(), "Id", "Name"), string.Empty, useHalfWidth: false)
+                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "Name"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false, withLookAhead: true)
+                    </div>
+                    </div>
+
+                <div class="govuk-grid-row govuk-!-padding-top-3">
+                    <div class="govuk-form-group govuk-grid-column-one-half @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
+                        @Html.Gds().LabelFor(m => m.WasteTypeValue, new { @class = "govuk-label--s" })
+                        @Html.Gds().ValidationMessageFor(m => m.WasteTypeValue)
+                        
+                            @Html.Gds().DropDownListFor(m => m.WasteTypeValue, new SelectList(Model.WasteTypeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
+                        
+                    </div>
+                </div>
+
+                <div class="govuk-grid-row govuk-!-padding-top-3">
+                    <div class="govuk-form-group govuk-grid-column-one-half @Html.Gds().FormGroupClass(m => m.ProtocolValue)">
+                        @Html.Gds().LabelFor(m => m.ProtocolValue, new { @class = "govuk-label--s" })
+                        @Html.Gds().ValidationMessageFor(m => m.ProtocolValue)
+                        @Html.Gds().DropDownListFor(m => m.ProtocolValue, new SelectList(Model.ProtocolList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
                     </div>
                 </div>
             </div>

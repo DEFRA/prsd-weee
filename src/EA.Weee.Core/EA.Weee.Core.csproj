@@ -97,6 +97,8 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValues.cs" />
+    <Compile Include="AatfEvidence\Protocol.cs" />
+    <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
