@@ -728,6 +728,88 @@
             Assert.Equal("ChooseActivity", routeValues["action"]);
         }
 
+        [Fact]
+        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsAATFEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = true
+              });
+
+            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+
+            result.Should().Contain(PcsAction.ManageAatfEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnAATFEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = false
+              });
+
+            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_DoesNotReturnsAATFEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = true
+              });
+
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasNoAatf_DoesNotReturnAATFEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = false
+              });
+
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ManageAATFEvidenceNotes_RedirectsToManageAATFEvidenceNotes()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ManageAatfEvidenceNotes
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            // TODO - This is a place holder, please update to correct page once implemented
+            routeValues["action"].Should().Be("Index");
+        }
+
+        private HomeController HomeControllerSetupForAATFEvidenceNotes(bool enableAATFEvidenceNotes = false)
+        {
+            var configService = A.Fake<ConfigurationService>();
+            configService.CurrentConfiguration.EnableAATFEvidenceNotes = enableAATFEvidenceNotes;
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
         private HomeController HomeController(bool enableDataReturns = false)
         {
             var configService = A.Fake<ConfigurationService>();
