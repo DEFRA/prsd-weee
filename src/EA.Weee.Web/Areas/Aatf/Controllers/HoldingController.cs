@@ -1,7 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Controllers
+﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using System;
     using System.Web.Mvc;
+    using AatfEvidence.Controllers;
 
     public class HoldingController : AatfEvidenceBaseController
     {

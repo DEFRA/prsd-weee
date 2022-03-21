@@ -234,7 +234,7 @@
   <ItemGroup>
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
-    <Compile Include="Areas\Aatf\Controller\SelectYourAatfControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ChooseSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />

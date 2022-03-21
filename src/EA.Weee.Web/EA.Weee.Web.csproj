@@ -346,7 +346,7 @@
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
-    <Compile Include="Areas\Aatf\Controllers\SelectYourAatfController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ChooseSiteController.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
@@ -701,7 +701,7 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
-    <Content Include="Areas\Aatf\Views\SelectYourAatf\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />

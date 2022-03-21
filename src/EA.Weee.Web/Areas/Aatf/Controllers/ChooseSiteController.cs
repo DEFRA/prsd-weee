@@ -16,14 +16,14 @@
     using ViewModels;
     using Weee.Requests.AatfReturn;
 
-    public class SelectYourAatfController : AatfEvidenceBaseController
+    public class ChooseSiteController : AatfEvidenceBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
 
-        public SelectYourAatfController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper)
+        public ChooseSiteController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
