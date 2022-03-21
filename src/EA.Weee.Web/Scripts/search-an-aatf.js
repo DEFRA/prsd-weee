@@ -1,0 +1,24 @@
+﻿function SearchAnAATF() {
+    $("#SearchTerm").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "SearchAnAatf/SearchAatf",
+                type: "POST",
+                dataType: "json",
+                data: { searchTerm: request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.SearchTermName, value: item.SearchTermName, id: item.SearchTermId };
+                    }))
+                }
+            })
+        },
+        minLength: 3,
+        select: function (event, ui) {            
+            $("#hidden").val(ui.item.id);
+        },
+        messages: {
+            noResults: "", results: ""
+        }
+    });
+}

@@ -55,6 +55,9 @@
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/search-an-aatf").Include(
+                "~/Scripts/search-an-aatf.js"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
                       "~/Content/weee-page-ie6.css"));
 
@@ -75,7 +78,7 @@
                 "~/Content/weee-returns-aatf-mobile.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-returns-ae-mobile").Include(
-                "~/Content/weee-returns-ae-mobile.css"));
+                "~/Content/weee-returns-ae-mobile.css"));            
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
