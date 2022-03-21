@@ -25,11 +25,11 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
-                m => m.SelectedValue,
-                Model.PossibleValues,
-                "What activity would you like to do?",
-                RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Stacked)
+                     m => m.SelectedValue,
+                     Model.PossibleValues,
+                     "What activity would you like to do?",
+                     RadioButtonLegend.VisuallyHidden,
+                     RadioButtonLayout.Stacked)
         </div>
 
         @(this.WeeeGds().Submit("Continue"))

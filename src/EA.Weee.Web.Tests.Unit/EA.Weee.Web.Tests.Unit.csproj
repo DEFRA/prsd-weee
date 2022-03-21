@@ -235,6 +235,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\AatfEvidence\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\AatfEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\AatfEvidence\Mapping\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\AatfEvidence\Controller\NoteControllerTests.cs" />
