@@ -215,7 +215,7 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ManageAatfEvidenceNotes)
                 {
-                    return this.RedirectToAction("Index", "Holding", new { area = "AatfEvidence", organisationId = viewModel.OrganisationId});
+                    return this.RedirectToAction("Index", "SelectYourAatf", new { area = "AatfEvidence", organisationId = viewModel.OrganisationId});
                 }
             }
 
