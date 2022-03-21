@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.AatfEvidence.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Scheme;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -33,9 +35,23 @@
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes));
+                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes, false));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(CreateNoteViewModel viewModel)
+        {
+            using (var client = apiClient())
+            {
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes, true));
 
                 return View(model);
             }
