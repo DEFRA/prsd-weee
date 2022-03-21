@@ -42,7 +42,7 @@
             typeof(EvidenceCategoryValue).GetProperty("Received")
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
-                    t.CategoryProperty.Equals("CategoryId") && t.TypeMessage.Equals("Total received"));
+                    t.CategoryProperty.Equals("CategoryId") && t.TypeMessage.Equals("total received"));
         }
 
         [Fact]
@@ -51,7 +51,7 @@
             typeof(EvidenceCategoryValue).GetProperty("Reused")
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
-                    t.CategoryProperty.Equals("CategoryId") && t.TypeMessage.Equals("Reused as whole appliances"));
+                    t.CategoryProperty.Equals("CategoryId") && t.TypeMessage.Equals("reused as whole appliances"));
         }
     }
 }

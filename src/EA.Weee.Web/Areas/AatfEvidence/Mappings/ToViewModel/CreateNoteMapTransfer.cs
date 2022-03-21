@@ -8,11 +8,14 @@
     {
         public List<SchemeData> Schemes { get; private set; }
 
-        public CreateNoteMapTransfer(List<SchemeData> schemes)
+        public bool IsEdit { get; private set; }
+
+        public CreateNoteMapTransfer(List<SchemeData> schemes, bool isEdit)
         {
             Guard.ArgumentNotNull(() => schemes, schemes);
 
             Schemes = schemes;
+            IsEdit = isEdit;
         }
     }
 }

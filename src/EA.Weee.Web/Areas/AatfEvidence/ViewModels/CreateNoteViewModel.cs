@@ -27,12 +27,12 @@
         public List<SchemeData> SchemeList { get; set; }
 
         [Display(Name = "Type of waste")]
-        public int WasteTypeValue { get; set; }
+        public int? WasteTypeValue { get; set; }
 
         public IEnumerable<WasteType> WasteTypeList { get; set; }
 
         [Display(Name = "Actual or protocol")]
-        public int ProtocolValue { get; set; }
+        public int? ProtocolValue { get; set; }
 
         public IEnumerable<Protocol> ProtocolList { get; set; }
 

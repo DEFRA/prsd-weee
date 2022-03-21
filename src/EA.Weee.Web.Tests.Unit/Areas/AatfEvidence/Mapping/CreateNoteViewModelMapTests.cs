@@ -45,9 +45,9 @@
             result.Should().NotBeNull();
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
-            result.ProtocolList.Count().Should().Be(Enumeration.GetAll<Protocol>().Count());
+            result.ProtocolList.Should().BeEquivalentTo(Enumeration.GetAll<Protocol>());
             result.WasteTypeList.Should().NotBeNullOrEmpty();
-            result.WasteTypeList.Count().Should().Be(Enumeration.GetAll<WasteType>().Count());
+            result.WasteTypeList.Should().BeEquivalentTo(Enumeration.GetAll<WasteType>());
         }
     }
 }
