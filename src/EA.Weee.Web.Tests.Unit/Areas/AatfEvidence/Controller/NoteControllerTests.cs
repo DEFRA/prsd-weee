@@ -104,7 +104,7 @@
         public async Task CreateGet_GivenViewModel_ViewModelShouldBeReturned()
         {
             //arrange
-            var model = fixture.Create<CreateNoteViewModel>();
+            var model = new CreateNoteViewModel();
             A.CallTo(() => mapper.Map<CreateNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
