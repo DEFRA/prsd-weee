@@ -9,25 +9,36 @@
     {
         public void RebuildDatabase()
         {
-            var src = GetParent("src");
-
-            if (src != null)
-            {
-                LaunchCommandLineApp(src);
-            }
+            LaunchCommandLineApp();
         }
 
-        private void LaunchCommandLineApp(FileSystemInfo src)
+        private void LaunchCommandLineApp()
         {
-            var aliaSql = Directory.GetFiles($"{src.FullName}\\packages", "AliaSQL.exe", SearchOption.AllDirectories);
-            var scriptsDirectory = $"{src.FullName}\\EA.Weee.Database\\scripts\\";
-
-            if (aliaSql.Length > 0)
+            var aliaScriptsDir = ConfigurationManager.AppSettings["aliaSqlScriptsDir"];
+            string aliaExe = string.Empty;
+            if (string.IsNullOrWhiteSpace(aliaScriptsDir))
             {
-                Console.WriteLine($"Using AliaSQL from {aliaSql[0]}");
+                var src = GetParent("src");
+                var aliaSql = Directory.GetFiles($@"{src.FullName}", "AliaSQL.exe", SearchOption.AllDirectories);
 
+                if (aliaSql.Length > 0)
+                {
+                    aliaExe = aliaSql[0];
+                }
+
+                aliaScriptsDir = $@"{src.FullName}\EA.Weee.Database\scripts\";
+            }
+            else
+            {
+                aliaExe = $@"{aliaScriptsDir}\AliaSQL.exe";
+            }
+
+            Console.WriteLine($"Using AliaSQL from {aliaExe}");
+
+            if (!string.IsNullOrWhiteSpace(aliaExe))
+            {
                 var arguments =
-                    $@"Rebuild .\sqlexpress EA.Weee.Integration {scriptsDirectory} {ConfigurationManager.AppSettings["aliSqlConnectionUser"]} {ConfigurationManager.AppSettings["aliSqlConnectionPassword"]}";
+                    $@"Rebuild {ConfigurationManager.AppSettings["aliaSqlConnectionServer"]} {ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]} {aliaScriptsDir} {ConfigurationManager.AppSettings["aliaSqlConnectionUser"]} {ConfigurationManager.AppSettings["aliaSqlConnectionPassword"]}";
 
                 Console.Write($"AliaSql command arguments {arguments}");
 
@@ -35,10 +46,10 @@
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false,
-                    FileName = aliaSql[0],
+                    FileName = aliaExe,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     RedirectStandardOutput = true,
-                    Arguments = $@"Rebuild .\sqlexpress EA.Weee.Integration {scriptsDirectory} {ConfigurationManager.AppSettings["aliSqlConnectionUser"]} {ConfigurationManager.AppSettings["aliSqlConnectionPassword"]}"
+                    Arguments = arguments
                 };
 
                 try

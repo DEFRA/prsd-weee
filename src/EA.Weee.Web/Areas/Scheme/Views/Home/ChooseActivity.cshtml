@@ -7,22 +7,23 @@
 
 @section main_content
 {
-    @Html.Gds().ValidationSummary()
 
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">
-            What activity would you like to do?
-        </h1>
-    </header>
 
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                What activity would you like to do?
+            </h1>
+        </header>
 
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.SchemeId)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+            @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
                      m => m.SelectedValue,
                      Model.PossibleValues,
