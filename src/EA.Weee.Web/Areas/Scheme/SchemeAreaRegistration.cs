@@ -19,7 +19,7 @@
             context.MapLowercaseDashedRoute(
                 name: "Scheme_default",
                 url: "Scheme/{pcsId}/{controller}/{action}/{entityId}",
-                defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional },
+                defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional, area = "Scheme" },
                 namespaces: new[] { typeof(HomeController).Namespace });
         }
     }

@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Attributes
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Attributes
 {
+    using System;
+    using System.Web.Mvc;
     using Api.Client;
-    using EA.Weee.Web.Areas.AatfEvidence.Attributes;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
-    using System;
-    using System.Web.Mvc;
+    using Web.Areas.Aatf.Attributes;
     using Xunit;
 
     public class ValidateEvidenceEnabledAttributeTests

@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Attributes
+﻿namespace EA.Weee.Web.Areas.Aatf.Attributes
 {
-    using Api.Client;
-    using Services;
     using System;
     using System.Web.Mvc;
+    using Api.Client;
+    using Services;
 
     public class ValidateEvidenceEnabledAttribute : ActionFilterAttribute
     {

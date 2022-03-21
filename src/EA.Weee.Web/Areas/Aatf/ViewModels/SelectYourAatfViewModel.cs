@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.ViewModels
+﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
-    using EA.Weee.Core.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Core.AatfReturn;
 
     public class SelectYourAatfViewModel
     {
