@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Controller
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Constant;
+    using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -13,6 +15,8 @@
     using Services;
     using Services.Caching;
     using Web.Areas.AatfEvidence.Controllers;
+    using Web.Areas.AatfEvidence.Mappings.ToViewModel;
+    using Web.Areas.AatfEvidence.ViewModels;
     using Weee.Requests.Scheme;
     using Xunit;
 
@@ -79,6 +83,35 @@
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateGet_ViewModelMapperShouldBeCalled()
+        {
+            //arrange
+            var schemes = fixture.CreateMany<SchemeData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+
+            //act
+            await controller.Create(A.Dummy<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<CreateNoteViewModel>(
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateGet_GivenViewModel_ViewModelShouldBeReturned()
+        {
+            //arrange
+            var model = fixture.Create<CreateNoteViewModel>();
+            A.CallTo(() => mapper.Map<CreateNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await controller.Create(A.Dummy<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
         }
     }
 }

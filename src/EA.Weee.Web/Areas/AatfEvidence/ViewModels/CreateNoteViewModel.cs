@@ -6,6 +6,7 @@
     using System.Linq;
     using Core.AatfEvidence;
     using Core.AatfReturn;
+    using Core.Scheme;
 
     public class CreateNoteViewModel
     {
@@ -22,6 +23,18 @@
         [Required]
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
+
+        public List<SchemeData> SchemeList { get; set; }
+
+        [Display(Name = "Type of waste")]
+        public int WasteTypeValue { get; set; }
+
+        public IEnumerable<WasteType> WasteTypeList { get; set; }
+
+        [Display(Name = "Actual or protocol")]
+        public int ProtocolValue { get; set; }
+
+        public IEnumerable<Protocol> ProtocolList { get; set; }
 
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
