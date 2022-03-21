@@ -21,7 +21,7 @@
 
             context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.Default,
-                url: "aatf-evidence/{aatfId}/choose-site/",
+                url: "aatf-evidence/{organisationId}/choose-site/",
                 defaults: new { action = "Index", controller = "SelectYourAatf" },
                 namespaces: new[] { typeof(SelectYourAatfController).Namespace });
         }
