@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using EA.Weee.Core.AatfReturn;
     using System;
     using System.Collections.Generic;
+    using Core.AatfReturn;
 
     public class AatfDataToSelectYourAatfViewModelMapTransfer
     {

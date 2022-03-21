@@ -17,7 +17,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-
+    using System.Web.Routing;
     using EA.Weee.Core.AatfReturn;
 
     using ViewModels;
@@ -215,7 +215,12 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ManageAatfEvidenceNotes)
                 {
-                    return this.RedirectToAction("Index", "SelectYourAatf", new { area = "AatfEvidence", organisationId = viewModel.OrganisationId});
+// return AatfEvidenceRedirect.SelectYourAatf(viewModel.OrganisationId);
+                    //var values = new Dictionary<string, object>();
+                    //values.Add("area", "dddd");
+                    //return RedirectToRoute("evidence", new RouteValueDictionary(values));
+                    
+                    return RedirectToAction("Index", "SelectYourAatf", new { area = "Aatf", organisationId = viewModel.OrganisationId });
                 }
             }
 

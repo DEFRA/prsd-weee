@@ -1,12 +1,13 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using EA.Prsd.Core;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.AatfEvidence.ViewModels;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.AatfReturn;
+    using Prsd.Core;
+    using Prsd.Core.Mapper;
+    using ViewModels;
 
-    public class AatfDataToSelectYourAatfViewModelMap
+    public class AatfDataToSelectYourAatfViewModelMap : IMap<AatfDataToSelectYourAatfViewModelMapTransfer, SelectYourAatfViewModel>
     {
         public SelectYourAatfViewModel Map(AatfDataToSelectYourAatfViewModelMapTransfer source)
         {
