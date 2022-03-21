@@ -3,7 +3,6 @@
     using Aatf.Controllers;
     using Infrastructure;
     using System.Web.Mvc;
-    using AatfEvidence.Controllers;
 
     public class AatfAreaRegistration : AreaRegistration
     {
