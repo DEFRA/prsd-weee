@@ -7,9 +7,10 @@
     using ViewModels;
     using Xunit;
 
-    public class GdsTextboxTests
+    public class GdsTextBoxTests
     {
         private readonly HtmlHelper<TestModel> htmlHelper = HtmlHelperFactory.CreateHtmlHelper<TestModel>();
+        private const string GovUkHalfWidth = "govuk-!-width-one-half";
 
         [Fact]
         public void GivenGDSTextBox_ShouldContainGdsCssClass()
@@ -24,7 +25,7 @@
         {
             var control = htmlHelper.Gds().TextBoxFor(m => m.Nested.Bottom);
 
-            control.ToString().Should().Contain("class").And.Contain("govuk-!-width-one-half");
+            control.ToString().Should().Contain("class").And.Contain(GovUkHalfWidth);
         }
 
         [Fact]
@@ -32,7 +33,7 @@
         {
             var control = htmlHelper.Gds().TextBoxFor(m => m.Nested.Bottom, false);
 
-            control.ToString().Should().NotContain("govuk-!-width-one-half");
+            control.ToString().Should().NotContain(GovUkHalfWidth);
         }
     }
 }
