@@ -52,7 +52,7 @@
                 return null;
             }
 
-            var cssClass = (modelState.Errors.Count > 0) ? "govuk-form-group--error error" : null;
+            var cssClass = (modelState.Errors.Count > 0) ? "govuk-form-group govuk-form-group--error error" : null;
 
             return cssClass;
         }
@@ -92,7 +92,6 @@
         {
             return htmlHelper.ValidationMessageFor(expression, null, new { @class = "govuk-error-message error-message" }, "p");
         }
-
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression,
             string validationMessage)
         {
@@ -102,7 +101,7 @@
 
         private string GetJavascriptEnabledBlankSummary()
         {
-            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true'>
+            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert'>
                         <ul class='error-summary-list govuk-list govuk-error-summary__list'>
                             <li style='display:none'></li>
                         </ul>
@@ -132,7 +131,6 @@
         private string GetErrorSummaryList(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
             var errorListBuilder = new StringBuilder();
-
             errorListBuilder.AppendLine("<ul class='govuk-list govuk-error-summary__list error-summary-list'>");
 
             foreach (var modelError in modelErrors)
@@ -145,6 +143,7 @@
                     fieldName = fieldName.Replace("]", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
                 }
                 
+                errorListBuilder.AppendLine("<span class='govuk-visually-hidden'>Error:</span> ");
                 errorListBuilder.AppendLine("<li>");
                 errorListBuilder.AppendFormat("<a href=\"#{0}\">{1}</a>", fieldName,
                     modelError.ModelError.ErrorMessage);

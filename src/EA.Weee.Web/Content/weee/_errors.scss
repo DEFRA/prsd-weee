@@ -1,6 +1,7 @@
 ﻿@import "../govuk_frontend/helpers/_colour.scss";
 
-.input-validation-error {   
+.input-validation-error {
+    border-color: $govuk-error-colour; 
 }
 
 .field-validation-error {

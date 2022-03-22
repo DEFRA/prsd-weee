@@ -12,11 +12,12 @@
         Are you sure you want to remove these PCS(s) from your list?
     </h1>
 
-    <div>
-        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-        <p class="important">
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
             Any data entered against these options will be deleted
-        </p>
+        </strong>
     </div>
 
     @using (Html.BeginRouteForm(AatfRedirect.SelectPcsRouteName, new { action = "PcsRemoved" }, FormMethod.Post))
@@ -75,7 +76,7 @@
         </div>
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" >Save and continue</button>
+            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Save and continue</button>
         </div>
     }
 </section>

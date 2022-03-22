@@ -61,7 +61,13 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="govuk-grid-row">
-                <p class="important-large">Removing this AATF / ATF will delete all tonnage data associated with it</p>
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        Removing this AATF / ATF will delete all tonnage data associated with it
+                    </strong>
+                </div>
                 <div class="govuk-!-padding-bottom-5"></div>
                 <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
                     @this.WeeeGds().RadioButtonsFor(
@@ -74,7 +80,7 @@
             </div>
         </div>
         <div class="govuk-!-padding-bottom-7"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details" data-module="govuk-button" >
+        <button type="submit" name="save" class="govuk-button" id="site-details" data-module="govuk-button" data-prevent-double-click="true">
             Save and continue
         </button>
     }

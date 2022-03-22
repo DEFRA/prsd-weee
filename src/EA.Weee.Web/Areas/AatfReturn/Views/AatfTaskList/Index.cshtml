@@ -252,7 +252,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
-        <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return" data-module="govuk-button" >
+        <button type="submit" name="checkreturn" class="govuk-button" id="pcs-check-return" data-module="govuk-button" data-prevent-double-click="true">
             Check return
         </button>
 

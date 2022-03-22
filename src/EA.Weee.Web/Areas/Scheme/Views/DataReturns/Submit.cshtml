@@ -148,10 +148,12 @@
 
                 @if (Model.DataReturn.IsResubmission)
                 {
-
-                    <div class="highlight-section-text negative-margin">
-                        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;" height="42" width="42">
-                        Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
+                    <div class="govuk-warning-text highlight-section-text negative-margin">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
+                        </strong>
                     </div>
                 }
 

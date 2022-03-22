@@ -36,11 +36,15 @@
         </table>
         <br />
 
-        if(Model.Producer.HasSubmittedEEE)
+        if (Model.Producer.HasSubmittedEEE)
         {
-            <p class="important-large">
-                The scheme has already submitted a data return for this producer. If you remove this producer, their EEE data for the specified scheme and compliance year will be lost.
-            </p>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    The scheme has already submitted a data return for this producer. If you remove this producer, their EEE data for the specified scheme and compliance year will be lost.
+                </strong>
+            </div>
         }
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
