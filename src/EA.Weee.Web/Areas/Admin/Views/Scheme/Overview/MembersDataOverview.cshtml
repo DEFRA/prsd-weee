@@ -6,9 +6,9 @@
     @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
     <section class="govuk-tabs__panel" id="pcsDetails">
-        <div class="govuk-table__header--large">
+        <h1 class="govuk-heading-l">
             Members and data
-        </div>
+        </h1>
 
         @foreach (var yearlyDownloads in Model.SchemeDataAvailability.AnnualDataAvailibilities.OrderByDescending(yd => yd.Year))
         {
