@@ -1,27 +1,26 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Controllers
+﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Aatf.Mappings.ToViewModel;
-    using Aatf.ViewModels;
+    using AatfEvidence.Controllers;
     using Api.Client;
-    using Core.Scheme;
     using Infrastructure;
+    using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using ViewModels;
     using Weee.Requests.Scheme;
 
-    public class NoteController : AatfEvidenceBaseController
+    public class ManageEvidenceNotesController : AatfEvidenceBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
 
-        public NoteController(IMapper mapper, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient)
+        public ManageEvidenceNotesController(IMapper mapper, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -29,7 +28,7 @@
             this.apiClient = apiClient;
         }
 
-        public async Task<ActionResult> Create(Guid organisationId)
+        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId)
         {
             using (var client = apiClient())
             {
@@ -45,7 +44,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateNoteViewModel viewModel)
+        public async Task<ActionResult> CreateEvidenceNote(CreateNoteViewModel viewModel)
         {
             using (var client = apiClient())
             {
