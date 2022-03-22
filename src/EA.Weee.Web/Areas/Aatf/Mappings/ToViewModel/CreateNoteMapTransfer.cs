@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
     using System.Collections.Generic;
     using Core.Scheme;

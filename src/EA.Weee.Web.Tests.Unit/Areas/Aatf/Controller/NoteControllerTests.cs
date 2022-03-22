@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Controller
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using System;
     using System.Linq;
@@ -6,17 +6,15 @@
     using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
-    using Constant;
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using Web.Areas.Aatf.Mappings.ToViewModel;
+    using Web.Areas.Aatf.ViewModels;
     using Web.Areas.AatfEvidence.Controllers;
-    using Web.Areas.AatfEvidence.Mappings.ToViewModel;
-    using Web.Areas.AatfEvidence.ViewModels;
     using Weee.Requests.Scheme;
     using Xunit;
 
