@@ -21,6 +21,12 @@
             validationResults = new List<ValidationResult>();
         }
 
+        public void TonnageCompareValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
+        {
+            typeof(TonnageCompareValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
+                .Should().Be(AttributeTargets.Property);
+        }
+
         [Fact]
         public void Validate_GivenRelatedValuePropertyDoesNotExist_ValidationExceptionExpected()
         {
@@ -81,11 +87,18 @@
         [InlineData(2, "")]
         [InlineData(2, " ")]
         [InlineData(2, null)]
-        public void Validate_GivenTonnageIsNotEmptyAndCompareValueIsEmpty_FalseShouldBeReturned(object tonnage, object compareTonnage)
+        public void Validate_GivenTonnageIsNotEmptyAndCompareValueIsEmpty_FalseShouldBeReturned(object tonnage,
+            object compareTonnage)
         {
             var result = Validate(tonnage, compareTonnage);
 
             result.Should().BeFalse();
+            validationResults.Count.Should().Be(1);
+            validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
+            {
+                new ValidationResult(
+                    "The reused tonnage for category 10 must be equivalent or lower than the received tonnage.")
+            });
         }
 
         [Fact]
@@ -94,6 +107,11 @@
             var result = Validate(2, 1);
 
             result.Should().BeFalse();
+            validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
+            {
+                new ValidationResult(
+                    "The reused tonnage for category 10 must be equivalent or lower than the received tonnage.")
+            });
         }
 
         [Fact]

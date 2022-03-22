@@ -5,8 +5,8 @@
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
+    [AttributeUsage(AttributeTargets.Property)]
     public class TonnageCompareValueAttribute : ValidationAttribute
     {
         private string categoryPropertyErrorMessage;
