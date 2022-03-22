@@ -275,7 +275,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
-    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerCreateEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
