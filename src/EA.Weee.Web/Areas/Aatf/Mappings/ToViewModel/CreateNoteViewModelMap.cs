@@ -1,11 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System;
-    using System.Web.Mvc;
     using Core.AatfEvidence;
-    using EA.Prsd.Core.Mapper;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Prsd.Core.Mapper;
     using ViewModels;
 
     public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, CreateNoteViewModel>
