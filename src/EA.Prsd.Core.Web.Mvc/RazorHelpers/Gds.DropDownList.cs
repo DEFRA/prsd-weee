@@ -10,9 +10,9 @@
     public partial class Gds<TModel>
     {
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IEnumerable<SelectListItem> selectList, bool withLookAhead = false)
+            IEnumerable<SelectListItem> selectList, bool withLookAhead = false, bool useHalfWidth = true)
         {
-            return DropDownListFor(expression, selectList, new RouteValueDictionary(), withLookAhead);
+            return DropDownListFor(expression, selectList, new RouteValueDictionary(), withLookAhead, useHalfWidth);
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
@@ -26,20 +26,21 @@
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IEnumerable<SelectListItem> selectList, object htmlAttributes, bool withLookAhead = false)
+            IEnumerable<SelectListItem> selectList, object htmlAttributes, bool withLookAhead = false, bool useHalfWidth = true)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            return DropDownListFor(expression, selectList, routeValueDictionary, withLookAhead);
+            return DropDownListFor(expression, selectList, routeValueDictionary, withLookAhead, useHalfWidth);
         }
 
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IEnumerable<SelectListItem> selectList,
             string optionLabel,
             object htmlAttributes,
-            bool withLookAhead = false)
+            bool withLookAhead = false,
+            bool useHalfWidth = true)
         {
             var routeValueDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            AddFormControlCssClass(routeValueDictionary);
+            AddFormControlCssClass(routeValueDictionary, useHalfWidth);
             GdsExtensions.AddClass(routeValueDictionary, "govuk-select");
             AddLookAhead(expression, routeValueDictionary, withLookAhead);
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValueDictionary);
@@ -48,9 +49,10 @@
         public MvcHtmlString DropDownListFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IEnumerable<SelectListItem> selectList,
             IDictionary<string, object> htmlAttributes,
-            bool withLookAhead = false)
+            bool withLookAhead = false,
+            bool useHalfWidth = true)
         {
-            AddFormControlCssClass(htmlAttributes);
+            AddFormControlCssClass(htmlAttributes, useHalfWidth);
             GdsExtensions.AddClass(htmlAttributes, "govuk-select");
 
             AddLookAhead(expression, htmlAttributes, withLookAhead);

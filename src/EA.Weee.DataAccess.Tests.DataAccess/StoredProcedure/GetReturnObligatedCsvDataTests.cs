@@ -10,6 +10,7 @@
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Aatf;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
