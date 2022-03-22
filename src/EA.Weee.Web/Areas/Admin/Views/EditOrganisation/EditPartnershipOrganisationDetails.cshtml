@@ -35,7 +35,7 @@
         @Html.EditorFor(m => m.BusinessAddress)
 
         <div class="govuk-form-group">
-            <button class="govuk-button" data-module="govuk-button">Save and Continue</button>
+            <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">Save and Continue</button>
         </div>
         <p>
             @if (Model.SchemeId.HasValue)

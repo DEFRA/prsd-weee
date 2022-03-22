@@ -21,7 +21,7 @@
     {
         @Html.AntiForgeryToken()
         <p>
-            <button class="govuk-button" data-module="govuk-button" type="submit">Request another email</button>        
+            <button class="govuk-button" data-module="govuk-button" type="submit" data-prevent-double-click="true">Request another email</button>        
         </p>
         <p>
             @Html.ActionLink("Create another user account", "UserCreation", "NewUser")

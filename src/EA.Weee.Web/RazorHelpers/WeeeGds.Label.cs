@@ -6,9 +6,9 @@
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString ScreenReaderLabelFor<TValue>(Expression<Func<TModel, TValue>> expression)
+        public MvcHtmlString ScreenVisuallyHiddenLabelFor<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            return gdsHelper.LabelFor(expression, new { @class = "hidden-for-screen-reader" });
+            return gdsHelper.LabelFor(expression, new { @class = "govuk-visually-hidden" });
         }
     }
 }

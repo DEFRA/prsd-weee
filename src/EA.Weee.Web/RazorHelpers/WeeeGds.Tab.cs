@@ -20,7 +20,7 @@
             linkBuilder.SetInnerText(displayText);
 
             var tagBuilder = new TagBuilder("li") { InnerHtml = linkBuilder.ToString() };
-            tagBuilder.AddCssClass("govuk-tabs__list-item");
+            tagBuilder.AddCssClass("govuk-tabs__list-item--selected");
 
             return new MvcHtmlString(tagBuilder.ToString());
         }

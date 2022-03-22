@@ -6,7 +6,7 @@
     {
         public MvcHtmlString ActionLinkToNewTab(string linkText, string url)
         {
-            var span = string.Format("{0}<span class=\"hidden-for-screen-reader\">This link opens in a new browser window</span>",
+            var span = string.Format("{0}<span class=\"govuk-visually-hidden\">This link opens in a new browser window</span>",
                 linkText);
 
             var tagBuilder = new TagBuilder("a");
