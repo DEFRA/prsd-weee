@@ -61,9 +61,9 @@
     </ul>
 
     <section class="govuk-tabs__panel" id="aatfDetails">
-        <div class="govuk-table__header--large">
+        <h1 class="govuk-heading-l">
             @Model.FacilityType.ToDisplayString() details
-        </div>
+        </h1>
         @if (Model.CanEdit && Model.IsValidComplianceYear)
         {
             <div style="float:right">
@@ -149,9 +149,9 @@
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
-        <div class="govuk-table__header--large">
+        <h1 class="govuk-heading-l">
             @Model.FacilityType.ToDisplayString() data returns
-        </div>
+        </h1>
 
         @if (Model.HasSubmissionData)
         {
@@ -221,9 +221,9 @@
 
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
-        <div class="govuk-table__header--large">
+        <h1 class="govuk-heading-l">
             Organisation details
-        </div>
+        </h1>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
@@ -311,9 +311,9 @@
         }
     </section>
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
-        <div class="govuk-table__header--large">
+        <h1 class="govuk-heading-l">
             Contact details
-        </div>
+        </h1>
         <p>Only contact details for the latest compliance year are shown to the customer in WEEE Online</p>
         <table class="govuk-table">
             <tbody class="govuk-table__body">
