@@ -11,21 +11,21 @@
     {
         private static readonly string CssTextClass = "govuk-input";
 
-        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression)
+        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true)
         {
-            return TextBoxFor(expression, new RouteValueDictionary());
+            return TextBoxFor(expression, new RouteValueDictionary(), useHalfWidth);
         }
 
-        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            return TextBoxFor(expression, routeValueDictionary);
+            return TextBoxFor(expression, routeValueDictionary, useHalfWidth);
         }
 
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IDictionary<string, object> htmlAttributes)
+            IDictionary<string, object> htmlAttributes, bool useHalfWidth)
         {
-            AddFormControlCssClass(htmlAttributes);
+            AddFormControlCssClass(htmlAttributes, useHalfWidth);
     /* SG */
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 

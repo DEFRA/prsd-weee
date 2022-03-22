@@ -1,8 +1,9 @@
-﻿namespace EA.Weee.Core.AatfReturn
+﻿namespace EA.Weee.Core.Aatf
 {
-    using DataReturns;
     using System;
     using System.Collections.Generic;
+    using AatfReturn;
+    using DataReturns;
 
     public class CategoryValues<T> : List<T> where T : CategoryValue, new()
     {

@@ -16,6 +16,7 @@
     using FluentAssertions;
     using System;
     using System.Web.Mvc;
+    using Core.Aatf;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.AatfReturn
+﻿namespace EA.Weee.Core.Aatf
 {
     public enum ObligatedType
     {
