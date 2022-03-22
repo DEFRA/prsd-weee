@@ -13,6 +13,12 @@
             context.Routes.MapMvcAttributeRoutes();
 
             context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ManageEvidenceRouteName,
+                url: "Aatf/{organisationId}/{controller}/{action}/",
+                defaults: new { action = "Index", controller = "Home" },
+                namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Aatf_default",
                 url: "Aatf/{organisationId}/{controller}/{action}/",
                 defaults: new { action = "Index", controller = "Home" },
