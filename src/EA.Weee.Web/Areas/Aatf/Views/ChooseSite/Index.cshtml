@@ -1,0 +1,42 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.SelectYourAatfViewModel
+@{
+    var title = "Which site would you like to manage evidence notes for?";
+    ViewBag.Title = title + " - GOV.UK";
+
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "Index", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.FacilityType)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                     m => m.SelectedId,
+                     Model.AatfList,
+                     o => o.Id,
+                     o => o.AatfContactDetailsName,
+                     RadioButtonLegend.VisuallyHidden,
+                     RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
+    </p>
+}

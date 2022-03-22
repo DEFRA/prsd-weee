@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Mapping
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
 {
     using System;
     using System.Linq;
@@ -7,7 +7,7 @@
     using Core.Scheme;
     using FluentAssertions;
     using Prsd.Core.Domain;
-    using Web.Areas.AatfEvidence.Mappings.ToViewModel;
+    using Web.Areas.Aatf.Mappings.ToViewModel;
     using Xunit;
 
     public class CreateNoteViewModelMapTests
@@ -21,22 +21,26 @@
             fixture = new Fixture();
         }
 
-        [Fact]
-        public void Map_GiveSchemesIsNull_ArgumentNullExceptionExpected()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GiveSchemesIsNull_ArgumentNullExceptionExpected(bool isEdit)
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(null));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(null, isEdit));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact]
-        public void Map_GivenTransfer_CreateNoteViewModelShouldBeReturned()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenTransfer_CreateNoteViewModelShouldBeReturned(bool isEdit)
         {
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
-            var transfer = new CreateNoteMapTransfer(schemes);
+            var transfer = new CreateNoteMapTransfer(schemes, isEdit);
 
             //act
             var result = map.Map(transfer);

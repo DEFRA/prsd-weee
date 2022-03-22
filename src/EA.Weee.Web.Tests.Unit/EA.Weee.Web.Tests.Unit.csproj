@@ -235,12 +235,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\AatfEvidence\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Controller\AatfEvidenceBaseControllerTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Mapping\CreateNoteViewModelMapTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Controller\NoteControllerTests.cs" />
-    <Compile Include="Areas\AatfEvidence\Controller\SelectYourAatfControllerTests.cs" />
-    <Compile Include="Areas\AatfEvidence\ViewModel\CreateNoteViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ChooseSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
@@ -278,7 +275,9 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\NoteControllerTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />

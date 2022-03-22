@@ -4,14 +4,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Aatf.Mappings.ToViewModel;
+    using Aatf.ViewModels;
     using Api.Client;
     using Core.Scheme;
     using Infrastructure;
-    using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using ViewModels;
     using Weee.Requests.Scheme;
 
     public class NoteController : AatfEvidenceBaseController

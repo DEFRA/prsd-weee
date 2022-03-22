@@ -1,11 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.ViewModels
+﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Core.AatfEvidence;
-    using Core.AatfReturn;
     using Core.Scheme;
 
     public class CreateNoteViewModel
