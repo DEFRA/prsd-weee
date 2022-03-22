@@ -7,7 +7,7 @@
     using Api.Client;
     using Constant;
     using Core.AatfReturn;
-    using Core.Helpers;
+    using EA.Weee.Web.Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -43,13 +43,41 @@
 
                 if (model.AatfList.Count == 1)
                 {
-                    //return RedirectToAction("Index", "ContactDetails", new { organisationId, aatfId = model.AatfList[0].Id, facilityType });
+                    // TODO: Update with appropriate Manage evidence page once created
+                    return RedirectToAction("Index", "Holding", new { organisationId });
                 }
 
                 await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
 
                 return View(model);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<ActionResult> Index(SelectYourAatfViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // TODO: Update with appropriate Manage evidence page once created
+                return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
+            }
+
+            using (var client = apiClient())
+            {
+                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(model.OrganisationId));
+
+                model = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, FacilityType = model.FacilityType});
+            }
+
+            if (!model.ModelValidated)
+            {
+                ModelState.RunCustomValidation(model);
+            }
+
+            await SetBreadcrumb(model.OrganisationId, string.Format(AatfAction.ManageAatfContactDetails, model.FacilityType.ToDisplayString()));
+
+            return View(model);
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

@@ -10,28 +10,30 @@
 }
 @section main_content
 {
+    @Html.Gds().ValidationSummary()
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             @title
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "Index", controllerName: "Home", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "Index", controllerName: "ChooseSite", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.FacilityType)
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
-            @this.WeeeGds().RadioButtonsFor(
-                     m => m.SelectedId,
-                     Model.AatfList,
-                     o => o.Id,
-                     o => o.AatfContactDetailsName,
-                     RadioButtonLegend.VisuallyHidden,
-                     RadioButtonLayout.Stacked)
-        </div>
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
+    @Html.Gds().ValidationMessageFor(m => m.SelectedId)
+    @this.WeeeGds().RadioButtonsFor(
+                       m => m.SelectedId,
+                       Model.AatfList,
+                       o => o.Id,
+                       o => o.AatfContactDetailsName,
+                       RadioButtonLegend.VisuallyHidden,
+                       RadioButtonLayout.Stacked)
+</div>
 
         @(this.WeeeGds().Submit("Continue"))
     }
