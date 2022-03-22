@@ -13,7 +13,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        <div class="govuk-form-group">
+        <div class="govuk-form-group govuk-form-group--error">
             <fieldset class="govuk-fieldset">  
                     <h1 class="govuk-heading-l">
                         @title
@@ -103,7 +103,7 @@
     "Start AATF nil return"
     ))
 </p>
-        <button type="submit" class="govuk-button" data-module="govuk-button" >
+        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
             Continue
         </button>
     }

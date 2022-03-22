@@ -12,9 +12,13 @@
     </header>
     <div class="govuk-grid-column-full">
         <div class="govuk-grid-row">
-            <p class="important-large">
-                Any data entered against these options will be deleted
-            </p>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Any data entered against these options will be deleted
+                </strong>
+            </div>
         </div>
     </div>
     
@@ -51,7 +55,7 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        <button type="submit" class="govuk-button" data-module="govuk-button" >
+        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
             Save and continue
         </button>
     }

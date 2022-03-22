@@ -11,8 +11,8 @@
 
     <div class="govuk-tabs" id="tabs-div" data-module="govuk-tabs">
         <ul class="govuk-tabs__list">
-            <li id="collectedDelivered-list-item" class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#collected-details" id="collectedDelivered-data-tab">WEEE data</a>
+            <li id="collectedDelivered-list-item" class="govuk-tabs__list-item--selected">
+                <a class="govuk-tabs__tab" href="#collected-details" id="collectedDelivered-data-tab">WEEE data</a>
             </li>
             <li id="output-list-item" class="govuk-tabs__list-item">
                 <a class="govuk-tabs__tab" href="#output-details" id="output-data-tab">EEE data</a>
@@ -20,7 +20,7 @@
         </ul>
         <section class="govuk-tabs__panel" id="collected-details">
             <table id="collectedDelivered-data-table" class="govuk-table">
-                <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
+                <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         @switch (Model.OrderBy)
@@ -91,7 +91,7 @@
 
         <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="output-details">
             <table id="output-data-table" class="govuk-table govuk-visually-hidden">
-                <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
+                <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     @switch (Model.OrderBy)
