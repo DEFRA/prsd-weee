@@ -12,6 +12,7 @@
         public string Received { get; set; }
 
         [TonnageValue("CategoryId", "reused as whole appliances")]
+        [TonnageCompareValue("CategoryId", "Received")]
         public string Reused { get; set; }
 
         public EvidenceCategoryValue()

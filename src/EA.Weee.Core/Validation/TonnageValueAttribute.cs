@@ -44,7 +44,7 @@
 
             if (propertyValue == null || !categoryId.Contains(propertyValue.Value))
             {
-                throw new ValidationException($"Property {CategoryProperty} should be of type {typeof(WeeeCategory).Name}");
+                throw new ValidationException($"Property {CategoryProperty} should be of type {nameof(WeeeCategory)}");
             }
 
             if (string.IsNullOrWhiteSpace(value?.ToString()))

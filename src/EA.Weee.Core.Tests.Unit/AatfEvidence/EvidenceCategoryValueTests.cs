@@ -53,5 +53,14 @@
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") && t.TypeMessage.Equals("reused as whole appliances"));
         }
+
+        [Fact]
+        public void EvidenceCategoryValue_ReusedProperty_ShouldBeDecoratedWith_TonnageCompareValueAttribute()
+        {
+            typeof(EvidenceCategoryValue).GetProperty("Reused")
+                .Should()
+                .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") && t.ComparePropertyName.Equals("Received"));
+        }
     }
 }
