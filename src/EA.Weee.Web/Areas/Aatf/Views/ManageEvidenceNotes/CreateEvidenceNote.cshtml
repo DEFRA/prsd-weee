@@ -8,13 +8,13 @@
 }
 
 <section id="main-content">
-    @Html.RouteLink("Back", AatfEvidenceRedirect.Default, new { @class = "govuk-back-link" })
+    @Html.RouteLink("Back", AatfEvidenceRedirect.ManageEvidenceRouteName, new { @class = "govuk-back-link" })
 
     <h1 class="govuk-heading-l govuk-!-padding-top-5">
         Enter evidence note details
     </h1>
 
-    @using (Html.BeginForm("Create", "Note", FormMethod.Post))
+    @using (Html.BeginForm("CreateEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         <div class="govuk-grid-row">
 
