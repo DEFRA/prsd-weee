@@ -21,6 +21,12 @@
             validationResults = new List<ValidationResult>();
         }
 
+        public void TonnageValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
+        {
+            typeof(TonnageValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
+                .Should().Be(AttributeTargets.Property);
+        }
+
         [Fact]
         public void IsValid_GivenRelatedPropertyDoesNotExist_ValidationExceptionExpected()
         {

@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    [AttributeUsage(AttributeTargets.Property)]
     public class TonnageValueAttribute : ValidationAttribute
     {
         public const int MaxTonnageLength = 14;

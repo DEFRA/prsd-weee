@@ -4,19 +4,22 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Attributes;
     using Core.AatfEvidence;
     using Core.Scheme;
 
-    public class CreateNoteViewModel
+    public class CreateNoteViewModel : IValidatableObject
     {
         [Required]
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
+        [EvidenceNoteStartDate(nameof(EndDate))]
         public DateTime StartDate { get; set; }
 
         [Required]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
+        [EvidenceNoteEndDate(nameof(StartDate))]
         public DateTime EndDate { get; set; }
 
         [Required]
@@ -55,6 +58,11 @@
             {
                 CategoryValues.Add(categoryValue);
             }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            yield return new ValidationResult("Please select a country", new[] { "EndDate" });
         }
     }
 }
