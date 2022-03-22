@@ -150,7 +150,7 @@
         }
         
         var newElement = document.createElement("div");
-        newElement.setAttribute("class", "govuk-!-width-one-half");
+        newElement.setAttribute("style", "width: 100%");
         element.parentNode.insertBefore(newElement, element);
         var existingId = element.id;
 
