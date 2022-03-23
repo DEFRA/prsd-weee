@@ -86,9 +86,12 @@
 
                     TempData["currentQuarter"] = @return.Quarter;
                     TempData["currentQuarterWindow"] = @return.QuarterWindow;
-
+                                        
                     return await Task.Run<ActionResult>(() =>
-                    RedirectToAction("Index", "CanNotFoundTreatmentFacility", new { area = "AatfReturn", returnId = viewModel.ReturnId, aatfId = viewModel.AatfId, aatfName = searchAnAatfViewModel.SearchTerm, isCanNotFindLinkClick = false }));
+                    RedirectToAction("Index", "SearchedAatfResultList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
+
+                    //return await Task.Run<ActionResult>(() =>
+                    //RedirectToAction("Index", "CanNotFoundTreatmentFacility", new { area = "AatfReturn", returnId = viewModel.ReturnId, aatfId = viewModel.AatfId, aatfName = searchAnAatfViewModel.SearchTerm, isCanNotFindLinkClick = false }));
                 }
             }
 

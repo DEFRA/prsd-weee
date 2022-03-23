@@ -21,6 +21,7 @@
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
         public static string Download = "returns-download";
         public static string SearchAnAatfRouteName = "search-an-aatf";
+        public static string SearchedAatfResultListRouteName = "searched-aatf-result-list";
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -92,9 +93,9 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnSiteSummaryList", action = "Index", organisationId = organisationId, returnId = returnId, aatfId = aatfId }));
         }
 
-        public static RedirectToRouteResult SearchedAatfResultLis(Guid organisationId, Guid returnId, Guid aatfId)
+        public static RedirectToRouteResult SearchedAatfResultList(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SearchedAatfResultLis", action = "Index", organisationId = organisationId, returnId = returnId, aatfId = aatfId }));
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SearchedAatfResultList", action = "Index", organisationId = organisationId, returnId = returnId, aatfId = aatfId }));
         }
 
         public static RedirectToRouteResult ReturnsList(Guid organisationId)
