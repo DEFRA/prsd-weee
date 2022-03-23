@@ -35,7 +35,7 @@
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes, false));
+                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
 
@@ -45,13 +45,13 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateEvidenceNote(CreateNoteViewModel viewModel, Guid organisationId)
+        public async Task<ActionResult> CreateEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId)
         {
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<CreateNoteViewModel>(new CreateNoteMapTransfer(schemes, true));
+                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
 

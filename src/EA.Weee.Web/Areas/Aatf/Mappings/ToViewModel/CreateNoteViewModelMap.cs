@@ -6,18 +6,23 @@
     using Prsd.Core.Mapper;
     using ViewModels;
 
-    public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, CreateNoteViewModel>
+    public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, EvidenceNoteViewModel>
     {
-        public CreateNoteViewModel Map(CreateNoteMapTransfer source)
+        public EvidenceNoteViewModel Map(CreateNoteMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new CreateNoteViewModel
+            var model = new EvidenceNoteViewModel
             {
                 SchemeList = source.Schemes,
                 ProtocolList = Enumeration.GetAll<Protocol>(),
                 WasteTypeList = Enumeration.GetAll<WasteType>()
             };
+
+            if (source.ExistingModel != null)
+            {
+                model.CategoryValues = source.ExistingModel.CategoryValues;
+            }
 
             return model;
         }

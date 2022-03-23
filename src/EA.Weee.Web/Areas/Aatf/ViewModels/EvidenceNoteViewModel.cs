@@ -6,10 +6,13 @@
     using System.Linq;
     using Attributes;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Core.Scheme;
 
-    public class CreateNoteViewModel : IValidatableObject
+    public class EvidenceNoteViewModel
     {
+        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+
         [Required]
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
@@ -40,8 +43,9 @@
 
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        public CreateNoteViewModel()
+        public EvidenceNoteViewModel()
         {
+            this.categoryValueCalculator = new CategoryValueTotalCalculator();
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
@@ -59,5 +63,9 @@
                 CategoryValues.Add(categoryValue);
             }
         }
+
+        public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
+
+        public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
     }
 }
