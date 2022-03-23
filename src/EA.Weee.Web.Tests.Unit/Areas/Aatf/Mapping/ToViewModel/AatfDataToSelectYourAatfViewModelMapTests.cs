@@ -7,17 +7,22 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Web.Areas.Aatf.Mappings.Filters;
     using Xunit;
 
     public class AatfDataToSelectYourAatfViewModelMapTests
     {
         private readonly AatfDataToSelectYourAatfViewModelMap map;
         private readonly Fixture fixture;
+        private readonly IAatfDataFilter<List<AatfData>, FacilityType> filter;
+
         public AatfDataToSelectYourAatfViewModelMapTests()
         {
             fixture = new Fixture();
+            filter = A.Fake<IAatfDataFilter<List<AatfData>, FacilityType>>();
 
-            map = new AatfDataToSelectYourAatfViewModelMap();
+            map = new AatfDataToSelectYourAatfViewModelMap(filter);
         }
 
         [Fact]
@@ -26,6 +31,21 @@
             Action action = () => map.Map(null);
 
             action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenListOfAatfs_MapperShouldBeCalled()
+        {
+            //arrange
+            var aatfList = fixture.CreateMany<AatfData>().ToList();
+            var facility = fixture.Create<FacilityType>();
+            var transfer = new AatfDataToSelectYourAatfViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = aatfList, FacilityType = facility };
+
+            //act
+            map.Map(transfer);
+
+            //assert
+            A.CallTo(() => filter.Filter(aatfList, facility)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -58,6 +78,8 @@
             aatfList.Add(aatfData);
             aatfList.Add(aatfData2);
             aatfList.Add(aatfData3);
+
+            A.CallTo(() => filter.Filter(aatfList, A<FacilityType>.Ignored)).Returns(aatfList);
 
             var transfer = new AatfDataToSelectYourAatfViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 

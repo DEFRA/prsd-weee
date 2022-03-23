@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class AatfDataFilter : IFilter<List<AatfData>, FacilityType>
+    public class AatfDataAatfDataFilter : IAatfDataFilter<List<AatfData>, FacilityType>
     {
         public List<AatfData> Filter(List<AatfData> source, FacilityType filter)
         {
