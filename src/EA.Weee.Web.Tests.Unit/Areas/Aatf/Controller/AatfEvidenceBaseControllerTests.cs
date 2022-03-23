@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfEvidence.Controller
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using FluentAssertions;
     using Web.Areas.AatfEvidence.Controllers;
