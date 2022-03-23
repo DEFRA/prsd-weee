@@ -9100,6 +9100,7 @@ $.extend( Datepicker.prototype, {
 				.attr( {
 					type: "button",
 					"class": "ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all",
+					"data-module":"govuk - button",
 					"data-handler": "hide",
 					"data-event": "click"
 				} )
@@ -9115,6 +9116,7 @@ $.extend( Datepicker.prototype, {
 						.attr( {
 							type: "button",
 							"class": "ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all",
+							"data-module": "govuk - button",
 							"data-handler": "today",
 							"data-event": "click"
 						} )

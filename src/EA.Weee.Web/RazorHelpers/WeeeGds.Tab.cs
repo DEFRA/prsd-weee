@@ -13,13 +13,15 @@
                 linkBuilder.Attributes.Add("id", id);
             }
             linkBuilder.AddCssClass("govuk-tabs__tab");
-            if (isActive)
-            {
-                linkBuilder.AddCssClass("govuk-tabs__tab--selected");
-            }
+            
             linkBuilder.SetInnerText(displayText);
 
             var tagBuilder = new TagBuilder("li") { InnerHtml = linkBuilder.ToString() };
+            
+            if (isActive)
+            {
+                tagBuilder.AddCssClass("govuk-tabs__list-item--selected");
+            }
             tagBuilder.AddCssClass("govuk-tabs__list-item");
 
             return new MvcHtmlString(tagBuilder.ToString());

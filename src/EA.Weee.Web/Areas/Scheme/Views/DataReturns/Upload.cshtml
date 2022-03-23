@@ -100,12 +100,16 @@
             </ul>
 
             <p>To submit your data return, upload an XML file</p>
-            <img src="~/Content/govuk_frontend/images/icon-important.png" alt="icon-important" style="float:left;" height="42" width="42">
-            <p class="important">
-                Your XML file must use the version 3.35 schema
-            </p>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Your XML file must use the version 3.35 schema
+                </strong>
+            </div>
+
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
-                @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
+                @(this.WeeeGds().ScreenVisuallyHiddenLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 <!-- Removed this as the TextBoxFor helper was adding the govuk-input class to the browse button, causing some formatting issues SG -->
                 <!--@Html.Gds().TextBoxFor(m => m.File, new { @class= "govuk-file-upload", type = "file", accept = ".xml" })-->

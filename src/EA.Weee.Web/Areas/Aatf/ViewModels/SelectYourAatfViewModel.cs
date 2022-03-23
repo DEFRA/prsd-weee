@@ -5,13 +5,10 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using Core.AatfReturn;
-    using EA.Weee.Web.Extensions;
 
     public class SelectYourAatfViewModel : IValidatableObject
     {
         public Guid OrganisationId { get; set; }
-
-        public FacilityType FacilityType { get; set; }
 
         [DisplayName("Which site would you like to manage evidence notes for?")]
         [Required(ErrorMessage = "Select the site you would like to manage")]
