@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
 {
+    using AutoFixture;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using FakeItEasy;
@@ -7,22 +8,21 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AutoFixture;
     using Web.Areas.Aatf.Mappings.Filters;
     using Xunit;
 
-    public class AatfDataToHomeViewModelMapTests
+    public class AatfDataToSelectYourAatfViewModelMapTests
     {
-        private readonly AatfDataToHomeViewModelMap map;
+        private readonly AatfDataToSelectYourAatfViewModelMap map;
         private readonly Fixture fixture;
         private readonly IAatfDataFilter<List<AatfData>, FacilityType> filter;
 
-        public AatfDataToHomeViewModelMapTests()
+        public AatfDataToSelectYourAatfViewModelMapTests()
         {
             fixture = new Fixture();
             filter = A.Fake<IAatfDataFilter<List<AatfData>, FacilityType>>();
 
-            map = new AatfDataToHomeViewModelMap(filter);
+            map = new AatfDataToSelectYourAatfViewModelMap(filter);
         }
 
         [Fact]
@@ -39,7 +39,7 @@
             //arrange
             var aatfList = fixture.CreateMany<AatfData>().ToList();
             var facility = fixture.Create<FacilityType>();
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = aatfList, FacilityType = facility };
+            var transfer = new AatfDataToSelectYourAatfViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = aatfList, FacilityType = facility };
 
             //act
             map.Map(transfer);
@@ -81,7 +81,7 @@
 
             A.CallTo(() => filter.Filter(aatfList, A<FacilityType>.Ignored)).Returns(aatfList);
 
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
+            var transfer = new AatfDataToSelectYourAatfViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 
             var result = map.Map(transfer);
 
@@ -91,13 +91,12 @@
         [Fact]
         public void Map_GivenSource_PropertiesShouldBeSet()
         {
-            var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = A.Fake<List<AatfData>>(), FacilityType = fixture.Create<FacilityType>() };
+            var transfer = new AatfDataToSelectYourAatfViewModelMapTransfer() { OrganisationId = Guid.NewGuid(), AatfList = A.Fake<List<AatfData>>(), FacilityType = fixture.Create<FacilityType>() };
 
             var result = map.Map(transfer);
 
             result.AatfList.Should().BeEquivalentTo(transfer.AatfList);
             result.OrganisationId.Should().Be(transfer.OrganisationId);
-            result.FacilityType.Should().Be(transfer.FacilityType);
         }
     }
 }

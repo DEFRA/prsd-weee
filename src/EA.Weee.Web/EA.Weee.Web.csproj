@@ -307,15 +307,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
-    <Compile Include="Areas\AatfEvidence\AatfEvidenceAreaRegistration.cs" />
-    <Compile Include="Areas\AatfEvidence\Attributes\ValidateEvidenceEnabledAttribute .cs" />
-    <Compile Include="Areas\AatfEvidence\Controllers\AatfEvidenceBaseController.cs" />
-    <Compile Include="Areas\AatfEvidence\Controllers\HoldingController.cs" />
-    <Compile Include="Areas\AatfEvidence\Controllers\NoteController.cs" />
-    <Compile Include="Areas\AatfEvidence\Controllers\SelectYourAatfController.cs" />
-    <Compile Include="Areas\AatfEvidence\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
-    <Compile Include="Areas\AatfEvidence\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
-    <Compile Include="Areas\AatfEvidence\ViewModels\CreateNoteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
@@ -350,13 +341,26 @@
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttribute .cs" />
+    <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ChooseSiteController.cs" />
+    <Compile Include="Areas\Aatf\Controllers\NoteController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\Filters\AatfDataFilter.cs" />
+    <Compile Include="Areas\Aatf\Mappings\Filters\IAatfDataFilter.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\CreateNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
     <Compile Include="Areas\Admin\Controllers\Attributes\ValidateOrganisationSchemeBaseActionFilterAttribute.cs" />
@@ -703,11 +707,9 @@
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
-    <Content Include="Areas\AatfEvidence\Views\web.config" />
-    <Content Include="Areas\AatfEvidence\Views\Holding\Index.cshtml" />
-    <Content Include="Areas\AatfEvidence\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\AatfEvidence\Views\SelectYourAatf\Index.cshtml" />
-    <Content Include="Areas\AatfEvidence\Views\Note\Create.cshtml" />
+    <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
+    <Content Include="Areas\Aatf\Views\Note\Create.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -1494,7 +1496,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AatfEvidence\Views\Shared\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
