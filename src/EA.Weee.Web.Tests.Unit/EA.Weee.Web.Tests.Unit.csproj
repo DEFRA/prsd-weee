@@ -346,6 +346,7 @@
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="RazorHelpers\GdsPanelUnitTests.cs" />
     <Compile Include="RazorHelpers\GdsDropDownUnitTests.cs" />
     <Compile Include="RazorHelpers\GdsLabelUnitTests.cs" />
     <Compile Include="RazorHelpers\WeeeGdsFormTests.cs" />
