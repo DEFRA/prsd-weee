@@ -142,13 +142,31 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeBuiltAsync()
+        {
+            var organisationId = this.fixture.Create<Guid>();
+            var model = new SelectYourAatfViewModel()
+            {
+                OrganisationId = organisationId,
+                AatfList = A.Fake<List<AatfData>>(),
+            };
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            var result = await this.controller.Index(organisationId) as ViewResult;
+
+            var modelResult = result.Model as SelectYourAatfViewModel;
+
+            modelResult.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
         public async void IndexPost_ValidViewModel_PageRedirectsManageEvidence()
         {
             var model = new SelectYourAatfViewModel()
             {
                 OrganisationId = fixture.Create<Guid>(),
                 SelectedId = fixture.Create<Guid>(),
-                FacilityType = fixture.Create<FacilityType>()
             };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
@@ -157,6 +175,62 @@
             result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Manage Evidence
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             //result.RouteValues["aatfId"].Should().Be(model.SelectedId); // This will be needed
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidModel_ApiShouldBeCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var model = new SelectYourAatfViewModel()
+            {
+                AatfList = A.Fake<List<AatfData>>(),
+            };
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(organisationId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalid_MapperShouldBeCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var model = new SelectYourAatfViewModel()
+            {
+                AatfList = A.Fake<List<AatfData>>(),
+            };
+
+            this.controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            var facilityType = FacilityType.Aatf;
+
+            await controller.Index(organisationId);
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async void IndexPost_GivenValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationName = "Organisation";
+            var model = new SelectYourAatfViewModel()
+            {
+                AatfList = A.Fake<List<AatfData>>(),
+            };
+
+            this.controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+
+            await controller.Index(model);
+
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence");
         }
     }
 }
