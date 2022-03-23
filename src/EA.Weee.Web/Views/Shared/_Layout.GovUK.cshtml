@@ -12,19 +12,19 @@
                 (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
         </script>*@
 
-    <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/images/favicon.ico")" type="image/x-icon" />
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@Url.Content("~/Content/govuk_frontend/images/favicon.ico")" type="image/x-icon" />
-    <link rel="mask-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-mask-icon.svg")" color="#0b0c0c" />
-    <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-180x180.png")" />
-    <link rel="apple-touch-icon" sizes="167x167" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-167x167.png")" />
-    <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-152x152.png")" />
-    <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon.png")" />
+    <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
+    <link rel="mask-icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-mask-icon.svg")" color="#0b0c0c" />
+    <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-180x180.png")" />
+    <link rel="apple-touch-icon" sizes="167x167" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-167x167.png")" />
+    <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-apple-touch-icon-152x152.png")" />
+    <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/images/assets/govuk-apple-touch-icon.png")" />
 
     <!--[if IE 8]>
-        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.7.0.min.css")" rel="stylesheet" />
+        <link href="@Url.Content("~/Content/weee-page-ie8.css")" rel="stylesheet" />
     <![endif]-->
 
-    <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/images/opengraph-image.png")" />
+    <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-opengraph-image.png")" />
     @RenderSection("head", required: false)
 </head>
 
@@ -37,17 +37,17 @@
     
     <div id="skiplink-container">
         <div>
-            <a href="#main-content" class="govuk-skip-link skiplink">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
+            <a href="#main-content" class="govuk-skip-link skiplink" data-module="govuk-skip-link">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
         </div>
     </div>
         
-    <div id="global-cookie-message">
+    <div id="global-cookie-message" class="govuk-cookie-banner " data-nosnippet role="region" aria-label="Cookies on your service">
         @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
     </div>
     <!--end global-cookie-message-->
     <!--end header-->
 
-    <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="header">
+    <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
             <div class="header-global">
                 <div class="govuk-header__logo">
@@ -74,11 +74,11 @@
 
     @RenderBody()
 
-    <footer class="govuk-footer " role="contentinfo" id="footer">
-        <div class="govuk-width-container ">
+    <footer class="govuk-footer" role="contentinfo" id="footer">
+        <div class="govuk-width-container">
             @RenderSection("footer_top", required: false)
             <hr class="govuk-footer__section-break">
-            <div class="govuk-footer__meta">
+            <div class="govuk-footer__meta govuk-footer__section">
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow govuk-!-margin-left-6">
                     @RenderSection("footer_support_links", required: false)
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">
@@ -90,7 +90,7 @@
                 </div>
                 <div class="govuk-footer__meta-item">
                     <a class="footer-logo govuk-footer__link " href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">
-                        <img src="@Url.Content("~/Content/govuk_frontend/images/govuk-crest.png")" alt="govuk crest" /><br /> @Html.Raw(ViewBag.CrownCopyrightMessage ?? "&copy; Crown copyright")
+                        <img src="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-crest.png")" alt="govuk crest" /><br /> @Html.Raw(ViewBag.CrownCopyrightMessage ?? "&copy; Crown copyright")
                     </a>
                 </div>
             </div>
@@ -98,13 +98,11 @@
     </footer>
 
 
-    <div hidden="hidden" class="hidden-for-screen-reader">
+    <div hidden="hidden" class="govuk-visually-hidden">
         Version: @Startup.ApplicationVersion
     </div>
 
     <div id="global-app-error" class="app-error hidden"></div>
-
-    <script src="@Url.Content("~/Scripts/govuk/govuk-template.js")"></script>
 
     @RenderSection("body_end", required: false)
 

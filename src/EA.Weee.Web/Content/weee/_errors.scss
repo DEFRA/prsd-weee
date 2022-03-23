@@ -1,12 +1,7 @@
-﻿@import "../govuk_frontend/package/helpers/colour";
+﻿@import "../govuk_frontend/helpers/_colour.scss";
 
-.input-validation-error {   
-}
-
-.form-group-error {
-    border-left: 3px solid $govuk-error-colour;
-    padding: 10px 0 10px 10px;
-    background-color: #FEF7F7;
+.input-validation-error {
+    border-color: $govuk-error-colour; 
 }
 
 .field-validation-error {
