@@ -7,6 +7,7 @@
     public static class AatfEvidenceRedirect
     {
         public static string ManageEvidenceRouteName = "AATF_ManageEvidence";
+        public static string ViewEvidenceRouteName = "AATF_ViewEvidence";
 
         public static RedirectToRouteResult SelectYourAatf(Guid organisationId)
         {

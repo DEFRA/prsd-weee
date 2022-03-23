@@ -103,7 +103,7 @@
 
             //assert
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel.Equals(null)))).MustHaveHappenedOnceExactly();
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -128,13 +128,14 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_BreadcrumbShouldBeSet()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_BreadcrumbShouldBeSet()
         {
             //arrange
             var organisationName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            AddModelError();
 
             //act
             await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId);
@@ -146,8 +147,11 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_SchemesListShouldBeRetrieved()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_SchemesListShouldBeRetrieved()
         {
+            //arrange
+            AddModelError();
+
             //act
             await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), A.Dummy<Guid>());
 
@@ -157,12 +161,14 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_ViewModelMapperShouldBeCalled()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_ViewModelMapperShouldBeCalled()
         {
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
             var model = A.Dummy<EvidenceNoteViewModel>();
+            AddModelError();
+
             //act
             await controller.CreateEvidenceNote(model, A.Dummy<Guid>());
 
@@ -182,17 +188,66 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_ModelShouldBeReturned()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_ModelShouldBeReturned()
         {
             //arrange
             var model = new EvidenceNoteViewModel();
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+            AddModelError();
 
             //act
             var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelIsValid_ModelShouldNotBeRebuilt()
+        {
+            //arrange
+            var model = new EvidenceNoteViewModel()
+            {
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
+                ReceivedId = Guid.NewGuid()
+            };
+            
+            //act
+            await controller.CreateEvidenceNote(model, A.Dummy<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelIsValid_ShouldBeRedirectToViewEvidenceNote()
+        {
+            //arrange
+            var model = ValidModel();
+
+            //act
+            var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>()) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues.Should().Contain(c => c.Value.Equals("ViewDraftEvidenceNote") && c.Key.Equals("action"));
+            result.RouteValues.Should().Contain(c => c.Key.Equals("evidenceNoteId"));
+        }
+
+        private void AddModelError()
+        {
+            controller.ModelState.AddModelError("error", "error");
+        }
+
+        private EvidenceNoteViewModel ValidModel()
+        {
+            var model = new EvidenceNoteViewModel()
+            {
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
+                ReceivedId = Guid.NewGuid()
+            };
+            return model;
         }
     }
 }

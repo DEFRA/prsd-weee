@@ -49,13 +49,29 @@
         {
             using (var client = apiClient())
             {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                if (ModelState.IsValid)
+                {
+                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = Guid.NewGuid() });
+                }
 
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                
                 var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb(organisationId, "TODO:fix");
+
+                return View();
             }
         }
 
