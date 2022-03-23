@@ -350,6 +350,7 @@
     <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ChooseSiteController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ManageEvidenceNotesController.cs" />
+    
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
@@ -710,6 +711,7 @@
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\CreateEvidenceNote.cshtml" />
+    
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
