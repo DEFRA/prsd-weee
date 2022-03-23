@@ -15,10 +15,9 @@
         display: inline-block;
         position: absolute;
         left: 0;
-        min-width: 65px;
-        min-height: 65px;
-        margin-top: -8px;
-        line-height: 120%;
+        min-width: 35px;
+        min-height: 35px;
+        margin-top: -7px;
 
         @include govuk-media-query($from: tablet) {
             margin-top: -5px;
@@ -29,11 +28,9 @@
         border-radius: 50%;
         color: govuk-colour("white");
         background: govuk-colour("black");
-        font-size: 55px;
-        line-height: 55px;
-
+        font-size: 30px;
+        line-height: 29px;
         text-align: center;
-
         // Prevent the exclamation mark from being included when the warning text
         // is copied, for example.
         user-select: none;
