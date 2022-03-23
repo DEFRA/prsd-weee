@@ -59,10 +59,5 @@
                 CategoryValues.Add(categoryValue);
             }
         }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            yield return new ValidationResult("Please select a country", new[] { "EndDate" });
-        }
     }
 }
