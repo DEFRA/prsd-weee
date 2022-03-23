@@ -281,7 +281,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToSelectYourAatfViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\CreateNoteViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
@@ -489,7 +489,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-
     <Folder Include="Areas\Admin\DataAnnotations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
