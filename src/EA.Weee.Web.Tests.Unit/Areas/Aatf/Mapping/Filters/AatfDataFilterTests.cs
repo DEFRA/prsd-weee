@@ -10,11 +10,11 @@
 
     public class AatfDataFilterTests
     {
-        private readonly AatfDataFilter aatfDataFilter;
+        private readonly AatfDataAatfDataFilter aatfDataAatfDataFilter;
 
         public AatfDataFilterTests()
         {
-            aatfDataFilter = new AatfDataFilter();
+            aatfDataAatfDataFilter = new AatfDataAatfDataFilter();
         }
 
         [Fact]
@@ -32,7 +32,7 @@
 
             aatfList.Add(aatfData);
 
-            var result = aatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
 
             foreach (var aatf in result)
             {
@@ -66,7 +66,7 @@
             aatfList.Add(aatfData);
             aatfList.Add(aatfData2);
 
-            var result = aatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
 
             result.Count.Should().Be(1);
             result.Should().Contain(aatfData2);
@@ -79,7 +79,7 @@
             var aatfList = SetupAatfList();
             var facilityType = FacilityType.Aatf;
 
-            var result = aatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
 
             result.Should().NotBeEmpty();
             result.Should().OnlyContain(m => m.FacilityType == FacilityType.Aatf);
@@ -91,7 +91,7 @@
             var aatfList = SetupAatfList();
             var facilityType = FacilityType.Ae;
 
-            var result = aatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
 
             result.Should().NotBeEmpty();
             result.Should().OnlyContain(m => m.FacilityType == FacilityType.Ae);
