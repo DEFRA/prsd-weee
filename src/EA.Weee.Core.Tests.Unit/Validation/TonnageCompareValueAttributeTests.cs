@@ -21,6 +21,7 @@
             validationResults = new List<ValidationResult>();
         }
 
+        [Fact]
         public void TonnageCompareValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
         {
             typeof(TonnageCompareValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn

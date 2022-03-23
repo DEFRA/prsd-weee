@@ -8,23 +8,17 @@
 
     public class NonObligatedCategoryValueTests
     {
-        private readonly TonnageValueAttribute attribute;
-
-        public NonObligatedCategoryValueTests()
+        [Fact]
+        public void NonObligatedCategoryValue_ShouldHaveSerializableAttribute()
         {
-            attribute = (TonnageValueAttribute)Attribute.GetCustomAttribute(typeof(NonObligatedCategoryValue).GetProperty("Tonnage"), typeof(TonnageValueAttribute));
+            typeof(NonObligatedCategoryValue).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]
-        public void NonObligatedCategoryValue_GivenTonnageProperty_ShouldContainTonnageValueAttribute()
+        public void NonObligatedCategoryValue_TonnageProperty_ShouldHaveTonnageAttribute()
         {
-            attribute.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void NonObligatedCategoryValue_GivenTonnageProperty_TonnageValueAttributeShouldHaveValidPropertyName()
-        {
-            attribute.CategoryProperty.Should().Be("CategoryId");
+            typeof(NonObligatedCategoryValue).GetProperty("Tonnage").Should().BeDecoratedWith<TonnageValueAttribute>(
+                a => a.CategoryProperty.Equals("CategoryId") && a.StartOfValidationMessage.Equals("The tonnage value"));
         }
     }
 }
