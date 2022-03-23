@@ -1,15 +1,16 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.Controllers
+﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using AatfEvidence.Controllers;
     using Api.Client;
+    using EA.Weee.Web.Areas.AatfEvidence.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.AatfEvidence.ViewModels;
     using Infrastructure;
-    using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using ViewModels;
     using Weee.Requests.Scheme;
 
     public class NoteController : AatfEvidenceBaseController

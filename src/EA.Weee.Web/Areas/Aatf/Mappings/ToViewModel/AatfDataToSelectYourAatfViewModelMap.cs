@@ -1,29 +1,28 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
     using System.Collections.Generic;
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Mapper;
-    using Filters;
-    using ViewModels;
     using System.Linq;
     using Core.AatfReturn;
+    using EA.Weee.Web.Areas.Aatf.Mappings.Filters;
+    using Prsd.Core;
+    using Prsd.Core.Mapper;
+    using ViewModels;
 
-    public class AatfDataToHomeViewModelMap : IMap<AatfDataToHomeViewModelMapTransfer, HomeViewModel>
+    public class AatfDataToSelectYourAatfViewModelMap : IMap<AatfDataToSelectYourAatfViewModelMapTransfer, SelectYourAatfViewModel>
     {
         private readonly IAatfDataFilter<List<AatfData>, FacilityType> filter;
 
-        public AatfDataToHomeViewModelMap(IAatfDataFilter<List<AatfData>, FacilityType> filter)
+        public AatfDataToSelectYourAatfViewModelMap(IAatfDataFilter<List<AatfData>, FacilityType> filter)
         {
             this.filter = filter;
         }
 
-        public HomeViewModel Map(AatfDataToHomeViewModelMapTransfer source)
+        public SelectYourAatfViewModel Map(AatfDataToSelectYourAatfViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new HomeViewModel
+            var model = new SelectYourAatfViewModel
             {
-                FacilityType = source.FacilityType,
                 OrganisationId = source.OrganisationId,
                 AatfList = filter.Filter(source.AatfList, source.FacilityType).OrderBy(o => o.Name).ToList(),
             };
