@@ -178,16 +178,6 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_DefaultViewShouldBeReturned()
-        {
-            //act
-            var result = await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), A.Dummy<Guid>()) as ViewResult;
-
-            //assert
-            result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
         public async Task CreateEvidenceNotePost_GivenInvalidModel_ModelShouldBeReturned()
         {
             //arrange
