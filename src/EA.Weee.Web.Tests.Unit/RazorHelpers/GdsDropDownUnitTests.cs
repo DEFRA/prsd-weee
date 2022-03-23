@@ -13,11 +13,13 @@
         private readonly HtmlHelper<TestModel> htmlHelper = HtmlHelperFactory.CreateHtmlHelper<TestModel>();
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void GivenGDSDropDown_ShouldContainGdsCss(bool autocomplete)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void GivenGDSDropDown_ShouldContainGdsCss(bool autocomplete, bool useHalfWidth)
         {
-            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), autocomplete);
+            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), autocomplete, useHalfWidth);
 
             control.ToString().Should().Contain("class").And.Contain("govuk-select");
         }
@@ -43,7 +45,7 @@
             }
             else
             {
-                control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), optionLabel, true);
+                control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), optionLabel, true, true);
             }
             
             control.ToString().Should().Contain("aria-labelledby=\"TopLevel-label\" ");
@@ -63,6 +65,38 @@
             var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>());
 
             control.ToString().Should().NotContain("gds-auto-complete");
+        }
+
+        [Fact]
+        public void GivenGDSDropDown_WithoutHalfWidth_ShouldNotContainHalfWidthCss()
+        {
+            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), useHalfWidth: false);
+
+            control.ToString().Should().NotContain("govuk-!-width-one-half");
+        }
+
+        [Fact]
+        public void GivenGDSDropDown_WithHalfWidth_ShouldContainHalfWidthCss()
+        {
+            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), useHalfWidth: true);
+
+            control.ToString().Should().Contain("class").And.Contain("govuk-!-width-one-half");
+        }
+
+        [Fact]
+        public void GivenGDSDropDownAlt_WithoutHalfWidth_ShouldNotContainHalfWidthCss()
+        {
+            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), new object(), useHalfWidth: false);
+
+            control.ToString().Should().NotContain("govuk-!-width-one-half");
+        }
+
+        [Fact]
+        public void GivenGDSDropDownAlt_WithHalfWidth_ShouldContainHalfWidthCss()
+        {
+            var control = htmlHelper.Gds().DropDownListFor(m => m.TopLevel, new List<SelectListItem>(), new object(), useHalfWidth: true);
+
+            control.ToString().Should().Contain("class").And.Contain("govuk-!-width-one-half");
         }
     }
 }
