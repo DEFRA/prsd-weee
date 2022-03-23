@@ -45,7 +45,13 @@
 
         public EvidenceNoteViewModel()
         {
-            this.categoryValueCalculator = new CategoryValueTotalCalculator();
+            categoryValueCalculator = new CategoryValueTotalCalculator();
+            AddCategoryValues(new EvidenceCategoryValues());
+        }
+
+        public EvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
+        {
+            this.categoryValueCalculator = categoryValueCalculator;
             AddCategoryValues(new EvidenceCategoryValues());
         }
 

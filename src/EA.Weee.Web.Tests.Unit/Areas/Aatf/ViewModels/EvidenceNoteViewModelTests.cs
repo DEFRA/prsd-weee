@@ -1,21 +1,28 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Core.AatfEvidence;
+    using Core.DataReturns;
+    using Core.Helpers;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
     using Xunit;
 
-    public class CreateNoteViewModelTests
+    public class EvidenceNoteViewModelTests
     {
         private readonly EvidenceNoteViewModel model;
+        private readonly ICategoryValueTotalCalculator calculator;
 
-        public CreateNoteViewModelTests()
+        public EvidenceNoteViewModelTests()
         {
-            model = new EvidenceNoteViewModel();
+            calculator = A.Fake<ICategoryValueTotalCalculator>();
+
+            model = new EvidenceNoteViewModel(calculator);
         }
 
         [Theory]
@@ -24,7 +31,7 @@
         [InlineData("ReceivedId", "Recipient")]
         [InlineData("ProtocolValue", "Actual or protocol")]
         [InlineData("WasteTypeValue", "Type of waste")]
-        public void CreateNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
+        public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
             typeof(EvidenceNoteViewModel)
                 .GetProperty(property)
@@ -36,7 +43,7 @@
         [InlineData("StartDate")]
         [InlineData("EndDate")]
         [InlineData("ReceivedId")]
-        public void CreateNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property)
+        public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property)
         {
             typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>();
         }
@@ -44,13 +51,13 @@
         [Theory]
         [InlineData("StartDate", DataType.Date)]
         [InlineData("EndDate", DataType.Date)]
-        public void CreateNoteViewModel_Properties_ShouldHaveDataTypeAttribute(string property, DataType type)
+        public void EvidenceNoteViewModel_Properties_ShouldHaveDataTypeAttribute(string property, DataType type)
         {
             typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<DataTypeAttribute>(d => d.DataType.Equals(type));
         }
 
         [Fact]
-        public void CreateNoteViewModel_Constructor_ShouldPopulateEvidenceCategoryValues()
+        public void EvidenceNoteViewModel_Constructor_ShouldPopulateEvidenceCategoryValues()
         {
             var evidenceCategoryValues = new EvidenceCategoryValues();
             for (var count = 0; count < evidenceCategoryValues.Count; count++)
@@ -60,7 +67,7 @@
         }
 
         [Fact]
-        public void Edit_GivenSavedCategoryValuesExist_EditShouldBeTrue()
+        public void EvidenceNoteViewModel_Edit_GivenSavedCategoryValuesExist_EditShouldBeTrue()
         {
             for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
             {
@@ -71,15 +78,35 @@
         }
 
         [Fact]
-        public void CreateNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
+        public void EvidenceNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
             typeof(EvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
         }
 
         [Fact]
-        public void CreateNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
+        public void EvidenceNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
             typeof(EvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_ReceivedTotal_ShouldCallCalculator()
+        {
+            model.CategoryValues.Add(new EvidenceCategoryValue(WeeeCategory.ConsumerEquipment) { Received = "1"});
+
+            var total = model.ReceivedTotal;
+
+            A.CallTo(() => calculator.Total(A<List<string>>.That.IsSameSequenceAs(model.CategoryValues.Select(c => c.Received).ToList()))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_ReusedTotal_ShouldCallCalculator()
+        {
+            model.CategoryValues.Add(new EvidenceCategoryValue(WeeeCategory.ConsumerEquipment) { Reused = "2" });
+
+            var total = model.ReusedTotal;
+
+            A.CallTo(() => calculator.Total(A<List<string>>.That.IsSameSequenceAs(model.CategoryValues.Select(c => c.Reused).ToList()))).MustHaveHappenedOnceExactly();
         }
     }
 }
