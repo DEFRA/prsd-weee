@@ -102,16 +102,16 @@
             await controller.CreateEvidenceNote(A.Dummy<Guid>());
 
             //assert
-            A.CallTo(() => mapper.Map<CreateNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.IsEdit.Equals(false)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel.Equals(null)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNoteGet_GivenViewModel_ViewModelShouldBeReturned()
         {
             //arrange
-            var model = new CreateNoteViewModel();
-            A.CallTo(() => mapper.Map<CreateNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+            var model = new EvidenceNoteViewModel();
+            A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
             var result = await controller.CreateEvidenceNote(A.Dummy<Guid>()) as ViewResult;
@@ -123,7 +123,7 @@
         [Fact]
         public void CreateEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(CreateNoteViewModel), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EvidenceNoteViewModel), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
@@ -137,7 +137,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await controller.CreateEvidenceNote(A.Dummy<CreateNoteViewModel>(), organisationId);
+            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId);
 
             //assert
             breadcrumb.ExternalActivity.Should().Be("TODO:fix");
@@ -149,7 +149,7 @@
         public async Task CreateEvidenceNotePost_SchemesListShouldBeRetrieved()
         {
             //act
-            await controller.CreateEvidenceNote(A.Dummy<CreateNoteViewModel>(), A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), A.Dummy<Guid>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -162,20 +162,20 @@
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
-
+            var model = A.Dummy<EvidenceNoteViewModel>();
             //act
-            await controller.CreateEvidenceNote(A.Dummy<CreateNoteViewModel>(), A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(model, A.Dummy<Guid>());
 
             //assert
-            A.CallTo(() => mapper.Map<CreateNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.IsEdit.Equals(true)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel.Equals(model)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNotePost_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await controller.CreateEvidenceNote(A.Dummy<CreateNoteViewModel>(), A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), A.Dummy<Guid>()) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -185,8 +185,8 @@
         public async Task CreateEvidenceNotePost_ModelShouldBeReturned()
         {
             //arrange
-            var model = new CreateNoteViewModel();
-            A.CallTo(() => mapper.Map<CreateNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+            var model = new EvidenceNoteViewModel();
+            A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
             var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>()) as ViewResult;

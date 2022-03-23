@@ -34,7 +34,7 @@ function numberWithCommas(x) {
 }
 
 function TonnageTotals(controlId) {
-    //var controlId = 'Tonnage';
+  
     var tonnageElements = document.querySelectorAll('input[id$=' + controlId + ']');
     for (var elementCount = 0; elementCount < tonnageElements.length; elementCount++) {
         var element = tonnageElements[elementCount];
