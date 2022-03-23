@@ -710,6 +710,7 @@
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\CreateEvidenceNote.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\ViewDraftEvidenceNote.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
