@@ -2,6 +2,7 @@
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -19,7 +20,7 @@
             @Html.HiddenFor(m => m.AatfId)*@
         <p class="govuk-body">The treatment site below will be added to your list</p>
         <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-            @if (Model.Sites.Count > 0)
+            @*@if (Model.Sites.Count > 0)*@
             {
                 <div class="govuk-table__head">
                     <div class="govuk-grid-row govuk-table__row govuk-table__header">
@@ -33,7 +34,7 @@
                             AATF approval number
                         </div>
                         <div class="govuk-grid-column-one-quarter weee-tonnage-right-aligned-display">
-                            Actions
+                            Select
                         </div>
                     </div>
                 </div>
@@ -68,11 +69,11 @@
                         </div>
                     }*@
             }
-            else
+            @*else
             {
                 <div class="govuk-!-padding-bottom-8"></div>
                 <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another AATF / ATF link.</p>
-            }
+            }*@
         </div>
         <div class="govuk-!-padding-bottom-2"></div>
         <p class="govuk-body" style="margin-bottom: 0px;">

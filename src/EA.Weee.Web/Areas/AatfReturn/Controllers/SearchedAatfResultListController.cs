@@ -26,9 +26,9 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper;
+        private readonly IMap<ReturnToSearchedAnAatfViewModelMapTransfer, ReturnToSearchedAnAatfViewModelMap> mapper;
 
-        public SearchedAatfResultListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper)
+        public SearchedAatfResultListController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IWeeeCache cache, IMap<ReturnToSearchedAnAatfViewModelMapTransfer, ReturnToSearchedAnAatfViewModelMap> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -39,7 +39,31 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId)
         {
-            return View();
+            using (var client = apiClient())
+            {
+                var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(aatfId, returnId, null));
+
+                var model = mapper.Map(new ReturnToSearchedAnAatfViewModelMapTransfer()
+                {                    
+                    AatfId = aatfId                    
+                });
+
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+
+                return View(model);
+            }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }
