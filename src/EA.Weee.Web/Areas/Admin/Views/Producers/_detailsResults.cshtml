@@ -8,9 +8,9 @@
 
 @foreach (var scheme in Model.Schemes)
 {
-    <div class="govuk-tabs" data-module="govuk-tabs">
+    <div class="govuk-tabs" data-module="tabs">
         <ul class="govuk-tabs__list">
-            <li class="govuk-tabs__list-item--selected">
+            <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                 <a class="govuk-tabs__tab" href="#registration-details" id="@(scheme.ObligationType)-registration-details-tab">Overview</a>
             </li>
 
