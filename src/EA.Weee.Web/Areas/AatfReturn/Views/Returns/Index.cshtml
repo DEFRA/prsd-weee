@@ -107,7 +107,7 @@
                                                 @Html.AntiForgeryToken()
 
                                                 <span class="govuk-visually-hidden" id="edit-message-@item.ReturnViewModel.ReturnId">@editMessage</span>
-                                                <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit" aria-label="@editMessage" aria-describedby="edit-message-@item.ReturnViewModel.ReturnId">Edit</button>
+                                                <button class="link-submit govuk-link govuk-link--no-visited-state" role="button" type="submit" aria-label="@editMessage" aria-describedby="edit-message-@item.ReturnViewModel.ReturnId" data-module="govuk-button" data-prevent-double-click="true">Edit</button>
                                             }
                                         }
                                         if (item.ReturnsListDisplayOptions.DisplaySummary)

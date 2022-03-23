@@ -153,7 +153,7 @@
             </div>
             @if (item.SchemeData.Count > 0)
             {
-                <details class="govuk-details collapsible-font-size" style="margin-left: 15px;" aria-live="polite" role="group">
+                <details class="govuk-details collapsible-font-size" data-module="govuk-details" style="margin-left: 15px;" aria-live="polite" role="group">
                     <summary id="details-@item.Aatf.Id" class="govuk-details__summary" aria-controls="details-content-@count" aria-expanded="false">
                         <span class="govuk-details__summary-text">
                             Breakdown by PCS
@@ -210,7 +210,7 @@
                 </details>
             }
         </div>
-        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
             <div class="govuk-grid-column-one-half">
                 <p class="summary-paragraph">
                     Sent to another AATF / ATF
@@ -262,7 +262,7 @@
                 }
             </div>
         </div>
-        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+        <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
             <div class="govuk-grid-column-one-half">
                 <p class="summary-paragraph">
                     Reused as a whole appliance
@@ -375,7 +375,7 @@
             }
         </div>
     </div>
-    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
         <div class="govuk-grid-column-one-half">
             <p class="summary-paragraph">
                 Received
@@ -423,7 +423,7 @@
             }
         </div>
     </div>
-    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display summary-row">
+    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display">
         <div class="govuk-grid-column-one-half">
             <p class="summary-paragraph">
                 Kept / retained by a DCF
