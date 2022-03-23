@@ -18,6 +18,8 @@
 
     public class ChooseSiteController : AatfEvidenceBaseController
     {
+        private const FacilityType facilityType = FacilityType.Aatf;
+
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -34,23 +36,17 @@
         [HttpGet]
         public virtual async Task<ActionResult> Index(Guid organisationId)
         {
-            using (var client = apiClient())
+            var model = await GenerateSelectYourAatfViewModel(organisationId);
+
+            if (model.AatfList.Count == 1)
             {
-                FacilityType facilityType = FacilityType.Aatf;
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-
-                var model = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = facilityType });
-
-                if (model.AatfList.Count == 1)
-                {
-                    // TODO: Update with appropriate Manage evidence page once created
-                    return RedirectToAction("Index", "Holding", new { organisationId });
-                }
-
-                await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
-
-                return View(model);
+                // TODO: Update with appropriate Manage evidence page once created
+                return RedirectToAction("Index", "Holding", new { organisationId });
             }
+            
+            await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
+            
+            return View(model);
         }
 
         [HttpPost]
@@ -63,19 +59,9 @@
                 return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
             }
 
-            using (var client = apiClient())
-            {
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(model.OrganisationId));
+            model = await GenerateSelectYourAatfViewModel(model.OrganisationId);
 
-                model = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, FacilityType = model.FacilityType});
-            }
-
-            if (!model.ModelValidated)
-            {
-                ModelState.RunCustomValidation(model);
-            }
-
-            await SetBreadcrumb(model.OrganisationId, string.Format(AatfAction.ManageAatfContactDetails, model.FacilityType.ToDisplayString()));
+            await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
 
             return View(model);
         }
@@ -85,6 +71,16 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+        }
+
+        private async Task<SelectYourAatfViewModel> GenerateSelectYourAatfViewModel(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+
+                return mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = facilityType });
+            }
         }
     }
 }

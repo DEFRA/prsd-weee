@@ -347,6 +347,8 @@
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ChooseSiteController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\Filters\AatfDataFilter.cs" />
+    <Compile Include="Areas\Aatf\Mappings\Filters\IFilter.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />

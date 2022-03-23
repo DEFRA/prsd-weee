@@ -22,7 +22,6 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.FacilityType)
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
     @Html.Gds().ValidationMessageFor(m => m.SelectedId)
