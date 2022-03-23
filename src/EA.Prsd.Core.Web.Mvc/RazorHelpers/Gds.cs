@@ -16,11 +16,11 @@ namespace EA.Prsd.Core.Web.Mvc.RazorHelpers
             this.htmlHelper = htmlHelper;
         }
 
-        protected static void AddFormControlCssClass(IDictionary<string, object> htmlAttributes)
+        protected static void AddFormControlCssClass(IDictionary<string, object> htmlAttributes, bool useHalfWidth = true)
         {
             if (htmlAttributes.ContainsKey("class"))
             {
-                if (!htmlAttributes["class"].ToString().Contains("govuk-!-width-one-half"))
+                if (!htmlAttributes["class"].ToString().Contains("govuk-!-width-one-half") && useHalfWidth)
                 {
                     htmlAttributes["class"] += " govuk-!-width-one-half";
                 }
@@ -31,7 +31,14 @@ namespace EA.Prsd.Core.Web.Mvc.RazorHelpers
             }
             else
             {
-                htmlAttributes.Add("class", "govuk-!-width-one-half form-control");
+                if (useHalfWidth)
+                {
+                    htmlAttributes.Add("class", "govuk-!-width-one-half form-control");
+                }
+                else
+                {
+                    htmlAttributes.Add("class", "form-control");
+                }
             }
         }
 
