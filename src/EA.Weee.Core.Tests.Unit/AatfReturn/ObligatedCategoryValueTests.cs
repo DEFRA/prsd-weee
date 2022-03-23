@@ -8,49 +8,28 @@
 
     public class ObligatedCategoryValueTests
     {
-        private readonly TonnageValueAttribute b2bAttribute;
-        private readonly TonnageValueAttribute b2cAttribute;
-
-        public ObligatedCategoryValueTests()
+        [Fact]
+        public void ObligatedCategoryValue_ShouldHaveSerializableAttribute()
         {
-            b2cAttribute = (TonnageValueAttribute)Attribute.GetCustomAttribute(typeof(ObligatedCategoryValue).GetProperty("B2C"), typeof(TonnageValueAttribute));
-            b2bAttribute = (TonnageValueAttribute)Attribute.GetCustomAttribute(typeof(ObligatedCategoryValue).GetProperty("B2B"), typeof(TonnageValueAttribute));
+            typeof(ObligatedCategoryValue).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]
-        public void ObligatedCategoryValue_GivenHouseHoldProperty_ShouldContainTonnageValueAttribute()
+        public void ObligatedCategoryValue_B2CProperty_ShouldHaveTonnageAttribute()
         {
-            b2cAttribute.Should().NotBeNull();
+            typeof(ObligatedCategoryValue).GetProperty("B2C").Should().BeDecoratedWith<TonnageValueAttribute>(
+                a => a.CategoryProperty.Equals("CategoryId") 
+                     && a.StartOfValidationMessage.Equals("The tonnage value")
+                     && a.TypeMessage.Equals("B2C"));
         }
 
         [Fact]
-        public void ObligatedCategoryValue_GivenNonHouseHoldProperty_ShouldContainTonnageValueAttribute()
+        public void ObligatedCategoryValue_B2BProperty_ShouldHaveTonnageAttribute()
         {
-            b2bAttribute.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void ObligatedCategoryValue_GivenHouseHoldProperty_TonnageValueAttributeShouldHaveValidPropertyName()
-        {
-            b2cAttribute.CategoryProperty.Should().Be("CategoryId");
-        }
-
-        [Fact]
-        public void ObligatedCategoryValue_GivenNonHouseHoldProperty_TonnageValueAttributeShouldHaveValidPropertyName()
-        {
-            b2bAttribute.CategoryProperty.Should().Be("CategoryId");
-        }
-
-        [Fact]
-        public void ObligatedCategoryValue_GivenHouseHoldProperty_TonnageValueAttributeShouldHaveValidTypeMessage()
-        {
-            b2cAttribute.TypeMessage.Should().Be("B2C");
-        }
-
-        [Fact]
-        public void ObligatedCategoryValue_GivenNonHouseHoldProperty_TonnageValueAttributeShouldHaveValidTypeMessage()
-        {
-            b2bAttribute.TypeMessage.Should().Be("B2B");
+            typeof(ObligatedCategoryValue).GetProperty("B2B").Should().BeDecoratedWith<TonnageValueAttribute>(
+                a => a.CategoryProperty.Equals("CategoryId")
+                     && a.StartOfValidationMessage.Equals("The tonnage value")
+                     && a.TypeMessage.Equals("B2B"));
         }
     }
 }

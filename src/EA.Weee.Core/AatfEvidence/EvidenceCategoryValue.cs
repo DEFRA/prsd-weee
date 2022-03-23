@@ -8,10 +8,10 @@
     [Serializable]
     public class EvidenceCategoryValue : CategoryValue
     {
-        [TonnageValue(nameof(CategoryId), "total received")]
+        [TonnageValue(nameof(CategoryId), "The total amount received in tonnes")]
         public string Received { get; set; }
 
-        [TonnageValue(nameof(CategoryId), "reused as whole appliances")]
+        [TonnageValue(nameof(CategoryId), "The amount in tonnes that has been re-used as whole appliances")]
         [TonnageCompareValue(nameof(CategoryId), nameof(Received))]
         public string Reused { get; set; }
 
