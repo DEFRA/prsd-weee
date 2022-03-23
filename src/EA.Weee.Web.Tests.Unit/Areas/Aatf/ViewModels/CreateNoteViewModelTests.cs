@@ -11,11 +11,11 @@
 
     public class CreateNoteViewModelTests
     {
-        private readonly CreateNoteViewModel model;
+        private readonly EvidenceNoteViewModel model;
 
         public CreateNoteViewModelTests()
         {
-            model = new CreateNoteViewModel();
+            model = new EvidenceNoteViewModel();
         }
 
         [Theory]
@@ -26,7 +26,7 @@
         [InlineData("WasteTypeValue", "Type of waste")]
         public void CreateNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
-            typeof(CreateNoteViewModel)
+            typeof(EvidenceNoteViewModel)
                 .GetProperty(property)
                 .Should()
                 .BeDecoratedWith<DisplayAttribute>(d => d.Name.Equals(description));
@@ -38,7 +38,7 @@
         [InlineData("ReceivedId")]
         public void CreateNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property)
         {
-            typeof(CreateNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>();
+            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>();
         }
 
         [Theory]
@@ -46,7 +46,7 @@
         [InlineData("EndDate", DataType.Date)]
         public void CreateNoteViewModel_Properties_ShouldHaveDataTypeAttribute(string property, DataType type)
         {
-            typeof(CreateNoteViewModel).GetProperty(property).Should().BeDecoratedWith<DataTypeAttribute>(d => d.DataType.Equals(type));
+            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<DataTypeAttribute>(d => d.DataType.Equals(type));
         }
 
         [Fact]
@@ -64,7 +64,7 @@
         {
             for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
             {
-                var local = new CreateNoteViewModel();
+                var local = new EvidenceNoteViewModel();
                 local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
                 local.Edit.Should().BeTrue();
             }
@@ -73,13 +73,13 @@
         [Fact]
         public void CreateNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
-            typeof(CreateNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
+            typeof(EvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
         }
 
         [Fact]
         public void CreateNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
-            typeof(CreateNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
+            typeof(EvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
         }
     }
 }
