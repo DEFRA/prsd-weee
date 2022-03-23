@@ -5,12 +5,14 @@
 <div class="govuk-!-padding-bottom-8"></div>
 
 <div class="govuk-tabs">
-    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+   @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
     <section class="govuk-tabs__panel" id="pcsDetails">
-        <h1 class="govuk-heading-l">
-            PCS details
-        </h1>
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                PCS details
+            </h1>
+        </header>
 
         <table id="pcs-details-table" class="govuk-table">
             <thead class="govuk-table__head">
