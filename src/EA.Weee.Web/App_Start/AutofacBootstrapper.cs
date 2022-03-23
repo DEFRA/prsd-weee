@@ -20,6 +20,7 @@
     using Requests.Base;
     using Security;
     using System.Reflection;
+    using Areas.Aatf.Mappings.Filters;
 
     public class AutofacBootstrapper
     {
@@ -54,6 +55,9 @@
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .AsClosedTypesOf(typeof(IMap<,>));
+
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .AsClosedTypesOf(typeof(IAatfDataFilter<,>));
 
             // Register security module
             builder.RegisterModule(new SecurityModule());
