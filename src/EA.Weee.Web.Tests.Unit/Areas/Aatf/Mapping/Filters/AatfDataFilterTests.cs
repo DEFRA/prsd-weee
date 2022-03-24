@@ -32,7 +32,7 @@
 
             aatfList.Add(aatfData);
 
-            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, true);
 
             foreach (var aatf in result)
             {
@@ -66,7 +66,7 @@
             aatfList.Add(aatfData);
             aatfList.Add(aatfData2);
 
-            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, true);
 
             result.Count.Should().Be(1);
             result.Should().Contain(aatfData2);
@@ -79,7 +79,7 @@
             var aatfList = SetupAatfList();
             var facilityType = FacilityType.Aatf;
 
-            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, true);
 
             result.Should().NotBeEmpty();
             result.Should().OnlyContain(m => m.FacilityType == FacilityType.Aatf);
@@ -91,10 +91,54 @@
             var aatfList = SetupAatfList();
             var facilityType = FacilityType.Ae;
 
-            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType);
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, true);
 
             result.Should().NotBeEmpty();
             result.Should().OnlyContain(m => m.FacilityType == FacilityType.Ae);
+        }
+
+        [Fact]
+        public void Filter_GivenDisplayStatusTrue_ShouldAppendStatus()
+        {
+            var aatfList = new List<AatfData>();
+            var aatfId = Guid.NewGuid();
+            var facilityType = FacilityType.Aatf;
+
+            var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = facilityType,
+                AatfId = aatfId,
+            };
+
+            aatfList.Add(aatfData);
+
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, true);
+
+            result[0].AatfContactDetailsName.Should().Contain(aatfData.AatfStatus.ToString());
+        }
+
+        [Fact]
+        public void Filter_GivenDisplayStatusFalse_ShouldNotAppendStatus()
+        {
+            var aatfList = new List<AatfData>();
+            var aatfId = Guid.NewGuid();
+            var facilityType = FacilityType.Aatf;
+
+            var aatfData = new AatfData(Guid.NewGuid(), "AATF", "approval number", 2019, A.Dummy<Core.Shared.UKCompetentAuthorityData>(),
+                Core.AatfReturn.AatfStatus.Approved, A.Dummy<AatfAddressData>(), Core.AatfReturn.AatfSize.Large, DateTime.Now,
+                A.Dummy<Core.Shared.PanAreaData>(), null)
+            {
+                FacilityType = facilityType,
+                AatfId = aatfId,
+            };
+
+            aatfList.Add(aatfData);
+
+            var result = aatfDataAatfDataFilter.Filter(aatfList, facilityType, false);
+
+            result[0].AatfContactDetailsName.Should().NotContain(aatfData.AatfStatus.ToString());
         }
 
         private List<AatfData> SetupAatfList()
