@@ -8,8 +8,14 @@
     ViewBag.Title = title + " - GOV.UK";
 
 }
+
+
 @section main_content
 {
+    <p>
+        @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class="govuk-back-link" })
+    </p>
+
     @Html.Gds().ValidationSummary()
 
     <header class="hgroup">
@@ -37,7 +43,5 @@
         @(this.WeeeGds().Submit("Continue"))
     }
 
-    <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { })
-    </p>
+   
 }
