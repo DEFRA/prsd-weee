@@ -341,15 +341,18 @@
     <Compile Include="Areas\AatfReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
+    <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ContactDetailsController.cs" />
     <Compile Include="Areas\Aatf\Controllers\ChooseSiteController.cs" />
-    <Compile Include="Areas\Aatf\Controllers\NoteController.cs" />
+    
     <Compile Include="Areas\Aatf\Mappings\Filters\AatfDataFilter.cs" />
     <Compile Include="Areas\Aatf\Mappings\Filters\IAatfDataFilter.cs" />
+    <Compile Include="Areas\Aatf\Controllers\ManageEvidenceNotesController.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
@@ -357,7 +360,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\CreateNoteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModel.cs" />
@@ -419,6 +422,7 @@
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Panel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnsViewModelTransfer.cs" />
@@ -993,7 +997,8 @@
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
-    <Content Include="Areas\Aatf\Views\Note\Create.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\CreateEvidenceNote.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\ViewDraftEvidenceNote.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
