@@ -14,6 +14,7 @@
 
             var model = new EvidenceNoteViewModel
             {
+                OrganisationId = source.OrganisationId,
                 SchemeList = source.Schemes,
                 ProtocolList = Enumeration.GetAll<Protocol>(),
                 WasteTypeList = Enumeration.GetAll<WasteType>()

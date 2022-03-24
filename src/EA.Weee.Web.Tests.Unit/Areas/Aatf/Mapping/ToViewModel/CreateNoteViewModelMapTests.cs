@@ -16,6 +16,7 @@
     {
         private readonly CreateNoteViewModelMap map;
         private readonly Fixture fixture;
+
         public CreateNoteViewModelMapTests()
         {
             map = new CreateNoteViewModelMap();
@@ -27,10 +28,30 @@
         public void Map_GiveSchemesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(null, null));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(null, null, Guid.NewGuid(), Guid.NewGuid()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<SchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid()));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Map_GivenAatfIdGuidIsEmpty_ArgumentNullExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<SchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
         }
 
         [Fact]
@@ -38,14 +59,18 @@
         {
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
-                
-            var transfer = new CreateNoteMapTransfer(schemes, null);
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var transfer = new CreateNoteMapTransfer(schemes, null, organisationId, aatfId);
 
             //act
             var result = map.Map(transfer);
 
             //assert
             result.Should().NotBeNull();
+            result.OrganisationId.Should().Be(organisationId);
+            result.AatfId.Should().Be(aatfId);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
             result.ProtocolList.Should().BeEquivalentTo(Enumeration.GetAll<Protocol>());
@@ -58,18 +83,22 @@
         {
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
             var model = new EvidenceNoteViewModel()
             {
                 CategoryValues = fixture.CreateMany<EvidenceCategoryValue>().ToList()
             };
 
-            var transfer = new CreateNoteMapTransfer(schemes, model);
+            var transfer = new CreateNoteMapTransfer(schemes, model, organisationId, aatfId);
 
             //act
             var result = map.Map(transfer);
 
             //assert
             result.Should().NotBeNull();
+            result.OrganisationId.Should().Be(organisationId);
+            result.AatfId.Should().Be(aatfId);
             result.CategoryValues.Should().BeEquivalentTo(model.CategoryValues);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();

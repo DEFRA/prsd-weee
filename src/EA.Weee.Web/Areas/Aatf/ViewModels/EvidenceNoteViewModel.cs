@@ -60,6 +60,10 @@
             get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
         }
 
+        public Guid OrganisationId { get; set; }
+
+        public Guid AatfId { get; set; }
+
         private void AddCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
         {
             CategoryValues = new List<EvidenceCategoryValue>();

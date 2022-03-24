@@ -79,6 +79,7 @@
     <Compile Include="Evidence\Note.cs" />
     <Compile Include="Evidence\Protocol.cs" />
     <Compile Include="Evidence\NoteStatus.cs" />
+    <Compile Include="Evidence\NoteType.cs" />
     <Compile Include="Evidence\WasteType.cs" />
     <Compile Include="Lookup\AreaBase.cs" />
     <Compile Include="Lookup\LocalArea.cs" />

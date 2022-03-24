@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -16,6 +17,9 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Areas.AatfEvidence.Controllers;
+    using Web.Requests.Base;
+    using Weee.Requests.Aatf;
+    using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Xunit;
 
@@ -26,7 +30,11 @@
         private readonly ManageEvidenceNotesController controller;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator;
+
         private readonly Fixture fixture;
+        private readonly Guid organisationId;
+        private readonly Guid aatfId;
 
         public ManageEvidenceNotesControllerCreateEvidenceNoteTests()
         {
@@ -34,9 +42,12 @@
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
+            createRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest>>();
             fixture = new Fixture();
+            organisationId = new Guid();
+            aatfId = new Guid();
 
-            controller = new ManageEvidenceNotesController(mapper, breadcrumb, cache, () => weeeClient);
+            controller = new ManageEvidenceNotesController(mapper, breadcrumb, cache, () => weeeClient, createRequestCreator);
         }
 
         [Fact]
@@ -56,7 +67,7 @@
         public async Task CreateEvidenceNoteGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await controller.CreateEvidenceNote(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.CreateEvidenceNote(organisationId, aatfId) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -72,7 +83,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await controller.CreateEvidenceNote(organisationId);
+            await controller.CreateEvidenceNote(organisationId, aatfId);
 
             //assert
             breadcrumb.ExternalActivity.Should().Be("TODO:fix");
@@ -84,7 +95,7 @@
         public async Task CreateEvidenceNoteGet_SchemesListShouldBeRetrieved()
         {
             //act
-            await controller.CreateEvidenceNote(A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(organisationId, aatfId);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -99,11 +110,11 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
 
             //act
-            await controller.CreateEvidenceNote(A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(organisationId, aatfId);
 
             //assert
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel == null))).MustHaveHappenedOnceExactly();
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel == null && c.AatfId.Equals(aatfId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -114,7 +125,7 @@
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
-            var result = await controller.CreateEvidenceNote(A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.CreateEvidenceNote(organisationId, aatfId) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -138,7 +149,7 @@
             AddModelError();
 
             //act
-            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId);
+            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId, aatfId);
 
             //assert
             breadcrumb.ExternalActivity.Should().Be("TODO:fix");
@@ -153,7 +164,7 @@
             AddModelError();
 
             //act
-            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId, aatfId);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -170,11 +181,14 @@
             AddModelError();
 
             //act
-            await controller.CreateEvidenceNote(model, A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(model, organisationId, aatfId);
 
             //assert
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) 
+                                                           && c.ExistingModel.Equals(model)
+                                                           && c.OrganisationId.Equals(organisationId) 
+                                                           && c.AatfId.Equals(aatfId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -186,7 +200,7 @@
             AddModelError();
 
             //act
-            var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>()) as ViewResult;
+            var result = await controller.CreateEvidenceNote(model, organisationId, aatfId) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -204,7 +218,7 @@
             };
             
             //act
-            await controller.CreateEvidenceNote(model, A.Dummy<Guid>());
+            await controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
             A.CallTo(() => mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).MustNotHaveHappened();
@@ -217,11 +231,47 @@
             var model = ValidModel();
 
             //act
-            var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>()) as RedirectToRouteResult;
+            var result = await controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>()) as RedirectToRouteResult;
 
             //assert
             result.RouteValues.Should().Contain(c => c.Value.Equals("ViewDraftEvidenceNote") && c.Key.Equals("action"));
             result.RouteValues.Should().Contain(c => c.Key.Equals("evidenceNoteId"));
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelIsValid_RequestCreatorShouldBeCalled()
+        {
+            //arrange
+            var model = ValidModel();
+
+            //act
+            await controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            A.CallTo(() => createRequestCreator.ViewModelToRequest(model)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
+        {
+            //arrange
+            var model = ValidModel();
+            var request = new CreateEvidenceNoteRequest(Guid.NewGuid(), 
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                DateTime.Now, 
+                DateTime.Now, 
+                null, 
+                null,
+                new List<TonnageValues>());
+
+            A.CallTo(() => createRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            //act
+            await controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync<int>(A<string>._, request)).MustHaveHappenedOnceExactly();
         }
 
         private void AddModelError()
