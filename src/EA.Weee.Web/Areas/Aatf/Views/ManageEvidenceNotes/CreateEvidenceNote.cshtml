@@ -8,7 +8,7 @@
 }
 
 <section id="main-content">
-    @Html.RouteLink("Back", AatfEvidenceRedirect.ManageEvidenceRouteName, new { @class = "govuk-back-link" })
+    @Html.RouteLink("Back", AatfEvidenceRedirect.ManageEvidenceRouteName, null, new { @class = "govuk-back-link" })
 
     <h1 class="govuk-heading-l govuk-!-padding-top-5">
         Enter evidence note details
@@ -22,6 +22,8 @@
 
                 @Html.AntiForgeryToken()
                 @Html.Gds().ValidationSummary()
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.AatfId)
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full govuk-body-m">Period in which WEEE was received for treatment</div>

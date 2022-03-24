@@ -7,13 +7,14 @@
     using System;
     using System.Collections.Generic;
     using Extensions;
+    using Weee.Requests.Aatf;
 
     public class ObligatedSentOnWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedBaseRequest>, IObligatedSentOnWeeeRequestCreator
     {
         public override ObligatedBaseRequest ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
-            var obligatedRequestValues = new List<ObligatedValue>();
+            var obligatedRequestValues = new List<TonnageValues>();
 
             foreach (var categoryValue in viewModel.CategoryValues)
             {
@@ -21,7 +22,7 @@
                 var nonHouseholdValue = categoryValue.B2B.ToDecimal();
 
                 obligatedRequestValues.Add(
-                    new ObligatedValue(categoryValue.Id,
+                    new TonnageValues(categoryValue.Id,
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));

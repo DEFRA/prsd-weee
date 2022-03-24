@@ -32,7 +32,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeReceivedAmount.Add(new WeeeReceivedAmount(aatfWeeeReceived, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
             }
 
             await obligatedReceivedDataAccess.Submit(aatfWeeeReceivedAmount);
