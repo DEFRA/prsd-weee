@@ -17,6 +17,11 @@
             return LabelFor(expression, new RouteValueDictionary(), CssLabelClass, string.Empty, showOptionalLabel);
         }
 
+        public MvcHtmlString LabelFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool showOptionalLabel)
+        {
+            return LabelFor(expression, new RouteValueDictionary(htmlAttributes), CssLabelClass, string.Empty, showOptionalLabel);
+        }
+
         public MvcHtmlString LabelFor<TValue>(Expression<Func<TModel, TValue>> expression, string optionalMessage = "")
         {
             return LabelFor(expression, new RouteValueDictionary(), optionalMessage);

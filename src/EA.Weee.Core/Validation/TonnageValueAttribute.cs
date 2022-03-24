@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    [AttributeUsage(AttributeTargets.Property)]
     public class TonnageValueAttribute : ValidationAttribute
     {
         public const int MaxTonnageLength = 14;
@@ -14,19 +15,23 @@
         public string CategoryProperty { get; private set; }
         public string TypeMessage { get; private set; }
 
+        public string StartOfValidationMessage { get; private set; }
+
         /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
         private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
-        public TonnageValueAttribute(string category)
+        public TonnageValueAttribute(string category, string startOfValidationMessage)
         {
-            this.CategoryProperty = category;
-            this.TypeMessage = null;
+            CategoryProperty = category;
+            TypeMessage = null;
+            StartOfValidationMessage = startOfValidationMessage;
         }
 
-        public TonnageValueAttribute(string category, string typeMessage)
+        public TonnageValueAttribute(string category, string startOfValidationMessage, string typeMessage)
         {
-            this.CategoryProperty = category;
-            this.TypeMessage = typeMessage;
+            CategoryProperty = category;
+            TypeMessage = typeMessage;
+            StartOfValidationMessage = startOfValidationMessage;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -44,7 +49,7 @@
 
             if (propertyValue == null || !categoryId.Contains(propertyValue.Value))
             {
-                throw new ValidationException($"Property {CategoryProperty} should be of type {typeof(WeeeCategory).Name}");
+                throw new ValidationException($"Property {CategoryProperty} should be of type {nameof(WeeeCategory)}");
             }
 
             if (string.IsNullOrWhiteSpace(value?.ToString()))
@@ -111,7 +116,7 @@
         {
             var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
 
-            return $"The tonnage value for category {categoryId}{additionalMessage} must be {message}";
+            return $"{StartOfValidationMessage} for category {categoryId}{additionalMessage} must be {message}";
         }
     }
 }

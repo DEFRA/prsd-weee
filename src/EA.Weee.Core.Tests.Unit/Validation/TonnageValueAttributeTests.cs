@@ -12,6 +12,7 @@
     public class TonnageValueAttributeTests
     {
         private const string CategoryIdProperty = "Category";
+        private const string StartOfValidationMessage = "The tonnage value";
         private const int CategoryIdValue = 1;
         private readonly List<ValidationResult> validationResults;
         private const WeeeCategory Category = WeeeCategory.AutomaticDispensers;
@@ -22,11 +23,18 @@
         }
 
         [Fact]
+        public void TonnageValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
+        {
+            typeof(TonnageValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
+                .Should().Be(AttributeTargets.Property);
+        }
+
+        [Fact]
         public void IsValid_GivenRelatedPropertyDoesNotExist_ValidationExceptionExpected()
         {
             var tonnageValue = new TestTonnageValueNonRelatedProperty();
             var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
-            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage);
 
             Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
 
@@ -38,7 +46,7 @@
         {
             var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType() { Category = 15 };
             var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
-            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage);
 
             Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
 
@@ -271,13 +279,13 @@
 
         public class TestTonnageValueNonRelatedProperty
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage)]
             public object Tonnage { get; set; }
         }
 
         public class TestTonnageValueRelatedPropertyNotOfCorrectType
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage)]
             public object Tonnage { get; set; }
 
             public int Category { get; set; }
@@ -285,7 +293,7 @@
 
         public class TestTonnageValue
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }
@@ -293,7 +301,7 @@
 
         public class TestTonnageValueWithTypeMessage
         {
-            [TonnageValue(CategoryIdProperty, "B2C")]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, "B2C")]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }

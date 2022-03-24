@@ -1,23 +1,28 @@
-﻿namespace EA.Weee.Web.Areas.AatfEvidence.ViewModels
+﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Attributes;
     using Core.AatfEvidence;
-    using Core.AatfReturn;
+    using Core.Helpers;
     using Core.Scheme;
 
-    public class CreateNoteViewModel
+    public class EvidenceNoteViewModel
     {
+        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+
         [Required]
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
+        [EvidenceNoteStartDate(nameof(EndDate))]
         public DateTime StartDate { get; set; }
 
         [Required]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
+        [EvidenceNoteEndDate(nameof(StartDate))]
         public DateTime EndDate { get; set; }
 
         [Required]
@@ -27,19 +32,26 @@
         public List<SchemeData> SchemeList { get; set; }
 
         [Display(Name = "Type of waste")]
-        public int WasteTypeValue { get; set; }
+        public int? WasteTypeValue { get; set; }
 
         public IEnumerable<WasteType> WasteTypeList { get; set; }
 
         [Display(Name = "Actual or protocol")]
-        public int ProtocolValue { get; set; }
+        public int? ProtocolValue { get; set; }
 
         public IEnumerable<Protocol> ProtocolList { get; set; }
 
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        public CreateNoteViewModel()
+        public EvidenceNoteViewModel()
         {
+            categoryValueCalculator = new CategoryValueTotalCalculator();
+            AddCategoryValues(new EvidenceCategoryValues());
+        }
+
+        public EvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
+        {
+            this.categoryValueCalculator = categoryValueCalculator;
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
@@ -57,5 +69,9 @@
                 CategoryValues.Add(categoryValue);
             }
         }
+
+        public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
+
+        public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
     }
 }
