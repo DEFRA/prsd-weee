@@ -25,7 +25,7 @@
             {
                 FacilityType = source.FacilityType,
                 OrganisationId = source.OrganisationId,
-                AatfList = filter.Filter(source.AatfList, source.FacilityType).OrderBy(o => o.Name).ToList(),
+                AatfList = filter.Filter(source.AatfList, source.FacilityType, true).OrderBy(o => o.Name).ToList(),
             };
 
             return model;

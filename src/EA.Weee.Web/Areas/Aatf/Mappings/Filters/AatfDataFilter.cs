@@ -6,7 +6,7 @@
 
     public class AatfDataAatfDataFilter : IAatfDataFilter<List<AatfData>, FacilityType>
     {
-        public List<AatfData> Filter(List<AatfData> source, FacilityType filter)
+        public List<AatfData> Filter(List<AatfData> source, FacilityType filter, bool displayStatus)
         {
             var filteredAatfList = RemoveOlderAatfs(source);
 
@@ -16,7 +16,7 @@
 
             foreach (var aatf in selectedAatfsOrAes)
             {
-                aatf.AatfContactDetailsName = aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus;
+                aatf.AatfContactDetailsName = displayStatus ? aatf.Name + " (" + aatf.ApprovalNumber + ") - " + aatf.AatfStatus : aatf.Name + " (" + aatf.ApprovalNumber + ")";
             }
 
             return selectedAatfsOrAes;
