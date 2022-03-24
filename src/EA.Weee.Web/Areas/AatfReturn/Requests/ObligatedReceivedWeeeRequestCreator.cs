@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Requests
 {
     using EA.Prsd.Core;
+    using EA.Weee.Web.Extensions;
     using System;
     using System.Collections.Generic;
     using ViewModels;
@@ -16,8 +17,8 @@
 
             foreach (var categoryValue in viewModel.CategoryValues)
             {
-                var householdValue = ConvertStringToDecimal(categoryValue.B2C);
-                var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
+                var householdValue = categoryValue.B2C.ToDecimal();
+                var nonHouseholdValue = categoryValue.B2B.ToDecimal();
 
                 obligatedRequestValues.Add(
                     new ObligatedValue(categoryValue.Id,
@@ -42,17 +43,6 @@
                 ReturnId = viewModel.ReturnId,
                 CategoryValues = obligatedRequestValues
             };
-        }
-
-        private decimal? ConvertStringToDecimal(string input)
-        {
-            decimal? value = null;
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                value = Convert.ToDecimal(input);
-            }
-
-            return value;
         }
     }
 }
