@@ -21,10 +21,15 @@
             WasteType wasteType,
             Protocol protocol,
             Aatf aatf,
+            NoteType noteType,
             string createdBy)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
+            Guard.ArgumentNotNull(() => aatf, aatf);
+            Guard.ArgumentNotNull(() => noteType, noteType);
+            Guard.ArgumentNotDefaultValue(() => startDate, startDate);
+            Guard.ArgumentNotDefaultValue(() => endDate, endDate);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
 
             Organisation = organisation;
@@ -36,6 +41,7 @@
             EndDate = endDate;
             Aatf = aatf;
             CreatedById = createdBy;
+            NoteType = noteType;
             CreatedDate = SystemTime.UtcNow;
         }
 
@@ -64,6 +70,8 @@
 
         public virtual Protocol Protocol { get; private set; }
 
+        public virtual NoteType NoteType { get; private set; }
+
         public virtual Aatf Aatf { get; private set; }
 
         public virtual DateTime CreatedDate { get; private set; }
@@ -77,5 +85,7 @@
         public virtual User CreatedBy { get; set; }
 
         public virtual User SubmittedBy { get; set; }
+
+        public virtual int Reference { get; set; }
     }
 }

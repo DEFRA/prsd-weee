@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
-    using AatfReturn;
     using Prsd.Core.Domain;
 
     public class Protocol : Enumeration

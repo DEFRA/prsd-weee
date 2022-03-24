@@ -13,6 +13,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Requests.Aatf;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -45,12 +46,12 @@
 
                 var addObligatedReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
 
-                var categoryValues = new List<ObligatedValue>();
+                var categoryValues = new List<TonnageValues>();
                 var weeeReused = new WeeeReused(aatf.Id, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
+                    categoryValues.Add(new TonnageValues(Guid.NewGuid(), (int)category, (int)category, (int)category));
                 }
 
                 var obligatedReusedRequest = new AddObligatedReused()
@@ -65,7 +66,7 @@
 
                 foreach (var categoryValue in obligatedReusedRequest.CategoryValues)
                 {
-                    weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                    weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
                 }
 
                 var obligateReusedDataAccess = new ObligatedReusedDataAccess(database.WeeeContext);
