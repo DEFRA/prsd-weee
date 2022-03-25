@@ -199,6 +199,7 @@
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
+    <Compile Include="SpecimenBuilders\StringDecimalGenerator.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
