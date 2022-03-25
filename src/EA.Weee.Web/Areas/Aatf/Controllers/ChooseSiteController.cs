@@ -40,8 +40,7 @@
 
             if (model.AatfList.Count == 1)
             {
-                // TODO: Update with appropriate Manage evidence page once created
-                return RedirectToAction("Index", "Holding", new { organisationId });
+                return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.AatfList[0].Id });
             }
             
             await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
@@ -55,8 +54,7 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Update with appropriate Manage evidence page once created
-                return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
+                return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.SelectedId });
             }
 
             model = await GenerateSelectYourAatfViewModel(model.OrganisationId);
