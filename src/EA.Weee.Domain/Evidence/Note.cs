@@ -18,8 +18,8 @@
             Scheme recipient, 
             DateTime startDate,
             DateTime endDate,
-            WasteType wasteType,
-            Protocol protocol,
+            WasteType? wasteType,
+            Protocol? protocol,
             Aatf aatf,
             NoteType noteType,
             string createdBy)
@@ -56,7 +56,11 @@
             Organisation = organisation;
         }
 
+        //public virtual Guid OrganisationId { get; private set; }
+
         public virtual Organisation Organisation { get; private set; }
+
+        //public virtual Guid RecipientId { get; private set; }
 
         public virtual Scheme Recipient { get; private set; }
 
@@ -64,15 +68,17 @@
 
         public virtual DateTime EndDate { get; private set; }
 
-        public virtual WasteType WasteType { get; private set; }
+        public virtual WasteType? WasteType { get; private set; }
 
         public virtual NoteStatus Status { get; private set; }
 
-        public virtual Protocol Protocol { get; private set; }
+        public virtual Protocol? Protocol { get; private set; }
 
         public virtual NoteType NoteType { get; private set; }
 
         public virtual Aatf Aatf { get; private set; }
+
+        //public virtual Guid AatfId { get; private set; }
 
         public virtual DateTime CreatedDate { get; private set; }
 
@@ -86,6 +92,6 @@
 
         public virtual User SubmittedBy { get; set; }
 
-        public virtual int Reference { get; set; }
+        public virtual int? Reference { get; set; }
     }
 }

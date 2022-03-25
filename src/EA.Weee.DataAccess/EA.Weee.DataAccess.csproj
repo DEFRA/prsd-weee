@@ -105,8 +105,6 @@
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\NoteTypeMapping.cs" />
-    <Compile Include="Mappings\EvidenceNoteProtocolMapping.cs" />
-    <Compile Include="Mappings\EvidenceNoteWasteTypeMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteStatusMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteMapping.cs" />
     <Compile Include="Mappings\AatfReturnReportOnMapping.cs" />

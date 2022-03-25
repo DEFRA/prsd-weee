@@ -8,6 +8,7 @@
     using Core.Scheme;
     using FluentAssertions;
     using Prsd.Core.Domain;
+    using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Xunit;
@@ -73,9 +74,9 @@
             result.AatfId.Should().Be(aatfId);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
-            result.ProtocolList.Should().BeEquivalentTo(Enumeration.GetAll<Protocol>());
+            result.ProtocolList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value");
             result.WasteTypeList.Should().NotBeNullOrEmpty();
-            result.WasteTypeList.Should().BeEquivalentTo(Enumeration.GetAll<WasteType>());
+            result.WasteTypeList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value");
         }
 
         [Fact]
@@ -102,9 +103,9 @@
             result.CategoryValues.Should().BeEquivalentTo(model.CategoryValues);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
-            result.ProtocolList.Should().BeEquivalentTo(Enumeration.GetAll<Protocol>());
+            result.ProtocolList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value");
             result.WasteTypeList.Should().NotBeNullOrEmpty();
-            result.WasteTypeList.Should().BeEquivalentTo(Enumeration.GetAll<WasteType>());
+            result.WasteTypeList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value");
         }
     }
 }

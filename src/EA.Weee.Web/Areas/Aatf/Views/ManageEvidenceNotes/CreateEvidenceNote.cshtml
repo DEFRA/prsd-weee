@@ -60,7 +60,7 @@
                         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
                             @Html.Gds().LabelFor(m => m.WasteTypeValue, new { @class = "govuk-label--s" }, false)
                             @Html.Gds().ValidationMessageFor(m => m.WasteTypeValue)
-                            @Html.Gds().DropDownListFor(m => m.WasteTypeValue, new SelectList(Model.WasteTypeList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
+                            @Html.Gds().DropDownListFor(m => m.WasteTypeValue, Model.WasteTypeList,string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
 
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.ProtocolValue)">
                             @Html.Gds().LabelFor(m => m.ProtocolValue, new { @class = "govuk-label--s" }, false)
                             @Html.Gds().ValidationMessageFor(m => m.ProtocolValue)
-                            @Html.Gds().DropDownListFor(m => m.ProtocolValue, new SelectList(Model.ProtocolList, "Value", "DisplayName"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
+                            @Html.Gds().DropDownListFor(m => m.ProtocolValue, Model.ProtocolList, string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
                         </div>
                     </div>
                 </div>

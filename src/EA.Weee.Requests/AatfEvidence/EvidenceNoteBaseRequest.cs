@@ -14,9 +14,9 @@
 
         public DateTime EndDate { get; protected set; }
 
-        public WasteType WasteType { get; protected set; }
+        public WasteType? WasteType { get; protected set; }
 
-        public Protocol Protocol { get; protected set; }
+        public Protocol? Protocol { get; protected set; }
 
         public Guid OrganisationId { get; protected set; }
 
