@@ -24,7 +24,7 @@
             var model = new SelectYourAatfViewModel
             {
                 OrganisationId = source.OrganisationId,
-                AatfList = filter.Filter(source.AatfList, source.FacilityType).OrderBy(o => o.Name).ToList(),
+                AatfList = filter.Filter(source.AatfList, source.FacilityType, false).OrderBy(o => o.Name).ToList(),
             };
 
             return model;

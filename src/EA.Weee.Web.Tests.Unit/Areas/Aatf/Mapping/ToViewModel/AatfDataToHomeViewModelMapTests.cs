@@ -45,7 +45,7 @@
             map.Map(transfer);
 
             //assert
-            A.CallTo(() => filter.Filter(aatfList, facility)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => filter.Filter(aatfList, facility, true)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -79,7 +79,7 @@
             aatfList.Add(aatfData2);
             aatfList.Add(aatfData3);
 
-            A.CallTo(() => filter.Filter(aatfList, A<FacilityType>.Ignored)).Returns(aatfList);
+            A.CallTo(() => filter.Filter(aatfList, A<FacilityType>.Ignored, true)).Returns(aatfList);
 
             var transfer = new AatfDataToHomeViewModelMapTransfer() { OrganisationId = organisationId, AatfList = aatfList, FacilityType = fixture.Create<FacilityType>() };
 
