@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using AutoFixture;
     using Core.Scheme;
+    using EA.Weee.Requests.Aatf;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -209,6 +210,57 @@
 
         [Fact]
         public async Task CreateEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
+        [Fact]
+        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationName = "Organisation";
+
+            A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+
+            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence Notes");
+        }
+
+        [Fact]
+        public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var model = new ManageEvidenceNoteViewModel()
+            {
+            };
+
+            var result = await controller.Index(organisationId, aatfId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async void IndexPost_ValidViewModel_PageRedirectsCreateEvidenceNote()
+        {
+            var model = new ManageEvidenceNoteViewModel()
+            {
+                OrganisationId = fixture.Create<Guid>(),
+                AatfId = fixture.Create<Guid>(),
+            };
+
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Create Evidence Note
+            result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
+            //result.RouteValues["aatfId"].Should().Be(model.SelectedId); // This will be needed
+        }
+
+        private void AddModelError()
+        {
+            controller.ModelState.AddModelError("error", "error");
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
         {
             //arrange
             var model = ValidModel();
@@ -223,23 +275,15 @@
             A.CallTo(() => WeeeClient.SendAsync<int>(A<string>._, request)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task CreateEvidenceNotePost_GivenApiHasBeenCalled_ShouldBeRedirectedToViewAction()
+        private EvidenceNoteViewModel ValidModel()
         {
-            //arrange
-            var model = ValidModel();
-            var request = Request();
-            const int newNoteId = 1;
-
-            A.CallTo(() => CreateRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
-            A.CallTo(() => WeeeClient.SendAsync<int>(A<string>._, A<CreateEvidenceNoteRequest>._)).Returns(newNoteId);
-
-            //act
-            var result = await Controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>()) as RedirectToRouteResult;
-
-            //assert
-            result.RouteValues.Should().Contain(c => c.Value.Equals("ViewDraftEvidenceNote") && c.Key.Equals("action"));
-            result.RouteValues.Should().Contain(c => c.Value.Equals(newNoteId) && c.Key.Equals("evidenceNoteId"));
+            var model = new EvidenceNoteViewModel()
+            {
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
+                ReceivedId = Guid.NewGuid()
+            };
+            return model;
         }
     }
 }

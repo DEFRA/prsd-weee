@@ -2,6 +2,6 @@
 {
     public interface IAatfDataFilter<T, in TU>
     {
-        T Filter(T source, TU filter);
+        T Filter(T source, TU filter, bool displayStatus);
     }
 }
