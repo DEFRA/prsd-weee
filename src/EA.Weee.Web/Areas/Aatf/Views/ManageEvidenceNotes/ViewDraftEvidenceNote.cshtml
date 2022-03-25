@@ -5,7 +5,10 @@
     ViewBag.Title = "View Draft Evidence Note";
 }
 
+@{
+    var text = string.Format("You have successfully submitted the evidence note with reference ID", ViewBag.EvidenceNoteId);
+}
 <section id="main-content">
-  @(this.WeeeGds().Panel("You have successfully submitted the evidence note with reference ID 1"))
+  @(this.WeeeGds().Panel(text))
 </section>
 

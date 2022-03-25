@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using AatfReturn;
     using AatfReturn.Internal;
+    using Core.AatfEvidence;
     using DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
@@ -12,6 +13,8 @@
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
+    using Protocol = Domain.Evidence.Protocol;
+    using WasteType = Domain.Evidence.WasteType;
 
     public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, int>
     {
@@ -75,18 +78,24 @@
                 scheme,
                 message.StartDate,
                 message.EndDate,
-                message.WasteType != null ? Enumeration.FromValue<WasteType>(message.WasteType.Value) : null,
-                message.Protocol != null ? Enumeration.FromValue<Protocol>(message.Protocol.Value) : null,
+                message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
+                message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 aatf,
                 NoteType.TransferNote,
                 userContext.UserId.ToString());
 
-            // add the list of categories to the entity
-            await genericDataAccess.Add(evidenceNote);
-
+            try
+            {
+                // add the list of categories to the entity
+                await genericDataAccess.Add(evidenceNote);
+            }
+            catch (Exception e)
+            {
+                int i = 10;
+            }
             // add all the categproes
 
-            return evidenceNote.Reference;
+            return evidenceNote.Reference.Value;
         }
     }
 }

@@ -6,15 +6,16 @@
     using Core.AatfEvidence;
     using Prsd.Core;
 
+    [Serializable]
     public class CreateEvidenceNoteRequest : EvidenceNoteBaseRequest
     {
-        public CreateEvidenceNoteRequest(Guid organisationId, 
+        public CreateEvidenceNoteRequest(Guid organisationId,
             Guid aatfId,
             Guid recipientId,
-            DateTime startDate, 
+            DateTime startDate,
             DateTime endDate,
-            WasteType wasteType,
-            Protocol protocol,
+            WasteType? wasteType,
+            Protocol? protocol,
             IList<TonnageValues> tonnages)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);

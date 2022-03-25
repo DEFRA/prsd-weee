@@ -77,13 +77,12 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, int evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, "TODO:fix");
-
-                //await client.SendAsync(User.GetAccessToken(), new CreateEvidenceNoteRequest());
+                ViewBag.EvidenceNoteId = evidenceNoteId;
 
                 return View();
             }

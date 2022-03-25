@@ -27,6 +27,7 @@
                 WasteType.HouseHold,
                 Protocol.Actual,
                 aatf,
+                NoteType.EvidenceNote,
                 user.UserId.ToString());
 
             return instance;
