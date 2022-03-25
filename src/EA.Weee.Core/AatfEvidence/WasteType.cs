@@ -1,18 +1,14 @@
 ﻿namespace EA.Weee.Core.AatfEvidence
 {
-    using Prsd.Core.Domain;
+    using System;
+    using System.ComponentModel.DataAnnotations;
 
-    public class WasteType : Enumeration
+    [Serializable]
+    public enum WasteType
     {
-        public static readonly WasteType HouseHold = new WasteType(1, "Household");
-        public static readonly WasteType NonHouseHold = new WasteType(2, "Non-household");
-
-        protected WasteType()
-        {
-        }
-
-        private WasteType(int value, string displayName) : base(value, displayName)
-        {
-        }
+        [Display(Name = "Household")]
+        Household = 1,
+        [Display(Name = "Non-household")]
+        NonHousehold = 2
     }
 }

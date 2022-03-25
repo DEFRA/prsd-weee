@@ -35,8 +35,8 @@
                     viewModel.ReceivedId.Value,
                     viewModel.StartDate,
                     viewModel.EndDate,
-                    viewModel.WasteTypeValue.HasValue ? Enumeration.FromValue<WasteType>(viewModel.WasteTypeValue.Value) : null,
-                    viewModel.ProtocolValue.HasValue ? Enumeration.FromValue<Protocol>(viewModel.ProtocolValue.Value) : null,
+                    viewModel.WasteTypeValue,
+                    viewModel.ProtocolValue,
                     tonnageValues);
 
                 return request;
