@@ -88,13 +88,41 @@
 
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            return htmlHelper.ValidationMessageFor(expression, null, new { @class = "govuk-error-message error-message" }, "p");
+            var generatedHtml = htmlHelper.ValidationMessageFor(expression, null,
+                new { @class = "govuk-error-message error-message" }, "p");
+
+            if (generatedHtml != null)
+            {
+                return AppendHiddenErrorText(generatedHtml);
+            }
+            
+            return null;
         }
+
+        private static MvcHtmlString AppendHiddenErrorText(MvcHtmlString html2)
+        {
+            var node = HtmlAgilityPack.HtmlNode.CreateNode(html2.ToHtmlString());
+
+            var spanBuilder = new TagBuilder("span");
+            spanBuilder.AddCssClass("govuk-visually-hidden");
+            spanBuilder.SetInnerText("Error:");
+
+            node.InnerHtml = spanBuilder + node.InnerHtml;
+            return new MvcHtmlString(node.OuterHtml);
+        }
+
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression,
             string validationMessage)
         {
-            return htmlHelper.ValidationMessageFor(expression, validationMessage, new { @class = "govuk-error-message error-message" },
+            var generatedHtml = htmlHelper.ValidationMessageFor(expression, validationMessage, new { @class = "govuk-error-message error-message" },
                 "p");
+
+            if (generatedHtml != null)
+            {
+                return AppendHiddenErrorText(generatedHtml);
+            }
+
+            return null;
         }
 
         private string GetJavascriptEnabledBlankSummary()
@@ -141,7 +169,6 @@
                     fieldName = fieldName.Replace("]", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
                 }
                 
-                errorListBuilder.AppendLine("<span class='govuk-visually-hidden'>Error:</span> ");
                 errorListBuilder.AppendLine("<li>");
                 errorListBuilder.AppendFormat("<a href=\"#{0}\">{1}</a>", fieldName,
                     modelError.ModelError.ErrorMessage);
