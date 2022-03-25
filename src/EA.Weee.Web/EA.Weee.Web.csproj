@@ -423,6 +423,7 @@
     <Compile Include="Infrastructure\DisplayHelper.cs" />
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.BackLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Panel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />

@@ -1,5 +1,7 @@
 ﻿
+@using EA.Weee.Web.Areas.Aatf.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
 @{
     ViewBag.Title = "View Draft Evidence Note";
@@ -7,8 +9,12 @@
 
 @{
     var text = string.Format("You have successfully submitted the evidence note with reference ID {0}", ViewBag.EvidenceNoteId);
+    var aatfId = (Guid)ViewBag.aatfId;
+    var organisationId = (Guid)ViewBag.organisationId;
 }
 <section id="main-content">
-  @(this.WeeeGds().Panel(text))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(organisationId, aatfId))))
+
+    @(this.WeeeGds().Panel(text))
 </section>
 

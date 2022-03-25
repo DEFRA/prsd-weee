@@ -209,18 +209,16 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
-        [Fact]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationName = "Organisation";
 
-            A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+            A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
+            await Controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence Notes");
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence Notes");
         }
 
         [Fact]
@@ -232,9 +230,9 @@
             {
             };
 
-            var result = await controller.Index(organisationId, aatfId);
+            var result = await Controller.Index(organisationId, aatfId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -242,21 +240,16 @@
         {
             var model = new ManageEvidenceNoteViewModel()
             {
-                OrganisationId = fixture.Create<Guid>(),
-                AatfId = fixture.Create<Guid>(),
+                OrganisationId = Fixture.Create<Guid>(),
+                AatfId = Fixture.Create<Guid>(),
             };
 
-            var result = await controller.Index(model) as RedirectToRouteResult;
+            var result = await Controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Create Evidence Note
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             //result.RouteValues["aatfId"].Should().Be(model.SelectedId); // This will be needed
-        }
-
-        private void AddModelError()
-        {
-            controller.ModelState.AddModelError("error", "error");
         }
 
         [Fact]
@@ -273,17 +266,6 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync<int>(A<string>._, request)).MustHaveHappenedOnceExactly();
-        }
-
-        private EvidenceNoteViewModel ValidModel()
-        {
-            var model = new EvidenceNoteViewModel()
-            {
-                EndDate = DateTime.Now,
-                StartDate = DateTime.Now,
-                ReceivedId = Guid.NewGuid()
-            };
-            return model;
         }
     }
 }
