@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
     using System;
+    using System.Collections.Generic;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
@@ -8,10 +9,11 @@
     using Scheme;
     using User;
 
-    public partial class Note : Entity
+    public sealed partial class Note : Entity
     {
-        protected Note()
+        private Note()
         {
+            NoteTonnage = new List<NoteTonnage>();
         }
 
         public Note(Organisation organisation,
@@ -43,6 +45,8 @@
             CreatedById = createdBy;
             NoteType = noteType;
             CreatedDate = SystemTime.UtcNow;
+
+            NoteTonnage = new List<NoteTonnage>();
         }
 
         /// <summary>
@@ -58,40 +62,42 @@
 
         //public virtual Guid OrganisationId { get; private set; }
 
-        public virtual Organisation Organisation { get; private set; }
+        public Organisation Organisation { get; private set; }
 
         //public virtual Guid RecipientId { get; private set; }
 
-        public virtual Scheme Recipient { get; private set; }
+        public Scheme Recipient { get; private set; }
 
-        public virtual DateTime StartDate { get; private set; }
+        public DateTime StartDate { get; private set; }
 
-        public virtual DateTime EndDate { get; private set; }
+        public DateTime EndDate { get; private set; }
 
-        public virtual WasteType? WasteType { get; private set; }
+        public WasteType? WasteType { get; private set; }
 
-        public virtual NoteStatus Status { get; private set; }
+        public NoteStatus Status { get; private set; }
 
-        public virtual Protocol? Protocol { get; private set; }
+        public Protocol? Protocol { get; private set; }
 
-        public virtual NoteType NoteType { get; private set; }
+        public NoteType NoteType { get; private set; }
 
-        public virtual Aatf Aatf { get; private set; }
+        public Aatf Aatf { get; private set; }
 
         //public virtual Guid AatfId { get; private set; }
 
-        public virtual DateTime CreatedDate { get; private set; }
+        public DateTime CreatedDate { get; private set; }
 
-        public virtual DateTime? SubmittedDate { get; set; }
+        public DateTime? SubmittedDate { get; set; }
 
-        public virtual string CreatedById { get; private set; }
+        public string CreatedById { get; private set; }
 
-        public virtual string SubmittedById { get; set; }
+        public string SubmittedById { get; set; }
 
-        public virtual User CreatedBy { get; set; }
+        public User CreatedBy { get; set; }
 
-        public virtual User SubmittedBy { get; set; }
+        public User SubmittedBy { get; set; }
 
-        public virtual int? Reference { get; set; }
+        public int? Reference { get; set; }
+
+        public ICollection<NoteTonnage> NoteTonnage { get; set; }
     }
 }
