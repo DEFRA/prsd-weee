@@ -3,14 +3,13 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
     using Domain.Evidence;
-    using Domain.Organisation;
-    using Domain.Scheme;
 
     internal class EvidenceNoteMapping : EntityTypeConfiguration<Note>
     {
         public EvidenceNoteMapping()
         {
             ToTable("Note", "Evidence");
+            HasKey(n => n.Id);
             Property(n => n.Reference).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity).IsRequired();
             Property(n => n.StartDate).IsRequired();
             Property(n => n.EndDate).IsRequired();
@@ -26,6 +25,7 @@
             HasRequired(n => n.Organisation);
             HasRequired(n => n.Recipient);
             HasRequired(n => n.Aatf);
+            HasMany(n => n.NoteTonnage);
         }
     }
 }

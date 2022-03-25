@@ -61,9 +61,9 @@
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
 
-                    await client.SendAsync(User.GetAccessToken(), request);
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = Guid.NewGuid() });
+                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
