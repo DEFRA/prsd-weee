@@ -6,7 +6,7 @@
 }
 
 @{
-    var text = string.Format("You have successfully submitted the evidence note with reference ID", ViewBag.EvidenceNoteId);
+    var text = string.Format("You have successfully submitted the evidence note with reference ID {0}", ViewBag.EvidenceNoteId);
 }
 <section id="main-content">
   @(this.WeeeGds().Panel(text))

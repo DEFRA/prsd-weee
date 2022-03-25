@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using AatfReturn;
     using AatfReturn.Internal;
     using Core.AatfEvidence;
-    using DataAccess;
+    using Core.Helpers;
     using Domain.Evidence;
+    using Domain.Lookup;
     using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
@@ -19,22 +21,16 @@
     public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, int>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess dataAccess;
-        private readonly WeeeContext context;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IUserContext userContext;
 
         public CreateEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess dataAccess,
-            WeeeContext context,
             IGenericDataAccess genericDataAccess, 
             IAatfDataAccess aatfDataAccess, 
             IUserContext userContext)
         {
             this.authorization = authorization;
-            this.dataAccess = dataAccess;
-            this.context = context;
             this.genericDataAccess = genericDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.userContext = userContext;
@@ -62,8 +58,10 @@
 
             if (aatf.ComplianceYear != SystemTime.Now.Year)
             {
-                throw new InvalidOperationException(
-                    $"Aatf with Id {message.AatfId} is not valid for the current compliance year");
+                //TODO://put this back in when business rule validation is in place
+                // This rule will need to be implemented. The AATF selected for the evidence note should always be in the current compliance year.
+                //throw new InvalidOperationException(
+                //    $"Aatf with Id {message.AatfId} is not valid for the current compliance year");
             }
 
             if (aatf.Organisation.Id != message.OrganisationId)
@@ -71,8 +69,6 @@
                 throw new InvalidOperationException(
                     $"Aatf with Id {message.AatfId} does not belong to Organisation with Id {message.OrganisationId}");
             }
-
-            // find latest aatf
 
             var evidenceNote = new Note(organisation,
                 scheme,
@@ -84,16 +80,14 @@
                 NoteType.TransferNote,
                 userContext.UserId.ToString());
 
-            try
-            {
-                // add the list of categories to the entity
-                await genericDataAccess.Add(evidenceNote);
-            }
-            catch (Exception e)
-            {
-                int i = 10;
-            }
-            // add all the categproes
+            var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(evidenceNote,
+                (WeeeCategory)t.CategoryId,
+                t.FirstTonnage,
+                t.SecondTonnage));
+
+            evidenceNote.NoteTonnage.AddRange(tonnageValues);
+
+            await genericDataAccess.Add(evidenceNote);
 
             return evidenceNote.Reference.Value;
         }
