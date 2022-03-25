@@ -241,33 +241,5 @@
             result.RouteValues.Should().Contain(c => c.Value.Equals("ViewDraftEvidenceNote") && c.Key.Equals("action"));
             result.RouteValues.Should().Contain(c => c.Value.Equals(newNoteId) && c.Key.Equals("evidenceNoteId"));
         }
-
-        private void AddModelError()
-        {
-            Controller.ModelState.AddModelError("error", "error");
-        }
-
-        private CreateEvidenceNoteRequest Request()
-        {
-            return new CreateEvidenceNoteRequest(Guid.NewGuid(),
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                DateTime.Now,
-                DateTime.Now,
-                null,
-                null,
-                new List<TonnageValues>());
-        }
-
-        private EvidenceNoteViewModel ValidModel()
-        {
-            var model = new EvidenceNoteViewModel()
-            {
-                EndDate = DateTime.Now,
-                StartDate = DateTime.Now,
-                ReceivedId = Guid.NewGuid()
-            };
-            return model;
-        }
     }
 }
