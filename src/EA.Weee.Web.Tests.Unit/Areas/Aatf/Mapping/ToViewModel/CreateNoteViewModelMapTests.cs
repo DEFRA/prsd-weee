@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.Mvc;
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Scheme;
@@ -74,9 +75,9 @@
             result.AatfId.Should().Be(aatfId);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
-            result.ProtocolList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value");
+            result.ProtocolList.Should().BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should().NotBeNullOrEmpty();
-            result.WasteTypeList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value");
+            result.WasteTypeList.Should().BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
         }
 
         [Fact]
@@ -103,9 +104,9 @@
             result.CategoryValues.Should().BeEquivalentTo(model.CategoryValues);
             result.SchemeList.Should().BeEquivalentTo(schemes);
             result.ProtocolList.Should().NotBeNullOrEmpty();
-            result.ProtocolList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value");
+            result.ProtocolList.Should().BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should().NotBeNullOrEmpty();
-            result.WasteTypeList.Should().BeEquivalentTo(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value");
+            result.WasteTypeList.Should().BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
         }
     }
 }

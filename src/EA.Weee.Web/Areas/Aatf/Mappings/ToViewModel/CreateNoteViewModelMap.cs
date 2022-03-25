@@ -18,6 +18,7 @@
             var model = new EvidenceNoteViewModel
             {
                 OrganisationId = source.OrganisationId,
+                AatfId = source.AatfId,
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value")

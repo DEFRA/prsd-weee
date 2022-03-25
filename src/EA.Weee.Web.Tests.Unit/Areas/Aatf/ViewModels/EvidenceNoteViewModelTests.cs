@@ -28,7 +28,7 @@
         [Theory]
         [InlineData("StartDate", "Start date")]
         [InlineData("EndDate", "End date")]
-        [InlineData("ReceivedId", "RecipientId")]
+        [InlineData("ReceivedId", "Recipient")]
         [InlineData("ProtocolValue", "Actual or protocol")]
         [InlineData("WasteTypeValue", "Type of waste")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
