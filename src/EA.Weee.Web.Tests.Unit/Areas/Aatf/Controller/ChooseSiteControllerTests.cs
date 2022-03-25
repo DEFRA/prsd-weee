@@ -128,6 +128,7 @@
 
             var model = new SelectYourAatfViewModel()
             {
+                OrganisationId = organisationId,
                 AatfList = aatfList,
             };
 
@@ -137,8 +138,9 @@
             var result = await controller.Index(organisationId) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding"); //TODO Change this in Manage Evidence Story
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfList[0].Id);
         }
 
         [Fact]
@@ -172,9 +174,9 @@
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Manage Evidence
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
-            //result.RouteValues["aatfId"].Should().Be(model.SelectedId); // This will be needed
+            result.RouteValues["aatfId"].Should().Be(model.SelectedId);
         }
 
         [Fact]
