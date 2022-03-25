@@ -39,7 +39,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId)
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId)
         {
             using (var client = this.apiClient())
@@ -58,11 +57,11 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(ManageEvidenceNoteViewModel model)
         {
-            return RedirectToAction("Index", "Holding", new { area = "Aatf", model.OrganisationId });
+            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId)
+        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
@@ -102,12 +101,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, int evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, "TODO:fix");
                 ViewBag.EvidenceNoteId = evidenceNoteId;
+                ViewBag.aatfId = aatfId;
+                ViewBag.organisationId = organisationId;
 
                 return View();
             }
