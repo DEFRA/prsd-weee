@@ -21,6 +21,7 @@
             attribute = new ValidateEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
 
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
             A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
         }
 
@@ -38,6 +39,28 @@
         public void OnActionExecuting_GivenEnableAatfEvidenceNotesIsTrue_NoInvalidOperationExceptionExpected()
         {
             A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
+
+            Action action = () => attribute.OnActionExecuting(context);
+
+            action.Should().NotThrow<InvalidOperationException>();
+        }
+
+        // ---- GC
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePcsEvidenceNotesIsFalse_InvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(false);
+
+            Action action = () => attribute.OnActionExecuting(context);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("PCS evidence notes are not enabled.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePcsEvidenceNotesIsTrue_NoInvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
 
             Action action = () => attribute.OnActionExecuting(context);
 

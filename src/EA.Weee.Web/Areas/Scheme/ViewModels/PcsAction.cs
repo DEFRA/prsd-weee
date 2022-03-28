@@ -2,6 +2,7 @@
 {
     public static class PcsAction
     {
+        public static string ManagePcsEvidenceNotes = "Manage PCS evidence notes";  // CCCI_00007 in catalogue has not been updated but this has been confirmed
         public static string ManagePcsMembers = "Manage PCS members";
         public static string ManageEeeWeeeData = "Manage PCS EEE/WEEE data";
         public static string ViewSubmissionHistory = "View PCS submissions history";
