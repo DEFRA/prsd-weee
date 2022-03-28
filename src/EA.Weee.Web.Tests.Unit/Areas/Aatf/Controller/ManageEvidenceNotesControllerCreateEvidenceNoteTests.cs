@@ -236,7 +236,7 @@
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence Notes");
+            breadcrumb.ExternalActivity.Should().Be($"Manage Evidence Notes");
         }
 
         [Fact]
