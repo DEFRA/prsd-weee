@@ -181,6 +181,8 @@
 
         public virtual DbSet<Note> Notes { get; set; }
 
+        public virtual DbSet<NoteTonnage> NoteTonnages { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)

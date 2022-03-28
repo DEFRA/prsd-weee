@@ -7,6 +7,8 @@
     using Autofac;
     using DataAccess;
     using Domain;
+    using Domain.Evidence;
+    using Domain.Scheme;
     using Prsd.Core.Autofac;
 
     public class CommonTestQueryProcessor
@@ -21,6 +23,16 @@
         public Country GetCountryById(Guid id)
         {
             return dbContext.Countries.First(c => c.Id.Equals(id));
+        }
+
+        public Note GetEvidenceNoteById(Guid id)
+        {
+            return dbContext.Notes.FirstOrDefault(n => n.Id.Equals(id));
+        }
+
+        public Note GetEvidenceNoteByReference(int reference)
+        {
+            return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);
         }
     }
 }

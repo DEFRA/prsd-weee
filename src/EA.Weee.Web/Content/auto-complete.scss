@@ -1,5 +1,7 @@
-﻿/*taken from https://github.com/alphagov/accessible-autocomplete*/
-/* move to sass when design system is upgraded to ensure these files are kept in line with the Design System */
+﻿
+@import "govuk_frontend/base";
+
+/*taken from https://github.com/alphagov/accessible-autocomplete*/
 .autocomplete__wrapper {
     position: relative;
     z-index: 0;
@@ -7,7 +9,7 @@
 
 .autocomplete__hint, .autocomplete__input {
     -webkit-appearance: none;
-    border: 2px solid #0b0c0c;
+    border: 2px solid govuk-colour("black");
     border-radius: 0;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -22,7 +24,7 @@
 }
 
 .autocomplete__hint {
-    color: #b1b4b6;
+    color: govuk-colour("mid-grey");
     position: absolute
 }
 
@@ -31,7 +33,7 @@
 }
 
 .autocomplete__input--focused {
-    outline: 3px solid #fd0;
+    outline: 3px solid govuk-colour("yellow");
     outline-offset: 0;
     box-shadow: inset 0 0 0 2px
 }
@@ -53,9 +55,9 @@
 
 .autocomplete__menu {
     background-color: #fff;
-    border: 2px solid #0b0c0c;
+    border: 2px solid govuk-colour("black");
     border-top: 0;
-    color: #0b0c0c;
+    color: govuk-colour("black");
     margin: 0;
     max-height: 342px;
     overflow-x: hidden;
@@ -85,8 +87,8 @@
 }
 
 .autocomplete__option {
-    font-family: "GDS Transport", arial, sans-serif;
-    border-bottom: solid #b1b4b6;
+    font-family: $govuk-font-family;
+    border-bottom: solid govuk-colour("mid-grey");
     border-width: 1px 0;
     cursor: pointer;
     display: block;
@@ -106,13 +108,13 @@
     }
 
 .autocomplete__option--odd {
-    background-color: #f8f8f8
+    background-color: govuk-colour("light-grey");
 }
 
 .autocomplete__option--focused, .autocomplete__option:hover {
-    background-color: #1d70b8;
-    border-color: #1d70b8;
-    color: #fff;
+    background-color: govuk-colour("blue");
+    border-color: govuk-colour("blue");
+    color: govuk-colour("white");
     outline: 0
 }
 
@@ -136,16 +138,25 @@
 }
 
 .autocomplete__option--no-results {
-    background-color: #f8f8f8;
-    color: #0b0c0c;
+    background-color: govuk-colour("white");
+    color: govuk-colour("black");
     cursor: not-allowed
 }
 
-.autocomplete__hint, .autocomplete__input, .autocomplete__option {
+.autocomplete__input {
     font-size: 16px;
-    line-height: 1.25
+    height: 40px;
+}
+
+.autocomplete__hint, .autocomplete__option {
+    font-size: 16px;
+    line-height: 1.5
 }
 
 .autocomplete__hint, .autocomplete__option {
     padding: 5px
+}
+
+.autocomplete__error {
+    border-color: govuk-colour("red") !important;
 }

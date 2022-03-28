@@ -177,5 +177,15 @@
             }
             return day + " " + monthYear;
         }
+
+        public static int? ToInt<T>(this T? enumeration) where T : struct
+        {
+            if (enumeration.HasValue)
+            {
+                return System.Convert.ToInt32(enumeration);
+            }
+
+            return null;
+        }
     }
 }

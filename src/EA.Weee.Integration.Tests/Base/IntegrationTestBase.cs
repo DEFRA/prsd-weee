@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Data.Entity;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net;
@@ -17,7 +16,6 @@
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.Scheme;
-    using EA.Weee.Security;
     using IoC;
     using Microsoft.AspNet.Identity;
     using netDumbster.smtp;
@@ -98,15 +96,15 @@
                     throw new InvalidOperationException("Principal must have been set to login as particular user type");
                 }
                 
-                var identity = (ClaimsIdentity)Principal.Identity;
-                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessExternalArea));
+                var userContext = new TestUserContext(Guid.Parse(User.Id), true);
+                InitIocWithUser(userContext);
 
                 return this;
             }
 
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
             {
-                return WithIoC(resetDb)
+                return WithIoC(true)
                     .WithTestData(resetDb);
             }
 
@@ -178,9 +176,10 @@
                     Console.WriteLine($"Using default user with id { User.Id } ");
 
                     var testUserContextUpdater = Container.Resolve<Action<TestUserContext>>();
-                    testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id)));
+                    testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id), false));
 
                     var userc = Container.Resolve<IUserContext>();
+                    
                     Principal = userc.Principal;
                     var weeContext = Container.Resolve<WeeeContext>();
                     DefaultIntegrationOrganisation = weeContext.Organisations.FirstOrDefault(o => o.Name.Equals(TestingConstants.TestCompanyName));
@@ -243,6 +242,22 @@
 
                 return Container;
             }
+
+            protected static IContainer InitIocWithUser(TestUserContext userContext)
+            {
+                var environment = new EnvironmentResolver
+                {
+                    IocApplication = CurrentAppUnderTest,
+                    HostEnvironment = CurrentHostEnvironment,
+                    IsTestRun = true
+                };
+
+                var iocFactory = new IoCFactory();
+                iocFactory.RemoveContainer(environment);
+                ServiceLocator.Container = Container = iocFactory.GetOrCreateContainer(environment, userContext);
+                
+                return Container;
+            }
         }
 
         public static void RunSql(string sql)
@@ -270,6 +285,10 @@
                 {
                     Console.WriteLine($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
                     throw;
+                }
+                finally
+                {
+                    new DatabaseSeeder().UpdateDatabase();
                 }
             }
         }

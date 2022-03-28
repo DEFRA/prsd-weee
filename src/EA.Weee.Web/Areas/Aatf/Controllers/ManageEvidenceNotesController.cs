@@ -13,6 +13,8 @@
     using Services;
     using Services.Caching;
     using ViewModels;
+    using Web.Requests.Base;
+    using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
 
     public class ManageEvidenceNotesController : AatfEvidenceBaseController
@@ -21,13 +23,19 @@
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator;
 
-        public ManageEvidenceNotesController(IMapper mapper, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient)
+        public ManageEvidenceNotesController(IMapper mapper, 
+            BreadcrumbService breadcrumb, 
+            IWeeeCache cache, 
+            Func<IWeeeClient> apiClient, 
+            IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.apiClient = apiClient;
+            this.createRequestCreator = createRequestCreator;
         }
 
         [HttpGet]
@@ -49,17 +57,17 @@
         [ValidateAntiForgeryToken]
         public ActionResult Index(ManageEvidenceNoteViewModel model)
         {
-            return RedirectToAction("Index", "Holding", new { area = "Aatf", model.OrganisationId });
+            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId)
+        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null));
+                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null, organisationId, aatfId));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
 
@@ -69,18 +77,22 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId)
+        public async Task<ActionResult> CreateEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
                 if (ModelState.IsValid)
                 {
-                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = Guid.NewGuid() });
+                    var request = createRequestCreator.ViewModelToRequest(viewModel);
+
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
                 
-                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel));
+                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel, organisationId, aatfId));
 
                 await SetBreadcrumb(organisationId, "TODO:fix");
 
@@ -89,11 +101,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, "TODO:fix");
+                ViewBag.EvidenceNoteId = evidenceNoteId;
+                ViewBag.aatfId = aatfId;
+                ViewBag.organisationId = organisationId;
 
                 return View();
             }
