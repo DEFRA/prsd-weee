@@ -19,13 +19,13 @@
             this.context = context;
         }
 
-        public async Task<Guid> Add<TEntity>(TEntity entity) where TEntity : Entity
+        public async Task<TEntity> Add<TEntity>(TEntity entity) where TEntity : Entity
         {
             context.Set<TEntity>().Add(entity);
 
             await context.SaveChangesAsync();
 
-            return entity.Id;
+            return entity;
         }
 
         public Task AddMany<TEntity>(IEnumerable<TEntity> amounts) where TEntity : Entity
