@@ -277,10 +277,6 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
             .Should()
-            .BeDecoratedWith<HttpPostAttribute>();
-
-            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
-            .Should()
             .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
