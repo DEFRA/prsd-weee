@@ -67,6 +67,8 @@
 
             private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
             {
+                note.CreatedById.Should().Be(UserId.ToString());
+                note.Aatf.Should().Be(aatf);
             };
         }
 

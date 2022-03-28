@@ -288,6 +288,10 @@
                     Console.WriteLine($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
                     throw;
                 }
+                finally
+                {
+                    new DatabaseSeeder().UpdateDatabase();
+                }
             }
         }
 
