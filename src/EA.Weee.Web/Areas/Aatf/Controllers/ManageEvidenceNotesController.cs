@@ -55,7 +55,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(ManageEvidenceNoteViewModel model)
+        public ActionResult Index(ManageEvidenceNoteViewModel model)
         {
             return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
         }

@@ -13,7 +13,9 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Web.Mvc;
+    using Constant;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
     using Xunit;
@@ -59,7 +61,7 @@
             await controller.Index(A.Dummy<Guid>());
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence");
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
 
         [Fact]
@@ -74,7 +76,7 @@
 
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
-            result.ViewName.Should().BeEmpty();
+            result.Model.Should().BeOfType<SelectYourAatfViewModel>();
         }
 
         [Fact]
@@ -163,6 +165,26 @@
         }
 
         [Fact]
+        public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
+        {
+            typeof(ChooseSiteController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid) }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldBeDecoratedWith_Attributes()
+        {
+            typeof(ChooseSiteController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectYourAatfViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<HttpPostAttribute>();
+
+            typeof(ChooseSiteController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectYourAatfViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
         public async void IndexPost_ValidViewModel_PageRedirectsManageEvidence()
         {
             var model = new SelectYourAatfViewModel()
@@ -232,7 +254,7 @@
             await controller.Index(model);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence");
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
     }
 }
