@@ -5,6 +5,8 @@
     using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
+    using EA.Weee.Requests.Aatf;
+    using EA.Weee.Web.Constant;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -26,6 +28,28 @@
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.apiClient = apiClient;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Index(Guid organisationId, Guid aatfId)
+        {
+            using (var client = this.apiClient())
+            {
+                var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
+
+                var model = new ManageEvidenceNoteViewModel() { OrganisationId = organisationId, AatfId = aatfId, AatfName = aatf.Name };
+
+                await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+
+                return this.View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(ManageEvidenceNoteViewModel model)
+        {
+            return RedirectToAction("Index", "Holding", new { area = "Aatf", model.OrganisationId });
         }
 
         [HttpGet]
