@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -253,7 +254,38 @@
         }
 
         [Fact]
-        public async void IndexPost_ValidViewModel_PageRedirectsCreateEvidenceNote()
+        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var result = await controller.Index(organisationId, aatfId) as ViewResult;
+
+            result.Model.Should().BeOfType<ManageEvidenceNoteViewModel>();
+        }
+
+        [Fact]
+        public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid) }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldBeDecoratedWith_Attributes()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<HttpPostAttribute>();
+
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ValidViewModel_PageRedirectsCreateEvidenceNote()
         {
             var model = new ManageEvidenceNoteViewModel()
             {
@@ -261,7 +293,7 @@
                 AatfId = fixture.Create<Guid>(),
             };
 
-            var result = await controller.Index(model) as RedirectToRouteResult;
+            var result = controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Create Evidence Note
