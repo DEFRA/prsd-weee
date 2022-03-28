@@ -13,7 +13,7 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -21,7 +21,7 @@
         public async Task ViewDraftEvidenceNoteGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await Controller.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
+            var result = await Controller.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -37,7 +37,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await Controller.ViewDraftEvidenceNote(organisationId, EvidenceNoteId);
+            await Controller.ViewDraftEvidenceNote(organisationId, AatfId, EvidenceNoteId);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be("TODO:fix");

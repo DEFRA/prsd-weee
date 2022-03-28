@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -14,8 +13,6 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Areas.AatfEvidence.Controllers;
-    using Weee.Requests.Aatf;
-    using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Xunit;
 
@@ -246,10 +243,10 @@
 
             var result = await Controller.Index(model) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding"); // TODO Change to Create Evidence Note
+            result.RouteValues["action"].Should().Be("CreateEvidenceNote");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
-            //result.RouteValues["aatfId"].Should().Be(model.SelectedId); // This will be needed
+            result.RouteValues["aatfId"].Should().Be(model.AatfId); 
         }
 
         [Fact]
