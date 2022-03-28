@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
@@ -214,8 +215,8 @@
 
             await Controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            Breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence Notes");
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be($"Manage Evidence Notes");
         }
 
         [Fact]
@@ -233,7 +234,38 @@
         }
 
         [Fact]
-        public async void IndexPost_ValidViewModel_PageRedirectsCreateEvidenceNote()
+        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var result = await controller.Index(organisationId, aatfId) as ViewResult;
+
+            result.Model.Should().BeOfType<ManageEvidenceNoteViewModel>();
+        }
+
+        [Fact]
+        public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid) }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldBeDecoratedWith_Attributes()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<HttpPostAttribute>();
+
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(ManageEvidenceNoteViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ValidViewModel_PageRedirectsCreateEvidenceNote()
         {
             var model = new ManageEvidenceNoteViewModel()
             {

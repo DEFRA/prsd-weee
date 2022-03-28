@@ -18,8 +18,6 @@
 
     public class ChooseSiteController : AatfEvidenceBaseController
     {
-        private const FacilityType facilityType = FacilityType.Aatf;
-
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -43,7 +41,7 @@
                 return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.AatfList[0].Id });
             }
             
-            await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
+            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.AatfManageEvidence);
             
             return View(model);
         }
@@ -59,7 +57,7 @@
 
             model = await GenerateSelectYourAatfViewModel(model.OrganisationId);
 
-            await SetBreadcrumb(model.OrganisationId, string.Format(BreadCrumbConstant.AatfEvidence, facilityType.ToDisplayString()));
+            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.AatfManageEvidence);
 
             return View(model);
         }
@@ -77,7 +75,7 @@
             {
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                return mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = facilityType });
+                return mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
             }
         }
     }
