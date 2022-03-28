@@ -14,11 +14,11 @@
             }
         }
 
-        public static void ArgumentNotNull<T>(Expression<Func<T>> reference, T value) where T : class
+        public static void ArgumentNotNull<T>(Expression<Func<T>> reference, T value, string message = null) where T : class
         {
             if (value == null)
             {
-                throw new ArgumentNullException(GetParameterName(reference), "Parameter cannot be null.");
+                throw new ArgumentNullException(GetParameterName(reference), $"Parameter cannot be null. {message}");
             }
         }
 

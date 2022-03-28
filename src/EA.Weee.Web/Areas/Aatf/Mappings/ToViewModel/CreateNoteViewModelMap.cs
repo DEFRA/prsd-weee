@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
+    using System.Web.Mvc;
     using Core.AatfEvidence;
+    using Core.Shared;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using ViewModels;
 
@@ -14,9 +17,11 @@
 
             var model = new EvidenceNoteViewModel
             {
+                OrganisationId = source.OrganisationId,
+                AatfId = source.AatfId,
                 SchemeList = source.Schemes,
-                ProtocolList = Enumeration.GetAll<Protocol>(),
-                WasteTypeList = Enumeration.GetAll<WasteType>()
+                ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
+                WasteTypeList = new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value")
             };
 
             if (source.ExistingModel != null)

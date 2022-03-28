@@ -6,21 +6,23 @@
     using EA.Weee.Web.Requests.Base;
     using System;
     using System.Collections.Generic;
+    using Extensions;
+    using Weee.Requests.Aatf;
 
     public class ObligatedSentOnWeeeRequestCreator : RequestCreator<ObligatedViewModel, ObligatedBaseRequest>, IObligatedSentOnWeeeRequestCreator
     {
         public override ObligatedBaseRequest ViewModelToRequest(ObligatedViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
-            var obligatedRequestValues = new List<ObligatedValue>();
+            var obligatedRequestValues = new List<TonnageValues>();
 
             foreach (var categoryValue in viewModel.CategoryValues)
             {
-                var householdValue = ConvertStringToDecimal(categoryValue.B2C);
-                var nonHouseholdValue = ConvertStringToDecimal(categoryValue.B2B);
+                var householdValue = categoryValue.B2C.ToDecimal();
+                var nonHouseholdValue = categoryValue.B2B.ToDecimal();
 
                 obligatedRequestValues.Add(
-                    new ObligatedValue(categoryValue.Id,
+                    new TonnageValues(categoryValue.Id,
                         categoryValue.CategoryId,
                         householdValue,
                         nonHouseholdValue));
@@ -43,17 +45,6 @@
                 SiteAddressId = viewModel.SiteAddressId,
                 WeeeSentOnId = viewModel.WeeeSentOnId
             };
-        }
-
-        private decimal? ConvertStringToDecimal(string input)
-        {
-            decimal? value = null;
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                value = Convert.ToDecimal(input);
-            }
-
-            return value;
         }
     }
 }

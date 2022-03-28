@@ -9,10 +9,15 @@
     {
         public void RebuildDatabase()
         {
-            LaunchCommandLineApp();
+            LaunchCommandLineApp("Rebuild");
         }
 
-        private void LaunchCommandLineApp()
+        public void UpdateDatabase()
+        {
+            LaunchCommandLineApp("Update");
+        }
+
+        private void LaunchCommandLineApp(string command)
         {
             var aliaScriptsDir = ConfigurationManager.AppSettings["aliaSqlScriptsDir"];
             string aliaExe = string.Empty;

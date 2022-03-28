@@ -7,6 +7,8 @@
     using Api.Modules;
     using Api.Services;
     using Autofac;
+    using Autofac.Core;
+    using DataAccess.DataAccess;
     using DataAccess.Identity;
     using EA.Weee.DataAccess;
     using Microsoft.AspNet.Identity;
@@ -60,7 +62,7 @@
             return false;
         }
 
-        public IContainer OverrideContainerWithNew(EnvironmentResolver environment)
+        public IContainer OverrideContainerWithNew(EnvironmentResolver environment, TestUserContext testUserContext)
         {
             var key = GetKey(environment);
             if (ContainerCache.ContainsKey(key))
@@ -74,8 +76,11 @@
             var container = new ContainerBuilder().As(environment);
 
             Console.WriteLine($"Installing IoC...");
+            if (testUserContext == null)
+            {
+                testUserContext = new TestUserContext(Guid.Empty, false);
+            }
 
-            var testUserContext = new TestUserContext(Guid.Empty);
             switch (environment.IocApplication)
             {
                 case IocApplication.RequestHandler:
@@ -84,12 +89,12 @@
                     container.RegisterModule(new EventDispatcherModule());
                     container.RegisterModule(new SecurityModule(environment));
                     container.RegisterModule(new EntityFrameworkModule(environment));
+                    container.Register(context => testUserContext).As<IUserContext>();
+                    container.Register<Action<TestUserContext>>(context => newInstance => testUserContext = newInstance);
                     container.RegisterModule(new MappingModule());
                     container.RegisterType<WeeeIdentityContext>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserManager>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>();
-                    container.Register(context => testUserContext).As<IUserContext>();
-                    container.Register<Action<TestUserContext>>(context => newInstance => testUserContext = newInstance);
                     container.RegisterType<SecurityEventDatabaseAuditor>()
                         .WithParameter(new NamedParameter("connectionString",
                             ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ToString()))
@@ -108,9 +113,9 @@
             return ContainerCache[key] = container.Build();
         }
 
-        public IContainer GetOrCreateContainer(EnvironmentResolver environment)
+        public IContainer GetOrCreateContainer(EnvironmentResolver environment, TestUserContext userContext = null)
         {
-            return IsContainerExisting(environment) ? ContainerCache[GetKey(environment)] : OverrideContainerWithNew(environment);
+            return IsContainerExisting(environment) ? ContainerCache[GetKey(environment)] : OverrideContainerWithNew(environment, userContext);
         }
     }
 }

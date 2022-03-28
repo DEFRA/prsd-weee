@@ -31,7 +31,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSent, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSent, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
             }
 
             await obligatedSentOnDataAccess.Submit(aatfWeeeSentOnAmount);
