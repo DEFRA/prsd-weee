@@ -30,7 +30,7 @@
 
                 var result = await dataAccess.Add<Aatf>(aatf);
 
-                result.Should().NotBeEmpty();
+                result.Should().Be(aatf);
             }
         }
 

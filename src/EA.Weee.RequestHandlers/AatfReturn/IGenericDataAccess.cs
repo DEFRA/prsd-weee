@@ -9,7 +9,7 @@
 
     public interface IGenericDataAccess
     {
-        Task<Guid> Add<TEntity>(TEntity entity) where TEntity : Entity;
+        Task<TEntity> Add<TEntity>(TEntity entity) where TEntity : Entity;
 
         Task AddMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity;
 
