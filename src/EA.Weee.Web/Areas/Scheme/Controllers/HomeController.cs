@@ -87,6 +87,11 @@
 
                 if (organisationDetails.SchemeId != null)
                 {
+                    if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
+                    {
+                        activities.Add(PcsAction.ManagePcsEvidenceNotes);
+                    }
+
                     activities.Add(PcsAction.ManagePcsMembers);
 
                     if (configurationService.CurrentConfiguration.EnableDataReturns)
@@ -216,6 +221,11 @@
                 if (viewModel.SelectedValue == PcsAction.ManageAatfEvidenceNotes)
                 {
                     return RedirectToAction("Index", "ChooseSite", new { area = "Aatf", organisationId = viewModel.OrganisationId });
+                }
+                if (viewModel.SelectedValue == PcsAction.ManagePcsEvidenceNotes)
+                {
+                    //TODO: invoke holding page in Aatf area - possibly need to create a Pcs area with same
+                    return RedirectToAction("Index", "Holding", new { area = "Aatf", organisationId = viewModel.OrganisationId });
                 }
             }
 

@@ -800,6 +800,18 @@
             routeValues["action"].Should().Be("Index");
         }
 
+        //GC ------------------------------
+
+        private HomeController HomeControllerSetupForPCSEvidenceNotes(bool enablePCSEvidenceNotes = false)
+        {
+            var configService = A.Fake<ConfigurationService>();
+            configService.CurrentConfiguration.EnablePCSEvidenceNotes = enablePCSEvidenceNotes;
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
         private HomeController HomeControllerSetupForAATFEvidenceNotes(bool enableAATFEvidenceNotes = false)
         {
             var configService = A.Fake<ConfigurationService>();
@@ -1391,6 +1403,105 @@
             var model = result.Model as ChooseActivityViewModel;
             model.PossibleValues.Should().NotContain(PcsAction.ManageAeReturns);
             model.PossibleValues.Should().NotContain(PcsAction.ManageAatfReturns);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsPCSEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  SchemeId = A.Dummy<Guid>(),
+                  HasAatfs = true
+              });
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+
+            result.Should().Contain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnPCSEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = false
+              });
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_DoesNotReturnsPCSEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = true
+              });
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToFalseAndOrganisationHasNoAatf_DoesNotReturnPCSEvidenceNotesOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(new OrganisationData
+              {
+                  HasAatfs = false
+              });
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+
+            result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsEvidenceNotes()
+        {
+            var organisationData = new OrganisationData() { SchemeId = null };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeController(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsEvidenceNotes()
+        {
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid(), HasAatfs = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(true).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().Contain(PcsAction.ManagePcsEvidenceNotes);
+        }
+
+        [Fact]
+        public async void ChooseActivityGET_GivenManagePcsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePcsEvidenceNotes()
+        {
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid(), HasAatfs = true };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(false).ChooseActivity(A.Dummy<Guid>()) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            model.PossibleValues.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
         }
     }
 }
