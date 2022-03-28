@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
+    using Constant;
     using Core.Scheme;
     using EA.Weee.Requests.Aatf;
     using FakeItEasy;
@@ -55,7 +56,7 @@
             await Controller.CreateEvidenceNote(organisationId, AatfId);
 
             //assert
-            Breadcrumb.ExternalActivity.Should().Be("TODO:fix");
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.OrganisationId.Should().Be(organisationId);
         }
@@ -121,7 +122,7 @@
             await Controller.CreateEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId, AatfId);
 
             //assert
-            Breadcrumb.ExternalActivity.Should().Be("TODO:fix");
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.OrganisationId.Should().Be(organisationId);
         }
