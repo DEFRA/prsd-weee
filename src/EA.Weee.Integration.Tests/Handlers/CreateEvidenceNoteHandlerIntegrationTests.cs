@@ -8,6 +8,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -15,6 +16,7 @@
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
+    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.Aatf;
@@ -69,6 +71,14 @@
             {
                 note.CreatedById.Should().Be(UserId.ToString());
                 note.Aatf.Should().Be(aatf);
+                note.EndDate.Should().Be(request.EndDate);
+                note.StartDate.Should().Be(request.StartDate);
+                note.WasteType.ToInt().Should().Be(request.WasteType.ToInt());
+                note.Protocol.ToInt().Should().Be(request.Protocol.ToInt());
+                note.Recipient.Should().Be(scheme);
+                note.Reference.Should().BeGreaterThan(0);
+                note.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                note.Organisation.Should().Be(organisation);
             };
         }
 

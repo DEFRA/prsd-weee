@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Data.Entity;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Net;
@@ -17,7 +16,6 @@
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.Scheme;
-    using EA.Weee.Security;
     using IoC;
     using Microsoft.AspNet.Identity;
     using netDumbster.smtp;
@@ -106,7 +104,7 @@
 
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
             {
-                return WithIoC(resetDb)
+                return WithIoC(true)
                     .WithTestData(resetDb);
             }
 
