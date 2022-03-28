@@ -29,23 +29,23 @@
 
             var contactPerson = ValueObjectInitializer.CreateContact(message.ContactPerson);
 
-            Guid id;
+            Contact result;
             if (message.ContactId.HasValue)
             {
                 var contact = await dataAccess.GetById<Contact>(message.ContactId.Value);
 
                 contact.Overwrite(contactPerson);
 
-                id = contact.Id;
+                result = contact;
             }
             else
             {
-                id = await dataAccess.Add<Contact>(contactPerson);
+                result = await dataAccess.Add<Contact>(contactPerson);
             }
 
             await db.SaveChangesAsync();
 
-            return id;
+            return result.Id;
         }
     }
 }

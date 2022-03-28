@@ -2,15 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
+    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.AatfReturn;
@@ -37,6 +41,7 @@
         private readonly Aatf aatf;
         private readonly Scheme scheme;
         private readonly Note note;
+        private readonly Guid userId;
 
         public CreateEvidenceNoteRequestHandlerTests()
         {
@@ -50,16 +55,14 @@
             aatf = A.Fake<Aatf>();
             scheme = A.Fake<Scheme>();
             note = A.Fake<Note>();
+            userId = fixture.Create<Guid>();
 
             A.CallTo(() => note.Reference).Returns(1);
             A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => genericDataAccess.Add<Note>(A<Note>._)).Invokes(() =>
-            {
-                A.CallTo(() => note.Reference).Returns(100);
-            });
+            A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
             request = new CreateEvidenceNoteRequest(organisation.Id,
                 aatf.Id,
@@ -68,7 +71,7 @@
                 DateTime.Now.AddDays(1),
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
-                new List<TonnageValues>());
+                fixture.CreateMany<TonnageValues>().ToList());
 
             handler = new CreateEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
@@ -77,6 +80,8 @@
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+            A.CallTo(() => userContext.UserId).Returns(userId);
+            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
         }
 
         [Fact]
@@ -90,65 +95,171 @@
                 userContext);
 
             //act
-            Func<Task> action = async () => await handler.HandleAsync(Request());
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
-            await action.Should().ThrowAsync<SecurityException>();
+            result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
         public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
             handler = new CreateEvidenceNoteRequestHandler(authorization, genericDataAccess,
                 aatfDataAccess,
                 userContext);
 
             //act
-            Func<Task> action = async () => await handler.HandleAsync(Request());
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
-            await action.Should().ThrowAsync<InvalidOperationException>();
+            result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
-        public void HandleAsync_GivenRequestAndNoOrganisationFound_ArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndNoOrganisationFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
             A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns((Organisation)null);
 
             //act
-            Func<Task> action = async () => await handler.HandleAsync(Request());
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
-            action.Should().ThrowAsync<ArgumentNullException>();
+            result.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
-        public void HandleAsync_GivenRequestAndNoSchemeFound_ArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndNoSchemeFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
             A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns((Scheme)null);
 
             //act
-            Func<Task> action = async () => await handler.HandleAsync(Request());
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
-            action.Should().ThrowAsync<ArgumentNullException>();
+            result.Should().BeOfType<ArgumentNullException>();
         }
 
-        //[Fact]
-        //public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
-        //{
-        //    //act
-        //    await handler.HandleAsync(request);
+        [Fact]
+        public async Task HandleAsync_GivenAatfDoesNotBelongToTheOrganisation_ShouldThrowInvalidOperationException()
+        {
+            //arrange
+            A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(A.Fake<Aatf>());
 
-        //    //assert
-        //    A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
-        //        .MustHaveHappenedOnceExactly();
-        //}
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_NoteShouldBeAddedToContext()
+        {
+            //act
+            var date = DateTime.UtcNow;
+            SystemTime.Freeze(date);
+
+            //arrange
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(request.EndDate) &&
+
+                                                                           n.Aatf.Equals(aatf) &&
+                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.Organisation.Equals(organisation) &&
+                                                                           n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
+                                                                           n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
+                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.StartDate.Equals(request.StartDate) &&
+                                                                           n.EndDate.Equals(request.EndDate) &&
+                                                                           n.CreatedById.Equals(userId.ToString()) &&
+                                                                           n.NoteType.Equals(NoteType.EvidenceNote) &&
+                                                                           n.Status.Equals(NoteStatus.Draft) &&
+                                                                           n.NoteTonnage.Count.Equals(request.TonnageValues.Count))))
+                                                                           .MustHaveHappenedOnceExactly();
+
+            foreach (var requestTonnageValue in request.TonnageValues)
+            {
+                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c => 
+                    c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
+                    && c.Reused.Equals(requestTonnageValue.SecondTonnage)
+                    && c.Received.Equals(requestTonnageValue.FirstTonnage)
+                    && c.Note.Equals(n)) != null))).MustHaveHappenedOnceExactly();
+            }
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithNullWasteAndProtocol_NoteShouldBeAddedToContext()
+        {
+            //act
+            var date = DateTime.UtcNow;
+            SystemTime.Freeze(date);
+
+            var newRequest = new CreateEvidenceNoteRequest(organisation.Id,
+                aatf.Id,
+                scheme.Id,
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                null,
+                null,
+                new List<TonnageValues>());
+
+            //arrange
+            await handler.HandleAsync(newRequest);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(newRequest.EndDate) &&
+
+                                                                           n.Aatf.Equals(aatf) &&
+                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.Organisation.Equals(organisation) &&
+                                                                           n.Protocol.Equals(null) &&
+                                                                           n.WasteType.Equals(null) &&
+                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.StartDate.Equals(newRequest.StartDate) &&
+                                                                           n.EndDate.Equals(newRequest.EndDate) &&
+                                                                           n.CreatedById.Equals(userId.ToString()) &&
+                                                                           n.NoteType.Equals(NoteType.EvidenceNote) &&
+                                                                           n.Status.Equals(NoteStatus.Draft) &&
+                                                                           n.NoteTonnage.Count.Equals(newRequest.TonnageValues.Count))))
+                                                                           .MustHaveHappenedOnceExactly();
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ReferenceShouldBeReturned()
+        {
+            //act
+            var reference = fixture.Create<int>();
+            var newNote = A.Fake<Note>();
+            A.CallTo(() => newNote.Reference).Returns(reference);
+            A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(newNote);
+
+            //arrange
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.Should().Be(reference);
+        }
 
         private CreateEvidenceNoteRequest Request()
         {
