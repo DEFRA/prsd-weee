@@ -215,8 +215,8 @@
 
             await Controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>());
 
-            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage Evidence Notes");
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalActivity.Should().Be($"Manage Evidence Notes");
         }
 
         [Fact]
@@ -239,7 +239,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var result = await controller.Index(organisationId, aatfId) as ViewResult;
+            var result = await Controller.Index(organisationId, aatfId) as ViewResult;
 
             result.Model.Should().BeOfType<ManageEvidenceNoteViewModel>();
         }
@@ -273,7 +273,7 @@
                 AatfId = Fixture.Create<Guid>(),
             };
 
-            var result = await Controller.Index(model) as RedirectToRouteResult;
+            var result = Controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("CreateEvidenceNote");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
