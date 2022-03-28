@@ -4,16 +4,20 @@
     using System.Collections.Generic;
     using System.Security.Claims;
     using Prsd.Core.Domain;
+    using Security;
 
     public class TestUserContext : IUserContext
     {
         public ClaimsPrincipal BackingPrincipal;
 
-        public TestUserContext(Guid userId)
+        public TestUserContext(Guid userId, bool asExternal)
         {
             UserId = userId;
-
             var identity = new ClaimsIdentity(new List<Claim>(), "integration");
+            if (asExternal)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessExternalArea));
+            }
 
             BackingPrincipal = new ClaimsPrincipal(identity);
         }

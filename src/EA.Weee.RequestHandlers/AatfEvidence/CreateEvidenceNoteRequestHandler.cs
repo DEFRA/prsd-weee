@@ -78,7 +78,8 @@
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 aatf,
                 NoteType.TransferNote,
-                userContext.UserId.ToString());
+                userContext.UserId.ToString(),
+                NoteStatus.Draft);
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(evidenceNote,
                 (WeeeCategory)t.CategoryId,

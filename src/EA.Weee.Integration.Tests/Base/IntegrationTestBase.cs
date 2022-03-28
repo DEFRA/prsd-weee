@@ -98,8 +98,8 @@
                     throw new InvalidOperationException("Principal must have been set to login as particular user type");
                 }
                 
-                var identity = (ClaimsIdentity)Principal.Identity;
-                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessExternalArea));
+                var userContext = new TestUserContext(Guid.Parse(User.Id), true);
+                InitIocWithUser(userContext);
 
                 return this;
             }
@@ -178,9 +178,10 @@
                     Console.WriteLine($"Using default user with id { User.Id } ");
 
                     var testUserContextUpdater = Container.Resolve<Action<TestUserContext>>();
-                    testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id)));
+                    testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id), false));
 
                     var userc = Container.Resolve<IUserContext>();
+                    
                     Principal = userc.Principal;
                     var weeContext = Container.Resolve<WeeeContext>();
                     DefaultIntegrationOrganisation = weeContext.Organisations.FirstOrDefault(o => o.Name.Equals(TestingConstants.TestCompanyName));
@@ -241,6 +242,22 @@
                     ServiceLocator.Container = Container = iocFactory.GetOrCreateContainer(environment);
                 }
 
+                return Container;
+            }
+
+            protected static IContainer InitIocWithUser(TestUserContext userContext)
+            {
+                var environment = new EnvironmentResolver
+                {
+                    IocApplication = CurrentAppUnderTest,
+                    HostEnvironment = CurrentHostEnvironment,
+                    IsTestRun = true
+                };
+
+                var iocFactory = new IoCFactory();
+                iocFactory.RemoveContainer(environment);
+                ServiceLocator.Container = Container = iocFactory.GetOrCreateContainer(environment, userContext);
+                
                 return Container;
             }
         }
