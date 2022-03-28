@@ -86,13 +86,15 @@
                 OrganisationType = Core.Organisations.OrganisationType.Partnership
             };
 
-            Guid organisationId = Guid.NewGuid();
+            var organisation = A.Fake<Organisation>();
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
 
             CreateOrganisationAdminHandler handler = new CreateOrganisationAdminHandler(authorization, this.dataAccess, this.context);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).Returns(organisationId);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).Returns(organisation);
 
-            Guid result = await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
 
             A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => dataAccess.Add<Address>(A<Address>.That.Matches(p => p.Address1 == request.Address.Address1))).MustHaveHappened(1, Times.Exactly);
@@ -110,11 +112,13 @@
                 OrganisationType = Core.Organisations.OrganisationType.SoleTraderOrIndividual
             };
 
-            Guid organisationId = Guid.NewGuid();
+            var organisation = A.Fake<Organisation>();
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
 
             CreateOrganisationAdminHandler handler = new CreateOrganisationAdminHandler(authorization, this.dataAccess, this.context);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).Returns(organisationId);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName))).Returns(organisation);
 
             Guid result = await handler.HandleAsync(request);
 
@@ -135,11 +139,13 @@
                 TradingName = "Trading"
             };
 
-            Guid organisationId = Guid.NewGuid();
+            var organisation = A.Fake<Organisation>();
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
 
             CreateOrganisationAdminHandler handler = new CreateOrganisationAdminHandler(authorization, this.dataAccess, this.context);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).Returns(organisationId);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).Returns(organisation);
 
             Guid result = await handler.HandleAsync(request);
 
@@ -161,11 +167,13 @@
                 TradingName = "Trading"
             };
 
-            Guid organisationId = Guid.NewGuid();
+            var organisation = A.Fake<Organisation>();
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
 
             CreateOrganisationAdminHandler handler = new CreateOrganisationAdminHandler(authorization, this.dataAccess, this.context);
 
-            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).Returns(organisationId);
+            A.CallTo(() => dataAccess.Add<Organisation>(A<Organisation>.That.Matches(p => p.OrganisationName == request.BusinessName && p.TradingName == request.TradingName))).Returns(organisation);
 
             Guid result = await handler.HandleAsync(request);
 
