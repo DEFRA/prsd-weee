@@ -137,6 +137,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
