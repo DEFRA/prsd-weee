@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Constant;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -40,7 +41,7 @@
             await Controller.ViewDraftEvidenceNote(organisationId, AatfId, EvidenceNoteId);
 
             //assert
-            Breadcrumb.ExternalActivity.Should().Be("TODO:fix");
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.OrganisationId.Should().Be(organisationId);
         }
