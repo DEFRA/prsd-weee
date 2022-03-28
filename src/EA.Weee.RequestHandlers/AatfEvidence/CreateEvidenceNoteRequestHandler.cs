@@ -44,15 +44,8 @@
             var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
             var scheme = await genericDataAccess.GetById<Domain.Scheme.Scheme>(message.RecipientId);
 
-            if (organisation == null)
-            {
-                throw new ArgumentException($"Could not find an organisation with Id {message.OrganisationId}");
-            }
-
-            if (scheme == null)
-            {
-                throw new ArgumentException($"Could not find an scheme with Id {message.RecipientId}");
-            }
+            Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an organisation with Id {message.OrganisationId}");
+            Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an scheme with Id {message.RecipientId}");
 
             var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 

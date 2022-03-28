@@ -1,6 +1,8 @@
 ﻿
-
-ALTER TABLE [Evidence].[Note] ADD NoteType [INT] NOT NULL;
+IF COL_LENGTH('Evidence.Note','NoteType') IS NULL
+BEGIN
+	ALTER TABLE [Evidence].[Note] ADD NoteType [INT] NOT NULL;
+END
 	
 ALTER TABLE [Evidence].[NoteTonnage]  WITH CHECK ADD  CONSTRAINT [FK_Note_CategoryId] FOREIGN KEY([CategoryId])
 REFERENCES [Lookup].[WeeeCategory] ([Id])
