@@ -14,7 +14,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <p>
-                @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+                @Html.ActionLink("Back", "Index", "ChooseSite", new { area = "Aatf", organisationId = Model.OrganisationId }, new { @class = "govuk-back-link" })
             </p>
 
             <header class="hgroup">
@@ -26,6 +26,8 @@
             @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.OrganisationId)
+                @Html.HiddenFor(m => m.AatfId)
                 <p>Choose what you would like to view below. A summary of total evidence, editable notes or all other evidence notes.</p>
 
                 @(this.WeeeGds().Submit("Create new evidence note"))
