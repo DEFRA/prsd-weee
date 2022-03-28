@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
     using Domain.Evidence;
 
-    internal class EvidenceNoteTonnageMapping : EntityTypeConfiguration<NoteTonnage>
+    public class EvidenceNoteTonnageMapping : EntityTypeConfiguration<NoteTonnage>
     {
         public EvidenceNoteTonnageMapping()
         {

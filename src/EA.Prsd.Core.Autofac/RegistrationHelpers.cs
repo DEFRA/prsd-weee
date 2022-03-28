@@ -16,5 +16,17 @@
                 builder.RegisterType(type).AsSelf().InstancePerRequest();
             }
         }
+
+        public static void RegisterTypeByEnvironment<T, TI>(this ContainerBuilder builder, EnvironmentResolver environment)
+        {
+            if (environment.HostEnvironment.Equals(HostEnvironmentType.Console))
+            {
+                builder.RegisterType<T>().As<TI>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<T>().As<TI>().InstancePerRequest();
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@
     {
         protected override OrganisationUser Instantiate()
         {
-            instance = new OrganisationUser(Guid.Empty, Guid.Empty, UserStatus.Pending);
+            instance = new OrganisationUser(Guid.Empty, Guid.Empty, UserStatus.Active);
 
             return instance;
         }

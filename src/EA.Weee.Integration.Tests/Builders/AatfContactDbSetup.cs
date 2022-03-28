@@ -12,8 +12,8 @@
         {
             var country = DbContext.Countries.First(c => c.Name.Equals("UK - England"));
 
-            instance = new AatfContact("Aatf contact first",
-                "Aatf contact last",
+            instance = new AatfContact("aatf contact first",
+                "aatf contact last",
                 "Job",
                 "Address 1",
                 "Address 2",

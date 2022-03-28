@@ -24,18 +24,20 @@
             Protocol? protocol,
             Aatf aatf,
             NoteType noteType,
-            string createdBy)
+            string createdBy,
+            NoteStatus status)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNull(() => aatf, aatf);
             Guard.ArgumentNotNull(() => noteType, noteType);
+            Guard.ArgumentNotNull(() => status, status);
             Guard.ArgumentNotDefaultValue(() => startDate, startDate);
             Guard.ArgumentNotDefaultValue(() => endDate, endDate);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
 
             Organisation = organisation;
-            Status = NoteStatus.Draft;
+            Status = status;
             WasteType = wasteType;
             Protocol = protocol;
             Recipient = recipient;
@@ -60,11 +62,7 @@
             Organisation = organisation;
         }
 
-        //public virtual Guid OrganisationId { get; private set; }
-
         public Organisation Organisation { get; private set; }
-
-        //public virtual Guid RecipientId { get; private set; }
 
         public Scheme Recipient { get; private set; }
 
@@ -81,8 +79,6 @@
         public NoteType NoteType { get; private set; }
 
         public Aatf Aatf { get; private set; }
-
-        //public virtual Guid AatfId { get; private set; }
 
         public DateTime CreatedDate { get; private set; }
 
