@@ -150,7 +150,7 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(companyName));
+                return await client.SendAsync(User.GetAccessToken(), new FindMatchingPartialOrganisations(companyName));
             }
         }
 
