@@ -41,6 +41,8 @@
         {
             var schemeId = Guid.NewGuid();
             var contactId = Guid.NewGuid();
+            var contact = A.Fake<Contact>();
+            A.CallTo(() => contact.Id).Returns(contactId);
             var dataAccess = A.Fake<IGenericDataAccess>();
             var context = A.Fake<WeeeContext>();
 
@@ -55,7 +57,7 @@
             A.CallTo(() => dataAccess.Add<Contact>(A<Contact>.That.Matches(c => c.FirstName.Equals(message.ContactPerson.FirstName)
                                                                                 && c.LastName.Equals(message.ContactPerson.LastName) &&
                                                                                 c.Position.Equals(message.ContactPerson.Position))))
-                .Returns(contactId);
+                .Returns(contact);
 
             var result = await handler.HandleAsync(message);
 
