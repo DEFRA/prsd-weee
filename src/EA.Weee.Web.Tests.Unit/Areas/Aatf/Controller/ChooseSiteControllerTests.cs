@@ -15,6 +15,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Web.Mvc;
+    using Constant;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
     using Xunit;
@@ -60,7 +61,7 @@
             await controller.Index(A.Dummy<Guid>());
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence");
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
 
         [Fact]
@@ -253,7 +254,7 @@
             await controller.Index(model);
 
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumb.ExternalActivity.Should().Be($"Manage AATF Evidence");
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
     }
 }
