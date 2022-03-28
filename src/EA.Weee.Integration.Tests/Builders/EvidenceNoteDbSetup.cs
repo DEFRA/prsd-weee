@@ -28,7 +28,8 @@
                 Protocol.Actual,
                 aatf,
                 NoteType.EvidenceNote,
-                user.UserId.ToString());
+                user.UserId.ToString(),
+                NoteStatus.Draft);
 
             return instance;
         }
