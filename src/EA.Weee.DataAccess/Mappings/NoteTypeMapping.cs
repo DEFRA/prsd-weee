@@ -3,12 +3,12 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain.Evidence;
 
-    internal class EvidenceNoteProtocolMapping : ComplexTypeConfiguration<Protocol>
+    internal class NoteTypeMapping : ComplexTypeConfiguration<NoteType>
     {
-        public EvidenceNoteProtocolMapping()
+        public NoteTypeMapping()
         {
             Ignore(x => x.DisplayName);
-            Property(x => x.Value).HasColumnName("Protocol");
+            Property(x => x.Value).HasColumnName("NoteType");
         }
     }
 }

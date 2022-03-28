@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Requests.Aatf;
     using Xunit;
 
     public class AddObligatedReusedHandlerTests
@@ -49,11 +50,11 @@
                 aatfReturn.Id);
             var weeeReusedAmount = new List<WeeeReusedAmount>();
 
-            var categoryValues = new List<ObligatedValue>();
+            var categoryValues = new List<TonnageValues>();
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
+                categoryValues.Add(new TonnageValues(Guid.NewGuid(), (int)category, (int)category, (int)category));
             }
 
             var obligatedWeeeRequest = new AddObligatedReused
@@ -66,7 +67,7 @@
 
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
-                weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                weeeReusedAmount.Add(new WeeeReusedAmount(weeeReused, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
             }
 
             var requestHandler = new AddObligatedReusedHandler(authorization, addObligatedReusedDataAccess);

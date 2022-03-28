@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Web.Mvc;
     using Attributes;
     using Core.AatfEvidence;
     using Core.Helpers;
@@ -32,14 +33,14 @@
         public List<SchemeData> SchemeList { get; set; }
 
         [Display(Name = "Type of waste")]
-        public int? WasteTypeValue { get; set; }
+        public WasteType? WasteTypeValue { get; set; }
 
-        public IEnumerable<WasteType> WasteTypeList { get; set; }
+        public IEnumerable<SelectListItem> WasteTypeList { get; set; }
 
         [Display(Name = "Actual or protocol")]
-        public int? ProtocolValue { get; set; }
+        public Protocol? ProtocolValue { get; set; }
 
-        public IEnumerable<Protocol> ProtocolList { get; set; }
+        public IEnumerable<SelectListItem> ProtocolList { get; set; }
 
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
@@ -59,6 +60,10 @@
         {
             get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
         }
+
+        public Guid OrganisationId { get; set; }
+
+        public Guid AatfId { get; set; }
 
         private void AddCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
         {

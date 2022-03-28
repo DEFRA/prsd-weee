@@ -358,6 +358,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
@@ -414,6 +415,7 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
+    <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
     <Compile Include="Filters\MaintenanceModeFilterAttribute.cs" />
     <Compile Include="Filters\RenderActionErrorAttribute.cs" />
@@ -421,6 +423,7 @@
     <Compile Include="Infrastructure\DisplayHelper.cs" />
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.BackLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Panel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
@@ -610,7 +613,7 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Content\auto-complete.css" />
+    <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
     <Content Include="Content\govuk_frontend\assets\images\favicon.ico" />
@@ -1618,6 +1621,7 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\dart.exe&quot;  &quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sass.snapshot&quot; --quiet --no-source-map Content\weee-returns-aatf-mobile.scss Content\weee-returns-aatf-mobile.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\dart.exe&quot;  &quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sass.snapshot&quot; --quiet --no-source-map Content\weee-returns-ae-mobile.scss Content\weee-returns-ae-mobile.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\dart.exe&quot;  &quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sass.snapshot&quot; --quiet --no-source-map Content\remove-site.scss Content\remove-site.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\dart.exe&quot;  &quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sass.snapshot&quot; --quiet --no-source-map Content\auto-complete.scss Content\auto-complete.css" />
     <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
@@ -1632,6 +1636,9 @@
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
     <CreateItem Include="Content\remove-site.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\auto-complete.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
   </Target>
