@@ -20,9 +20,9 @@
 
             context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.ManageEvidenceRouteName,
-                url: "Aatf/{organisationId}/{controller}/{action}/",
-                defaults: new { action = "Index", controller = "Home" },
-                namespaces: new[] { typeof(HomeController).Namespace });
+                url: "Aatf/{organisationId}/manage-evidence/{aatfId}/{action}/",
+                defaults: new { action = "Index", controller = "ManageEvidenceNotes", aatfId = UrlParameter.Optional },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "Aatf_default",
