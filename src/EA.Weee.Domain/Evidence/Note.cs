@@ -92,7 +92,7 @@
 
         public virtual User SubmittedBy { get; set; }
 
-        public virtual int? Reference { get; set; }
+        public virtual int Reference { get; set; }
 
         public virtual ICollection<NoteTonnage> NoteTonnage { get; set; }
     }

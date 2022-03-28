@@ -69,7 +69,7 @@
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 aatf,
-                NoteType.TransferNote,
+                NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
                 NoteStatus.Draft);
 
@@ -80,9 +80,9 @@
 
             evidenceNote.NoteTonnage.AddRange(tonnageValues);
 
-            await genericDataAccess.Add(evidenceNote);
+            var newNote = await genericDataAccess.Add(evidenceNote);
 
-            return evidenceNote.Reference.Value;
+            return newNote.Reference;
         }
     }
 }
