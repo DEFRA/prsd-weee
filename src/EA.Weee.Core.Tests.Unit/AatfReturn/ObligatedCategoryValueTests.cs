@@ -20,7 +20,8 @@
             typeof(ObligatedCategoryValue).GetProperty("B2C").Should().BeDecoratedWith<TonnageValueAttribute>(
                 a => a.CategoryProperty.Equals("CategoryId") 
                      && a.StartOfValidationMessage.Equals("The tonnage value")
-                     && a.TypeMessage.Equals("B2C"));
+                     && a.TypeMessage.Equals("B2C")
+                     && a.DisplayCategory.Equals(false));
         }
 
         [Fact]
@@ -29,7 +30,8 @@
             typeof(ObligatedCategoryValue).GetProperty("B2B").Should().BeDecoratedWith<TonnageValueAttribute>(
                 a => a.CategoryProperty.Equals("CategoryId")
                      && a.StartOfValidationMessage.Equals("The tonnage value")
-                     && a.TypeMessage.Equals("B2B"));
+                     && a.TypeMessage.Equals("B2B")
+                     && a.DisplayCategory.Equals(false));
         }
     }
 }

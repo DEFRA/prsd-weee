@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using Helpers;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class TonnageValueAttribute : ValidationAttribute
@@ -17,21 +18,25 @@
 
         public string StartOfValidationMessage { get; private set; }
 
+        public bool DisplayCategory { get; private set; }
+
         /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
         private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
-        public TonnageValueAttribute(string category, string startOfValidationMessage)
+        public TonnageValueAttribute(string category, string startOfValidationMessage, bool displayCategory)
         {
             CategoryProperty = category;
             TypeMessage = null;
             StartOfValidationMessage = startOfValidationMessage;
+            DisplayCategory = displayCategory;
         }
 
-        public TonnageValueAttribute(string category, string startOfValidationMessage, string typeMessage)
+        public TonnageValueAttribute(string category, string startOfValidationMessage, string typeMessage, bool displayCategory)
         {
             CategoryProperty = category;
             TypeMessage = typeMessage;
             StartOfValidationMessage = startOfValidationMessage;
+            DisplayCategory = displayCategory;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -114,9 +119,11 @@
 
         private string GenerateMessage(string message, int categoryId)
         {
-            var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
+            var category = DisplayCategory ? $"{((WeeeCategory)categoryId).ToDisplayString().ToLower()} " : string.Empty;
 
-            return $"{StartOfValidationMessage} for category {categoryId}{additionalMessage} must be {message}";
+            var additionalMessage = TypeMessage == null ? string.Empty : $"{TypeMessage} ";
+
+            return $"{StartOfValidationMessage} for category {categoryId} {category}{additionalMessage}must be {message}";
         }
     }
 }
