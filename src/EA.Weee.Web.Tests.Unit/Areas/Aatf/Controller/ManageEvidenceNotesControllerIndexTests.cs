@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -23,6 +24,9 @@
         {
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
                 .Returns(new ManageEvidenceNoteViewModel());
+
+            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
+                .Returns(new SelectYourAatfViewModel() { AatfList = new List<AatfData>() });
         }
 
         [Fact]
@@ -61,6 +65,26 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenOrganisationId_SelectYourAatfViewModelMapperShouldBeCalled()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatfs = Fixture.CreateMany<AatfData>().ToList();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+
+            //act
+            await Controller.Index(organisationId, aatfId);
+
+            //assert
+            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
+                A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(
+                    a => a.AatfList.Equals(aatfs) && a.FacilityType.Equals(FacilityType.Aatf) &&
+                         a.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async void IndexGet_GivenRequiredData_ModelMapperShouldBeCalled()
         {
             //arrange
@@ -68,6 +92,11 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
+            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
+
+            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
+                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
+                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
@@ -77,8 +106,15 @@
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                m => m.AatfId.Equals(aatfId) && m.AatfData.Equals(aatfData) && m.Aatfs.Equals(aatfs) &&
-                     m.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
+                m => m.AatfId.Equals(aatfId) 
+                     && m.AatfData.Equals(aatfData) 
+                     && m.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
+
+            foreach (var aatf in selectYourAatfViewModel.AatfList)
+            {
+                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
+                        m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
+            }
         }
 
         [Fact]
