@@ -40,12 +40,12 @@
         }
 
         [Theory]
-        [InlineData("StartDate")]
-        [InlineData("EndDate")]
-        [InlineData("ReceivedId")]
-        public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property)
+        [InlineData("StartDate", "Enter a start date")]
+        [InlineData("EndDate", "Enter an end date")]
+        [InlineData("ReceivedId", "Select a receiving PCS")]
+        public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string message)
         {
-            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>();
+            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
         }
 
         [Theory]

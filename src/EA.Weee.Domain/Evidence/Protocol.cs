@@ -3,8 +3,9 @@
     public enum Protocol
     {
         Actual = 1,
-        NationalProtocol = 2,
-        SiteProtocol = 3,
-        ReuseNetworkWeights = 4
+        LdaProtocol = 2,
+        SmwProtocol = 3,
+        SiteSpecificProtocol = 4,
+        ReuseNetworkPwp = 5
     }
 }

@@ -14,19 +14,19 @@
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
-        [Required]
+        [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
         [EvidenceNoteStartDate(nameof(EndDate))]
         public DateTime StartDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
         [EvidenceNoteEndDate(nameof(StartDate))]
         public DateTime EndDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Select a receiving PCS")]
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
