@@ -272,7 +272,7 @@
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine($"Run SQL: {ex.Message}");
+                    Console.Write($"SQL: {ex.Message}");
 
                     if (ex.Message.Contains("No process is on the other end of the pipe") ||
                         ex.Message.Contains("Cannot open database"))
@@ -283,7 +283,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
+                    Console.Write($"Exception running SQL during a test run. SQL was:\n{sql}\nException: {ex}");
                     throw;
                 }
                 finally
