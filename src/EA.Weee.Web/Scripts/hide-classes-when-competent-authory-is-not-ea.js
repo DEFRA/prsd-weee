@@ -10,7 +10,7 @@
 
             $('.error-summary-list').parent().css("display", "block");
 
-            $('#error-summary-title').text("You have " + $('.error-summary-list li').length + " errors on this page");
+            $('#error-summary-title').text("There is a problem");
 	    }
         else
         {
@@ -24,7 +24,7 @@
             if (!numberOfNonHiddenErrors > 0) {
 	            $('.error-summary-list').parent().css("display", "none");
             } else {
-	            $('#error-summary-title').text("You have " + numberOfNonHiddenErrors + " errors on this page");
+	            $('#error-summary-title').text("There is a problem");
             }
             
         }
