@@ -7,10 +7,10 @@
     [Serializable]
     public class ObligatedCategoryValue : CategoryValue
     {
-        [TonnageValue("CategoryId", "The tonnage value", "B2C")]
+        [TonnageValue("CategoryId", "The tonnage value", "B2C", false)]
         public string B2C { get; set; }
 
-        [TonnageValue("CategoryId", "The tonnage value", "B2B")]
+        [TonnageValue("CategoryId", "The tonnage value", "B2B", false)]
         public string B2B { get; set; }
 
         public bool RedirectToSummary
