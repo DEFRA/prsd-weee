@@ -7,7 +7,7 @@
     [Serializable]
     public class NonObligatedCategoryValue : CategoryValue
     {
-        [TonnageValue(nameof(CategoryId), "The tonnage value")]
+        [TonnageValue(nameof(CategoryId), "The tonnage value", false)]
         public string Tonnage { get; set; }
 
         public bool Dcf { get; set; }
