@@ -23,7 +23,7 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(value?.ToString()))
+            if (string.IsNullOrWhiteSpace(value?.ToString()) || (!value.ToString().Any(char.IsDigit)))
             {
                 return ValidationResult.Success;
             }
@@ -81,7 +81,7 @@
 
         private string GenerateMessage(int categoryId)
         {
-            return $"The reused tonnage for category {categoryId} must be equivalent or lower than the received tonnage.";
+            return "The reused tonnage must be equivalent or lower than the received tonnage";
         }
     }
 }

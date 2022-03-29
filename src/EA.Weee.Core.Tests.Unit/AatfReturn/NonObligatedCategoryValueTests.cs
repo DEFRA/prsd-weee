@@ -18,7 +18,9 @@
         public void NonObligatedCategoryValue_TonnageProperty_ShouldHaveTonnageAttribute()
         {
             typeof(NonObligatedCategoryValue).GetProperty("Tonnage").Should().BeDecoratedWith<TonnageValueAttribute>(
-                a => a.CategoryProperty.Equals("CategoryId") && a.StartOfValidationMessage.Equals("The tonnage value"));
+                a => a.CategoryProperty.Equals("CategoryId") 
+                     && a.StartOfValidationMessage.Equals("The tonnage value") 
+                     && a.DisplayCategory.Equals(false));
         }
     }
 }
