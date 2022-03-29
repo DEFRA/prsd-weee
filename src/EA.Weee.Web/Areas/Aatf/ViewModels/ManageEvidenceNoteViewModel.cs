@@ -12,5 +12,7 @@
         public Guid AatfId { get; set; }
 
         public string AatfName { get; set; }
+
+        public bool SingleAatf { get; set; }
     }
 }
