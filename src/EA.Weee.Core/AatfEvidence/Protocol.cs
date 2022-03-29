@@ -8,11 +8,13 @@
     {
         [Display(Name = "Actual")]
         Actual = 1,
-        [Display(Name = "National protocol")]
-        NationalProtocol = 2,
-        [Display(Name = "Site protocol")]
-        SiteProtocol = 3,
-        [Display(Name = "Re-use network weights")]
-        ReuseNetworkWeights = 4,
+        [Display(Name = "LDA protocol")]
+        LdaProtocol = 2,
+        [Display(Name = "SMW protocol")]
+        SmwProtocol = 3,
+        [Display(Name = "Site specific protocol")]
+        SiteSpecificProtocol = 4,
+        [Display(Name = "Reuse network PWP")]
+        ReuseNetworkPwp = 5
     }
 }
