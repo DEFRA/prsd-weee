@@ -109,7 +109,7 @@
             validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
             {
                 new ValidationResult(
-                    "The reused tonnage for category 10 must be equivalent or lower than the received tonnage.")
+                    "The reused tonnage must be equivalent or lower than the received tonnage")
             });
         }
 
@@ -122,7 +122,7 @@
             validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
             {
                 new ValidationResult(
-                    "The reused tonnage for category 10 must be equivalent or lower than the received tonnage.")
+                    "The reused tonnage must be equivalent or lower than the received tonnage")
             });
         }
 
