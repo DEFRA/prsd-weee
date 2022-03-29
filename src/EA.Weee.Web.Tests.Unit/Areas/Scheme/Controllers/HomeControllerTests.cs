@@ -138,7 +138,7 @@
             var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
 
             Assert.Contains(PcsAction.ManagePcsMembers, result);
-            Assert.Contains(PcsAction.ManageContactDetails, result);
+            Assert.Contains(PcsAction.ManagePcsContactDetails, result);
         }
 
         [Fact]
@@ -1411,8 +1411,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(new OrganisationData
               {
-                  SchemeId = A.Dummy<Guid>(),
-                  HasAatfs = true
+                  SchemeId = A.Dummy<Guid>()
               });
 
             var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
@@ -1421,43 +1420,15 @@
         }
 
         [Fact]
-        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnPCSEvidenceNotesOption()
+        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoSchemeId_DoesNotReturnPCSEvidenceNotesOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(new OrganisationData
               {
-                  HasAatfs = false
+                  SchemeId = null
               });
 
             var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
-
-            result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
-        }
-
-        [Fact]
-        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_DoesNotReturnsPCSEvidenceNotesOption()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
-
-            var result = await HomeControllerSetupForPCSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
-
-            result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
-        }
-
-        [Fact]
-        public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToFalseAndOrganisationHasNoAatf_DoesNotReturnPCSEvidenceNotesOption()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = false
-              });
-
-            var result = await HomeControllerSetupForPCSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
 
             result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
         }
@@ -1477,9 +1448,9 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsEvidenceNotes()
+        public async void ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToTrueInconfig_ViewModelShouldContainManagePcsEvidenceNotes()
         {
-            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid(), HasAatfs = true };
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
@@ -1491,9 +1462,9 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenManagePcsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePcsEvidenceNotes()
+        public async void ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePcsEvidenceNotes()
         {
-            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid(), HasAatfs = true };
+            var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);

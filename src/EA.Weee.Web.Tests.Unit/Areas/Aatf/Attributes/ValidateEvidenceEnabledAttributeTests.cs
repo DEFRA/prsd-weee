@@ -11,26 +11,28 @@
 
     public class ValidateEvidenceEnabledAttributeTests
     {
-        private readonly ValidateEvidenceEnabledAttribute attribute;
+        private readonly ValidateAatfEvidenceEnabledAttribute aatfAttribute;
+        private readonly ValidatePcsEvidenceEnabledAttribute pcsAttribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
 
         public ValidateEvidenceEnabledAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
-            attribute = new ValidateEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
+            aatfAttribute = new ValidateAatfEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
+            pcsAttribute = new ValidatePcsEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
 
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
+            A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
+            A.CallTo(() => aatfAttribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
         }
 
         [Fact]
         public void OnActionExecuting_GivenEnableAatfEvidenceNotesIsFalse_InvalidOperationExceptionExpected()
         {
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(false);
+            A.CallTo(() => aatfAttribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(false);
 
-            Action action = () => attribute.OnActionExecuting(context);
+            Action action = () => aatfAttribute.OnActionExecuting(context);
 
             action.Should().Throw<InvalidOperationException>().WithMessage("AATF evidence notes are not enabled.");
         }
@@ -38,9 +40,9 @@
         [Fact]
         public void OnActionExecuting_GivenEnableAatfEvidenceNotesIsTrue_NoInvalidOperationExceptionExpected()
         {
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
+            A.CallTo(() => aatfAttribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
 
-            Action action = () => attribute.OnActionExecuting(context);
+            Action action = () => aatfAttribute.OnActionExecuting(context);
 
             action.Should().NotThrow<InvalidOperationException>();
         }
@@ -50,9 +52,9 @@
         [Fact]
         public void OnActionExecuting_GivenEnablePcsEvidenceNotesIsFalse_InvalidOperationExceptionExpected()
         {
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(false);
+            A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(false);
 
-            Action action = () => attribute.OnActionExecuting(context);
+            Action action = () => pcsAttribute.OnActionExecuting(context);
 
             action.Should().Throw<InvalidOperationException>().WithMessage("PCS evidence notes are not enabled.");
         }
@@ -60,9 +62,9 @@
         [Fact]
         public void OnActionExecuting_GivenEnablePcsEvidenceNotesIsTrue_NoInvalidOperationExceptionExpected()
         {
-            A.CallTo(() => attribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
+            A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
 
-            Action action = () => attribute.OnActionExecuting(context);
+            Action action = () => pcsAttribute.OnActionExecuting(context);
 
             action.Should().NotThrow<InvalidOperationException>();
         }
