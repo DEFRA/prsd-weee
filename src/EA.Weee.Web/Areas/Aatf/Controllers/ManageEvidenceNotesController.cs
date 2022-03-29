@@ -50,8 +50,9 @@
                 var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                var model = mapper.Map<ManageEvidenceNoteViewModel>(
-                    new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfsAndAes));
+                var models = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
+
+                var model = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
 
                 await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 

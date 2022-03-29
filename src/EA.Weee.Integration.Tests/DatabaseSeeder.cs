@@ -43,7 +43,7 @@
             if (!string.IsNullOrWhiteSpace(aliaExe))
             {
                 var arguments =
-                    $@"Rebuild {ConfigurationManager.AppSettings["aliaSqlConnectionServer"]} {ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]} {aliaScriptsDir} {ConfigurationManager.AppSettings["aliaSqlConnectionUser"]} {ConfigurationManager.AppSettings["aliaSqlConnectionPassword"]}";
+                    $@"{command} {ConfigurationManager.AppSettings["aliaSqlConnectionServer"]} {ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]} {aliaScriptsDir} {ConfigurationManager.AppSettings["aliaSqlConnectionUser"]} {ConfigurationManager.AppSettings["aliaSqlConnectionPassword"]}";
 
                 Console.Write($"AliaSql command arguments {arguments}");
 
