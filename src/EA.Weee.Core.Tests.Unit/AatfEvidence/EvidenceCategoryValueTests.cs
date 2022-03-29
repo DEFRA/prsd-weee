@@ -43,7 +43,8 @@
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The total amount received in tonnes") &&
-                    t.TypeMessage.Equals("household"));
+                    t.TypeMessage.Equals("household") &&
+                    t.DisplayCategory.Equals(true));
         }
 
         [Fact]
@@ -53,7 +54,8 @@
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The amount in tonnes that has been re-used as whole appliances")
-                    && t.TypeMessage.Equals("non-household"));
+                    && t.TypeMessage.Equals("non-household") &&
+                    t.DisplayCategory.Equals(true));
         }
 
         [Fact]

@@ -119,10 +119,11 @@
 
         private string GenerateMessage(string message, int categoryId)
         {
-            var additionalMessage = TypeMessage == null ? string.Empty : $" {TypeMessage}";
-            var category = DisplayCategory ? $" {((WeeeCategory)categoryId).ToDisplayString()} " : string.Empty;
+            var category = DisplayCategory ? $"{((WeeeCategory)categoryId).ToDisplayString().ToLower()} " : string.Empty;
 
-            return $"{StartOfValidationMessage} for category {categoryId}{category}{additionalMessage} must be {message}";
+            var additionalMessage = TypeMessage == null ? string.Empty : $"{TypeMessage} ";
+
+            return $"{StartOfValidationMessage} for category {categoryId} {category}{additionalMessage}must be {message}";
         }
     }
 }
