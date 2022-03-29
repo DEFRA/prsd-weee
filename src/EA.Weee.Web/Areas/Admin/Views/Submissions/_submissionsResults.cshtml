@@ -57,7 +57,7 @@
                                 <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                             }
                         </td>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" style="text-align:left">
                             @if (item.ProducersChanged.HasValue && item.ProducersChanged.Value)
                             {
                                 <div style="width:120px;">

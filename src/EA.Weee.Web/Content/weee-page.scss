@@ -521,3 +521,13 @@ input.tonnage-entry {
         padding: 2px;
     }
 }
+
+.import-icon-error-upload {
+    left: 10% !important;
+}
+
+@media only screen and (max-width: 860px) {
+    .import-icon-error-upload {
+        left: 5% !important;
+    }
+}
