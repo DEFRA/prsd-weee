@@ -81,7 +81,7 @@
 
         private string GenerateMessage(int categoryId)
         {
-            return $"The reused tonnage for category {categoryId} must be equivalent or lower than the received tonnage.";
+            return "The reused tonnage must be equivalent or lower than the received tonnage";
         }
     }
 }
