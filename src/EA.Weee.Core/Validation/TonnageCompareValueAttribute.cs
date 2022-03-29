@@ -23,7 +23,7 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(value?.ToString()))
+            if (string.IsNullOrWhiteSpace(value?.ToString()) || (!value.ToString().Any(char.IsDigit)))
             {
                 return ValidationResult.Success;
             }
