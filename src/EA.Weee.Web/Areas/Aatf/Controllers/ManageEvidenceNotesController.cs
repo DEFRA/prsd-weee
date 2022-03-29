@@ -1,20 +1,24 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
+    using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
     using Infrastructure;
     using Mappings.ToViewModel;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
 
     public class ManageEvidenceNotesController : AatfEvidenceBaseController
@@ -44,8 +48,10 @@
             using (var client = this.apiClient())
             {
                 var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
+                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                var model = new ManageEvidenceNoteViewModel() { OrganisationId = organisationId, AatfId = aatfId, AatfName = aatf.Name };
+                var model = mapper.Map<ManageEvidenceNoteViewModel>(
+                    new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfsAndAes));
 
                 await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
