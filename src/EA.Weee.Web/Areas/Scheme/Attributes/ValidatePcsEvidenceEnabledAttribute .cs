@@ -5,7 +5,7 @@
     using Api.Client;
     using Services;
 
-    public class ValidateEvidenceEnabledAttribute : ActionFilterAttribute
+    public class ValidatePcsEvidenceEnabledAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
 
@@ -16,11 +16,6 @@
             if (!ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes)
             {
                 throw new InvalidOperationException("PCS evidence notes are not enabled.");
-            }
-
-            if (!ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes)
-            {
-                throw new InvalidOperationException("AATF evidence notes are not enabled.");
             }
 
             base.OnActionExecuting(context);

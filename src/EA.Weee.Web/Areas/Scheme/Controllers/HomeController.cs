@@ -55,8 +55,7 @@
         {
             using (var client = apiClient())
             {
-                var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+                var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
 
                 if (!organisationExists)
                 {
@@ -98,11 +97,8 @@
                     {
                         activities.Add(PcsAction.ManageEeeWeeeData);
                     }
-                }
 
-                if (organisationDetails.SchemeId != null)
-                {
-                    activities.Add(PcsAction.ManageContactDetails);
+                    activities.Add(PcsAction.ManagePcsContactDetails);
                 }
 
                 var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
@@ -152,6 +148,14 @@
         {
             if (ModelState.IsValid)
             {
+                // 1. placeholder for Manage PCS evidence notes
+                if (viewModel.SelectedValue == PcsAction.ManagePcsEvidenceNotes)
+                {
+                    //TODO: invoke holding page in Aatf area - possibly need to create a Pcs area with same
+                    return RedirectToAction("Index", "Holding", new { area = "Aatf", organisationId = viewModel.OrganisationId });
+                }
+
+                // 2. Manage PCS Members
                 if (viewModel.SelectedValue == PcsAction.ManagePcsMembers)
                 {
                     using (var client = apiClient())
@@ -168,18 +172,20 @@
                         }
                     }
                 }
-                if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
+
+                // 3. Manage PCS WEEE data
+                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.ViewOrganisationDetails)
-                {
-                    return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
-                }
-                if (viewModel.SelectedValue == PcsAction.ManageContactDetails)
+
+                // 4. Manage Contact Details
+                if (viewModel.SelectedValue == PcsAction.ManagePcsContactDetails)
                 {
                     return RedirectToAction("ManageContactDetails", new { pcsId = viewModel.OrganisationId });
                 }
+
+                // 5. View PCS Submission History
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
                     var organisationOverview = await GetOrganisationOverview(viewModel.OrganisationId);
@@ -198,34 +204,47 @@
                         return RedirectToAction("ViewDataReturnSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                     }
                 }
-                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
-                {
-                    return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
-                }
-                if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
-                {
-                    return AatfRedirect.ReturnsList(viewModel.OrganisationId);
-                }
-                if (viewModel.SelectedValue == PcsAction.ManageAeReturns)
-                {
-                    return AeRedirect.ReturnsList(viewModel.OrganisationId);
-                }
-                if (viewModel.SelectedValue == PcsAction.ManageAatfContactDetails)
-                {
-                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Aatf });
-                }
-                if (viewModel.SelectedValue == PcsAction.ManageAeContactDetails)
-                {
-                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Ae });
-                }
+
+                // 1. Manage AATF Evidence Notes
                 if (viewModel.SelectedValue == PcsAction.ManageAatfEvidenceNotes)
                 {
                     return RedirectToAction("Index", "ChooseSite", new { area = "Aatf", organisationId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.ManagePcsEvidenceNotes)
+
+                // 2. Manage AATF Returns
+                if (viewModel.SelectedValue == PcsAction.ManageAatfReturns)
                 {
-                    //TODO: invoke holding page in Aatf area - possibly need to create a Pcs area with same
-                    return RedirectToAction("Index", "Holding", new { area = "Aatf", organisationId = viewModel.OrganisationId });
+                    return AatfRedirect.ReturnsList(viewModel.OrganisationId);
+                }
+
+                // 3. Manage AATF Contact Details
+                if (viewModel.SelectedValue == PcsAction.ManageAatfContactDetails)
+                {
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Aatf });
+                }
+
+                // 4. Manage AE Returns
+                if (viewModel.SelectedValue == PcsAction.ManageAeReturns)
+                {
+                    return AeRedirect.ReturnsList(viewModel.OrganisationId);
+                }
+
+                // 5. Manage AE Contact Details
+                if (viewModel.SelectedValue == PcsAction.ManageAeContactDetails)
+                {
+                    return this.RedirectToAction("Index", "Home", new { area = "Aatf", organisationId = viewModel.OrganisationId, FacilityType = FacilityType.Ae });
+                }
+
+                // 6. View Organisation details
+                if (viewModel.SelectedValue == PcsAction.ViewOrganisationDetails)
+                {
+                    return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
+                }
+
+                // 7. Manage Organisation Users
+                if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
+                {
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
             }
 
@@ -307,12 +326,9 @@
             model.ShowLinkToCreateOrJoinOrganisation = showLink;
         }
 
-        /// <summary>
-        /// Returns all complete organisations with which the user is associated.
-        /// </summary>
-        /// <returns></returns>
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
         {
+            // Returns all complete organisations with which the user is associated.
             using (var client = apiClient())
             {
                 return await
@@ -476,7 +492,7 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, PcsAction.ManageContactDetails);
+            await SetBreadcrumb(pcsId, PcsAction.ManagePcsContactDetails);
 
             SchemeData model;
             using (var client = apiClient())
@@ -492,7 +508,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(SchemeData model)
         {
-            await SetBreadcrumb(model.OrganisationId, PcsAction.ManageContactDetails);
+            await SetBreadcrumb(model.OrganisationId, PcsAction.ManagePcsContactDetails);
 
             if (!ModelState.IsValid)
             {
