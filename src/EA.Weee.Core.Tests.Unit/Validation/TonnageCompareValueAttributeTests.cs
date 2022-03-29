@@ -82,6 +82,17 @@
         }
 
         [Theory]
+        [InlineData("A")]
+        [InlineData("........")]
+        [InlineData("Z")]
+        public void Validate_GivenTonnageIsNotANumber_TrueShouldBeReturned(string tonnage)
+        {
+            var result = Validate(tonnage, null);
+
+            result.Should().BeTrue();
+        }
+
+        [Theory]
         [InlineData("1", "")]
         [InlineData("1", " ")]
         [InlineData("1", null)]
