@@ -20,9 +20,8 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
-    using Requests.Aatf;
-    using Requests.AatfEvidence;
-    using Requests.AatfReturn;
+    using Weee.Requests.Aatf;
+    using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
@@ -200,8 +199,7 @@
                 A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c => 
                     c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
                     && c.Reused.Equals(requestTonnageValue.SecondTonnage)
-                    && c.Received.Equals(requestTonnageValue.FirstTonnage)
-                    && c.Note.Equals(n)) != null))).MustHaveHappenedOnceExactly();
+                    && c.Received.Equals(requestTonnageValue.FirstTonnage)) != null))).MustHaveHappenedOnceExactly();
             }
 
             SystemTime.Unfreeze();
