@@ -199,8 +199,7 @@
                 A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c => 
                     c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
                     && c.Reused.Equals(requestTonnageValue.SecondTonnage)
-                    && c.Received.Equals(requestTonnageValue.FirstTonnage)
-                    && c.Note.Equals(n)) != null))).MustHaveHappenedOnceExactly();
+                    && c.Received.Equals(requestTonnageValue.FirstTonnage)) != null))).MustHaveHappenedOnceExactly();
             }
 
             SystemTime.Unfreeze();
