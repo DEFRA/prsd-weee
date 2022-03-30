@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Requests.AatfEvidence;
     using Prsd.Core.Mapper;
@@ -10,14 +8,13 @@
     {
         public EditDraftReturnedNotesRequest Map(Note source)
         {
-            if (source != null)
+            return new EditDraftReturnedNotesRequest
             {
-                return new EditDraftReturnedNotesRequest(source.Reference, source.Recipient.Id, source.Status, source.WasteType);
-            }
-            else
-            {
-                return new EditDraftReturnedNotesRequest();
-            }
+                RecipientId = source.Recipient.Id,
+                ReferenceId = source.Reference,
+                Status = source.Status.DisplayName.ToString(),
+                WasteType = source.WasteType.HasValue ? source.WasteType.Value.ToString() : string.Empty,
+            };
         }
     }
 }
