@@ -15,7 +15,6 @@
 
     public class NoteTests
     {
-        private readonly Fixture fixture;
         private readonly Organisation organisation;
         private readonly Scheme scheme;
         private readonly DateTime startDate;
@@ -30,7 +29,7 @@
 
         public NoteTests()
         {
-            fixture = new Fixture();
+            var fixture = new Fixture();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             startDate = DateTime.Now.AddDays(1);
