@@ -17,12 +17,12 @@
             this.WasteType = wasteType;
         }
 
-        public int ReferenceId { get; protected set; }
+        public int ReferenceId { get; set; }
 
-        public Guid RecipientId { get; protected set; }
+        public Guid RecipientId { get; set; }
 
-        public NoteStatus Status { get; protected set; }
+        public NoteStatus Status { get;  set; }
 
-        public WasteType? WasteType { get; protected set; }
+        public WasteType? WasteType { get; set; }
     }
 }
