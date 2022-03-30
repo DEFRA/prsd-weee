@@ -156,8 +156,8 @@
             return new CreateEvidenceNoteRequest(organisationId,
                 aatfId,
                 schemeId,
-                endDate,
                 startDate,
+                endDate,
                 wasteType,
                 protocol,
                 tonnages.ToList());
