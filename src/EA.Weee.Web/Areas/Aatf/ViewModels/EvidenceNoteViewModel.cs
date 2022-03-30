@@ -78,5 +78,7 @@
         public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
 
         public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
+
+        public ActionEnum Action { get; set; }
     }
 }
