@@ -6,6 +6,7 @@
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.Evidence;
 
     public interface IAatfDataAccess
     {
@@ -32,5 +33,7 @@
         Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, short complianceYear);
 
         Task<bool> IsLatestAatf(Guid id, Guid aatfId);
+
+        Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId);
     }
 }

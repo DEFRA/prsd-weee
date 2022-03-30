@@ -362,10 +362,13 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOption.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteOverviewViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
@@ -615,6 +618,8 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManagerEvidenceNotesOverviewHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EditDraftReturnedNotesOverview.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

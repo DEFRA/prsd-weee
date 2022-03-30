@@ -1,18 +1,16 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
 
-    public class ManageEvidenceNoteViewModel
+    public class ManageEvidenceNoteViewModel : ManageEvidenceNoteOverviewViewModel
     {
-        public Guid OrganisationId { get; set; }
-
-        public Guid AatfId { get; set; }
-
         public string AatfName { get; set; }
 
         public bool SingleAatf { get; set; }
+
+        public ManageEvidenceNoteViewModel()
+         : base(ManageEvidenceOverviewDisplayOption.EvidenceSummary)
+        {
+        }
     }
 }
