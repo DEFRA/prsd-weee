@@ -343,7 +343,7 @@
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
-    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttribute .cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
@@ -416,6 +416,7 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
+    <Compile Include="Areas\Scheme\Attributes\ValidatePcsEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
