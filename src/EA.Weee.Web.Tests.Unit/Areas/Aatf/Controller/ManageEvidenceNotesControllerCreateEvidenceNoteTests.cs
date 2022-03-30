@@ -220,7 +220,7 @@
             await Controller.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
-            A.CallTo(() => WeeeClient.SendAsync<int>(A<string>._, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, request)).MustHaveHappenedOnceExactly();
         }
     }
 }
