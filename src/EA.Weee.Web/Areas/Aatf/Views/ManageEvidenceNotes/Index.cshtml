@@ -42,6 +42,10 @@
 
                 @(this.WeeeGds().Submit("Create new evidence note"))
             }
+
+            <br />
+
+            @Html.Action("Overview", "ManageEvidenceNotes", new { Model.OrganisationId, Model.AatfId });
         </div>
     </div>
 </section>
