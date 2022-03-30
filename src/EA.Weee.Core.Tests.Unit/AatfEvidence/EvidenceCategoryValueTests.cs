@@ -43,7 +43,6 @@
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
-                    t.TypeMessage.Equals("household") &&
                     t.DisplayCategory.Equals(true));
         }
 
@@ -53,8 +52,7 @@
             typeof(EvidenceCategoryValue).GetProperty("Reused")
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
-                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value")
-                    && t.TypeMessage.Equals("non-household") &&
+                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
                     t.DisplayCategory.Equals(true));
         }
 
