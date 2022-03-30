@@ -20,9 +20,8 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
-    using Requests.Aatf;
-    using Requests.AatfEvidence;
-    using Requests.AatfReturn;
+    using Weee.Requests.Aatf;
+    using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
