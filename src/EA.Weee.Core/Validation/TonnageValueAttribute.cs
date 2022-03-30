@@ -98,7 +98,7 @@
 
             if (!validThousandRegex.IsMatch(value?.ToString()))
             {
-                return new ValidationResult(GenerateMessage("entered in its correct format using a comma only as a thousand separator", (int)propertyValue));
+                return new ValidationResult(GenerateMessage("entered in its correct format using only a comma as a thousand separator", (int)propertyValue));
             }
 
             return ValidationResult.Success;
