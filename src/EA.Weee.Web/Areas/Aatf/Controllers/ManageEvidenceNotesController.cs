@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -28,7 +29,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator;
-
+    
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
             IWeeeCache cache, 
@@ -64,7 +65,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Index(ManageEvidenceNoteViewModel model)
         {
-            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
+              return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
         }
 
         [HttpGet]
@@ -119,6 +120,19 @@
 
                 return View();
             }
+        }
+
+        [HttpGet]
+        public ActionResult Overview(Guid organisationId, Guid aatfId, ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null, string clicked = null)
+        {
+            using (var client = apiClient())
+            {
+                var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetDraftReturnedNotesRequest(organisationId, aatfId))).Result;
+
+                // TODO 
+                // a mapper 
+                return PartialView("Overview/EditDraftReturnedNotesOverview",  new EditDraftReturnedNotesViewModel());
+            }      
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

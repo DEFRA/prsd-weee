@@ -5,6 +5,7 @@
     using Domain.DataReturns;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Evidence;
     using Factories;
     using System;
     using System.Collections.Generic;
@@ -31,6 +32,11 @@
         public async Task<Aatf> GetDetails(Guid id)
         {
             return await GetAatfById(id);
+        }
+
+        public async Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId)
+        {
+            return await GetAllNotesByIds(organisationId, aatfId);
         }
 
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
@@ -116,6 +122,18 @@
             }
 
             return aatf;
+        }
+
+        private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId)
+        {
+            var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId).ToListAsync();
+
+            if (notes == null)
+            {
+                throw new ArgumentException($"Notes for organisation {organisationId} and aatf {aatfId} not found");
+            }
+
+            return notes;
         }
 
         public async Task RemoveAatf(Guid aatfId)
