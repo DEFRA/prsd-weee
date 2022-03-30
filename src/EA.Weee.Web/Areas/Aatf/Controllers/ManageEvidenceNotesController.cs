@@ -94,6 +94,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
+                    //TODO: add indicator into ViewData, bool? noteCreated that can be checked in the ViewDraftEvidenceNote action
                     return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
                 }
 
@@ -108,7 +109,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
