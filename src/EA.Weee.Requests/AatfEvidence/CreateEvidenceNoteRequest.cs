@@ -23,6 +23,7 @@
             Guard.ArgumentNotDefaultValue(() => recipientId, recipientId);
             Guard.ArgumentNotDefaultValue(() => startDate, startDate);
             Guard.ArgumentNotDefaultValue(() => endDate, endDate);
+            Guard.ArgumentNotNull(() => tonnages, tonnages);
 
             OrganisationId = organisationId;
             RecipientId = recipientId;
