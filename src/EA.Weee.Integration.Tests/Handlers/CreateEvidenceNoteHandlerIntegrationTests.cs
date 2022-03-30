@@ -79,6 +79,15 @@
                 note.Reference.Should().BeGreaterThan(0);
                 note.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
                 note.Organisation.Should().Be(organisation);
+                note.Status.Should().Be(NoteStatus.Draft);
+                note.NoteType.Should().Be(NoteType.EvidenceNote);
+                note.NoteTonnage.Count.Should().Be(request.TonnageValues.Count);
+                foreach (var noteTonnage in request.TonnageValues)
+                {
+                    note.NoteTonnage.Should().Contain(n => n.Received.Equals(noteTonnage.FirstTonnage) &&
+                                                           n.Reused.Equals(noteTonnage.SecondTonnage) &&
+                                                           n.CategoryId.Equals((WeeeCategory)noteTonnage.CategoryId));
+                }
             };
         }
 
