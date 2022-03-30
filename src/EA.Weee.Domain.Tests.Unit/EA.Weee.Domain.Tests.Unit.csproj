@@ -125,6 +125,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\NoteTests.cs" />
     <Compile Include="AatfEvidence\ProtocolEnumTests.cs" />
     <Compile Include="AatfEvidence\WasteTypeEnumTests.cs" />
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
