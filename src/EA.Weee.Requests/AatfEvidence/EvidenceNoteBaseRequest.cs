@@ -23,5 +23,7 @@
         public Guid AatfId { get; protected set; }
 
         public Guid RecipientId { get; protected set; }
+
+        public NoteStatus Status { get; protected set; }
     }
 }
