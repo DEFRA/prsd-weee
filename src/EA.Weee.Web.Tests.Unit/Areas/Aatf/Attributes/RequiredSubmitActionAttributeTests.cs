@@ -24,28 +24,14 @@
         [Fact]
         public void RequiredSubmitActionAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
         {
-            typeof(EvidenceNoteStartDateAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
+            typeof(RequiredSubmitActionAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
                 .Should().Be(AttributeTargets.Property);
         }
 
         [Fact]
         public void RequiredSubmitActionAttribute_ShouldBeDerivedFrom_RequiredAttribute()
         {
-            typeof(EvidenceNoteStartDateAttribute).Should().BeDerivedFrom<RequiredAttribute>();
-        }
-
-        [Fact]
-        public void RequiredSubmitActionAttribute_GivenStartDateIsAfterToday_FalseShouldBeReturned()
-        {
-            //arrange
-            var target = new NotValidValidationTarget();
-            var context = new ValidationContext(target);
-
-            //act
-            var exception = Record.Exception(() => Validator.TryValidateObject(target, context, validationResults, true));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
+            typeof(RequiredSubmitActionAttribute).Should().BeDerivedFrom<RequiredAttribute>();
         }
 
         [Fact]
