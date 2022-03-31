@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
+    using Core.AatfEvidence;
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
@@ -96,7 +97,14 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result, noteStatus = request.Status });
+                    //TODO: TEST THIS AND View data setting
+                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    return RedirectToRoute(routeName, new
+                    {
+                        organisationId,
+                        aatfId,
+                        evidenceNoteId = result
+                    });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
