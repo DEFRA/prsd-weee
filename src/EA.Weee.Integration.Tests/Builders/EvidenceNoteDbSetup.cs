@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Integration.Tests.Builders
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Api.Identity;
     using Autofac;
@@ -29,7 +30,8 @@
                 aatf,
                 NoteType.EvidenceNote,
                 user.UserId.ToString(),
-                NoteStatus.Draft);
+                NoteStatus.Draft,
+                new List<NoteTonnage>());
 
             return instance;
         }

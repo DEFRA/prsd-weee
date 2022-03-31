@@ -12,14 +12,10 @@
         {
         }
 
-        public NoteTonnage(Note note,
-            WeeeCategory categoryId,
+        public NoteTonnage(WeeeCategory categoryId,
             decimal? received,
             decimal? reused)
         {
-            Guard.ArgumentNotNull(() => note, note);
-
-            Note = note;
             CategoryId = categoryId;
             Reused = reused;
             Received = received;
