@@ -29,7 +29,7 @@
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
-        protected readonly int EvidenceNoteId;
+        protected readonly Guid EvidenceNoteId;
 
         public ManageEvidenceNotesControllerTestsBase()
         {
@@ -41,7 +41,7 @@
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
-            EvidenceNoteId = 10;
+            EvidenceNoteId = Guid.NewGuid();
             Controller = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
         }
 

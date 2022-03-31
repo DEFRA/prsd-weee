@@ -6,7 +6,7 @@
     using Core.AatfEvidence;
     using Prsd.Core.Mediator;
 
-    public abstract class EvidenceNoteBaseRequest : IRequest<int>
+    public abstract class EvidenceNoteBaseRequest : IRequest<Guid>
     {
         public IList<TonnageValues> TonnageValues { get; set; }
 

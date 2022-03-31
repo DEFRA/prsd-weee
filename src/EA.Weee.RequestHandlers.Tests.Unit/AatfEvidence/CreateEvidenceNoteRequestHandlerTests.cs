@@ -261,16 +261,16 @@
         public async Task HandleAsync_GivenRequest_ReferenceShouldBeReturned()
         {
             //act
-            var reference = fixture.Create<int>();
+            var id = fixture.Create<Guid>();
             var newNote = A.Fake<Note>();
-            A.CallTo(() => newNote.Reference).Returns(reference);
+            A.CallTo(() => newNote.Id).Returns(id);
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(newNote);
 
             //arrange
             var result = await handler.HandleAsync(request);
 
             //assert
-            result.Should().Be(reference);
+            result.Should().Be(id);
         }
 
         private CreateEvidenceNoteRequest Request()

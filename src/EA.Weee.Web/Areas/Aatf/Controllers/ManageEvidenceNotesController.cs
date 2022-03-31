@@ -94,6 +94,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
+                    //TODO: add indicator into ViewData, bool? noteCreated that can be checked in the ViewDraftEvidenceNote action
                     return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
                 }
 
@@ -108,22 +109,30 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                //TODO: retrieve the evidence note
-                //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.
-                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
-                //TODO: Remove the Viewbag items below as they should be based off the view model
-                //TODO: update the view to only show the success based on a view model property
-                ViewBag.EvidenceNoteId = evidenceNoteId;
-                ViewBag.aatfId = aatfId;
-                ViewBag.organisationId = organisationId;
+                var request = new GetEvidenceNoteRequest(organisationId, evidenceNoteId);
 
-                return View();
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+                //TODO: retrieve the evidence note
+
+                //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.
+
+                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer());
+
+                //TODO: Remove the Viewbag items below as they should be based off the view model
+
+                //TODO: update the view to only show the success based on a view model property
+                //ViewBag.EvidenceNoteId = evidenceNoteId;
+                //ViewBag.aatfId = aatfId;
+                //ViewBag.organisationId = organisationId;
+
+                return View(model);
             }
         }
 
