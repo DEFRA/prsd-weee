@@ -10,7 +10,6 @@
     using Core.Helpers;
     using Core.Scheme;
 
-    [TestAttribute]
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
@@ -45,6 +44,7 @@
 
         public IEnumerable<SelectListItem> ProtocolList { get; set; }
 
+        [RequiredTonnageAttribute]
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
         public EvidenceNoteViewModel()
