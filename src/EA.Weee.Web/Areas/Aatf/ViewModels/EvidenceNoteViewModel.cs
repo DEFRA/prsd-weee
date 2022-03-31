@@ -10,6 +10,7 @@
     using Core.Helpers;
     using Core.Scheme;
 
+    [TestAttribute]
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
