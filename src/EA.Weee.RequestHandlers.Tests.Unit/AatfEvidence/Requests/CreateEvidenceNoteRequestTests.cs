@@ -107,20 +107,6 @@
         }
 
         [Fact]
-        public void CreateEvidenceNote_Constructor_GivenNullTonnagesArgumentNullExceptionExpected()
-        {
-            var result = Record.Exception(() => new CreateEvidenceNoteRequest(organisationId, aatfId,
-                schemeId,
-                DateTime.Now,
-                DateTime.Now,
-                null,
-                null,
-               null));
-
-            result.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void CreateEvidenceNote_Constructor_GivenDraftEvidenceNoteValues_PropertiesShouldBeSet()
         {
             var result = CreateNoteRequest();
