@@ -1,27 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Aatf;
-    using AatfEvidence;
-    using Core.Helpers;
-    using Domain.Evidence;
-    using Domain.Lookup;
-    using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Mappings;
-    using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
-    using Protocol = Domain.Evidence.Protocol;
-    using WasteType = Domain.Evidence.WasteType;
 
     public class GetEvidenceNoteHandler : IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>
     {
