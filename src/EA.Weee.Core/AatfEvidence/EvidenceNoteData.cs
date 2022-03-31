@@ -9,6 +9,16 @@
 
     public class EvidenceNoteData
     {
-        public SchemeData SchemeData { get; set; }
+        //TODO: Other evidence note properties required
+        public int Reference { get; set; }
+
+        public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
+
+        public SchemeData SchemeData { get; private set; }
+
+        public EvidenceNoteData(SchemeData schemeData)
+        {
+            SchemeData = schemeData;
+        }
     }
 }
