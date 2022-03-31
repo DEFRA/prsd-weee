@@ -8,12 +8,11 @@
 }
 
 @{
-    var text = string.Format("You have successfully saved the evidence note with reference ID E{0} as a draft", ViewBag.EvidenceNoteId);
-    var aatfId = (Guid)ViewBag.aatfId;
-    var organisationId = (Guid)ViewBag.organisationId;
+    var text = string.Format("You have successfully saved the evidence note with reference ID E{0} as a draft", Model.Reference);
+    
 }
 <section id="main-content">
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(organisationId, aatfId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId))))
 
     @(this.WeeeGds().Panel(text))
 
