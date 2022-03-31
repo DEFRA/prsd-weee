@@ -109,7 +109,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteByReference(result);
+                note = Query.GetEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveCreateEvidenceNote = () =>
