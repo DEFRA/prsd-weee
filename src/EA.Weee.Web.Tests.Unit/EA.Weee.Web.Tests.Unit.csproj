@@ -236,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />

@@ -26,6 +26,17 @@
         }
 
         [Theory]
+        [InlineData("ProtocolValue", "Select actual or protocol")]
+        [InlineData("WasteTypeValue", "Select a type of waste")]
+        public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredSubmitActionAttribute(string property, string description)
+        {
+            typeof(EvidenceNoteViewModel)
+                .GetProperty(property)
+                .Should()
+                .BeDecoratedWith<RequiredSubmitActionAttribute>(d => d.ErrorMessage.Equals(description));
+        }
+
+        [Theory]
         [InlineData("StartDate", "Start date")]
         [InlineData("EndDate", "End date")]
         [InlineData("ReceivedId", "Recipient")]
