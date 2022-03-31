@@ -16,5 +16,7 @@
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(organisationId, aatfId))))
 
     @(this.WeeeGds().Panel(text))
+
+    @Html.Partial("_ViewEvidenceNotePartial", Model)
 </section>
 
