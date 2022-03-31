@@ -53,7 +53,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenViewModel_CreateEvidenceNoteRequestShouldBeCreated()
+        public void ViewModelToRequest_GivenSaveViewModel_CreateEvidenceNoteRequestShouldBeCreated()
         {
             //arrange
             var aatfId = Guid.NewGuid();
@@ -75,7 +75,8 @@
                 ReceivedId = receivedId,
                 WasteTypeValue = wasteTypeValue,
                 ProtocolValue = protocolValue,
-                CategoryValues = tonnageValues
+                CategoryValues = tonnageValues,
+                Action = ActionEnum.Save
             };
 
             //act
@@ -89,6 +90,49 @@
             request.RecipientId.Should().Be(receivedId);
             request.WasteType.Should().Be(wasteTypeValue);
             request.Protocol.Should().Be(protocolValue);
+            request.Status.Should().Be(NoteStatus.Draft);
+            ShouldContainTonnage(tonnageValues, request);
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenSubmitViewModel_CreateEvidenceNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var aatfId = Guid.NewGuid();
+            var endDate = DateTime.Now;
+            var startDate = DateTime.Now;
+            var organisationId = Guid.NewGuid();
+            var receivedId = Guid.NewGuid();
+            var wasteTypeValue = fixture.Create<WasteType>();
+            var protocolValue = fixture.Create<Protocol>();
+            var tonnageValues = fixture.CreateMany<EvidenceCategoryValue>()
+                .ToList();
+
+            var model = new EvidenceNoteViewModel()
+            {
+                AatfId = aatfId,
+                EndDate = endDate,
+                StartDate = startDate,
+                OrganisationId = organisationId,
+                ReceivedId = receivedId,
+                WasteTypeValue = wasteTypeValue,
+                ProtocolValue = protocolValue,
+                CategoryValues = tonnageValues,
+                Action = ActionEnum.Submit
+            };
+
+            //act
+            var request = requestCreator.ViewModelToRequest(model);
+
+            //assert
+            request.AatfId.Should().Be(aatfId);
+            request.OrganisationId.Should().Be(organisationId);
+            request.StartDate.Should().Be(startDate);
+            request.EndDate.Should().Be(endDate);
+            request.RecipientId.Should().Be(receivedId);
+            request.WasteType.Should().Be(wasteTypeValue);
+            request.Protocol.Should().Be(protocolValue);
+            request.Status.Should().Be(NoteStatus.Submitted);
             ShouldContainTonnage(tonnageValues, request);
         }
 

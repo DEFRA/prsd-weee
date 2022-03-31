@@ -37,7 +37,8 @@
                     viewModel.EndDate,
                     viewModel.WasteTypeValue,
                     viewModel.ProtocolValue,
-                    tonnageValues);
+                    tonnageValues,
+                    viewModel.Action == ActionEnum.Save ? NoteStatus.Draft : NoteStatus.Submitted);
 
                 return request;
             }
