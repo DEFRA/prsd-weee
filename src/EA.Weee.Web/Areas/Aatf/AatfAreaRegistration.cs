@@ -13,8 +13,14 @@
             context.Routes.MapMvcAttributeRoutes();
 
             context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-submitted-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.ViewEvidenceRouteName,
-                url: "Aatf/{organisationId}/{controller}/{aatfId}/{action}/{evidenceNoteId}",
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-draft-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 

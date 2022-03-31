@@ -4,5 +4,6 @@
     {
         public static string ManageEvidenceRouteName = "AATF_ManageEvidence";
         public static string ViewEvidenceRouteName = "AATF_ViewEvidence";
+        public static string ViewSubmittedEvidenceRouteName = "AATF_SubmittedViewEvidence";
     }
 }
