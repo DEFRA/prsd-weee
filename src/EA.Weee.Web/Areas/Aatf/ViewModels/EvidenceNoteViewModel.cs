@@ -47,6 +47,8 @@
         [RequiredTonnageAttribute]
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
+        public int Reference { get; set; }
+
         public EvidenceNoteViewModel()
         {
             categoryValueCalculator = new CategoryValueTotalCalculator();
