@@ -145,9 +145,9 @@
                 <div class="govuk-!-margin-top-3">
                     
                     <div class="govuk-button-group">
-                        @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit })
+                        @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id="submit-note" })
 
-                        @this.WeeeGds().SecondaryButton("Save as draft", new { name = "Action", value = ActionEnum.Save })
+                        @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id="save-note" })
                     </div>
 
                 </div>
