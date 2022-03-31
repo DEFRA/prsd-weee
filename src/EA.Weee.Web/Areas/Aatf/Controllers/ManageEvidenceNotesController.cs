@@ -115,6 +115,9 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
+                var request = new GetEvidenceNoteRequest(organisationId, evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
                 //TODO: retrieve the evidence note
 
                 //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.

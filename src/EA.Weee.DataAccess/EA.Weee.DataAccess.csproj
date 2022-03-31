@@ -85,6 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\EvidenceDataAccess.cs" />
+    <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />

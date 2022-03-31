@@ -4,19 +4,17 @@
     using System.Collections.Generic;
     using Aatf;
     using Core.AatfEvidence;
+    using EA.Prsd.Core.Mediator;
     using Prsd.Core;
 
     [Serializable]
-    public class GetViewEvidenceNoteRequest : CreateEvidenceNoteRequest
+    public class GetEvidenceNoteRequest : IRequest<EvidenceNoteData>
     {
-        public GetViewEvidenceNoteRequest(Guid organisationId,
-            Guid aatfId,
-            Guid recipientId,
-            DateTime startDate,
-            DateTime endDate,
-            WasteType? wasteType,
-            Protocol? protocol,
-            IList<TonnageValues> tonnages)
+        public Guid EvidenceNoteId { get; private set; }
+
+        public Guid OrganisationId { get; private set; }
+
+        public GetEvidenceNoteRequest(Guid evidenceNoteId, Guid organisationId)
         {
             // all checkings will be done in base class
             //Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
@@ -28,15 +26,7 @@
             // IMPORTANT
             // NOT SURE WHICH PARAMETERS ARE COMING FROM THE CALLING CREATE PAGE
             // IF SAME PARAMETERS THEN QUERY NEW NOTE AND HIDE GUID IN PAGE FOR DOWNLOAD PDF
-
-            OrganisationId = organisationId;
-            RecipientId = recipientId;
-            AatfId = aatfId;
-            StartDate = startDate;
-            EndDate = endDate;
-            WasteType = wasteType;
-            Protocol = protocol;
-            TonnageValues = tonnages;
+            EvidenceNoteId = evidenceNoteId;
 
             /*
              * SELECT  Evidence.Note.AatfId, Evidence.Note.OrganisationId, Evidence.Note.StartDate, Evidence.Note.EndDate, Evidence.Note.RecipientId, Evidence.Note.WasteType, Evidence.Note.Protocol, Evidence.Note.Status, 

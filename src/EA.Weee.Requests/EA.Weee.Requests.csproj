@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfEvidence\GetViewEvidenceNoteRequest.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequest.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
