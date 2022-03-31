@@ -117,20 +117,14 @@
 
                 var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
 
+                // retrieve the evidence note
                 var result = await client.SendAsync(User.GetAccessToken(), request);
-                //TODO: retrieve the evidence note
-
-                //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.
 
                 //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
 
-                //TODO: Remove the Viewbag items below as they should be based off the view model
+                var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
 
-                //TODO: update the view to only show the success based on a view model property
-                //ViewBag.EvidenceNoteId = evidenceNoteId;
-                //ViewBag.aatfId = aatfId;
-                //ViewBag.organisationId = organisationId;
 
                 return View(model);
             }
