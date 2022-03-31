@@ -56,10 +56,10 @@
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
-        //public bool Edit
-        //{
-        //    get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
-        //}
+        public bool Edit
+        {
+            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
 
         public Guid OrganisationId { get; set; }
 
