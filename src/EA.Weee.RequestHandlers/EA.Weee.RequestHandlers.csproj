@@ -84,7 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AatfEvidence\ViewEvidenceNoteRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteHandler.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
@@ -94,10 +94,10 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
-    <Compile Include="Aatf\GetViewEvidenceNoteHandler.cs" />
-    <Compile Include="Aatf\IViewEvidenceNoteRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Mappings\EvidenceNoteMap.cs" />
+    <Compile Include="Mappings\EvidenceNoteMappingTransfer.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
