@@ -32,11 +32,13 @@
 
         public List<SchemeData> SchemeList { get; set; }
 
+        [RequiredSubmitAction(ErrorMessage = "Select a type of waste")]
         [Display(Name = "Type of waste")]
         public WasteType? WasteTypeValue { get; set; }
 
         public IEnumerable<SelectListItem> WasteTypeList { get; set; }
 
+        [RequiredSubmitAction(ErrorMessage = "Select actual or protocol")]
         [Display(Name = "Actual or protocol")]
         public Protocol? ProtocolValue { get; set; }
 
