@@ -238,7 +238,7 @@
         {
             var result = Validate(input);
 
-            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using a comma only as a thousand separator");
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using only a comma as a thousand separator");
         }
 
         [Fact]
@@ -281,7 +281,7 @@
         {
             ValidationWithTypeMessageAndCategoryDisplay(input);
 
-            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be entered in its correct format using a comma only as a thousand separator");
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be entered in its correct format using only a comma as a thousand separator");
         }
 
         [Fact]
@@ -324,7 +324,7 @@
         {
             ValidationWithCategoryDisplay(input);
 
-            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be entered in its correct format using a comma only as a thousand separator");
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be entered in its correct format using only a comma as a thousand separator");
         }
 
         private void ValidationWithTypeMessage(object value)
