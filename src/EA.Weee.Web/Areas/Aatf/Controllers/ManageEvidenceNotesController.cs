@@ -92,10 +92,11 @@
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
 
+                    ViewData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    //TODO: add indicator into ViewData, bool? noteCreated that can be checked in the ViewDraftEvidenceNote action
-                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
+                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result, noteStatus = request.Status });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
