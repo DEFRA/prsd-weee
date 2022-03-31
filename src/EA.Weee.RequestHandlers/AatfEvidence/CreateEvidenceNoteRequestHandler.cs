@@ -76,7 +76,7 @@
                 aatf,
                 NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
-                NoteStatus.Draft,
+                message.Status.ToDomainEnumeration<NoteStatus>(),
                 tonnageValues.ToList());
 
             var newNote = await genericDataAccess.Add(evidenceNote);

@@ -78,7 +78,8 @@
                 ReceivedId = Guid.NewGuid(),
                 StartDate = date,
                 EndDate = date,
-                Action = ActionEnum.Submit
+                Action = ActionEnum.Submit,
+                CategoryValues = new List<EvidenceCategoryValue>() { new EvidenceCategoryValue("1", null) }
             };
 
             var context = new ValidationContext(target);
@@ -98,8 +99,7 @@
         }
 
         [Fact]
-        public void
-            RequiredSubmitActionAttribute_GivenSubmitActionAndRequiredSubmitActionPropertiesDoHaveValue_ValidationSuccessShouldBeReturned()
+        public void RequiredSubmitActionAttribute_GivenSubmitActionAndRequiredSubmitActionPropertiesDoHaveValue_ValidationSuccessShouldBeReturned()
         {
             //arrange
             var date = new DateTime(2022, 3, 1);
@@ -112,7 +112,8 @@
                 ReceivedId = Guid.NewGuid(),
                 StartDate = date,
                 EndDate = date,
-                Action = ActionEnum.Submit
+                Action = ActionEnum.Submit,
+                CategoryValues = new List<EvidenceCategoryValue>() { new EvidenceCategoryValue("1", null) }
             };
 
             var context = new ValidationContext(target);

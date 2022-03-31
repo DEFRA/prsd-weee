@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Api.Client;
     using AutoFixture;
+    using Core.AatfEvidence;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Services;
@@ -58,7 +59,8 @@
                 DateTime.Now,
                 null,
                 null,
-                new List<TonnageValues>());
+                new List<TonnageValues>(),
+                NoteStatus.Draft);
         }
 
         protected EvidenceNoteViewModel ValidModel()
