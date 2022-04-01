@@ -3,17 +3,17 @@
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;    
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Obligated;    
-    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;    
+    using EA.Weee.Requests.AatfReturn.Obligated;
+    using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;    
+    using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -66,6 +66,11 @@
         {
             if (ModelState.IsValid)
             {
+                return await Task.Run<ActionResult>(() =>
+                        RedirectToAction("Index", "SearchedAatfResultList", new { area = "AatfReturn", organisationId = searchAnAatfViewModel.OrganisationId, returnId = searchAnAatfViewModel.ReturnId, aatfId = searchAnAatfViewModel.AatfId, selectedAatfId = searchAnAatfViewModel.SelectedAatfId, selectedAatfName = searchAnAatfViewModel.SearchTerm }));
+            }
+            else
+            {
                 using (var client = apiClient())
                 {
                     var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(searchAnAatfViewModel.ReturnId, false));
@@ -75,6 +80,7 @@
                     {
                         weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOnById(searchAnAatfViewModel.WeeeSentOnId.Value));
                     }
+
                     var viewModel = mapper.Map(new ReturnAndAatfToSearchAnAatfViewModelMapTransfer()
                     {
                         Return = @return,
@@ -86,16 +92,10 @@
 
                     TempData["currentQuarter"] = @return.Quarter;
                     TempData["currentQuarterWindow"] = @return.QuarterWindow;
-                                        
-                    return await Task.Run<ActionResult>(() =>
-                    RedirectToAction("Index", "SearchedAatfResultList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
 
-                    //return await Task.Run<ActionResult>(() =>
-                    //RedirectToAction("Index", "CanNotFoundTreatmentFacility", new { area = "AatfReturn", returnId = viewModel.ReturnId, aatfId = viewModel.AatfId, aatfName = searchAnAatfViewModel.SearchTerm, isCanNotFindLinkClick = false }));
+                    return View(searchAnAatfViewModel);
                 }
             }
-
-            return View(searchAnAatfViewModel);
         }
 
         [HttpPost]

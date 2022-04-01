@@ -19,9 +19,7 @@
         public static string ReturnsRouteName = "aatf-returns";
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
-        public static string Download = "returns-download";
-        public static string SearchAnAatfRouteName = "search-an-aatf";
-        public static string SearchedAatfResultListRouteName = "searched-aatf-result-list";
+        public static string Download = "returns-download";              
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
