@@ -252,7 +252,9 @@
                                                                            n.NoteType.Equals(NoteType.EvidenceNote) &&
                                                                            n.Status.Equals(NoteStatus.Submitted) &&
                                                                            n.NoteTonnage.Count.Equals(request.TonnageValues.Count) &&
-                                                                           n.NoteStatusHistory.Count.Equals(1))))
+                                                                           n.NoteStatusHistory.Count.Equals(1) &&
+                                                                           n.SubmittedById.Equals(userId.ToString()) &&
+                                                                           n.SubmittedDate.Equals(date))))
                                                                            .MustHaveHappenedOnceExactly();
 
             foreach (var requestTonnageValue in request.TonnageValues)

@@ -64,6 +64,12 @@
                 throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
             }
 
+            if (newStatus.Equals(NoteStatus.Submitted))
+            {
+                SubmittedDate = SystemTime.UtcNow;
+                SubmittedById = changedBy;
+            }
+
             NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
 
             Status = newStatus;
