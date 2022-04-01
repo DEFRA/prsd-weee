@@ -22,7 +22,7 @@
     {
         protected readonly IWeeeClient WeeeClient;
         protected readonly IMapper Mapper;
-        protected readonly ManageEvidenceNotesController Controller;
+        protected readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly BreadcrumbService Breadcrumb;
         protected readonly IWeeeCache Cache;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> CreateRequestCreator;
@@ -42,15 +42,15 @@
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            Controller = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
         }
 
         protected void AddModelError()
         {
-            Controller.ModelState.AddModelError("error", "error");
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
         }
 
-        protected CreateEvidenceNoteRequest Request()
+        protected CreateEvidenceNoteRequest Request(NoteStatus status = NoteStatus.Draft)
         {
             return new CreateEvidenceNoteRequest(Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -60,7 +60,7 @@
                 null,
                 null,
                 new List<TonnageValues>(),
-                NoteStatus.Draft);
+                status);
         }
 
         protected EvidenceNoteViewModel ValidModel()
