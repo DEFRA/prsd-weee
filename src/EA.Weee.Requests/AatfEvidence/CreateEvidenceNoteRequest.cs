@@ -16,7 +16,7 @@
             DateTime endDate,
             WasteType? wasteType,
             Protocol? protocol,
-            IList<TonnageValues> tonnages)
+            List<TonnageValues> tonnages)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);

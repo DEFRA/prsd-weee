@@ -128,10 +128,11 @@
         {
             var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId).ToListAsync();
 
-            if (notes == null)
-            {
-                throw new ArgumentException($"Notes for organisation {organisationId} and aatf {aatfId} not found");
-            }
+            //TODO://remove uncommented - AATf could have no notes
+            //if (notes == null)
+            //{
+            //    throw new ArgumentException($"Notes for organisation {organisationId} and aatf {aatfId} not found");
+            //}
 
             return notes;
         }

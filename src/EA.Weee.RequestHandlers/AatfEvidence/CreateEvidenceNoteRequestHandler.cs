@@ -17,7 +17,7 @@
     using Protocol = Domain.Evidence.Protocol;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, int>
+    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -35,7 +35,7 @@
             this.userContext = userContext;
         }
 
-        public async Task<int> HandleAsync(CreateEvidenceNoteRequest message)
+        public async Task<Guid> HandleAsync(CreateEvidenceNoteRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
@@ -62,6 +62,11 @@
                     $"Aatf with Id {message.AatfId} does not belong to Organisation with Id {message.OrganisationId}");
             }
 
+            var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
+                (WeeeCategory)t.CategoryId,
+                t.FirstTonnage,
+                t.SecondTonnage));
+
             var evidenceNote = new Note(organisation,
                 scheme,
                 message.StartDate,
@@ -71,18 +76,12 @@
                 aatf,
                 NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
-                NoteStatus.Draft);
-
-            var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(evidenceNote,
-                (WeeeCategory)t.CategoryId,
-                t.FirstTonnage,
-                t.SecondTonnage));
-
-            evidenceNote.NoteTonnage.AddRange(tonnageValues);
+                NoteStatus.Draft,
+                tonnageValues.ToList());
 
             var newNote = await genericDataAccess.Add(evidenceNote);
 
-            return newNote.Reference;
+            return newNote.Id;
         }
     }
 }
