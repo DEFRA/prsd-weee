@@ -231,8 +231,10 @@
         {
             //arrange
             var model = ValidModel();
-            
+            var request = Request(NoteStatus.Submitted);
             var evidenceNoteId = Fixture.Create<Guid>();
+
+            A.CallTo(() => CreateRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
             A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Returns(evidenceNoteId);
 
             //act
@@ -250,8 +252,10 @@
         {
             //arrange
             var model = ValidModel();
-
+            var request = Request(NoteStatus.Draft);
             var evidenceNoteId = Fixture.Create<Guid>();
+
+            A.CallTo(() => CreateRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
             A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Returns(evidenceNoteId);
 
             //act
