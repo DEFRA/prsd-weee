@@ -83,16 +83,8 @@
                 evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
             }
 
-            try
-            {
-                var newNote = await genericDataAccess.Add(evidenceNote);
-                return newNote.Id;
-            }
-            catch (Exception ex)
-            {
-                int i = 10;
-            }
-            return Guid.Empty;
+            var newNote = await genericDataAccess.Add(evidenceNote);
+            return newNote.Id;
         }
     }
 }

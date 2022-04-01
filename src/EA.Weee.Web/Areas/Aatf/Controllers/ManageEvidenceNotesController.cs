@@ -97,7 +97,6 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    //TODO: TEST THIS AND View data setting
                     var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
                     return RedirectToRoute(routeName, new
                     {
@@ -134,6 +133,8 @@
                 //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
 
+                SetSuccessMessage(result, model);
+                
                 //TODO: Remove the Viewbag items below as they should be based off the view model
 
                 //TODO: update the view to only show the success based on a view model property
@@ -142,6 +143,15 @@
                 //ViewBag.organisationId = organisationId;
 
                 return View(model);
+            }
+        }
+        private void SetSuccessMessage(EvidenceNoteData note, ViewEvidenceNoteViewModel model)
+        {
+            if (ViewData[ViewDataConstant.EvidenceNoteStatus] != null)
+            {
+                model.SuccessMessage = ViewData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status ? ((NoteStatus?)status == NoteStatus.Draft ? 
+                    $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft" :
+                    $"You have successfully submitted the evidence note with reference ID E{note.Reference}") : null;
             }
         }
 
