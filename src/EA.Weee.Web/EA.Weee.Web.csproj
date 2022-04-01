@@ -326,6 +326,8 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchAnAatfViewModelMap.CS" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchAnAatfViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchedAatfViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchedAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CanNotFoundTreatmentFacilityViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SearchAnAatfViewModel.cs" />

@@ -16,7 +16,7 @@
 
         public Guid? WeeeSentOnId { get; set; }
 
-        public Guid SearchTermId { get; set; }
+        public Guid SelectedAatfId { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Search Term must have min length of 3 and max Length of 50")]
