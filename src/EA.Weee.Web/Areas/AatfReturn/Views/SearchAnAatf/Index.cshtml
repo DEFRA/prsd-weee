@@ -26,7 +26,7 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.HiddenFor(model => model.SearchTermId, new { id = "hidden" })
+            @Html.HiddenFor(model => model.SelectedAatfId, new { id = "hidden" })
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-full" })
         </div>
 

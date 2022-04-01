@@ -72,6 +72,9 @@
     <Compile Include="AatfReturn\SearchAatfAddress\GetSearchAnAatfAddressHandler.cs" />
     <Compile Include="AatfReturn\SearchAatfAddress\ISearchAnAatfAddressDataAccess.cs" />
     <Compile Include="AatfReturn\SearchAatfAddress\SearchAnAatfAddressDataAccess.cs" />
+    <Compile Include="AatfReturn\SearchedAatfResultList\GetSearchedAatfResultListHandler.cs" />
+    <Compile Include="AatfReturn\SearchedAatfResultList\ISearchedAatfResultListDataAccess.cs" />
+    <Compile Include="AatfReturn\SearchedAatfResultList\SearchedAatfResultListDataAccess.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
