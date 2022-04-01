@@ -149,9 +149,18 @@
         {
             if (TempData[ViewDataConstant.EvidenceNoteStatus] != null)
             {
-                model.SuccessMessage = TempData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status ? ((NoteStatus?)status == NoteStatus.Draft ? 
-                    $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft" :
-                    $"You have successfully submitted the evidence note with reference ID E{note.Reference}") : null;
+                if (TempData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status)
+                {
+                    model.SuccessMessage = (status == NoteStatus.Submitted ?
+                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
+
+                    //TODO: Move this to the mapper
+                    model.Status = status;
+                }
+                else
+                {
+                    model.Status = NoteStatus.Draft;
+                }
             }
         }
 
