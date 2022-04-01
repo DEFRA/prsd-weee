@@ -1,21 +1,23 @@
 ﻿
+@using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.Areas.Aatf.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
+@model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
 @{
-    ViewBag.Title = "View Draft Evidence Note";
+    var title = Model.Status == NoteStatus.Draft ? "Draft evidence note" : "Submitted evidence note";
+
+    ViewBag.Title = title;
 }
 
-@{
-    var text = string.Format("You have successfully saved the evidence note with reference ID E{0} as a draft", Model.Reference);
-    
-}
 <section id="main-content">
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId))))
+    @if (Model.DisplayMessage)
+    {
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
+    }
 
-    @(this.WeeeGds().Panel(text))
+    @*@Html.Partial("_ViewEvidenceNotePartial", Model)*@
 
-    @Html.Partial("_ViewEvidenceNotePartial", Model)
 </section>
 
