@@ -59,7 +59,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteByReference(result);
+                note = Query.GetEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveCreateEvidenceNote = () =>
@@ -79,17 +79,26 @@
                 note.Reference.Should().BeGreaterThan(0);
                 note.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
                 note.Organisation.Should().Be(organisation);
+                note.Status.Should().Be(NoteStatus.Draft);
+                note.NoteType.Should().Be(NoteType.EvidenceNote);
+                note.NoteTonnage.Count.Should().Be(request.TonnageValues.Count);
+                foreach (var noteTonnage in request.TonnageValues)
+                {
+                    note.NoteTonnage.Should().Contain(n => n.Received.Equals(noteTonnage.FirstTonnage) &&
+                                                           n.Reused.Equals(noteTonnage.SecondTonnage) &&
+                                                           n.CategoryId.Equals((WeeeCategory)noteTonnage.CategoryId));
+                }
             };
         }
 
         public class CreateEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<CreateEvidenceNoteRequest, int> handler;
+            protected static IRequestHandler<CreateEvidenceNoteRequest, Guid> handler;
             protected static Organisation organisation;
             protected static Aatf aatf;
             protected static CreateEvidenceNoteRequest request;
             protected static Scheme scheme;
-            protected static int result;
+            protected static Guid result;
             protected static Note note;
             protected static Fixture fixture;
 
@@ -101,7 +110,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<CreateEvidenceNoteRequest, int>>();
+                handler = Container.Resolve<IRequestHandler<CreateEvidenceNoteRequest, Guid>>();
 
                 return setup;
             }

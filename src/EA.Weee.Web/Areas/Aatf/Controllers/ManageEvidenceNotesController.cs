@@ -95,6 +95,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
+                    //TODO: add indicator into ViewData, bool? noteCreated that can be checked in the ViewDraftEvidenceNote action
                     return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
                 }
 
@@ -109,16 +110,21 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
-                ViewBag.EvidenceNoteId = evidenceNoteId;
-                ViewBag.aatfId = aatfId;
-                ViewBag.organisationId = organisationId;
 
-                return View();
+                var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
+
+                // retrieve the evidence note
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
+
+                return View(model);
             }
         }
 
@@ -127,7 +133,7 @@
         {
             using (var client = apiClient())
             {
-                var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetDraftReturnedNotesRequest(organisationId, aatfId))).Result;
+                var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId))).Result;
 
                 // TODO 
                 // a mapper 
