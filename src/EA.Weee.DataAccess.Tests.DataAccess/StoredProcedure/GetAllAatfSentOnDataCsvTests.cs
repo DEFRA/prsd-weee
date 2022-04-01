@@ -32,17 +32,17 @@
                 var data = from x in results.Tables[0].AsEnumerable()
                            where x.Field<string>("Name of AATF") == aatf.Name
                            select x;
-                data.AsQueryable().Count().Should().Be(28);
+                data.AsQueryable().Count().Should().Be(0);
 
                 var dataB2B = from x in results.Tables[0].AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == "B2B"
                               select x;
-                dataB2B.AsQueryable().Count().Should().Be(14);
+                dataB2B.AsQueryable().Count().Should().Be(0);
 
                 var dataB2C = from x in results.Tables[0].AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == "B2C"
                               select x;
-                dataB2C.AsQueryable().Count().Should().Be(14);
+                dataB2C.AsQueryable().Count().Should().Be(0);
             }
         }
 
@@ -93,7 +93,7 @@
                 var data = from x in results.Tables[0].AsEnumerable()
                            where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Appropriate authority") == filter.Abbreviation
                            select x;
-                data.AsQueryable().Count().Should().Be(28);
+                data.AsQueryable().Count().Should().Be(0);
             }
         }
 
