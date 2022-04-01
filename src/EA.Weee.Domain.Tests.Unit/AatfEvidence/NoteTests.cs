@@ -210,6 +210,9 @@
         public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_StatusShouldBeUpdated()
         {
             //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+
             var note = CreateNote();
             
             //act
@@ -217,6 +220,10 @@
 
             //asset
             note.Status.Should().Be(NoteStatus.Submitted);
+            note.SubmittedById.Should().Be("user");
+            note.SubmittedDate.Should().Be(date);
+
+            SystemTime.Unfreeze();
         }
 
         [Fact]
