@@ -63,7 +63,7 @@
                 note = Query.GetEvidenceNoteById(result);
             };
 
-            private readonly It shouldHaveCreateEvidenceNote = () =>
+            private readonly It shouldHaveCreatedEvidenceNote = () =>
             {
                 note.Should().NotBeNull();
             };
@@ -122,6 +122,17 @@
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Submitted);
             };
+
+            private readonly It shouldHaveCreatedStatusChangeHistory = () =>
+            {
+                var history = Query.GetLatestNoteStatusHistoryForNote(note.Id);
+
+                history.Should().NotBeNull();
+                history.ChangedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                history.FromStatus.Should().Be(NoteStatus.Draft);
+                history.ToStatus.Should().Be(NoteStatus.Submitted);
+                history.ChangedById.Should().Be(UserId.ToString());
+            };
         }
 
         public class CreateEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
@@ -151,8 +162,8 @@
             {
                 note.CreatedById.Should().Be(UserId.ToString());
                 note.Aatf.Should().Be(aatf);
-                note.EndDate.Should().Be(request.EndDate);
-                note.StartDate.Should().Be(request.StartDate);
+                note.EndDate.Date.Should().Be(request.EndDate.Date);
+                note.StartDate.Date.Should().Be(request.StartDate.Date);
                 note.WasteType.ToInt().Should().Be(request.WasteType.ToInt());
                 note.Protocol.ToInt().Should().Be(request.Protocol.ToInt());
                 note.Recipient.Should().Be(scheme);
