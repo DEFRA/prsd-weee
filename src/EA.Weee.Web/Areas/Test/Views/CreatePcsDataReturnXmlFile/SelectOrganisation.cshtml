@@ -20,11 +20,8 @@
     {
         <p>Search for and select the PCS that will be used for the test file.</p>
         <p>
-            If you are signed in as an external user, only organisations with which you are
-            associated will be returned. If you want to search all organisations, sign in
-            as an internal user.
+            Organisations matching the partial search will be returned.
         </p>
-
         @Html.ValidationSummary()
 
         <div class="govuk-form-group" id="companyName">
@@ -38,7 +35,7 @@
 
     @if (Model.MatchingOrganisations != null)
     {
-        <hr/>
+        <hr />
 
         if (Model.MatchingOrganisations.TotalItemCount > 0)
         {
@@ -51,42 +48,42 @@
                 if (isNewRow)
                 {
                     @:<div class="govuk-grid-row">
-                }
+                    }
 
-                <div class="column-one-half">
+                    <div class="column-one-half">
 
-                    <h3 class="govuk-heading-s"></h3>
+                        <h3 class="govuk-heading-s"></h3>
 
-                    <div class="colored-header-bar"></div>
+                        <div class="colored-header-bar"></div>
 
-                    <ul class="unordered-list-xml govuk-body">
-                        <li>
-                            <span class="bold-small">@Html.DisplayFor(m => organisation.DisplayName)</span>
-                        </li>
-                        <li>
-                            @Html.DisplayFor(m => organisation.Address.Address1),
-                        </li>
-                        <li>
-                            @Html.DisplayFor(m => organisation.Address.TownOrCity),
-                        </li>
-                        <li>
-                            @Html.DisplayFor(m => organisation.Address.Postcode)
-                        </li>
-                    </ul>
+                        <ul class="unordered-list-xml govuk-body">
+                            <li>
+                                <span class="bold-small">@Html.DisplayFor(m => organisation.DisplayName)</span>
+                            </li>
+                            <li>
+                                @Html.DisplayFor(m => organisation.Address.Address1),
+                            </li>
+                            <li>
+                                @Html.DisplayFor(m => organisation.Address.TownOrCity),
+                            </li>
+                            <li>
+                                @Html.DisplayFor(m => organisation.Address.Postcode)
+                            </li>
+                        </ul>
 
-                    @Html.ActionLink("Select this organisation", "SpecifyOptions", new { OrganisationID = organisation.Id })
+                        @Html.ActionLink("Select this organisation", "SpecifyOptions", new { OrganisationID = organisation.Id })
 
-                </div>
+                    </div>
 
-                if (!isNewRow || i == Model.MatchingOrganisations.Count() - 1)
-                {
+                    if (!isNewRow || i == Model.MatchingOrganisations.Count() - 1)
+                    {
                     @:</div>
                 }
                 i++;
             }
             <div>
                 @if (@Model.MatchingOrganisations.PageCount > 1)
-            {
+                {
                     <br />
                     <span style="display: inline-block">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</span>
                     <div class="pager govuk-body">
@@ -95,8 +92,8 @@
 
                     </div>
                     <br />
-            }
-</div>
+                }
+            </div>
         }
         else
         {
