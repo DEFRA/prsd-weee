@@ -123,9 +123,6 @@
                 //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
 
-                var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
-
-
                 return View(model);
             }
         }

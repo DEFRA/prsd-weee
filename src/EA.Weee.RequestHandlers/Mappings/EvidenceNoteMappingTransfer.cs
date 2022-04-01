@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using Core.AatfReturn;
     using Core.Scheme;
     using EA.Weee.Domain.Evidence;
 
@@ -8,5 +9,7 @@
         public Note Note { get; set; }
 
         public SchemeData SchemeData { get; set; }
+
+        public AatfData AatfData { get; set; }
     }
 }
