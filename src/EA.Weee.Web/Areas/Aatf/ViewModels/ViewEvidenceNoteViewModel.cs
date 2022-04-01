@@ -15,5 +15,7 @@
         public string SuccessMessage { get; set; }
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
+
+        public NoteStatus Status { get; set; }
     }
 }
