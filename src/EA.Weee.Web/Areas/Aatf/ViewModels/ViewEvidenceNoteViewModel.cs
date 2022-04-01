@@ -12,6 +12,8 @@
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
-        public bool DisplaySuccessMessage { get; set; }
+        public string SuccessMessage { get; set; }
+
+        public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
     }
 }
