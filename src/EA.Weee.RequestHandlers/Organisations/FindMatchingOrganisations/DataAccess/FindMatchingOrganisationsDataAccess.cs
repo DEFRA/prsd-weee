@@ -54,13 +54,11 @@
 
         public async Task<Organisation[]> GetOrganisationsByPartialSearchAsync(string searchTerm, Guid userId)
         {
-            var organisationsCurrentlyLinkedToUser = await OrganisationsCurrentlyLinkedToUser(userId);
-
             return (await context.Organisations.ToListAsync())
                 .Where(o =>
                 {
-                    return o.OrganisationStatus == OrganisationStatus.Complete && !organisationsCurrentlyLinkedToUser.Any(id => id == o.Id)
-                        && ((!string.IsNullOrEmpty(o.Name) && o.Name.ToLower().Contains(searchTerm.ToLower())) || (!string.IsNullOrEmpty(o.TradingName) && o.TradingName.ToLower().Contains(searchTerm.ToLower())));
+                    return o.OrganisationStatus == OrganisationStatus.Complete &&
+                        ((!string.IsNullOrEmpty(o.Name) && o.Name.ToLower().Contains(searchTerm.ToLower())) || (!string.IsNullOrEmpty(o.TradingName) && o.TradingName.ToLower().Contains(searchTerm.ToLower())));
                 }).ToArray();
         }
 
