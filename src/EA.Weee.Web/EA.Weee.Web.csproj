@@ -343,7 +343,8 @@
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
-    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttribute .cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredIfActionAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HomeController.cs" />
@@ -360,9 +361,13 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
@@ -419,6 +424,7 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidator.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
+    <Compile Include="Areas\Scheme\Attributes\ValidatePcsEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -1342,6 +1348,7 @@
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
+    <Content Include="Views\Shared\_ViewEvidenceNotePartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

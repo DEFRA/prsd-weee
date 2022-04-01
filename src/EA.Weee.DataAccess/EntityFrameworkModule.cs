@@ -28,6 +28,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
+            builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
 
             builder.RegisterType<WeeeTransactionAdapter>().As<IWeeeTransactionAdapter>()
                 .InstancePerRequest();
