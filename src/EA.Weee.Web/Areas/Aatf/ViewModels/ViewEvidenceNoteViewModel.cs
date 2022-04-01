@@ -23,6 +23,5 @@
 
         public string RecipientName { get; set; } = "ERP UK LTD";
         public string RecipientAddress { get; set; } = "1 Bart Simpson Avenue <br /> Reading <br /> RG1 ATR";
-
     }
 }

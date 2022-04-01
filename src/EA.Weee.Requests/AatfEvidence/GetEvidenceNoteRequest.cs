@@ -6,9 +6,13 @@
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class GetEvidenceNoteRequest : EvidenceNoteBaseRequest
+    public class GetEvidenceNoteRequest : IRequest<EvidenceNoteData>
     {
         public Guid EvidenceNoteId { get; private set; }
+        
+        public Guid AatfId { get; private set; }
+
+        public Guid OrganisationId { get; private set; }
 
         public GetEvidenceNoteRequest(Guid evidenceNoteId, Guid organisationId)
         {
