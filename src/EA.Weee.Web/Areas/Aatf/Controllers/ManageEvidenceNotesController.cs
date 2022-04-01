@@ -93,7 +93,7 @@
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
 
-                    ViewData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -147,9 +147,9 @@
         }
         private void SetSuccessMessage(EvidenceNoteData note, ViewEvidenceNoteViewModel model)
         {
-            if (ViewData[ViewDataConstant.EvidenceNoteStatus] != null)
+            if (TempData[ViewDataConstant.EvidenceNoteStatus] != null)
             {
-                model.SuccessMessage = ViewData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status ? ((NoteStatus?)status == NoteStatus.Draft ? 
+                model.SuccessMessage = TempData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status ? ((NoteStatus?)status == NoteStatus.Draft ? 
                     $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft" :
                     $"You have successfully submitted the evidence note with reference ID E{note.Reference}") : null;
             }

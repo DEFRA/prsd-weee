@@ -56,7 +56,7 @@
             //arrange
             var evidenceNoteData = Fixture.Create<EvidenceNoteData>();
 
-            ManageEvidenceController.ViewData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Draft;
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Draft;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
 
             //act
@@ -75,7 +75,7 @@
             //arrange
             var evidenceNoteData = Fixture.Create<EvidenceNoteData>();
 
-            ManageEvidenceController.ViewData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Submitted;
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Submitted;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
 
             //act
@@ -93,7 +93,7 @@
         {
             //arrange
 
-            ManageEvidenceController.ViewData[ViewDataConstant.EvidenceNoteStatus] = null;
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
 
             //act
             var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
