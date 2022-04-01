@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfEvidence
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
@@ -39,6 +40,8 @@
             aatf = A.Fake<Aatf>();
             createdBy = fixture.Create<string>();
             tonnages = fixture.CreateMany<NoteTonnage>();
+            status = NoteStatus.Draft;
+            noteType = NoteType.EvidenceNote;
         }
 
         [Fact]
@@ -52,7 +55,6 @@
                 A.Fake<Aatf>(),
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 new List<NoteTonnage>()));
 
             result.Should().BeOfType<ArgumentNullException>();
@@ -69,7 +71,6 @@
                 A.Fake<Aatf>(),
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 new List<NoteTonnage>()));
 
             result.Should().BeOfType<ArgumentNullException>();
@@ -86,7 +87,6 @@
                 A.Fake<Aatf>(),
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 new List<NoteTonnage>()));
 
             result.Should().BeOfType<ArgumentException>();
@@ -103,7 +103,6 @@
                 A.Fake<Aatf>(),
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 new List<NoteTonnage>()));
 
             result.Should().BeOfType<ArgumentException>();
@@ -120,7 +119,6 @@
                 null,
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 new List<NoteTonnage>()));
 
             result.Should().BeOfType<ArgumentNullException>();
@@ -137,7 +135,6 @@
                 null,
                 NoteType.EvidenceNote,
                 "created",
-                NoteStatus.Draft,
                 null));
 
             result.Should().BeOfType<ArgumentNullException>();
@@ -168,7 +165,6 @@
             SystemTime.Freeze(date);
 
             noteType = NoteType.EvidenceNote;
-            status = NoteStatus.Submitted;
 
             var result = CreateNote();
 
@@ -185,7 +181,6 @@
             SystemTime.Freeze(date);
 
             noteType = NoteType.TransferNote;
-            status = NoteStatus.Submitted;
 
             var result = CreateNote();
 
@@ -209,6 +204,53 @@
             ShouldBeEqualTo(result, date);
 
             SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var note = CreateNote();
+            
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Submitted);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenDraftStatusToDraftStatusUpdate_InvalidOperationExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Draft, "user"));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)
@@ -238,7 +280,6 @@
                 aatf,
                 noteType,
                 createdBy,
-                status,
                 tonnages.ToList());
         }
     }

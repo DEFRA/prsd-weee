@@ -11,6 +11,8 @@
 
     public partial class Note : Entity
     {
+        private const string StatusTransitionError = @"Evidence note cannot transition from status '{0}' to '{1}'";
+
         public Note()
         {
         }
@@ -24,21 +26,18 @@
             Aatf aatf,
             NoteType noteType,
             string createdBy,
-            NoteStatus status,
             IList<NoteTonnage> tonnages)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNull(() => aatf, aatf);
             Guard.ArgumentNotNull(() => noteType, noteType);
-            Guard.ArgumentNotNull(() => status, status);
             Guard.ArgumentNotDefaultValue(() => startDate, startDate);
             Guard.ArgumentNotDefaultValue(() => endDate, endDate);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
             Guard.ArgumentNotNull(() => tonnages, tonnages);
 
             Organisation = organisation;
-            Status = status;
             WasteType = wasteType;
             Protocol = protocol;
             Recipient = recipient;
@@ -48,8 +47,26 @@
             CreatedById = createdBy;
             NoteType = noteType;
             CreatedDate = SystemTime.UtcNow;
-
+            Status = NoteStatus.Draft;
             NoteTonnage = tonnages;
+            NoteStatusHistory = new List<NoteStatusHistory>();
+        }
+
+        public void UpdateStatus(NoteStatus newStatus, string changedBy)
+        {
+            if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
+            {
+                throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
+            }
+
+            if ((newStatus.Equals(NoteStatus.Submitted) && Status != NoteStatus.Draft))
+            {
+                throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
+            }
+
+            NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
+
+            Status = newStatus;
         }
 
         /// <summary>
@@ -96,5 +113,7 @@
         public virtual int Reference { get; set; }
 
         public virtual ICollection<NoteTonnage> NoteTonnage { get; protected set; }
+
+        public virtual ICollection<NoteStatusHistory> NoteStatusHistory { get; protected set; }
     }
 }
