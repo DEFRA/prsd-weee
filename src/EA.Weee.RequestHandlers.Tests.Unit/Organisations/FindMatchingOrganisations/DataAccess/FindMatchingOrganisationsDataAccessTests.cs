@@ -141,17 +141,9 @@
             A.CallTo(() => organisation.OrganisationStatus).Returns(Core.Shared.OrganisationStatus.Complete.ToDomainEnumeration<OrganisationStatus>());
 
             var userId = Guid.NewGuid();
-            var existingUserId = Guid.NewGuid();
 
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
-
-            var organisationUser = new OrganisationUser(userId, organisation.Id, Core.Shared.UserStatus.Active.ToDomainEnumeration<UserStatus>());
-            A.CallTo(() => context.OrganisationUsers)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
-                {
-                    organisationUser
-                }));
 
             var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsByPartialSearchAsync("Test", userId);
 
@@ -164,17 +156,9 @@
         {
             var organisation = orgHelper.GetOrganisationWithName("Test Organisation");
             var userId = Guid.NewGuid();
-            var existingUserId = Guid.NewGuid();
 
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
-
-            var organisationUser = new OrganisationUser(userId, organisation.Id, Core.Shared.UserStatus.Active.ToDomainEnumeration<UserStatus>());
-            A.CallTo(() => context.OrganisationUsers)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
-                {
-                    organisationUser
-                }));
 
             var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsByPartialSearchAsync("Test", userId);
 
@@ -190,17 +174,9 @@
             A.CallTo(() => organisation.OrganisationStatus).Returns(Core.Shared.OrganisationStatus.Complete.ToDomainEnumeration<OrganisationStatus>());
 
             var userId = Guid.NewGuid();
-            var existingUserId = Guid.NewGuid();
 
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
-
-            var organisationUser = new OrganisationUser(userId, organisation.Id, Core.Shared.UserStatus.Active.ToDomainEnumeration<UserStatus>());
-            A.CallTo(() => context.OrganisationUsers)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
-                {
-                    organisationUser
-                }));
 
             var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsByPartialSearchAsync("Fail", userId);
 
@@ -236,44 +212,14 @@
             var org2 = orgHelper.GetOrganisationWithName("Test Organisation 2");
             org2.OrganisationStatus = OrganisationStatus.Incomplete;
             var userId = Guid.NewGuid();
-            var existingUserId = Guid.NewGuid();
 
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation, org2 }));
-
-            var organisationUser = new OrganisationUser(userId, organisation.Id, Core.Shared.UserStatus.Active.ToDomainEnumeration<UserStatus>());
-            A.CallTo(() => context.OrganisationUsers)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
-                {
-                    organisationUser
-                }));
 
             var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsByPartialSearchAsync("Test", userId);
 
             result.Count().Should().Be(1);
             result[0].Name.Should().Be("Test Organisation");
-        }
-
-        [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_RejectedUserMatch_ReturnsNoResults()
-        {
-            var organisation = orgHelper.GetOrganisationWithName("Test Organisation");
-            var userId = Guid.NewGuid();
-            var existingUserId = Guid.NewGuid();
-
-            A.CallTo(() => context.Organisations)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
-
-            var organisationUser = new OrganisationUser(userId, organisation.Id, Core.Shared.UserStatus.Rejected.ToDomainEnumeration<UserStatus>());
-            A.CallTo(() => context.OrganisationUsers)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
-                {
-                    organisationUser
-                }));
-
-            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsByPartialSearchAsync("Test", userId);
-
-            result.Count().Should().Be(0);
         }
 
         private FindMatchingOrganisationsDataAccess FindMatchingOrganisationsDataAccess()
