@@ -76,12 +76,23 @@
                 aatf,
                 NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
-                message.Status.ToDomainEnumeration<NoteStatus>(),
                 tonnageValues.ToList());
 
-            var newNote = await genericDataAccess.Add(evidenceNote);
+            if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
+            {
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+            }
 
-            return newNote.Id;
+            try
+            {
+                var newNote = await genericDataAccess.Add(evidenceNote);
+                return newNote.Id;
+            }
+            catch (Exception ex)
+            {
+                int i = 10;
+            }
+            return Guid.Empty;
         }
     }
 }
