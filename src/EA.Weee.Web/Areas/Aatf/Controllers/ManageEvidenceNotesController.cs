@@ -127,11 +127,25 @@
         {
             using (var client = apiClient())
             {
-                var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetDraftReturnedNotesRequest(organisationId, aatfId))).Result;
+                var result = Task.Run(async () =>
+               await client.SendAsync(User.GetAccessToken(), new GetDraftReturnedNotesRequest(organisationId, aatfId))).Result;
 
-                // TODO 
-                // a mapper 
-                return PartialView("Overview/EditDraftReturnedNotesOverview",  new EditDraftReturnedNotesViewModel());
+                List<EditDraftReturnedNotesRequest> castResults = result;
+                List<EditDraftReturnedNotesViewModel> modelToViewList = new List<EditDraftReturnedNotesViewModel>();
+
+                // TODO
+                // might need a different mapper
+                if (result != null && result.Any())
+                {
+                    foreach (var res in castResults)
+                    {
+                        var model = mapper.Map<EditDraftReturnedNotesViewModel>
+                            (new EditDraftReturnedNotesModel(res.ReferenceId, res.RecipientId, res.Status, res.WasteType));
+                        modelToViewList.Add(model);
+                    }
+                }
+
+                return PartialView("Overview/EditDraftReturnedNotesOverview", modelToViewList);
             }      
         }
 
