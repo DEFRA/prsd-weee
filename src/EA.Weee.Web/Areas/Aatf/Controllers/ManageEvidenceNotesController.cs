@@ -152,24 +152,27 @@
         {
             using (var client = apiClient())
             {
-                var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId))).Result;
+                var result = Task.Run(() =>  client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId))).Result;
 
-                var modelToViewList = new EditDraftReturnedNotesViewModel();
+                //var modelToViewList = new EditDraftReturnedNotesViewModel();
 
-                if (result != null && result.Any())
-                {
-                    foreach (var res in result)
-                    {
-                        var model = mapper.Map<EditDraftReturnedNote>
-                            (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType));
+                //if (result != null && result.Any())
+                //{
+                //    foreach (var res in result)
+                //    {
+                //        var model = mapper.Map<EditDraftReturnedNote>
+                //            (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType));
 
-                        modelToViewList.ListOfNotes.Add(model);
-                    }
-                }
-                modelToViewList.AatfId = aatfId;
-                modelToViewList.OrganisationId = organisationId;
+                //        modelToViewList.ListOfNotes.Add(model);
+                //    }
+                //}
+                //modelToViewList.AatfId = aatfId;
+                //modelToViewList.OrganisationId = organisationId;
 
-                return PartialView("Overview/EditDraftReturnedNotesOverview", modelToViewList);
+                var model = mapper.Map<EditDraftReturnedNotesViewModel>(
+                    new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
+
+                return PartialView("Overview/EditDraftReturnedNotesOverview", model);
             }
         }
 
