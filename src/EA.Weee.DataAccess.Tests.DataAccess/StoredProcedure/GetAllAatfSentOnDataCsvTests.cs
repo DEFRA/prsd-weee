@@ -70,7 +70,7 @@
                 var dataB2C = from x in results.Tables[0].AsEnumerable()
                               where x.Field<string>("Name of AATF") == aatf.Name && x.Field<string>("Obligation type") == nonFilter
                               select x;
-                dataB2C.AsQueryable().Count().Should().Be(0); 
+                dataB2C.AsQueryable().Count().Should().Be(0);
             }
         }
 
