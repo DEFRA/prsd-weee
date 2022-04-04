@@ -13,7 +13,7 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class RequiredTonnageAttribute : RequiredAttribute
     {
-        private const string Message = "Enter a tonnage value for at least one category";
+        private const string Message = "Enter a tonnage value for at least one category. The value must be 3 decimal places or less.";
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
