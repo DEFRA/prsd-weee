@@ -19,23 +19,14 @@
     internal class GetEvidenceNoteHandler : IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
-        private readonly IAatfDataAccess aatfDataAccess;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
 
         public GetEvidenceNoteHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess,
-            IAatfDataAccess aatfDataAccess, 
-            ISchemeDataAccess schemeDataAccess,
             IEvidenceDataAccess evidenceDataAccess,
             IMapper mapper)
         {
             this.authorization = authorization;
-            this.genericDataAccess = genericDataAccess;
-            this.aatfDataAccess = aatfDataAccess;
-            this.schemeDataAccess = schemeDataAccess;
             this.evidenceDataAccess = evidenceDataAccess;
             this.mapper = mapper;
         }

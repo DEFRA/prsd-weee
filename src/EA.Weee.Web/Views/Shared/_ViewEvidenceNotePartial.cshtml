@@ -1,125 +1,104 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
 
-<!-- ViewBag already contains valid title -->
-
 @{
-    <section id="main-content">
 
-        <h1 class="govuk-heading-l govuk-!-padding-top-5">
-            Evidence note
-        </h1>
+    <h1 class="govuk-heading-l govuk-!-padding-top-5">
+        Evidence note
+    </h1>
+    
+    <div class="govuk-width-container govuk-!-margin-top-3 ">
 
-        <div class="govuk-grid-column-one-third">
-            <div class="govuk-grid-column-one-half">
-                Reference ID
-            </div>
-            <div class="govuk-grid-column-one-half">
-                @Model.Reference
-            </div>
-            <div class="govuk-grid-column-one-half">
-                Status
-            </div>
-            <div class="govuk-grid-column-one-half">
-                @Model.Status
-            </div>
-            <div class="govuk-grid-column-one-half">
-                Compliance year
-            </div>
-            <div class="govuk-grid-column-one-half">
-                @Model.ComplianceYear
-            </div>
-            <div class="govuk-grid-column-one-half">
-                Type of waste
-            </div>
-            <div class="govuk-grid-column-one-half">
-                @Model.TypeOfWaste
-            </div>
-            <div class="govuk-grid-column-one-half">
-                Actual or Protocol
-            </div>
-            <div class="govuk-grid-column-one-half">
-                @Model.Protocol
-            </div>
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.Reference, @Model.ReferenceDisplay)
         </div>
 
-        <div class="govuk-grid-column-full">
-            <div class="govuk-grid-column-one-third">
-                <div>Site</div>
-                <div>@Model.SiteAddress</div>
-            </div>
-            <div class="govuk-grid-column-one-third">
-                <div>Operator</div>
-                <div>@Model.OperatorAddress</div>
-            </div>
-            <div class="govuk-grid-column-one-third">
-                <div>Recipient</div>
-                <div>@Model.RecipientAddress</div>
-            </div>
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.Status, @Model.Status.ToDisplayString())
         </div>
 
-        <p class="govuk-!-padding-top-5">
-            By submitting this information you confirm that the following waste and electronic equipment from UK household has been received between
-            @(Model.StartDate) and @(Model.EndDate) at this site.
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, @Model.ComplianceYearDisplay)
+        </div>
+
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.WasteDisplay, @Model.WasteDisplay)
+        </div>
+
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ProtocolDisplay, @Model.ProtocolDisplay)
+        </div>
+    </div>
+
+    <div class="govuk-width-container govuk-!-margin-top-3 govuk-!-padding-left-0">
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="site" class="govuk-label--s">Site</span><br />
+            <span aria-labelledby="site" class="govuk-body"> @Html.Raw(@Model.SiteAddress)</span>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0 ">
+            <span id="operator" class="govuk-label--s">Operator</span><br />
+            <span aria-labelledby="operator" class="govuk-body">@Html.Raw(@Model.OperatorAddress)</span>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="recipient" class="govuk-label--s">Recipient</span><br />
+            <span aria-labelledby="recipient" class="govuk-body">@Html.Raw(@Model.RecipientAddress)</span>
+        </div>
+    </div>
+    <div class="ui-helper-clearfix"></div>
+    <div class="govuk-width-container govuk-!-padding-top-5">
+        <p>
+            By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.WasteDisplay</strong> has been received between
+            <strong>@(Model.StartDate.ToShortDateString())</strong> and <strong>@(Model.EndDate.ToShortDateString())</strong> at this site.
             It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
         </p>
+    </div>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Re-used as whole appliances (tonnes)</th>
+            </tr>
+        </thead>
 
-        <div class="govuk-grid-column-full">
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                    <tr>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Total received (tonnes)</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Re-used as whole appliances (tonnes)</th>
-                    </tr>
-                </thead>
+        <tbody class="govuk-table__body">
 
-                <tbody class="govuk-table__body">
+            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            {
+                var category = Model.CategoryValues[i];
 
-                    @for (var i = 0; i < Model.CategoryValues.Count; i++)
-                    {
-                        var category = Model.CategoryValues[i];
+                <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                    <td class="govuk-table__cell">
+                        <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                    </td>
+                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                        @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
+                    </td>
+                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                        @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
+                    </td>
+                </tr>
+            }
 
-                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                            <td class="govuk-table__cell">
-                                @(@category.CategoryId). @category.CategoryDisplay
-                            </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
-                                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
-                                </div>
-                            </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
-                                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
-                                </div>
-                            </td>
-                        </tr>
-                    }
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <h2 class="govuk-heading-m">Total</h2>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</h2>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</h2>
+                </td>
+            </tr>
 
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <h2 class="govuk-heading-m">Total</h2>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</h2>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</h2>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="govuk-!-margin-top-3">
+        </tbody>
+    </table>
+ 
+    @*<div class="govuk-!-margin-top-3">
             @this.WeeeGds().Submit("Download as PDF", new { name = "Action", value = ActionEnum.Submit })
-        </div>
+        </div>*@
 
-        <div class="govuk-!-margin-top-3">
-            @this.WeeeGds().SecondaryButton("Edit evidence note", new { name = "Action", value = ActionEnum.Edit })
-        </div>
-</section>
 }
