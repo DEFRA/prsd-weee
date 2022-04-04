@@ -262,7 +262,7 @@
             var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
 
             //assert
-            result.RouteName.Should().Be(AatfEvidenceRedirect.ViewEvidenceRouteName);
+            result.RouteName.Should().Be(AatfEvidenceRedirect.ViewDraftEvidenceRouteName);
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
             result.RouteValues["aatfId"].Should().Be(AatfId);
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);

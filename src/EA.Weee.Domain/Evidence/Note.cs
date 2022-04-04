@@ -56,12 +56,17 @@
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
             {
-                throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
+                ThrowInvalidStateTransitionError(newStatus);
+            }
+
+            if ((newStatus.Equals(NoteStatus.Submitted) && Status.Equals(NoteStatus.Submitted)))
+            {
+                ThrowInvalidStateTransitionError(newStatus);
             }
 
             if ((newStatus.Equals(NoteStatus.Submitted) && Status != NoteStatus.Draft))
             {
-                throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
+                ThrowInvalidStateTransitionError(newStatus);
             }
 
             if (newStatus.Equals(NoteStatus.Submitted))
@@ -73,6 +78,11 @@
             NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
 
             Status = newStatus;
+        }
+
+        private void ThrowInvalidStateTransitionError(NoteStatus newStatus)
+        {
+            throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
         }
 
         /// <summary>

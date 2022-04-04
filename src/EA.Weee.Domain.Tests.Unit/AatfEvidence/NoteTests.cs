@@ -260,6 +260,20 @@
             result.Should().BeOfType<InvalidOperationException>();
         }
 
+        [Fact]
+        public void UpdateStatus_GivenSubmittedStatusToSubmittedStatusUpdate_InvalidOperationExpected()
+        {
+            //arrange
+            var note = CreateNote();
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Submitted, "user"));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
         private void ShouldBeEqualTo(Note result, DateTime date)
         {
             result.Organisation.Should().Be(organisation);

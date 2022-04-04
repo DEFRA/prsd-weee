@@ -97,7 +97,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
                     return RedirectToRoute(routeName, new
                     {
                         organisationId,

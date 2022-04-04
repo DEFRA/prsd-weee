@@ -19,15 +19,15 @@
         {
             var model = validationContext.ObjectInstance as EvidenceNoteViewModel;
 
-            Guard.ArgumentNotNull(() => model, model, "RequiredSubmitActionAttribute EvidenceViewModel IsNull");
+            Guard.ArgumentNotNull(() => model, model, "RequiredSubmitActionAttribute EvidenceViewModel is null");
+            Guard.ArgumentNotNull(() => value, value, "RequiredTonnageAttribute Tonnage Values are null");
 
             var list = value as IList<EvidenceCategoryValue>;
 
             if (model.Action.Equals(ActionEnum.Submit))
             {
-                if (list == null || list.Count == 0)
+                if (list == null || list.Any())
                 {
-                    //return new ValidationResult(ErrorMessage);
                     return new ValidationResult(Message);
                 }
 
