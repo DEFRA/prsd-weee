@@ -221,7 +221,7 @@
         public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext()
         {
             //act
-            var date = DateTime.UtcNow;
+            var date = SystemTime.UtcNow;
             SystemTime.Freeze(date);
 
             //arrange
