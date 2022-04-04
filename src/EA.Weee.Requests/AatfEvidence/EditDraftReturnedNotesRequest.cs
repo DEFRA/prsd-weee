@@ -9,7 +9,7 @@
         {
         }
 
-        public EditDraftReturnedNotesRequest(int referenceId, Guid recipientId, NoteStatus status, WasteType? wasteType)
+        public EditDraftReturnedNotesRequest(int referenceId, Guid recipientId, string status, string wasteType)
         {
             this.ReferenceId = referenceId;
             this.RecipientId = recipientId;
@@ -21,8 +21,8 @@
 
         public Guid RecipientId { get; set; }
 
-        public NoteStatus Status { get;  set; }
+        public string Status { get;  set; }
 
-        public WasteType? WasteType { get; set; }
+        public string WasteType { get; set; }
     }
 }
