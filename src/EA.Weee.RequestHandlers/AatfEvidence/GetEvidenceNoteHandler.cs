@@ -37,12 +37,8 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
-            
-            var schemeData = mapper.Map<Scheme, SchemeData>(evidenceNote.Recipient);
 
-            var aatfData = mapper.Map<Aatf, AatfData>(evidenceNote.Aatf);
-
-            var transfer = new EvidenceNoteMappingTransfer() { Note = evidenceNote, SchemeData = schemeData, AatfData = aatfData};
+            var transfer = new EvidenceNoteMappingTransfer() { Note = evidenceNote };
 
             var evidenceNoteData = mapper.Map<EvidenceNoteMappingTransfer, EvidenceNoteData>(transfer);
 

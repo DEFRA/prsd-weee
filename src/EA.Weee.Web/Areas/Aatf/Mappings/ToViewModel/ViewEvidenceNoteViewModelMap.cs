@@ -26,8 +26,8 @@
 
             var model = new ViewEvidenceNoteViewModel
             {
-                OrganisationId = source.OrganisationId,
-                AatfId = source.AatfId,
+                OrganisationId = source.EvidenceNoteData.OrganisationData.Id,
+                AatfId = source.EvidenceNoteData.AatfData.Id,
                 Reference = source.EvidenceNoteData.Reference,
                 Status = source.EvidenceNoteData.Status,
                 Type = source.EvidenceNoteData.Type,

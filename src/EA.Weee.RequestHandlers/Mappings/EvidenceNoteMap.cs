@@ -1,31 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
     using System.Linq;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Organisations;
     using Core.Scheme;
-    using Core.Shared;
-    using Domain.Scheme;
+    using Domain.AatfReturn;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
+    using AddressData = Core.Shared.AddressData;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class EvidenceNoteMap : IMap<EvidenceNoteMappingTransfer, EvidenceNoteData>
     {
-        private readonly IMap<Address, AddressData> addressMap;
         private readonly IMapper mapper;
 
         public EvidenceNoteMap(IMap<Address, AddressData> addressMap, IMapper mapper)
         {
-            this.addressMap = addressMap;
             this.mapper = mapper;
         }
 
         public EvidenceNoteData Map(EvidenceNoteMappingTransfer source)
         {
-            return new EvidenceNoteData(source.SchemeData, source.AatfData)
+            return new EvidenceNoteData()
             {
                 Reference = source.Note.Reference,
                 Type = (NoteType)source.Note.NoteType.Value,
@@ -37,7 +35,8 @@
                 EvidenceTonnageData = source.Note.NoteTonnage.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList(),
                 SchemeData  = mapper.Map<Scheme, SchemeData>(source.Note.Recipient),
-                OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation)
+                OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation),
+                AatfData = mapper.Map<Aatf, AatfData>(source.Note.Aatf)
             };
         }
     }

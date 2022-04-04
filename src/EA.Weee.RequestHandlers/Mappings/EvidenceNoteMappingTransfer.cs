@@ -8,9 +8,5 @@
     public class EvidenceNoteMappingTransfer
     {
         public Note Note { get; set; }
-
-        public SchemeData SchemeData { get; set; }
-
-        public AatfData AatfData { get; set; }
     }
 }
