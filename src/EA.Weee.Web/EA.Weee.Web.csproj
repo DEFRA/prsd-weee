@@ -343,7 +343,8 @@
     <Compile Include="Areas\Aatf\AatfAreaRegistration.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
-    <Compile Include="Areas\Aatf\Attributes\RequiredIfActionAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
