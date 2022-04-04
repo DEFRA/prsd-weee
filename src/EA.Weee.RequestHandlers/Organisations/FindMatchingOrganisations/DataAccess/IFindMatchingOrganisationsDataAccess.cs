@@ -7,5 +7,7 @@
     public interface IFindMatchingOrganisationsDataAccess
     {
         Task<Organisation[]> GetOrganisationsBySimpleSearchTerm(string searchTerm, Guid userId);
+
+        Task<Organisation[]> GetOrganisationsByPartialSearchAsync(string searchTerm, Guid userId);
     }
 }
