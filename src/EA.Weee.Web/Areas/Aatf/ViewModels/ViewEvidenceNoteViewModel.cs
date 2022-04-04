@@ -1,32 +1,42 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    using Core.AatfEvidence;
+    using Extensions;
+
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
         public string SuccessMessage { get; set; }
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
 
+        [DisplayName("Reference ID")]
+        public string ReferenceDisplay
+        {
+            get
+            {
+                return $"{Type.ToDisplayString()}{Reference}";
+            }
+        }
+
+        [DisplayName("Protocol")]
+        public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.ToString() : "-";
+
+        [DisplayName("Type of waste")]
+        public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.ToString() : "-";
+
         public NoteStatus Status { get; set; }
-        public bool DisplaySuccessMessage { get; set; }
 
-        public string ReferenceId { get; set; } = "E20";
+        public NoteType Type { get; set; }
 
-        public string Status { get; set; } = "Draft";
+        [DisplayName("Compliance year")]
+        public string ComplianceYearDisplay => StartDate.Year.ToString();
 
-        public int ComplianceYear { get; set; } = 2022;
+        public string SiteAddress { get; set; }
 
-        public string TypeOfWaste { get; set; } = "Household";
+        public string OperatorAddress { get; set; }
 
-        public string Protocol { get; set; } = "Actual";
-
-        public string SiteName { get; set; } = "Recyling Team LTD";
-        public string SiteCode { get; set; } = "WEE/AB0001YZ/ATF";
-        public string SiteAddress { get; set; } = "12 May Lane <br />Hammersmith<br />London<br />SW13 TYH";
-
-        public string OperatorName { get; set; } = "Recycling Team LTD";
-        public string OperatorAddress { get; set; } = "12 May Lane <br />Hammersmith <br /> London <br /> SW13 TYH";
-
-        public string RecipientName { get; set; } = "ERP UK LTD";
-        public string RecipientAddress { get; set; } = "1 Bart Simpson Avenue <br /> Reading <br /> RG1 ATR";
+        public string RecipientAddress { get; set; }
     }
 }
