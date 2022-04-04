@@ -22,12 +22,18 @@
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
-        public SchemeData SchemeData { get; private set; }
+        public SchemeData SchemeData { get; set; }
 
-        public AatfData AatfData { get; private set; }
+        public AatfData AatfData { get; set; }
 
         public EvidenceNoteData()
         {
+        }
+
+        public EvidenceNoteData(SchemeData schemeData)
+        {
+            Guard.ArgumentNotNull(() => schemeData, schemeData);
+            SchemeData = schemeData;
         }
 
         public EvidenceNoteData(SchemeData schemeData, AatfData aatfData)

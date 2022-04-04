@@ -135,23 +135,23 @@
             {
                 var result = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId))).Result;
 
-                List<EditDraftReturnedNotesRequest> castResults = result;
-                List<EditDraftReturnedNotesViewModel> modelToViewList = new List<EditDraftReturnedNotesViewModel>();
+                var modelToViewList = new EditDraftReturnedNotesViewModel();
 
-                // TODO
-                // might need a different mapper
                 if (result != null && result.Any())
-                {
-                    foreach (var res in castResults)
+                { 
+                    foreach (var res in result)
                     {
-                        var model = mapper.Map<EditDraftReturnedNotesViewModel>
-                            (new EditDraftReturnedNotesModel(res.ReferenceId, res.RecipientId, res.Status, res.WasteType));
-                        modelToViewList.Add(model);
+                        var model = mapper.Map<EditDraftReturnedNote>
+                            (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType));
+
+                        modelToViewList.ListOfNotes.Add(model);
                     }
                 }
-
+                modelToViewList.AatfId = aatfId;
+                modelToViewList.OrganisationId = organisationId;
+    
                 return PartialView("Overview/EditDraftReturnedNotesOverview", modelToViewList);
-            }      
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
