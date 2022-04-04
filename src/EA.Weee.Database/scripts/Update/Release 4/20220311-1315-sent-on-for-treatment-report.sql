@@ -322,7 +322,7 @@ BEGIN
 			AND x.TonnageType = a.TonnageType
 	WHERE (
 			@ObligationType IS NULL
-			OR a.Obligation = @ObligationType
+			OR a.Obligation LIKE '%' +  COALESCE(@ObligationType, a.Obligation) + '%'
 			)
 	ORDER BY 
 		a.CompetentAuthorityAbbr,
@@ -391,7 +391,7 @@ BEGIN
 		INNER JOIN [Lookup].WeeeCategory c ON a.CategoryId = c.Id
 		WHERE (
 			@ObligationType IS NULL
-			OR a.Obligation = @ObligationType
+			OR a.Obligation LIKE '%' +  COALESCE(@ObligationType, a.Obligation) + '%'
 			)
 		ORDER BY
 			a.CompetentAuthorityAbbr,
