@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
+    using Core.AatfEvidence;
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
@@ -92,9 +93,17 @@
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
 
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("ViewDraftEvidenceNote", new { evidenceNoteId = result });
+                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    return RedirectToRoute(routeName, new
+                    {
+                        organisationId,
+                        aatfId,
+                        evidenceNoteId = result
+                    });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
@@ -108,22 +117,50 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, int evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                //TODO: retrieve the evidence note
-                //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.
-                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
-                //TODO: Remove the Viewbag items below as they should be based off the view model
-                //TODO: update the view to only show the success based on a view model property
-                ViewBag.EvidenceNoteId = evidenceNoteId;
-                ViewBag.aatfId = aatfId;
-                ViewBag.organisationId = organisationId;
+                var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
 
-                return View();
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+                //TODO: retrieve the evidence note
+
+                //TODO: create ViewDraftEvidenceNoteModel perhaps inherit from EvidenceNoteViewModel.
+
+                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
+
+                SetSuccessMessage(result, model);
+                
+                //TODO: Remove the Viewbag items below as they should be based off the view model
+
+                //TODO: update the view to only show the success based on a view model property
+                //ViewBag.EvidenceNoteId = evidenceNoteId;
+                //ViewBag.aatfId = aatfId;
+                //ViewBag.organisationId = organisationId;
+
+                return View(model);
+            }
+        }
+        private void SetSuccessMessage(EvidenceNoteData note, ViewEvidenceNoteViewModel model)
+        {
+            if (TempData[ViewDataConstant.EvidenceNoteStatus] != null)
+            {
+                if (TempData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status)
+                {
+                    model.SuccessMessage = (status == NoteStatus.Submitted ?
+                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
+
+                    //TODO: Move this to the mapper
+                    model.Status = status;
+                }
+                else
+                {
+                    model.Status = NoteStatus.Draft;
+                }
             }
         }
 

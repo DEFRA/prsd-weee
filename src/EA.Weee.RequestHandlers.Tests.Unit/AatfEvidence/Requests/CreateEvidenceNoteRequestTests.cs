@@ -19,8 +19,8 @@
         private WasteType? wasteType;
         private Protocol? protocol;
         private readonly Guid aatfId;
-        private readonly string createdBy;
         private readonly IEnumerable<TonnageValues> tonnages;
+        private readonly NoteStatus status;
 
         public CreateEvidenceNoteRequestTests()
         {
@@ -32,8 +32,9 @@
             wasteType = fixture.Create<WasteType>();
             protocol = fixture.Create<Protocol>();
             aatfId = fixture.Create<Guid>();
-            createdBy = fixture.Create<string>();
+            fixture.Create<string>();
             tonnages = fixture.CreateMany<TonnageValues>();
+            status = fixture.Create<NoteStatus>();
         }
 
         [Fact]
@@ -45,7 +46,8 @@
                 DateTime.Now,
                 null,
                 null,
-                tonnages.ToList()));
+                tonnages.ToList(),
+                status));
 
                 result.Should().BeOfType<ArgumentException>();
         }
@@ -59,7 +61,8 @@
                 DateTime.Now,
                 null,
                 null,
-                tonnages.ToList()));
+                tonnages.ToList(),
+                status));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -73,7 +76,8 @@
                 DateTime.Now,
                 null,
                 null,
-                tonnages.ToList()));
+                tonnages.ToList(),
+                status));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -87,7 +91,8 @@
                 DateTime.Now,
                 null,
                 null,
-                tonnages.ToList()));
+                tonnages.ToList(),
+                status));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -101,7 +106,8 @@
                 DateTime.MinValue,
                 null,
                 null,
-                tonnages.ToList()));
+                tonnages.ToList(),
+                status));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -135,6 +141,7 @@
             result.StartDate.Should().Be(startDate);
             result.EndDate.Should().Be(endDate);
             result.TonnageValues.Should().BeEquivalentTo(tonnages);
+            result.Status.Should().Be(status);
         }
 
         public CreateEvidenceNoteRequest CreateNoteRequest()
@@ -146,7 +153,8 @@
                 endDate,
                 wasteType,
                 protocol,
-                tonnages.ToList());
+                tonnages.ToList(),
+                status);
         }
     }
 }
