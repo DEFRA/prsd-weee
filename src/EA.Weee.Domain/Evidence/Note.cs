@@ -13,7 +13,6 @@
     {
         public Note()
         {
-            NoteTonnage = new List<NoteTonnage>();
         }
 
         public Note(Organisation organisation,
@@ -25,7 +24,8 @@
             Aatf aatf,
             NoteType noteType,
             string createdBy,
-            NoteStatus status)
+            NoteStatus status,
+            IList<NoteTonnage> tonnages)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -35,6 +35,7 @@
             Guard.ArgumentNotDefaultValue(() => startDate, startDate);
             Guard.ArgumentNotDefaultValue(() => endDate, endDate);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
+            Guard.ArgumentNotNull(() => tonnages, tonnages);
 
             Organisation = organisation;
             Status = status;
@@ -48,7 +49,7 @@
             NoteType = noteType;
             CreatedDate = SystemTime.UtcNow;
 
-            NoteTonnage = new List<NoteTonnage>();
+            NoteTonnage = tonnages;
         }
 
         /// <summary>
@@ -94,6 +95,6 @@
 
         public virtual int Reference { get; set; }
 
-        public virtual ICollection<NoteTonnage> NoteTonnage { get; set; }
+        public virtual ICollection<NoteTonnage> NoteTonnage { get; protected set; }
     }
 }

@@ -20,9 +20,8 @@
     using RequestHandlers.AatfReturn;
     using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
-    using Requests.Aatf;
-    using Requests.AatfEvidence;
-    using Requests.AatfReturn;
+    using Weee.Requests.Aatf;
+    using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
@@ -200,8 +199,7 @@
                 A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c => 
                     c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
                     && c.Reused.Equals(requestTonnageValue.SecondTonnage)
-                    && c.Received.Equals(requestTonnageValue.FirstTonnage)
-                    && c.Note.Equals(n)) != null))).MustHaveHappenedOnceExactly();
+                    && c.Received.Equals(requestTonnageValue.FirstTonnage)) != null))).MustHaveHappenedOnceExactly();
             }
 
             SystemTime.Unfreeze();
@@ -249,16 +247,16 @@
         public async Task HandleAsync_GivenRequest_ReferenceShouldBeReturned()
         {
             //act
-            var reference = fixture.Create<int>();
+            var id = fixture.Create<Guid>();
             var newNote = A.Fake<Note>();
-            A.CallTo(() => newNote.Reference).Returns(reference);
+            A.CallTo(() => newNote.Id).Returns(id);
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(newNote);
 
             //arrange
             var result = await handler.HandleAsync(request);
 
             //assert
-            result.Should().Be(reference);
+            result.Should().Be(id);
         }
 
         private CreateEvidenceNoteRequest Request()
