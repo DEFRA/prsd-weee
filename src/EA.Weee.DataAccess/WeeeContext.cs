@@ -183,6 +183,8 @@
 
         public virtual DbSet<NoteTonnage> NoteTonnages { get; set; }
 
+        public virtual DbSet<NoteStatusHistory> NoteStatusHistory { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)

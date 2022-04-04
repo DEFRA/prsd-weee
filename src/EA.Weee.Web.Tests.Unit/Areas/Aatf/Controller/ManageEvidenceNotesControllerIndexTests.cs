@@ -36,7 +36,7 @@
 
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
-            await Controller.Index(OrganisationId, AatfId);
+            await ManageEvidenceController.Index(OrganisationId, AatfId);
 
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -48,7 +48,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            await Controller.Index(organisationId, aatfId);
+            await ManageEvidenceController.Index(organisationId, aatfId);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
@@ -59,7 +59,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            await Controller.Index(organisationId, aatfId);
+            await ManageEvidenceController.Index(organisationId, aatfId);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId.Equals(organisationId)))).MustHaveHappened(1, Times.Exactly);
         }
@@ -75,7 +75,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
 
             //act
-            await Controller.Index(organisationId, aatfId);
+            await ManageEvidenceController.Index(organisationId, aatfId);
 
             //assert
             A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
@@ -102,7 +102,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await Controller.Index(organisationId, aatfId);
+            await ManageEvidenceController.Index(organisationId, aatfId);
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -127,7 +127,7 @@
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(model);
 
             //act
-            var result = await Controller.Index(organisationId, aatfId) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -139,7 +139,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var result = await Controller.Index(organisationId, aatfId) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
         }
@@ -169,7 +169,7 @@
                 AatfId = Fixture.Create<Guid>(),
             };
 
-            var result = Controller.Index(model) as RedirectToRouteResult;
+            var result = ManageEvidenceController.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("CreateEvidenceNote");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");

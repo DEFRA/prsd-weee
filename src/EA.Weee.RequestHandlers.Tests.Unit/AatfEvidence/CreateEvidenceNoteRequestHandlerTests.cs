@@ -70,7 +70,8 @@
                 DateTime.Now.AddDays(1),
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
-                fixture.CreateMany<TonnageValues>().ToList());
+                fixture.CreateMany<TonnageValues>().ToList(),
+                fixture.Create<Core.AatfEvidence.NoteStatus>());
 
             handler = new CreateEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
@@ -168,13 +169,23 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_NoteShouldBeAddedToContext()
+        public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
         {
             //act
             var date = DateTime.UtcNow;
             SystemTime.Freeze(date);
 
             //arrange
+            var request = new CreateEvidenceNoteRequest(organisation.Id,
+                aatf.Id,
+                scheme.Id,
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                fixture.Create<WasteType>(),
+                fixture.Create<Protocol>(),
+                fixture.CreateMany<TonnageValues>().ToList(),
+                Core.AatfEvidence.NoteStatus.Draft);
+
             await handler.HandleAsync(request);
 
             //assert
@@ -191,16 +202,74 @@
                                                                            n.CreatedById.Equals(userId.ToString()) &&
                                                                            n.NoteType.Equals(NoteType.EvidenceNote) &&
                                                                            n.Status.Equals(NoteStatus.Draft) &&
-                                                                           n.NoteTonnage.Count.Equals(request.TonnageValues.Count))))
+                                                                           n.NoteTonnage.Count.Equals(request.TonnageValues.Count) &&
+                                                                           n.NoteStatusHistory.Count.Equals(0))))
                                                                            .MustHaveHappenedOnceExactly();
 
             foreach (var requestTonnageValue in request.TonnageValues)
             {
-                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c => 
+                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c =>
                     c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
                     && c.Reused.Equals(requestTonnageValue.SecondTonnage)
                     && c.Received.Equals(requestTonnageValue.FirstTonnage)) != null))).MustHaveHappenedOnceExactly();
             }
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext()
+        {
+            //act
+            var date = SystemTime.UtcNow;
+            SystemTime.Freeze(date);
+
+            //arrange
+            var request = new CreateEvidenceNoteRequest(organisation.Id,
+                aatf.Id,
+                scheme.Id,
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                fixture.Create<WasteType>(),
+                fixture.Create<Protocol>(),
+                fixture.CreateMany<TonnageValues>().ToList(),
+                Core.AatfEvidence.NoteStatus.Submitted);
+
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(request.EndDate) &&
+
+                                                                           n.Aatf.Equals(aatf) &&
+                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.Organisation.Equals(organisation) &&
+                                                                           n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
+                                                                           n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
+                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.StartDate.Equals(request.StartDate) &&
+                                                                           n.EndDate.Equals(request.EndDate) &&
+                                                                           n.CreatedById.Equals(userId.ToString()) &&
+                                                                           n.NoteType.Equals(NoteType.EvidenceNote) &&
+                                                                           n.Status.Equals(NoteStatus.Submitted) &&
+                                                                           n.NoteTonnage.Count.Equals(request.TonnageValues.Count) &&
+                                                                           n.NoteStatusHistory.Count.Equals(1) &&
+                                                                           n.SubmittedById.Equals(userId.ToString()) &&
+                                                                           n.SubmittedDate.Equals(date))))
+                                                                           .MustHaveHappenedOnceExactly();
+
+            foreach (var requestTonnageValue in request.TonnageValues)
+            {
+                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTonnage.FirstOrDefault(c =>
+                    c.CategoryId.Equals((WeeeCategory)requestTonnageValue.CategoryId)
+                    && c.Reused.Equals(requestTonnageValue.SecondTonnage)
+                    && c.Received.Equals(requestTonnageValue.FirstTonnage)) != null))).MustHaveHappenedOnceExactly();
+            }
+
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteStatusHistory.First(c =>
+                c.ChangedById.Equals(userId.ToString()) &&
+                c.ChangedDate.Equals(date) &&
+                c.FromStatus.Equals(NoteStatus.Draft) &&
+                c.ToStatus.Equals(NoteStatus.Submitted)) != null))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
         }
@@ -219,7 +288,8 @@
                 DateTime.Now.AddDays(1),
                 null,
                 null,
-                new List<TonnageValues>());
+                new List<TonnageValues>(),
+                Core.AatfEvidence.NoteStatus.Draft);
 
             //arrange
             await handler.HandleAsync(newRequest);
@@ -238,7 +308,8 @@
                                                                            n.CreatedById.Equals(userId.ToString()) &&
                                                                            n.NoteType.Equals(NoteType.EvidenceNote) &&
                                                                            n.Status.Equals(NoteStatus.Draft) &&
-                                                                           n.NoteTonnage.Count.Equals(newRequest.TonnageValues.Count))))
+                                                                           n.NoteTonnage.Count.Equals(newRequest.TonnageValues.Count) &&
+                                                                           n.NoteStatusHistory.Count.Equals(0))))
                                                                            .MustHaveHappenedOnceExactly();
             SystemTime.Unfreeze();
         }
@@ -268,7 +339,8 @@
                 DateTime.Now.AddDays(1),
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
-                new List<TonnageValues>());
+                new List<TonnageValues>(),
+                fixture.Create<Core.AatfEvidence.NoteStatus>());
         }
     }
 }
