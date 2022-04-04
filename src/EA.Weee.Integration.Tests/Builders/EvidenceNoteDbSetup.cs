@@ -30,7 +30,6 @@
                 aatf,
                 NoteType.EvidenceNote,
                 user.UserId.ToString(),
-                NoteStatus.Draft,
                 new List<NoteTonnage>());
 
             return instance;
