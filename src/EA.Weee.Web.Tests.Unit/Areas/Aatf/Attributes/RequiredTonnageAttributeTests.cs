@@ -215,7 +215,7 @@
         {
             result.Should().BeFalse();
             validationResults.Select(v => v.ErrorMessage).Should()
-                .Contain("Enter a tonnage value for at least one category");
+                .Contain("Enter a tonnage value for at least one category. The value must be 3 decimal places or less.");
         }
 
         private class NotValidValidationTarget
