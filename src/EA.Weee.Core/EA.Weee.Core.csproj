@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\NoteStatus.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValues.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteData.cs" />

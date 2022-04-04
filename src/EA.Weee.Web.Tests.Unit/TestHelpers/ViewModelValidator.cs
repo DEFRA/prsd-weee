@@ -6,7 +6,7 @@
     public static class ViewModelValidator
     {
         /// <summary>
-        /// Checks the ViewModel according to the logic used by the MVC Controller ModelState.IsValid check.
+        /// Checks the ViewModel according to the logic used by the MVC ManegeEvidenceController ModelState.IsValid check.
         /// </summary>
         /// <param name="viewModel">The ViewModel object to check.</param>
         /// <returns>A list of validation results.</returns>
