@@ -9,6 +9,7 @@
     using Prsd.Core;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
+    using Weee.Requests.AatfEvidence;
     using Xunit;
 
     public class RequiredTonnageAttributeTests
@@ -31,6 +32,36 @@
         public void RequiredTonnageAttribute_ShouldBeDerivedFrom_RequiredAttribute()
         {
             typeof(RequiredTonnageAttribute).Should().BeDerivedFrom<RequiredAttribute>();
+        }
+
+        [Fact]
+        public void RequiredTonnageAttribute_GivenValuesIsNull_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var target = ValidViewModel(SystemTime.Now, ActionEnum.Submit);
+            target.CategoryValues = null;
+
+            var context = new ValidationContext(target);
+
+            //act
+            var result = Record.Exception(() => Validator.TryValidateObject(target, context, validationResults, true));
+
+            //assert
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void RequiredTonnageAttribute_GivenModelIsNotValidViewModel_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var target = new NotValidValidationTarget();
+            var context = new ValidationContext(target);
+
+            //act
+            var result = Record.Exception(() => Validator.TryValidateObject(target, context, validationResults, true));
+
+            //assert
+            result.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]

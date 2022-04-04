@@ -20,7 +20,7 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: AatfEvidenceRedirect.ViewEvidenceRouteName,
+                name: AatfEvidenceRedirect.ViewDraftEvidenceRouteName,
                 url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-draft-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Draft },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
