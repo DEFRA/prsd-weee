@@ -9,7 +9,6 @@
     using Prsd.Core;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
-    using Weee.Requests.AatfEvidence;
     using Xunit;
 
     public class RequiredTonnageAttributeTests
@@ -72,7 +71,7 @@
             SystemTime.Freeze(date);
 
             var target = ValidViewModel(date, ActionEnum.Save);
-            target.CategoryValues = null;
+            target.CategoryValues = new List<EvidenceCategoryValue>();
 
             var context = new ValidationContext(target);
 
@@ -150,26 +149,6 @@
             //assert
             result.Should().BeTrue();
             validationResults.Should().BeEmpty();
-
-            SystemTime.Unfreeze();
-        }
-
-        [Fact]
-        public void RequiredTonnageAttribute_GivenSubmitAndNullTonnageValues_ValidationFailedShouldBeReturned()
-        {
-            //arrange
-            var date = new DateTime(2022, 3, 1);
-            SystemTime.Freeze(date);
-
-            var target = ValidViewModel(date, ActionEnum.Submit);
-            target.CategoryValues = null;
-
-            var context = new ValidationContext(target);
-
-            var result = Validator.TryValidateObject(target, context, validationResults, true);
-
-            //assert
-            ShouldBeInvalid(result);
 
             SystemTime.Unfreeze();
         }
