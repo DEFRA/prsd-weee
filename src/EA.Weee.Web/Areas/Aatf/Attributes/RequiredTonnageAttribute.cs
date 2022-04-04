@@ -26,7 +26,7 @@
 
             if (model.Action.Equals(ActionEnum.Submit))
             {
-                if (list == null || list.Any())
+                if (list == null || !list.Any())
                 {
                     return new ValidationResult(Message);
                 }
