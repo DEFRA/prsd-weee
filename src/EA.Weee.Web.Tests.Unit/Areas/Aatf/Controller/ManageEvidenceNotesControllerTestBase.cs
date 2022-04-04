@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Api.Client;
     using AutoFixture;
+    using Core.AatfEvidence;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Services;
@@ -21,14 +22,14 @@
     {
         protected readonly IWeeeClient WeeeClient;
         protected readonly IMapper Mapper;
-        protected readonly ManageEvidenceNotesController Controller;
+        protected readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly BreadcrumbService Breadcrumb;
         protected readonly IWeeeCache Cache;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> CreateRequestCreator;
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
-        protected readonly int EvidenceNoteId;
+        protected readonly Guid EvidenceNoteId;
 
         public ManageEvidenceNotesControllerTestsBase()
         {
@@ -40,16 +41,16 @@
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
-            EvidenceNoteId = 10;
-            Controller = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
+            EvidenceNoteId = Guid.NewGuid();
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
         }
 
         protected void AddModelError()
         {
-            Controller.ModelState.AddModelError("error", "error");
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
         }
 
-        protected CreateEvidenceNoteRequest Request()
+        protected CreateEvidenceNoteRequest Request(NoteStatus status = NoteStatus.Draft)
         {
             return new CreateEvidenceNoteRequest(Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -58,7 +59,8 @@
                 DateTime.Now,
                 null,
                 null,
-                new List<TonnageValues>());
+                new List<TonnageValues>(),
+                status);
         }
 
         protected EvidenceNoteViewModel ValidModel()

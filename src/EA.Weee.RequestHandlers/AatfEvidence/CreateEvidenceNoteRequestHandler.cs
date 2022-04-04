@@ -17,7 +17,7 @@
     using Protocol = Domain.Evidence.Protocol;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, int>
+    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -35,7 +35,7 @@
             this.userContext = userContext;
         }
 
-        public async Task<int> HandleAsync(CreateEvidenceNoteRequest message)
+        public async Task<Guid> HandleAsync(CreateEvidenceNoteRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
@@ -76,12 +76,15 @@
                 aatf,
                 NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
-                NoteStatus.Draft,
                 tonnageValues.ToList());
 
-            var newNote = await genericDataAccess.Add(evidenceNote);
+            if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
+            {
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+            }
 
-            return newNote.Reference;
+            var newNote = await genericDataAccess.Add(evidenceNote);
+            return newNote.Id;
         }
     }
 }
