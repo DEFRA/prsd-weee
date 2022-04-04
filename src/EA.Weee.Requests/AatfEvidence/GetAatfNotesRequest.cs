@@ -4,15 +4,16 @@
     using EA.Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
+    using Core.AatfEvidence;
 
     [Serializable]
-    public class GetDraftReturnedNotesRequest : IRequest<List<EditDraftReturnedNotesRequest>>
+    public class GetAatfNotesRequest : IRequest<List<EvidenceNoteData>>
     {
         public Guid OrganisationId { get; set; }
 
         public Guid AatfId { get; set; }
 
-        public GetDraftReturnedNotesRequest(Guid organisationId, Guid aatfId)
+        public GetAatfNotesRequest(Guid organisationId, Guid aatfId)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);

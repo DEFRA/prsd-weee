@@ -9,29 +9,30 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.AatfEvidence;
 
-    public class GetDraftReturnedNotesRequestHandler : IRequestHandler<GetDraftReturnedNotesRequest, List<EditDraftReturnedNotesRequest>>
+    public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfDataAccess aatfDataAccess;
-        private readonly IMap<Note, EditDraftReturnedNotesRequest> mapper;
+        private readonly IMapper mapper;
 
-        public GetDraftReturnedNotesRequestHandler(IWeeeAuthorization authorization,
-           IAatfDataAccess aatfDataAccess, IMap<Note, EditDraftReturnedNotesRequest> mapper)
+        public GetAatfNotesRequestHandler(IWeeeAuthorization authorization,
+           IAatfDataAccess aatfDataAccess, IMapper mapper)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
             this.mapper = mapper;
         }
 
-        public async Task<List<EditDraftReturnedNotesRequest>> HandleAsync(GetDraftReturnedNotesRequest message)
+        public async Task<List<EvidenceNoteData>> HandleAsync(GetAatfNotesRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var notes = await aatfDataAccess.GetAllNotes(message.OrganisationId, message.AatfId);
 
-            return notes.Select(a => mapper.Map(a)).ToList();
+            return notes.Select(a => mapper.Map<Note, EvidenceNoteData>(a)).ToList();
         }
     }
 }
