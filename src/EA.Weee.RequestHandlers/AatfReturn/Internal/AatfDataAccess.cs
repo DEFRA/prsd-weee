@@ -34,9 +34,9 @@
             return await GetAatfById(id);
         }
 
-        public async Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId)
+        public async Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
         {
-            return await GetAllNotesByIds(organisationId, aatfId);
+            return await GetAllNotesByIds(organisationId, aatfId, allowedStatuses);
         }
 
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
@@ -124,15 +124,10 @@
             return aatf;
         }
 
-        private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId)
+        private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
         {
-            var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId).ToListAsync();
-
-            //TODO://remove uncommented - AATf could have no notes
-            //if (notes == null)
-            //{
-            //    throw new ArgumentException($"Notes for organisation {organisationId} and aatf {aatfId} not found");
-            //}
+            var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId && allowedStatuses.Contains(p.Status.Value))
+                .ToListAsync();
 
             return notes;
         }
