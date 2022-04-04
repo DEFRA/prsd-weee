@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Scheme;
     using FluentAssertions;
-    using Prsd.Core.Domain;
     using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;

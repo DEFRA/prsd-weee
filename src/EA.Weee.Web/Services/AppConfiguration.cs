@@ -41,11 +41,17 @@
 
         public string DonePageUrl { get; set; }
 
-        [DefaultValue("false")]
+        [DefaultValue(false)]
         public bool EnableDataReturns { get; set; }
 
-        [DefaultValue("false")]
+        [DefaultValue(false)]
         public bool EnableAATFReturns { get; set; }
+
+        /// <summary>
+        /// defines whether the radio-button option "Manage PCS evidence notes" will be available in menu or not
+        /// </summary>
+        [DefaultValue(false)]
+        public bool EnablePCSEvidenceNotes { get; set; }
 
         [DefaultValue(false)]
         public bool EnableAATFEvidenceNotes { get; set; }

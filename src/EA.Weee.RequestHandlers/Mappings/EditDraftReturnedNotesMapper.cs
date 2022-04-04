@@ -1,19 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using Core.AatfEvidence;
     using EA.Weee.Domain.Evidence;
-    using EA.Weee.Requests.AatfEvidence;
     using Prsd.Core.Mapper;
 
-    public class EditDraftReturnedNotesMapper : IMap<Note, EditDraftReturnedNotesRequest>
+    public class EditDraftReturnedNotesMapper : IMap<Note, EvidenceNoteData>
     {
-        public EditDraftReturnedNotesRequest Map(Note source)
+        public EvidenceNoteData Map(Note source)
         {
-            return new EditDraftReturnedNotesRequest
+            return new EvidenceNoteData
             {
                 RecipientId = source.Recipient.Id,
-                ReferenceId = source.Reference,
-                Status = source.Status.DisplayName.ToString(),
-                WasteType = source.WasteType.HasValue ? source.WasteType.Value.ToString() : string.Empty,
+                Reference = source.Reference,
+                Status = (Core.AatfEvidence.NoteStatus)source.Status.Value,
+                WasteType = source.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)source.WasteType.Value : null,
             };
         }
     }

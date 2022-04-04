@@ -34,6 +34,8 @@
 
         bool EnableAATFReturns { get; set; }
 
+        bool EnablePCSEvidenceNotes { get; set; }
+
         bool EnableAATFEvidenceNotes { get; set; }
 
         /// <summary>

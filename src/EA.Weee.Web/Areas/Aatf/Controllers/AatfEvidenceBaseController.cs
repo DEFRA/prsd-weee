@@ -4,7 +4,7 @@
     using Aatf.Attributes;
     using Web.Controllers.Base;
 
-    [ValidateEvidenceEnabled]
+    [ValidateAatfEvidenceEnabled]
 
     public abstract class AatfEvidenceBaseController : ExternalSiteController
     {
