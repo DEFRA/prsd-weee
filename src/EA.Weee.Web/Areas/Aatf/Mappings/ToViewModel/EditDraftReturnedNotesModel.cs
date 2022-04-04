@@ -1,16 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
     using EA.Prsd.Core;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using System;
 
-    public class EditDraftReturnedNotesModel
+    public class EditDraftReturnedNotesModel 
     {
-        public EditDraftReturnedNotesModel(int referenceId, Guid recipientId, string status, string wasteType)
+        public EditDraftReturnedNotesModel(int referenceId, string recipient, NoteStatus status, WasteType? wasteType)
         {
             Guard.ArgumentNotDefaultValue(() => referenceId, referenceId);
-            Guard.ArgumentNotDefaultValue(() => recipientId, recipientId);
 
-            this.RecipientId = recipientId;
+            this.Recipient = recipient;
             this.ReferenceId = referenceId;
             this.Status = status;
             this.WasteType = wasteType;
@@ -18,10 +19,10 @@
 
         public int ReferenceId { get; set; }
 
-        public Guid RecipientId { get; set; }
+        public string Recipient { get; set; }
 
-        public string Status { get; set; }
+        public NoteStatus Status { get; set; }
         
-        public string WasteType { get; set; }
+        public WasteType? WasteType { get; set; }
     }
 }

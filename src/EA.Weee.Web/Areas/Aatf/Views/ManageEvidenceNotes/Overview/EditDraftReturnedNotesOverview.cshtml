@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Web.Areas.Aatf.Controllers
 @using EA.Weee.Core.Shared
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EditDraftReturnedNotesViewModel
 
@@ -25,10 +26,43 @@
                         Status
                     </th>
                 </tr>
-                </thead>
-            </table>
+            </thead>
+            <tbody class="govuk-table__body">
+                @if (Model.ListOfNotes.Any())
+                {
+                    foreach (EditDraftReturnedNote note in Model.ListOfNotes)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@note.ReferenceId</td>
+                            <td class="govuk-table__cell">@note.Recipient</td>
+                            @if (note.TypeOfWaste.HasValue)
+                            {
+                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell"> </td>
+                            }
+
+                            <td class="govuk-table__cell">@note.Status.ToString() </td>
+                            <td class="govuk-table__cell">
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td> <p>There are currently no draft or returned evidence notes </p></td>
+                    </tr>
+                    <tr>
+                        <td> <p>   Showing 0 - 0 of 0 </p></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
         <br />
-      
     </section>
 
 </div>

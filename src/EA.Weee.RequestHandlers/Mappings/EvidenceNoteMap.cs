@@ -8,9 +8,11 @@
     {
         public EvidenceNoteData Map(EvidenceNoteMappingTransfer source)
         {
-            return new EvidenceNoteData(source.SchemeData, source.AatfData)
+            return new EvidenceNoteData
             {
                 Reference = source.Note.Reference,
+                SchemeData = source.SchemeData,
+                AatfData = source.AatfData
             };
         }
     }
