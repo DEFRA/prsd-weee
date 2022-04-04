@@ -132,6 +132,8 @@
 
                 //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
+                model.OrganisationId = organisationId;
+                model.AatfId = aatfId;
 
                 SetSuccessMessage(result, model);
                 
