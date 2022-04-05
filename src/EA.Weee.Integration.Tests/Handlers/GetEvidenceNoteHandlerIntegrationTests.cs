@@ -30,41 +30,32 @@
     public class GetEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenICreateADraftEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetADraftEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                aatf = AatfDbSetup.Init().WithOrganisation(organisation).Create();
-                scheme = SchemeDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
-                var categories = new List<TonnageValues>()
+                var categories = new List<NoteTonnage>()
                 {
-                    new TonnageValues(Guid.Empty, (int)WeeeCategory.AutomaticDispensers, 2, 1),
-                    new TonnageValues(Guid.Empty, (int)WeeeCategory.ConsumerEquipment, null, null),
-                    new TonnageValues(Guid.Empty, (int)WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
                 };
 
-                note = EvidenceNoteDbSetup.Init()
-                request = new GetEvidenceNoteRequest(organisation.Id,
-                    aatf.Id,
-                    scheme.Id,
-                    DateTime.Now,
-                    DateTime.Now.AddDays(1),
-                    fixture.Create<WasteType>(),
-                    fixture.Create<Protocol>(),
-                    categories.ToList(),
-                    Core.AatfEvidence.NoteStatus.Draft);
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
+
+                request = new GetEvidenceNoteRequest(note.Id, organisation.Id);
             };
 
             private readonly Because of = () =>
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveCreatedEvidenceNote = () =>
@@ -79,14 +70,54 @@
             };
         }
 
+        [Component]
+        public class WhenIGetASubmittedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
+                note.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+
+                request = new GetEvidenceNoteRequest(note.Id, organisation.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            {
+                note.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                note.Status.Should().Be(NoteStatus.Submitted);
+            };
+        }
+
         public class GetEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
-            protected static Aatf aatf;
-            protected static CreateEvidenceNoteRequest request;
-            protected static Scheme scheme;
-            protected static Guid result;
+            protected static GetEvidenceNoteRequest request;
+            protected static EvidenceNoteData result;
             protected static Note note;
             protected static Fixture fixture;
 
@@ -104,23 +135,23 @@
             }
             protected static void ShouldMapToNote()
             {
-                note.CreatedById.Should().Be(UserId.ToString());
-                note.Aatf.Should().Be(aatf);
-                note.EndDate.Date.Should().Be(request.EndDate.Date);
-                note.StartDate.Date.Should().Be(request.StartDate.Date);
-                note.WasteType.ToInt().Should().Be(request.WasteType.ToInt());
-                note.Protocol.ToInt().Should().Be(request.Protocol.ToInt());
-                note.Recipient.Should().Be(scheme);
-                note.Reference.Should().BeGreaterThan(0);
-                note.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
-                note.Organisation.Should().Be(organisation);
-                note.NoteType.Should().Be(NoteType.EvidenceNote);
-                note.NoteTonnage.Count.Should().Be(request.TonnageValues.Count);
-                foreach (var noteTonnage in request.TonnageValues)
+                result.EndDate.Should().Be(note.EndDate);
+                result.StartDate.Should().Be(note.StartDate);
+                result.Reference.Should().Be(note.Reference);
+                result.Protocol.ToInt().Should().Be(note.Protocol.ToInt());
+                result.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
+                result.AatfData.Should().NotBeNull();
+                result.AatfData.Id.Should().Be(note.Aatf.Id);
+                result.SchemeData.Should().NotBeNull();
+                result.SchemeData.Id.Should().Be(note.Recipient.Id);
+                result.EvidenceTonnageData.Count.Should().Be(3);
+                result.OrganisationData.Should().NotBeNull();
+                result.OrganisationData.Id.Should().Be(note.Organisation.Id);
+                foreach (var noteTonnage in note.NoteTonnage)
                 {
-                    note.NoteTonnage.Should().Contain(n => n.Received.Equals(noteTonnage.FirstTonnage) &&
-                                                           n.Reused.Equals(noteTonnage.SecondTonnage) &&
-                                                           n.CategoryId.Equals((WeeeCategory)noteTonnage.CategoryId));
+                    result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
+                                                             n.Reused.Equals(noteTonnage.Reused) &&
+                                                             ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
             }
         }

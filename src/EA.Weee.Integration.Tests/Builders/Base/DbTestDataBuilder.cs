@@ -24,7 +24,6 @@
             var userContext = Container.Resolve<IUserContext>();
             var eventDispatcher = Container.Resolve<IEventDispatcher>();
             DbContext = new WeeeContext(userContext, eventDispatcher);
-                //DbContext = Container.Resolve<WeeeContext>();
             Fixture = new Fixture();
         }
 
