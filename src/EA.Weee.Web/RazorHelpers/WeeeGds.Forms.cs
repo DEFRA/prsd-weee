@@ -97,6 +97,7 @@
             builder.AddCssClass("govuk-button");
             builder.Attributes.Add("data-module", "govuk-button");
             builder.Attributes.Add("data-prevent-double-click", "true");
+            builder.Attributes.Add("type", "submit");
             builder.MergeAttributes(htmlAttributes);
             
             return MvcHtmlString.Create(builder.ToString());
