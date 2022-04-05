@@ -34,5 +34,11 @@
         {
             return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);
         }
+
+        public NoteStatusHistory GetLatestNoteStatusHistoryForNote(Guid noteId)
+        {
+            return dbContext.NoteStatusHistory.Where(n => n.NoteId.Equals(noteId))
+                .OrderByDescending(n => n.ChangedDate).FirstOrDefault();
+        }
     }
 }

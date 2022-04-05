@@ -85,6 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\EvidenceDataAccess.cs" />
+    <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Mappings\AatfContactMapping.cs" />
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
+    <Compile Include="Mappings\EvidenceNoteStatusHistoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTonnageMapping.cs" />
     <Compile Include="Mappings\NoteTypeMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteStatusMapping.cs" />
