@@ -38,7 +38,6 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.OrganisationId)
                 @Html.HiddenFor(m => m.AatfId)
-                <p>Choose what you would like to view below. A summary of total evidence, editable notes or all other evidence notes.</p>
 
                 @(this.WeeeGds().Submit("Create new evidence note"))
             }
