@@ -5,6 +5,7 @@
     using System.Linq;
     using Api.Identity;
     using Autofac;
+    using AutoFixture;
     using Base;
     using Domain;
     using Domain.AatfReturn;
@@ -16,6 +17,13 @@
     {
         protected override Note Instantiate()
         {
+            DefaultNote(new List<NoteTonnage>());
+
+            return instance;
+        }
+
+        private void DefaultNote(List<NoteTonnage> tonnages)
+        {
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var scheme = DbContext.Schemes.First(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
             var aatf = DbContext.Aatfs.First(s => s.Name.Equals(TestingConstants.TestCompanyName));
@@ -25,19 +33,24 @@
                 scheme,
                 DateTime.Now,
                 DateTime.Now.AddDays(10),
-                WasteType.HouseHold,
-                Protocol.Actual,
+                Fixture.Create<WasteType>(),
+                Fixture.Create<Protocol>(),
                 aatf,
                 NoteType.EvidenceNote,
                 user.UserId.ToString(),
-                new List<NoteTonnage>());
-
-            return instance;
+                tonnages);
         }
 
-        protected EvidenceNoteDbSetup WithOrganisation(Organisation organisation)
+        public EvidenceNoteDbSetup WithOrganisation(Guid organisationId)
         {
-            instance.UpdateOrganisation(organisation);
+            instance.UpdateOrganisation(organisationId);
+
+            return this;
+        }
+
+        public EvidenceNoteDbSetup WithTonnages(List<NoteTonnage> tonnages)
+        {
+            DefaultNote(tonnages);
 
             return this;
         }
