@@ -54,7 +54,7 @@
                         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
                             @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                             @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                            @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-input" }, useHalfWidth: false, withLookAhead: true)
+                            @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
                             @Html.Gds().LabelFor(m => m.WasteTypeValue, new { @class = "govuk-label--s" }, false)
                             @Html.Gds().ValidationMessageFor(m => m.WasteTypeValue)
-                            @Html.Gds().DropDownListFor(m => m.WasteTypeValue, Model.WasteTypeList, string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
+                            @Html.Gds().DropDownListFor(m => m.WasteTypeValue, Model.WasteTypeList, string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false)
 
                         </div>
                     </div>
@@ -74,25 +74,32 @@
                         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.ProtocolValue)">
                             @Html.Gds().LabelFor(m => m.ProtocolValue, new { @class = "govuk-label--s" }, false)
                             @Html.Gds().ValidationMessageFor(m => m.ProtocolValue)
-                            @Html.Gds().DropDownListFor(m => m.ProtocolValue, Model.ProtocolList, string.Empty, new { @class = "govuk-input" }, useHalfWidth: false)
+                            @Html.Gds().DropDownListFor(m => m.ProtocolValue, Model.ProtocolList, string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false)
                         </div>
                     </div>
                 </div>
             </div>
 
 
-            <div class="govuk-grid-column-full">
-                <p class="govuk-!-padding-top-5">
-                    Input tonnage below
-                    <br />
-                    Provide tonnage to 3 decimal places. For example 1.238
-                </p>
-                <table class="govuk-table">
+            <div class="govuk-grid-column-full govuk-!-padding-top-3">
+                
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues)">
+                    
+                    <p class="govuk-!-padding-top-5">
+                        Input tonnage below
+                        <br/>
+                        Provide tonnage to 3 decimal places. For example 1.238
+                    </p>
+                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues)
+                </div>
+
+                <table class="govuk-table" id="#CategoryValues">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
                     <thead class="govuk-table__head">
                         <tr>
                             <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
-                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Total received (tonnes)</th>
-                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter weee-tonnage-right-aligned-display">Re-used as whole appliances (tonnes)</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Re-used as whole appliances (tonnes)</th>
                         </tr>
                     </thead>
 
@@ -129,13 +136,13 @@
 
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">
-                                <h2 class="govuk-heading-m">Total</h2>
+                                <p class="govuk-body"><strong>Total</strong></p>
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</h2>
+                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal"><strong>@Model.ReceivedTotal</strong></p>
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <h2 class="govuk-heading-m weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</h2>
+                                <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal"><strong>@Model.ReusedTotal</strong></p>
                             </td>
                         </tr>
 
@@ -143,8 +150,12 @@
                 </table>
 
                 <div class="govuk-!-margin-top-3">
+                    
+                    <div class="govuk-button-group">
+                        @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id="submit-note" })
 
-                    @this.WeeeGds().SecondaryButton("Save as draft", new { name="Action", value=ActionEnum.Save })
+                        @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id="save-note" })
+                    </div>
 
                 </div>
             </div>

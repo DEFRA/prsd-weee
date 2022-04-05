@@ -22,7 +22,7 @@
         {
             var button = htmlHelper.Button("my button");
 
-            button.ToHtmlString().Should().Be(@"<button class=""govuk-button"" data-module=""govuk-button"" data-prevent-double-click=""true"">my button</button>");
+            button.ToHtmlString().Should().Be(@"<button class=""govuk-button"" data-module=""govuk-button"" data-prevent-double-click=""true"" type=""submit"">my button</button>");
         }
 
         [Fact]
@@ -30,7 +30,7 @@
         {
             var button = htmlHelper.SecondaryButton("my button");
 
-            button.ToHtmlString().Should().Be(@"<button class=""govuk-button govuk-button--secondary"" data-module=""govuk-button"" data-prevent-double-click=""true"">my button</button>");
+            button.ToHtmlString().Should().Be(@"<button class=""govuk-button govuk-button--secondary"" data-module=""govuk-button"" data-prevent-double-click=""true"" type=""submit"">my button</button>");
         }
     }
 }
