@@ -1,0 +1,26 @@
+﻿@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ManageEvidenceNoteViewModel
+
+
+@Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+
+<section class="govuk-tabs__panel" id="pcsDetails">
+    <h1 class="govuk-heading-l">
+        Review submitted evidence notes
+    </h1>
+    @using (Html.BeginForm(actionName: "ApplyFilter", controllerName: "Aatf", method: FormMethod.Post))
+    {
+<div class="filter">
+    <div class="govuk-label">Search by reference ID</div>
+    <br />
+    <div class="govuk-label">Filter by:</div>
+    <br />
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+
+        </tbody>
+    </table>
+</div>
+    }
+</section>
