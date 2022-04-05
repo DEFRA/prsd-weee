@@ -26,16 +26,23 @@
 
         public int Reference { get; set; }
 
+        public Guid RecipientId { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }
 
         public AatfData AatfData { get; set; }
-
         public OrganisationData OrganisationData { get; set; }
 
         public EvidenceNoteData()
         {
+        }
+
+        public EvidenceNoteData(SchemeData schemeData)
+        {
+            Guard.ArgumentNotNull(() => schemeData, schemeData);
+            SchemeData = schemeData;
         }
 
         public EvidenceNoteData(SchemeData schemeData, AatfData aatfData)
