@@ -2,15 +2,14 @@
 {
     using System;
 
-    public class ManageEvidenceNoteViewModel : ManageEvidenceNoteOverviewViewModel
+    public class ManageEvidenceNoteViewModel
     {
         public string AatfName { get; set; }
 
         public bool SingleAatf { get; set; }
 
-        public ManageEvidenceNoteViewModel()
-         : base(ManageEvidenceOverviewDisplayOption.EvidenceSummary)
-        {
-        }
+        public Guid OrganisationId { get; set; }
+
+        public Guid AatfId { get; set; }
     }
 }
