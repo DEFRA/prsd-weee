@@ -128,9 +128,6 @@
         private string GetJavascriptEnabledBlankSummary()
         {
             return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert'>
-                        <ul class='error-summary-list govuk-list govuk-error-summary__list'>
-                            <li style='display:none'></li>
-                        </ul>
                     </div>";
         }
 
