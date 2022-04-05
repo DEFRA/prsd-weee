@@ -1,0 +1,28 @@
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+{
+    using System;
+    using System.Collections.Generic;
+    using Core.AatfEvidence;
+    using Core.AatfReturn;
+    using Prsd.Core;
+
+    public class EditDraftReturnNotesViewModelTransfer
+    {
+        public Guid OrganisationId { get; protected set; }
+
+        public Guid AatfId { get; protected set; }
+
+        public List<EvidenceNoteData> Notes { get; protected set; }
+
+        public EditDraftReturnNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes)
+        {
+            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
+            Guard.ArgumentNotNull(() => notes, notes);
+            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+
+            OrganisationId = organisationId;
+            AatfId = aatfId;
+            Notes = notes;
+        }
+    }
+}
