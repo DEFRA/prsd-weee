@@ -11,7 +11,7 @@
         public Guid OrganisationId { get; set; }
 
         [DisplayName("Which site would you like to manage evidence notes for?")]
-        [Required(ErrorMessage = "Select the site you would like to manage")]
+        [Required(ErrorMessage = "Select the site you would like to manage evidence notes for")]
         public Guid? SelectedId { get; set; }
 
         public IReadOnlyList<AatfData> AatfList { get; set; }
@@ -32,7 +32,7 @@
                 if (!instance.SelectedId.HasValue)
                 {
                     validationResults.Add(
-                        new ValidationResult($"Select the site you would like to manage"));
+                        new ValidationResult($"Select the site you would like to manage evidence notes for"));
                 }
             }
 
