@@ -23,7 +23,7 @@
 
         public EvidenceNoteData Map(EvidenceNoteMappingTransfer source)
         {
-            return new EvidenceNoteData()
+            return new EvidenceNoteData
             {
                 Reference = source.Note.Reference,
                 Type = (NoteType)source.Note.NoteType.Value,
@@ -34,7 +34,7 @@
                 WasteType = source.Note.WasteType.HasValue ? (WasteType?)source.Note.WasteType.Value : null,
                 EvidenceTonnageData = source.Note.NoteTonnage.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList(),
-                SchemeData  = mapper.Map<Scheme, SchemeData>(source.Note.Recipient),
+                SchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Note.Aatf)
             };
