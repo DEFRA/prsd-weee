@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\GetEvidenceNoteHandler.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Mappings\EvidenceNoteMap.cs" />
+    <Compile Include="Mappings\EvidenceNoteMappingTransfer.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Scheme\AddSchemeHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />

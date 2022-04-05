@@ -3,6 +3,7 @@
     using Aatf.Controllers;
     using Infrastructure;
     using System.Web.Mvc;
+    using Core.AatfEvidence;
 
     public class AatfAreaRegistration : AreaRegistration
     {
@@ -13,9 +14,15 @@
             context.Routes.MapMvcAttributeRoutes();
 
             context.MapLowercaseDashedRoute(
-                name: AatfEvidenceRedirect.ViewEvidenceRouteName,
-                url: "Aatf/{organisationId}/{controller}/{aatfId}/{action}/{evidenceNoteId}",
-                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes" },
+                name: AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-submitted-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Submitted },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewDraftEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-draft-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Draft },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(

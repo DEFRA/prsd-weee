@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\GetEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequest.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisation.cs" />
     <Compile Include="Admin\GetAatfsByOrganisationId.cs" />
+    <Compile Include="Organisations\FindMatchingPartialOrganisations.cs" />
     <Compile Include="Organisations\GetActiveOrganisationUsers.cs" />
     <Compile Include="Organisations\GetContact.cs" />
     <Compile Include="Organisations\GetAddress.cs" />
