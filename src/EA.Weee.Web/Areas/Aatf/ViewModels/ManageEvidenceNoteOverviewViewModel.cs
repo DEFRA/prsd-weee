@@ -8,6 +8,8 @@
 
         public Guid AatfId { get; set; }
 
+        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
+
         protected ManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
         {
             ActiveOverviewDisplayOption = activeOverviewDisplayOption;
