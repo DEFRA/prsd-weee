@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using Core.AatfEvidence;
-    using Extensions;
+    using Core.Helpers;
+    using System.ComponentModel;
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
@@ -12,13 +11,7 @@
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
 
         [DisplayName("Reference ID")]
-        public string ReferenceDisplay
-        {
-            get
-            {
-                return $"{Type.ToDisplayString()}{Reference}";
-            }
-        }
+        public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [DisplayName("Protocol")]
         public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.ToString() : "-";
