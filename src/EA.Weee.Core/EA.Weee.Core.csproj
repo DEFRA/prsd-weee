@@ -99,7 +99,6 @@
     <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValues.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteData.cs" />
-    <Compile Include="AatfEvidence\NoteStatus.cs" />
     <Compile Include="AatfEvidence\Protocol.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
     <Compile Include="AatfEvidence\WasteType.cs" />
