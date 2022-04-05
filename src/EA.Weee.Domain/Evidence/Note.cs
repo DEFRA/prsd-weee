@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
@@ -89,13 +90,17 @@
         /// Should only be used for integration tests
         /// </summary>
         /// <param name="organisation"></param>
-        public void UpdateOrganisation(Organisation organisation)
+        public void UpdateOrganisation(Guid organisationId)
         {
-            Guard.ArgumentNotNull(() => organisation, organisation);
+            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
 
-            Organisation = organisation;
+            OrganisationId = organisationId;
+            Organisation = null;
         }
 
+        public virtual Guid OrganisationId { get; private set; }
+
+        [ForeignKey("OrganisationId")]
         public virtual Organisation Organisation { get; private set; }
 
         public virtual Scheme Recipient { get; private set; }
