@@ -192,6 +192,7 @@
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\CreateEvidenceNoteHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetAatfNotesRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemesExternalHandlerIntegrationTests.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
