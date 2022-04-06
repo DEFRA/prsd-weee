@@ -14,7 +14,8 @@
                 ReferenceId = source.ReferenceId,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,
-                Id = source.Id
+                Id = source.Id,
+                Type = source.Type
             };
         }
     }

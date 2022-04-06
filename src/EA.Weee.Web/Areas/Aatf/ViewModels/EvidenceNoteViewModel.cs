@@ -70,6 +70,10 @@
 
         public Guid AatfId { get; set; }
 
+        public NoteStatus Status { get; set; }
+
+        public NoteType Type { get; set; }
+
         private void AddCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
         {
             CategoryValues = new List<EvidenceCategoryValue>();
