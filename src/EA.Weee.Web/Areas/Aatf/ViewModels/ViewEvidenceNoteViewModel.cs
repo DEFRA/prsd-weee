@@ -9,7 +9,6 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
-
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
         public string SuccessMessage { get; set; }
