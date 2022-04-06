@@ -360,18 +360,26 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnedNotesModel.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewDraftReturnedNotesModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOption.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteOverviewViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationController.cs" />
@@ -628,6 +636,9 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EditDraftReturnedNotesOverview.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_CreateEvidenceNotePartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewSubmittedEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
@@ -970,7 +981,6 @@
     <Content Include="Content\govuk_frontend\template.njk" />
     <Content Include="Content\govuk_frontend\_base.scss" />
     <Content Include="Content\.gitignore" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Index.cshtml" />
     <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
