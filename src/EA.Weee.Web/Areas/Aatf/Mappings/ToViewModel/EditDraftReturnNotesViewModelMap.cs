@@ -25,8 +25,7 @@
             {
                 foreach (var res in source.Notes)
                 {
-                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>
-                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType)));
+                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>(new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id)));
                 }
             }
 
