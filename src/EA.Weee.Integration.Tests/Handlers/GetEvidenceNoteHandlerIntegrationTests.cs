@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
@@ -15,6 +16,7 @@
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
+    using Domain.User;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core;
@@ -48,7 +50,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
-                request = new GetEvidenceNoteRequest(note.Id, organisation.Id);
+                request = new GetEvidenceNoteRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -87,10 +89,15 @@
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
                 };
 
-                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
-                note.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-
-                request = new GetEvidenceNoteRequest(note.Id, organisation.Id);
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    })
+                    .Create();
+                
+                request = new GetEvidenceNoteRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -110,6 +117,44 @@
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Submitted);
             };
+        }
+
+        [Component]
+        public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                note = EvidenceNoteDbSetup.Init().Create();
+
+                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+            };
+
+            private readonly Because of = () =>
+            {
+                CatchExceptionAsync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldHaveCaughtArgumentNullException = ShouldThrowException<ArgumentNullException>;
+        }
+
+        [Component]
+        public class WhenIGetANotesWhereUserIsNotAuthorised : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+            };
+
+            private readonly Because of = () =>
+            {
+                CatchExceptionAsync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
         }
 
         public class GetEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
@@ -147,6 +192,8 @@
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
+                ((int)result.Type).Should().Be(note.NoteType.Value);
+                result.Id.Should().Be(note.Id);
                 foreach (var noteTonnage in note.NoteTonnage)
                 {
                     result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
