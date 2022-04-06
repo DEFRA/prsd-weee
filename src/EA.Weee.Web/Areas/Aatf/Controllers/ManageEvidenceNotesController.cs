@@ -62,8 +62,6 @@
 
                 await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                //return PartialView("Overview/EditDraftReturnedNotesOverview", model);
-
                 return this.View("Overview/EditDraftReturnedNotesOverview", model);
             }
         }
@@ -130,7 +128,7 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
+                var request = new GetEvidenceNoteRequest(evidenceNoteId);
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 

@@ -113,8 +113,7 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>.That.Matches(
-                g => g.EvidenceNoteId.Equals(EvidenceNoteId)
-                     && g.OrganisationId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+                g => g.EvidenceNoteId.Equals(EvidenceNoteId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

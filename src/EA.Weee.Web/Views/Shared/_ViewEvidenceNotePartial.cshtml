@@ -10,38 +10,38 @@
     <div class="govuk-width-container govuk-!-margin-top-3 ">
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.Reference, @Model.ReferenceDisplay)
+            @Html.Gds().DisplayFor(m => m.Reference, Model.ReferenceDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.Status, @Model.Status.ToDisplayString())
+            @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, @Model.ComplianceYearDisplay)
+            @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.WasteDisplay, @Model.WasteDisplay)
+            @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ProtocolDisplay, @Model.ProtocolDisplay)
+            @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay)
         </div>
     </div>
 
     <div class="govuk-width-container govuk-!-margin-top-3 govuk-!-padding-left-0">
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
             <span id="site" class="govuk-label--s">Site</span><br />
-            <span aria-labelledby="site" class="govuk-body"> @Html.Raw(@Model.SiteAddress)</span>
+            <span aria-labelledby="site" class="govuk-body"> @Html.Raw(Model.SiteAddress)</span>
         </div>
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0 ">
             <span id="operator" class="govuk-label--s">Operator</span><br />
-            <span aria-labelledby="operator" class="govuk-body">@Html.Raw(@Model.OperatorAddress)</span>
+            <span aria-labelledby="operator" class="govuk-body">@Html.Raw(Model.OperatorAddress)</span>
         </div>
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
             <span id="recipient" class="govuk-label--s">Recipient</span><br />
-            <span aria-labelledby="recipient" class="govuk-body">@Html.Raw(@Model.RecipientAddress)</span>
+            <span aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.RecipientAddress)</span>
         </div>
     </div>
     <div class="ui-helper-clearfix"></div>
