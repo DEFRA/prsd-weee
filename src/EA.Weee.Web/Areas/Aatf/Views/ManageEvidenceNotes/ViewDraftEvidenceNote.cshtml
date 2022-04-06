@@ -11,7 +11,7 @@
 }
 
 <section id="main-content">
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
     @if (Model.DisplayMessage)
     {
         @(this.WeeeGds().Panel(Model.SuccessMessage))
@@ -20,4 +20,3 @@
     @*@Html.Partial("_ViewEvidenceNotePartial", Model)*@
 
 </section>
-
