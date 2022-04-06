@@ -1,6 +1,9 @@
 ﻿@using EA.Weee.Web.Areas.Aatf.Controllers
 @using EA.Weee.Core.Shared
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EditDraftReturnedNotesViewModel
@@ -11,66 +14,67 @@
             @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_CreateEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
 
             <div class="govuk-tabs">
-               
                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
 
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
                         <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header">
-                                Reference ID
-                            </th>
-                            <th class="govuk-table__header">
-                                Recipient
-                            </th>
-                            <th class="govuk-table__header">
-                                Type of waste
-                            </th>
-                            <th class="govuk-table__header">
-                                Status
-                            </th>
-                        </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header">
+                                    Reference ID
+                                </th>
+                                <th class="govuk-table__header">
+                                    Recipient
+                                </th>
+                                <th class="govuk-table__header">
+                                    Type of waste
+                                </th>
+                                <th class="govuk-table__header">
+                                    Status
+                                </th>
+                            </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        @if (Model.ListOfNotes.Any())
-                        {
-                            foreach (EditDraftReturnedNote note in Model.ListOfNotes)
+                            @if (Model.ListOfNotes.Any())
                             {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">@note.ReferenceId</td>
-                                    <td class="govuk-table__cell">@note.Recipient</td>
-                                    @if (note.TypeOfWaste.HasValue)
-                                    {
-                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
-                                    }
-                                    else
-                                    {
-                                        <td class="govuk-table__cell"> </td>
-                                    }
+                                foreach (EditDraftReturnedNote note in Model.ListOfNotes)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">@note.ReferenceId</td>
+                                        <td class="govuk-table__cell">@note.Recipient</td>
+                                        @if (note.TypeOfWaste.HasValue)
+                                        {
+                                            <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="govuk-table__cell"> </td>
+                                        }
 
-                                    <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                    <td class="govuk-table__cell">
+                                        <td class="govuk-table__cell">@note.Status </td>
+                                        <td class="govuk-table__cell">
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <p>There are currently no draft or returned evidence notes </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p> Showing 0 - 0 of 0 </p>
                                     </td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td>
-                                    <p>There are currently no draft or returned evidence notes </p></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p> Showing 0 - 0 of 0 </p></td>
-                            </tr>
-                        }
 
                         </tbody>
                     </table>
-                    <br/>
+                    <br />
                 </section>
             </div>
         </div>
