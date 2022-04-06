@@ -8,6 +8,7 @@
     public enum ActionEnum
     {
         Save = 1,
-        Submit = 2
+        Submit = 2,
+        Edit = 3
     }
 }
