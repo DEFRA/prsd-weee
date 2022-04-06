@@ -18,7 +18,6 @@
         protected override Note Instantiate()
         {
             DefaultNote(new List<NoteTonnage>());
-
             return instance;
         }
 
@@ -30,28 +29,38 @@
             var user = Container.Resolve<IUserContext>();
 
             instance = new Note(organisation,
-                scheme,
-                DateTime.Now,
-                DateTime.Now.AddDays(10),
-                Fixture.Create<WasteType>(),
-                Fixture.Create<Protocol>(),
-                aatf,
-                NoteType.EvidenceNote,
-                user.UserId.ToString(),
-                tonnages);
+            scheme,
+            DateTime.Now,
+            DateTime.Now.AddDays(10),
+            Fixture.Create<WasteType>(),
+            Fixture.Create<Protocol>(),
+            aatf,
+            NoteType.EvidenceNote,
+            user.UserId.ToString(),
+            tonnages);
         }
 
         public EvidenceNoteDbSetup WithOrganisation(Guid organisationId)
         {
             instance.UpdateOrganisation(organisationId);
+            return this;
+        }
 
+        public EvidenceNoteDbSetup WithAatf(Guid aatfId)
+        {
+            instance.UpdateAatf(aatfId);
+            return this;
+        }
+
+        public EvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
+        {
+            instance.UpdateStatus(statusToUpdate, user);
             return this;
         }
 
         public EvidenceNoteDbSetup WithTonnages(List<NoteTonnage> tonnages)
         {
             DefaultNote(tonnages);
-
             return this;
         }
     }
