@@ -6,12 +6,12 @@
 @model ManageEvidenceNoteOverviewViewModel
 <ul class="govuk-tabs__list">
     @*@this.WeeeGds().Tab("Evidence summary",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")*@
     @this.WeeeGds().Tab("Edit draft and returned notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")
     @*@this.WeeeGds().Tab("View all other evidence notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Overview(Model.OrganisationId, Model.AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Overview(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")*@
 </ul>

@@ -113,8 +113,6 @@
             var result = Map.Map(transfer);
 
             // assert 
-            result.OrganisationId.Should().Be(Guid.Empty);
-            result.AatfId.Should().Be(Guid.Empty);
             result.ListOfNotes.Should().BeNullOrEmpty();
         }
 
