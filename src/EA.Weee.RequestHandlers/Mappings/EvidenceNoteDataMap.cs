@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
@@ -18,6 +19,8 @@
 
         public ListOfEvidenceNoteDataMap Map(ListOfNotesMap source)
         {
+            Guard.ArgumentNotNull(() => source, source);
+
             var model = new ListOfEvidenceNoteDataMap();
 
             if (source != null && source.ListOfNotes.Any())

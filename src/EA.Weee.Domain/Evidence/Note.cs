@@ -89,12 +89,23 @@
         /// Should only be used for integration tests
         /// </summary>
         /// <param name="organisation"></param>
-        public void UpdateOrganisation(Organisation organisation)
+        public void UpdateOrganisation(Guid organisationId)
         {
-            Guard.ArgumentNotNull(() => organisation, organisation);
+            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
 
-            Organisation = organisation;
+            OrganisationId = organisationId;
+            Organisation = null;
         }
+        public void UpdateAatf(Guid aatfId)
+        {
+            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+
+            AatfId = aatfId;
+            Aatf = null;
+        }
+
+        public virtual Guid OrganisationId { get; set; }
+        public virtual Guid AatfId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }
 
