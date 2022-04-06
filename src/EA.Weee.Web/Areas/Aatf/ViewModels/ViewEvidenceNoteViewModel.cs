@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using Core.AatfEvidence;
-    using Core.Helpers;
     using System.ComponentModel;
+    using Extensions;
+    using Prsd.Core.Helpers;
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
@@ -14,10 +15,10 @@
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [DisplayName("Protocol")]
-        public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.ToString() : "-";
+        public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : "-";
 
         [DisplayName("Type of waste")]
-        public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.ToString() : "-";
+        public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : "-";
 
         public NoteStatus Status { get; set; }
 

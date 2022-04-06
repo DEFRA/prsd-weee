@@ -2,6 +2,8 @@
 @using EA.Weee.Core.Shared
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EditDraftReturnedNotesViewModel
 
@@ -17,6 +19,7 @@
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">Draft evidence notes</caption>
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header">
@@ -31,6 +34,7 @@
                             <th class="govuk-table__header">
                                 Status
                             </th>
+                            <th class="govuk-table__header"></th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -51,8 +55,7 @@
                                     }
 
                                     <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                    <td class="govuk-table__cell">
-                                    </td>
+                                    <td class="govuk-table__cell">@Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)</td>
                                 </tr>
                             }
                         }

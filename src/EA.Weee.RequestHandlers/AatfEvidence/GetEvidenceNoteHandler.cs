@@ -4,6 +4,7 @@
     using Core.AatfReturn;
     using Core.Scheme;
     using Domain.AatfReturn;
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
@@ -38,9 +39,7 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            var transfer = new EvidenceNoteMappingTransfer() { Note = evidenceNote };
-
-            var evidenceNoteData = mapper.Map<EvidenceNoteMappingTransfer, EvidenceNoteData>(transfer);
+            var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);
 
             return evidenceNoteData;
         }

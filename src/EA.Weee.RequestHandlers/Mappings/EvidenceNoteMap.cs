@@ -6,13 +6,18 @@
     using Core.Organisations;
     using Core.Scheme;
     using Domain.AatfReturn;
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Organisation;
     using AddressData = Core.Shared.AddressData;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
+    using Protocol = Core.AatfEvidence.Protocol;
     using Scheme = Domain.Scheme.Scheme;
+    using WasteType = Core.AatfEvidence.WasteType;
 
-    public class EvidenceNoteMap : IMap<EvidenceNoteMappingTransfer, EvidenceNoteData>
+    public class EvidenceNoteMap : IMap<Note, EvidenceNoteData>
     {
         private readonly IMapper mapper;
 
@@ -21,22 +26,23 @@
             this.mapper = mapper;
         }
 
-        public EvidenceNoteData Map(EvidenceNoteMappingTransfer source)
+        public EvidenceNoteData Map(Note source)
         {
             return new EvidenceNoteData
             {
-                Reference = source.Note.Reference,
-                Type = (NoteType)source.Note.NoteType.Value,
-                Status = (NoteStatus)source.Note.Status.Value,
-                StartDate = source.Note.StartDate,
-                EndDate = source.Note.EndDate,
-                Protocol = source.Note.Protocol.HasValue ? (Protocol?)source.Note.Protocol.Value : null,
-                WasteType = source.Note.WasteType.HasValue ? (WasteType?)source.Note.WasteType.Value : null,
-                EvidenceTonnageData = source.Note.NoteTonnage.Select(t =>
+                Id = source.Id,
+                Reference = source.Reference,
+                Type = (NoteType)source.NoteType.Value,
+                Status = (NoteStatus)source.Status.Value,
+                StartDate = source.StartDate,
+                EndDate = source.EndDate,
+                Protocol = source.Protocol.HasValue ? (Protocol?)source.Protocol.Value : null,
+                WasteType = source.WasteType.HasValue ? (WasteType?)source.WasteType.Value : null,
+                EvidenceTonnageData = source.NoteTonnage.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList(),
-                SchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient),
-                OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation),
-                AatfData = mapper.Map<Aatf, AatfData>(source.Note.Aatf)
+                SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
+                OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
+                AatfData = mapper.Map<Aatf, AatfData>(source.Aatf)
             };
         }
     }
