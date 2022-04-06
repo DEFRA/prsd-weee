@@ -21,7 +21,7 @@
             IList<ValidationResult> result = model.Validate(validationContext).ToList();
 
             Assert.True(result.Any());
-            result[0].ErrorMessage.Should().Be($"Select the site you would like to manage");
+            result[0].ErrorMessage.Should().Be($"Select the site you would like to manage evidence notes for");
             model.ModelValidated.Should().BeTrue();
         }
 
@@ -47,7 +47,7 @@
             typeof(SelectYourAatfViewModel).GetProperty("SelectedId")
             .Should()
             .BeDecoratedWith<RequiredAttribute>(t =>
-            t.ErrorMessage.Equals("Select the site you would like to manage"));
+            t.ErrorMessage.Equals("Select the site you would like to manage evidence notes for"));
 
             typeof(SelectYourAatfViewModel).GetProperty("SelectedId")
             .Should()
