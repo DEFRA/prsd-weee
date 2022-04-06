@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
+    using Core.AatfEvidence;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Prsd.Core.Mapper;
   
@@ -12,7 +13,8 @@
                 Recipient = source.Recipient,
                 ReferenceId = source.ReferenceId,
                 Status = source.Status,
-                TypeOfWaste = source.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)source.WasteType.Value : null,
+                TypeOfWaste = source.WasteType,
+                Id = source.Id
             };
         }
     }

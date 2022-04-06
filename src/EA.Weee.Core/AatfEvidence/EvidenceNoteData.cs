@@ -3,15 +3,14 @@
     using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using AatfReturn;
     using Organisations;
     using Prsd.Core;
 
     public class EvidenceNoteData
     {
+        public Guid Id { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }

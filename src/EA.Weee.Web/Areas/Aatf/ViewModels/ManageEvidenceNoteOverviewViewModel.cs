@@ -4,10 +4,6 @@
 
     public abstract class ManageEvidenceNoteOverviewViewModel
     {
-        public Guid OrganisationId { get; set; }
-
-        public Guid AatfId { get; set; }
-
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
 
         protected ManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
