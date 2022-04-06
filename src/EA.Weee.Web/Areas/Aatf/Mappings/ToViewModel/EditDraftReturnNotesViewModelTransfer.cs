@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
-    using Core.AatfReturn;
     using Prsd.Core;
 
     public class EditDraftReturnNotesViewModelTransfer
