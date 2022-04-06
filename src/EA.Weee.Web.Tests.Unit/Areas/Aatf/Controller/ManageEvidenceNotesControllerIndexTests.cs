@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using AutoFixture;
     using Constant;
+    using Core.AatfEvidence;
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using FakeItEasy;
@@ -15,6 +16,7 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
+    using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Xunit;
 
@@ -118,36 +120,71 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenRequiredData_ModelShouldBeReturned()
+        public async void IndexGet_GivenRequiredData_NoteShouldBeRetrieved()
         {
-            //arrange
-            var organisationId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var model = new ManageEvidenceNoteViewModel();
-            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(model);
-
             //act
-            var result = await ManageEvidenceController.Index(organisationId, aatfId) as ViewResult;
+            await ManageEvidenceController.Index(OrganisationId, AatfId);
 
             //assert
-            result.Model.Should().Be(model);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
+                g.AatfId.Equals(AatfId) &&
+                g.OrganisationId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async void IndexGet_GivenRequiredData_NoteViewModelShouldBeBuilt()
+        {
+            //arrange
+            var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId);
+
+            //assert
+            A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
+                A<EditDraftReturnNotesViewModelTransfer>.That.Matches(
+                    e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
+                         e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenRequiredData_ModelShouldBeReturned()
+        {
+            //arrange
+            var manageNoteViewModel = new ManageEvidenceNoteViewModel();
+            var evidenceNoteViewModel = new EditDraftReturnedNotesViewModel();
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
+            A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
+                A<EditDraftReturnNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
+
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, AatfId) as ViewResult;
+
+            //assert
+            var model = result.Model as EditDraftReturnedNotesViewModel;
+
+            model.Should().Be(evidenceNoteViewModel);
+            model.ManageEvidenceNoteViewModel.Should().Be(manageNoteViewModel);
+        }
+
+        [Fact]
+        public async void IndexGet_GivenAction_EditDraftReturnedNotesOverviewViewShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
             var result = await ManageEvidenceController.Index(organisationId, aatfId) as ViewResult;
 
-            result.ViewName.Should().BeEmpty();
+            result.ViewName.Should().Be("Overview/EditDraftReturnedNotesOverview");
         }
 
         [Fact]
         public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid) }, null)
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid), typeof(ManageEvidenceOverviewDisplayOption?), typeof(string) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
