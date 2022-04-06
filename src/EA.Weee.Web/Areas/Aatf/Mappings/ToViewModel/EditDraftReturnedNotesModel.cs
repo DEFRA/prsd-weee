@@ -4,6 +4,7 @@
     using EA.Weee.Core.AatfEvidence;
     using ViewModels;
     using System;
+    using EA.Weee.Core.Helpers;
 
     public class EditDraftReturnedNotesModel 
     {
@@ -11,7 +12,8 @@
             string recipient, 
             NoteStatus status, 
             WasteType? wasteType,
-            Guid id)
+            Guid id,
+            NoteType type)
         {
             Guard.ArgumentNotDefaultValue(() => referenceId, referenceId);
 
@@ -20,6 +22,7 @@
             Status = status;
             WasteType = wasteType;
             Id = id;
+            Type = type;
         }
 
         public int ReferenceId { get; protected set; }
@@ -31,5 +34,7 @@
         public WasteType? WasteType { get; protected set; }
 
         public Guid Id { get; protected set; }
+
+        public NoteType Type { get; protected set; }
     }
 }
