@@ -97,10 +97,18 @@
             OrganisationId = organisationId;
             Organisation = null;
         }
+        public void UpdateAatf(Guid aatfId)
+        {
+            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
 
-        public virtual Guid OrganisationId { get; private set; }
+            AatfId = aatfId;
+            Aatf = null;
+        }
 
-        [ForeignKey("OrganisationId")]
+        public virtual Guid OrganisationId { get; set; }
+
+        public virtual Guid AatfId { get; set; }
+
         public virtual Organisation Organisation { get; private set; }
 
         public virtual Scheme Recipient { get; private set; }
