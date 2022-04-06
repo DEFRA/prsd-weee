@@ -21,7 +21,7 @@
     {
         private readonly IMapper mapper;
 
-        public EvidenceNoteMap(IMap<Address, AddressData> addressMap, IMapper mapper)
+        public EvidenceNoteMap(IMapper mapper)
         {
             this.mapper = mapper;
         }
