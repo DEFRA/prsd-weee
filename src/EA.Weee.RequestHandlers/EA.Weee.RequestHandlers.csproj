@@ -100,6 +100,7 @@
     <Compile Include="Mappings\EditDraftReturnedNotesMapper.cs" />
     <Compile Include="Mappings\EvidenceNoteMap.cs" />
     <Compile Include="Mappings\EvidenceNoteMappingTransfer.cs" />
+    <Compile Include="Mappings\EvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
@@ -131,6 +132,8 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Mappings\ListOfEvidenceNoteDataMap.cs" />
+    <Compile Include="Mappings\ListOfNotesMap.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Scheme\AddSchemeHandler.cs" />
