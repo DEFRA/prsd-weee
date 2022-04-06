@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
@@ -105,6 +106,7 @@
         }
 
         public virtual Guid OrganisationId { get; set; }
+
         public virtual Guid AatfId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }

@@ -4,6 +4,14 @@
 
     public partial class Gds<TModel>
     {
+        public MvcHtmlString VisuallyHidden(string text)
+        {
+            var hint = new TagBuilder("span");
+            hint.AddCssClass("govuk-visually-hidden");
+            hint.SetInnerText(text);
+            return MvcHtmlString.Create(hint.ToString());
+        }
+
         public MvcHtmlString HintSpan(string hintText, string id = null)
         {
             var hint = CreateHintTag(hintText, id, "span");

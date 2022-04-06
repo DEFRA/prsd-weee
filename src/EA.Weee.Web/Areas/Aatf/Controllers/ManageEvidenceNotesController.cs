@@ -62,8 +62,6 @@
 
                 await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                //return PartialView("Overview/EditDraftReturnedNotesOverview", model);
-
                 return this.View("Overview/EditDraftReturnedNotesOverview", model);
             }
         }
@@ -130,24 +128,13 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
+                var request = new GetEvidenceNoteRequest(evidenceNoteId);
 
-                // retrieve the evidence note
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
-                model.OrganisationId = organisationId;
-                model.AatfId = aatfId;
 
                 SetSuccessMessage(result, model);
-
-                //TODO: Remove the Viewbag items below as they should be based off the view model
-
-                //TODO: update the view to only show the success based on a view model property
-                //ViewBag.EvidenceNoteId = evidenceNoteId;
-                //ViewBag.aatfId = aatfId;
-                //ViewBag.organisationId = organisationId;
 
                 return View(model);
             }

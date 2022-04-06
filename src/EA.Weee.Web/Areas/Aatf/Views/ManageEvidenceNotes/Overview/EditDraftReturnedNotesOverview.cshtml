@@ -5,6 +5,8 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EditDraftReturnedNotesViewModel
 
@@ -19,58 +21,57 @@
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">Draft evidence notes</caption>
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header">
-                                    Reference ID
-                                </th>
-                                <th class="govuk-table__header">
-                                    Recipient
-                                </th>
-                                <th class="govuk-table__header">
-                                    Type of waste
-                                </th>
-                                <th class="govuk-table__header">
-                                    Status
-                                </th>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header">
+                                Reference ID
+                            </th>
+                            <th class="govuk-table__header">
+                                Recipient
+                            </th>
+                            <th class="govuk-table__header">
+                                Type of waste
+                            </th>
+                            <th class="govuk-table__header">
+                                Status
+                            </th>
+                            <th class="govuk-table__header"></th>
+                        </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                            @if (Model.ListOfNotes.Any())
+                        @if (Model.ListOfNotes.Any())
+                        {
+                            foreach (EditDraftReturnedNote note in Model.ListOfNotes)
                             {
-                                foreach (EditDraftReturnedNote note in Model.ListOfNotes)
-                                {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">@note.ReferenceId</td>
-                                        <td class="govuk-table__cell">@note.Recipient</td>
-                                        @if (note.TypeOfWaste.HasValue)
-                                        {
-                                            <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
-                                        }
-                                        else
-                                        {
-                                            <td class="govuk-table__cell"> </td>
-                                        }
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                    <td class="govuk-table__cell">@note.Recipient</td>
+                                    @if (note.TypeOfWaste.HasValue)
+                                    {
+                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="govuk-table__cell"> </td>
+                                    }
 
-                                        <td class="govuk-table__cell">@note.Status </td>
-                                        <td class="govuk-table__cell">
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td>
-                                        <p>There are currently no draft or returned evidence notes </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p> Showing 0 - 0 of 0 </p>
-                                    </td>
+                                    <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                    <td class="govuk-table__cell">@Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)</td>
                                 </tr>
                             }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>
+                                    <p>There are currently no draft or returned evidence notes </p></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> Showing 0 - 0 of 0 </p></td>
+                            </tr>
+                        }
 
                         </tbody>
                     </table>

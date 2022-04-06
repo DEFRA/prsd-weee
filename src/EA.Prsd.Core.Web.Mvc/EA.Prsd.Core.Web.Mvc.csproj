@@ -96,6 +96,7 @@
     <Compile Include="Filters\HandleApiErrorAttribute.cs" />
     <Compile Include="Owin\IdentityValidationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RazorHelpers\Gds.DisplayFor.cs" />
     <Compile Include="RazorHelpers\Gds.CheckBox.cs" />
     <Compile Include="RazorHelpers\Gds.cs" />
     <Compile Include="RazorHelpers\Gds.DateTime.cs" />
