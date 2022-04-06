@@ -31,8 +31,6 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var listOfNotes = new List<EvidenceNoteData>();
-
             message.AllowedStatuses = new List<NoteStatus>
             {
                  NoteStatus.Draft

@@ -20,10 +20,6 @@
         [DisplayName("Type of waste")]
         public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : "-";
 
-        public NoteStatus Status { get; set; }
-
-        public NoteType Type { get; set; }
-
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => StartDate.Year.ToString();
 

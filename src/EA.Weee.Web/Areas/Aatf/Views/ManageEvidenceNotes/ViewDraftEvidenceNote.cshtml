@@ -11,11 +11,18 @@
 }
 
 <section id="main-content">
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+
+
     @if (Model.DisplayMessage)
     {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null)), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
+    else
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+    }
+
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 
