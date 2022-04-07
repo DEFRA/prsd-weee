@@ -137,7 +137,7 @@
 
             foreach (var type in types)
             {
-                var model = new EditEvidenceNoteViewModel()
+                var model = new EvidenceNoteViewModel()
                 {
                     Type = (NoteType)type.Key,
                     Reference = 1

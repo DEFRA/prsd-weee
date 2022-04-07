@@ -9,31 +9,12 @@
     [Serializable]
     public class CreateEvidenceNoteRequest : EvidenceNoteBaseRequest
     {
-        public CreateEvidenceNoteRequest(Guid organisationId,
-            Guid aatfId,
-            Guid recipientId,
-            DateTime startDate,
-            DateTime endDate,
-            WasteType? wasteType,
-            Protocol? protocol,
-            List<TonnageValues> tonnages,
-            NoteStatus status)
+        public CreateEvidenceNoteRequest()
         {
-            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
-            Guard.ArgumentNotDefaultValue(() => recipientId, recipientId);
-            Guard.ArgumentNotDefaultValue(() => startDate, startDate);
-            Guard.ArgumentNotDefaultValue(() => endDate, endDate);
+        }
 
-            OrganisationId = organisationId;
-            RecipientId = recipientId;
-            AatfId = aatfId;
-            StartDate = startDate;
-            EndDate = endDate;
-            WasteType = wasteType;
-            Protocol = protocol;
-            TonnageValues = tonnages;
-            Status = status;
+        public CreateEvidenceNoteRequest(Guid organisationId, Guid aatfId, Guid recipientId, DateTime startDate, DateTime endDate, WasteType? wasteType, Protocol? protocol, List<TonnageValues> tonnages, NoteStatus status, Guid id) : base(organisationId, aatfId, recipientId, startDate, endDate, wasteType, protocol, tonnages, status, id)
+        {
         }
     }
 }

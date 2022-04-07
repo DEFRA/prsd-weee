@@ -14,9 +14,8 @@
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status)
-        @Html.HiddenFor(m => m.ReceivedId)
         @Html.HiddenFor(m => m.Reference)
-        @Html.HiddenFor(m => m.Id)
+
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m">Period in which WEEE was received for treatment</div>
@@ -25,7 +24,14 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
-                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+                    @if (Model.StartDate.Equals(default(DateTime)))
+                    {
+                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+                    }
+                    else
+                    {
+                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+                    }
                 </div>
 
             </div>
@@ -34,7 +40,15 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EndDate)">
                     @Html.Gds().LabelFor(m => m.EndDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.EndDate)
-                    @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+
+                    @if (Model.EndDate.Equals(default(DateTime)))
+                    {
+                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+                    }
+                    else
+                    {
+                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+                    }
                 </div>
             </div>
         </div>
@@ -44,7 +58,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
                     @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                    @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName", Model.ReceivedId), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                    @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
                 </div>
             </div>
         </div>
