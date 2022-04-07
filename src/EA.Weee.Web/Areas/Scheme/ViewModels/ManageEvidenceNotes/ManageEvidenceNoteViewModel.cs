@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class ManageEvidenceNoteViewModel
+    public abstract class ManageEvidenceNoteViewModel
     {
         public Guid OrganisationId { get; set; }
 

@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -40,9 +41,10 @@
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
-                var scheme = await client.SendAsync(this.User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
 
-                var model = mapper.Map<ManageEvidenceNoteViewModel>(new SchemeDataToManageEvidenceNoteViewModelMapTransfer() { OrganisationId = scheme.OrganisationId, OrganisationName = scheme.Name });
+                var result = await client.SendAsync(User.GetAccessToken(), new GetSubmittedEvidenceNotesByOrganisationIdRequest(organisationId));
+
+                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result));
 
                 return this.View("ReviewSubmittedEvidence", model);
             }
