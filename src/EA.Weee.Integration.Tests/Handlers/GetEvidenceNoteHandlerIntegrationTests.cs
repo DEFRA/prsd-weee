@@ -126,8 +126,6 @@
             {
                 LocalSetup();
 
-                note = EvidenceNoteDbSetup.Init().Create();
-
                 request = new GetEvidenceNoteRequest(Guid.NewGuid());
             };
 
@@ -146,7 +144,9 @@
             {
                 LocalSetup();
 
-                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+                note = EvidenceNoteDbSetup.Init().Create();
+
+                request = new GetEvidenceNoteRequest(note.Id);
             };
 
             private readonly Because of = () =>
