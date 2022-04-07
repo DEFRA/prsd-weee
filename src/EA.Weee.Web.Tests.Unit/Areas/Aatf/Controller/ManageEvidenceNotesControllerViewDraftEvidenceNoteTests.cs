@@ -27,7 +27,7 @@
         public async Task ViewDraftEvidenceNoteGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -43,7 +43,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(organisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(organisationId, EvidenceNoteId);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -61,7 +61,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
 
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             //assert
             var model = result.Model as ViewEvidenceNoteViewModel;
@@ -80,7 +80,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
 
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             //assert
             var model = result.Model as ViewEvidenceNoteViewModel;
@@ -96,7 +96,7 @@
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
 
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             //assert
             var model = result.Model as ViewEvidenceNoteViewModel;
@@ -109,7 +109,7 @@
             //arrange
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>.That.Matches(
@@ -125,7 +125,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(data);
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
@@ -142,7 +142,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as
+                await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as
                     ViewResult;
 
             //asset

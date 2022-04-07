@@ -47,12 +47,14 @@
             var reference = fixture.Create<int>();
             var startDate = fixture.Create<DateTime>();
             var endDate = fixture.Create<DateTime>();
+            var recipientId = fixture.Create<Guid>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => note.Reference).Returns(reference);
             A.CallTo(() => note.StartDate).Returns(startDate);
             A.CallTo(() => note.EndDate).Returns(endDate);
+            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
 
             //act
             var result = map.Map(note);
@@ -62,6 +64,7 @@
             result.Reference.Should().Be(reference);
             result.StartDate.Should().Be(startDate);
             result.EndDate.Should().Be(endDate);
+            result.RecipientId.Should().Be(recipientId);
         }
 
         public static IEnumerable<object[]> NoteTypes()
