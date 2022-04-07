@@ -122,7 +122,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
@@ -135,6 +135,24 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
 
                 SetSuccessMessage(result, model);
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                
+                var request = new GetEvidenceNoteRequest(evidenceNoteId);
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, null, organisationId, result.AatfData.Id, result));
+                
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
                 return View(model);
             }

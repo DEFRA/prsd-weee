@@ -9,6 +9,13 @@
 
     public class ViewEvidenceNoteViewModelTests
     {
+        [Fact]
+        public void ViewEvidenceNoteViewModel_ShouldBeDerivedFromEvidenceNoteViewModel()
+        {
+            typeof(ViewEvidenceNoteViewModel).Should().BeDerivedFrom<EvidenceNoteViewModel>();
+        }
+
+
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
         [InlineData("ProtocolDisplay", "Protocol")]
@@ -53,23 +60,6 @@
 
             //assert
             result.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ReferenceDisplay_ShouldFormatCorrectly()
-        {
-            var types = EnumHelper.GetValues(typeof(NoteType));
-
-            foreach (var type in types)
-            {
-                var model = new ViewEvidenceNoteViewModel()
-                {
-                    Type = (NoteType)type.Key,
-                    Reference = 1
-                };
-
-                model.ReferenceDisplay.Should().Be($"{type.Value}1");
-            }
         }
 
         [Fact]
