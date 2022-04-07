@@ -15,10 +15,10 @@
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [DisplayName("Protocol")]
-        public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : "-";
+        public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Type of waste")]
-        public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : "-";
+        public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => StartDate.Year.ToString();

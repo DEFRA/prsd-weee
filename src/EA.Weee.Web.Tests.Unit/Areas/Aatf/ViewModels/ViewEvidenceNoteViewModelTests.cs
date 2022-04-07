@@ -71,5 +71,75 @@
                 model.ReferenceDisplay.Should().Be($"{type.Value}1");
             }
         }
+
+        [Fact]
+        public void ProtocolDisplay_GivenProtocolIsNull_EmptyStringShouldBeReturned()
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                ProtocolValue = null
+            };
+
+            //act
+            var result = model.ProtocolDisplay;
+
+            //assert
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void WasteDisplay_GivenWasteTypeIsNull_EmptyStringShouldBeReturned()
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                WasteTypeValue = null
+            };
+
+            //act
+            var result = model.WasteDisplay;
+
+            //assert
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ProtocolDisplay_GivenWasteType_WasteTypeDisplayShouldBeReturned()
+        {
+            //arrange
+            foreach (var waste in EnumHelper.GetValues(typeof(WasteType)))
+            {
+                var model = new ViewEvidenceNoteViewModel()
+                {
+                    WasteTypeValue = (WasteType)waste.Key
+                };
+
+                //act
+                var result = model.WasteDisplay;
+                
+                //assert
+                result.Should().Be(EnumHelper.GetDisplayName((WasteType)waste.Key));
+            }
+        }
+
+        [Fact]
+        public void ProtocolDisplay_GivenProtocol_ProtocolDisplayShouldBeReturned()
+        {
+            //arrange
+            foreach (var protocol in EnumHelper.GetValues(typeof(Protocol)))
+            {
+                var model = new ViewEvidenceNoteViewModel()
+                {
+                    ProtocolValue = (Protocol)protocol.Key
+                };
+
+                //act
+                var result = model.ProtocolDisplay;
+
+                //assert
+                result.Should().Be(EnumHelper.GetDisplayName((Protocol)protocol.Key));
+            }
+        }
     }
 }
