@@ -20,19 +20,20 @@
 
             var model = new EvidenceNoteViewModel
             {
-                Status = source.NoteData.Status,
-                Reference = source.NoteData.Reference,
-                Type = source.NoteData.Type,
-                OrganisationId = source.OrganisationId,
-                AatfId = source.AatfId,
+                Id = source.ExistingModel?.Id ?? source.NoteData.Id,
+                Status = source.ExistingModel?.Status ?? source.NoteData.Status,
+                Reference = source.ExistingModel?.Reference ?? source.NoteData.Reference,
+                Type = source.ExistingModel?.Type ?? source.NoteData.Type,
+                OrganisationId = source.ExistingModel?.OrganisationId ?? source.OrganisationId,
+                AatfId = source.ExistingModel?.AatfId ?? source.AatfId,
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"),
-                ReceivedId = source.NoteData.RecipientId,
-                StartDate = source.NoteData.StartDate,
-                EndDate = source.NoteData.EndDate,
-                WasteTypeValue = source.NoteData.WasteType,
-                ProtocolValue = source.NoteData.Protocol
+                ReceivedId = source.ExistingModel?.ReceivedId ?? source.NoteData.RecipientId,
+                StartDate = source.ExistingModel?.StartDate ?? source.NoteData.StartDate,
+                EndDate = source.ExistingModel?.EndDate ?? source.NoteData.EndDate,
+                WasteTypeValue = source.ExistingModel?.WasteTypeValue ?? source.NoteData.WasteType,
+                ProtocolValue = source.ExistingModel?.ProtocolValue ?? source.NoteData.Protocol
             };
 
             if (source.ExistingModel != null)

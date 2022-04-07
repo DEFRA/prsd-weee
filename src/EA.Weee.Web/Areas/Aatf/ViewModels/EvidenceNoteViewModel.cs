@@ -15,6 +15,8 @@
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
+        public Guid Id { get; set; }
+
         [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
