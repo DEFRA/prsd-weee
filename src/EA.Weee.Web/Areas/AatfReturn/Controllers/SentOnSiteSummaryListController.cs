@@ -52,6 +52,9 @@
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
+                //Copy Previous Quater added need add logic
+                model.IsChkCopyPreviousQuaterVisiable = true;
+
                 return View(model);
             }
         }
