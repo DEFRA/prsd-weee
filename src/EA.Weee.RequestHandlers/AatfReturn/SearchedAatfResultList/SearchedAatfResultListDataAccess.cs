@@ -33,6 +33,7 @@
                     var returnSearchedAatfAddressListData = new WeeeSearchedAnAatfListData()
                     {
                         ApprovalNumber = sentOn.Aatf.ApprovalNumber,
+                        WeeeSentOnId = sentOn.Id,
                         OperatorAddress = new AatfAddressData(sentOn.OperatorAddress.Name, sentOn.OperatorAddress.Address1, sentOn.OperatorAddress.Address2, sentOn.OperatorAddress.TownOrCity, sentOn.OperatorAddress.CountyOrRegion, sentOn.OperatorAddress.Postcode, sentOn.OperatorAddress.CountryId, sentOn.OperatorAddress.Country.Name),
                         SiteAddress = new AatfAddressData(sentOn.SiteAddress.Name, sentOn.SiteAddress.Address1, sentOn.SiteAddress.Address2, sentOn.SiteAddress.TownOrCity, sentOn.SiteAddress.CountyOrRegion, sentOn.SiteAddress.Postcode, sentOn.SiteAddress.CountryId, sentOn.SiteAddress.Country.Name)                        
                     };

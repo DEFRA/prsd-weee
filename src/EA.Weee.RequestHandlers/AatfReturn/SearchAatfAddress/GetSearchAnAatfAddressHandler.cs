@@ -23,7 +23,7 @@
             authorization.EnsureCanAccessExternalArea();
 
             var aatfAddressDataList = new List<ReturnAatfAddressData>();
-            var aatfAddresses = await getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(message.SearchTerm);
+            var aatfAddresses = await getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(message);
 
             foreach (var item in aatfAddresses)
             {
