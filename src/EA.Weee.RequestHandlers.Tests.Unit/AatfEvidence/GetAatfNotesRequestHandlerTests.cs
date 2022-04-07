@@ -32,8 +32,6 @@
         private readonly GetAatfNotesRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
-        private readonly Scheme scheme;
-        private readonly Note note;
 
         public GetAatfNotesRequestHandlerTests()
         {
@@ -44,11 +42,7 @@
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
-            scheme = A.Fake<Scheme>();
-            note = A.Fake<Note>();
-    
-            A.CallTo(() => note.Reference).Returns(1);
-            A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
+            
             A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
@@ -117,7 +111,23 @@
         public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var note1 = A.Fake<Note>();
+            var note2 = A.Fake<Note>();
+            var note3 = A.Fake<Note>();
+
+            A.CallTo(() => note1.Reference).Returns(2);
+            A.CallTo(() => note1.CreatedDate).Returns(DateTime.Now.AddDays(1));
+            A.CallTo(() => note2.Reference).Returns(4);
+            A.CallTo(() => note2.CreatedDate).Returns(DateTime.Now);
+            A.CallTo(() => note3.Reference).Returns(6);
+            A.CallTo(() => note3.CreatedDate).Returns(DateTime.Now.AddDays(2));
+
+            var noteList = new List<Note>()
+            {
+                note1,
+                note2,
+                note3
+            };
 
             A.CallTo(() => aatfDataAccess.GetAllNotes(A<Guid>._, A<Guid>._, A<List<int>>._)).Returns(noteList);
 
@@ -125,7 +135,11 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a => a.ListOfNotes.Equals(noteList)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a => 
+                a.ListOfNotes.ElementAt(0).Reference.Equals(4) &&
+                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
+                a.ListOfNotes.ElementAt(2).Reference.Equals(6) &&
+                a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
