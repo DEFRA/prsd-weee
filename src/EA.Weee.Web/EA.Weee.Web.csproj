@@ -371,12 +371,15 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewDraftReturnedNotesModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Aatf\Requests\EditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Aatf\Requests\ICreateEvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Aatf\Requests\IEditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />

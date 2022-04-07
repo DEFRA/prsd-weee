@@ -29,19 +29,22 @@
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator;
-    
+        private readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
+        private readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
+
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
             IWeeeCache cache, 
             Func<IWeeeClient> apiClient, 
-            IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator)
+            IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
+            IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.apiClient = apiClient;
             this.createRequestCreator = createRequestCreator;
+            this.editRequestCreator = editRequestCreator;
         }
 
         [HttpGet]
@@ -166,19 +169,19 @@
             {
                 if (ModelState.IsValid)
                 {
-                    var request = createRequestCreator.ViewModelToRequest(viewModel);
+                    var request = editRequestCreator.ViewModelToRequest(viewModel);
 
-                    //TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
 
-                    //var result = await client.SendAsync(User.GetAccessToken(), request);
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    //var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
-                    //return RedirectToRoute(routeName, new
-                    //{
-                    //    organisationId,
-                    //    aatfId,
-                    //    evidenceNoteId = result
-                    //});
+                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    return RedirectToRoute(routeName, new
+                    {
+                        organisationId,
+                        aatfId,
+                        evidenceNoteId = result
+                    });
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
