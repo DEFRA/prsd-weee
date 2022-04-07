@@ -358,6 +358,8 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelMap.cs" />
@@ -365,6 +367,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnedNotesModel.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ModifyNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewDraftReturnedNotesModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
@@ -373,6 +376,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
@@ -633,6 +637,8 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EditDraftReturnedNotesOverview.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_CreateEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\EditEvidenceNote.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\_EditEvidenceNotePartial.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

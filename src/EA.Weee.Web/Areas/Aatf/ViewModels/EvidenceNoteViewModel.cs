@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
@@ -13,6 +14,9 @@
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+
+        [DisplayName("Reference ID")]
+        public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Core.AatfEvidence;
@@ -9,6 +10,7 @@
     using Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
     using Xunit;
@@ -23,6 +25,14 @@
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             model = new EvidenceNoteViewModel(calculator);
+        }
+
+        [Theory]
+        [InlineData("ReferenceDisplay", "Reference ID")]
+        public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
+        {
+            typeof(EvidenceNoteViewModel).GetProperty(property).Should()
+                .BeDecoratedWith<DisplayNameAttribute>(a => a.DisplayName.Equals(display));
         }
 
         [Theory]
@@ -118,6 +128,23 @@
             var total = model.ReusedTotal;
 
             A.CallTo(() => calculator.Total(A<List<string>>.That.IsSameSequenceAs(model.CategoryValues.Select(c => c.Reused).ToList()))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_ReferenceDisplay_ShouldFormatCorrectly()
+        {
+            var types = EnumHelper.GetValues(typeof(NoteType));
+
+            foreach (var type in types)
+            {
+                var model = new EditEvidenceNoteViewModel()
+                {
+                    Type = (NoteType)type.Key,
+                    Reference = 1
+                };
+
+                model.ReferenceDisplay.Should().Be($"{type.Value}1");
+            }
         }
     }
 }
