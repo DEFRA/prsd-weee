@@ -2,6 +2,7 @@
 {
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Requests.AatfReturn;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -16,11 +17,12 @@
             this.context = context;
         }
 
-        public async Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(string searchTerm)
+        public async Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(GetSearchAatfAddress searchAatfAddress)
         {
-            return await context.Aatfs.Where(w => w.Name.Contains(searchTerm) ||
-                                                  w.ApprovalNumber.Contains(searchTerm) ||
-                                                  w.Organisation.Name.Contains(searchTerm))
+            return await context.Aatfs.Where(w => w.Name.Contains(searchAatfAddress.SearchTerm) ||
+                                                  w.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
+                                                  w.Organisation.Name.Contains(searchAatfAddress.SearchTerm) && 
+                                                  w.Id != searchAatfAddress.CurrentSelectedAatfId)
                                       .GroupBy(a => a.AatfId)
                                       .Select(x => x.OrderByDescending(a => a.ComplianceYear).FirstOrDefault())
                                       .OrderBy(x => x.Name)

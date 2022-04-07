@@ -17,7 +17,10 @@
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
-                AatfName = source.AatfName
+                AatfName = source.AatfName,
+                SelectedAatfId = source.SelectedAatfId,
+                SelectedAatfName = source.SelectedAatfName,
+                SelectedWeeeSentOnId = source.SelectedWeeeSentOnId
             };
 
             var siteList = new List<WeeeSearchedAnAatfListData>();
@@ -28,7 +31,8 @@
                 {                    
                     SiteAddress = item.SiteAddress,
                     OperatorAddress = item.OperatorAddress,
-                    ApprovalNumber = item.ApprovalNumber
+                    ApprovalNumber = item.ApprovalNumber,
+                    WeeeSentOnId = item.WeeeSentOnId
                 };                
                 siteList.Add(siteData);
             }

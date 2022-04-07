@@ -99,11 +99,11 @@
         }
 
         [HttpPost]
-        public async Task<JsonResult> SearchAatf(string searchTerm)
+        public async Task<JsonResult> SearchAatf(string searchTerm, Guid aatfId)
         {
             using (var client = apiClient())
             {
-                var returnData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchTerm));
+                var returnData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchTerm, aatfId));
                 return Json(returnData, JsonRequestBehavior.AllowGet);
             }
         }

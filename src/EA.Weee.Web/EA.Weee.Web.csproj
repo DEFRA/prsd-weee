@@ -328,7 +328,12 @@
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchAnAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchedAatfViewModelMap.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSearchedAatfViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateWeeeSentOnViewModelMap.cs" />
+    <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndAatfToSentOnCreateWeeeSentOnViewModelMapTransfer.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\CreateWeeeSentOnAatfRequestCreator.cs" />
+    <Compile Include="Areas\AatfReturn\Requests\ICreateWeeeSentOnAatfRequestCreator.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\CanNotFoundTreatmentFacilityViewModel.cs" />
+    <Compile Include="Areas\AatfReturn\ViewModels\CreateWeeeSentOnViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\PcsRemovedViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SearchAnAatfViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\SearchedAatfResultListViewModel.cs" />

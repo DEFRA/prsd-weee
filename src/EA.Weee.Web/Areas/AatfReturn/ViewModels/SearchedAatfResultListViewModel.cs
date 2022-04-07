@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class SearchedAatfResultListViewModel
     {
@@ -12,9 +13,16 @@
 
         public Guid AatfId { get; set; }
 
-        public String AatfName { get; set; }
+        public string AatfName { get; set; }
 
         public List<WeeeSearchedAnAatfListData> Sites { get; set; }
+
+        [Required(ErrorMessage = "You must select a scheme to manage")]
+        public Guid? SelectedWeeeSentOnId { get; set; }
+
+        public Guid SelectedAatfId { get; set; }
+
+        public string SelectedAatfName { get; set; }
 
         public SearchedAatfResultListViewModel()
         {
