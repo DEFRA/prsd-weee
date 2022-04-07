@@ -20,6 +20,8 @@
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
+        @Html.HiddenFor(m => m.Id)
+
         <div class="govuk-width-container govuk-!-margin-top-3 ">
 
             <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
