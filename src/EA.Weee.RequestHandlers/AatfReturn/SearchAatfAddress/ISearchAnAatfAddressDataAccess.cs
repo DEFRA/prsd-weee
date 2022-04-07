@@ -8,6 +8,6 @@
 
     public interface ISearchAnAatfAddressDataAccess
     {
-        Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(string searchTerm);
+        Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(GetSearchAatfAddress searchAatfAddress);
     }
 }

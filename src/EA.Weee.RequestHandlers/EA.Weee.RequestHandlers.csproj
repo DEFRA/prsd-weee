@@ -69,6 +69,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\CreateWeeeSentOnAatfSiteHandler.cs" />
     <Compile Include="AatfReturn\SearchAatfAddress\GetSearchAnAatfAddressHandler.cs" />
     <Compile Include="AatfReturn\SearchAatfAddress\ISearchAnAatfAddressDataAccess.cs" />
     <Compile Include="AatfReturn\SearchAatfAddress\SearchAnAatfAddressDataAccess.cs" />

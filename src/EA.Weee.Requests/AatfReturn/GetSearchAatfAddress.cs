@@ -9,9 +9,12 @@
     {
         public string SearchTerm { get; set; }
 
-        public GetSearchAatfAddress(string searchTerm)
+        public Guid CurrentSelectedAatfId { get; set; }
+
+        public GetSearchAatfAddress(string searchTerm, Guid currentSelectedAatfId)
         {
             this.SearchTerm = searchTerm;
+            this.CurrentSelectedAatfId = currentSelectedAatfId;
         }
     }
 }
