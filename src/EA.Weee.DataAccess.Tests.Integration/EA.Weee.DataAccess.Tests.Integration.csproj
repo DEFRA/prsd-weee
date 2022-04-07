@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
+    <Compile Include="AatfNotesDataAccessIntegration.cs" />
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="DataAccess\OrganisationDataAccessTests.cs" />
