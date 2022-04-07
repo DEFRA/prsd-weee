@@ -7,9 +7,9 @@
     [Serializable]
     public class AatfAddressData : AddressData
     {
-        [Required(ErrorMessage = "Enter AATF / ATF site name")]
+        [Required(ErrorMessage = "Enter ATF site name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [Display(Name = "AATF / ATF site name")]
+        [Display(Name = "ATF site name")]
         public override string Name { get; set; }
 
         public AatfAddressData(Guid id, string name, string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Guid countryId, string countryName)

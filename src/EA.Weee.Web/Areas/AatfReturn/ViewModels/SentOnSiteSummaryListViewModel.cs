@@ -18,6 +18,8 @@
 
         public ObligatedCategoryValue Tonnages { get; set; }
 
+        public bool IsChkCopyPreviousQuaterVisiable { get; set; }
+
         public SentOnSiteSummaryListViewModel()
         {
         }

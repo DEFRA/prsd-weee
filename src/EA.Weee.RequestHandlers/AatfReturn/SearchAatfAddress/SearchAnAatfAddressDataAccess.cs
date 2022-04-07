@@ -19,10 +19,13 @@
 
         public async Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(GetSearchAatfAddress searchAatfAddress)
         {
-            return await context.Aatfs.Where(w => w.Name.Contains(searchAatfAddress.SearchTerm) ||
+            var selectedAatf = await context.Aatfs.Where(a => a.Id == searchAatfAddress.CurrentSelectedAatfId).SingleOrDefaultAsync();
+
+            return await context.Aatfs.Where(w => (w.Name.Contains(searchAatfAddress.SearchTerm) ||
                                                   w.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
-                                                  w.Organisation.Name.Contains(searchAatfAddress.SearchTerm) && 
-                                                  w.Id != searchAatfAddress.CurrentSelectedAatfId)
+                                                  w.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) && 
+                                                 (w.Id != searchAatfAddress.CurrentSelectedAatfId && 
+                                                  w.ComplianceYear == selectedAatf.ComplianceYear))
                                       .GroupBy(a => a.AatfId)
                                       .Select(x => x.OrderByDescending(a => a.ComplianceYear).FirstOrDefault())
                                       .OrderBy(x => x.Name)
