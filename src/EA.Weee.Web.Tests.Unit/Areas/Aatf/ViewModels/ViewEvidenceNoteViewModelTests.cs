@@ -105,7 +105,7 @@
         }
 
         [Fact]
-        public void ProtocolDisplay_GivenWasteType_WasteTypeDisplayShouldBeReturned()
+        public void WasteDisplay_GivenWasteType_WasteTypeDisplayShouldBeReturned()
         {
             //arrange
             foreach (var waste in EnumHelper.GetValues(typeof(WasteType)))
