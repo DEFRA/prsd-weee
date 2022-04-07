@@ -6,6 +6,7 @@
     {
         public static readonly NoteStatus Draft = new NoteStatus(1, "Draft");
         public static readonly NoteStatus Submitted = new NoteStatus(2, "Submitted");
+        public static readonly NoteStatus Approved = new NoteStatus(3, "Approved");
 
         protected NoteStatus()
         {
