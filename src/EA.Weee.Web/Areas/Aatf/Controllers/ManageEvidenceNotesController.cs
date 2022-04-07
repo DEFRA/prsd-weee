@@ -158,6 +158,39 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
+        {
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    var request = createRequestCreator.ViewModelToRequest(viewModel);
+
+                    //TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
+                    //var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    //var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    //return RedirectToRoute(routeName, new
+                    //{
+                    //    organisationId,
+                    //    aatfId,
+                    //    evidenceNoteId = result
+                    //});
+                }
+
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, viewModel, organisationId, aatfId, null));
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+
+                return View(model);
+            }
+        }
+
         private void SetSuccessMessage(EvidenceNoteData note, ViewEvidenceNoteViewModel model)
         {
             if (TempData[ViewDataConstant.EvidenceNoteStatus] != null)
@@ -167,7 +200,6 @@
                     model.SuccessMessage = (status == NoteStatus.Submitted ?
                         $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
 
-                    //TODO: Move this to the mapper
                     model.Status = status;
                 }
                 else
