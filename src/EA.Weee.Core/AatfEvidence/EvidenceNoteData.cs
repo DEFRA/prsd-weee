@@ -16,6 +16,12 @@
 
         public Guid RecipientId { get; set; }
 
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
         public Core.AatfEvidence.NoteStatus Status { get; set; }
 
         public Core.AatfEvidence.WasteType? WasteType { get; set; }

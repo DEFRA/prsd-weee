@@ -12,6 +12,9 @@
             {
                 RecipientId = source.Recipient.Id,
                 Reference = source.Reference,
+                StartDate = source.StartDate,
+                EndDate = source.EndDate,
+                SubmittedDate = source.SubmittedDate,
                 Status = (Core.AatfEvidence.NoteStatus)source.Status.Value,
                 WasteType = source.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)source.WasteType.Value : null,
             };

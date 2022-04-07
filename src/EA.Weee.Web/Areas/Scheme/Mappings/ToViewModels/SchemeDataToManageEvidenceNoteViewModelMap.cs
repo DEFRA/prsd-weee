@@ -10,7 +10,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new ManageEvidenceNoteViewModel
+            var model = new ReviewSubmittedEvidenceNotesViewModel
             {
                 OrganisationId = source.OrganisationId,
                 OrganisationName = source.OrganisationName,

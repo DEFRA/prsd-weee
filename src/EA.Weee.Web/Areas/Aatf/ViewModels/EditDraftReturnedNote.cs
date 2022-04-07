@@ -1,7 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using EA.Weee.Core.AatfEvidence;
-   
+    using System;
+
     public class EditDraftReturnedNote 
     {
         public int ReferenceId { get; set; }
@@ -11,5 +12,9 @@
         public WasteType? TypeOfWaste { get; set; }
 
         public NoteStatus Status { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string SubmittedBy { get; set; }
     }
 }
