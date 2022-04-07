@@ -57,7 +57,9 @@
                                     }
 
                                     <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                    <td class="govuk-table__cell">@Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)</td>
+                                    <td class="govuk-table__cell">
+                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
+                                        <a class="govuk-link--no-visited-state govuk-link" href="@(Url.UrlFor<HoldingController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId)))">Edit</a>  </td>
                                 </tr>
                             }
                         }
