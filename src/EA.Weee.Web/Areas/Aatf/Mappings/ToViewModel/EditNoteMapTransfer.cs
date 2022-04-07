@@ -15,8 +15,6 @@
             EvidenceNoteViewModel existingModel,
             Guid organisationId, Guid aatfId, EvidenceNoteData noteData) : base(schemes, existingModel, organisationId, aatfId)
         {
-            Guard.ArgumentNotNull(() => noteData, noteData);
-
             NoteData = noteData;
         }
     }
