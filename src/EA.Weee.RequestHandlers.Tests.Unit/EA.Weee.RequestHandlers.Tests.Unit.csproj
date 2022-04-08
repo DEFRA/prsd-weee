@@ -137,6 +137,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />

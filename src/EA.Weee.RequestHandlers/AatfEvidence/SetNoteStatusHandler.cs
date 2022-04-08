@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -16,15 +17,20 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
         private readonly WeeeContext context;
+        private readonly IUserContext userContext;
 
-        public SetNoteStatusHandler(WeeeContext context, IWeeeAuthorization authorization,
-            IEvidenceDataAccess evidenceDataAccess,
-            IMapper mapper)
+        public SetNoteStatusHandler(
+                                    WeeeContext context, 
+                                    IWeeeAuthorization authorization,
+                                    IEvidenceDataAccess evidenceDataAccess,
+                                    IUserContext userContext,
+                                    IMapper mapper)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
             this.mapper = mapper;
             this.context = context;
+            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(SetNoteStatus message)
@@ -32,17 +38,21 @@
             authorization.EnsureCanAccessExternalArea();
 
             var evidenceNote = await context.Notes.FindAsync(message.NoteId);
-            Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.NoteId} not found");
 
-            if (evidenceNote != null)
+            Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.NoteId} not found");
+            
+            authorization.CheckSchemeAccess(evidenceNote.Recipient.Id);
+
+            string changedBy = userContext.UserId.ToString();
+
+            if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
             {
-                string changedBy = "name of current approver";  //TODO: find out that name
                 evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy);
-                await context.SaveChangesAsync();
-                return message.NoteId;
             }
 
-            throw new InvalidOperationException(string.Format("Scheme with Id '{0}' does not exist", message.NoteId));
+            await context.SaveChangesAsync();
+
+            return message.NoteId;
         }
     }
 }
