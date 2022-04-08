@@ -22,12 +22,14 @@
         {
             var model = new ReviewSubmittedEvidenceNotesViewModel();
 
+            model.OrganisationId = source.OrganisationId;
+
             if (source != null && source.Notes.Any())
             {
                 foreach (var res in source.Notes)
                 {
                     model.EvidenceNotesDataList.Add(mapper.Map<EditDraftReturnedNote>
-                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType)));
+                        (new EditDraftReturnedNotesModel(res.Reference, res.Status, res.WasteType, res.SubmittedDate, res.SubmittedBy)));
                 }
             }
 
