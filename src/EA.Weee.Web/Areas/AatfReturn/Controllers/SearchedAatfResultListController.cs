@@ -61,7 +61,7 @@
                     SelectedAatfName = selectedAatfName
                 });
 
-                if (model.Sites.Count > 0)
+                if (aatfAddressList != null && aatfAddressList.Count > 0)
                 {
                     return View(model);
                 }
@@ -94,7 +94,7 @@
             {
                 using (var client = apiClient())
                 {
-                    CreateWeeeSentOnViewModel viewModel = new CreateWeeeSentOnViewModel()
+                    var viewModel = new CreateWeeeSentOnViewModel()
                     {
                         AatfId = searchedAatfModel.AatfId,
                         OrganisationId = searchedAatfModel.OrganisationId,

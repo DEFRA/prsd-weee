@@ -33,14 +33,14 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMap<ReturnAndAatfToSearchAnAatfViewModelMapTransfer, SearchAnAatfViewModel> mapper;
-        private readonly SearchAnAatfController controller;        
+        private readonly SearchAnAatfController controller;
 
         public SearchAnAatfControllerTests()
         {
             this.apiClient = A.Fake<IWeeeClient>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
-            this.mapper = A.Fake<IMap<ReturnAndAatfToSearchAnAatfViewModelMapTransfer, SearchAnAatfViewModel>>();            
+            this.mapper = A.Fake<IMap<ReturnAndAatfToSearchAnAatfViewModelMapTransfer, SearchAnAatfViewModel>>();
 
             controller = new SearchAnAatfController(() => apiClient, breadcrumb, cache, mapper);
         }
@@ -103,18 +103,6 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnIdAndAatfId_ApiShouldBeCalledWithReturnRequest()
-        {
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-
-            await controller.Index(returnId, aatfId, A.Dummy<Guid>());
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(g => g.ReturnId.Equals(returnId) && g.AatfId.Equals(aatfId))))
-                                    .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
         public async void IndexGet_GivenActionAndParameters_SearchAnAatfViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
@@ -146,14 +134,17 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmit_PageRedirectsToSearchedAatfList()
         {
-            var model = new SearchAnAatfViewModel();
+            var model = new SearchAnAatfViewModel()
+            {
+                SearchTerm = "Test Aatf"
+            };
             var returnId = new Guid();
             var organisationId = new Guid();
             var aatfId = new Guid();
             var selectedAatfId = new Guid();
-            var selectedAatfName = "Test Aatf";
+            var searchTerm = "Test Aatf";
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
@@ -163,7 +154,7 @@
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
             result.RouteValues["selectedAatfId"].Should().Be(selectedAatfId);
-            result.RouteValues["selectedAatfName"].Should().Be(selectedAatfName);
+            result.RouteValues["selectedAatfName"].Should().Be(searchTerm);
         }
 
         [Fact]
@@ -196,10 +187,11 @@
 
             var returnAatfAddressResult = new List<ReturnAatfAddressData>()
             {
-                new ReturnAatfAddressData() { SearchTermId = new Guid(), SearchTermName = "Test" }
+                new ReturnAatfAddressData() { SearchTermId = new Guid(), SearchTermName = "Test Aatf" }
             };
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetSearchAatfAddress>._)).Returns(returnAatfAddressResult);
 
-            var jsonResult = await controller.SearchAatf(returnAatfAddressResult[0].SearchTermName, returnAatfAddressResult[0].SearchTermId) as JsonResult;
+            var jsonResult = await controller.SearchAatf("Test Aatf", A.Dummy<Guid>()) as JsonResult;
 
             var serializer = new JavaScriptSerializer();
             var result = serializer.Deserialize<List<ReturnAatfAddressData>>(serializer.Serialize(jsonResult.Data));

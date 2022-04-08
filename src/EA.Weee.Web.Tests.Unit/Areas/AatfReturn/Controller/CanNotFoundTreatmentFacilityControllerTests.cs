@@ -98,21 +98,7 @@
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async void IndexGet_GivenReturnIdAndAatfId_ApiShouldBeCalledWithReturnRequest()
-        {
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();
-            var selectedAatfId = Guid.NewGuid();
-            var selectedAatfName = "Test";
-
-            await controller.Index(returnId, aatfId, selectedAatfName);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>.That.Matches(g => g.ReturnId.Equals(returnId) && g.AatfId.Equals(aatfId))))
-                                    .MustHaveHappened(Repeated.Exactly.Once);
-        }
+        }        
 
         [Fact]
         public async void IndexGet_GivenActionAndParameters_CanNotFoundTreatmentFacilityViewModelShouldBeReturned()

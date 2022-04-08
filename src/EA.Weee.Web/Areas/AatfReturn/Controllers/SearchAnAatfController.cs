@@ -99,8 +99,19 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SearchAatf(string searchTerm, Guid aatfId)
         {
+            if (!this.Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
             using (var client = apiClient())
             {
                 var returnData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchTerm, aatfId));
