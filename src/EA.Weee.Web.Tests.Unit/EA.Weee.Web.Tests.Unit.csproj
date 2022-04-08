@@ -280,6 +280,7 @@
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerViewDraftEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerTestBase.cs" />
     <Compile Include="Areas\Aatf\Mapping\Filters\AatfDataFilterTests.cs" />
