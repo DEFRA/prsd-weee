@@ -34,31 +34,7 @@
             {
                 LocalSetup();
 
-                var existingTonnages = new List<NoteTonnage>()
-                {
-                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
-                        fixture.Create<decimal?>()),
-                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
-                        fixture.Create<decimal?>()),
-                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
-                        fixture.Create<decimal?>())
-                };
-
-                existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
-
-                var newOrganisation = OrganisationDbSetup.Init().Create();
-                updatedScheme = SchemeDbSetup.Init().WithOrganisation(newOrganisation).Create();
-
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, existingNote.OrganisationId).Create();
-
-                existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
-
-                noteTonnages = new List<TonnageValues>();
-
-                foreach (var existingTonnage in existingTonnages)
-                {
-                    noteTonnages.Add(new TonnageValues(existingTonnage.Id, existingTonnage.CategoryId.ToInt(), existingTonnage.Received, existingTonnage.Reused));
-                }
+                DefaultData();
 
                 request = new EditEvidenceNoteRequest(existingNote.Id,
                     existingNote.Id,
@@ -96,30 +72,20 @@
         {
             private readonly Establish context = () =>
             {
-                var builder = LocalSetup();
+                LocalSetup();
 
-                //organisation = OrganisationDbSetup.Init().Create();
-                //aatf = AatfDbSetup.Init().WithOrganisation(organisation).Create();
-                //updatedScheme = SchemeDbSetup.Init().Create();
-                //OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                DefaultData();
 
-                //var categories = new List<TonnageValues>()
-                //{
-                //    new TonnageValues(Guid.Empty, (int)WeeeCategory.ITAndTelecommsEquipment, null, 999),
-                //    new TonnageValues(Guid.Empty, (int)WeeeCategory.MedicalDevices, 20, null),
-                //    new TonnageValues(Guid.Empty, (int)WeeeCategory.ConsumerEquipment, 10, 0)
-                //};
-
-                //request = new EditEvidenceNoteRequest(organisation.Id,
-                //    aatf.Id,
-                //    updatedScheme.Id,
-                //    DateTime.Now,
-                //    DateTime.Now.AddDays(1),
-                //    fixture.Create<WasteType>(),
-                //    fixture.Create<Protocol>(),
-                //    categories.ToList(),
-                //    Core.AatfEvidence.NoteStatus.Submitted,
-                //    Guid.Empty);
+                request = new EditEvidenceNoteRequest(existingNote.Id,
+                    existingNote.Id,
+                    updatedScheme.Id,
+                    DateTime.Now,
+                    DateTime.Now.AddDays(1),
+                    fixture.Create<WasteType>(),
+                    fixture.Create<Protocol>(),
+                    noteTonnages,
+                    Core.AatfEvidence.NoteStatus.Submitted,
+                    existingNote.Id);
             };
 
             private readonly Because of = () =>
@@ -157,8 +123,6 @@
         public class EditEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<EditEvidenceNoteRequest, Guid> handler;
-            //protected static Organisation organisation;
-            //protected static Aatf aatf;
             protected static EditEvidenceNoteRequest request;
             protected static Scheme updatedScheme;
             protected static Guid result;
@@ -187,9 +151,7 @@
                 updatedNote.StartDate.Date.Should().Be(request.StartDate.Date);
                 updatedNote.WasteType.ToInt().Should().Be(request.WasteType.ToInt());
                 updatedNote.Protocol.ToInt().Should().Be(request.Protocol.ToInt());
-                updatedNote.Recipient.Should().Be(updatedScheme);
-                updatedNote.Reference.Should().BeGreaterThan(0);
-                updatedNote.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                updatedNote.Recipient.Id.Should().Be(request.RecipientId);
                 updatedNote.Organisation.Should().Be(existingNote.Organisation);
                 updatedNote.NoteType.Should().Be(NoteType.EvidenceNote);
                 updatedNote.NoteTonnage.Count.Should().Be(request.TonnageValues.Count);
@@ -198,6 +160,32 @@
                     updatedNote.NoteTonnage.Should().Contain(n => n.Received.Equals(noteTonnage.FirstTonnage) &&
                                                                   n.Reused.Equals(noteTonnage.SecondTonnage) &&
                                                                   n.CategoryId.Equals((WeeeCategory)noteTonnage.CategoryId));
+                }
+            }
+            protected static void DefaultData()
+            {
+                var existingTonnages = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
+                        fixture.Create<decimal?>()),
+                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
+                        fixture.Create<decimal?>()),
+                    new NoteTonnage(fixture.Create<WeeeCategory>(), fixture.Create<decimal?>(),
+                        fixture.Create<decimal?>())
+                };
+
+                existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
+
+                var newOrganisation = OrganisationDbSetup.Init().Create();
+                updatedScheme = SchemeDbSetup.Init().WithOrganisation(newOrganisation).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, existingNote.OrganisationId).Create();
+
+                noteTonnages = new List<TonnageValues>();
+
+                foreach (var existingTonnage in existingTonnages)
+                {
+                    noteTonnages.Add(new TonnageValues(existingTonnage.Id, existingTonnage.CategoryId.ToInt(),
+                        existingTonnage.Received, existingTonnage.Reused));
                 }
             }
         }
