@@ -3,15 +3,11 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
-    using AatfReturn.Internal;
     using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
-    using Domain.Organisation;
     using Prsd.Core;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;

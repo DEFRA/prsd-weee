@@ -56,6 +56,10 @@
         public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
             Protocol? protocol)
         {
+            Guard.ArgumentNotNull(() => recipient, recipient);
+            Guard.ArgumentNotDefaultValue(() => startDate, startDate);
+            Guard.ArgumentNotDefaultValue(() => endDate, endDate);
+
             WasteType = wasteType;
             Protocol = protocol;
             Recipient = recipient;
