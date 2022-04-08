@@ -10,7 +10,7 @@
     using Requests.AatfEvidence;
     using Security;
 
-    internal class GetEvidenceNoteForSchemeRequest : IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>
+    public class GetEvidenceNoteForSchemeRequest : IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -30,10 +30,10 @@
             authorization.EnsureCanAccessExternalArea();
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
+
             Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.EvidenceNoteId} not found");
 
-            authorization.CheckSchemeAccess(evidenceNote.Recipient.Id);
-            authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
+            authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
             var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);
 

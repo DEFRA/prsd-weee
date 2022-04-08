@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Requests.Note
 {
-    using Core.Shared;
+    using System;
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mediator;
-    using System;
 
     public class SetNoteStatus : IRequest<Guid>
     {
