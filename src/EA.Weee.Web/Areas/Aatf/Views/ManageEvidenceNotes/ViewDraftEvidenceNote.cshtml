@@ -27,7 +27,10 @@
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
     
-    <div class="govuk-!-margin-top-3">
-        @Html.RouteLink("Edit evidence note", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id}, new { @class="govuk-button govuk-button--secondary"})
-    </div>
+    @if (Model.DisplayEditButton)
+    {
+        <div class="govuk-!-margin-top-3">
+            @Html.RouteLink("Edit evidence note", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id}, new { @class="govuk-button govuk-button--secondary"})
+        </div>
+    }
 </section>

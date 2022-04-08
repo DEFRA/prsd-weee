@@ -25,5 +25,7 @@
         public string OperatorAddress { get; set; }
 
         public string RecipientAddress { get; set; }
+
+        public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
     }
 }
