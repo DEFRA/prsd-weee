@@ -85,6 +85,12 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
             A.CallTo(() => aatfInfo.Name).Returns(aatfName);
 
+            var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>()
+            {
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
+            };
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAddressBySearchId>._)).Returns(returnAatfAddressResult);
+
             await controller.Index(organisationId, @return.Id, aatfId, selectedAatfId, selectedAatfName);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
@@ -97,9 +103,33 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
-            var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>()) as ViewResult;
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var selectedAatfId = Guid.NewGuid();
+            var selectedAatfName = "Test";
 
-            result.ViewName.Should().BeEmpty();
+            var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAddressBySearchId>._)).Returns(returnAatfAddressResult);
+
+            var model = new SearchedAatfResultListViewModel()
+            {
+                AatfId = aatfId,
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                SelectedAatfId = selectedAatfId,
+                Sites = returnAatfAddressResult
+            };
+
+            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSearchedAatfViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(organisationId, returnId, aatfId, selectedAatfId, selectedAatfName) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("CanNotFoundTreatmentFacility");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+            result.RouteValues["aatfName"].Should().Be(selectedAatfName);
         }
 
         [Fact]
@@ -125,7 +155,11 @@
             var selectedAatfId = Guid.NewGuid();
             var selectedAatfName = "Test";
 
-            var weeeSarchedAatfList = A.Fake<List<WeeeSearchedAnAatfListData>>();
+            var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>()
+            {
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
+            };
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAddressBySearchId>._)).Returns(returnAatfAddressResult);
 
             var model = new SearchedAatfResultListViewModel()
             {
@@ -133,7 +167,7 @@
                 ReturnId = returnId,
                 OrganisationId = organisationId,
                 SelectedAatfId = selectedAatfId,
-                Sites = weeeSarchedAatfList
+                Sites = returnAatfAddressResult
             };
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSearchedAatfViewModelMapTransfer>._)).Returns(model);
@@ -144,28 +178,37 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
+        public async void IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
         {
-            var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();
+            var selectedAatfId = Guid.NewGuid();
+            var aatfName = "Test";
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+            var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>()
+            {
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
+            };
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfAddressBySearchId>._)).Returns(returnAatfAddressResult);
 
-            await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>());
-
-            A.CallTo(() => mapper.Map(A<ReturnAndAatfToSearchedAatfViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
-        {
-            var model = new SearchedAatfResultListViewModel();
-            var returnId = new Guid();
+            var model = new SearchedAatfResultListViewModel()
+            {
+                AatfId = aatfId,
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                SelectedAatfId = selectedAatfId,
+                Sites = returnAatfAddressResult,
+                AatfName = aatfName,
+                SelectedWeeeSentOnId = selectedAatfId,
+                SelectedAatfName = aatfName
+            };
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["controller"].Should().Be("ObligatedSentOn");
             result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
         }
     }
 }
