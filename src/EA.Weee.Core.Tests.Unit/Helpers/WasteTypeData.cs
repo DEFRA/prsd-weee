@@ -8,9 +8,9 @@
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var protocol in typeof(WasteType).GetEnumValues())
+            foreach (var waste in typeof(WasteType).GetEnumValues())
             {
-                yield return new[] { protocol };
+                yield return new[] { waste };
             }
 
             yield return new object[] { null };
