@@ -44,8 +44,6 @@
             {
                 var tonnage = note.NoteTonnage.First(t => t.CategoryId.Equals(noteTonnage.CategoryId));
 
-                Guard.ArgumentNotNull(() => tonnage, tonnage, $"Tonnage value for {noteTonnage.CategoryId} is null");
-
                 tonnage.UpdateValues(noteTonnage.Received, noteTonnage.Reused);
             }
 

@@ -5,14 +5,17 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using AutoFixture;
     using Xunit;
 
     public class AddressUtilitiesTests
     {
         private readonly AddressUtilities addressUtilities;
+        private readonly Fixture fixture;
 
         public AddressUtilitiesTests()
         {
+            fixture = new Fixture();
             addressUtilities = new AddressUtilities();
         }
 
@@ -114,6 +117,70 @@
             var result = addressUtilities.FormattedAddress(null);
 
             result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void FormattedAddress2_GivenAddressFields_AddressShouldBeFormattedCorrectly()
+        {
+            var name = Faker.Company.Name();
+            var address1 = Faker.Address.StreetName();
+            var address2 = Faker.Address.StreetAddress();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+            var approval = Faker.Name.Suffix();
+
+            var result = addressUtilities.FormattedAddress(name, address1, address2, town,
+                county, postcode, approval);
+
+            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
+
+        [Fact]
+        public void FormattedAddress2_GivenAddressFieldsWithNoApprovalNumber_AddressShouldBeFormattedCorrectly()
+        {
+            var name = Faker.Company.Name();
+            var address1 = Faker.Address.StreetName();
+            var address2 = Faker.Address.StreetAddress();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+
+            var result = addressUtilities.FormattedAddress(name, address1, address2, town,
+                county, postcode);
+
+            result.Should().Be($@"{name}<br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
+
+        [Fact]
+        public void FormattedAddress2_GivenAddressFieldsWithNoAddress2_AddressShouldBeFormattedCorrectly()
+        {
+            var name = Faker.Company.Name();
+            var address1 = Faker.Address.StreetName();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+            var approval = Faker.Name.Suffix();
+
+            var result = addressUtilities.FormattedAddress(name, address1, null, town,
+                county, postcode, approval);
+
+            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
+
+        [Fact]
+        public void FormattedAddress2_GivenAddressFieldsWithNoApprovalOrAddress2_AddressShouldBeFormattedCorrectly()
+        {
+            var name = Faker.Company.Name();
+            var address1 = Faker.Address.StreetName();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+
+            var result = addressUtilities.FormattedAddress(name, address1, null, town,
+                county, postcode);
+
+            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
         }
     }
 }
