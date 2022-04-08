@@ -8,16 +8,13 @@
     using AutoFixture;
     using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
@@ -33,31 +30,23 @@
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
-        private readonly IAatfDataAccess aatfDataAccess;
-        private readonly IUserContext userContext;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
-        private readonly Aatf aatf;
         private readonly Scheme scheme;
         private readonly Note note;
-        private readonly Guid userId;
-        private readonly Guid organisationId;
 
         public EditEvidenceNoteRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            aatfDataAccess = A.Fake<IAatfDataAccess>();
-            userContext = A.Fake<IUserContext>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
 
             organisation = A.Fake<Organisation>();
-            aatf = A.Fake<Aatf>();
             scheme = A.Fake<Scheme>();
             note = A.Fake<Note>();
-            userId = fixture.Create<Guid>();
-            organisationId = fixture.Create<Guid>();
+            fixture.Create<Guid>();
+            var organisationId = fixture.Create<Guid>();
 
             A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
@@ -165,7 +154,7 @@
         }
 
         [Theory]
-        [ClassData(typeof(WasteType))]
+        [ClassData(typeof(WasteTypeData))]
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
         {
             //arrange
