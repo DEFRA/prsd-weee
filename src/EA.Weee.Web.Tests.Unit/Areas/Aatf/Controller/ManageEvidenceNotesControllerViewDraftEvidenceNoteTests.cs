@@ -19,7 +19,7 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 

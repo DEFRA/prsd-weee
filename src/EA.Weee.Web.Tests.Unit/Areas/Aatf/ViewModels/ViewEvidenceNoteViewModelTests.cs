@@ -15,7 +15,6 @@
             typeof(ViewEvidenceNoteViewModel).Should().BeDerivedFrom<EvidenceNoteViewModel>();
         }
 
-
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
         [InlineData("ProtocolDisplay", "Protocol")]
