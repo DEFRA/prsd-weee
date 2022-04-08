@@ -41,7 +41,7 @@
 
             Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.Id} not found");
 
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
             var scheme = await schemeDataAccess.GetSchemeOrDefault(message.RecipientId);
 
