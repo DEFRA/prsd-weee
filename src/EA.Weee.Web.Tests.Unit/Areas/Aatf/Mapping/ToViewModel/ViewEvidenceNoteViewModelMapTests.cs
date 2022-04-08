@@ -1,0 +1,162 @@
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AutoFixture;
+    using Core.AatfEvidence;
+    using Core.DataReturns;
+    using Core.Helpers;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Web.Areas.Aatf.Mappings.ToViewModel;
+    using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Web.ViewModels.Shared.Utilities;
+    using Xunit;
+
+    public class ViewEvidenceNoteViewModelMapTests
+    {
+        private readonly ITonnageUtilities tonnageUtilities;
+        private readonly IAddressUtilities addressUtilities;
+        private readonly ViewEvidenceNoteViewModelMap map;
+        private readonly Fixture fixture;
+
+        public ViewEvidenceNoteViewModelMapTests()
+        {
+            tonnageUtilities = A.Fake<ITonnageUtilities>();
+            addressUtilities = A.Fake<IAddressUtilities>();
+            fixture = new Fixture();
+
+            map = new ViewEvidenceNoteViewModelMap(tonnageUtilities, addressUtilities);
+        }
+
+        [Fact]
+        public void Map_GivenNullSource_ArgumentNullExceptionExpected()
+        {
+            //act
+            var result = Record.Exception(() => map.Map(null));
+
+            //assert
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenSource_StandardPropertiesShouldBeMapped()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.Id.Should().Be(source.EvidenceNoteData.Id);
+            result.OrganisationId.Should().Be(source.EvidenceNoteData.OrganisationData.Id);
+            result.AatfId.Should().Be(source.EvidenceNoteData.AatfData.Id);
+            result.Reference.Should().Be(source.EvidenceNoteData.Reference);
+            result.Status.Should().Be(source.EvidenceNoteData.Status);
+            result.Type.Should().Be(source.EvidenceNoteData.Type);
+            result.StartDate.Should().Be(source.EvidenceNoteData.StartDate);
+            result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
+            result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
+            result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+        }
+
+        [Fact]
+        public void Map_GivenSource_OperatorAddressShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            const string operatorAddress = "operatorAddress";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                null)).Returns(operatorAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.OperatorAddress.Should().Be(operatorAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSource_SiteAddressShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            const string siteAddress = "siteAddress";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
+                source.EvidenceNoteData.AatfData.SiteAddress.Address1,
+                source.EvidenceNoteData.AatfData.SiteAddress.Address2,
+                source.EvidenceNoteData.AatfData.SiteAddress.TownOrCity,
+                source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
+                source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
+                source.EvidenceNoteData.AatfData.ApprovalNumber)).Returns(siteAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SiteAddress.Should().Be(siteAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSource_RecipientAddressShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            const string recipientAddress = "recipientAddress";
+
+            A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                source.EvidenceNoteData.SchemeData.Address.Address1,
+                source.EvidenceNoteData.SchemeData.Address.Address2,
+                source.EvidenceNoteData.SchemeData.Address.TownOrCity,
+                source.EvidenceNoteData.SchemeData.Address.CountyOrRegion,
+                source.EvidenceNoteData.SchemeData.Address.Postcode,
+                null)).Returns(recipientAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be(recipientAddress);
+        }
+
+        [Fact]
+        public void Map_GivenTonnages_TonnagesShouldBeFormatted()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+
+            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, null, 1),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null)
+            };
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns(null);
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused)).Returns("1");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received)).Returns("2");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Reused)).Returns(null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt())).Received
+                .Should().Be(null);
+            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt())).Reused
+                .Should().Be("1");
+            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Received
+                .Should().Be("2");
+            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Reused
+                .Should().Be(null);
+        }
+    }
+}

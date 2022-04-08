@@ -59,12 +59,12 @@
             userId = fixture.Create<Guid>();
             organisationId = fixture.Create<Guid>();
 
-            //A.CallTo(() => note.Reference).Returns(1);
             A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
-
+            A.CallTo(() => note.Id).Returns(fixture.Create<Guid>());
+            
             request = Request();
 
             handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess);
@@ -218,15 +218,14 @@
         public async Task HandleAsync_GivenRequest_IdShouldBeReturned()
         {
             //act
-            var id = fixture.Create<Guid>();
-            var newNote = A.Fake<Note>();
-            A.CallTo(() => newNote.Id).Returns(id);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
 
             //arrange
             var result = await handler.HandleAsync(request);
 
             //assert
-            result.Should().Be(id);
+            result.Should().Be(note.Id);
         }
 
         private void AssertTonnages(List<NoteTonnage> tonnageValues)
