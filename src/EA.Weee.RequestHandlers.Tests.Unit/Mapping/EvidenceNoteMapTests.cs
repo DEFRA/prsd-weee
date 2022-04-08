@@ -13,6 +13,7 @@
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
+    using EA.Weee.Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -67,13 +68,8 @@
             result.RecipientId.Should().Be(recipientId);
         }
 
-        public static IEnumerable<object[]> NoteTypes()
-        {
-            return Enumeration.GetAll<NoteType>().Select(value => new object[] { value });
-        }
-
         [Theory]
-        [MemberData(nameof(NoteTypes))]
+        [ClassData(typeof(NoteTypeData))]
         public void Map_GivenNote_NoteTypePropertyShouldBeMapped(NoteType noteType)
         {
             //arrange
@@ -88,13 +84,8 @@
             result.Type.ToInt().Should().Be(noteType.Value);
         }
 
-        public static IEnumerable<object[]> NoteStatuses()
-        {
-            return Enumeration.GetAll<NoteStatus>().Select(value => new object[] { value });
-        }
-
         [Theory]
-        [MemberData(nameof(NoteStatuses))]
+        [ClassData(typeof(NoteStatusData))]
         public void Map_GivenNote_NoteStatusPropertyShouldBeMapped(NoteStatus noteStatus)
         {
             //arrange
@@ -109,18 +100,8 @@
             result.Status.ToInt().Should().Be(noteStatus.Value);
         }
 
-        public static IEnumerable<object[]> Protocols()
-        {
-            foreach (var protocol in typeof(Protocol).GetEnumValues())
-            {
-                yield return new[] { protocol };
-            }
-
-            yield return new object[] { null };
-        }
-
         [Theory]
-        [MemberData(nameof(Protocols))]
+        [ClassData(typeof(ProtocolData))]
         public void Map_GivenNote_ProtocolPropertyShouldBeMapped(Protocol protocol)
         {
             //arrange
@@ -135,17 +116,8 @@
             result.Protocol.ToInt().Should().Be(protocol.ToInt());
         }
 
-        public static IEnumerable<object[]> WasteTypes()
-        {
-            foreach (var wasteType in typeof(WasteType).GetEnumValues())
-            {
-                yield return new[] { wasteType };
-            }
-            yield return new object[] { null };
-        }
-
         [Theory]
-        [MemberData(nameof(WasteTypes))]
+        [ClassData(typeof(WasteTypeData))]
         public void Map_GivenNote_WasteTypePropertyShouldBeMapped(WasteType wasteType)
         {
             //arrange
