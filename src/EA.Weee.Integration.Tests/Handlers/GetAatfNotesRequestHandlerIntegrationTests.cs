@@ -108,6 +108,11 @@
                     evidenceNoteData[i].Reference.Should().Be(notesSetArray[i].Reference);
                 }
             };
+
+            private readonly It shouldHaveNotesInExpectedOrder = () =>
+            {
+                evidenceNoteData.Should().BeInAscendingOrder(e => e.Reference);
+            };
         }
 
         [Component]
