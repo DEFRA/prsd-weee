@@ -39,7 +39,7 @@
             var notes = await aatfDataAccess
                 .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses.Select(x => (int)x).ToList());
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderBy(n => n.CreatedDate).ToList())).ListOfEvidenceNoteData;
+            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }
     }
 }
