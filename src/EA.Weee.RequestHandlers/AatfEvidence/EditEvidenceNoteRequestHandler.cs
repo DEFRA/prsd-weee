@@ -21,17 +21,14 @@
     public class EditEvidenceNoteRequestHandler : IRequestHandler<EditEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
-            IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
             ISchemeDataAccess schemeDataAccess)
         {
             this.authorization = authorization;
-            this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.schemeDataAccess = schemeDataAccess;
         }
