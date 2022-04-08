@@ -6,13 +6,12 @@
 
     public class ViewEvidenceNoteMapTransfer
     {
-        public Guid OrganisationId { get; protected set; }
-        public Guid AatfId { get; protected set; }
-
-        public EvidenceNoteData EvidenceNoteData { get; private set; }
+        public EvidenceNoteData EvidenceNoteData { get; }
 
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData)
         {
+            Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
+
             EvidenceNoteData = evidenceNoteData;
         }
     }

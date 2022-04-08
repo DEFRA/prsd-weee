@@ -8,39 +8,42 @@
     ViewBag.Title = title + " - GOV.UK";
 }
 
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
-@section main_content
-{
-    <p>
-        @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class="govuk-back-link" })
-    </p>
+            <p>
+                @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+            </p>
 
-    @Html.Gds().ValidationSummary()
+            @Html.Gds().ValidationSummary()
 
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">
-            @title
-        </h1>
-    </header>
+            <header class="hgroup">
+                <h1 class="govuk-heading-m">
+                    @title
+                </h1>
+            </header>
 
-    @using (Html.BeginForm(actionName: "Index", controllerName: "ChooseSite", method: FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.OrganisationId)
+            @using (Html.BeginForm(actionName: "Index", controllerName: "ChooseSite", method: FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.OrganisationId)
 
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
-    @Html.Gds().ValidationMessageFor(m => m.SelectedId)
-    @this.WeeeGds().RadioButtonsFor(
-                       m => m.SelectedId,
-                       Model.AatfList,
-                       o => o.Id,
-                       o => o.AatfContactDetailsName,
-                       RadioButtonLegend.VisuallyHidden,
-                       RadioButtonLayout.Stacked)
-</div>
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
+                    @Html.Gds().ValidationMessageFor(m => m.SelectedId)
+                    @this.WeeeGds().RadioButtonsFor(
+                                       m => m.SelectedId,
+                                       Model.AatfList,
+                                       o => o.Id,
+                                       o => o.AatfContactDetailsName,
+                                       RadioButtonLegend.VisuallyHidden,
+                                       RadioButtonLayout.Stacked)
+                </div>
 
-        @(this.WeeeGds().Submit("Continue"))
-    }
+                @(this.WeeeGds().Submit("Continue"))
+            }
 
-   
-}
+        </div>
+    </div>
+</section>
+

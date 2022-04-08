@@ -134,24 +134,7 @@
         $("#SelectPcsForm").submit();
     });
 
-    $("#save-as-draft-button").click(function() {
-        //event.preventDefault();
-        //var form = $(this).parents("form:first");
-        //form.submit();
-
-        //var autocompletes = $(".autocomplete__input");
-        //autocompletes.each(function(auto) {
-        //    console.log($(this));
-        //});
-    });
     var selectElements = document.querySelectorAll(".gds-auto-complete");
-/*    if (selectElements.length > 0) {
-        window.onload = new function() {
-            selectElements.forEach(function(element) {
-                console.log(element.parent);
-            });
-        }
-    }*/
 
     selectElements.forEach(function(element) {
         var items = Array.from(element.options).map(el => el.textContent || el.innerText);

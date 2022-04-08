@@ -35,6 +35,11 @@
             return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);
         }
 
+        public Note GetDraftReturnedEvidenceNote(Guid organisationId, Guid aatfId)
+        {
+            return dbContext.Notes.FirstOrDefault(n => n.Organisation.Id == organisationId && n.Aatf.Id == aatfId);
+        }
+
         public NoteStatusHistory GetLatestNoteStatusHistoryForNote(Guid noteId)
         {
             return dbContext.NoteStatusHistory.Where(n => n.NoteId.Equals(noteId))

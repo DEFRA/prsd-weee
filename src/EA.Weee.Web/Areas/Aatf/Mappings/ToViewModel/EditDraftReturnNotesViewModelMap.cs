@@ -1,10 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
-    using Core.AatfEvidence;
+    using EA.Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
 
@@ -19,14 +16,15 @@
 
         public EditDraftReturnedNotesViewModel Map(EditDraftReturnNotesViewModelTransfer source)
         {
+            Guard.ArgumentNotNull(() => source, source);
+
             var model = new EditDraftReturnedNotesViewModel();
 
             if (source != null && source.Notes.Any())
             {
                 foreach (var res in source.Notes)
                 {
-                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>
-                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType)));
+                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>(new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type)));
                 }
             }
 
