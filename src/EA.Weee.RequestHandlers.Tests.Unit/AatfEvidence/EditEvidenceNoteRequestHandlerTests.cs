@@ -214,6 +214,21 @@
             AssertTonnages(tonnageValues);
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenRequest_IdShouldBeReturned()
+        {
+            //act
+            var id = fixture.Create<Guid>();
+            var newNote = A.Fake<Note>();
+            A.CallTo(() => newNote.Id).Returns(id);
+
+            //arrange
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.Should().Be(id);
+        }
+
         private void AssertTonnages(List<NoteTonnage> tonnageValues)
         {
             foreach (var tonnageValue in tonnageValues)
