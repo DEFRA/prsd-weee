@@ -11,11 +11,9 @@
     public class AddressUtilitiesTests
     {
         private readonly AddressUtilities addressUtilities;
-        private readonly Fixture fixture;
 
         public AddressUtilitiesTests()
         {
-            fixture = new Fixture();
             addressUtilities = new AddressUtilities();
         }
 
