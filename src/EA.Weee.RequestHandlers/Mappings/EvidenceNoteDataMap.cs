@@ -27,6 +27,7 @@
                     var schemeData = mapper.Map<Scheme, SchemeData>(note.Recipient);
                     var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(note);
                     evidenceNoteData.SchemeData = schemeData;
+                    evidenceNoteData.SubmittedBy = note.Aatf != null ? note.Aatf.Organisation.Name : string.Empty;
                     model.ListOfEvidenceNoteData.Add(evidenceNoteData);
                 }
             }
