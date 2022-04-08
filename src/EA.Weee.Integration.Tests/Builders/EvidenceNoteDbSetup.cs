@@ -63,5 +63,13 @@
             DefaultNote(tonnages);
             return this;
         }
+
+        //public EvidenceNoteDbSetup UpdateTonnages(List<NoteTonnage> tonnages)
+        //{
+        //    foreach (var noteTonnage in instance.NoteTonnage)
+        //    {
+                
+        //    }
+        //}
     }
 }
