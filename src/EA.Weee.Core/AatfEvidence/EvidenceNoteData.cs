@@ -22,6 +22,8 @@
 
         public DateTime? SubmittedDate { get; set; }
 
+        public string SubmittedBy { get; set; }
+
         public Core.AatfEvidence.NoteStatus Status { get; set; }
 
         public Core.AatfEvidence.WasteType? WasteType { get; set; }

@@ -13,6 +13,8 @@
                 ReferenceId = source.ReferenceId,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)source.WasteType.Value : null,
+                SubmittedDate = source.SubmittedDate,
+                SubmittedBy = source.SubmittedBy,
             };
         }
     }
