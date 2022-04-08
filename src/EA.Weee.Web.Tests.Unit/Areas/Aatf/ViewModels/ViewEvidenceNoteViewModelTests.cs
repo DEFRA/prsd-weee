@@ -130,5 +130,37 @@
                 result.Should().Be(EnumHelper.GetDisplayName((Protocol)protocol.Key));
             }
         }
+
+        [Fact]
+        public void DisplayEditButton_GivenDraft_ShouldBeTrue()
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Draft
+            };
+
+            //act
+            var result = model.DisplayEditButton;
+
+            //assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void DisplayEditButton_GivenNotDraft_ShouldBeFalse()
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Submitted
+            };
+
+            //act
+            var result = model.DisplayEditButton;
+
+            //assert
+            result.Should().BeFalse();
+        }
     }
 }
