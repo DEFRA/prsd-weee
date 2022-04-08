@@ -56,5 +56,42 @@
 
             return siteAddressLong;
         }
+
+        public string FormattedAddress(string name,
+            string address1,
+            string address2,
+            string town,
+            string county,
+            string postCode,
+            string approvalNumber = null)
+        {
+            var siteAddressLong = name;
+
+            if (approvalNumber != null)
+            {
+                siteAddressLong += $"<br/><strong>{approvalNumber}</strong>";
+            }
+
+            siteAddressLong += $"<br/>{address1}";
+
+            if (address2 != null)
+            {
+                siteAddressLong += $"<br/>{address2}";
+            }
+
+            siteAddressLong += $"<br/>{town}";
+
+            if (county != null)
+            {
+                siteAddressLong += $"<br/>{county}";
+            }
+
+            if (postCode != null)
+            {
+                siteAddressLong += $"<br/>{postCode}";
+            }
+
+            return siteAddressLong;
+        }
     }
 }
