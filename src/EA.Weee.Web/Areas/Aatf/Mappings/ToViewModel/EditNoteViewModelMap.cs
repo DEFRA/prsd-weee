@@ -29,12 +29,24 @@
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"),
-                ReceivedId = source.ExistingModel?.ReceivedId ?? source.NoteData.RecipientId,
-                StartDate = source.ExistingModel?.StartDate ?? source.NoteData.StartDate,
-                EndDate = source.ExistingModel?.EndDate ?? source.NoteData.EndDate,
-                WasteTypeValue = source.ExistingModel?.WasteTypeValue ?? source.NoteData.WasteType,
-                ProtocolValue = source.ExistingModel?.ProtocolValue ?? source.NoteData.Protocol
             };
+
+            if (source.ExistingModel != null)
+            {
+                model.ReceivedId = source.ExistingModel.ReceivedId;
+                model.StartDate = source.ExistingModel.StartDate;
+                model.EndDate = source.ExistingModel.EndDate;
+                model.WasteTypeValue = source.ExistingModel.WasteTypeValue;
+                model.ProtocolValue = source.ExistingModel.ProtocolValue;
+            }
+            else
+            {
+                model.ReceivedId = source.NoteData.RecipientId;
+                model.StartDate = source.NoteData.StartDate;
+                model.EndDate = source.NoteData.EndDate;
+                model.WasteTypeValue = source.NoteData.WasteType;
+                model.ProtocolValue = source.NoteData.Protocol;
+            }
 
             if (source.ExistingModel != null)
             {

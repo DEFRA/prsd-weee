@@ -3,15 +3,11 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
-    using AatfReturn.Internal;
     using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
-    using Domain.Organisation;
     using Prsd.Core;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
@@ -21,17 +17,14 @@
     public class EditEvidenceNoteRequestHandler : IRequestHandler<EditEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
-            IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
             ISchemeDataAccess schemeDataAccess)
         {
             this.authorization = authorization;
-            this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.schemeDataAccess = schemeDataAccess;
         }
@@ -44,7 +37,7 @@
 
             Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.Id} not found");
 
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
             var scheme = await schemeDataAccess.GetSchemeOrDefault(message.RecipientId);
 

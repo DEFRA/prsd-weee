@@ -49,8 +49,7 @@
             builder.RegisterType<OrganisationDataAccess>().As<IOrganisationDataAccess>()
                 .InstancePerRequest();
 
-            builder.RegisterType<SchemeDataAccess>().As<ISchemeDataAccess>()
-                .InstancePerRequest();
+            builder.RegisterTypeByEnvironment<SchemeDataAccess, ISchemeDataAccess>(environment);
 
             builder.RegisterType<StoredProcedures>().As<IStoredProcedures>()
                 .InstancePerRequest();
