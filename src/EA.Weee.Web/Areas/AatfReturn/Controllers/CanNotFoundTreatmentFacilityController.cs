@@ -3,13 +3,8 @@
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
-    using EA.Weee.Requests.AatfReturn.Obligated;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -26,18 +21,15 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IAddSentOnAatfSiteRequestCreator requestCreator;
         private readonly IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel> mapper;
 
-        public CanNotFoundTreatmentFacilityController(Func<IWeeeClient> apiClient, 
-                                                      BreadcrumbService breadcrumb, 
-                                                      IWeeeCache cache, 
-                                                      IAddSentOnAatfSiteRequestCreator requestCreator, 
+        public CanNotFoundTreatmentFacilityController(Func<IWeeeClient> apiClient,
+                                                      BreadcrumbService breadcrumb,
+                                                      IWeeeCache cache,
                                                       IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
-            this.requestCreator = requestCreator;
             this.cache = cache;
             this.mapper = mapper;
         }
@@ -47,7 +39,7 @@
         {
             using (var client = apiClient())
             {
-                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));                
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var viewModel = mapper.Map(new ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer()
                 {

@@ -186,6 +186,7 @@
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnTestActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfReturnBaseControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\AatfTaskListControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\CanNotFoundTreatmentFacilityControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReturnsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\CheckYourReturnControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ObligatedReusedControllerTests.cs" />
@@ -198,6 +199,8 @@
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteCreateSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedOffSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\ReusedRemoveSiteControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SearchAnAatfControllerTests.cs" />
+    <Compile Include="Areas\AatfReturn\Controller\SearchedAatfResultListControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsDeselectControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Controller\SelectReportOptionsNilControllerTests.cs" />
