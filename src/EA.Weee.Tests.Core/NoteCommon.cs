@@ -13,7 +13,13 @@
 
     public static class NoteCommon
     {
-        public static Note CreateNote(DatabaseWrapper database, Organisation organisation, Scheme scheme, Aatf aatf)
+        public static Note CreateNote(DatabaseWrapper database, 
+            Organisation organisation, 
+            Scheme scheme, 
+            Aatf aatf,
+            WasteType wasteType = WasteType.HouseHold,
+            Protocol protocol = Protocol.Actual,
+            List<NoteTonnage> noteTonnages = null)
         {
             if (organisation == null)
             {
@@ -22,7 +28,7 @@
 
             if (scheme == null)
             {
-                scheme = new Scheme(organisation.Id);
+                scheme = new Scheme(organisation);
             }
 
             if (aatf == null)
@@ -41,16 +47,21 @@
                     database.WeeeContext.PanAreas.First());
             }
 
+            if (noteTonnages == null)
+            {
+                noteTonnages = new List<NoteTonnage>();
+            }
+
             return new Note(organisation,
                 scheme,
                 DateTime.Now,
                 DateTime.Now,
-                WasteType.HouseHold,
-                Protocol.Actual,
+                wasteType,
+                protocol,
                 aatf,
                 NoteType.EvidenceNote,
                 database.WeeeContext.GetCurrentUser(),
-                new List<NoteTonnage>());
+                noteTonnages);
         }
     }
 }
