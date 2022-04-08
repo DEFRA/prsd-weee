@@ -36,7 +36,7 @@
                             <th class="govuk-table__header">
                                 Status
                             </th>
-                            <th class="govuk-table__header"></th>
+                            <th class="govuk-table__header">@Html.Gds().VisuallyHidden("actions")</th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -58,8 +58,9 @@
 
                                     <td class="govuk-table__cell">@note.Status.ToString() </td>
                                     <td class="govuk-table__cell">
-                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
-                                        <a class="govuk-link--no-visited-state govuk-link" href="@(Url.UrlFor<HoldingController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId)))">Edit</a>  </td>
+                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br/>
+                                        @Html.NavigationRouteLink("Edit", "Edit evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)
+                                    </td>
                                 </tr>
                             }
                         }

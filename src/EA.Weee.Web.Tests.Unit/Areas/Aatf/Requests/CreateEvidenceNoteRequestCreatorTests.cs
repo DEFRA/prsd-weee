@@ -13,17 +13,17 @@
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
-    public class EvidenceNoteRequestCreatorTests
+    public class CreateEvidenceNoteRequestCreatorTests
     {
-        private readonly EvidenceNoteRequestCreator requestCreator;
+        private readonly CreateEvidenceNoteRequestCreator requestCreator;
         private readonly Fixture fixture;
 
-        public EvidenceNoteRequestCreatorTests()
+        public CreateEvidenceNoteRequestCreatorTests()
         {
             fixture = new Fixture();
             fixture.Customizations.Add(new StringDecimalGenerator());
 
-            requestCreator = new EvidenceNoteRequestCreator();
+            requestCreator = new CreateEvidenceNoteRequestCreator();
         }
 
         [Fact]

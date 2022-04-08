@@ -97,21 +97,16 @@
 
             private readonly It shouldHaveExpectedReferenceData = () =>
             {
-                var expectedEvidenceNote = evidenceNoteData.First();
-
-                expectedEvidenceNote.Reference.Should().Be(notesSet[0].Reference);
-
-                var notesSetArray = notesSet.ToArray();
-
-                for (int i = 0; i < evidenceNoteData.Count; i++)
+                foreach (var note1 in notesSet)
                 {
-                    evidenceNoteData[i].Reference.Should().Be(notesSetArray[i].Reference);
+                    var evidenceNote = evidenceNoteData.FirstOrDefault(n => n.Id.Equals(note1.Id));
+                    evidenceNote.Should().NotBeNull();
                 }
             };
 
             private readonly It shouldHaveNotesInExpectedOrder = () =>
             {
-                evidenceNoteData.Should().BeInAscendingOrder(e => e.Reference);
+                evidenceNoteData.Should().BeInDescendingOrder(e => e.Reference);
             };
         }
 

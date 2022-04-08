@@ -35,5 +35,13 @@
 
             control.ToString().Should().NotContain(GovUkHalfWidth);
         }
+
+        [Fact]
+        public void GivenGDSTextBox_DateFieldWithFormatShouldBeRenderedCorrectly()
+        {
+            var control = htmlHelper.Gds().TextBoxFor(m => m.Date, false, "{0:yyyy-MM-dd}");
+
+            control.ToString().Should().Be(@"<input class=""form-control govuk-input"" id=""Date"" name=""Date"" type=""text"" value=""0001-01-01"" />");
+        }
     }
 }

@@ -47,7 +47,8 @@
                 null,
                 null,
                 tonnages.ToList(),
-                status));
+                status,
+                Guid.Empty));
 
                 result.Should().BeOfType<ArgumentException>();
         }
@@ -62,7 +63,8 @@
                 null,
                 null,
                 tonnages.ToList(),
-                status));
+                status,
+                Guid.Empty));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -77,7 +79,8 @@
                 null,
                 null,
                 tonnages.ToList(),
-                status));
+                status,
+                Guid.Empty));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -92,7 +95,8 @@
                 null,
                 null,
                 tonnages.ToList(),
-                status));
+                status,
+                Guid.Empty));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -107,7 +111,8 @@
                 null,
                 null,
                 tonnages.ToList(),
-                status));
+                status,
+                Guid.Empty));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -154,7 +159,8 @@
                 wasteType,
                 protocol,
                 tonnages.ToList(),
-                status);
+                status,
+                Guid.Empty);
         }
     }
 }
