@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteHandler.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
