@@ -2,17 +2,10 @@
 {
     using EA.Weee.Core.AatfReturn;
     using System;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class ReturnAndAatfToSearchAnAatfViewModelMapTransfer
     {
-        public ReturnAndAatfToSearchAnAatfViewModelMapTransfer()
-        {
-        }
-
         public ReturnData Return { get; set; }
 
         public Guid AatfId { get; set; }
