@@ -187,5 +187,10 @@
 
             return null;
         }
+
+        public static int ToInt<T>(this T enumeration) where T : struct
+        {
+            return System.Convert.ToInt32(enumeration);
+        }
     }
 }

@@ -31,19 +31,15 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var listOfNotes = new List<EvidenceNoteData>();
-
             message.AllowedStatuses = new List<NoteStatus>
             {
                  NoteStatus.Draft
             };
 
             var notes = await aatfDataAccess
-                .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses
-                .Select(x => (int)x)
-                .ToList());
+                .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses.Select(x => (int)x).ToList());
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes)).ListOfEvidenceNoteData;
+            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }
     }
 }

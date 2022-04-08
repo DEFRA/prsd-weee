@@ -29,19 +29,22 @@
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator;
-    
+        private readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
+        private readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
+
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
             IWeeeCache cache, 
             Func<IWeeeClient> apiClient, 
-            IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> createRequestCreator)
+            IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
+            IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.apiClient = apiClient;
             this.createRequestCreator = createRequestCreator;
+            this.editRequestCreator = editRequestCreator;
         }
 
         [HttpGet]
@@ -61,8 +64,6 @@
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
 
                 await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
-
-                //return PartialView("Overview/EditDraftReturnedNotesOverview", model);
 
                 return this.View("Overview/EditDraftReturnedNotesOverview", model);
             }
@@ -124,30 +125,70 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                var request = new GetEvidenceNoteRequest(evidenceNoteId, organisationId);
+                var request = new GetEvidenceNoteRequest(evidenceNoteId);
 
-                // retrieve the evidence note
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                //TODO: create view model mapper, to map EvidenceNote to ViewModel and to map if success message should be displayed
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
-                model.OrganisationId = organisationId;
-                model.AatfId = aatfId;
 
                 SetSuccessMessage(result, model);
 
-                //TODO: Remove the Viewbag items below as they should be based off the view model
+                return View(model);
+            }
+        }
 
-                //TODO: update the view to only show the success based on a view model property
-                //ViewBag.EvidenceNoteId = evidenceNoteId;
-                //ViewBag.aatfId = aatfId;
-                //ViewBag.organisationId = organisationId;
+        [HttpGet]
+        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                
+                var request = new GetEvidenceNoteRequest(evidenceNoteId);
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, null, organisationId, result.AatfData.Id, result));
+                
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
+        {
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    var request = editRequestCreator.ViewModelToRequest(viewModel);
+
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    return RedirectToRoute(routeName, new
+                    {
+                        organisationId,
+                        aatfId,
+                        evidenceNoteId = result
+                    });
+                }
+
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, viewModel, organisationId, aatfId, null));
+
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
                 return View(model);
             }
@@ -162,7 +203,6 @@
                     model.SuccessMessage = (status == NoteStatus.Submitted ?
                         $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
 
-                    //TODO: Move this to the mapper
                     model.Status = status;
                 }
                 else

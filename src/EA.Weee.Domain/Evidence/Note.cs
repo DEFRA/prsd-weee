@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
@@ -52,6 +53,16 @@
             NoteStatusHistory = new List<NoteStatusHistory>();
         }
 
+        public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
+            Protocol? protocol)
+        {
+            WasteType = wasteType;
+            Protocol = protocol;
+            Recipient = recipient;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
         public void UpdateStatus(NoteStatus newStatus, string changedBy)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
@@ -89,12 +100,24 @@
         /// Should only be used for integration tests
         /// </summary>
         /// <param name="organisation"></param>
-        public void UpdateOrganisation(Organisation organisation)
+        public void UpdateOrganisation(Guid organisationId)
         {
-            Guard.ArgumentNotNull(() => organisation, organisation);
+            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
 
-            Organisation = organisation;
+            OrganisationId = organisationId;
+            Organisation = null;
         }
+        public void UpdateAatf(Guid aatfId)
+        {
+            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+
+            AatfId = aatfId;
+            Aatf = null;
+        }
+
+        public virtual Guid OrganisationId { get; set; }
+
+        public virtual Guid AatfId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }
 
