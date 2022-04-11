@@ -25,15 +25,11 @@
             Type = type;
         }
 
-        public EditDraftReturnedNotesModel(int referenceId, NoteStatus status, WasteType? wasteType, DateTime? submittedDate, string submittedBy)
+        public EditDraftReturnedNotesModel(int referenceId, string recipient, NoteStatus status, WasteType? wasteType, Guid id,
+            NoteType noteType, DateTime? submittedDate, string submittedBy) : this(referenceId, recipient, status, wasteType, id, noteType)
         {
-            Guard.ArgumentNotDefaultValue(() => referenceId, referenceId);
-
-            this.ReferenceId = referenceId;
-            this.Status = status;
-            this.WasteType = wasteType;
-            this.SubmittedDate = submittedDate;
-            this.SubmittedBy = submittedBy;
+            SubmittedDate = submittedDate;
+            SubmittedBy = submittedBy;
         }
 
         public int ReferenceId { get; set; }

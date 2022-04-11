@@ -6,11 +6,11 @@
     using System;
     using System.Collections.Generic;
 
-    public class GetSubmittedEvidenceNotesByOrganisationIdRequest : IRequest<List<EvidenceNoteData>>
+    public class GetEvidenceNotesByOrganisationRequest : IRequest<List<EvidenceNoteData>>
     {
         public Guid OrganisationId { get; private set; }
 
-        public GetSubmittedEvidenceNotesByOrganisationIdRequest(Guid organisationId)
+        public GetEvidenceNotesByOrganisationRequest(Guid organisationId)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
 

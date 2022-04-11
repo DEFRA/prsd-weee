@@ -9,5 +9,10 @@
         public string OrganisationName { get; set; }
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
+
+        public ManageEvidenceNoteViewModel(ManageEvidenceNotesDisplayOptions activeDisplayOption)
+        {
+            this.ActiveDisplayOption = activeDisplayOption;
+        }
     }
 }
