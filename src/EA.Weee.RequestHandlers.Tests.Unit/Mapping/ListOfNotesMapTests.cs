@@ -18,7 +18,7 @@
         }
 
         [Fact]
-        public void Map_GivenListIsNull_ArgumentNullExceptionExpected()
+        public void Constructor_GivenListIsNull_ArgumentNullExceptionExpected()
         {
             // act
             Action action = () => new ListOfNotesMap(null);
@@ -28,7 +28,7 @@
         }
 
         [Fact]
-        public void Map_GivenListIsNotNull_ShouldMapTheListOfNotes()
+        public void Constrctor_GivenListIsNotNull_ShouldContainTheListOfNotes()
         {
             // arrange
             var notes = fixture.CreateMany<Note>().ToList();
