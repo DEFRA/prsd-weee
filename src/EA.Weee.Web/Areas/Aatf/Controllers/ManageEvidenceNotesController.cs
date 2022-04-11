@@ -50,6 +50,14 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null, string clicked = null)
         {
+            await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+
+            if (overviewDisplayOption == null)
+            {
+                // that needs to change once the Summary tab is added
+                overviewDisplayOption = ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+            }
+
             using (var client = this.apiClient())
             {
                 var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
@@ -57,15 +65,34 @@
 
                 var models = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
 
-                var result = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId));
+                switch (overviewDisplayOption.Value)
+                {
+                    case ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes:
 
-                var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
+                        var result = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
+                        var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
 
-                await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+                        model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
 
-                return this.View("Overview/EditDraftReturnedNotesOverview", model);
+                        return this.View("Overview/EditDraftReturnedNotesOverview", model);
+
+                    case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
+
+                        var resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> 
+                        { 
+                            NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void 
+                        }));
+
+                        var modelAllNotes = mapper.Map<AllOtherEvidenceNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+
+                        modelAllNotes.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
+
+                        return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
+
+                    default:
+                        return this.View("Overview/EditDraftReturnedNotesOverview", new EditDraftReturnedNotesViewModel());
+                }
             }
         }
 

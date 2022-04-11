@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence.Requests
 {
     using AutoFixture;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
     using Xunit;
 
     public class GetAatfNotesRequestTests
@@ -23,7 +25,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyOrganisationArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, aatfId));
+            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, aatfId, new List<Core.AatfEvidence.NoteStatus> { NoteStatus.Draft }));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -33,7 +35,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAatfArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus> { NoteStatus.Draft }));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -43,7 +45,7 @@
         public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_PropertiesShouldBeSet()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft });
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -54,7 +56,7 @@
         public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_AllowedStatusesSholdBeEmpty()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft });
 
             // assert
             result.OrganisationId.Should().Be(organisationId);

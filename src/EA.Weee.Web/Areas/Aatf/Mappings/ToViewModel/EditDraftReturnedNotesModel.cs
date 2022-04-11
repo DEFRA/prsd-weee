@@ -2,9 +2,7 @@
 {
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
-    using ViewModels;
     using System;
-    using EA.Weee.Core.Helpers;
 
     public class EditDraftReturnedNotesModel 
     {
