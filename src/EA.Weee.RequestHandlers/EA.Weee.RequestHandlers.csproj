@@ -88,6 +88,7 @@
     <Compile Include="AatfEvidence\GetEvidenceNoteHandler.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchAatfDataAccess.cs" />
