@@ -23,7 +23,7 @@
 
             var model = new ListOfEvidenceNoteDataMap();
 
-            if (source != null && source.ListOfNotes.Any())
+            if (source.ListOfNotes.Any())
             {
                 foreach (var note in source.ListOfNotes)
                 { 
