@@ -53,6 +53,7 @@
             A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => note.Id).Returns(fixture.Create<Guid>());
+            A.CallTo(() => note.Status).Returns(NoteStatus.Draft);
             
             request = Request();
 
@@ -91,8 +92,28 @@
             result.Should().BeOfType<SecurityException>();
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task HandleAsync_GivenNoteIsNotInDraft_ShouldInvalidOperationException(NoteStatus status)
+        {
+            //arrange
+            var allowedStatus = new List<int>() { NoteStatus.Draft.Value };
+
+            if (!allowedStatus.Contains(status.Value))
+            {
+                A.CallTo(() => note.Status).Returns(status);
+                A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+
+                //act
+                var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
+
+                //assert
+                result.Should().BeOfType<InvalidOperationException>();
+            }
+        }
+
         [Fact]
-        public async Task HandleAsync_GivenRequestAndNoNotFound_ShowThrowArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndNoNotFound_ShouldThrowArgumentNullExceptionExpected()
         {
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns((Note)null);

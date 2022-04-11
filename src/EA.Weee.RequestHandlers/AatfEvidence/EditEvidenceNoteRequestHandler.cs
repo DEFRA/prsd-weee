@@ -43,6 +43,11 @@
 
             Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme {message.RecipientId} not found");
 
+            if (!evidenceNote.Status.Equals(NoteStatus.Draft))
+            {
+                throw new InvalidOperationException($"Evidence note {message.Id} is incorrect state to be edited");
+            }
+            
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
                 (WeeeCategory)t.CategoryId,
                 t.FirstTonnage,
