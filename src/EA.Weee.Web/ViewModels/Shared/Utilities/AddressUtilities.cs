@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Utilities
 {
+    using System.Text;
     using EA.Weee.Core.AatfReturn;
 
     public class AddressUtilities : IAddressUtilities
@@ -55,6 +56,44 @@
             siteAddressLong += "<br/>" + address.CountryName;
 
             return siteAddressLong;
+        }
+
+        public string FormattedAddress(string name,
+            string address1,
+            string address2,
+            string town,
+            string county,
+            string postCode,
+            string approvalNumber = null)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(name);
+
+            if (approvalNumber != null)
+            {
+                stringBuilder.Append($"<br/><strong>{approvalNumber}</strong>");
+            }
+
+            stringBuilder.Append($"<br/>{address1}");
+
+            if (address2 != null)
+            {
+                stringBuilder.Append($"<br/>{address2}");
+            }
+
+            stringBuilder.Append($"<br/>{town}");
+
+            if (county != null)
+            {
+                stringBuilder.Append($"<br/>{county}");
+            }
+
+            if (postCode != null)
+            {
+                stringBuilder.Append($"<br/>{postCode}");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

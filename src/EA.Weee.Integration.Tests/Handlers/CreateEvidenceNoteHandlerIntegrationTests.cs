@@ -53,7 +53,8 @@
                     fixture.Create<WasteType>(),
                     fixture.Create<Protocol>(),
                     categories.ToList(),
-                    Core.AatfEvidence.NoteStatus.Draft);
+                    Core.AatfEvidence.NoteStatus.Draft,
+                    Guid.Empty);
             };
 
             private readonly Because of = () =>
@@ -102,7 +103,8 @@
                     fixture.Create<WasteType>(),
                     fixture.Create<Protocol>(),
                     categories.ToList(),
-                    Core.AatfEvidence.NoteStatus.Submitted);
+                    Core.AatfEvidence.NoteStatus.Submitted,
+                    Guid.Empty);
             };
 
             private readonly Because of = () =>

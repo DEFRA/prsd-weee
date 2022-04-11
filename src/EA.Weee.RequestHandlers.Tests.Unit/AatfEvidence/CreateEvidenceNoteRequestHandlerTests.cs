@@ -71,7 +71,8 @@
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
                 fixture.CreateMany<TonnageValues>().ToList(),
-                fixture.Create<Core.AatfEvidence.NoteStatus>());
+                fixture.Create<Core.AatfEvidence.NoteStatus>(),
+                Guid.Empty);
 
             handler = new CreateEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
@@ -184,7 +185,8 @@
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
                 fixture.CreateMany<TonnageValues>().ToList(),
-                Core.AatfEvidence.NoteStatus.Draft);
+                Core.AatfEvidence.NoteStatus.Draft,
+                Guid.Empty);
 
             await handler.HandleAsync(request);
 
@@ -233,7 +235,8 @@
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
                 fixture.CreateMany<TonnageValues>().ToList(),
-                Core.AatfEvidence.NoteStatus.Submitted);
+                Core.AatfEvidence.NoteStatus.Submitted,
+                Guid.Empty);
 
             await handler.HandleAsync(request);
 
@@ -289,7 +292,8 @@
                 null,
                 null,
                 new List<TonnageValues>(),
-                Core.AatfEvidence.NoteStatus.Draft);
+                Core.AatfEvidence.NoteStatus.Draft,
+                Guid.Empty);
 
             //arrange
             await handler.HandleAsync(newRequest);
@@ -340,7 +344,8 @@
                 fixture.Create<WasteType>(),
                 fixture.Create<Protocol>(),
                 new List<TonnageValues>(),
-                fixture.Create<Core.AatfEvidence.NoteStatus>());
+                fixture.Create<Core.AatfEvidence.NoteStatus>(),
+                Guid.Empty);
         }
     }
 }

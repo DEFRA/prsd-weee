@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
@@ -50,6 +51,20 @@
             Status = NoteStatus.Draft;
             NoteTonnage = tonnages;
             NoteStatusHistory = new List<NoteStatusHistory>();
+        }
+
+        public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
+            Protocol? protocol)
+        {
+            Guard.ArgumentNotNull(() => recipient, recipient);
+            Guard.ArgumentNotDefaultValue(() => startDate, startDate);
+            Guard.ArgumentNotDefaultValue(() => endDate, endDate);
+
+            WasteType = wasteType;
+            Protocol = protocol;
+            Recipient = recipient;
+            StartDate = startDate;
+            EndDate = endDate;
         }
 
         public void UpdateStatus(NoteStatus newStatus, string changedBy)
@@ -105,6 +120,7 @@
         }
 
         public virtual Guid OrganisationId { get; set; }
+
         public virtual Guid AatfId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }

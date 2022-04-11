@@ -280,6 +280,7 @@
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerViewDraftEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerTestBase.cs" />
     <Compile Include="Areas\Aatf\Mapping\Filters\AatfDataFilterTests.cs" />
@@ -289,10 +290,12 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditDraftReturnNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
-    <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreatorTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewEvidenceNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
