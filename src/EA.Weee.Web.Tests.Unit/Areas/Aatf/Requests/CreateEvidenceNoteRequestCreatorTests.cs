@@ -194,7 +194,7 @@
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenViewModelWithNullValues_CreateEvidenceNoteRequestShouldBeCreated()
+        public void ViewModelToRequest_GivenViewModelWithNullWasteAndProtocolValues_CreateEvidenceNoteRequestShouldBeCreated()
         {
             //arrange
             var aatfId = fixture.Create<Guid>();
