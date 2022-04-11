@@ -2,20 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
     using Base;
     using Builders;
     using Core.Helpers;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
-    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;

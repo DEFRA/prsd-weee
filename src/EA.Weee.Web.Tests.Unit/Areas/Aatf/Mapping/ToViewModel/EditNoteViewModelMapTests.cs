@@ -96,8 +96,8 @@
 
             foreach (var evidenceCategoryValue in result.CategoryValues.Where(c => !notInCategories.Contains(c.CategoryId)))
             {
-                evidenceCategoryValue.Received.Should().Be(string.Empty);
-                evidenceCategoryValue.Reused.Should().Be(string.Empty);
+                evidenceCategoryValue.Received.Should().BeNull();
+                evidenceCategoryValue.Reused.Should().BeNull();
             }
         }
 
