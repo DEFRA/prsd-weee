@@ -288,9 +288,12 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToSelectYourAatfViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditDraftReturnNotesViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteMapTransferTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewEvidenceNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Requests\EditEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
