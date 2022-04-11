@@ -108,7 +108,7 @@
                 var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
                 //assert
-                result.Should().BeOfType<InvalidOperationException>();
+                result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Evidence note {note.Id} is incorrect state to be edited");
             }
         }
 
