@@ -3,7 +3,6 @@
     using System;
     using Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
-    using System;
 
     public class EditDraftReturnedNote 
     {
