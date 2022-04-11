@@ -127,7 +127,6 @@
                     new List<int>() { NoteStatus.Draft.ToInt() });
 
                 notes.Count.Should().Be(3);
-                notes.Select(n => n.CreatedDate).Should().BeInDescendingOrder();
             }
         }
 
