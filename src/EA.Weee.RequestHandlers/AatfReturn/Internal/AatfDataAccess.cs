@@ -39,6 +39,11 @@
             return await GetAllNotesByIds(organisationId, aatfId, allowedStatuses);
         }
 
+        public async Task<List<Note>> GetAllSubmittedNotesByOrgId(Guid organisationId, List<int> allowedStatuses)
+        {
+            return await context.Notes.Where(en => allowedStatuses.Contains(en.Status.Value) && en.Organisation.Id == organisationId).ToListAsync();
+        }
+
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
         {
             oldDetails.UpdateDetails(
