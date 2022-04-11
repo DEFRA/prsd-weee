@@ -14,17 +14,17 @@
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
-    public class CreateEvidenceNoteRequestCreatorTests
+    public class EditEvidenceNoteRequestCreatorTests
     {
-        private readonly CreateEvidenceNoteRequestCreator requestCreator;
+        private readonly EditEvidenceNoteRequestCreator requestCreator;
         private readonly Fixture fixture;
 
-        public CreateEvidenceNoteRequestCreatorTests()
+        public EditEvidenceNoteRequestCreatorTests()
         {
             fixture = new Fixture();
             fixture.Customizations.Add(new StringDecimalGenerator());
 
-            requestCreator = new CreateEvidenceNoteRequestCreator();
+            requestCreator = new EditEvidenceNoteRequestCreator();
         }
 
         [Fact]
@@ -83,6 +83,21 @@
         }
 
         [Fact]
+        public void ViewModelToRequest_GivenEmptyId_ArgumentExceptionExpected()
+        {
+            //arrange
+            var model = ValidModel();
+            model.Id = Guid.Empty;
+
+            //act
+            var exception = Record.Exception(() => requestCreator.ViewModelToRequest(model));
+
+            //assert
+            exception.Should().BeOfType<TargetInvocationException>();
+            exception.InnerException.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
         public void ViewModelToRequest_GivenEmptyStartDate_ArgumentExceptionExpected()
         {
             //arrange
@@ -116,6 +131,7 @@
         public void ViewModelToRequest_GivenSaveViewModel_CreateEvidenceNoteRequestShouldBeCreated()
         {
             //arrange
+            var id = fixture.Create<Guid>();
             var aatfId = fixture.Create<Guid>();
             var endDate = fixture.Create<DateTime>();
             var startDate = fixture.Create<DateTime>();
@@ -135,12 +151,14 @@
             model.WasteTypeValue = wasteTypeValue;
             model.ProtocolValue = protocolValue;
             model.CategoryValues = tonnageValues;
+            model.Id = id;
             model.Action = ActionEnum.Save;
 
             //act
             var request = requestCreator.ViewModelToRequest(model);
 
             //assert
+            request.Id.Should().Be(id);
             request.AatfId.Should().Be(aatfId);
             request.OrganisationId.Should().Be(organisationId);
             request.StartDate.Should().Be(startDate);
@@ -156,6 +174,7 @@
         public void ViewModelToRequest_GivenSubmitViewModel_CreateEvidenceNoteRequestShouldBeCreated()
         {
             //arrange
+            var id = fixture.Create<Guid>();
             var aatfId = fixture.Create<Guid>();
             var endDate = fixture.Create<DateTime>();
             var startDate = fixture.Create<DateTime>();
@@ -175,13 +194,14 @@
             model.WasteTypeValue = wasteTypeValue;
             model.ProtocolValue = protocolValue;
             model.CategoryValues = tonnageValues;
+            model.Id = id;
             model.Action = ActionEnum.Submit;
 
             //act
             var request = requestCreator.ViewModelToRequest(model);
 
             //assert
-            request.Id.Should().Be(Guid.Empty);
+            request.Id.Should().Be(id);
             request.AatfId.Should().Be(aatfId);
             request.OrganisationId.Should().Be(organisationId);
             request.StartDate.Should().Be(startDate);
@@ -197,6 +217,7 @@
         public void ViewModelToRequest_GivenViewModelWithNullValues_CreateEvidenceNoteRequestShouldBeCreated()
         {
             //arrange
+            var id = fixture.Create<Guid>();
             var aatfId = fixture.Create<Guid>();
             var endDate = fixture.Create<DateTime>();
             var startDate = fixture.Create<DateTime>();
@@ -214,13 +235,14 @@
             model.WasteTypeValue = null;
             model.ProtocolValue = null;
             model.CategoryValues = tonnageValues;
+            model.Id = id;
             model.Action = ActionEnum.Save;
 
             //act
             var request = requestCreator.ViewModelToRequest(model);
 
             //assert
-            request.Id.Should().Be(Guid.Empty);
+            request.Id.Should().Be(id);
             request.AatfId.Should().Be(aatfId);
             request.OrganisationId.Should().Be(organisationId);
             request.StartDate.Should().Be(startDate);
@@ -237,7 +259,7 @@
             var model = new EvidenceNoteViewModel()
             {
                 ReceivedId = Guid.NewGuid(),
-                Id = Guid.Empty,
+                Id = Guid.NewGuid(),
                 OrganisationId = Guid.NewGuid(),
                 AatfId = Guid.NewGuid(),
                 StartDate = DateTime.Now,
