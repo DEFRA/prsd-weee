@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
@@ -13,6 +14,11 @@
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+
+        public Guid Id { get; set; }
+
+        [DisplayName("Reference ID")]
+        public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
@@ -69,6 +75,10 @@
         public Guid OrganisationId { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public NoteStatus Status { get; set; }
+
+        public NoteType Type { get; set; }
 
         private void AddCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
         {

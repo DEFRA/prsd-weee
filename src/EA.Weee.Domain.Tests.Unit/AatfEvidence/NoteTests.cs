@@ -16,21 +16,22 @@
 
     public class NoteTests
     {
-        private readonly Organisation organisation;
-        private readonly Scheme scheme;
-        private readonly DateTime startDate;
-        private readonly DateTime endDate;
-        private readonly WasteType wasteType;
-        private readonly Protocol protocol;
-        private readonly Aatf aatf;
-        private readonly string createdBy;
-        private readonly IEnumerable<NoteTonnage> tonnages;
+        private Organisation organisation;
+        private Scheme scheme;
+        private DateTime startDate;
+        private DateTime endDate;
+        private WasteType wasteType;
+        private Protocol protocol;
+        private Aatf aatf;
+        private string createdBy;
+        private IEnumerable<NoteTonnage> tonnages;
         private NoteStatus status;
         private NoteType noteType;
+        private readonly Fixture fixture;
 
         public NoteTests()
         {
-            var fixture = new Fixture();
+            fixture = new Fixture();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             startDate = DateTime.Now.AddDays(1);
@@ -272,6 +273,83 @@
 
             //asset
             result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void Update_GivenNullSchemeArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var result = Record.Exception(() =>
+                note.Update(null, DateTime.Now, DateTime.Now, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
+
+            //assert
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Update_GivenDefaultStartDateArgumentExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var result = Record.Exception(() =>
+                note.Update(A.Fake<Scheme>(), DateTime.MinValue, DateTime.Now, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
+
+            //assert
+            result.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Update_GivenDefaultEndDateArgumentExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var result = Record.Exception(() =>
+                note.Update(A.Fake<Scheme>(), DateTime.Now, DateTime.MinValue, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
+
+            //assert
+            result.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Update_GivenUpdateValue_NoteShouldBeUpdated()
+        {
+            //arrange
+            organisation = A.Fake<Organisation>();
+            scheme = A.Fake<Scheme>();
+            startDate = DateTime.Now.AddDays(1);
+            endDate = DateTime.Now.AddDays(2);
+            wasteType = WasteType.HouseHold;
+            protocol = Protocol.LdaProtocol;
+            aatf = A.Fake<Aatf>();
+            createdBy = fixture.Create<string>();
+            tonnages = fixture.CreateMany<NoteTonnage>();
+            status = NoteStatus.Draft;
+            noteType = NoteType.EvidenceNote;
+
+            var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, noteType, createdBy, tonnages.ToList());
+
+            var updatedScheme = A.Fake<Scheme>();
+            var updatedStartDate = DateTime.Now;
+            var updatedEndDate = DateTime.Now.AddDays(4);
+            var updatedWasteType = WasteType.NonHouseHold;
+            var updatedProtocol = Protocol.Actual;
+
+            //act
+            note.Update(updatedScheme, updatedStartDate, updatedEndDate, updatedWasteType, updatedProtocol);
+
+            //assert
+            note.Recipient.Should().Be(updatedScheme);
+            note.StartDate.Should().Be(updatedStartDate);
+            note.EndDate.Should().Be(updatedEndDate);
+            note.WasteType.Should().Be(updatedWasteType);
+            note.Protocol.Should().Be(updatedProtocol);
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)
