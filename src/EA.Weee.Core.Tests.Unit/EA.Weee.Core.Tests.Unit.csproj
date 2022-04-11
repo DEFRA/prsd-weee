@@ -186,6 +186,7 @@
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
+    <Compile Include="Helpers\NoteStatusCoreData.cs" />
     <Compile Include="Helpers\NoteStatusData.cs" />
     <Compile Include="Helpers\NoteTypeData.cs" />
     <Compile Include="Helpers\ProtocolData.cs" />
