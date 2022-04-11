@@ -105,13 +105,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
-                    return RedirectToRoute(routeName, new
-                    {
-                        organisationId,
-                        aatfId,
-                        evidenceNoteId = result
-                    });
+                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
@@ -135,9 +129,7 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result));
-
-                SetSuccessMessage(result, model);
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
 
                 return View(model);
             }
@@ -175,13 +167,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    var routeName = request.Status == NoteStatus.Draft ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
-                    return RedirectToRoute(routeName, new
-                    {
-                        organisationId,
-                        aatfId,
-                        evidenceNoteId = result
-                    });
+                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
@@ -194,29 +180,26 @@
             }
         }
 
-        private void SetSuccessMessage(EvidenceNoteData note, ViewEvidenceNoteViewModel model)
-        {
-            if (TempData[ViewDataConstant.EvidenceNoteStatus] != null)
-            {
-                if (TempData[ViewDataConstant.EvidenceNoteStatus] is NoteStatus status)
-                {
-                    model.SuccessMessage = (status == NoteStatus.Submitted ?
-                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
-
-                    model.Status = status;
-                }
-                else
-                {
-                    model.Status = NoteStatus.Draft;
-                }
-            }
-        }
-
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+        }
+
+        private ActionResult RedirectAfterNoteAction(Guid organisationId, Guid aatfId, NoteStatus status,
+            Guid result)
+        {
+            var routeName = status == NoteStatus.Draft
+                ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName
+                : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+
+            return RedirectToRoute(routeName, new
+            {
+                organisationId,
+                aatfId,
+                evidenceNoteId = result
+            });
         }
     }
 }

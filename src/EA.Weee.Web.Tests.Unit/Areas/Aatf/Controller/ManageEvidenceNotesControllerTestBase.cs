@@ -66,6 +66,20 @@
                 Guid.Empty);
         }
 
+        protected EditEvidenceNoteRequest EditRequest(NoteStatus status = NoteStatus.Draft)
+        {
+            return new EditEvidenceNoteRequest(Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                DateTime.Now,
+                DateTime.Now,
+                null,
+                null,
+                new List<TonnageValues>(),
+                status,
+                Guid.NewGuid());
+        }
+
         protected EvidenceNoteViewModel ValidModel()
         {
             var model = new EvidenceNoteViewModel()
