@@ -295,6 +295,7 @@
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
+    <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\ListOfNotesMapTests.cs" />
     <Compile Include="Mapping\LocalAreaMapTests.cs" />
     <Compile Include="Mapping\NonObligatedObjectMapperTests.cs" />
