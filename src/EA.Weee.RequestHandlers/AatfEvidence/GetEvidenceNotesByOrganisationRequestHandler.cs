@@ -11,13 +11,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetSubmittedEvidenceNotesByOrganisationIdRequestHandler : IRequestHandler<GetSubmittedEvidenceNotesByOrganisationIdRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMapper mapper;
 
-        public GetSubmittedEvidenceNotesByOrganisationIdRequestHandler(IWeeeAuthorization authorization,
+        public GetEvidenceNotesByOrganisationRequestHandler(IWeeeAuthorization authorization,
             IAatfDataAccess aatfDataAccess,
             IMapper mapper)
         {
@@ -26,7 +26,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetSubmittedEvidenceNotesByOrganisationIdRequest message)
+        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesByOrganisationRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
@@ -37,7 +37,7 @@
                 .GetAllSubmittedNotesByOrgId(message.OrganisationId, allowedStatuses.Select(x => (int)x)
                 .ToList());
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes)).ListOfEvidenceNoteData;
+            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }
     }
 }
