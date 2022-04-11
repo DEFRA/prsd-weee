@@ -71,25 +71,6 @@
         }
 
         [Fact]
-        public void Map_SourceIsEmpty_ShouldNotCallMapperTwice()
-        {
-            // arrange
-            var notes = new List<Note>()
-            {
-                fixture.Create<Note>(),
-                fixture.Create<Note>()
-            };
-            var source = new ListOfNotesMap(notes);
-          
-            // act
-            map.Map(source);
-
-            // assert
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).MustHaveHappened(notes.Count, Times.Exactly);
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).MustHaveHappened(notes.Count, Times.Exactly);
-        }
-
-        [Fact]
         public void Map_SourceIsNotEmpty_ResultDataListPropertiesShouldBeMapped()
         {
             // arrange
@@ -101,7 +82,6 @@
             var evidenceData2 = fixture.Create<EvidenceNoteData>();
             var evidenceData3 = fixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).Returns(schemeData);
             A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData3);
             A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData2);
             A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData1);
@@ -110,9 +90,6 @@
             var result = map.Map(source);
 
             // assert
-            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).MustHaveHappened(listOfNotes.Count, Times.Exactly);
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).MustHaveHappened(listOfNotes.Count, Times.Exactly);
-
             result.ListOfEvidenceNoteData.ElementAt(0).Should().BeEquivalentTo(evidenceData1);
             result.ListOfEvidenceNoteData.ElementAt(1).Should().BeEquivalentTo(evidenceData2);
             result.ListOfEvidenceNoteData.ElementAt(2).Should().BeEquivalentTo(evidenceData3);
