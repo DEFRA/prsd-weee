@@ -29,8 +29,6 @@
 
         public DateTime? SubmittedDate { get; set; }
 
-        public string SubmittedBy { get; set; }
-
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }
