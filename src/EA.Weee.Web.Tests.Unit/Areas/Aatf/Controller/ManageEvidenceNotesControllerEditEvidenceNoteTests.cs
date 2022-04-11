@@ -10,6 +10,7 @@
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
@@ -303,6 +304,20 @@
 
             //assert
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(status);
+        }
+
+        [Fact]
+        public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
+        }
+
+        [Fact]
+        public void EditDraftEvidenceNotePost_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
         }
     }
 }

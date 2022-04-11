@@ -307,7 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
-    <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
+    <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttribute.cs" />
@@ -345,6 +345,7 @@
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />

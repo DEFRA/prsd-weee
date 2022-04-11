@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
+    using Attributes;
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
@@ -119,6 +120,7 @@
         }
 
         [HttpGet]
+        [CheckEditEvidenceNoteStatus]
         public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
@@ -136,6 +138,7 @@
         }
 
         [HttpGet]
+        [CheckEditEvidenceNoteStatus]
         public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
@@ -155,6 +158,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CheckEditEvidenceNoteStatus]
         public async Task<ActionResult> EditEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
