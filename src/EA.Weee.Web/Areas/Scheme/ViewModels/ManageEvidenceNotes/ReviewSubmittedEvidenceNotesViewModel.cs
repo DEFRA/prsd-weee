@@ -11,6 +11,7 @@
         public IList<EditDraftReturnedNote> EvidenceNotesDataList { get; set; }
 
         public ReviewSubmittedEvidenceNotesViewModel()
+            : base(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
         {
             EvidenceNotesDataList = new List<EditDraftReturnedNote>();
         }

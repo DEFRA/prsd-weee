@@ -1,5 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Extensions
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedEvidenceNotesViewModel
 
@@ -36,21 +37,21 @@
                         {
                             foreach (EditDraftReturnedNote note in Model.EvidenceNotesDataList)
                             {
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@note.ReferenceId</td>
-                                <td class="govuk-table__cell">@note.SubmittedDate</td>
-                                <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                @if (note.TypeOfWaste.HasValue)
-                                {
-                                    <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
-                                }
-                                else
-                                {
-                                    <td class="govuk-table__cell"> </td>
-                                }
-                                <td class="govuk-table__cell">
-                                </td>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                            <td class="govuk-table__cell">@(note.SubmittedDate.HasValue ? note.SubmittedDate.Value.ToShortDateString() : string.Empty)</td>
+                            <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                    @if (note.TypeOfWaste.HasValue)
+                                    {
+                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="govuk-table__cell"> </td>
+                                    }
+                            <td class="govuk-table__cell">
+                            </td>
+                        </tr>
                             }
                         }
                         else
@@ -66,9 +67,9 @@
                                 </td>
                             </tr>
                         }
-                        </tbody>
-                        </table>
+                    </tbody>
+                </table>
             </section>
-            </div>
         </div>
+    </div>
 </section>
