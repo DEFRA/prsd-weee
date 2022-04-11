@@ -2,19 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using Core.AatfEvidence;
     using Extensions;
     using Prsd.Core;
-    using Prsd.Core.Domain;
     using ViewModels;
     using Web.Requests.Base;
     using Weee.Requests.Aatf;
-    using Weee.Requests.AatfEvidence;
 
-    public class EvidenceNoteRequestCreator : IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest>
+    public abstract class EvidenceNoteRequestCreator<T> : IRequestCreator<EvidenceNoteViewModel, T> where T : new()
     {
-        public EvidenceNoteBaseRequest ViewModelToRequest(EvidenceNoteViewModel viewModel)
+        public virtual T ViewModelToRequest(EvidenceNoteViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
 
@@ -30,7 +27,7 @@
 
             if (viewModel.ReceivedId != null)
             {
-                var request = new CreateEvidenceNoteRequest(viewModel.OrganisationId,
+                var request = (T)Activator.CreateInstance(typeof(T), viewModel.OrganisationId,
                     viewModel.AatfId,
                     viewModel.ReceivedId.Value,
                     viewModel.StartDate,
@@ -38,7 +35,8 @@
                     viewModel.WasteTypeValue,
                     viewModel.ProtocolValue,
                     tonnageValues,
-                    viewModel.Action == ActionEnum.Save ? NoteStatus.Draft : NoteStatus.Submitted);
+                    viewModel.Action == ActionEnum.Save ? NoteStatus.Draft : NoteStatus.Submitted,
+                    viewModel.Id);
 
                 return request;
             }
