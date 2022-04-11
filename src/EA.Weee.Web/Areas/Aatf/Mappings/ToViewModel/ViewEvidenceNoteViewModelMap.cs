@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Constant;
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Helpers;
@@ -15,7 +16,7 @@
     {
         private readonly ITonnageUtilities tonnageUtilities;
         private readonly IAddressUtilities addressUtilities;
-
+        
         public ViewEvidenceNoteViewModelMap(ITonnageUtilities tonnageUtilities, 
             IAddressUtilities addressUtilities)
         {
@@ -71,8 +72,27 @@
                     category.Id = tonnageData.Id;
                 }
             }
+            SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
+        }
+
+        private void SetSuccessMessage(EvidenceNoteData note, object noteStatus, ViewEvidenceNoteViewModel model)
+        {
+            if (noteStatus != null)
+            {
+                if (noteStatus is NoteStatus status)
+                {
+                    model.SuccessMessage = (status == NoteStatus.Submitted ?
+                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
+
+                    model.Status = status;
+                }
+                else
+                {
+                    model.Status = NoteStatus.Draft;
+                }
+            }
         }
     }
 }

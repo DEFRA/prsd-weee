@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.AatfReturn.Attributes
+﻿namespace EA.Weee.Web.Filters
 {
     using System;
     using System.Collections.Generic;
