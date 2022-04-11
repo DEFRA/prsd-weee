@@ -45,7 +45,7 @@
 
             if (!evidenceNote.Status.Equals(NoteStatus.Draft))
             {
-                throw new InvalidOperationException($"Evidence note {message.Id} is incorrect state to be edited");
+                throw new InvalidOperationException($"Evidence note {evidenceNote.Id} is incorrect state to be edited");
             }
             
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
