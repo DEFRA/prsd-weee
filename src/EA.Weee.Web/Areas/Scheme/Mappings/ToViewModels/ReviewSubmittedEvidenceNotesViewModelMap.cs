@@ -20,25 +20,16 @@
             var model = new ReviewSubmittedEvidenceNotesViewModel();
 
             model.OrganisationId = source.OrganisationId;
-            model.OrganisationName = source.OrganisationName;
+            model.SchemeName = source.OrganisationName;
 
             if (source != null && source.Notes.Any())
             {
                 foreach (var res in source.Notes)
                 {
-                    string aatfOrgName;
-
-                    if (res.AatfData != null)
-                    {
-                        aatfOrgName = res.AatfData.Organisation != null ? res.AatfData.Organisation.Name : string.Empty;
-                    } 
-                    else
-                    {
-                        aatfOrgName = string.Empty;
-                    }
+                    var aatfName = res.AatfData != null ? res.AatfData.Name : string.Empty;
 
                     model.EvidenceNotesDataList.Add(mapper.Map<EditDraftReturnedNote>
-                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type, res.SubmittedDate, aatfOrgName)));
+                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type, res.SubmittedDate, aatfName)));
                 }
             }
 

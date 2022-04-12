@@ -2,9 +2,7 @@
 {
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
-    using ViewModels;
     using System;
-    using EA.Weee.Core.Helpers;
 
     public class EditDraftReturnedNotesModel 
     {
@@ -13,7 +11,8 @@
             NoteStatus status, 
             WasteType? wasteType,
             Guid id,
-            NoteType type)
+            NoteType type,
+            bool displayViewLink = true)
         {
             Guard.ArgumentNotDefaultValue(() => referenceId, referenceId);
 
@@ -23,10 +22,11 @@
             WasteType = wasteType;
             Id = id;
             Type = type;
+            DisplayViewLink = displayViewLink;
         }
 
         public EditDraftReturnedNotesModel(int referenceId, string recipient, NoteStatus status, WasteType? wasteType, Guid id,
-            NoteType noteType, DateTime? submittedDate, string submittedBy) : this(referenceId, recipient, status, wasteType, id, noteType)
+            NoteType noteType, DateTime? submittedDate, string submittedBy, bool displayViewLink = true) : this(referenceId, recipient, status, wasteType, id, noteType, displayViewLink)
         {
             SubmittedDate = submittedDate;
             SubmittedBy = submittedBy;
@@ -39,6 +39,7 @@
         public Guid Id { get; protected set; }
 
         public NoteType Type { get; protected set; }
+
         public NoteStatus Status { get; set; }
         
         public WasteType? WasteType { get; set; }
@@ -46,5 +47,7 @@
         public DateTime? SubmittedDate { get; set; }
 
         public string SubmittedBy { get; set; }
+
+        public bool DisplayViewLink { get; set; }
     }
 }

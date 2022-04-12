@@ -6,7 +6,7 @@
     {
         public Guid OrganisationId { get; set; }
 
-        public string OrganisationName { get; set; }
+        public string SchemeName { get; set; }
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
 

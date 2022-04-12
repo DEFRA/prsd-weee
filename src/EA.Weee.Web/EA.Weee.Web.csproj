@@ -359,6 +359,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToHomeViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\AllOtherNotesViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
@@ -378,6 +379,7 @@
     <Compile Include="Areas\Aatf\Requests\ICreateEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\Requests\IEditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
@@ -653,6 +655,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewSubmittedEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
