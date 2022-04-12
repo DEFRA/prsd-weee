@@ -7,10 +7,10 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class GetSearchAnAatfAddressHandler : IRequestHandler<GetSearchAatfAddress, List<ReturnAatfAddressData>>
+    public class GetSearchAnAatfAddressHandler : IRequestHandler<GetSearchAatfAddress, List<ReturnAatfAddressResult>>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly ISearchAnAatfAddressDataAccess getSearchAnAatfAddressDataAccess;        
+        private readonly ISearchAnAatfAddressDataAccess getSearchAnAatfAddressDataAccess;
         
         public GetSearchAnAatfAddressHandler(IWeeeAuthorization authorization, ISearchAnAatfAddressDataAccess getSearchAnAatfAddressDataAccess)
         {
@@ -18,16 +18,16 @@
             this.getSearchAnAatfAddressDataAccess = getSearchAnAatfAddressDataAccess;            
         }
 
-        public async Task<List<ReturnAatfAddressData>> HandleAsync(GetSearchAatfAddress message)
+        public async Task<List<ReturnAatfAddressResult>> HandleAsync(GetSearchAatfAddress message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfAddressDataList = new List<ReturnAatfAddressData>();
+            var aatfAddressDataList = new List<ReturnAatfAddressResult>();
             var aatfAddresses = await getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(message);
 
             foreach (var item in aatfAddresses)
             {
-                var returnAatfAddressData = new ReturnAatfAddressData()
+                var returnAatfAddressData = new ReturnAatfAddressResult()
                 {
                     SearchTermId = item.Id,
                     SearchTermName = item.Name

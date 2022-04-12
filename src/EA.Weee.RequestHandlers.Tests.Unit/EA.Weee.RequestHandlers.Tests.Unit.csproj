@@ -105,8 +105,11 @@
     <Compile Include="AatfReturn\Internal\AatfDataAccessTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedWeeeHandlerTestsBase.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\CreateWeeeSentOnAatfSiteHandlerTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandlerTests.cs" />
+    <Compile Include="AatfReturn\SearchAatfAddress\GetSearchAnAatfAddressHandlerTests.cs" />
+    <Compile Include="AatfReturn\SearchedAatfResultList\GetSearchedAatfResultListHandlerTests.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandlerTests.cs" />

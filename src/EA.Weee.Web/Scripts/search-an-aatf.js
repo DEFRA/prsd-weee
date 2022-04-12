@@ -5,7 +5,7 @@
                 url: "SearchAnAatf/SearchAatf",
                 type: "POST",
                 dataType: "json",
-                data: { searchTerm: request.term, currentSelectedAatfId: request.AatfId },
+                data: { searchTerm: request.term, currentSelectedAatfId: request.AatfId, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
                 success: function (data) {
                     response($.map(data, function (item) {
                         return { label: item.SearchTermName, value: item.SearchTermName, id: item.SearchTermId };
