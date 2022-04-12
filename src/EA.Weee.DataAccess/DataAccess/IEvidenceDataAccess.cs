@@ -18,5 +18,9 @@
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status);
+
+        Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter);
+
+        //Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses);
     }
 }

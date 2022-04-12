@@ -10,19 +10,20 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class GetAllOtherEvidenceNotesHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
 
         public GetAllOtherEvidenceNotesHandler(IWeeeAuthorization authorization,
-       IAatfDataAccess aatfDataAccess, IMapper mapper)
+            IEvidenceDataAccess noteDataAccess, IMapper mapper)
         {
             this.authorization = authorization;
-            this.aatfDataAccess = aatfDataAccess;
+            this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
         }
 
@@ -36,10 +37,11 @@
                  NoteStatus.Draft
             };
 
-            var notes = await aatfDataAccess
-                .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses.Select(x => (int)x).ToList());
+            //var notes = await noteDataAccess
+            //    .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses.Select(x => (int)x).ToList());
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList())).ListOfEvidenceNoteData;
+            //return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList())).ListOfEvidenceNoteData;
+            return null;
         }
     }
 }
