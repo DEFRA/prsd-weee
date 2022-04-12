@@ -36,6 +36,6 @@
 
         Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId, List<int> allowedStatuses);
 
-        Task<List<Note>> GetAllSubmittedNotesByOrgId(Guid organisationId, List<int> allowedStatuses);
+        Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses);
     }
 }
