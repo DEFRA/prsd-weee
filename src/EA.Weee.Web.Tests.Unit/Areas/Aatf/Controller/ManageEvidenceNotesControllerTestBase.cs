@@ -25,7 +25,8 @@
         protected readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly BreadcrumbService Breadcrumb;
         protected readonly IWeeeCache Cache;
-        protected readonly IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest> CreateRequestCreator;
+        protected readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> CreateRequestCreator;
+        protected readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> EditRequestCreator;
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
@@ -37,12 +38,13 @@
             Breadcrumb = A.Fake<BreadcrumbService>();
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
-            CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EvidenceNoteBaseRequest>>();
+            CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
+            EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator);
         }
 
         protected void AddModelError()
@@ -60,7 +62,22 @@
                 null,
                 null,
                 new List<TonnageValues>(),
-                status);
+                status,
+                Guid.Empty);
+        }
+
+        protected EditEvidenceNoteRequest EditRequest(NoteStatus status = NoteStatus.Draft)
+        {
+            return new EditEvidenceNoteRequest(Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                DateTime.Now,
+                DateTime.Now,
+                null,
+                null,
+                new List<TonnageValues>(),
+                status,
+                Guid.NewGuid());
         }
 
         protected EvidenceNoteViewModel ValidModel()

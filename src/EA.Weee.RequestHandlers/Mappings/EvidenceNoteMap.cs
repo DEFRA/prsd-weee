@@ -42,7 +42,9 @@
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList(),
                 SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
-                AatfData = mapper.Map<Aatf, AatfData>(source.Aatf)
+                AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
+                RecipientId = source.Recipient.Id,
+                SubmittedDate = source.SubmittedDate
             };
         }
     }

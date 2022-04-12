@@ -39,6 +39,12 @@
             return await GetAllNotesByIds(organisationId, aatfId, allowedStatuses);
         }
 
+        public async Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses)
+        {
+            return await context.Notes.Where(en => allowedStatuses.Contains(en.Status.Value) 
+                                                   && en.Recipient.Id == schemeId).ToListAsync();
+        }
+
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
         {
             oldDetails.UpdateDetails(

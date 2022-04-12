@@ -152,7 +152,7 @@
                 if (viewModel.SelectedValue == PcsAction.ManagePcsEvidenceNotes)
                 {
                     //TODO: invoke holding page in Aatf area - possibly need to create a Pcs area with same
-                    return RedirectToAction("Index", "Holding", new { area = "Aatf", organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = viewModel.OrganisationId });
                 }
 
                 // 2. Manage PCS Members

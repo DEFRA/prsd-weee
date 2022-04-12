@@ -1,5 +1,6 @@
 ﻿namespace EA.Prsd.Core.Web.Mvc.Tests.ViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Runtime.CompilerServices;
 
@@ -11,5 +12,7 @@
 
         [Required]
         public string RequiredField { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }
