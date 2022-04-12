@@ -7,6 +7,7 @@
     using Core.AatfEvidence;
     using Filters;
     using Infrastructure;
+    using ViewModels;
     using Weee.Requests.AatfEvidence;
 
     public class CheckEditEvidenceNoteStatusAttribute : ActionFilterAttribute
@@ -15,9 +16,25 @@
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.RouteData.Values.TryGetValue("evidenceNoteId", out var idActionParameter))
+            object idActionParameter = 0;
+
+            if (context.ActionParameters.TryGetValue("viewModel", out var viewModel))
             {
-                throw new ArgumentException("No evidence note ID was specified.");
+                var convertedModel = viewModel as EvidenceNoteViewModel;
+
+                if (convertedModel == null)
+                {
+                    throw new ArgumentException("Edit evidence note view model incorrect type");
+                }
+
+                idActionParameter = convertedModel.Id;
+            }
+            else
+            {
+                if (!context.RouteData.Values.TryGetValue("evidenceNoteId", out idActionParameter))
+                {
+                    throw new ArgumentException("No evidence note ID was specified.");
+                }
             }
 
             if (!(Guid.TryParse(idActionParameter.ToString(), out var evidenceNoteIdActionParameter)))
