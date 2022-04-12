@@ -13,12 +13,16 @@
 <section id="main-content">
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
 
-    <h1 class="govuk-heading-l govuk-!-padding-top-5">
-        Enter evidence note details
-    </h1>
-
     @using (Html.BeginForm("CreateEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l govuk-!-padding-top-3">
+            Enter evidence note details
+        </h1>
+
+
         @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/_EditEvidenceNotePartial.cshtml", Model)
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")

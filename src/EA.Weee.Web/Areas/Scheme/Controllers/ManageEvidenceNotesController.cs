@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -41,9 +42,9 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId));
 
-                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
 
-                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, organisation.OrganisationName));
+                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, scheme.SchemeName));
 
                 return this.View("ReviewSubmittedEvidence", model);
             }

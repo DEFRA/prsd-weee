@@ -146,7 +146,6 @@
         }
 
         [HttpGet]
-        [CheckEditEvidenceNoteStatus]
         public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
