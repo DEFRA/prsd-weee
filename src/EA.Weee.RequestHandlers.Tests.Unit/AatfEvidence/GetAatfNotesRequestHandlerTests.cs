@@ -48,7 +48,7 @@
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id);
+                aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 aatfDataAccess,
@@ -170,7 +170,7 @@
 
         private GetAatfNotesRequest GetAatfNotesRequest()
         {
-            return new GetAatfNotesRequest(organisation.Id, aatf.Id);
+            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
         }
     }
 }

@@ -15,15 +15,16 @@
 
         public List<NoteStatus> AllowedStatuses { get; set; }
 
-        public GetAatfNotesRequest(Guid organisationId, Guid aatfId)
+        public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+            Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
 
             OrganisationId = organisationId;
             AatfId = aatfId;
 
-            AllowedStatuses = new List<NoteStatus>();
+            AllowedStatuses = allowedStatuses;
         }
     }
 }
