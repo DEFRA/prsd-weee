@@ -15,7 +15,9 @@
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,
                 Id = source.Id,
-                Type = source.Type
+                Type = source.Type,
+                SubmittedDate = source.SubmittedDate,
+                SubmittedBy = source.SubmittedBy,
             };
         }
     }

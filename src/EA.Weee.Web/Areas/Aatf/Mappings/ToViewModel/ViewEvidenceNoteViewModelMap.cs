@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Constant;
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Helpers;
@@ -14,10 +15,13 @@
     public class ViewEvidenceNoteViewModelMap : IMap<ViewEvidenceNoteMapTransfer, ViewEvidenceNoteViewModel>
     {
         private readonly ITonnageUtilities tonnageUtilities;
-
-        public ViewEvidenceNoteViewModelMap(ITonnageUtilities tonnageUtilities)
+        private readonly IAddressUtilities addressUtilities;
+        
+        public ViewEvidenceNoteViewModelMap(ITonnageUtilities tonnageUtilities, 
+            IAddressUtilities addressUtilities)
         {
             this.tonnageUtilities = tonnageUtilities;
+            this.addressUtilities = addressUtilities;
         }
 
         public ViewEvidenceNoteViewModel Map(ViewEvidenceNoteMapTransfer source)
@@ -26,6 +30,7 @@
 
             var model = new ViewEvidenceNoteViewModel
             {
+                Id = source.EvidenceNoteData.Id,
                 OrganisationId = source.EvidenceNoteData.OrganisationData.Id,
                 AatfId = source.EvidenceNoteData.AatfData.Id,
                 Reference = source.EvidenceNoteData.Reference,
@@ -35,20 +40,20 @@
                 EndDate = source.EvidenceNoteData.EndDate,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
-                OperatorAddress = FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
+                OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode),
-                SiteAddress = FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
+                SiteAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
                     source.EvidenceNoteData.AatfData.SiteAddress.Address1,
                     source.EvidenceNoteData.AatfData.SiteAddress.Address2,
                     source.EvidenceNoteData.AatfData.SiteAddress.TownOrCity,
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                RecipientAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
                     source.EvidenceNoteData.SchemeData.Address.Address1,
                     source.EvidenceNoteData.SchemeData.Address.Address2,
                     source.EvidenceNoteData.SchemeData.Address.TownOrCity,
@@ -56,7 +61,6 @@
                     source.EvidenceNoteData.SchemeData.Address.Postcode)
             };
 
-            var t = source.EvidenceNoteData.SchemeData.Address;
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
             {
                 var category = model.CategoryValues.FirstOrDefault(c => c.CategoryId == (int)tonnageData.CategoryId);
@@ -68,45 +72,27 @@
                     category.Id = tonnageData.Id;
                 }
             }
+            SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
         }
 
-        public string FormattedAddress(string name,
-            string address1,
-            string address2,
-            string town,
-            string county,
-            string postCode,
-            string approvalNumber = null)
+        private void SetSuccessMessage(EvidenceNoteData note, object noteStatus, ViewEvidenceNoteViewModel model)
         {
-            var siteAddressLong = name;
-
-            if (approvalNumber != null)
+            if (noteStatus != null)
             {
-                siteAddressLong += $"<br/><strong>{approvalNumber}</strong>";
+                if (noteStatus is NoteStatus status)
+                {
+                    model.SuccessMessage = (status == NoteStatus.Submitted ?
+                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
+
+                    model.Status = status;
+                }
+                else
+                {
+                    model.Status = NoteStatus.Draft;
+                }
             }
-
-            siteAddressLong += $"<br/>{address1}";
-
-            if (address2 != null)
-            {
-                siteAddressLong += $"<br/>{address2}";
-            }
-
-            siteAddressLong += $"<br/>{town}";
-
-            if (county != null)
-            {
-                siteAddressLong += $"<br/>{county}";
-            }
-
-            if (postCode != null)
-            {
-                siteAddressLong += $"<br/>{postCode}";
-            }
-
-            return siteAddressLong;
         }
     }
 }

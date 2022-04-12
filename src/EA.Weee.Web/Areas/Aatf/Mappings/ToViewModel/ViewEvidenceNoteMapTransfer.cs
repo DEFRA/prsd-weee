@@ -6,13 +6,16 @@
 
     public class ViewEvidenceNoteMapTransfer
     {
-        public EvidenceNoteData EvidenceNoteData { get; }
+        public EvidenceNoteData EvidenceNoteData { get; private set; }
 
-        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData)
+        public object NoteStatus { get; private set; }
+
+        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
 
             EvidenceNoteData = evidenceNoteData;
+            NoteStatus = noteStatus;
         }
     }
 }

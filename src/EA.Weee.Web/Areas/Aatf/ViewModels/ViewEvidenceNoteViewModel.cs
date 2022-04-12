@@ -11,9 +11,6 @@
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
 
-        [DisplayName("Reference ID")]
-        public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
-
         [DisplayName("Protocol")]
         public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : string.Empty;
 
@@ -28,5 +25,7 @@
         public string OperatorAddress { get; set; }
 
         public string RecipientAddress { get; set; }
+
+        public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
     }
 }

@@ -53,6 +53,20 @@
             NoteStatusHistory = new List<NoteStatusHistory>();
         }
 
+        public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
+            Protocol? protocol)
+        {
+            Guard.ArgumentNotNull(() => recipient, recipient);
+            Guard.ArgumentNotDefaultValue(() => startDate, startDate);
+            Guard.ArgumentNotDefaultValue(() => endDate, endDate);
+
+            WasteType = wasteType;
+            Protocol = protocol;
+            Recipient = recipient;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
         public void UpdateStatus(NoteStatus newStatus, string changedBy)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))

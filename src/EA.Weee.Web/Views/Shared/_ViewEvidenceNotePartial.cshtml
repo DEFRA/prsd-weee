@@ -3,14 +3,14 @@
 
 @{
 
-    <h1 class="govuk-heading-l govuk-!-padding-top-5">
+    <h1 class="govuk-heading-l">
         Evidence note
     </h1>
     
     <div class="govuk-width-container govuk-!-margin-top-3 ">
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.Reference, Model.ReferenceDisplay)
+            @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
@@ -95,9 +95,5 @@
 
         </tbody>
     </table>
- 
-    @*<div class="govuk-!-margin-top-3">
-            @this.WeeeGds().Submit("Download as PDF", new { name = "Action", value = ActionEnum.Submit })
-        </div>*@
 
 }

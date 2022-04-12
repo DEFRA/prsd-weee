@@ -6,29 +6,12 @@
     using Prsd.Core;
     using ViewModels;
 
-    public class CreateNoteMapTransfer
+    public class CreateNoteMapTransfer : ModifyNoteTransfer
     {
-        public List<SchemeData> Schemes { get; private set; }
-
-        public EvidenceNoteViewModel ExistingModel { get; set; }
-
-        public Guid OrganisationId { get; set; }
-
-        public Guid AatfId { get; set; }
-
         public CreateNoteMapTransfer(List<SchemeData> schemes, 
-            EvidenceNoteViewModel existingModel,
-            Guid organisationId,
-            Guid aatfId)
+            EvidenceNoteViewModel existingModel, 
+            Guid organisationId, Guid aatfId) : base(schemes, existingModel, organisationId, aatfId)
         {
-            Guard.ArgumentNotNull(() => schemes, schemes);
-            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
-
-            ExistingModel = existingModel;
-            Schemes = schemes;
-            OrganisationId = organisationId;
-            AatfId = aatfId;
         }
     }
 }

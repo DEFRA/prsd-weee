@@ -1,0 +1,75 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Extensions
+
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedEvidenceNotesViewModel
+
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+
+            <section class="govuk-tabs__panel" id="pcsDetails">
+                <h1 class="govuk-heading-l">
+                    Review submitted evidence notes
+                </h1>
+
+                <table id="edit-draft-returned-notes-table" class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header">
+                                Reference ID
+                            </th>
+                            <th class="govuk-table__header">
+                                WEEE Submitted Date
+                            </th>
+                            <th class="govuk-table__header">
+                                Submitted by
+                            </th>
+                            <th class="govuk-table__header">
+                                Type of waste
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @if (Model.EvidenceNotesDataList.Any())
+                        {
+                            foreach (EditDraftReturnedNote note in Model.EvidenceNotesDataList)
+                            {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                            <td class="govuk-table__cell">@(note.SubmittedDate.HasValue ? note.SubmittedDate.Value.ToShortDateString() : string.Empty)</td>
+                            <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                    @if (note.TypeOfWaste.HasValue)
+                                    {
+                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="govuk-table__cell"> </td>
+                                    }
+                            <td class="govuk-table__cell">
+                            </td>
+                        </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>
+                                    <p>There are currently no evidence notes to review </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> Showing 0 - 0 of 0 </p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</section>
