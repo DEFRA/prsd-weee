@@ -158,5 +158,48 @@
             result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Reused
                 .Should().Be(null);
         }
+
+        [Fact]
+        public void Map_GivenNoteStatusIsNull_SuccessMessageShouldNotBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayMessage.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenNoteStatusDraftCreated_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Draft);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully saved the evidence note with reference ID E{source.EvidenceNoteData.Reference} as a draft");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNoteStatusSubmitted_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Submitted);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully submitted the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
     }
 }

@@ -307,7 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
-    <Compile Include="Areas\AatfReturn\Attributes\RunAsyncHelper.cs" />
+    <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttribute.cs" />
@@ -345,6 +345,7 @@
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
@@ -440,6 +441,13 @@
     <Compile Include="Areas\Admin\ViewModels\Validation\FacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Admin\ViewModels\Validation\IFacilityViewModelBaseValidatorWrapper.cs" />
     <Compile Include="Areas\Scheme\Attributes\ValidatePcsEvidenceEnabledAttribute .cs" />
+    <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesController.cs" />
+    <Compile Include="Areas\Scheme\Controllers\SchemeEvidenceBaseController.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewSubmittedEvidenceNotesViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewSubmittedEvidenceNotesViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesDisplayOptions.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ManageEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewSubmittedEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -644,6 +652,9 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\EditEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\_EditEvidenceNotePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewSubmittedEvidence.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />

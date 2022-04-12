@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using Core.Shared;
     using Prsd.Core;
-    using Prsd.Core.Domain;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -38,6 +35,7 @@
                 model.EndDate = source.ExistingModel.EndDate;
                 model.WasteTypeValue = source.ExistingModel.WasteTypeValue;
                 model.ProtocolValue = source.ExistingModel.ProtocolValue;
+                model.CategoryValues = source.ExistingModel.CategoryValues;
             }
             else
             {
@@ -46,14 +44,7 @@
                 model.EndDate = source.NoteData.EndDate;
                 model.WasteTypeValue = source.NoteData.WasteType;
                 model.ProtocolValue = source.NoteData.Protocol;
-            }
 
-            if (source.ExistingModel != null)
-            {
-                model.CategoryValues = source.ExistingModel.CategoryValues;
-            }
-            else
-            {
                 foreach (var evidenceTonnageData in source.NoteData.EvidenceTonnageData)
                 {
                     var category = model.CategoryValues.FirstOrDefault(c => c.CategoryId.Equals(evidenceTonnageData.CategoryId.ToInt()));
@@ -66,6 +57,7 @@
                     }
                 }
             }
+
             return model;
         }
     }
