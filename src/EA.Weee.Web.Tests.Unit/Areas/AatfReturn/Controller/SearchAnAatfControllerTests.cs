@@ -185,16 +185,16 @@
         {
             SetupControllerAjaxRequest();
 
-            var returnAatfAddressResult = new List<ReturnAatfAddressData>()
+            var returnAatfAddressResult = new List<ReturnAatfAddressResult>()
             {
-                new ReturnAatfAddressData() { SearchTermId = new Guid(), SearchTermName = "Test Aatf" }
+                new ReturnAatfAddressResult() { SearchTermId = new Guid(), SearchTermName = "Test Aatf" }
             };
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetSearchAatfAddress>._)).Returns(returnAatfAddressResult);
 
             var jsonResult = await controller.SearchAatf("Test Aatf", A.Dummy<Guid>()) as JsonResult;
 
             var serializer = new JavaScriptSerializer();
-            var result = serializer.Deserialize<List<ReturnAatfAddressData>>(serializer.Serialize(jsonResult.Data));
+            var result = serializer.Deserialize<List<ReturnAatfAddressResult>>(serializer.Serialize(jsonResult.Data));
 
             result.Count.Should().Be(1);
             result.Should().BeEquivalentTo(returnAatfAddressResult);
