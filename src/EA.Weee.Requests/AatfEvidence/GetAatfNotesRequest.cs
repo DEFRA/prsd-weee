@@ -7,13 +7,9 @@
     using System.Collections.Generic;
  
     [Serializable]
-    public class GetAatfNotesRequest : IRequest<List<EvidenceNoteData>>
+    public class GetAatfNotesRequest : EvidenceNoteFilterBaseRequest
     {
-        public Guid OrganisationId { get; set; }
-
         public Guid AatfId { get; set; }
-
-        public List<NoteStatus> AllowedStatuses { get; set; }
 
         public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses)
         {
