@@ -11,7 +11,8 @@
             NoteStatus status, 
             WasteType? wasteType,
             Guid id,
-            NoteType type)
+            NoteType type,
+            bool displayViewLink = true)
         {
             Guard.ArgumentNotDefaultValue(() => referenceId, referenceId);
 
@@ -21,10 +22,11 @@
             WasteType = wasteType;
             Id = id;
             Type = type;
+            DisplayViewLink = displayViewLink;
         }
 
         public EditDraftReturnedNotesModel(int referenceId, string recipient, NoteStatus status, WasteType? wasteType, Guid id,
-            NoteType noteType, DateTime? submittedDate, string submittedBy) : this(referenceId, recipient, status, wasteType, id, noteType)
+            NoteType noteType, DateTime? submittedDate, string submittedBy, bool displayViewLink = true) : this(referenceId, recipient, status, wasteType, id, noteType, displayViewLink)
         {
             SubmittedDate = submittedDate;
             SubmittedBy = submittedBy;
@@ -44,5 +46,7 @@
         public DateTime? SubmittedDate { get; set; }
 
         public string SubmittedBy { get; set; }
+
+        public bool DisplayViewLink { get; set; }
     }
 }
