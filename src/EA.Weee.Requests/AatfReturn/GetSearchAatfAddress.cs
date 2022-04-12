@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class GetSearchAatfAddress : IRequest<List<ReturnAatfAddressData>>
+    public class GetSearchAatfAddress : IRequest<List<ReturnAatfAddressResult>>
     {
         public string SearchTerm { get; set; }
 

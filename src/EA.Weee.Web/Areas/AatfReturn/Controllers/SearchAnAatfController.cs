@@ -62,6 +62,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SearchAnAatfViewModel searchAnAatfViewModel)
         {
             if (ModelState.IsValid)
