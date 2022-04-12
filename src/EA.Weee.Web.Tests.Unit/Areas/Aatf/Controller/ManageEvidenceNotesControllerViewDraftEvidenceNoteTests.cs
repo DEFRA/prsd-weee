@@ -6,6 +6,7 @@
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
+    using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -19,7 +20,7 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -27,7 +28,7 @@
         public async Task ViewDraftEvidenceNoteGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -43,7 +44,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(organisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(organisationId, EvidenceNoteId);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -52,64 +53,12 @@
         }
 
         [Fact]
-        public async Task ViewDraftEvidenceNoteGet_GivenDraftNoteHasBeenCreated_ModelSuccessMessageShouldBeSet()
-        {
-            //arrange
-            var evidenceNoteData = Fixture.Create<EvidenceNoteData>();
-
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Draft;
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
-
-            //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
-
-            //assert
-            var model = result.Model as ViewEvidenceNoteViewModel;
-            model.SuccessMessage.Should()
-                .Be($"You have successfully saved the evidence note with reference ID E{evidenceNoteData.Reference} as a draft");
-            model.DisplayMessage.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task ViewDraftEvidenceNoteGet_GivenSubmittedNoteHasBeenCreated_ModelSuccessMessageShouldBeSet()
-        {
-            //arrange
-            var evidenceNoteData = Fixture.Create<EvidenceNoteData>();
-
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Submitted;
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(evidenceNoteData);
-
-            //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
-
-            //assert
-            var model = result.Model as ViewEvidenceNoteViewModel;
-            model.SuccessMessage.Should()
-                .Be($"You have successfully submitted the evidence note with reference ID E{evidenceNoteData.Reference}");
-            model.DisplayMessage.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task ViewDraftEvidenceNoteGet_GivenRecordWasNotCreated_SuccessMessageShouldNotBeShown()
-        {
-            //arrange
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
-
-            //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as ViewResult;
-
-            //assert
-            var model = result.Model as ViewEvidenceNoteViewModel;
-            model.DisplayMessage.Should().BeFalse();
-        }
-
-        [Fact]
         public async Task ViewDraftEvidenceNoteGet_GivenEvidenceId_EvidenceNoteShouldBeRetrieved()
         {
             //arrange
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>.That.Matches(
@@ -121,15 +70,36 @@
         {
             //arrange
             var data = Fixture.Create<EvidenceNoteData>();
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(data);
 
             //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                v => v.EvidenceNoteData.Equals(data)))).MustHaveHappenedOnceExactly();
+                v => v.EvidenceNoteData.Equals(data) &&
+                     v.NoteStatus == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task ViewDraftEvidenceNoteGet_GivenRequestDataAndSuccessTempData_EvidenceNoteModelShouldBeBuilt(NoteStatus status)
+        {
+            //arrange
+            var data = Fixture.Create<EvidenceNoteData>();
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = status;
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(data);
+
+            //act
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            //asset
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.EvidenceNoteData.Equals(data) &&
+                     v.NoteStatus.Equals(status)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -142,7 +112,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, AatfId, EvidenceNoteId) as
+                await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId) as
                     ViewResult;
 
             //asset

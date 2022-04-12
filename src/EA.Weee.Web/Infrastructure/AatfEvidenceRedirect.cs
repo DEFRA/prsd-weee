@@ -11,5 +11,6 @@
         public static string ManageEvidenceRouteName = "AATF_ManageEvidence";
         public static string ViewDraftEvidenceRouteName = "AATF_ViewEvidence";
         public static string ViewSubmittedEvidenceRouteName = "AATF_SubmittedViewEvidence";
+        public static string EditEvidenceRouteName = "AATF_EditEvidence";
     }
 }

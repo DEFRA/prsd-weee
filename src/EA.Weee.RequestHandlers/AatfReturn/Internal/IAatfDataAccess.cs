@@ -35,5 +35,7 @@
         Task<bool> IsLatestAatf(Guid id, Guid aatfId);
 
         Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId, List<int> allowedStatuses);
+
+        Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses);
     }
 }
