@@ -21,6 +21,12 @@
                 url: "Scheme/{pcsId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional, area = "Scheme" },
                 namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "Scheme_manage_evidence",
+                url: "Scheme/{organisationId}/{controller}/{action}",
+                defaults: new { action = "Index", controller = "ManageEvidenceNotes" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
         }
     }
 }

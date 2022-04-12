@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Attributes
+﻿namespace EA.Weee.Web.Areas.Scheme.Attributes
 {
     using System;
     using System.Web.Mvc;

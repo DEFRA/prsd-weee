@@ -292,8 +292,11 @@
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
+    <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\ListOfNotesMapTests.cs" />
     <Compile Include="Mapping\LocalAreaMapTests.cs" />
     <Compile Include="Mapping\NonObligatedObjectMapperTests.cs" />
     <Compile Include="Mapping\PanAreaMapTests.cs" />
