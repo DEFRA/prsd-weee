@@ -84,6 +84,11 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
+            if ((newStatus.Equals(NoteStatus.Approved) && !Status.Equals(NoteStatus.Submitted)))
+            {
+                ThrowInvalidStateTransitionError(newStatus);
+            }
+
             if (newStatus.Equals(NoteStatus.Submitted))
             {
                 SubmittedDate = SystemTime.UtcNow;
