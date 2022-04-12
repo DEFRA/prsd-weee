@@ -89,7 +89,7 @@
                         modelAllNotes.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList()));
 
                         return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
-
+                        
                     default:
                         return this.View("Overview/EditDraftReturnedNotesOverview", new EditDraftReturnedNotesViewModel());
                 }
