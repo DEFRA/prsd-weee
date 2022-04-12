@@ -56,7 +56,7 @@
         public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_AllowedStatusesSholdBeEmpty()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft });
+            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus>());
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
