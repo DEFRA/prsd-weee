@@ -14,13 +14,15 @@
 <section id="main-content">
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
 
-    <h1 class="govuk-heading-l govuk-!-padding-top-5">
-        Edit evidence note details
-    </h1>
-
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.HiddenFor(m => m.Id)
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l govuk-!-padding-top-3">
+            Edit evidence note details
+        </h1>
 
         <div class="govuk-width-container govuk-!-margin-top-3 ">
 
