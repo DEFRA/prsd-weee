@@ -34,17 +34,6 @@
             return await GetAatfById(id);
         }
 
-        public async Task<List<Note>> GetAllNotes(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
-        {
-            return await GetAllNotesByIds(organisationId, aatfId, allowedStatuses);
-        }
-
-        public async Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses)
-        {
-            return await context.Notes.Where(en => allowedStatuses.Contains(en.Status.Value) 
-                                                   && en.Recipient.Id == schemeId).ToListAsync();
-        }
-
         public Task UpdateDetails(Aatf oldDetails, Aatf newDetails)
         {
             oldDetails.UpdateDetails(
@@ -128,14 +117,6 @@
             }
 
             return aatf;
-        }
-
-        private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
-        {
-            var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId && allowedStatuses.Contains(p.Status.Value))
-                .ToListAsync();
-
-            return notes;
         }
 
         public async Task RemoveAatf(Guid aatfId)
