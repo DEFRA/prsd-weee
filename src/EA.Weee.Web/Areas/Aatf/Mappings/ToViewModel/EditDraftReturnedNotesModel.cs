@@ -23,16 +23,26 @@
             Type = type;
         }
 
-        public int ReferenceId { get; protected set; }
+        public EditDraftReturnedNotesModel(int referenceId, string recipient, NoteStatus status, WasteType? wasteType, Guid id,
+            NoteType noteType, DateTime? submittedDate, string submittedBy) : this(referenceId, recipient, status, wasteType, id, noteType)
+        {
+            SubmittedDate = submittedDate;
+            SubmittedBy = submittedBy;
+        }
 
-        public string Recipient { get; protected set; }
+        public int ReferenceId { get; set; }
 
-        public NoteStatus Status { get; protected set; }
-        
-        public WasteType? WasteType { get; protected set; }
+        public string Recipient { get; set; }
 
         public Guid Id { get; protected set; }
 
         public NoteType Type { get; protected set; }
+        public NoteStatus Status { get; set; }
+        
+        public WasteType? WasteType { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string SubmittedBy { get; set; }
     }
 }

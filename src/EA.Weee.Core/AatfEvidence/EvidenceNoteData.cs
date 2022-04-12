@@ -27,6 +27,8 @@
 
         public Guid RecipientId { get; set; }
 
+        public DateTime? SubmittedDate { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }

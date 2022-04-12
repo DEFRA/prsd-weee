@@ -14,7 +14,6 @@
     {
         private const string CategoryIdProperty = "Category";
         private const string StartOfValidationMessage = "The tonnage value";
-        private const int CategoryIdValue = 1;
         private readonly List<ValidationResult> validationResults;
         private const WeeeCategory Category = WeeeCategory.AutomaticDispensers;
 
@@ -83,7 +82,7 @@
         [InlineData("+1.1")]
         public void ValidationResult_ValueIsNotANumber_ErrorMessageShouldBeCorrect(string input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be numerical");
         }
@@ -95,7 +94,7 @@
         [InlineData("-1.1")]
         public void ValidationResult_ValueIsNegativeZero_ErrorMessageShouldBeCorrect(string input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 0 or greater");
         }
@@ -111,7 +110,7 @@
         [Fact]
         public void ValidationResult_ValueIsLessThanZero_ErrorMessageShouldBeCorrect()
         {
-            var result = Validate(-1);
+            Validate(-1);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 0 or greater");
         }
@@ -133,7 +132,7 @@
         public void ValidationResult_ValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect(string value)
         {
             var decimalValue = decimal.Parse(value);
-            var result = Validate(decimalValue);
+            Validate(decimalValue);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 3 decimal places or less");
         }
@@ -184,7 +183,7 @@
         [InlineData("000000000000000.0")]
         public void IsValid_GivenValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect(object input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be numerical with 14 digits or less");
         }
@@ -236,7 +235,7 @@
         [InlineData("1,000,00")]
         public void ValidationResult_GivenTypeMessageIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using only a comma as a thousand separator");
         }

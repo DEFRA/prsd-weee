@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using EA.Weee.Web.Areas.Scheme.Attributes;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
