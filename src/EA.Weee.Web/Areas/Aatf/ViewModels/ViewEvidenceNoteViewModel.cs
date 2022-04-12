@@ -11,7 +11,7 @@
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
 
-        [DisplayName("Protocol")]
+        [DisplayName("Actual or protocol")]
         public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Type of waste")]
