@@ -23,7 +23,7 @@
 
     public class GetEvidenceNoteRequestHandlerTests
     {
-        private GetEvidenceNoteHandler handler;
+        private GetEvidenceNoteRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -55,7 +55,7 @@
 
             request = new GetEvidenceNoteRequest(evidenceNoteId);
 
-            handler = new GetEvidenceNoteHandler(weeeAuthorization,
+            handler = new GetEvidenceNoteRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
                 mapper);
 
@@ -68,7 +68,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNoteHandler(authorization,
+            handler = new GetEvidenceNoteRequestHandler(authorization,
                 evidenceDataAccess,
                 mapper);
 
@@ -85,7 +85,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
            
-            handler = new GetEvidenceNoteHandler(authorization,
+            handler = new GetEvidenceNoteRequestHandler(authorization,
                 evidenceDataAccess,
                 mapper);
 
