@@ -14,7 +14,6 @@
     using EA.Weee.Web.Constant;
     using Infrastructure;
     using Mappings.ToViewModel;
-    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
