@@ -11,6 +11,10 @@
         [Display(Name = "Submitted")]
         Submitted = 2,
         [Display(Name = "Approved")]
-        Approved = 3
+        Approved = 3,
+        [Display(Name = "Rejected")]
+        Rejected = 4,
+        [Display(Name = "Void")]
+        Void = 5
     }
 }
