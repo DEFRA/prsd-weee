@@ -39,6 +39,7 @@
         public Guid Id { get; protected set; }
 
         public NoteType Type { get; protected set; }
+
         public NoteStatus Status { get; set; }
         
         public WasteType? WasteType { get; set; }
