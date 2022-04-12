@@ -20,7 +20,7 @@
             var model = new ReviewSubmittedEvidenceNotesViewModel();
 
             model.OrganisationId = source.OrganisationId;
-            model.OrganisationName = source.OrganisationName;
+            model.SchemeName = source.OrganisationName;
 
             if (source != null && source.Notes.Any())
             {
