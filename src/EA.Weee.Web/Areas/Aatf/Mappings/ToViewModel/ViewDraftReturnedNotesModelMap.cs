@@ -18,6 +18,7 @@
                 Type = source.Type,
                 SubmittedDate = source.SubmittedDate,
                 SubmittedBy = source.SubmittedBy,
+                DisplayViewLink = source.DisplayViewLink
             };
         }
     }

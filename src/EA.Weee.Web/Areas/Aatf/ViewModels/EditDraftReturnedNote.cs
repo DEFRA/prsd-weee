@@ -22,6 +22,8 @@
 
         public NoteType Type { get; set; }
 
+        public bool DisplayViewLink { get; set; }
+
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
     }
 }

@@ -12,14 +12,14 @@
     using System.Threading.Tasks;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
 
-    public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
+    public class GetAllOtherEvidenceNotesHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMapper mapper;
 
-        public GetAatfNotesRequestHandler(IWeeeAuthorization authorization,
-           IAatfDataAccess aatfDataAccess, IMapper mapper)
+        public GetAllOtherEvidenceNotesHandler(IWeeeAuthorization authorization,
+       IAatfDataAccess aatfDataAccess, IMapper mapper)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
@@ -30,6 +30,11 @@
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
+
+            message.AllowedStatuses = new List<NoteStatus>
+            {
+                 NoteStatus.Draft
+            };
 
             var notes = await aatfDataAccess
                 .GetAllNotes(message.OrganisationId, message.AatfId, message.AllowedStatuses.Select(x => (int)x).ToList());
