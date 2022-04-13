@@ -66,12 +66,6 @@
             return notes;
         }
 
-        //public async Task<List<Note>> GetAllSubmittedNotesByScheme(Guid schemeId, List<int> allowedStatuses)
-        //{
-        //    return await context.Notes.Where(en => allowedStatuses.Contains(en.Status.Value)
-        //                                           && en.Recipient.Id == schemeId).ToListAsync();
-        //}
-
         private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
         {
             var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId && allowedStatuses.Contains(p.Status.Value))
