@@ -1,26 +1,26 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
+    using AutoFixture;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Evidence;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.RequestHandlers.AatfEvidence;
+    using EA.Weee.RequestHandlers.AatfReturn.Internal;
+    using EA.Weee.RequestHandlers.Mappings;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Tests.Core;
+    using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using AutoFixture;
-    using Domain.AatfReturn;
-    using Domain.Evidence;
-    using Domain.Organisation;
-    using Domain.Scheme;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.RequestHandlers.Mappings;
-    using FakeItEasy;
-    using FluentAssertions;
-    using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
-    using RequestHandlers.Security;
-    using Weee.Requests.AatfEvidence;
-    using Weee.Tests.Core;
     using Xunit;
+    using NoteStatusEvidence = Core.AatfEvidence.NoteStatus;
 
     public class GetAatfNotesRequestHandlerTests
     {
@@ -48,7 +48,7 @@
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
+                aatf.Id, new List<NoteStatusEvidence>());
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 aatfDataAccess,
@@ -140,6 +140,8 @@
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
                 a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() => aatfDataAccess.GetAllNotes(A<Guid>._, A<Guid>._, A<List<int>>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -166,11 +168,14 @@
             // assert
             result.Should().BeOfType<List<EvidenceNoteData>>();
             result.Count().Should().Be(evidenceNoteDatas.Count);
+
+            A.CallTo(() => aatfDataAccess.GetAllNotes(A<Guid>._, A<Guid>._, A<List<int>>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
         private GetAatfNotesRequest GetAatfNotesRequest()
         {
-            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
+            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatusEvidence> { NoteStatusEvidence.Submitted });
         }
     }
 }
