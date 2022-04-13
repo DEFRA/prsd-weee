@@ -18,5 +18,7 @@
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status);
+
+        Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter);
     }
 }
