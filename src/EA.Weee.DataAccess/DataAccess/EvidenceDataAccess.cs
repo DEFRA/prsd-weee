@@ -65,13 +65,5 @@
 
             return notes;
         }
-
-        private async Task<List<Note>> GetAllNotesByIds(Guid organisationId, Guid aatfId, List<int> allowedStatuses)
-        {
-            var notes = await context.Notes.Where(p => p.Organisation.Id == organisationId && p.Aatf.Id == aatfId && allowedStatuses.Contains(p.Status.Value))
-                .ToListAsync();
-
-            return notes;
-        }
     }
 }
