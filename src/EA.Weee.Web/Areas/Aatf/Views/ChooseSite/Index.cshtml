@@ -1,0 +1,49 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.SelectYourAatfViewModel
+@{
+    var title = "Which site would you like to manage evidence notes for?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            <p>
+                @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link" })
+            </p>
+
+            @Html.Gds().ValidationSummary()
+
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">
+                    @title
+                </h1>
+            </header>
+
+            @using (Html.BeginForm(actionName: "Index", controllerName: "ChooseSite", method: FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.OrganisationId)
+
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedId)" id="ActivityOptions">
+                    @Html.Gds().ValidationMessageFor(m => m.SelectedId)
+                    @this.WeeeGds().RadioButtonsFor(
+                                       m => m.SelectedId,
+                                       Model.AatfList,
+                                       o => o.Id,
+                                       o => o.AatfContactDetailsName,
+                                       RadioButtonLegend.VisuallyHidden,
+                                       RadioButtonLayout.Stacked)
+                </div>
+
+                @(this.WeeeGds().Submit("Continue"))
+            }
+
+        </div>
+    </div>
+</section>
+

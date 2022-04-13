@@ -5,6 +5,7 @@
     using System.Text;
     using System.Web;
     using System.Web.Mvc;
+    using Prsd.Core.Web.Mvc.RazorHelpers;
 
     public partial class WeeeGds<TModel>
     {
@@ -30,31 +31,31 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            string html = string.Format(@"<input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>", text, attributes.ToString());
+            var html = $@"<input type=""submit"" class=""govuk-button"" value=""{text}"" {attributes.ToString()}/>";
 
             return new MvcHtmlString(html);
         }
 
         public MvcHtmlString Submit(string value)
         {
-            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
-                value, AttributesHelper.AttributesHtml(null), SpinnerHtml(false));
+            var html =
+                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(null)}/>{SpinnerHtml(false)}</div>";
 
             return new MvcHtmlString(html);
         }
 
         public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
-                value, AttributesHelper.AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
+            var html =
+                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
 
             return new MvcHtmlString(html);
         }
 
         public MvcHtmlString Submit(string value, object htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{0}"" {1}/>{2}</div>",
-                value, AttributesHelper.AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
+            var html =
+                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
 
             return new MvcHtmlString(html);
         }
@@ -73,6 +74,50 @@
             img.Attributes.Add("class", "spinner-image");
 
             return img.ToString(TagRenderMode.SelfClosing);
+        }
+
+        public MvcHtmlString SecondaryButton(string innerHtml,
+            object htmlAttributes = null)
+        {
+            return SecondaryButton(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        }
+
+        public MvcHtmlString Button(string innerHtml,
+            object htmlAttributes = null)
+        {
+            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        }
+
+        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes)
+        {
+            var builder = new TagBuilder("button")
+            {
+                InnerHtml = innerHtml
+            };
+            builder.AddCssClass("govuk-button");
+            builder.Attributes.Add("data-module", "govuk-button");
+            builder.Attributes.Add("data-prevent-double-click", "true");
+            builder.Attributes.Add("type", "submit");
+            builder.MergeAttributes(htmlAttributes);
+            
+            return MvcHtmlString.Create(builder.ToString());
+        }
+
+        public MvcHtmlString SecondaryButton(string innerHtml, IDictionary<string, object> htmlAttributes)
+        {
+            var builder = new TagBuilder("button")
+            {
+                InnerHtml = innerHtml
+            };
+
+            builder.MergeAttributes(htmlAttributes);
+            builder.AddCssClass("govuk-button--secondary");
+            builder.AddCssClass("govuk-button");
+            builder.Attributes.Add("data-module", "govuk-button");
+            builder.Attributes.Add("data-prevent-double-click", "true");
+            builder.Attributes.Add("type", "submit");
+            
+            return MvcHtmlString.Create(builder.ToString());
         }
     }
 }

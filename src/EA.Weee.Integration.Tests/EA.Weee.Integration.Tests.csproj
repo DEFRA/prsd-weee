@@ -176,6 +176,9 @@
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
+    <Compile Include="Builders\EvidenceNoteDbSetup.cs" />
+    <Compile Include="Builders\OrganisationContactDbSetup.cs" />
+    <Compile Include="Builders\SchemeDbSetup.cs" />
     <Compile Include="Builders\Base\DbTestDataBuilder.cs" />
     <Compile Include="Builders\Base\DeferredBuilder.cs" />
     <Compile Include="Builders\Base\InstanceBuilder.cs" />
@@ -184,9 +187,15 @@
     <Compile Include="Builders\OrganisationUserDbSetup.cs" />
     <Compile Include="Builders\OrganisationDbSetup.cs" />
     <Compile Include="Builders\UserDbSetup.cs" />
+    <Compile Include="CommonMappingAssertions.cs" />
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
+    <Compile Include="Handlers\GetEvidenceNoteHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\CreateEvidenceNoteHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetAatfNotesRequestHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetSchemesExternalHandlerIntegrationTests.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handlers\GetAddressHandlerIntegrationTests.cs" />
@@ -194,6 +203,7 @@
     <Compile Include="TestDataProtectionProvider.cs" />
     <Compile Include="TestDataProtector.cs" />
     <Compile Include="TestingClass.cs" />
+    <Compile Include="TestingConstants.cs" />
     <Compile Include="TestUserContext.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +242,10 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
+      <Project>{99377736-A123-4823-BC63-E9AFC9C0A25C}</Project>
+      <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

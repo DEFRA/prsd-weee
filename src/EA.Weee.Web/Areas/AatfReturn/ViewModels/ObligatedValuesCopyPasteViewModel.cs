@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.AatfReturn;
     using System;
+    using Core.Aatf;
 
     public class ObligatedValuesCopyPasteViewModel
     {

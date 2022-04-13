@@ -29,7 +29,8 @@
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings();
+                    .WithDefaultSettings()
+                    .WithExternalUserAccess();
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init()
@@ -76,7 +77,8 @@
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings();
+                    .WithDefaultSettings()
+                    .WithExternalUserAccess();
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init()

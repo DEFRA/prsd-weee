@@ -35,9 +35,9 @@
 
     </script>
 
-    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link" >Skip to main content</a>
 
-    <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="header">
+    <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
 
             <div class="govuk-header__logo">
@@ -69,7 +69,7 @@
             </header>
             <p class="text govuk-body">Our service will be available again shortly. If you have an urgent query, please contact us.</p>
 
-            <details class="govuk-details" aria-live="polite">
+            <details class="govuk-details" data-module="govuk-details" aria-live="polite">
                 <summary class="govuk-details__summary">
                     <span class="summary govuk-details__summary-text">Who should I contact?</span>
                 </summary>
@@ -122,7 +122,7 @@
     </div>
 
 <footer class="govuk-footer" role="contentinfo">
-        <div class="govuk-width-container ">
+        <div class="govuk-width-container">
             <div class="govuk-footer__meta">
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow govuk-!-margin-left-6">
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">

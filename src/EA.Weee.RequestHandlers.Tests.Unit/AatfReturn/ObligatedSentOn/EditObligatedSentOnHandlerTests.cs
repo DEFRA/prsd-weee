@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Requests.Aatf;
     using Xunit;
 
     public class EditObligatedSentOnHandlerTests
@@ -47,10 +48,10 @@
         [Fact]
         public async Task HandleAsync_GivenMessageContainingUpdatedAmounts_AmountsAreUpdatedCorrectly()
         {
-            var updatedValues = new List<ObligatedValue>()
+            var updatedValues = new List<TonnageValues>()
             {
-                new ObligatedValue(Guid.NewGuid(), A.Dummy<int>(), 1, 2),
-                new ObligatedValue(Guid.NewGuid(), A.Dummy<int>(), 3, 4)
+                new TonnageValues(Guid.NewGuid(), A.Dummy<int>(), 1, 2),
+                new TonnageValues(Guid.NewGuid(), A.Dummy<int>(), 3, 4)
             };
 
             var message = new EditObligatedSentOn()

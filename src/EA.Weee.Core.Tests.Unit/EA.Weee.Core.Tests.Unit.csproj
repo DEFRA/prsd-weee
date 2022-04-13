@@ -55,6 +55,9 @@
     <Reference Include="FakeItEasy, Version=7.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.7.3.0\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Faker.Net.4.8, Version=2.0.154.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Faker.Net.2.0.154\lib\net48\Faker.Net.4.8.dll</HintPath>
+    </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
     </Reference>
@@ -158,6 +161,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AatfEvidence\EvidenceCategoryValuesTests.cs" />
+    <Compile Include="AatfEvidence\EvidenceCategoryValueTests.cs" />
+    <Compile Include="AatfEvidence\WasteTypeEnumTests.cs" />
+    <Compile Include="AatfEvidence\ProtocolEnumTests.cs" />
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
     <Compile Include="AatfReturn\AatfContactDataTests.cs" />
     <Compile Include="AatfReturn\AatfDataListTests.cs" />
@@ -179,7 +186,12 @@
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
+    <Compile Include="Helpers\NoteStatusCoreData.cs" />
+    <Compile Include="Helpers\NoteStatusData.cs" />
+    <Compile Include="Helpers\NoteTypeData.cs" />
+    <Compile Include="Helpers\ProtocolData.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
+    <Compile Include="Helpers\WasteTypeData.cs" />
     <Compile Include="Organisations\OrganisationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\ExternalRouteTests.cs" />
@@ -194,10 +206,12 @@
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
+    <Compile Include="SpecimenBuilders\StringDecimalGenerator.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
+    <Compile Include="Validation\TonnageCompareValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -262,10 +276,12 @@
     <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.targets'))" />
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props'))" />
     <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

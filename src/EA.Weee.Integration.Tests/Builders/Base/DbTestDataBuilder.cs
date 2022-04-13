@@ -23,9 +23,7 @@
 
             var userContext = Container.Resolve<IUserContext>();
             var eventDispatcher = Container.Resolve<IEventDispatcher>();
-
             DbContext = new WeeeContext(userContext, eventDispatcher);
-            
             Fixture = new Fixture();
         }
 
@@ -35,7 +33,7 @@
             {
                 throw new Exception("Failed to create instance of " + typeof(T));
             }
-                
+         
             Guard.ArgumentNotNull(() => DbContext, DbContext);
 
             try

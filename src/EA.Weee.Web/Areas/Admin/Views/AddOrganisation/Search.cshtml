@@ -28,7 +28,7 @@
             @Html.Gds().LabelFor(m => m.SearchTerm, new {@class = "govuk-visually-hidden"})
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new {@class = "govuk-!-width-one-half", @maxLength = CommonMaxFieldLengths.DefaultString}) <!-- SG Change, form control forces 50% width -->
-            <button type="submit" class="govuk-button">
+            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                 <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search"/>
             </button>
         </div>

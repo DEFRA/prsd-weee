@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.ObligatedReused
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
@@ -13,17 +12,15 @@
 
     internal class AddAatfSiteHandler : IRequestHandler<AddAatfSite, bool>
     {
-        private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfSiteDataAccess offSiteDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
 
-        public AddAatfSiteHandler(WeeeContext context, IWeeeAuthorization authorization,
+        public AddAatfSiteHandler(IWeeeAuthorization authorization,
             IAatfSiteDataAccess offSiteDataAccess, IGenericDataAccess genericDataAccess,
             IOrganisationDetailsDataAccess organisationDetailsDataAccess)
         {
-            this.context = context;
             this.authorization = authorization;
             this.offSiteDataAccess = offSiteDataAccess;
             this.genericDataAccess = genericDataAccess;

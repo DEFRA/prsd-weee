@@ -11,23 +11,28 @@
     {
         private static readonly string CssTextClass = "govuk-input";
 
-        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression)
+        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true, string displayFormat = null)
         {
-            return TextBoxFor(expression, new RouteValueDictionary());
+            return TextBoxFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
         }
 
-        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+        public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true, string displayFormat = null)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            return TextBoxFor(expression, routeValueDictionary);
+            return TextBoxFor(expression, routeValueDictionary, useHalfWidth, displayFormat);
         }
 
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression,
-            IDictionary<string, object> htmlAttributes)
+            IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
         {
-            GdsExtensions.AddFormControlCssClass(htmlAttributes);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
+    /* SG */
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 
+            if (!string.IsNullOrWhiteSpace(displayFormat))
+            {
+                return htmlHelper.TextBoxFor(expression, displayFormat, htmlAttributes);
+            }
             return htmlHelper.TextBoxFor(expression, htmlAttributes);
         }
     }

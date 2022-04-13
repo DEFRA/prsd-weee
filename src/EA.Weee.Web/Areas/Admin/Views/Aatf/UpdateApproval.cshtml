@@ -18,8 +18,11 @@
 
         @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasResubmission))
         {
-            <div>
-                <p class="important-large">
+        <div>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
                         <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete some of the data from that return and any resubmissions, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
@@ -28,14 +31,18 @@
                     {
                         <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete the entire return and any resubmissions. If you proceed, you should inform the customer.</span>
                     }
-
-                </p>
+                </strong>
             </div>
+        </div>
         }
         else if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasSubmittedReturn))
         {
-            <div>
-                <p class="important-large">
+        <div>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
                         <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete some of the data from that return, but will leave data from any other @facilityTypes intact. If you proceed, you should inform the customer.</span>
@@ -45,13 +52,18 @@
                         <span>A quarterly return has already been submitted for this @facilityType. Changing the approval date will delete the entire return. If you proceed, you should inform the customer.</span>
                     }
 
-                </p>
+                </strong>
             </div>
+        </div>
         }
         else if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasStartedReturn))
         {
-            <div>
-                <p class="important-large">
+        <div>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+
                     @if (Model.UpdateApprovalDateData.HasFlag(CanApprovalDateBeChangedFlags.HasMultipleFacility))
                     {
                         <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete this data, but leave the remainder of the data for other @facilityTypes in the same return intact. If you proceed, you should inform the customer.</span>
@@ -60,9 +72,9 @@
                     {
                         <span>There is a quarterly return in progress for this @facilityType. Changing the approval date will delete the entire return. If you proceed, you should inform the customer.</span>
                     }
-
-                </p>
+                </strong>
             </div>
+        </div>
         }
 
         @using (Html.BeginForm("UpdateApproval", "Aatf", FormMethod.Post))
@@ -105,4 +117,4 @@
             @(this.WeeeGds().Submit("Save and continue"))
         }
 
-    </section>
+</section>

@@ -1,0 +1,36 @@
+﻿
+@using EA.Weee.Core.AatfEvidence
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
+@{
+    var title = Model.Status == NoteStatus.Draft ? "Draft evidence note" : "Submitted evidence note";
+
+    ViewBag.Title = title;
+}
+
+<section id="main-content">
+
+
+    @if (Model.DisplayMessage)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null)), "Manage evidence notes"))
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+    }
+
+
+    @Html.Partial("_ViewEvidenceNotePartial", Model)
+    
+    @if (Model.DisplayEditButton)
+    {
+        <div class="govuk-!-margin-top-3">
+            @Html.RouteLink("Edit evidence note", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id}, new { @class="govuk-button govuk-button--secondary"})
+        </div>
+    }
+</section>

@@ -6,7 +6,7 @@
     {
         [Required(ErrorMessage = "Please enter an email address")]
         [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-        [Display(Name = "Recipient")]
+        [Display(Name = "RecipientId")]
         public string EmailTo { get; set; }
     }
 }
