@@ -1,0 +1,35 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceDataViewModel
+
+@{
+    ViewBag.Title = "Transfer Evidence - GOV.UK";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">
+        Transfer evidence to another scheme
+    </h1>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-m">
+            Who would you like to trasnfer evidence to?
+        </h1>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedNote)">
+            @Html.Gds().LabelFor(m => m.SelectedNote)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedNote)
+            @Html.Gds().DropDownListFor(m => m.SelectedNote, Model.NotesToDisplay, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <br />
+
+        <h1 class="govuk-heading-m">
+            What caregories would you like to trasfer?
+        </h1>
+    }
+</section>
