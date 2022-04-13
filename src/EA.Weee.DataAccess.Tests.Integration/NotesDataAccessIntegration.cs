@@ -5,16 +5,15 @@
     using System.Threading.Tasks;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
-    using RequestHandlers.Factories;
+    using Prsd.Core.Domain;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class AatfNotesDataAccessIntegration
+    public class NotesDataAccessIntegration
     {
         [Fact]
         public async Task GetAllNotes_ShouldMatchOnOrganisationId()
@@ -22,8 +21,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new AatfDataAccess(database.WeeeContext, new GenericDataAccess(database.WeeeContext),
-                    new QuarterWindowFactory(new QuarterWindowTemplateDataAccess(database.WeeeContext)));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
@@ -47,8 +45,14 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var notes = await dataAccess.GetAllNotes(organisation1.Id, aatf1.Id,
-                    new List<int>() { NoteStatus.Draft.ToInt() });
+                var filter = new EvidenceNoteFilter()
+                {
+                    OrganisationId = organisation1.Id,
+                    AatfId = aatf1.Id,
+                    AllowedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(1);
                 notes.ElementAt(0).Id.Should().Be(note1.Id);
@@ -61,8 +65,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new AatfDataAccess(database.WeeeContext, new GenericDataAccess(database.WeeeContext),
-                    new QuarterWindowFactory(new QuarterWindowTemplateDataAccess(database.WeeeContext)));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -86,8 +89,14 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var notes = await dataAccess.GetAllNotes(organisation1.Id, aatf2.Id,
-                    new List<int>() { NoteStatus.Draft.ToInt() });
+                var filter = new EvidenceNoteFilter()
+                {
+                    OrganisationId = organisation1.Id,
+                    AatfId = aatf2.Id,
+                    AllowedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(1);
                 notes.ElementAt(0).Id.Should().Be(note1.Id);
@@ -100,8 +109,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new AatfDataAccess(database.WeeeContext, new GenericDataAccess(database.WeeeContext),
-                    new QuarterWindowFactory(new QuarterWindowTemplateDataAccess(database.WeeeContext)));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 
@@ -123,8 +131,16 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var notes = await dataAccess.GetAllNotes(organisation.Id, aatf.Id,
-                    new List<int>() { NoteStatus.Draft.ToInt() });
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    OrganisationId = organisation.Id,
+                    AatfId = aatf.Id,
+                    AllowedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(3);
             }
@@ -136,8 +152,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new AatfDataAccess(database.WeeeContext, new GenericDataAccess(database.WeeeContext),
-                    new QuarterWindowFactory(new QuarterWindowTemplateDataAccess(database.WeeeContext)));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -161,8 +176,14 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var notes = await dataAccess.GetAllNotes(organisation.Id, aatf.Id,
-                    new List<int>() { NoteStatus.Draft.ToInt() });
+                var filter = new EvidenceNoteFilter()
+                {
+                    OrganisationId = organisation.Id,
+                    AatfId = aatf.Id,
+                    AllowedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(2);
                 notes.Should().NotContain(n => n.Id.Equals(note2.Id));
