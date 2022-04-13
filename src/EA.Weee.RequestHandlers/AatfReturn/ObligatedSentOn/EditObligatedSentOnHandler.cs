@@ -30,7 +30,7 @@
             {
                 var value = await genericDataAccess.GetById<WeeeSentOnAmount>(obligatedValue.Id);
 
-                await obligatedSentOnDataAccess.UpdateAmounts(value, obligatedValue.HouseholdTonnage, obligatedValue.NonHouseholdTonnage);
+                await obligatedSentOnDataAccess.UpdateAmounts(value, obligatedValue.FirstTonnage, obligatedValue.SecondTonnage);
             }
 
             return true;

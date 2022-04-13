@@ -30,6 +30,15 @@
             return fieldNames;
         }
 
+        public static Dictionary<int, string> GetOrderedValues(Type enumType)
+        {
+            var values = GetValues(enumType).ToList();
+
+            values.Sort((pair1, pair2) => string.Compare(pair1.Value, pair2.Value, StringComparison.Ordinal));
+
+            return values.ToDictionary(v => v.Key, v => v.Value);
+        }
+
         private static readonly ConcurrentDictionary<Type, EnumHelperMetaData> enumHelperMetaDataMap = new ConcurrentDictionary<Type, EnumHelperMetaData>();
 
         public static string GetDescription<TEnum>(TEnum value)

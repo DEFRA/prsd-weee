@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Requests.Aatf;
     using Xunit;
 
     public class AddObligatedSentOnHandlerTests
@@ -56,11 +57,11 @@
 
             var weeeSentOnAmount = new List<WeeeSentOnAmount>();
 
-            var categoryValues = new List<ObligatedValue>();
+            var categoryValues = new List<TonnageValues>();
 
             foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
             {
-                categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
+                categoryValues.Add(new TonnageValues(Guid.NewGuid(), (int)category, (int)category, (int)category));
             }
 
             var obligatedWeeeRequest = new AddObligatedSentOn
@@ -75,7 +76,7 @@
 
             foreach (var categoryValue in obligatedWeeeRequest.CategoryValues)
             {
-                weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                weeeSentOnAmount.Add(new WeeeSentOnAmount(weeeSentOn, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
             }
 
             var requestHandler = new AddObligatedSentOnHandler(authorization, addObligatedSentOnDataAccess, genericDataAccess);

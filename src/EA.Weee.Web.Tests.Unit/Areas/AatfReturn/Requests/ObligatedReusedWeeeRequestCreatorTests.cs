@@ -60,9 +60,9 @@
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
+                request.CategoryValues[i].FirstTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
                 request.CategoryValues[i].CategoryId.Should().Be(viewModel.CategoryValues[i].CategoryId);
-                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
+                request.CategoryValues[i].SecondTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
                 request.CategoryValues[i].CategoryId.Should().Be(viewModel.CategoryValues[i].CategoryId);
             }
         }
@@ -84,8 +84,8 @@
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                request.CategoryValues[i].HouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
-                request.CategoryValues[i].NonHouseholdTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
+                request.CategoryValues[i].FirstTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2C));
+                request.CategoryValues[i].SecondTonnage.Should().Be(Convert.ToDecimal(viewModel.CategoryValues[i].B2B));
             }
         }
 
@@ -109,8 +109,8 @@
 
             for (var i = 0; i < categoryValues.Count; i++)
             {
-                request.CategoryValues[i].HouseholdTonnage.Should().BeNull();
-                request.CategoryValues[i].NonHouseholdTonnage.Should().BeNull();
+                request.CategoryValues[i].FirstTonnage.Should().BeNull();
+                request.CategoryValues[i].SecondTonnage.Should().BeNull();
             }
         }
 

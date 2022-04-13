@@ -21,6 +21,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Domain.Evidence;
 
     public class WeeeContext : DbContext
     {
@@ -177,6 +178,12 @@
         public virtual DbSet<Aatf> Aatfs { get; set; }
 
         public virtual DbSet<ReturnAatf> ReturnAatfs { get; set; }
+
+        public virtual DbSet<Note> Notes { get; set; }
+
+        public virtual DbSet<NoteTonnage> NoteTonnages { get; set; }
+
+        public virtual DbSet<NoteStatusHistory> NoteStatusHistory { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 

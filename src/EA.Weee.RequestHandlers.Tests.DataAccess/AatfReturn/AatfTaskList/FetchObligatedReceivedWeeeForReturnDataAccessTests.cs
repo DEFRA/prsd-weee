@@ -14,6 +14,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Requests.Aatf;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
     using Return = Domain.AatfReturn.Return;
@@ -49,12 +50,12 @@
 
                 var addObligatedReceivedDataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);
 
-                var categoryValues = new List<ObligatedValue>();
+                var categoryValues = new List<TonnageValues>();
                 var weeeReceived = new WeeeReceived(scheme.Id, aatf.Id, @return.Id);
 
                 foreach (var category in Enum.GetValues(typeof(WeeeCategory)).Cast<WeeeCategory>())
                 {
-                    categoryValues.Add(new ObligatedValue(Guid.NewGuid(), (int)category, (int)category, (int)category));
+                    categoryValues.Add(new TonnageValues(Guid.NewGuid(), (int)category, (int)category, (int)category));
                 }
 
                 var obligatedReceivedRequest = new AddObligatedReceived()
@@ -79,7 +80,7 @@
 
                 foreach (var categoryValue in obligatedReceivedRequest.CategoryValues)
                 {
-                    weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                    weeeReceivedAmount.Add(new WeeeReceivedAmount(weeeReceived, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
                 }
 
                 var obligateReceivedDataAccess = new ObligatedReceivedDataAccess(database.WeeeContext);

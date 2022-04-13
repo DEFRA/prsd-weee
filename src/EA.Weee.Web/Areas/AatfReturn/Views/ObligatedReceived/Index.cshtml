@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Aatf
 @using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
@@ -47,7 +48,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.AntiForgeryToken()
    
-        <button type="submit" name="save" class="govuk-button" id="aatf-task-list">
+        <button type="submit" name="save" class="govuk-button" id="aatf-task-list" data-module="govuk-button" data-prevent-double-click="true">
             Save and continue
         </button>
     }

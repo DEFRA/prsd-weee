@@ -1,0 +1,34 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
+@{
+    ViewBag.Title = "Create evidence note";
+}
+
+<section id="main-content">
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+
+    @using (Html.BeginForm("CreateEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l govuk-!-padding-top-3">
+            Enter evidence note details
+        </h1>
+
+
+        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/_EditEvidenceNotePartial.cshtml", Model)
+    }
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    <script>
+        TonnageTotals('Received');
+        TonnageTotals('Reused');
+    </script>
+</section>
+

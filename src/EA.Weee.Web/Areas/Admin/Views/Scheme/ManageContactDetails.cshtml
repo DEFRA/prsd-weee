@@ -4,12 +4,12 @@
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ManageContactDetailsViewModel
 
 @{
-    ViewBag.Title = PcsAction.ManageContactDetails;
+    ViewBag.Title = PcsAction.ManagePcsContactDetails;
 }
 
 @section main_content {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">@PcsAction.ManageContactDetails</h1>
+        <h1 class="govuk-heading-l">@PcsAction.ManagePcsContactDetails</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -43,7 +43,7 @@
         @Html.EditorFor(m => m.OrganisationAddress, new { htmlAttributes = new { @class= "govuk-!-width-one-half" } })
 
         <div class="govuk-form-group">
-            <button class="govuk-button">Save and Continue</button>
+            <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">Save and Continue</button>
         </div>
         <p>
             <a href="@(Url.Action("Overview", new { controller = "Scheme", area = "Admin", SchemeId = Model.SchemeId, OverviewDisplayOption = "ContactDetails" }) + "#contactDetails")">Back</a>

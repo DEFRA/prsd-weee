@@ -9,7 +9,7 @@
     CompetentAuthority authority = (CompetentAuthority)ViewBag.Authority;
 
     Dictionary<CompetentAuthority, string> authorityDisplayNames = new Dictionary<CompetentAuthority, string>()
-    {
+{
         { CompetentAuthority.England, "Environment Agency" },
         { CompetentAuthority.Scotland, "Scottish Environment Protection Agency" },
         { CompetentAuthority.NorthernIreland, "Northern Ireland Environment Agency" },
@@ -54,6 +54,8 @@
                 string.Empty,
                 new { autocomplete = "false" })
         </div>
+        
+        <br />
 
         @(this.WeeeGds().Submit("Download charges (CSV)"))
     }

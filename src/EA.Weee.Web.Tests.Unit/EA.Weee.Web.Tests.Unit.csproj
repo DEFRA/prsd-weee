@@ -74,6 +74,9 @@
     <Reference Include="FakeItEasy, Version=7.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.7.3.0\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Faker.Net.4.8, Version=2.0.154.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Faker.Net.2.0.154\lib\net48\Faker.Net.4.8.dll</HintPath>
+    </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
     </Reference>
@@ -232,6 +235,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ChooseSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttributeTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnCreatedActionFilterAttributeTests.cs" />
@@ -269,8 +280,26 @@
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerViewDraftEvidenceNoteTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerTestBase.cs" />
+    <Compile Include="Areas\Aatf\Mapping\Filters\AatfDataFilterTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerCreateEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToSelectYourAatfViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditDraftReturnNotesViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteMapTransferTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNotesViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewEvidenceNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Requests\EditEvidenceNoteRequestCreatorTests.cs" />
+    <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreatorTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AatfReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AddOrganisationControllerTests.cs" />
@@ -333,6 +362,10 @@
     <Compile Include="Areas\Admin\ViewModels\FacilityViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\AeEditDetailsViewModelTests.cs" />
     <Compile Include="Infrastructure\DisplayHelperTests.cs" />
+    <Compile Include="RazorHelpers\GdsPanelUnitTests.cs" />
+    <Compile Include="RazorHelpers\GdsDropDownUnitTests.cs" />
+    <Compile Include="RazorHelpers\GdsLabelUnitTests.cs" />
+    <Compile Include="RazorHelpers\WeeeGdsFormTests.cs" />
     <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
@@ -428,6 +461,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc.Tests\EA.Prsd.Core.Web.Mvc.Tests.csproj">
+      <Project>{4c53b930-0e67-43b9-a753-187110c263b3}</Project>
+      <Name>EA.Prsd.Core.Web.Mvc.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
       <Project>{212c8803-bfe2-4091-81b0-b25be91c1c04}</Project>
       <Name>EA.Prsd.Core.Web.Mvc</Name>
@@ -443,6 +480,10 @@
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj">
+      <Project>{10930E82-4985-4F92-8C5A-65D15F0176BE}</Project>
+      <Name>EA.Weee.Core.Tests.Unit</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
@@ -482,11 +523,13 @@
     <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.targets'))" />
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props'))" />
     <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -4,12 +4,12 @@
 @model EA.Weee.Core.Scheme.SchemeData
 
 @{
-    ViewBag.Title = PcsAction.ManageContactDetails;
+    ViewBag.Title = PcsAction.ManagePcsContactDetails;
 }
 
 @section main_content {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">@PcsAction.ManageContactDetails</h1>
+        <h1 class="govuk-heading-l">@PcsAction.ManagePcsContactDetails</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -43,7 +43,7 @@
         @Html.EditorFor(model => model.Address)
 
         <p>
-            <button class="govuk-button">Save and Continue</button>
+            <button class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">Save and Continue</button>
         </p>
     }
 

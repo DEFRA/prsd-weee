@@ -7,12 +7,13 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Core.Helpers;
     using Xunit;
 
     public class TonnageValueAttributeTests
     {
         private const string CategoryIdProperty = "Category";
-        private const int CategoryIdValue = 1;
+        private const string StartOfValidationMessage = "The tonnage value";
         private readonly List<ValidationResult> validationResults;
         private const WeeeCategory Category = WeeeCategory.AutomaticDispensers;
 
@@ -22,11 +23,18 @@
         }
 
         [Fact]
+        public void TonnageValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
+        {
+            typeof(TonnageValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
+                .Should().Be(AttributeTargets.Property);
+        }
+
+        [Fact]
         public void IsValid_GivenRelatedPropertyDoesNotExist_ValidationExceptionExpected()
         {
             var tonnageValue = new TestTonnageValueNonRelatedProperty();
             var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
-            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage, false);
 
             Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
 
@@ -38,7 +46,7 @@
         {
             var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType() { Category = 15 };
             var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
-            var attribute = new TonnageValueAttribute(CategoryIdProperty);
+            var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage, false);
 
             Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
 
@@ -74,7 +82,7 @@
         [InlineData("+1.1")]
         public void ValidationResult_ValueIsNotANumber_ErrorMessageShouldBeCorrect(string input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be numerical");
         }
@@ -86,7 +94,7 @@
         [InlineData("-1.1")]
         public void ValidationResult_ValueIsNegativeZero_ErrorMessageShouldBeCorrect(string input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 0 or greater");
         }
@@ -102,7 +110,7 @@
         [Fact]
         public void ValidationResult_ValueIsLessThanZero_ErrorMessageShouldBeCorrect()
         {
-            var result = Validate(-1);
+            Validate(-1);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 0 or greater");
         }
@@ -124,7 +132,7 @@
         public void ValidationResult_ValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect(string value)
         {
             var decimalValue = decimal.Parse(value);
-            var result = Validate(decimalValue);
+            Validate(decimalValue);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be 3 decimal places or less");
         }
@@ -175,7 +183,7 @@
         [InlineData("000000000000000.0")]
         public void IsValid_GivenValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect(object input)
         {
-            var result = Validate(input);
+            Validate(input);
 
             ValidateErrorMessage($"The tonnage value for category {(int)Category} must be numerical with 14 digits or less");
         }
@@ -206,7 +214,7 @@
         }
 
         [Fact]
-        public void ValidationResult_GivenTypeMessageIsProvidedAndValueHasMoreThanFourteeenIntegerParts_ErrorMessageShouldBeCorrect()
+        public void ValidationResult_GivenTypeMessageIsProvidedAndValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect()
         {
             ValidationWithTypeMessage("0000000000000000.000");
 
@@ -227,14 +235,124 @@
         [InlineData("1,000,00")]
         public void ValidationResult_GivenTypeMessageIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
         {
-            var result = Validate(input);
+            Validate(input);
 
-            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using a comma only as a thousand separator");
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} must be entered in its correct format using only a comma as a thousand separator");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageAndDisplayCategoryIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessageAndCategoryDisplay(-1);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be 0 or greater");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageAndDisplayCategoryIsProvidedAndValueIsNotANumber_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessageAndCategoryDisplay("A");
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be numerical");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageAndDisplayCategoryIsProvidedAndValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessageAndCategoryDisplay("0000000000000000.000");
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be numerical with 14 digits or less");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenTypeMessageAnDisplayCategoryIsProvidedAndValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithTypeMessageAndCategoryDisplay(1.1111M);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be 3 decimal places or less");
+        }
+
+        [Theory]
+        [InlineData("1,00")]
+        [InlineData("10,00")]
+        [InlineData("1,000,00")]
+        public void ValidationResult_GivenTypeMessageAndDisplayCategoryIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
+        {
+            ValidationWithTypeMessageAndCategoryDisplay(input);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} B2C must be entered in its correct format using only a comma as a thousand separator");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenDisplayCategoryIsProvidedAndErrorIsLessThanZero_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithCategoryDisplay(-1);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be 0 or greater");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenDisplayCategoryIsProvidedAndValueIsNotANumber_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithCategoryDisplay("A");
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be numerical");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenDisplayCategoryIsProvidedAndValueHasMoreThanFourteenIntegerParts_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithCategoryDisplay("0000000000000000.000");
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be numerical with 14 digits or less");
+        }
+
+        [Fact]
+        public void ValidationResult_GivenDisplayCategoryIsProvidedAndValueHasMoreThanThreeDecimalPlaces_ErrorMessageShouldBeCorrect()
+        {
+            ValidationWithCategoryDisplay(1.1111M);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be 3 decimal places or less");
+        }
+
+        [Theory]
+        [InlineData("1,00")]
+        [InlineData("10,00")]
+        [InlineData("1,000,00")]
+        public void ValidationResult_GivenDisplayCategoryIsProvidedAndCommaIsIncorrectlyUsed_ErrorMessageShouldBeCorrect(object input)
+        {
+            ValidationWithCategoryDisplay(input);
+
+            ValidateErrorMessage($"The tonnage value for category {(int)Category} {Category.ToDisplayString().ToLower()} must be entered in its correct format using only a comma as a thousand separator");
         }
 
         private void ValidationWithTypeMessage(object value)
         {
             var tonnageValueModel = new TestTonnageValueWithTypeMessage()
+            {
+                Category = Category,
+                Tonnage = value
+            };
+
+            var validationContext = new ValidationContext(tonnageValueModel);
+            Validator.TryValidateObject(tonnageValueModel, validationContext, validationResults, true);
+        }
+
+        private void ValidationWithTypeMessageAndCategoryDisplay(object value)
+        {
+            var tonnageValueModel = new TestTonnageValueWithTypeMessageAndWithDisplayCategory()
+            {
+                Category = Category,
+                Tonnage = value
+            };
+
+            var validationContext = new ValidationContext(tonnageValueModel);
+            Validator.TryValidateObject(tonnageValueModel, validationContext, validationResults, true);
+        }
+
+        private void ValidationWithCategoryDisplay(object value)
+        {
+            var tonnageValueModel = new TestTonnageValueWithWithDisplayCategory()
             {
                 Category = Category,
                 Tonnage = value
@@ -271,13 +389,13 @@
 
         public class TestTonnageValueNonRelatedProperty
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, false)]
             public object Tonnage { get; set; }
         }
 
         public class TestTonnageValueRelatedPropertyNotOfCorrectType
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, false)]
             public object Tonnage { get; set; }
 
             public int Category { get; set; }
@@ -285,7 +403,7 @@
 
         public class TestTonnageValue
         {
-            [TonnageValue(CategoryIdProperty)]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, false)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }
@@ -293,7 +411,23 @@
 
         public class TestTonnageValueWithTypeMessage
         {
-            [TonnageValue(CategoryIdProperty, "B2C")]
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, "B2C", false)]
+            public object Tonnage { get; set; }
+
+            public WeeeCategory Category { get; set; }
+        }
+
+        public class TestTonnageValueWithTypeMessageAndWithDisplayCategory
+        {
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, "B2C", true)]
+            public object Tonnage { get; set; }
+
+            public WeeeCategory Category { get; set; }
+        }
+
+        public class TestTonnageValueWithWithDisplayCategory
+        {
+            [TonnageValue(CategoryIdProperty, StartOfValidationMessage, true)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }
