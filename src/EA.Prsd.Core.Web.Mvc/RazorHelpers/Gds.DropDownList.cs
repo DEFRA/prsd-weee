@@ -52,7 +52,7 @@
             bool withLookAhead = false,
             bool useHalfWidth = true)
         {
-            GdsExtensions.AddFormControlCssClass(htmlAttributes);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
             GdsExtensions.AddClass(htmlAttributes, "govuk-select");
 
             AddLookAhead(expression, htmlAttributes, withLookAhead);
