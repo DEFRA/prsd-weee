@@ -81,7 +81,7 @@
 
     @if (hasErrors)
     {
-        <details class="govuk-details weee-upload-error" aria-live="polite">
+        <details class="govuk-details weee-upload-error" data-module="govuk-details" aria-live="polite">
             @{
                 string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
                 this.WeeeGds().SummaryExpansion(errorSummaryText, "govuk-details__summary error-details-summary error-details-summary-title govuk-!-font-weight-bold", "Data return errors", "View data return errors");
@@ -103,7 +103,7 @@
 
     @if (hasWarnings)
     {
-        <details role="group" class="govuk-details weee-upload-warning">
+        <details role="group" class="govuk-details weee-upload-warning" data-module="govuk-details">
             <summary class="govuk-details__summary warning-details-summary govuk-!-font-weight-bold bold-small">View @warningCount @warningText</summary>
             <div class="warning-list-container">
                 <ul>
@@ -148,10 +148,12 @@
 
                 @if (Model.DataReturn.IsResubmission)
                 {
-
-                    <div class="highlight-section-text negative-margin">
-                        <img src="~/Content/govuk_frontend/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;" height="42" width="42">
-                        Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
+                    <div class="govuk-warning-text highlight-section-text">
+                        <span class="govuk-warning-text__icon import-icon-error-upload" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                             <span class="govuk-warning-text__assistive">Warning</span>
+                            Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
+                        </strong>
                     </div>
                 }
 

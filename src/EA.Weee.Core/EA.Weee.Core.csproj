@@ -95,6 +95,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\NoteType.cs" />
+    <Compile Include="AatfEvidence\NoteStatus.cs" />
+    <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />
+    <Compile Include="AatfEvidence\EvidenceCategoryValues.cs" />
+    <Compile Include="AatfEvidence\EvidenceNoteData.cs" />
+    <Compile Include="AatfEvidence\Protocol.cs" />
+    <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
+    <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
@@ -102,6 +110,7 @@
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
+    <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Users\UserFilter.cs" />
@@ -110,7 +119,7 @@
     <Compile Include="AatfReturn\AatfStatus.cs" />
     <Compile Include="AatfReturn\AatfDataList.cs" />
     <Compile Include="AatfReturn\AatfContactData.cs" />
-    <Compile Include="AatfReturn\ObligatedType.cs" />
+    <Compile Include="Aatf\ObligatedType.cs" />
     <Compile Include="AatfReturn\OperatorAddressData.cs" />
     <Compile Include="AatfReturn\ReportOnQuestion.cs" />
     <Compile Include="AatfReturn\ReportOnQuestionEnum.cs" />
@@ -130,7 +139,7 @@
     <Compile Include="AatfReturn\AddressDataSummary.cs" />
     <Compile Include="AatfReturn\AddressTonnageSummary.cs" />
     <Compile Include="AatfReturn\CategoryValue.cs" />
-    <Compile Include="AatfReturn\CategoryValues.cs" />
+    <Compile Include="Aatf\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
     <Compile Include="AatfReturn\ObligatedPastedValues.cs" />
@@ -304,6 +313,7 @@
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\MinimumElementAttribute.cs" />
+    <Compile Include="Validation\TonnageCompareValueAttribute.cs" />
     <Compile Include="Validation\TonnageValueAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
@@ -329,6 +339,7 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

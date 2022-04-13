@@ -28,6 +28,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
+            builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
 
             builder.RegisterType<WeeeTransactionAdapter>().As<IWeeeTransactionAdapter>()
                 .InstancePerRequest();
@@ -37,8 +38,7 @@
             builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>()
                 .InstancePerRequest();
 
-            builder.RegisterType<QuarterWindowTemplateDataAccess>().As<IQuarterWindowTemplateDataAccess>()
-                .InstancePerRequest();
+            builder.RegisterTypeByEnvironment<QuarterWindowTemplateDataAccess, IQuarterWindowTemplateDataAccess>(environment);
 
             builder.RegisterType<SystemDataDataAccess>().As<ISystemDataDataAccess>()
                 .InstancePerRequest();
@@ -49,8 +49,7 @@
             builder.RegisterType<OrganisationDataAccess>().As<IOrganisationDataAccess>()
                 .InstancePerRequest();
 
-            builder.RegisterType<SchemeDataAccess>().As<ISchemeDataAccess>()
-                .InstancePerRequest();
+            builder.RegisterTypeByEnvironment<SchemeDataAccess, ISchemeDataAccess>(environment);
 
             builder.RegisterType<StoredProcedures>().As<IStoredProcedures>()
                 .InstancePerRequest();

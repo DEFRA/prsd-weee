@@ -1,0 +1,46 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
+@{
+    ViewBag.Title = "Edit evidence note details";
+}
+
+<section id="main-content">
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+
+    @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l govuk-!-padding-top-3">
+            Edit evidence note details
+        </h1>
+
+        <div class="govuk-width-container govuk-!-margin-top-3 govuk-!-padding-bottom-5">
+
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-padding-bottom-1">
+                @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay)
+            </div>
+
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-padding-bottom-1">
+                @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
+            </div>
+        </div>
+
+        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/_EditEvidenceNotePartial.cshtml", Model)
+    }
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    <script>
+        TonnageTotals('Received');
+        TonnageTotals('Reused');
+    </script>
+</section>
+

@@ -93,9 +93,8 @@
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var validationResults = new List<ValidationResult>();
-            var instance = validationContext.ObjectInstance as FacilityViewModelBase;
 
-            if (instance != null)
+            if (validationContext.ObjectInstance is FacilityViewModelBase instance)
             {
                 if (instance.ApprovalDate.HasValue && instance.ComplianceYear != default(short))
                 {
@@ -108,7 +107,7 @@
                     if (inputDate < startDate || inputDate > endDate)
                     {
                         validationResults.Add(
-                            new ValidationResult($"Approval date must be between {startDate.ToString("dd/MM/yyyy")} and {endDate.ToString("dd/MM/yyyy")}",
+                            new ValidationResult($"Approval date must be between {startDate:dd/MM/yyyy} and {endDate:dd/MM/yyyy}",
                             new List<string> { nameof(instance.ApprovalDate) }));
                     }
                 }

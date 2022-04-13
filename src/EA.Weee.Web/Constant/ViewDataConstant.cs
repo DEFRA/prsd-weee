@@ -3,5 +3,6 @@
     public static class ViewDataConstant
     {
         public static string SchemeViewData = "schemeData";
+        public static string EvidenceNoteStatus = "evidenceNoteStatus";
     }
 }

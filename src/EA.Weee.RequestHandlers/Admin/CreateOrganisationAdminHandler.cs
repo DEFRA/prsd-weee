@@ -61,9 +61,9 @@
 
             organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
 
-            Guid id = await dataAccess.Add<Organisation>(organisation);
+            var result = await dataAccess.Add<Organisation>(organisation);
 
-            return id;
+            return result.Id;
         }
     }
 }

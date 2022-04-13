@@ -6,8 +6,6 @@ To dispose of the waste you have collected, you can contact a producer complianc
 
 The WEEE service is used by PCS organisations to register and report activities related to the WEEE regulation.
 
-This service is not currently released but is intended to replace the existing service soon. The key difference is that it will have been developed in accordance with the [Digital by Default service standard](https://www.gov.uk/service-manual/digital-by-default), putting user needs first and delivered iteratively.
-
 ## Development Environment
 
 ## Install global system dependencies
@@ -95,7 +93,7 @@ The website uses the API to access the database and to generate emails.
 
 #### Run the project
 
-1. On the Visual Studio toolbar click 'Debug' -> 'Options and Settings'.  In the options window select 'Projects and Solutions' -> 'Web Projects' and make sure the 'Use the 64 bit version of IIS Express...' is ticked.
+1. On the Visual Studio menu click 'Tools' -> 'Options'.  In the options window select 'Projects and Solutions' -> 'Web Projects' and make sure the 'Use the 64 bit version of IIS Express...' is ticked.
 2. Set the EA.Weee.Web project as the start-up project. Build and run the solution.
 3. The website will now be available at https://localhost:44300/
 

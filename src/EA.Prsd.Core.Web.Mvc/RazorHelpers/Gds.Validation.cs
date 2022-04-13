@@ -52,7 +52,7 @@
                 return null;
             }
 
-            var cssClass = (modelState.Errors.Count > 0) ? "govuk-form-group--error error" : null;
+            var cssClass = (modelState.Errors.Count > 0) ? "govuk-form-group govuk-form-group--error error" : null;
 
             return cssClass;
         }
@@ -61,15 +61,13 @@
         {
             var indexProperty = GetIndexedPropertyName(methodExpression.Body);
 
-            var expressionBody = expression.Body as MemberExpression;
-
-            if (expressionBody == null)
+            if (!(expression.Body is MemberExpression expressionBody))
             {
                 return null;
             }
 
             // CHECK THIS
-            var nameToCheck = string.Format("{0}.{1}", indexProperty, expressionBody.Member.Name);
+            var nameToCheck = $"{indexProperty}.{expressionBody.Member.Name}";
 
             if (string.IsNullOrWhiteSpace(nameToCheck))
             {
@@ -90,28 +88,52 @@
 
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression)
         {
-            return htmlHelper.ValidationMessageFor(expression, null, new { @class = "govuk-error-message error-message" }, "span");
+            var generatedHtml = htmlHelper.ValidationMessageFor(expression, null,
+                new { @class = "govuk-error-message error-message" }, "p");
+
+            if (generatedHtml != null)
+            {
+                return AppendHiddenErrorText(generatedHtml);
+            }
+            
+            return null;
+        }
+
+        private static MvcHtmlString AppendHiddenErrorText(MvcHtmlString html2)
+        {
+            var node = HtmlAgilityPack.HtmlNode.CreateNode(html2.ToHtmlString());
+
+            var spanBuilder = new TagBuilder("span");
+            spanBuilder.AddCssClass("govuk-visually-hidden");
+            spanBuilder.SetInnerText("Error:");
+
+            node.InnerHtml = spanBuilder + node.InnerHtml;
+            return new MvcHtmlString(node.OuterHtml);
         }
 
         public MvcHtmlString ValidationMessageFor<TValue>(Expression<Func<TModel, TValue>> expression,
             string validationMessage)
         {
-            return htmlHelper.ValidationMessageFor(expression, validationMessage, new { @class = "govuk-error-message error-message" },
-                "span");
+            var generatedHtml = htmlHelper.ValidationMessageFor(expression, validationMessage, new { @class = "govuk-error-message error-message" },
+                "p");
+
+            if (generatedHtml != null)
+            {
+                return AppendHiddenErrorText(generatedHtml);
+            }
+
+            return null;
         }
 
         private string GetJavascriptEnabledBlankSummary()
         {
-            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true'>
-                        <ul class='error-summary-list govuk-list govuk-error-summary__list'>
-                            <li style='display:none'></li>
-                        </ul>
+            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert' aria-atomic='true'>
                     </div>";
         }
 
         private string GetJavascriptDisabledErrorSummary(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title'>";
+            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title' role='alert' aria-atomic='true'>";
 
             var errorTitle = GetErrorSummaryHeading(modelErrors);
 
@@ -132,7 +154,6 @@
         private string GetErrorSummaryList(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
             var errorListBuilder = new StringBuilder();
-
             errorListBuilder.AppendLine("<ul class='govuk-list govuk-error-summary__list error-summary-list'>");
 
             foreach (var modelError in modelErrors)
@@ -158,8 +179,6 @@
 
         private string GetErrorSummaryHeading(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var modelErrorsCount = modelErrors.Count();
-
             var tagBuilder = new TagBuilder("h2");
 
             tagBuilder.AddCssClass("govuk-error-summary__title");
@@ -167,17 +186,7 @@
             tagBuilder.AddCssClass("error-summary-heading");
             tagBuilder.Attributes.Add("id", "error-summary-title");
 
-            var modelErrorsCountString = string.Empty;
-            if (modelErrorsCount > 1)
-            {
-                modelErrorsCountString = modelErrorsCount + " errors";
-            }
-            else
-            {
-                modelErrorsCountString = "1 error";
-            }
-
-            tagBuilder.SetInnerText(string.Format("You have {0} on this page", modelErrorsCountString));
+            tagBuilder.SetInnerText("There is a problem");
 
             return tagBuilder.ToString();
         }

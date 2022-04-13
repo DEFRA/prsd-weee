@@ -60,6 +60,9 @@
     <Reference Include="FakeItEasy, Version=7.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.7.3.0\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Faker.Net.4.8, Version=2.0.154.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Faker.Net.2.0.154\lib\net48\Faker.Net.4.8.dll</HintPath>
+    </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
     </Reference>
@@ -134,6 +137,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
@@ -282,7 +292,11 @@
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
+    <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\ListOfNotesMapTests.cs" />
     <Compile Include="Mapping\LocalAreaMapTests.cs" />
     <Compile Include="Mapping\NonObligatedObjectMapperTests.cs" />
     <Compile Include="Mapping\PanAreaMapTests.cs" />
@@ -291,6 +305,7 @@
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetContactHandlerTests.cs" />
@@ -366,6 +381,10 @@
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj">
+      <Project>{10930E82-4985-4F92-8C5A-65D15F0176BE}</Project>
+      <Name>EA.Weee.Core.Tests.Unit</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
@@ -461,11 +480,13 @@
     <Error Condition="!Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

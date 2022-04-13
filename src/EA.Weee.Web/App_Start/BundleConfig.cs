@@ -27,14 +27,14 @@
                     "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
-                    "~/Scripts/govuk_frontend/govuk-frontend-2.7.0.min.js",
-                    "~/Scripts/govuk_frontend/html5shiv.js",
+                    "~/Scripts/govuk_frontend/govuk-frontend-4.0.1.min.js",
                     "~/Scripts/setup-govuk-frontend.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                     "~/Scripts/vendor/modernizr.custom.77028.js",
                     "~/Scripts/flatpickr.js",
                     "~/Scripts/flatpickr.uk.js",
+                    "~/Scripts/auto-complete.min.js",
                     "~/Scripts/weee-application.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
@@ -55,18 +55,13 @@
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
 
-            bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
-                      "~/Content/weee-page-ie6.css"));
-
-            bundles.Add(new StyleBundle("~/Content/weee-page-ie7").Include(
-                      "~/Content/weee-page-ie7.css"));
-
             bundles.Add(new StyleBundle("~/Content/weee-page-ie8").Include(
                       "~/Content/weee-page-ie8.css"));
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                             "~/Content/flatpickr.css",
                             "~/Content/weee-page.css",
+                            "~/Content/auto-complete.css",
                             "~/Content/font-awesome.css"));
 
             bundles.Add(new StyleBundle("~/Content/remove-site").Include(

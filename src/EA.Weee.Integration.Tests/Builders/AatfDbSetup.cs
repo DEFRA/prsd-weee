@@ -17,7 +17,7 @@
             var address = AatfAddressDbSetup.Init().Create();
             var contact = AatfContactDbSetup.Init().Create();
 
-            var organisation = DbContext.Organisations.First(o => o.Name.Equals("Integration Test Company"));
+            var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var newAddress = DbContext.AatfAddress.First(a => a.Id.Equals(address.Id));
             var newContact = DbContext.AatfContacts.First(c => c.Id.Equals(contact.Id));
 
@@ -38,7 +38,7 @@
             return instance;
         }
 
-        protected AatfDbSetup WithOrganisation(Organisation organisation)
+        public AatfDbSetup WithOrganisation(Organisation organisation)
         {
             instance.UpdateDetails(instance.Name,
                 instance.CompetentAuthority,

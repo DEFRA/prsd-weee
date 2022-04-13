@@ -10,7 +10,7 @@ namespace EA.Weee.Web.RazorHelpers
         {
             Guard.ArgumentNotNullOrEmpty(() => caption, caption);
 
-            var html = string.Format("<div class=\"govuk-form-group\"><table class=\"govuk-table\"><caption class=\"govuk-table__caption\"><span class=\"hidden-for-screen-reader\">{0}</span></caption><thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr></thead><tbody class=\"govuk-table__body\">", caption);
+            var html = string.Format("<div class=\"govuk-form-group\"><table class=\"govuk-table\"><caption class=\"govuk-table__caption\"><span class=\"govuk-visually-hidden\">{0}</span></caption><thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr></thead><tbody class=\"govuk-table__body\">", caption);
 
             foreach (var key in data.Keys)
             {

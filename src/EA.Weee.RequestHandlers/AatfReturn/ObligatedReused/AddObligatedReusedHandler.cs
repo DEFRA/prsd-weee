@@ -31,7 +31,7 @@
 
             foreach (var categoryValue in message.CategoryValues)
             {
-                aatfWeeeReusedAmount.Add(new WeeeReusedAmount(aatfWeeeReused, categoryValue.CategoryId, categoryValue.HouseholdTonnage, categoryValue.NonHouseholdTonnage));
+                aatfWeeeReusedAmount.Add(new WeeeReusedAmount(aatfWeeeReused, categoryValue.CategoryId, categoryValue.FirstTonnage, categoryValue.SecondTonnage));
             }
 
             await obligatedReusedDataAccess.Submit(aatfWeeeReusedAmount);
