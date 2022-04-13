@@ -40,7 +40,7 @@
             bool useHalfWidth = true)
         {
             var routeValueDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            AddFormControlCssClass(routeValueDictionary, useHalfWidth);
+            GdsExtensions.AddFormControlCssClass(routeValueDictionary, useHalfWidth);
             GdsExtensions.AddClass(routeValueDictionary, "govuk-select");
             AddLookAhead(expression, routeValueDictionary, withLookAhead);
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValueDictionary);
