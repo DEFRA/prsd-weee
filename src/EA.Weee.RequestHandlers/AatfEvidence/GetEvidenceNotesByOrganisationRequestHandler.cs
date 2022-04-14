@@ -37,10 +37,6 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            //TODO: move the allowed status list to the GetEvidenceNotesByOrganisationRequest, perhaps create a base class as both GetEvidenceNotesByOrganisationRequest and GetAatfNotesRequest are very similar
-
-            var allowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted };
-
             var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
 
             Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
@@ -50,7 +46,7 @@
             var filter = new EvidenceNoteFilter()
             {
                 OrganisationId = message.OrganisationId,
-                AllowedStatuses = allowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList()
+                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList()
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);

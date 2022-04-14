@@ -23,7 +23,7 @@
         public MvcHtmlString PasswordFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IDictionary<string, object> htmlAttributes)
         {
-            AddFormControlCssClass(htmlAttributes);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes);
 
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 
