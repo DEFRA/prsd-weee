@@ -20,17 +20,8 @@
 
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
-                    @using(Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get)){
-                    <div class="govuk-form-group govuk-!-width-one-half">
-                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchRef)">
-                            @Html.Gds().LabelFor(m => m.SearchRef, new { @class = "govuk-label--s" }, false)
-                            @Html.Gds().TextBoxFor(m => m.SearchRef)
-                            <button class="govuk-button"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only govuk-visually-hidden">Search by reference number</span></button>
-                        </div>
-                    </div>
-                    }
-
-
+                    @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", Model)
+                    
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">Draft evidence notes</caption>
                         <thead class="govuk-table__head">
