@@ -5,6 +5,8 @@
     using System.Threading.Tasks;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Domain.Evidence;
+    using EA.Weee.Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
@@ -12,6 +14,8 @@
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
 
     public class NotesDataAccessIntegration
     {
@@ -147,7 +151,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_ShouldNotIncludedSubmitted()
+        public async Task GetAllNotes_GivenDraftStatusShouldNotIncludedSubmitted()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -188,6 +192,100 @@
                 notes.Count.Should().Be(2);
                 notes.Should().NotContain(n => n.Id.Equals(note2.Id));
             }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefShouldReturnSingleNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var note1 = await SetupSingleNote(context, database);
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    SearchRef = note1.Reference.ToString(),
+                    AllowedStatuses = new List<NoteStatus>() {note1.Status}
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(note1.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefAlongWithOrganisationAndAatfShouldReturnSingleNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var note1 = await SetupSingleNote(context, database);
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    SearchRef = note1.Reference.ToString(),
+                    AllowedStatuses = new List<NoteStatus>() { note1.Status },
+                    OrganisationId = note1.OrganisationId,
+                    AatfId = note1.AatfId
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(note1.Id);
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteTypeData))]
+        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote(NoteType noteType)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var note1 = await SetupSingleNote(context, database);
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    SearchRef = $"{noteType.DisplayName}{note1.Reference}",
+                    AllowedStatuses = new List<NoteStatus>() { note1.Status },
+                    OrganisationId = note1.OrganisationId,
+                    AatfId = note1.AatfId
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(note1.Id);
+            }
+        }
+
+        private async Task<Note> SetupSingleNote(WeeeContext context, DatabaseWrapper database)
+        {
+            var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+            context.Organisations.Add(organisation);
+
+            var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+
+            context.Aatfs.Add(aatf1);
+
+            await database.WeeeContext.SaveChangesAsync();
+
+            var note1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+
+            context.Notes.Add(note1);
+
+            await database.WeeeContext.SaveChangesAsync();
+            return note1;
         }
     }
 }
