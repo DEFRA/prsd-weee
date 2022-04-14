@@ -48,7 +48,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null, string clicked = null)
+        public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
+            ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null,
+            ManageEvidenceNoteViewModel viewModel = null)
         {
             await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -68,14 +70,18 @@
                 {
                     case ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes:
 
-                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models);
+                        return await EditDraftReturnNoteCase(client, 
+                            organisationId, 
+                            aatfId, 
+                            aatf, 
+                            models,
+                            viewModel?.FilterViewModel?.SearchRef);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        var resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> 
-                        { 
-                            NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void 
-                        }));
+                        var resultAllNotes = await client.SendAsync(User.GetAccessToken(), 
+                            new GetAatfNotesRequest(organisationId, aatfId, 
+                                new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void }, null));
 
                         var modelAllNotes = mapper.Map<AllOtherEvidenceNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
@@ -84,7 +90,7 @@
                         return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
                         
                     default:
-                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models);
+                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, viewModel?.FilterViewModel?.SearchRef);
                 }
             }
         }
@@ -224,9 +230,15 @@
             });
         }
 
-        private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, Guid organisationId, Guid aatfId, AatfData aatf, SelectYourAatfViewModel models)
+        private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, 
+            Guid organisationId, 
+            Guid aatfId, 
+            AatfData aatf, 
+            SelectYourAatfViewModel models,
+            string searchRef)
         {
-            var result = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }));
+            var result = await client.SendAsync(User.GetAccessToken(), 
+                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, searchRef));
             
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
             

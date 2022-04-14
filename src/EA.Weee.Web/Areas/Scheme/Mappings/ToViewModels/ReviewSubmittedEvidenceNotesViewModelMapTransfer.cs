@@ -9,19 +9,19 @@
     {
         public Guid OrganisationId { get; protected set; }
 
-        public string OrganisationName { get; protected set; }
+        public string SchemeName { get; protected set; }
 
         public List<EvidenceNoteData> Notes { get; protected set; }
 
-        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId, List<EvidenceNoteData> notes, string organisationName)
+        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId, List<EvidenceNoteData> notes, string schemeName)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => notes, notes);
-            Guard.ArgumentNotNull(() => organisationName, organisationName);
+            Guard.ArgumentNotNull(() => schemeName, schemeName);
 
             OrganisationId = organisationId;
             Notes = notes;
-            OrganisationName = organisationName;
+            SchemeName = schemeName;
         }
     }
 }

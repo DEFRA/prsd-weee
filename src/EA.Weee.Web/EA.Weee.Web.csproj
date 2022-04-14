@@ -66,6 +66,9 @@
     <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="CuttingEdge.Conditions, Version=1.2.0.11174, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\CuttingEdge.Conditions.1.2.0.0\lib\NET35\CuttingEdge.Conditions.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
       <Private>True</Private>
@@ -300,6 +303,9 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -310,6 +316,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\EvidenceNoteApprovalOptionsViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
@@ -460,6 +467,7 @@
     <Compile Include="Infrastructure\DisplayHelper.cs" />
     <Compile Include="Infrastructure\Logging\ApiErrorLog.cs" />
     <Compile Include="RazorHelpers\AttributesHelper.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.TextBoxWithIcon.cs" />
     <Compile Include="RazorHelpers\WeeeGds.BackLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Panel.cs" />
@@ -659,6 +667,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByReferencePartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
@@ -1046,11 +1055,19 @@
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Areas\Aatf\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\CreateEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\ViewDraftEvidenceNote.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\auto-complete.min.js" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />

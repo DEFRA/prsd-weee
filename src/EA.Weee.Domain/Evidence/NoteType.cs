@@ -4,8 +4,8 @@
 
     public class NoteType : Enumeration
     {
-        public static readonly NoteType EvidenceNote = new NoteType(1, "Evidence");
-        public static readonly NoteType TransferNote = new NoteType(2, "Transfer");
+        public static readonly NoteType EvidenceNote = new NoteType(1, "E");
+        public static readonly NoteType TransferNote = new NoteType(2, "T");
 
         protected NoteType()
         {
