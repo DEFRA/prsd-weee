@@ -25,7 +25,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyOrganisationArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, aatfId, new List<Core.AatfEvidence.NoteStatus> { NoteStatus.Draft }));
+            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, aatfId, new List<NoteStatus>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -35,21 +35,35 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAatfArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus> { NoteStatus.Draft }));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
         }
 
         [Fact]
-        public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_PropertiesShouldBeSet()
+        public void GetAatfNotesRequest_ConstructorListOfAllowedStatusIsNull_ArgumentNullExceptionExpected()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft });
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null));
+
+            // assert
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValuesWithListOfAllowedStatuses_PropertiesShouldBeSet()
+        {
+            // arrange 
+            var allowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
+
+            // act
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
             result.AatfId.Should().Be(aatfId);
+            result.AllowedStatuses.Should().BeEquivalentTo(allowedStatuses);
         }
 
         [Fact]
