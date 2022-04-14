@@ -1,13 +1,13 @@
 ﻿
 @using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.Areas.Aatf.Controllers
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels;
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
 @{
     var title = Model.Status == NoteStatus.Draft ? "Draft evidence note" : "Submitted evidence note";
-
+    var navigateBackToSelectedTab = Model.Status == NoteStatus.Draft ? ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes : ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
     ViewBag.Title = title;
 }
 
@@ -16,12 +16,12 @@
 
     @if (Model.DisplayMessage)
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null)), "Manage evidence notes"))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, navigateBackToSelectedTab, null)), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, navigateBackToSelectedTab, null))))
     }
 
 

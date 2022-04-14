@@ -24,7 +24,7 @@
 
                 if (convertedModel == null)
                 {
-                    throw new ArgumentException("Edit evidence note view model incorrect type");
+                    throw new ArgumentException("Edit evidence note view model incorrect type.");
                 }
 
                 idActionParameter = convertedModel.Id;
