@@ -44,7 +44,9 @@
 
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
 
-                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, scheme.SchemeName));
+                var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
+
+                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName));
 
                 return this.View("ReviewSubmittedEvidence", model);
             }
