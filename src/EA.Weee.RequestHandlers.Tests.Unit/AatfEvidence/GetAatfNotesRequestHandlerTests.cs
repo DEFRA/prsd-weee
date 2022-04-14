@@ -11,14 +11,12 @@
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
-    using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.RequestHandlers.Mappings;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
@@ -99,7 +97,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_AatfDataAccessShouldBeCalledOnce()
+        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -107,9 +105,11 @@
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => e.OrganisationId.Equals(request.OrganisationId) && 
-                e.AatfId.Equals(request.AatfId) 
-                && e.AllowedStatuses.SequenceEqual(status)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
+                e.OrganisationId.Equals(request.OrganisationId) && 
+                e.AatfId.Equals(request.AatfId) && 
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SchemeId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
