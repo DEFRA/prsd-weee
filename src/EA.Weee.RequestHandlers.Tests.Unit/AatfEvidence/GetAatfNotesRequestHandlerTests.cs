@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.Helpers;
     using DataAccess.DataAccess;
@@ -13,13 +8,18 @@
     using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.RequestHandlers.AatfEvidence;
     using EA.Weee.RequestHandlers.Mappings;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfEvidence;
-    using RequestHandlers.Security;
-    using Weee.Requests.AatfEvidence;
-    using Weee.Tests.Core;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
 
@@ -145,6 +145,8 @@
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
                 a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -171,11 +173,14 @@
             // assert
             result.Should().BeOfType<List<EvidenceNoteData>>();
             result.Count().Should().Be(evidenceNoteDatas.Count);
+
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
         private GetAatfNotesRequest GetAatfNotesRequest()
         {
-            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
+            return new GetAatfNotesRequest(organisation.Id, aatf.Id, fixture.CreateMany<NoteStatus>().ToList());
         }
     }
 }
