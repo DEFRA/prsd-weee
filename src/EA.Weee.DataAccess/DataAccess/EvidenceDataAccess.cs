@@ -3,6 +3,7 @@
     using EA.Weee.Domain.Evidence;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -50,6 +51,19 @@
             await context.SaveChangesAsync();
 
             return note;
+        }
+
+        public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
+        {
+            var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
+            var notes = await context.Notes.Where(p => 
+                    (!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
+                    && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
+                    && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
+                    && (allowedStatus.Contains(p.Status.Value)))
+                .ToListAsync();
+
+            return notes;
         }
     }
 }

@@ -3,6 +3,8 @@
     using Core.Helpers;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using FluentAssertions;
     using Xunit;
 
     public class EnumHelperTests
@@ -78,6 +80,20 @@
         public void GetDisplayName_DefaultsToEnumValue()
         {
             Assert.Equal("Parrot", EnumHelper.GetDisplayName(TestEnum.Parrot));
+        }
+
+        [Fact]
+        public void GetOrderedValues_ShouldOrderValuesByDisplayName()
+        {
+            var values = EnumHelper.GetOrderedValues(typeof(TestEnum));
+
+            values.ElementAt(0).Key.Should().Be(1);
+            values.ElementAt(1).Key.Should().Be(5);
+            values.ElementAt(2).Key.Should().Be(4);
+            values.ElementAt(3).Key.Should().Be(3);
+            values.ElementAt(4).Key.Should().Be(2);
+
+            values.Select(v => v.Value).Should().BeInAscendingOrder();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿
-@import "govuk_frontend/base";
-@import "govuk_frontend/components/input";
+@import "_main";
 
 /*taken from https://github.com/alphagov/accessible-autocomplete*/
 .autocomplete__wrapper {
