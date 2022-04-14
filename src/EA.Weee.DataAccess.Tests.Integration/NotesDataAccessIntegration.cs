@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.AatfEvidence;
-    using Core.Helpers;
     using Domain.Evidence;
     using EA.Weee.Core.Tests.Unit.Helpers;
     using FakeItEasy;
@@ -202,18 +200,20 @@
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
-                var note1 = await SetupSingleNote(context, database);
+                var noteShouldBeFound = await SetupSingleNote(context, database);
+                var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter()
                 {
-                    SearchRef = note1.Reference.ToString(),
-                    AllowedStatuses = new List<NoteStatus>() {note1.Status}
+                    SearchRef = noteShouldBeFound.Reference.ToString(),
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status}
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -225,20 +225,22 @@
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
-                var note1 = await SetupSingleNote(context, database);
+                var noteShouldBeFound = await SetupSingleNote(context, database);
+                var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter()
                 {
-                    SearchRef = note1.Reference.ToString(),
-                    AllowedStatuses = new List<NoteStatus>() { note1.Status },
-                    OrganisationId = note1.OrganisationId,
-                    AatfId = note1.AatfId
+                    SearchRef = noteShouldBeFound.Reference.ToString(),
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
+                    OrganisationId = noteShouldBeFound.OrganisationId,
+                    AatfId = noteShouldBeFound.AatfId
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -251,20 +253,22 @@
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
-                var note1 = await SetupSingleNote(context, database);
+                var noteShouldBeFound = await SetupSingleNote(context, database);
+                var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter()
                 {
-                    SearchRef = $"{noteType.DisplayName}{note1.Reference}",
-                    AllowedStatuses = new List<NoteStatus>() { note1.Status },
-                    OrganisationId = note1.OrganisationId,
-                    AatfId = note1.AatfId
+                    SearchRef = $"{noteType.DisplayName}{noteShouldBeFound.Reference}",
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
+                    OrganisationId = noteShouldBeFound.OrganisationId,
+                    AatfId = noteShouldBeFound.AatfId
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
