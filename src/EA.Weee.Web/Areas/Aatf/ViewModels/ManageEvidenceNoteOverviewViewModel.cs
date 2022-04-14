@@ -5,7 +5,7 @@
 
     public abstract class ManageEvidenceNoteOverviewViewModel
     {
-        [DisplayName("Search by reference number")]
+        [DisplayName("Search by reference ID")]
         public string SearchRef { get; set; }
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
