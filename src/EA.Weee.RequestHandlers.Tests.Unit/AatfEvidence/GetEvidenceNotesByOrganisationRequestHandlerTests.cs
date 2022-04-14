@@ -18,14 +18,16 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Helpers;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class GetEvidenceNotesByOrganisationRequestHandlerTests
     {
         private GetEvidenceNotesByOrganisationRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private readonly IMapper mapper;
         private readonly Guid organisationId;
@@ -35,16 +37,16 @@
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
-            aatfDataAccess = A.Fake<IAatfDataAccess>();
+            evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
-                aatfDataAccess,
+                evidenceDataAccess,
                 mapper,
                 schemeDataAccess);
         }
@@ -54,7 +56,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, aatfDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
@@ -68,7 +70,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, aatfDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
@@ -100,13 +102,20 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_AatfDataAccessShouldBeCalledOnce()
+        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
+            //arrange
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+
             // act
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => aatfDataAccess.GetAllSubmittedNotesByScheme(A<Guid>._, A<List<int>>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
+                                                              e.OrganisationId.Equals(request.OrganisationId) && 
+                                                              e.AllowedStatuses.SequenceEqual(status) &&
+                                                              e.AatfId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -141,7 +150,7 @@
                 note3
             };
 
-            A.CallTo(() => aatfDataAccess.GetAllSubmittedNotesByScheme(A<Guid>._, A<List<int>>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -168,7 +177,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
-            A.CallTo(() => aatfDataAccess.GetAllSubmittedNotesByScheme(A<Guid>._, A<List<int>>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -182,7 +191,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
         }
     }
 }
