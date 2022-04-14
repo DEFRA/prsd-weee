@@ -37,7 +37,8 @@
             {
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,
-                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList()
+                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
+                SearchRef = message.SearchRef
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
