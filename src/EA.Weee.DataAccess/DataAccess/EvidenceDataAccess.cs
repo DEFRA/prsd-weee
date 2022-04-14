@@ -5,10 +5,8 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain.Scheme;
-    using Prsd.Core;
     using Prsd.Core.Domain;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
