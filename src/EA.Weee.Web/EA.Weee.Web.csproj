@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
