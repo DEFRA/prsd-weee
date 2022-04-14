@@ -20,7 +20,7 @@
             string optionLabel)
         {
             var routeValues = new RouteValueDictionary();
-            AddFormControlCssClass(routeValues);
+            GdsExtensions.AddFormControlCssClass(routeValues);
             GdsExtensions.AddClass(routeValues, "govuk-select");
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValues);
         }
@@ -40,7 +40,7 @@
             bool useHalfWidth = true)
         {
             var routeValueDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            AddFormControlCssClass(routeValueDictionary, useHalfWidth);
+            GdsExtensions.AddFormControlCssClass(routeValueDictionary, useHalfWidth);
             GdsExtensions.AddClass(routeValueDictionary, "govuk-select");
             AddLookAhead(expression, routeValueDictionary, withLookAhead);
             return htmlHelper.DropDownListFor(expression, selectList, optionLabel: optionLabel, htmlAttributes: routeValueDictionary);
@@ -52,7 +52,7 @@
             bool withLookAhead = false,
             bool useHalfWidth = true)
         {
-            AddFormControlCssClass(htmlAttributes, useHalfWidth);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
             GdsExtensions.AddClass(htmlAttributes, "govuk-select");
 
             AddLookAhead(expression, htmlAttributes, withLookAhead);

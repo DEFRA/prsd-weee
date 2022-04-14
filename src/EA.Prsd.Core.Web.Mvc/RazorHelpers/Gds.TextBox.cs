@@ -25,7 +25,7 @@
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression,
             IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
         {
-            AddFormControlCssClass(htmlAttributes, useHalfWidth);
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
     /* SG */
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 

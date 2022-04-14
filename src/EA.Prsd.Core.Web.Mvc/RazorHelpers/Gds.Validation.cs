@@ -127,7 +127,7 @@
 
         private string GetJavascriptEnabledBlankSummary()
         {
-            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert'>
+            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert' aria-atomic='true'>
                     </div>";
         }
 
