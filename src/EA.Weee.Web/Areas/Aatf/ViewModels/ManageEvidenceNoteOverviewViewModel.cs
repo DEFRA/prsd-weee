@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System;
+    using System.ComponentModel;
 
     public abstract class ManageEvidenceNoteOverviewViewModel
     {

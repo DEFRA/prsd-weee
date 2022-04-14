@@ -13,8 +13,10 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.AatfEvidence;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
     {
@@ -41,11 +43,14 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId));
+                var result = await client.SendAsync(User.GetAccessToken(), 
+                    new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }));
 
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
 
-                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, scheme.SchemeName));
+                var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
+
+                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName));
 
                 return this.View("ReviewSubmittedEvidence", model);
             }

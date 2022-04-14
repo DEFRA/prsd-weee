@@ -11,5 +11,12 @@
         public Guid OrganisationId { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public FilterViewModel FilterViewModel { get; set; }
+
+        public ManageEvidenceNoteViewModel()
+        {
+            FilterViewModel = new FilterViewModel();
+        }
     }
 }
