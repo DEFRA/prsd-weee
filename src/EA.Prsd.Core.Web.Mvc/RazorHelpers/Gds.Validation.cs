@@ -127,13 +127,13 @@
 
         private string GetJavascriptEnabledBlankSummary()
         {
-            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert'>
+            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert' aria-atomic='true'>
                     </div>";
         }
 
         private string GetJavascriptDisabledErrorSummary(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title' role='alert'>";
+            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title' role='alert' aria-atomic='true'>";
 
             var errorTitle = GetErrorSummaryHeading(modelErrors);
 

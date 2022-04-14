@@ -151,8 +151,14 @@
         
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
+        var newLabel = document.createElement("label");
+        newLabel.setAttribute("for", "ReceivedId__listbox");
+        newLabel.setAttribute("class", "govuk-visually-hidden");
+        newLabel.innerHTML = "Options for " + document.getElementById(element.id + "-label").innerText;
 
+        element.parentNode.insertBefore(newLabel, element);
         element.parentNode.insertBefore(newElement, element);
+
         var existingId = element.id;
         
         accessibleAutocomplete({
@@ -180,7 +186,6 @@
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
                         if (text === selectedValue) {
                             postBackElement.value = findSelectedOption.value;
-
                         }
                     }
                 } else {
