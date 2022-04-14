@@ -79,6 +79,7 @@
     <Compile Include="Admin\AatfReports\AatfSubmissionHistory.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
+    <Compile Include="Evidence\EvidenceNoteFilter.cs" />
     <Compile Include="Evidence\Note.cs" />
     <Compile Include="Evidence\NoteStatusHistory.cs" />
     <Compile Include="Evidence\NoteTonnage.cs" />
