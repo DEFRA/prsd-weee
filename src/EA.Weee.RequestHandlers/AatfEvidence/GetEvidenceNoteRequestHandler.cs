@@ -10,7 +10,7 @@
     using Requests.AatfEvidence;
     using Security;
 
-    internal class GetEvidenceNoteRequestHandler : IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>
+    internal class GetEvidenceNoteRequestHandler : IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -25,7 +25,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<EvidenceNoteData> HandleAsync(GetEvidenceNoteRequest message)
+        public async Task<EvidenceNoteData> HandleAsync(GetEvidenceNoteForAatfRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
 

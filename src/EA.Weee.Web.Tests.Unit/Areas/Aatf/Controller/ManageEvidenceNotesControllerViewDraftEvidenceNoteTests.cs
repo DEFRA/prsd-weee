@@ -61,7 +61,7 @@
             await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>.That.Matches(
                 g => g.EvidenceNoteId.Equals(EvidenceNoteId)))).MustHaveHappenedOnceExactly();
         }
 
@@ -72,7 +72,7 @@
             var data = Fixture.Create<EvidenceNoteData>();
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(data);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
             //act
             await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
@@ -91,7 +91,7 @@
             var data = Fixture.Create<EvidenceNoteData>();
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = status;
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(data);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
             //act
             await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId);
