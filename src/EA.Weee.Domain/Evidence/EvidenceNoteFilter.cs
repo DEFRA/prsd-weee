@@ -24,7 +24,7 @@
 
                 if (!string.IsNullOrWhiteSpace(searchRef))
                 {
-                    return searchRef.Trim().Trim(allowedNoteTypes);
+                    return searchRef.ToUpper().Trim().Trim(allowedNoteTypes);
                 }
 
                 return searchRef;
