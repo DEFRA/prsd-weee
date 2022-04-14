@@ -25,7 +25,10 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyOrganisationArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, aatfId, new List<Core.AatfEvidence.NoteStatus> { NoteStatus.Draft }));
+            var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, 
+                aatfId, 
+                new List<Core.AatfEvidence.NoteStatus> { NoteStatus.Draft },
+                null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -35,7 +38,17 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAatfArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus> { NoteStatus.Draft }));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus> { NoteStatus.Draft }, null));
+
+            // assert
+            result.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void GetAatfNotesRequest_Constructor_GivenEmptyAllowedStatusArgumentExceptionExpected()
+        {
+            // act
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -45,7 +58,7 @@
         public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_PropertiesShouldBeSet()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft });
+            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -53,15 +66,15 @@
         }
 
         [Fact]
-        public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_AllowedStatusesSholdBeEmpty()
+        public void GetAatfNotesRequest_Constructor_GivenDraftEvidenceNoteValues_AllowedStatusesShouldBeSet()
         {
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus>());
+            var result = new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus>() { NoteStatus.Approved }, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
             result.AatfId.Should().Be(aatfId);
-            result.AllowedStatuses.Should().BeEmpty();
+            result.AllowedStatuses.Should().BeEquivalentTo(new List<NoteStatus>() { NoteStatus.Approved });
         }
     }
 }

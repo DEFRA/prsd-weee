@@ -49,7 +49,7 @@
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, fixture.CreateMany<NoteStatus>().ToList());
+                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>());
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -175,7 +175,7 @@
 
         private GetAatfNotesRequest GetAatfNotesRequest()
         {
-            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft });
+            return new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, fixture.Create<string>());
         }
     }
 }

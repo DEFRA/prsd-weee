@@ -35,7 +35,7 @@
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft })));
+                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, null)));
             };
 
             private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
@@ -82,7 +82,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null))).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -144,7 +144,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null))).Result;
             };
 
             private readonly It shouldReturnNoData = () =>
