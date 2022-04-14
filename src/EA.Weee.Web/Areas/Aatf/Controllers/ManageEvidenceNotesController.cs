@@ -145,7 +145,7 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-                var request = new GetEvidenceNoteRequest(evidenceNoteId);
+                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -163,7 +163,7 @@
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
                 
-                var request = new GetEvidenceNoteRequest(evidenceNoteId);
+                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, null, organisationId, result.AatfData.Id, result));

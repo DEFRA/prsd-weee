@@ -65,7 +65,7 @@
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+                    A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
 
                 var result = Record.Exception(() => attribute.OnActionExecuting(context));
 
@@ -83,7 +83,7 @@
             note.Status = NoteStatus.Draft;
 
             A.CallTo(() => client.SendAsync(A<string>._,
-                A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+                A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
 
             var result = Record.Exception(() => attribute.OnActionExecuting(context));
             result.Should().BeNull();

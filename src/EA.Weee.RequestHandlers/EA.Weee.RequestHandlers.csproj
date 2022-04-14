@@ -91,7 +91,6 @@
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
-
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchAatfDataAccess.cs" />

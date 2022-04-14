@@ -13,6 +13,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
@@ -41,7 +42,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -88,7 +89,7 @@
                     })
                     .Create();
                 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -117,7 +118,7 @@
             {
                 LocalSetup();
 
-                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+                request = new GetEvidenceNoteForSchemeRequest(Guid.NewGuid());
             };
 
             private readonly Because of = () =>
@@ -137,7 +138,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -150,10 +151,11 @@
 
         public class GetEvidenceNoteForSchemeHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData> handler;
+            protected static IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
-            protected static GetEvidenceNoteRequest request;
+            protected static GetEvidenceNoteForSchemeRequest request;
             protected static EvidenceNoteData result;
+            protected static Scheme scheme;  // added by Guido
             protected static Note note;
             protected static Fixture fixture;
 
@@ -165,7 +167,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData>>();
 
                 return setup;
             }
@@ -179,7 +181,9 @@
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
                 result.SchemeData.Should().NotBeNull();
-                result.SchemeData.Id.Should().Be(note.Recipient.Id);
+
+                result.SchemeData.Id.Should().Be(note.Recipient.Id);  // how can we associate note.Recipient.Id with Scheme.Id ?
+
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);

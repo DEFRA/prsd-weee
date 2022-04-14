@@ -28,7 +28,7 @@
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly GetEvidenceNoteRequest request;
+        private readonly GetEvidenceNoteForAatfRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
         private readonly Guid organisationId;
@@ -53,7 +53,7 @@
 
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
 
-            request = new GetEvidenceNoteRequest(evidenceNoteId);
+            request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
 
             handler = new GetEvidenceNoteRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
