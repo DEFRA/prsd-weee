@@ -49,8 +49,8 @@
 
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
-            ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null, 
-            string searchRef = null)
+            ManageEvidenceOverviewDisplayOption? overviewDisplayOption = null,
+            ManageEvidenceNoteViewModel viewModel = null)
         {
             await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -75,7 +75,7 @@
                             aatfId, 
                             aatf, 
                             models,
-                            searchRef);
+                            viewModel?.FilterViewModel?.SearchRef);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
@@ -90,7 +90,7 @@
                         return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
                         
                     default:
-                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, searchRef);
+                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, viewModel?.FilterViewModel?.SearchRef);
                 }
             }
         }

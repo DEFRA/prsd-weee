@@ -184,7 +184,7 @@
         [Fact]
         public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid), typeof(ManageEvidenceOverviewDisplayOption?), typeof(string) }, null)
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid), typeof(ManageEvidenceOverviewDisplayOption?), typeof(ManageEvidenceNoteViewModel) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }

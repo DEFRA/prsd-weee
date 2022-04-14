@@ -12,14 +12,5 @@
         {
             typeof(ManageEvidenceNoteOverviewViewModel).Should().BeAbstract();
         }
-
-        [Fact]
-        public void ManageEvidenceNoteOverviewViewModel_SearchRef_ShouldHaveDisplayAttribute()
-        {
-            typeof(ManageEvidenceNoteOverviewViewModel)
-                .GetProperty("SearchRef")
-                .Should()
-                .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals("Search by reference ID"));
-        }
     }
 }
