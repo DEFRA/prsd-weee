@@ -103,7 +103,8 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     g.AllowedStatuses.Contains(NoteStatus.Submitted)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
