@@ -10,23 +10,24 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Helpers;
     using DataAccess.DataAccess;
     using Prsd.Core;
 
     public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IAatfDataAccess aatfDataAccess;
+        private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly ISchemeDataAccess schemeDataAccess;
 
         public GetEvidenceNotesByOrganisationRequestHandler(IWeeeAuthorization authorization,
-            IAatfDataAccess aatfDataAccess,
+            IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
             ISchemeDataAccess schemeDataAccess)
         {
             this.authorization = authorization;
-            this.aatfDataAccess = aatfDataAccess;
+            this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
             this.schemeDataAccess = schemeDataAccess;
         }
@@ -36,17 +37,19 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var allowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted };
-
             var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
 
             Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var notes = await aatfDataAccess
-                .GetAllSubmittedNotesByScheme(scheme.Id, allowedStatuses.Select(x => (int)x)
-                .ToList());
+            var filter = new EvidenceNoteFilter()
+            {
+                OrganisationId = message.OrganisationId,
+                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList()
+            };
+
+            var notes = await noteDataAccess.GetAllNotes(filter);
 
             return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }
