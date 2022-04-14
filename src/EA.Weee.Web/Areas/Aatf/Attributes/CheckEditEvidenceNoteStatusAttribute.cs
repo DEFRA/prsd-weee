@@ -53,7 +53,7 @@
         {
             using (var client = Client())
             {
-                var evidenceNoteData = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetEvidenceNoteRequest(evidenceNoteId));
+                var evidenceNoteData = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetEvidenceNoteForAatfRequest(evidenceNoteId));
 
                 if (!evidenceNoteData.Status.Equals(NoteStatus.Draft))
                 {

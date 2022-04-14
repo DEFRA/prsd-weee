@@ -5,6 +5,7 @@
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -48,6 +49,44 @@
 
                 return this.View("ReviewSubmittedEvidence", model);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            //TODO:
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                // create the new evidence note scheme request from note's Guid
+                var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+
+                // call the api with the new evidence note scheme request
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                // create new viewmodel mapper to map request to viewmodel
+                var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+
+                //return viewmodel to view
+                return View("ReviewEvidenceNote", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, ReviewEvidenceNoteViewModel model)
+        {
+            //TODO:
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+            // call the api with the new evidence note scheme request
+
+            // create new viewmodel mapper to map request to viewmodel
+
+            //return viewmodel to view
+
+            return View();
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

@@ -50,7 +50,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -97,7 +97,7 @@
                     })
                     .Create();
                 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -126,7 +126,7 @@
             {
                 LocalSetup();
 
-                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+                request = new GetEvidenceNoteForAatfRequest(Guid.NewGuid());
             };
 
             private readonly Because of = () =>
@@ -146,7 +146,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -159,9 +159,9 @@
 
         public class GetEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData> handler;
+            protected static IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
-            protected static GetEvidenceNoteRequest request;
+            protected static GetEvidenceNoteForAatfRequest request;
             protected static EvidenceNoteData result;
             protected static Note note;
             protected static Fixture fixture;
@@ -174,7 +174,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData>>();
 
                 return setup;
             }
