@@ -25,6 +25,23 @@
         }
 
         [Theory]
+        [ClassData(typeof(NoteTypeData))]
+        public void SearchRef_GivenSearchRefWithNoteTypeAndIsLowerCase_ShouldReturnFormattedReference(NoteType noteType)
+        {
+            //arrange
+            var filter = new EvidenceNoteFilter()
+            {
+                SearchRef = $"{noteType.DisplayName.ToLower()}1"
+            };
+
+            //act
+            var result = filter.SearchRef;
+
+            //assert
+            result.Should().Be("1");
+        }
+
+        [Theory]
         [InlineData("X")]
         [InlineData("Y")]
         [InlineData("B")]
