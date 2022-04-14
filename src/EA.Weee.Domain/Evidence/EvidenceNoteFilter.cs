@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.DataAccess.DataAccess
+﻿namespace EA.Weee.Domain.Evidence
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain.Evidence;
+    using Prsd.Core.Domain;
 
     public class EvidenceNoteFilter
     {
@@ -20,9 +20,11 @@
         {
             get
             {
+                var allowedNoteTypes = Enumeration.GetAll<Domain.Evidence.NoteType>().Select(n => n.DisplayName.ToCharArray()[0]).ToArray();
+
                 if (!string.IsNullOrWhiteSpace(searchRef))
                 {
-                    return new string(searchRef.Trim().Where(char.IsDigit).ToArray());
+                    return searchRef.Trim().Trim(allowedNoteTypes);
                 }
 
                 return searchRef;
