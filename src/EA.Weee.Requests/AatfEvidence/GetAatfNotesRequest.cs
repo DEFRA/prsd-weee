@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Requests.AatfEvidence
 {
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;

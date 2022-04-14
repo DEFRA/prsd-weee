@@ -20,6 +20,7 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
     public class GetAatfNotesRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -90,7 +91,7 @@
                 evidenceNoteData.Should().NotBeNull();
             };
 
-            private readonly It shouldHaveExpectedResultsCount = () =>
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
             {
                 evidenceNoteData.Should().HaveCount(notesSet.Count);
             };
@@ -111,7 +112,7 @@
         }
 
         [Component]
-        public class WhenIGetNoEvidenceNoteDataAsNotesAreSubmittedStatus : GetAatfNotesRequestHandlerTestBase
+        public class WhenNoEvidenceShouldBeReturnAsTheAllowedStatusesDoNotPermitIt : GetAatfNotesRequestHandlerTestBase
         {
             private readonly Establish context = () =>
             {
@@ -132,14 +133,26 @@
                 var evidence1 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
-                .WithStatus(Domain.Evidence.NoteStatus.Submitted, UserId.ToString())
+                .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                 .Create();
 
                 var evidence2 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
-                .WithStatus(Domain.Evidence.NoteStatus.Submitted, UserId.ToString())
-               .Create();
+                .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
+                .Create();
+
+                var evidence3 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
+                .Create();
+
+                var evidence4 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Void, UserId.ToString())
+                .Create();
             };
 
             private readonly Because of = () =>
@@ -153,10 +166,86 @@
             };
         }
 
+        [Component]
+        public class WhenIGetFilterdEvidencesBasedOnAllowedStatusesList : GetAatfNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init()
+               .Create();
+
+                aatf = AatfDbSetup.Init()
+                .WithOrganisation(organisation)
+                .Create();
+
+                OrganisationUserDbSetup.Init()
+                .WithUserIdAndOrganisationId(UserId, organisation.Id)
+                .WithStatus(UserStatus.Active)
+                .Create();
+
+                var evidence1 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .Create();
+
+                var evidence2 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                .Create();
+
+                var evidence3 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                .Create();
+
+                var evidence4 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
+                .Create();
+
+                var evidence5 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Void, UserId.ToString())
+                .Create();
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null))).Result;
+            };
+
+            private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+            
+            private readonly It shouldHaveExpectedResultsCount = () =>
+            {
+                evidenceNoteData.Should().HaveCount(allowedStatuses.Count);
+            };
+
+            private readonly It shouldHaveExpectedAllowedStatuses = () =>
+            {
+                var allowedStatusesToArray = allowedStatuses.ToArray();
+
+                foreach (var note in evidenceNoteData)
+                {
+                    note.Status.Should().BeOneOf(allowedStatusesToArray);  
+                }
+            };
+        }
+
         public class GetAatfNotesRequestHandlerTestBase : WeeeContextSpecification
         {
             protected static List<EvidenceNoteData> evidenceNoteData;
             protected static List<Note> notesSet;
+            protected static List<NoteStatus> allowedStatuses;
             protected static IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>> handler;
             protected static Organisation organisation;
             protected static Scheme scheme;
@@ -170,6 +259,7 @@
                     .WithExternalUserAccess();
 
                 notesSet = new List<Note>();
+                allowedStatuses = new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Submitted };
                 handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>>();
             }
         }
