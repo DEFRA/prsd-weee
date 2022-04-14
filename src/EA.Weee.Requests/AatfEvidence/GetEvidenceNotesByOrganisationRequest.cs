@@ -6,15 +6,15 @@
     using System;
     using System.Collections.Generic;
 
-    public class GetEvidenceNotesByOrganisationRequest : IRequest<List<EvidenceNoteData>>
+    public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
-        public Guid OrganisationId { get; private set; }
-
-        public GetEvidenceNotesByOrganisationRequest(Guid organisationId)
+        public GetEvidenceNotesByOrganisationRequest(Guid organisationId, List<NoteStatus> allowedStatuses)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
+            Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
 
             OrganisationId = organisationId;
+            AllowedStatuses = allowedStatuses;
         }
     }
 }
