@@ -41,9 +41,9 @@
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId));
+                //var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId));
 
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
+                //var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
 
                 // build a list to pass 
 
