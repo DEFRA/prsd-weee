@@ -128,7 +128,25 @@
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
                 g.AatfId.Equals(AatfId) &&
-                g.OrganisationId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+                g.OrganisationId.Equals(OrganisationId) &&
+                g.AllowedStatuses.Contains(NoteStatus.Draft) &&
+                g.SearchRef == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenSearchFilterParameters_NoteShouldBeRetrieved()
+        {
+            var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, filter);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
+                g.AatfId.Equals(AatfId) &&
+                g.OrganisationId.Equals(OrganisationId) &&
+                g.AllowedStatuses.Contains(NoteStatus.Draft) &&
+                g.SearchRef.Equals(filter.FilterViewModel.SearchRef)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
