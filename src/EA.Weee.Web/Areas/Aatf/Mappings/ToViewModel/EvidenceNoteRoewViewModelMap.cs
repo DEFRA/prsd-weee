@@ -4,21 +4,20 @@
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Prsd.Core.Mapper;
   
-    public class ViewDraftReturnedNotesModelMap : IMap<EditDraftReturnedNotesModel, EditDraftReturnedNote>
+    public class EvidenceNoteRowViewModelMap : IMap<EvidenceNoteData, EvidenceNoteRowViewModel>
     {
-        public EditDraftReturnedNote Map(EditDraftReturnedNotesModel source)
+        public EvidenceNoteRowViewModel Map(EvidenceNoteData source)
         {
-            return new EditDraftReturnedNote
+            return new EvidenceNoteRowViewModel
             {
-                Recipient = source.Recipient,
-                ReferenceId = source.ReferenceId,
+                Recipient = source.SchemeData.SchemeName,
+                ReferenceId = source.Reference,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,
                 Id = source.Id,
                 Type = source.Type,
                 SubmittedDate = source.SubmittedDate,
-                SubmittedBy = source.SubmittedBy,
-                DisplayViewLink = source.DisplayViewLink
+                SubmittedBy = source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty
             };
         }
     }
