@@ -124,9 +124,19 @@
             Aatf = null;
         }
 
+        public void UpdateScheme(Guid schemeId)
+        {
+            Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
+
+            RecipientId = schemeId;
+            Recipient = null;
+        }
+
         public virtual Guid OrganisationId { get; set; }
 
         public virtual Guid AatfId { get; set; }
+
+        public virtual Guid RecipientId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }
 
