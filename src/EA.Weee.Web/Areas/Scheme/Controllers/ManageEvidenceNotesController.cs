@@ -81,6 +81,7 @@
         {
             using (var client = this.apiClient())
             {
+                // TODO: Add NoteStatus Returned to this list
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
 
