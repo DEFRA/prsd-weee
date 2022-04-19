@@ -59,7 +59,10 @@
                      && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                      && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                      && (allowedStatus.Contains(p.Status.Value))) && 
-                    (filter.FormattedSearchRef == null || (p.Reference.ToString() == filter.FormattedSearchRef)))
+                     (filter.SearchRef == null ||
+                      (filter.FormattedNoteType > 0 ? 
+                       (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) : 
+                       (filter.FormattedSearchRef == p.Reference.ToString()))))
                 .ToListAsync();
 
             return notes;
