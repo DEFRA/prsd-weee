@@ -22,33 +22,16 @@
         {
             get
             {
-                var allowedNoteTypes = Enumeration.GetAll<NoteType>().Select(n => n.DisplayName.ToCharArray()[0]).ToArray();
-
                 if (!string.IsNullOrWhiteSpace(SearchRef))
                 {
-                    return SearchRef.ToUpper().Trim().Trim(allowedNoteTypes);
-                }
-
-                return SearchRef;
-            }
-        }
-
-        public int? NoteType
-        {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(SearchRef))
-                {
-                    var regex = new Regex("[E|T][1-9]+");
-
-                    if (regex.Match(SearchRef.ToUpper()).Success)
+                    var regex = new Regex("^[E?|T?|e?|t?][1-9]+");
+                    if (regex.Match(SearchRef.Trim()).Success)
                     {
-                        var type = SearchRef.Substring(0, 1).ToUpper();
-                        return Enumeration.FromDisplayName<NoteType>(type).Value;
+                        return SearchRef.Trim().Remove(0, 1);
                     }
                 }
 
-                return null;
+                return SearchRef;
             }
         }
     }

@@ -47,6 +47,16 @@
         [InlineData("B")]
         [InlineData("*")]
         [InlineData("1")]
+        [InlineData("EE1")]
+        [InlineData("TT1")]
+        [InlineData("ET1")]
+        [InlineData("Ee1")]
+        [InlineData("eE1")]
+        [InlineData("ee1")]
+        [InlineData("TE1")]
+        [InlineData("Tt1")]
+        [InlineData("tt1")]
+        [InlineData("tT1")]
         public void FormattedSearchRef_GivenSearchRefWithUnknownNoteType_ShouldNotReturnFormattedReference(string noteType)
         {
             //arrange
@@ -93,81 +103,6 @@
 
             //assert
             result.Should().Be("1");
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public void NoteType_GivenEmptySearchRef_NullShouldBeReturned(string searchRef)
-        {
-            //arrange
-            var filter = new EvidenceNoteFilter()
-            {
-                SearchRef = searchRef
-            };
-
-            //act
-            var result = filter.NoteType;
-
-            //assert
-            result.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineData("X1234")]
-        [InlineData("AB1234")]
-        [InlineData(" ")]
-        [InlineData("1234")]
-        public void NoteType_GivenSearchRefWithInvalidNoteType_NullShouldBeReturned(string type)
-        {
-            //arrange
-            var filter = new EvidenceNoteFilter()
-            {
-                SearchRef = $"{type}1"
-            };
-
-            //act
-            var result = filter.NoteType;
-
-            //assert
-            result.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineData("E")]
-        [InlineData("e")]
-        public void NoteType_GivenSearchRefWithEvidenceNoteType_NoteTypeValueShouldBeReturned(string type)
-        {
-            //arrange
-            var filter = new EvidenceNoteFilter()
-            {
-                SearchRef = $"{type}1"
-            };
-
-            //act
-            var result = filter.NoteType;
-
-            //assert
-            result.Should().Be(NoteType.EvidenceNote.Value);
-        }
-
-        [Theory]
-        [InlineData("T")]
-        [InlineData("t")]
-        public void NoteType_GivenSearchRefWithTransferNoteType_NoteTypeValueShouldBeReturned(string type)
-        {
-            //arrange
-            var filter = new EvidenceNoteFilter()
-            {
-                SearchRef = $"{type}1"
-            };
-
-            //act
-            var result = filter.NoteType;
-
-            //assert
-            result.Should().Be(NoteType.TransferNote.Value);
         }
     }
 }
