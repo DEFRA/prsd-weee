@@ -20,7 +20,8 @@
 
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
-                    @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", Model.ManageEvidenceNoteViewModel)
+                    @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", 
+                        Model.ManageEvidenceNoteViewModel, new ViewDataDictionary(){ new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
                     
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">Draft evidence notes</caption>
@@ -44,7 +45,7 @@
                         <tbody class="govuk-table__body">
                             @if (Model.ListOfNotes.Any())
                             {
-                                foreach (EditDraftReturnedNote note in Model.ListOfNotes)
+                                foreach (EvidenceNoteRowViewModel note in Model.ListOfNotes)
                                 {
                                     <tr class="govuk-table__row">
                                         <td class="govuk-table__cell">@note.ReferenceDisplay</td>

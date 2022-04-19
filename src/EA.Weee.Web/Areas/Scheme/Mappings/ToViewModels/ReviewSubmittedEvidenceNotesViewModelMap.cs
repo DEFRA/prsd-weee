@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -17,21 +18,12 @@
 
         public ReviewSubmittedEvidenceNotesViewModel Map(ReviewSubmittedEvidenceNotesViewModelMapTransfer source)
         {
-            var model = new ReviewSubmittedEvidenceNotesViewModel();
-
-            model.OrganisationId = source.OrganisationId;
-            model.SchemeName = source.SchemeName;
-
-            if (source != null && source.Notes.Any())
+            var model = new ReviewSubmittedEvidenceNotesViewModel
             {
-                foreach (var res in source.Notes)
-                {
-                    var aatfName = res.AatfData != null ? res.AatfData.Name : string.Empty;
-
-                    model.EvidenceNotesDataList.Add(mapper.Map<EditDraftReturnedNote>
-                        (new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type, res.SubmittedDate, aatfName)));
-                }
-            }
+                OrganisationId = source.OrganisationId,
+                SchemeName = source.SchemeName,
+                EvidenceNotesDataList = mapper.Map<List<EvidenceNoteRowViewModel>>(source.Notes)
+            };
 
             return model;
         }

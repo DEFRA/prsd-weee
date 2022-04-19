@@ -4,12 +4,12 @@
 
     public class AllOtherEvidenceNotesViewModel : ManageEvidenceNoteOverviewViewModel
     {
-        public IList<EditDraftReturnedNote> ListOfNotes;
+        public IList<EvidenceNoteRowViewModel> ListOfNotes;
 
         public AllOtherEvidenceNotesViewModel()
         : base(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)
         {
-            ListOfNotes = new List<EditDraftReturnedNote>();
+            ListOfNotes = new List<EvidenceNoteRowViewModel>();
         }
     }
 }

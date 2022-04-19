@@ -313,6 +313,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ListOfNotesMap.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteRowViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
@@ -373,11 +375,10 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnedNotesModel.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ModifyNoteTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewDraftReturnedNotesModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceNoteRoewViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreator.cs" />
@@ -387,7 +388,6 @@
     <Compile Include="Areas\Aatf\Requests\IEditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />

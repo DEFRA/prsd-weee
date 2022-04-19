@@ -4,7 +4,7 @@
     using Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
 
-    public class EditDraftReturnedNote 
+    public class EvidenceNoteRowViewModel 
     {
         public int ReferenceId { get; set; }
 
