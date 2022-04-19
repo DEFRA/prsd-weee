@@ -67,7 +67,7 @@
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals(viewModel.Id)))).Returns(note);
+                    A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals(viewModel.Id)))).Returns(note);
 
                 //act
                 var result = Record.Exception(() => attribute.OnActionExecuting(context));
