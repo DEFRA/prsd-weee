@@ -8,12 +8,12 @@
     {
         public Guid? SelectedId { get; set; }
 
-        public IList<EditDraftReturnedNote> EvidenceNotesDataList { get; set; }
+        public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         public ReviewSubmittedEvidenceNotesViewModel()
             : base(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
         {
-            EvidenceNotesDataList = new List<EditDraftReturnedNote>();
+            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
     }
 }

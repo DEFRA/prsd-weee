@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.AatfReturn;
     using Prsd.Core;
+    using ViewModels;
 
     public class ManageEvidenceNoteTransfer
     {
@@ -14,7 +15,9 @@
 
         public List<AatfData> Aatfs { get; protected set; }
 
-        public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs)
+        public FilterViewModel FilterViewModel { get; protected set; }
+
+        public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs, FilterViewModel filterViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => aatfData, aatfData);
@@ -25,6 +28,7 @@
             AatfData = aatfData;
             Aatfs = aatfs;
             AatfId = aatfId;
+            FilterViewModel = filterViewModel;
         }
     }
 }

@@ -43,8 +43,7 @@
                 SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
-                RecipientId = source.Recipient.Id,
-                SubmittedDate = source.SubmittedDate
+                RecipientId = source.Recipient.Id
             };
         }
     }

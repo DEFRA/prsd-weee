@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System.Linq;
+    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
@@ -19,15 +19,16 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new AllOtherEvidenceNotesViewModel();
-
-            if (source != null && source.Notes.Any())
+            var model = new AllOtherEvidenceNotesViewModel
             {
-                foreach (var res in source.Notes)
-                {
-                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>(new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type, res.SubmittedDate, string.Empty, res.Status.Equals(NoteStatus.Submitted)))); 
-                }
+                ListOfNotes = mapper.Map<List<EvidenceNoteRowViewModel>>(source.Notes)
+            };
+
+            foreach (var evidenceNoteRowViewModel in model.ListOfNotes)
+            {
+                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted);
             }
+            
             return model;
         }
     }

@@ -77,7 +77,7 @@
             Map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(notes.Count, Times.Exactly);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -95,7 +95,7 @@
             Map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(0, Times.Exactly);
+            A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
         }
 
         [Fact]
@@ -122,25 +122,23 @@
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
 
-            var returnedNotes = new List<EditDraftReturnedNote>
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>()
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var model = new EditDraftReturnedNotesViewModel();
-            model.ListOfNotes = returnedNotes;
+            var model = new EditDraftReturnedNotesViewModel
+            {
+                ListOfNotes = returnedNotes
+            };
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
             var transfer = new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, notes);
-
-            foreach (var note in model.ListOfNotes)
-            {
-                A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).ReturnsNextFromSequence(note);
-            }
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
             var result = Map.Map(transfer);
