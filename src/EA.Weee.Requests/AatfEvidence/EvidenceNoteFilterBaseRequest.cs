@@ -8,8 +8,10 @@
     [Serializable]
     public class EvidenceNoteFilterBaseRequest : IRequest<List<EvidenceNoteData>>
     {
-        public List<NoteStatus> AllowedStatuses { get; set; }
+        public List<NoteStatus> AllowedStatuses { get; protected set; }
 
-        public Guid OrganisationId { get; set; }
+        public Guid OrganisationId { get; protected set; }
+
+        public string SearchRef { get; protected set; }
     }
 }
