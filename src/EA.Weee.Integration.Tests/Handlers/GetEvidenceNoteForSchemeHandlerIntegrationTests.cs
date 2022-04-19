@@ -73,7 +73,7 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                var scheme = SchemeDbSetup.Init().WithOrganisation(organisation).Create();
+                var scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 var categories = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
