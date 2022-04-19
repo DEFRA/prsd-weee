@@ -1,18 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
+    using Core.Helpers;
+    using DataAccess.DataAccess;
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfEvidence;
+    using Mappings;
+    using Prsd.Core;
+    using Security;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Helpers;
-    using DataAccess.DataAccess;
-    using Prsd.Core;
 
     public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
     {
@@ -46,7 +46,7 @@
             var filter = new EvidenceNoteFilter()
             {
                 OrganisationId = message.OrganisationId,
-                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList()
+                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
