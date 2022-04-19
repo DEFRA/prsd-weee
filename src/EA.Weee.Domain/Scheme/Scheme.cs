@@ -135,12 +135,13 @@
         /// <summary>
         /// Should only be used for integration tests
         /// </summary>
-        /// <param name="organisation"></param>
-        public void UpdateOrganisation(Organisation organisation)
+        /// <param name="organisationId"></param>
+        public void UpdateOrganisation(Guid organisationId)
         {
-            Guard.ArgumentNotNull(() => organisation, organisation);
+            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
 
-            Organisation = organisation;
+            OrganisationId = organisationId;
+            Organisation = null;
         }
     }
 }
