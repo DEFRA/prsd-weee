@@ -5,10 +5,8 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain.Scheme;
-    using Prsd.Core;
     using Prsd.Core.Domain;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
@@ -56,11 +54,12 @@
         public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
-            var notes = await context.Notes.Where(p => 
-                    (!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
+            var notes = await context.Notes.Where(p =>
+                    ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                     && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                     && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
-                    && (allowedStatus.Contains(p.Status.Value)))
+                    && (allowedStatus.Contains(p.Status.Value))) &&
+                    (filter.SearchRef == null || (p.Reference.ToString() == filter.SearchRef)))
                 .ToListAsync();
 
             return notes;
