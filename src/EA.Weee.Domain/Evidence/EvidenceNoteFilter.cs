@@ -24,14 +24,37 @@
             {
                 if (!string.IsNullOrWhiteSpace(SearchRef))
                 {
-                    var regex = new Regex("^[E?|T?|e?|t?][1-9]+");
-                    if (regex.Match(SearchRef.Trim()).Success)
+                    if (MatchReferenceWithNoteType())
                     {
                         return SearchRef.Trim().Remove(0, 1);
                     }
                 }
 
                 return SearchRef;
+            }
+        }
+
+        private bool MatchReferenceWithNoteType()
+        {
+            var regex = new Regex("^[E?|T?|e?|t?][1-9]+");
+            return regex.Match(SearchRef.Trim()).Success;
+        }
+
+        public int FormattedNoteType
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(SearchRef))
+                {
+                    if (MatchReferenceWithNoteType())
+                    {
+                        return Enumeration.FromDisplayName<NoteType>(SearchRef.Substring(0, 1)).Value;
+                    }
+
+                    return 0;
+                }
+
+                return -1;
             }
         }
     }

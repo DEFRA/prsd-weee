@@ -176,8 +176,8 @@
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(2);
-                notes.ElementAt(0).Id.Should().Be(draftNote.Id);
-                notes.ElementAt(1).Id.Should().Be(submittedNote.Id);
+                notes.Should().Contain(n => n.Id.Equals(draftNote.Id));
+                notes.Should().Contain(n => n.Id.Equals(submittedNote.Id));
                 notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
                 notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
                 notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
@@ -414,6 +414,30 @@
                 notes.Count.Should().Be(1);
                 notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
                 notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+            }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAndNoteTypeDoesNotMatch_ShouldNotReturnNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var noteShouldNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    SearchRef = $"{NoteType.TransferNote.DisplayName}{noteShouldNotBeFound.Reference}",
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
+                    OrganisationId = noteShouldNotBeFound.OrganisationId,
+                    AatfId = noteShouldNotBeFound.AatfId
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(0);
             }
         }
 
