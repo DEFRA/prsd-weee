@@ -244,6 +244,28 @@
             }
         }
 
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefWithInvalidNoteTypeShouldNotReturnNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var noteShouldNotBeFound = await SetupSingleNote(context, database);
+
+                var filter = new EvidenceNoteFilter()
+                {
+                    SearchRef = $"Z{noteShouldNotBeFound.Reference}",
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(0);
+            }
+        }
+
         [Theory]
         [ClassData(typeof(NoteTypeData))]
         public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote(NoteType noteType)
@@ -253,7 +275,7 @@
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
 
-                var noteShouldBeFound = await SetupSingleNote(context, database);
+                var noteShouldBeFound = await SetupSingleNote(context, database, noteType);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter()
@@ -272,7 +294,7 @@
             }
         }
 
-        private async Task<Note> SetupSingleNote(WeeeContext context, DatabaseWrapper database)
+        private async Task<Note> SetupSingleNote(WeeeContext context, DatabaseWrapper database, NoteType noteType = null)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -284,7 +306,12 @@
 
             await database.WeeeContext.SaveChangesAsync();
 
-            var note1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+            if (noteType == null)
+            {
+                noteType = NoteType.EvidenceNote;
+            }
+
+            var note1 = NoteCommon.CreateNote(database, organisation, null, aatf1, noteType: noteType);
 
             context.Notes.Add(note1);
 
