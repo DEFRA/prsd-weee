@@ -3,7 +3,8 @@
     using Core.AatfEvidence;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Prsd.Core.Mapper;
-  
+    using Web.ViewModels.Shared;
+
     public class EvidenceNoteRowViewModelMap : IMap<EvidenceNoteData, EvidenceNoteRowViewModel>
     {
         public EvidenceNoteRowViewModel Map(EvidenceNoteData source)

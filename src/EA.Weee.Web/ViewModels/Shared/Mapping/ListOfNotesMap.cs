@@ -1,13 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
     public class ListOfNotesMap : IMap<List<EvidenceNoteData>, List<EvidenceNoteRowViewModel>>
     {

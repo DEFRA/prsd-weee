@@ -313,9 +313,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ListOfNotesMap.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ListOfNotesViewModelBase.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteRowViewModel.cs" />
+    <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ListOfNotesMap.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ListOfNotesViewModelBase.cs" />
+    <Compile Include="ViewModels\Shared\EvidenceNoteRowViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />

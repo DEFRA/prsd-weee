@@ -7,6 +7,7 @@
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.AllOtherEvidenceNotesViewModel
 
@@ -46,9 +47,9 @@
                             </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                            @if (Model.ListOfNotes.Any())
+                            @if (Model.EvidenceNotesDataList.Any())
                             {
-                                foreach (EvidenceNoteRowViewModel note in Model.ListOfNotes)
+                                foreach (EvidenceNoteRowViewModel note in Model.EvidenceNotesDataList)
                                 {
                                     <tr class="govuk-table__row">
                                         <td class="govuk-table__cell">@note.ReferenceDisplay</td>
