@@ -3,7 +3,10 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -135,11 +138,14 @@
                  fixture.Create<EvidenceNoteRowViewModel>()
             };
 
+            var model = new ViewAndTransferEvidenceViewModel();
+            model.EvidenceNotesDataList = returnedNotes;
+
             var organisationId = Guid.NewGuid();
 
             var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
-            
+
             //act
             var result = map.Map(transfer);
 
