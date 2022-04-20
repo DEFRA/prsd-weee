@@ -53,10 +53,6 @@
             if (noteTonnages == null)
             {
                 noteTonnages = new List<NoteTonnage>();
-                foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
-                {
-                    noteTonnages.Add(new NoteTonnage((WeeeCategory)value, null, null));
-                }
             }
 
             if (noteType == null)
