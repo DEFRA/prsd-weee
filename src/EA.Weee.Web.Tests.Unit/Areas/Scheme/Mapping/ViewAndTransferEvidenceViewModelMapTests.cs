@@ -3,46 +3,44 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
-    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMapTests
+    public class ViewAndTransferEvidenceViewModelMapTests
     {
-        public readonly ReviewSubmittedEvidenceNotesViewModelMap Map;
+        private readonly ViewAndTransferEvidenceViewModelMap map;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
-        public ReviewSubmittedEvidenceNotesViewModelMapTests()
+        public ViewAndTransferEvidenceViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
 
-            Map = new ReviewSubmittedEvidenceNotesViewModelMap(mapper);
+            map = new ViewAndTransferEvidenceViewModelMap(mapper);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void ReviewSubmittedEvidenceNotesViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
+        public void ViewAndTransferEvidenceViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
         {
-            typeof(ReviewSubmittedEvidenceNotesViewModelMap).Should()
-                .BeDerivedFrom<ListOfNotesViewModelBase<ReviewSubmittedEvidenceNotesViewModel>>();
+            typeof(ViewAndTransferEvidenceViewModelMap).Should()
+                .BeDerivedFrom<ListOfNotesViewModelBase<ViewAndTransferEvidenceViewModel>>();
         }
 
         [Fact]
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), null, "Test"));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), null, "Test"));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -52,7 +50,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), "Test"));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), "Test"));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -62,7 +60,7 @@
         public void Map_GivenSchemeNameIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), null));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -81,10 +79,10 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
@@ -98,10 +96,10 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
@@ -115,10 +113,10 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert 
             result.EvidenceNotesDataList.Should().BeNullOrEmpty();
@@ -139,11 +137,11 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
             
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
