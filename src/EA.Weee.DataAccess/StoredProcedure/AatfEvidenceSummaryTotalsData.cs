@@ -8,6 +8,6 @@
 
         public decimal? Reused { get; set; }
 
-        public WeeeCategory Category { get; set; }
+        public WeeeCategory CategoryId { get; set; }
     }
 }
