@@ -1,29 +1,23 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
-    using System.Linq;
+    using Prsd.Core;
+    using Web.ViewModels.Shared.Mapping;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMap : IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedEvidenceNotesViewModel>
+    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfNotesViewModelBase<ReviewSubmittedEvidenceNotesViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedEvidenceNotesViewModel>
     {
-        private readonly IMapper mapper;
-
-        public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper)
+        public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper) : base(mapper)
         {
-            this.mapper = mapper;
         }
 
         public ReviewSubmittedEvidenceNotesViewModel Map(ReviewSubmittedEvidenceNotesViewModelMapTransfer source)
         {
-            var model = new ReviewSubmittedEvidenceNotesViewModel
-            {
-                OrganisationId = source.OrganisationId,
-                SchemeName = source.SchemeName,
-                EvidenceNotesDataList = mapper.Map<List<EvidenceNoteRowViewModel>>(source.Notes)
-            };
+            Guard.ArgumentNotNull(() => source, source);
+
+            var model = Map(source.Notes);
+            model.OrganisationId = source.OrganisationId;
+            model.SchemeName = source.SchemeName;
 
             return model;
         }

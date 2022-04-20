@@ -3,6 +3,8 @@
     using EA.Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
     public class EditDraftReturnNotesViewModelMap : ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>, IMap<EditDraftReturnNotesViewModelTransfer, EditDraftReturnedNotesViewModel>
     {

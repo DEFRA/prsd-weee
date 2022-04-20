@@ -19,6 +19,7 @@
     using Services.Caching;
     using ViewModels;
     using Web.Requests.Base;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;

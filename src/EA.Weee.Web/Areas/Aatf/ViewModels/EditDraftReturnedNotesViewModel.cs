@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System.Collections.Generic;
+    using Web.ViewModels.Shared;
 
     public class EditDraftReturnedNotesViewModel : ManageEvidenceNoteOverviewViewModel
     {
         public EditDraftReturnedNotesViewModel()
          : base(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)
         {
-            ListOfNotes = new List<EvidenceNoteRowViewModel>();
+            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
     }
 }

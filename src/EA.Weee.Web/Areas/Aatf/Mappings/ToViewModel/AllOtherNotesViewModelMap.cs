@@ -4,6 +4,8 @@
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
     using ViewModels;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
     public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>, IMap<EditDraftReturnNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
     {
@@ -17,7 +19,7 @@
 
             var model = Map(source.Notes);
 
-            foreach (var evidenceNoteRowViewModel in model.ListOfNotes)
+            foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
                 evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted);
             }

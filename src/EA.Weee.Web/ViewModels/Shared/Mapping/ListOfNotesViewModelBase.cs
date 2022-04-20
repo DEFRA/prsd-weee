@@ -1,12 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using System.Collections.Generic;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
-    public abstract class ListOfNotesViewModelBase<T> where T : ManageEvidenceNoteOverviewViewModel, new()
+    public abstract class ListOfNotesViewModelBase<T> where T : IEvidenceNoteRowViewModel, new()
     {
         protected readonly IMapper Mapper;
 
@@ -21,7 +20,7 @@
 
             var m = new T
             {
-                ListOfNotes = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes)
+                EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes)
             };
 
             return m;
