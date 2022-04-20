@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Autofac;
@@ -11,23 +10,15 @@
     using Builders;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
-    using Domain.User;
     using FluentAssertions;
     using NUnit.Specifications;
-    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using Requests.Aatf;
     using Requests.AatfEvidence;
     using NoteStatus = Domain.Evidence.NoteStatus;
-    using NoteType = Domain.Evidence.NoteType;
-    using Protocol = Core.AatfEvidence.Protocol;
-    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -201,6 +192,7 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.SubmittedDate.Should().Be(note.SubmittedDate);
             }
         }
     }
