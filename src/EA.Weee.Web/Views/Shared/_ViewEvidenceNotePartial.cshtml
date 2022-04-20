@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Core.Helpers
-@model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 
 @{
 
@@ -10,52 +10,56 @@
     <div class="govuk-width-container govuk-!-margin-top-3 ">
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay)
+            @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.ReferenceDisplay, Model.ViewEvidenceNoteViewModel.ReferenceDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
+            @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.Status, Model.ViewEvidenceNoteViewModel.Status.ToDisplayString())
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay)
+            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay)
+            @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.ComplianceYearDisplay, Model.ViewEvidenceNoteViewModel.ComplianceYearDisplay)
         </div>
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay)
+            @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.WasteDisplay, Model.ViewEvidenceNoteViewModel.WasteDisplay)
+        </div>
+
+        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.ProtocolDisplay, Model.ViewEvidenceNoteViewModel.ProtocolDisplay)
         </div>
     </div>
 
     <div class="govuk-width-container govuk-!-padding-top-5 govuk-!-padding-left-0">
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
             <span id="site" class="govuk-label--s">Site</span><br />
-            <span aria-labelledby="site" class="govuk-body"> @Html.Raw(Model.SiteAddress)</span>
+            <span aria-labelledby="site" class="govuk-body"> @Html.Raw(Model.ViewEvidenceNoteViewModel.SiteAddress)</span>
         </div>
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0 ">
             <span id="operator" class="govuk-label--s">Operator</span><br />
-            <span aria-labelledby="operator" class="govuk-body">@Html.Raw(Model.OperatorAddress)</span>
+            <span aria-labelledby="operator" class="govuk-body">@Html.Raw(Model.ViewEvidenceNoteViewModel.OperatorAddress)</span>
         </div>
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
             <span id="recipient" class="govuk-label--s">Recipient</span><br />
-            <span aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.RecipientAddress)</span>
+            <span aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.ViewEvidenceNoteViewModel.RecipientAddress)</span>
         </div>
     </div>
     <div class="ui-helper-clearfix"></div>
     <div class="govuk-width-container govuk-!-padding-top-7">
         <p>
-            By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.WasteDisplay.ToLower()</strong> has been received between
-            <strong>@(Model.StartDate.ToShortDateString())</strong> and <strong>@(Model.EndDate.ToShortDateString())</strong> at this site.
+            By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.ViewEvidenceNoteViewModel.WasteDisplay.ToLower()</strong> has been received between
+            <strong>@(Model.ViewEvidenceNoteViewModel.StartDate.ToShortDateString())</strong> and <strong>@(Model.ViewEvidenceNoteViewModel.EndDate.ToShortDateString())</strong> at this site.
             It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
         </p>
     </div>
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
         <thead class="govuk-table__head">
-        <tr>
+        <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
             <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
             <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Re-used as whole appliances (tonnes)</th>
@@ -64,9 +68,9 @@
 
         <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.CategoryValues.Count; i++)
+        @for (var i = 0; i < Model.ViewEvidenceNoteViewModel.CategoryValues.Count; i++)
         {
-            var category = Model.CategoryValues[i];
+            var category = Model.ViewEvidenceNoteViewModel.CategoryValues[i];
 
             <tr class="govuk-table__row" id="category-row-@category.CategoryId">
                 <td class="govuk-table__cell">
@@ -83,13 +87,13 @@
 
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-                <p class="govuk-body"><strong>Total</strong></p>
+                <p class="govuk-body govuk-!-font-weight-bold">Total</p>
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                <p class="govuk-body weee-tonnage-right-aligned-display govuk-!-font-weight-bold" id="ReceivedTotal">@Model.ViewEvidenceNoteViewModel.ReceivedTotal</p>
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-                <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
+                <p class="govuk-body weee-tonnage-right-aligned-display govuk-!-font-weight-bold" id="ReusedTotal">@Model.ViewEvidenceNoteViewModel.ReusedTotal</p>
             </td>
         </tr>
 
