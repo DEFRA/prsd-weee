@@ -14,26 +14,26 @@
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
-    public class EditDraftReturnNotesViewModelMapTests
+    public class AllOtherNotesViewModelMapTests
     {
-        private readonly EditDraftReturnNotesViewModelMap map;
+        private readonly AllOtherNotesViewModelMap map;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
-        public EditDraftReturnNotesViewModelMapTests()
+        public AllOtherNotesViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
 
-            map = new EditDraftReturnNotesViewModelMap(mapper);
+            map = new AllOtherNotesViewModelMap(mapper);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void EditDraftReturnNotesViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
+        public void AllOtherNotesViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
         {
-            typeof(EditDraftReturnNotesViewModelMap).Should()
-                .BeDerivedFrom<ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>>();
+            typeof(AllOtherNotesViewModelMap).Should()
+                .BeDerivedFrom<ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>>();
         }
 
         [Fact]
