@@ -75,7 +75,7 @@
                             aatfId, 
                             aatf, 
                             models,
-                            viewModel?.FilterViewModel?.SearchRef);
+                            viewModel);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
@@ -90,7 +90,7 @@
                         return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
                         
                     default:
-                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, viewModel?.FilterViewModel?.SearchRef);
+                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, viewModel);
                 }
             }
         }
@@ -235,10 +235,10 @@
             Guid aatfId, 
             AatfData aatf, 
             SelectYourAatfViewModel models,
-            string searchRef)
+            ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
-                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, searchRef));
+                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
             
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
             
