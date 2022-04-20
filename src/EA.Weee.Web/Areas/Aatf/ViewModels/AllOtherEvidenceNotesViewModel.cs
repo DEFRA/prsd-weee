@@ -4,8 +4,6 @@
 
     public class AllOtherEvidenceNotesViewModel : ManageEvidenceNoteOverviewViewModel
     {
-        public IList<EvidenceNoteRowViewModel> ListOfNotes;
-
         public AllOtherEvidenceNotesViewModel()
         : base(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)
         {
