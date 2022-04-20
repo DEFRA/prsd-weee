@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class EditDraftReturnNotesViewModelMapTests
@@ -113,7 +114,7 @@
             var result = Map.Map(transfer);
 
             // assert 
-            result.ListOfNotes.Should().BeNullOrEmpty();
+            result.EvidenceNotesDataList.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -131,7 +132,7 @@
 
             var model = new EditDraftReturnedNotesViewModel
             {
-                ListOfNotes = returnedNotes
+                EvidenceNotesDataList = returnedNotes
             };
 
             var organisationId = Guid.NewGuid();
@@ -144,8 +145,8 @@
             var result = Map.Map(transfer);
 
             // assert
-            result.ListOfNotes.Should().NotBeEmpty();
-            result.ListOfNotes.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.Should().NotBeEmpty();
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
     }
 }
