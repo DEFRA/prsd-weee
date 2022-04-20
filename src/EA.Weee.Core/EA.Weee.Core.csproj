@@ -115,6 +115,8 @@
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Scheme\CategoryValue.cs" />
+    <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />

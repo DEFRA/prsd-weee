@@ -1,0 +1,81 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNoteDataViewModel
+
+@{
+    ViewBag.Title = "Transfer Evidence - GOV.UK";
+}
+
+<p>
+    @*it needs to go back to the tab where it came from*@
+    @*@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))*@
+</p>
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">
+        Transfer evidence to another scheme
+    </h1>
+
+    @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-m">
+            Who would you like to trasnfer evidence to?
+        </h1>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+            @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
+            @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false)
+        </div>
+
+        <br />
+
+        <h1 class="govuk-heading-m">
+            What categories would you like to trasfer?
+        </h1>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
+            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            {
+
+                @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
+
+                <div>
+                    <div class='govuk-checkboxes'>
+                        <div class='govuk-checkboxes__item'>
+                            @{
+                                var category = Model.CategoryValues[i];
+                                var selectedOption = Model.CategoryValues[i].Selected ? "checked" : "";
+                                var id = "CategoryValues_" + i + "__Selected";
+                                var name = "CategoryValues[" + i + "].Selected";
+                            }
+
+                            <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
+                            <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                @category.CategoryId. @category.CategoryDisplay
+                            </label>
+                            <input name="@name" type="hidden" value="false">
+                        </div>
+                    </div>
+                    <br />
+                </div>
+
+                @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                @Html.HiddenFor(m => m.CategoryValues[i].Id)
+                @Html.HiddenFor(m => m.CategoryValues[i].Selected)
+            }
+        </div>
+
+            <div class="govuk-!-margin-top-3">
+                <div class="govuk-button-group">
+                    @this.WeeeGds().Button("Continue", new { id = "transfer-continue-btn", @class = "govuk-!-width-one-quarter" })
+                </div>
+            </div>
+            }
+    </section>

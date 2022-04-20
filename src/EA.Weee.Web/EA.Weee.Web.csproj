@@ -314,8 +314,12 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
-    <Compile Include="Areas\Scheme\Controllers\TrasferEvidenceController.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceDataViewModel.cs" />
+    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferSelectedDataModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttribute.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnEditActionFilterAttribute.cs" />
@@ -667,7 +671,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByReferencePartial.cshtml" />
-    <Content Include="Areas\Scheme\Views\TransferEvidence\Index.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\TransferEvidenceNote.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

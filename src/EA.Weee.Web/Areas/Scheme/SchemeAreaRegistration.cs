@@ -27,12 +27,6 @@
                 url: "Scheme/{organisationId}/{controller}/{action}",
                 defaults: new { action = "Index", controller = "ManageEvidenceNotes" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
-
-            context.MapLowercaseDashedRoute(
-            name: "Scheme_transfer",
-            url: "Scheme/{organisationId}/{controller}/{action}",
-            defaults: new { action = "Index", controller = "TrasferEvidenceController" },
-            namespaces: new[] { typeof(TrasferEvidenceController).Namespace });
         }
     }
 }
