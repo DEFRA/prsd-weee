@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Prsd.Core.Mapper;
-    using Web.ViewModels.Shared;
+    using Shared;
 
     public class EvidenceNoteRowViewModelMap : IMap<EvidenceNoteData, EvidenceNoteRowViewModel>
     {

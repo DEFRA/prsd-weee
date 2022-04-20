@@ -380,7 +380,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ModifyNoteTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceNoteRoewViewModelMap.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\EvidenceNoteRowViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreator.cs" />
