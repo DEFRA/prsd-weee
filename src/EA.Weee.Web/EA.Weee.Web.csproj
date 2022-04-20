@@ -314,6 +314,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ListOfNotesMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ListOfNotesViewModelBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteRowViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Filters\RunAsyncHelper.cs" />

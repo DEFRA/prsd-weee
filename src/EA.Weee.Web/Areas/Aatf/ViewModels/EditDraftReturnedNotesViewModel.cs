@@ -4,8 +4,6 @@
 
     public class EditDraftReturnedNotesViewModel : ManageEvidenceNoteOverviewViewModel
     {
-        public IList<EvidenceNoteRowViewModel> ListOfNotes;
-
         public EditDraftReturnedNotesViewModel()
          : base(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)
         {
