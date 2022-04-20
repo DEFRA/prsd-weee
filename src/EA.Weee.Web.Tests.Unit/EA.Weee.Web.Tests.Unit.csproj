@@ -365,7 +365,6 @@
     <Compile Include="Areas\Scheme\Controllers\SchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTransferTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewSubmittedEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewAndTransferEvidenceViewModelTests.cs" />
