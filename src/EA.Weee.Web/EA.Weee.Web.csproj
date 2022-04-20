@@ -314,6 +314,10 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\BaseEvidenceNotesViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ViewAndTransferEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
@@ -671,6 +675,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByReferencePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\TransferEvidenceNote.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />

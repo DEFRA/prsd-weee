@@ -113,6 +113,28 @@
         }
 
         [Fact]
+        public async void HandleAsync_GivenRequestWithSearchRef_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            var searchRef = fixture.Create<string>();
+            var request = GetAatfNotesRequest(searchRef);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SchemeId == null &&
+                e.SearchRef.Equals(searchRef)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
@@ -178,9 +200,12 @@
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
-        private GetAatfNotesRequest GetAatfNotesRequest()
+        private GetAatfNotesRequest GetAatfNotesRequest(string searchRef = null)
         {
-            return new GetAatfNotesRequest(organisation.Id, aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>());
+            return new GetAatfNotesRequest(organisation.Id, 
+                aatf.Id, 
+                fixture.CreateMany<NoteStatus>().ToList(),
+                searchRef);
         }
     }
 }
