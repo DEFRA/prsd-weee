@@ -48,7 +48,7 @@
                 {
                     if (MatchReferenceWithNoteType())
                     {
-                        return Enumeration.FromDisplayName<NoteType>(SearchRef.Substring(0, 1)).Value;
+                        return Enumeration.FromDisplayName<NoteType>(SearchRef.ToUpper().Substring(0, 1)).Value;
                     }
 
                     return 0;
