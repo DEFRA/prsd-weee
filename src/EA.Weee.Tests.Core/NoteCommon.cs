@@ -7,7 +7,9 @@
     using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.Evidence;
+    using Domain.Lookup;
     using Model;
+    using Prsd.Core.Helpers;
     using Organisation = Domain.Organisation.Organisation;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -51,6 +53,10 @@
             if (noteTonnages == null)
             {
                 noteTonnages = new List<NoteTonnage>();
+                foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
+                {
+                    noteTonnages.Add(new NoteTonnage((WeeeCategory)value, null, null));
+                }
             }
 
             if (noteType == null)
