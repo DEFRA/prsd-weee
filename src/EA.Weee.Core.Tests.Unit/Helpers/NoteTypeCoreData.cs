@@ -8,9 +8,9 @@
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var status in Enum.GetValues(typeof(EA.Weee.Core.AatfEvidence.NoteType)))
+            foreach (var noteType in Enum.GetValues(typeof(EA.Weee.Core.AatfEvidence.NoteType)))
             {
-                yield return new[] { status };
+                yield return new[] { noteType };
             }
         }
 
