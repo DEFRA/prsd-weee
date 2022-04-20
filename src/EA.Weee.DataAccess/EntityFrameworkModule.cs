@@ -51,8 +51,8 @@
 
             builder.RegisterTypeByEnvironment<SchemeDataAccess, ISchemeDataAccess>(environment);
 
-            builder.RegisterType<StoredProcedures>().As<IStoredProcedures>()
-                .InstancePerRequest();
+            builder.RegisterTypeByEnvironment<StoredProcedures, IStoredProcedures>(environment);
+            builder.RegisterTypeByEnvironment<EvidenceStoredProcedures, IEvidenceStoredProcedures>(environment);
 
             builder.RegisterType<ProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>()
                 .InstancePerRequest();

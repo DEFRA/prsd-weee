@@ -325,6 +325,7 @@
     <Content Include="scripts\Update\Release 5\Sprint01\20220325-1311-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220314-1536-schema.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220204-1145-setup-elmah.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint02\20220420-1439-totals-stored-proc.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

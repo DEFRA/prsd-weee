@@ -187,6 +187,8 @@
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
+        public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
+
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
             : base("name=Weee.DefaultConnection")
         {
@@ -196,6 +198,7 @@
             Database.SetInitializer<WeeeContext>(null);
 
             StoredProcedures = new StoredProcedures(this);
+            EvidenceStoredProcedures = new EvidenceStoredProcedures(this);
 
             // Set internal db sets
             AllRegisteredProducers = Set<RegisteredProducer>();
