@@ -291,10 +291,12 @@
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerCreateEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToSelectYourAatfViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\AllOtherNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditDraftReturnNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteViewModelMapTests.cs" />
-    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ListOfNotesMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceNotesViewModelTransferTests.cs" />
+    <Compile Include="ViewModels\ListOfNotesMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewEvidenceNoteViewModelMapTests.cs" />
@@ -379,6 +381,7 @@
     <Compile Include="RazorHelpers\WeeeGdsFormTests.cs" />
     <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
+    <Compile Include="ViewModels\ListOfNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />

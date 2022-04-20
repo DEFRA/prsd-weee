@@ -256,7 +256,7 @@
 
             //assert
             A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(
-                A<EditDraftReturnNotesViewModelTransfer>.That.Matches(
+                A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
         }
@@ -276,7 +276,7 @@
 
             //assert
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
-                A<EditDraftReturnNotesViewModelTransfer>.That.Matches(
+                A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
         }
@@ -290,7 +290,7 @@
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
             A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(
-                A<EditDraftReturnNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
+                A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes) as ViewResult;
@@ -313,7 +313,7 @@
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
-                A<EditDraftReturnNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
+                A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab) as ViewResult;

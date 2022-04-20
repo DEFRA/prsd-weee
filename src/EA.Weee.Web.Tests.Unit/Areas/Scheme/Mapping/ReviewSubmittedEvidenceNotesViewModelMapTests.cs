@@ -129,9 +129,6 @@
                  fixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var model = new ReviewSubmittedEvidenceNotesViewModel();
-            model.EvidenceNotesDataList = returnedNotes;
-
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, notes, "Test");

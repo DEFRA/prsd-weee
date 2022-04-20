@@ -232,7 +232,7 @@
 
             var modelAllNotes =
                 mapper.Map<AllOtherEvidenceNotesViewModel>(
-                    new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+                    new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
             modelAllNotes.ManageEvidenceNoteViewModel =
                 mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf,
@@ -251,7 +251,7 @@
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
             
-            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, result));
+            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result));
             
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel));
             
