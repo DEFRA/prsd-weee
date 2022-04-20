@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
-    using Web.Areas.Aatf.Mappings.ToViewModel;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
@@ -19,7 +17,7 @@
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
-        private ListOfNotesMap map;
+        private readonly ListOfNotesMap map;
 
         public ListOfNotesMapTests()
         {

@@ -4,16 +4,15 @@
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
     using ViewModels;
-    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
-    public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>, IMap<EditDraftReturnNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
+    public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
     {
         public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
-        public AllOtherEvidenceNotesViewModel Map(EditDraftReturnNotesViewModelTransfer source)
+        public AllOtherEvidenceNotesViewModel Map(EvidenceNotesViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
