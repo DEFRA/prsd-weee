@@ -2,6 +2,7 @@
 {
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using System;
+    using System.ComponentModel;
 
     public class ReviewEvidenceNoteViewModel
     {
@@ -9,10 +10,9 @@
 
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
-        public EvidenceNoteApprovalOptionsViewModel EvidenceNoteApprovalOptionsViewModel { get; set; }
+        [DisplayName("Date Submitted")]
+        public string SubmittedDate { get; set; }
 
-        public ReviewEvidenceNoteViewModel()
-        {
-        }
+        public EvidenceNoteApprovalOptionsViewModel EvidenceNoteApprovalOptionsViewModel { get; set; }
     }
 }

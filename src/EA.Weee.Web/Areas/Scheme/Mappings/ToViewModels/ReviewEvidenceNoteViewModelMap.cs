@@ -23,7 +23,8 @@
             var model = new ReviewEvidenceNoteViewModel()
             {
                 ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source),
-                EvidenceNoteApprovalOptionsViewModel = new EvidenceNoteApprovalOptionsViewModel()
+                EvidenceNoteApprovalOptionsViewModel = new EvidenceNoteApprovalOptionsViewModel(), 
+                SubmittedDate = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.SubmittedDate.Value.ToString() + " (GMT)" : string.Empty
             };
 
             //var model = new ReviewEvidenceNoteViewModel
