@@ -19,7 +19,8 @@
             Aatf aatf,
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
-            List<NoteTonnage> noteTonnages = null)
+            List<NoteTonnage> noteTonnages = null,
+            Weee.Domain.Evidence.NoteType noteType = null)
         {
             if (organisation == null)
             {
@@ -52,6 +53,11 @@
                 noteTonnages = new List<NoteTonnage>();
             }
 
+            if (noteType == null)
+            {
+                noteType = NoteType.EvidenceNote;
+            }
+
             return new Note(organisation,
                 scheme,
                 DateTime.Now,
@@ -59,7 +65,7 @@
                 wasteType,
                 protocol,
                 aatf,
-                NoteType.EvidenceNote,
+                noteType,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages);
         }
