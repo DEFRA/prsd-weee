@@ -49,6 +49,7 @@
             var startDate = fixture.Create<DateTime>();
             var endDate = fixture.Create<DateTime>();
             var recipientId = fixture.Create<Guid>();
+            var submittedDate = fixture.Create<DateTime>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
@@ -56,6 +57,7 @@
             A.CallTo(() => note.StartDate).Returns(startDate);
             A.CallTo(() => note.EndDate).Returns(endDate);
             A.CallTo(() => note.Recipient.Id).Returns(recipientId);
+            A.CallTo(() => note.SubmittedDate).Returns(submittedDate);
 
             //act
             var result = map.Map(note);
@@ -66,6 +68,7 @@
             result.StartDate.Should().Be(startDate);
             result.EndDate.Should().Be(endDate);
             result.RecipientId.Should().Be(recipientId);
+            result.SubmittedDate.Should().Be(submittedDate);
         }
 
         [Theory]

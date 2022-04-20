@@ -5,7 +5,7 @@
     using Core.AatfEvidence;
     using Prsd.Core;
 
-    public class EditDraftReturnNotesViewModelTransfer
+    public class EvidenceNotesViewModelTransfer
     {
         public Guid OrganisationId { get; protected set; }
 
@@ -13,7 +13,7 @@
 
         public List<EvidenceNoteData> Notes { get; protected set; }
 
-        public EditDraftReturnNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes)
+        public EvidenceNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => notes, notes);
