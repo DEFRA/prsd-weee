@@ -3,8 +3,6 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
@@ -12,7 +10,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
