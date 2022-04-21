@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Timers;
     using AutoFixture;
     using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
@@ -25,9 +28,15 @@
             fixture = new Fixture();
         }
 
-        [Fact]
-        public async Task Execute_GivenAatfWithDraftNote_NoDataShouldBeReturned()
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task Execute_GivenAatfWithDraftNote_NoDataShouldBeReturned(NoteStatus noteStatus)
         {
+            if (noteStatus.Equals(NoteStatus.Approved))
+            {
+                return;
+            }
+
             using (var db = new DatabaseWrapper())
             {
                 var context = db.WeeeContext;
@@ -43,7 +52,19 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var note1 = NoteCommon.CreateNote(db, organisation1, null, aatf1);
-                
+                if (!noteStatus.Equals(NoteStatus.Draft))
+                {
+                    if (noteStatus.Equals(NoteStatus.Submitted))
+                    {
+                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser());
+                    }
+                    else
+                    {
+                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser());
+                        note1.UpdateStatus(noteStatus, db.WeeeContext.GetCurrentUser());
+                    }
+                }
+
                 context.Notes.Add(note1);
 
                 await db.WeeeContext.SaveChangesAsync();
@@ -323,8 +344,12 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
+                var watch = new Stopwatch();
+                watch.Start();
                 var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
+                watch.Stop();
 
+                watch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5));
                 foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                 {
                     var categoryValue = (int)value;

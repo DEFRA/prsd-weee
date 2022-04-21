@@ -3,13 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.AatfReturn;
     using Domain.Evidence;
-    using Domain.Lookup;
     using Model;
-    using Prsd.Core.Helpers;
     using Organisation = Domain.Organisation.Organisation;
     using Scheme = Domain.Scheme.Scheme;
 
