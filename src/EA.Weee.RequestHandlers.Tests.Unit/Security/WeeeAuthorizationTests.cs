@@ -652,6 +652,7 @@
             {
                 new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), userStatusActive ? UserStatus.Active : UserStatus.Inactive, A.Dummy<Role>())
             };
+            aatfs = aatfs ?? new List<Aatf>();
 
             var dbHelper = new DbContextHelper();
             WeeeContext weeeContext = A.Fake<WeeeContext>();
