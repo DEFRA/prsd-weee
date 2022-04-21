@@ -1,0 +1,9 @@
+﻿IF NOT EXISTS (SELECT
+    * 
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
+    WHERE CONSTRAINT_NAME ='UNQ_Note_Category'
+)
+BEGIN
+ALTER TABLE [Evidence].[NoteTonnage]
+ADD CONSTRAINT UNQ_Note_Category UNIQUE (NoteId, CategoryId);
+END
