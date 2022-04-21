@@ -8,7 +8,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Note;
     using FakeItEasy;
-    using RequestHandlers.AatfEvidence;
+    using RequestHandlers.Scheme;
     using System;
     using System.Security;
     using System.Threading.Tasks;

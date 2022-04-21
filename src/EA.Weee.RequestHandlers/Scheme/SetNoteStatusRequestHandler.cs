@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.AatfEvidence
+﻿namespace EA.Weee.RequestHandlers.Scheme
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;

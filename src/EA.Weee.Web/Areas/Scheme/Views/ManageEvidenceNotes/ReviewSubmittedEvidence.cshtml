@@ -4,7 +4,6 @@
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedEvidenceNotesViewModel
 
-
 <section id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -54,7 +53,7 @@
                                         <td class="govuk-table__cell"> </td>
                                     }
                                     <td class="govuk-table__cell">
-                                        @Html.ActionLink("Review Note", "ReviewEvidenceNote", new { organisationId = Model.OrganisationId, evidenceNoteId = note.Id })
+                                        @Html.ActionLink("Review evidence", "ReviewEvidenceNote", new { organisationId = Model.OrganisationId, evidenceNoteId = note.Id })
                                     </td>
                                 </tr>
                             }
