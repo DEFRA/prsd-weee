@@ -10,9 +10,14 @@
 
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
-        [DisplayName("Date Submitted")]
+        [DisplayName("Date submitted")]
         public string SubmittedDate { get; set; }
 
+        [DisplayName("Date approved")]
+        public string ApprovedDate { get; set; }
+
         public EvidenceNoteApprovalOptionsViewModel EvidenceNoteApprovalOptionsViewModel { get; set; }
+
+        public bool ShowRadioButtonsDisplay { get; set; } = true;
     }
 }

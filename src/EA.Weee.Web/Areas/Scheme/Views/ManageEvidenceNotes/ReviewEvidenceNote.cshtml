@@ -9,31 +9,49 @@
 
 <section id="main-content">
 
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.OrganisationId, null)), "Manage evidence notes"))
-
-    <h1>Review evidence</h1>
-    <p>After review, you can choose whether to approve, reject or return the evidence note.</p>
-
-    @Html.Partial("_ViewEvidenceNotePartial", Model)
-
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
 
-        <!-- radiobuttons for approved -->
-        <p>Choose whether to approve, reject or return the evidence note</p>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue)" id="WeeeStatusOptions">
-            @this.WeeeGds().RadioButtonsFor(
-                 m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue,
-                 Model.EvidenceNoteApprovalOptionsViewModel.PossibleValues,
-                 "Choose whether to approve, reject or return the evidence note",
-                 RadioButtonLegend.VisuallyHidden,
-                 RadioButtonLayout.Inline)
-        </div>
+        @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
+        @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)
+        @Html.HiddenFor(m => m.SelectedId)
+        @Html.HiddenFor(m => m.SubmittedDate)
+        @Html.HiddenFor(m => m.ApprovedDate)
 
-        <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Save and continue</button>
-        </div>
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.OrganisationId, null)), "Manage evidence notes"))
+
+        if (Model.ShowRadioButtonsDisplay)
+        {
+            @Html.Gds().ValidationSummary()
+
+            <h1 class="govuk-heading-l">Review evidence</h1>
+            <p class="govuk-body govuk-!-margin-bottom-7">After review, you can choose whether to approve, reject or return the evidence note.</p>
+
+            @Html.Partial("_ViewEvidenceNotePartial", Model)
+
+            <!-- radiobuttons for approved -->
+            <p>Choose whether to approve, reject or return the evidence note</p>
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue)" id="WeeeStatusOptions">
+                @this.WeeeGds().RadioButtonsFor(
+                     m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue,
+                     Model.EvidenceNoteApprovalOptionsViewModel.PossibleValues,
+                     "Choose whether to approve, reject or return the evidence note",
+                     RadioButtonLegend.VisuallyHidden,
+                     RadioButtonLayout.Inline)
+            </div>
+
+            <div class="govuk-form-group">
+                <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Save and continue</button>
+            </div>
+        }
+        else
+        {
+            @Html.Partial("_ViewEvidenceNotePartial", Model)
+
+            <div class="govuk-form-group">
+                @Html.ActionLink("Download as PDF", "DownloadAsPDF", new { evidenceNoteId = Model.SelectedId })
+            </div>
+        }
     }
 </section>

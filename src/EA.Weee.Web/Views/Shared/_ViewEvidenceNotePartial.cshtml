@@ -2,12 +2,11 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 
 @{
-
     <h1 class="govuk-heading-l">
         Evidence note
     </h1>
     
-    <div class="govuk-width-container govuk-!-margin-top-3 ">
+    <div class="govuk-width-container govuk-!-margin-top-3">
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.ReferenceDisplay, Model.ViewEvidenceNoteViewModel.ReferenceDisplay)
@@ -20,6 +19,13 @@
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate)
         </div>
+
+        @if (Model.ViewEvidenceNoteViewModel.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Approved)
+        {
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+                @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate)
+            </div>
+        }
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ViewEvidenceNoteViewModel.ComplianceYearDisplay, Model.ViewEvidenceNoteViewModel.ComplianceYearDisplay)
@@ -99,5 +105,4 @@
 
         </tbody>
     </table>
-
 }
