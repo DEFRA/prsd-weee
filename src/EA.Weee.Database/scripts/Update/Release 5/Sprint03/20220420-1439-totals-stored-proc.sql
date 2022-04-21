@@ -15,7 +15,7 @@ END
 
 CREATE TABLE #CategoryTotals(
 	CategoryId INT NOT NULL,
-	CategoryName NVARCHAR(500) NOT NULL,
+	CategoryName NVARCHAR(60) NOT NULL,
 	Received DECIMAL NULL,
 	Reused DECIMAL NULL
 )
