@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Prsd.Core.Domain;
 
     public class EvidenceNoteFilter
@@ -15,21 +16,46 @@
 
         public List<NoteStatus> AllowedStatuses { get; set; }
 
-        private string searchRef;
-        public string SearchRef
+        public string SearchRef { get; set; }
+
+        public string FormattedSearchRef
         {
             get
             {
-                var allowedNoteTypes = Enumeration.GetAll<Domain.Evidence.NoteType>().Select(n => n.DisplayName.ToCharArray()[0]).ToArray();
-
-                if (!string.IsNullOrWhiteSpace(searchRef))
+                if (!string.IsNullOrWhiteSpace(SearchRef))
                 {
-                    return searchRef.ToUpper().Trim().Trim(allowedNoteTypes);
+                    if (MatchReferenceWithNoteType())
+                    {
+                        return SearchRef.Trim().Remove(0, 1);
+                    }
                 }
 
-                return searchRef;
+                return SearchRef;
             }
-            set => searchRef = value;
+        }
+
+        private bool MatchReferenceWithNoteType()
+        {
+            var regex = new Regex("^[E?|T?|e?|t?][1-9]+");
+            return regex.Match(SearchRef.Trim()).Success;
+        }
+
+        public int FormattedNoteType
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(SearchRef))
+                {
+                    if (MatchReferenceWithNoteType())
+                    {
+                        return Enumeration.FromDisplayName<NoteType>(SearchRef.ToUpper().Substring(0, 1)).Value;
+                    }
+
+                    return 0;
+                }
+
+                return -1;
+            }
         }
     }
 }

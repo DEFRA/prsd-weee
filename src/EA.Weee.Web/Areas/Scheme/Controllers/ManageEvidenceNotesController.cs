@@ -3,7 +3,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
@@ -17,6 +16,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.AatfEvidence;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Note;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
@@ -43,20 +43,56 @@
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
-
-                var result = await client.SendAsync(User.GetAccessToken(), 
-                    new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }));
-
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
+
+                switch (activeDisplayOption)
+                {
+                    case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                    case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(organisationId, scheme);
+                    default:
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                }
+            }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.OrganisationId = organisationId;
+        }
+
+        private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
+        {
+            using (var client = this.apiClient())
+            {
+                var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
                 var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName));
 
-                return this.View("ReviewSubmittedEvidence", model);
+                return View("ReviewSubmittedEvidence", model);
             }
         }
 
+        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemeData scheme)
+        {
+            using (var client = this.apiClient())
+            {
+                // TODO: Add NoteStatus Returned to this list
+                var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
+
+                var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
+
+                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, result, schemeName));
+
+                return View("ViewAndTransferEvidence", model);
+            }
         [HttpGet]
         public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {

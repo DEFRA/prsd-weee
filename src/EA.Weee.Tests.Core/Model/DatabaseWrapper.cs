@@ -46,6 +46,8 @@
 
         public IStoredProcedures StoredProcedures { get; private set; }
 
+        public IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
+
         private TransactionScope transactionScope;
 
         public DatabaseWrapper()
@@ -89,6 +91,8 @@
             WeeeContext = new WeeeContext(userContext, eventDispatcher);
 
             StoredProcedures = new StoredProcedures(WeeeContext);
+
+            EvidenceStoredProcedures = new EvidenceStoredProcedures(WeeeContext);
         }
 
         public void Dispose()
