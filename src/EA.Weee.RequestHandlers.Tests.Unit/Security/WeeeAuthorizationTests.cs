@@ -11,6 +11,8 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Security.Claims;
+    using Domain.AatfReturn;
+    using FluentAssertions;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
@@ -534,12 +536,113 @@
             Assert.Throws<SecurityException>(() => authorization.EnsureUserInRole(Roles.InternalAdmin));
         }
 
+        [Fact]
+        public void EnsureAatfHasOrganisationAccess_GivenAatfIsNotFound_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var userId = Guid.NewGuid();
+            var userContext = A.Fake<IUserContext>();
+
+            var weeeContext = MakeFakeWeeeContext(userContext, userId, aatfs: new List<Aatf>());
+            var authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            //act
+            var exception = Record.Exception(() => authorization.EnsureAatfHasOrganisationAccess(Guid.NewGuid()));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void EnsureAatfHasOrganisationAccess_GivenAatfIsNotAssociatedWithLoggedInOrganisation_SecurityExceptionExpected()
+        {
+            //arrange
+            var userId = Guid.NewGuid();
+            var userContext = A.Fake<IUserContext>();
+            var aatfId = Guid.NewGuid();
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+
+            var weeeContext = MakeFakeWeeeContext(userContext, userId, aatfs: new List<Aatf>()
+            {
+                aatf
+            });
+
+            var authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            //act
+            var exception = Record.Exception(() => authorization.EnsureAatfHasOrganisationAccess(aatfId));
+
+            //assert
+            exception.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public void EnsureAatfHasOrganisationAccess_GivenAatfIsAssociatedWithLoggedInOrganisation_ExceptionShouldNotBeThrown()
+        {
+            //arrange
+            var userId = Guid.NewGuid();
+            var userContext = A.Fake<IUserContext>();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.OrganisationId).Returns(organisationId);
+
+            var weeeContext = MakeFakeWeeeContext(userContext, userId, aatfs: new List<Aatf>()
+            {
+                aatf
+            }, organisationUsers: new List<OrganisationUser> { new OrganisationUser(userId, organisationId, UserStatus.Active) });
+
+            var authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            //act
+            var exception = Record.Exception(() => authorization.EnsureAatfHasOrganisationAccess(aatfId));
+
+            //assert
+            exception.Should().BeNull();
+        }
+
+        [Fact]
+        public void EnsureAatfHasOrganisationAccess_GivenAatfIsAssociatedWithLoggedInOrganisationButUserIsInactive_ExceptionShouldBeThrown()
+        {
+            //assert
+            ShouldThrowSecurityExceptionForAatfWhenUserIsInactive(UserStatus.Inactive);
+            ShouldThrowSecurityExceptionForAatfWhenUserIsInactive(UserStatus.Rejected);
+            ShouldThrowSecurityExceptionForAatfWhenUserIsInactive(UserStatus.Pending);
+        }
+
+        private void ShouldThrowSecurityExceptionForAatfWhenUserIsInactive(UserStatus status)
+        {
+            var userId = Guid.NewGuid();
+            var userContext = A.Fake<IUserContext>();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.OrganisationId).Returns(organisationId);
+
+            var weeeContext = MakeFakeWeeeContext(userContext, userId, aatfs: new List<Aatf>() { aatf },
+                organisationUsers: new List<OrganisationUser> { new OrganisationUser(userId, organisationId, status) });
+
+            var authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            //act
+            var exception = Record.Exception(() => authorization.EnsureAatfHasOrganisationAccess(aatfId));
+
+            //assert
+            exception.Should().BeOfType<SecurityException>();
+        }
+
         private WeeeContext MakeFakeWeeeContext(IUserContext userContext,
                                                 Guid? userId = null,
                                                 List<OrganisationUser> organisationUsers = null,
                                                 List<Domain.Scheme.Scheme> schemes = null,
                                                 bool userStatusActive = true,
-                                                List<CompetentAuthorityUser> competentAuthorityUsers = null)
+                                                List<CompetentAuthorityUser> competentAuthorityUsers = null,
+                                                List<Aatf> aatfs = null)
         {
             userId = userId ?? Guid.NewGuid();
 
@@ -555,6 +658,7 @@
             A.CallTo(() => weeeContext.OrganisationUsers).Returns(dbHelper.GetAsyncEnabledDbSet(organisationUsers));
             A.CallTo(() => weeeContext.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).Returns(dbHelper.GetAsyncEnabledDbSet(competentAuthorityUsers));
+            A.CallTo(() => weeeContext.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(aatfs));
 
             A.CallTo(() => userContext.UserId).Returns(userId.Value);
 
