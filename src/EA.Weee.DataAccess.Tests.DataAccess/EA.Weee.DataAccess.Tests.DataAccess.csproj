@@ -180,6 +180,10 @@
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj">
+      <Project>{10930E82-4985-4F92-8C5A-65D15F0176BE}</Project>
+      <Name>EA.Weee.Core.Tests.Unit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
       <Name>EA.Weee.Core</Name>
