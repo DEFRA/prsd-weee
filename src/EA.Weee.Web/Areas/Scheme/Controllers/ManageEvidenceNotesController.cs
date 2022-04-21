@@ -57,13 +57,6 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
-        {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
-            breadcrumb.OrganisationId = organisationId;
-        }
-
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
         {
             using (var client = this.apiClient())
@@ -93,6 +86,8 @@
 
                 return View("ViewAndTransferEvidence", model);
             }
+        }
+
         [HttpGet]
         public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
