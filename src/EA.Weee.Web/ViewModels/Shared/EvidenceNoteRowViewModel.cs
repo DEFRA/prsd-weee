@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
+    using Core.AatfEvidence;
     using Core.Helpers;
-    using EA.Weee.Core.AatfEvidence;
 
-    public class EditDraftReturnedNote 
+    public class EvidenceNoteRowViewModel 
     {
         public int ReferenceId { get; set; }
 
@@ -25,5 +25,7 @@
         public bool DisplayViewLink { get; set; }
 
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
+
+        public string SubmittedDateDisplay => SubmittedDate.HasValue ? SubmittedDate.Value.ToShortDateString() : "-";
     }
 }

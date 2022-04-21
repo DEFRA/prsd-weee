@@ -56,10 +56,13 @@
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
             var notes = await context.Notes.Where(p =>
                     ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                    && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
-                    && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
-                    && (allowedStatus.Contains(p.Status.Value))) &&
-                    (filter.SearchRef == null || (p.Reference.ToString() == filter.SearchRef)))
+                     && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
+                     && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
+                     && (allowedStatus.Contains(p.Status.Value))) && 
+                     (filter.SearchRef == null ||
+                      (filter.FormattedNoteType > 0 ? 
+                       (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) : 
+                       (filter.FormattedSearchRef == p.Reference.ToString()))))
                 .ToListAsync();
 
             return notes;
