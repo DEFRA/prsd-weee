@@ -56,6 +56,20 @@
         }
 
         [Fact]
+        public void TransferPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void TransferPost_ShouldHaveAntiForgeryAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
         public async Task IndexGet_BreadcrumbShouldBeSet()
         {
             //arrange

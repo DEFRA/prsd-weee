@@ -15,6 +15,17 @@
                     View all reviewed evidence or transfer to another PCS
                 </h2>
 
+                @if (Model.EvidenceNotesDataList.Any(x => x.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
+                {
+                    using (Html.BeginForm(actionName: "Transfer", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.OrganisationId)
+
+                        @(this.WeeeGds().Submit("Transfer evidence"))
+                    }
+                }
+
                 <table id="reviewed-evidence-notes-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">View all reviewed evidence or transfer to another PCS</caption>
                     <thead class="govuk-table__head">
@@ -41,22 +52,22 @@
                         {
                             foreach (EditDraftReturnedNote note in Model.EvidenceNotesDataList)
                             {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                            <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
-                            <td class="govuk-table__cell">@note.SubmittedBy</td>
-                            @if (note.TypeOfWaste.HasValue)
-                            {
-                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
-                            }
-                            else
-                            {
-                                <td class="govuk-table__cell"> </td>
-                            }
-                            <td class="govuk-table__cell">@note.Status</td>
-                            <td class="govuk-table__cell">
-                            </td>
-                        </tr>
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                    <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                                    <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                    @if (note.TypeOfWaste.HasValue)
+                                    {
+                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="govuk-table__cell"> </td>
+                                    }
+                                    <td class="govuk-table__cell">@note.Status</td>
+                                    <td class="govuk-table__cell">
+                                    </td>
+                                </tr>
                             }
                         }
                         else
