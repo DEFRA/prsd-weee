@@ -199,6 +199,13 @@
             return this;
         }
 
+        public AuthorizationBuilder DenyAatfAccess()
+        {
+            A.CallTo(() => fake.EnsureAatfHasOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Throws<SecurityException>();
+            A.CallTo(() => fake.CheckOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Returns(false);
+            return this;
+        }
+
         public AuthorizationBuilder AllowRole(Roles role)
         {
             A.CallTo(() => fake.EnsureUserInRole(role)).DoesNothing();
