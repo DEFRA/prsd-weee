@@ -397,7 +397,6 @@
     <Compile Include="Areas\Aatf\Requests\IEditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNote.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
