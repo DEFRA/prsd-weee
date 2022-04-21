@@ -17,6 +17,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.AatfEvidence;
+    using EA.Weee.Requests.Note;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
     {
@@ -59,7 +60,6 @@
         [HttpGet]
         public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
-            //TODO:
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
@@ -72,6 +72,7 @@
 
                 // create new viewmodel mapper to map request to viewmodel
                 var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+                model.SelectedId = evidenceNoteId;
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -80,18 +81,33 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, ReviewEvidenceNoteViewModel model)
+        public async Task<ActionResult> ReviewEvidenceNote(ReviewEvidenceNoteViewModel model)
         {
-            //TODO:
-            await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-            // call the api with the new evidence note scheme request
+                var result = ModelState.IsValid;  //TODO: my model [Required] attributes do not trigger ModelState validity
 
-            // create new viewmodel mapper to map request to viewmodel
+                //TODO: to be replaced by ModelState.IsValid when it works
+                if (model.EvidenceNoteApprovalOptionsViewModel != null)
+                {
+                    //TODO: data do not get commited to db 
+                    NoteStatus status = model.EvidenceNoteApprovalOptionsViewModel.SelectedEnumValue;
+                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
+                    await client.SendAsync(User.GetAccessToken(), request);  
 
-            //return viewmodel to view
+                    //TODO: reading back the data shows that db has not been updated
+                    var requestReadback = new GetEvidenceNoteForSchemeRequest(model.SelectedId.Value);
+                    var resultReadback = await client.SendAsync(User.GetAccessToken(), requestReadback);
+                    model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(resultReadback, null));
+                    model.ViewEvidenceNoteViewModel.Status = NoteStatus.Approved;        //TODO: this info should written to db
+                    model.ApprovedDate = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " (GMT)"; //TODO: this info should written to db - data type change for DisplayFor
+                    model.ShowRadioButtonsDisplay = false;
+                }
 
-            return View();
+                return View("ReviewEvidenceNote", model);
+            }
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
