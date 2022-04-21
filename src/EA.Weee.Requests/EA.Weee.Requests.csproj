@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
+    <Compile Include="AatfEvidence\GetAatfSummaryRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequest.cs" />
