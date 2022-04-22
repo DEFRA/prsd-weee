@@ -8,13 +8,13 @@
     using DataAccess.StoredProcedure;
     using Prsd.Core.Mapper;
 
-    internal class AatfSummaryTotalsMap : IMap<List<AatfEvidenceSummaryTotalsData>, List<EvidenceTonnageData>>
+    internal class AatfSummaryTotalsMap : IMap<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>
     {
-        public List<EvidenceTonnageData> Map(List<AatfEvidenceSummaryTotalsData> source)
+        public List<EvidenceSummaryTonnageData> Map(List<AatfEvidenceSummaryTotalsData> source)
         {
             Condition.Requires(source).IsNotNull();
 
-            return source.Select(e => new EvidenceTonnageData((WeeeCategory)e.CategoryId, e.Received, e.Reused)).ToList();
+            return source.Select(e => new EvidenceSummaryTonnageData((WeeeCategory)e.CategoryId, e.Received, e.Reused)).ToList();
         }
     }
 }
