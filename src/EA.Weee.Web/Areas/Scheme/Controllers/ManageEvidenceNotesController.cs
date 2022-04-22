@@ -118,21 +118,21 @@
             {
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                var result = ModelState.IsValid;  //TODO: my model [Required] attributes do not trigger ModelState validity
+                var result = ModelState.IsValid;  //TODO: why my model [Required] attributes do not trigger ModelState validity ?
 
-                //TODO: to be replaced by ModelState.IsValid when it works
+                //TODO: will be replaced by ModelState.IsValid when it works
                 if (model.EvidenceNoteApprovalOptionsViewModel != null)
                 {
-                    //TODO: data do not get commited to db 
+                    //TODO: for some reason data do not get commited to db 
                     NoteStatus status = model.EvidenceNoteApprovalOptionsViewModel.SelectedEnumValue;
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
-                    await client.SendAsync(User.GetAccessToken(), request);  
+                    await client.SendAsync(User.GetAccessToken(), request);              //TODO: this info should commited to db but it does not 
 
-                    //TODO: reading back the data shows that db has not been updated
+                    //TODO: when reading back the note data it shows that db has not been updated with approved status
                     var requestReadback = new GetEvidenceNoteForSchemeRequest(model.SelectedId.Value);
                     var resultReadback = await client.SendAsync(User.GetAccessToken(), requestReadback);
                     model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(resultReadback, null));
-                    model.ViewEvidenceNoteViewModel.Status = NoteStatus.Approved;        //TODO: this info should written to db
+                    model.ViewEvidenceNoteViewModel.Status = NoteStatus.Approved;        //TODO: this info should commited to db but it does not
                     model.ApprovedDate = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " (GMT)"; //TODO: this info should written to db - data type change for DisplayFor
                     model.ShowRadioButtonsDisplay = false;
                 }
