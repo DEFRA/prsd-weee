@@ -40,9 +40,9 @@
             return this;
         }
 
-        public SchemeDbSetup WithOrganisation(Organisation organisation)
+        public SchemeDbSetup WithOrganisation(Guid id)
         {
-            instance.UpdateOrganisation(organisation);
+            instance.UpdateOrganisation(id);
 
             return this;
         }

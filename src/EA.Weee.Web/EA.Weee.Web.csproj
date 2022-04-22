@@ -313,10 +313,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
+    <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\EditNoteMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesViewModelBase.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteRowViewModel.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewEvidenceNoteViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\BaseEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
@@ -375,8 +381,6 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfDataToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AllOtherNotesViewModelMap.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelMap.cs" />
@@ -385,8 +389,6 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ModifyNoteTransfer.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EvidenceNoteRowViewModelMap.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteMapTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\Requests\EditEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Aatf\Requests\EvidenceNoteRequestCreator.cs" />
@@ -396,8 +398,6 @@
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\EvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />
@@ -480,6 +480,8 @@
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
     <Compile Include="ViewModels\Shared\Aatf\Mapping\AatfEditContactMap.cs" />
     <Compile Include="ViewModels\Shared\Aatf\Mapping\AatfEditContactTransfer.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ViewEvidenceNoteMapTransfer.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ViewEvidenceNoteViewModelMap.cs" />
     <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
     <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
@@ -671,7 +673,9 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByReferencePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1574,6 +1578,7 @@
     <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\NonObligatedValuesViewModel.cs" />
+    <Compile Include="ViewModels\Shared\ViewEvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
