@@ -41,8 +41,15 @@
         </div>
     </div>
         
-    <div id="global-cookie-message">
-        @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
+    <div id="global-cookie-message" style="display: none;">
+        <p id="global-cookie-message-p1" style="margin-bottom: 15px; margin-top: 10px;">Cookies on Waste Electrical and Electronic Equipment</p>
+        <p id="global-cookie-message-p2" style="margin-bottom: 10px;">We also use essential cookies to remember if you've accepted analytics cookies.</p>
+        <p id="global-cookie-message-p2" style="margin-bottom: 20px;">We'd like to use analystics cookies so we can understand how you use Waste Electrical and Electronic Equipment and make improvements.</p>
+        <p>
+            <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-button" style="margin-right: 5px;">
+            <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-button" style="margin-right: 5px;">
+            <a href="/new-user/cookies" style="vertical-align: sub;">View cookies</a>
+        </p>
     </div>
     <!--end global-cookie-message-->
     <!--end header-->
@@ -111,3 +118,18 @@
 </body>
 
 </html>
+
+<script>
+    var cookieConsent = GOVUK.getCookie("weee-cookie-consent");
+    if (cookieConsent === null || cookieConsent === "null") {
+        document.getElementById("global-cookie-message").style.display = "block";
+    } else {
+        document.getElementById("global-cookie-message").style.display = "none";
+    }
+    $("#acceptCookies").click(function () {
+        GOVUK.acceptCookies();
+    });
+    $("#rejectCookies").click(function () {
+        GOVUK.rejectCookies();
+    });
+</script>
