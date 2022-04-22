@@ -51,7 +51,6 @@
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForAatfRequest.cs" />
     <Compile Include="AatfEvidence\GetAatfSummaryRequest.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequest.cs" />
