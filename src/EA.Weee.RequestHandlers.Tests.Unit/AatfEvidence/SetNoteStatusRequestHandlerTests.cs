@@ -20,7 +20,6 @@
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
-        private readonly DbContextHelper dbContextHelper;
         private readonly IWeeeAuthorization authorization;
         private readonly Fixture fixture;
         private readonly Note note;
@@ -32,7 +31,6 @@
             fixture = new Fixture();
             context = A.Fake<WeeeContext>();
             userContext = A.Fake<IUserContext>();
-            dbContextHelper = new DbContextHelper();
             authorization = A.Fake<IWeeeAuthorization>();
 
             A.Fake<IUserContext>();
