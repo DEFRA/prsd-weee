@@ -19,8 +19,6 @@
             Property(n => n.CreatedDate).IsRequired();
             Property(n => n.OrganisationId).IsRequired();
             Property(n => n.AatfId).IsRequired();
-            Property(n => n.SubmittedById).IsOptional();
-            Property(n => n.SubmittedDate).IsOptional();
             Property(n => n.Status.Value).HasColumnName("Status").IsRequired();
             Property(n => n.NoteType.Value).HasColumnName("NoteType").IsRequired();
 

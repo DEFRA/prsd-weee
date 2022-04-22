@@ -89,12 +89,6 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if (newStatus.Equals(NoteStatus.Submitted))
-            {
-                SubmittedDate = SystemTime.UtcNow;
-                SubmittedById = changedBy;
-            }
-
             NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
 
             Status = newStatus;
@@ -158,15 +152,9 @@
 
         public virtual DateTime CreatedDate { get; private set; }
 
-        public virtual DateTime? SubmittedDate { get; set; }
-
         public virtual string CreatedById { get; private set; }
 
-        public virtual string SubmittedById { get; set; }
-
         public virtual User CreatedBy { get; set; }
-
-        public virtual User SubmittedBy { get; set; }
 
         public virtual int Reference { get; set; }
 
