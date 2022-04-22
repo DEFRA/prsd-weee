@@ -100,7 +100,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
@@ -137,7 +136,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredDataAndFilterModel_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
@@ -175,7 +173,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
@@ -226,7 +223,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenSearchFilterParameters_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
@@ -262,7 +258,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_NoteViewModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
         {
@@ -303,7 +298,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
         {
@@ -337,7 +331,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenAction_EditDraftReturnedNotesOverviewViewShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
         {
