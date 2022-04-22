@@ -30,6 +30,11 @@
             return dbContext.Notes.FirstOrDefault(n => n.Id.Equals(id));
         }
 
+        public Scheme GetSchemeById(Guid id)
+        {
+            return dbContext.Schemes.FirstOrDefault(n => n.Id.Equals(id));
+        }
+
         public Note GetEvidenceNoteByReference(int reference)
         {
             return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);

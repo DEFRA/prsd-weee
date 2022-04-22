@@ -13,6 +13,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using EA.Weee.Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
@@ -20,10 +21,10 @@
     using Requests.AatfEvidence;
     using NoteStatus = Domain.Evidence.NoteStatus;
 
-    public class GetEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
+    public class GetEvidenceNoteForSchemeHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetADraftEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetADraftEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -41,7 +42,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
-                request = new GetEvidenceNoteForAatfRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -64,7 +65,7 @@
         }
 
         [Component]
-        public class WhenIGetASubmittedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetASubmittedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -72,7 +73,7 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-
+                var scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 var categories = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
@@ -82,13 +83,14 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
                     .WithOrganisation(organisation.Id)
+                    .WithScheme(scheme.Id)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     })
                     .Create();
                 
-                request = new GetEvidenceNoteForAatfRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -111,13 +113,13 @@
         }
 
         [Component]
-        public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
 
-                request = new GetEvidenceNoteForAatfRequest(Guid.NewGuid());
+                request = new GetEvidenceNoteForSchemeRequest(Guid.NewGuid());
             };
 
             private readonly Because of = () =>
@@ -129,7 +131,7 @@
         }
 
         [Component]
-        public class WhenIGetANotesWhereUserIsNotAuthorised : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetANotesWhereUserIsNotAuthorised : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -137,7 +139,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNoteForAatfRequest(note.Id);
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -148,12 +150,13 @@
             private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
         }
 
-        public class GetEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
+        public class GetEvidenceNoteForSchemeHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData> handler;
+            protected static IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
-            protected static GetEvidenceNoteForAatfRequest request;
+            protected static GetEvidenceNoteForSchemeRequest request;
             protected static EvidenceNoteData result;
+            protected static Scheme scheme;  // added by Guido
             protected static Note note;
             protected static Fixture fixture;
 
@@ -165,7 +168,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData>>();
 
                 return setup;
             }
@@ -179,12 +182,13 @@
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
                 result.SchemeData.Should().NotBeNull();
-                result.SchemeData.Id.Should().Be(note.Recipient.Id);
+
+                result.SchemeData.Id.Should().Be(note.Recipient.Id);  // how can we associate note.Recipient.Id with Scheme.Id ?
+
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
                 ((int)result.Type).Should().Be(note.NoteType.Value);
-                result.RecipientId.Should().Be(note.Recipient.Id);
                 result.Id.Should().Be(note.Id);
                 foreach (var noteTonnage in note.NoteTonnage)
                 {
@@ -192,7 +196,6 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
-                result.SubmittedDate.Should().Be(note.SubmittedDate);
             }
         }
     }

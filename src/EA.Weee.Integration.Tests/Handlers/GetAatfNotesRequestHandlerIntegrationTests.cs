@@ -167,7 +167,7 @@
         }
 
         [Component]
-        public class WhenIGetFilterdEvidencesBasedOnAllowedStatusesList : GetAatfNotesRequestHandlerTestBase
+        public class WhenIGetFilteredEvidencesBasedOnAllowedStatusesList : GetAatfNotesRequestHandlerTestBase
         {
             private readonly Establish context = () =>
             {
@@ -199,19 +199,31 @@
                 var evidence3 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
-                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
                 .Create();
 
                 var evidence4 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
-                .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString());
+                })
                 .Create();
 
                 var evidence5 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
-                .WithStatus(NoteStatusDomain.Void, UserId.ToString())
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString());
+                })
                 .Create();
             };
 

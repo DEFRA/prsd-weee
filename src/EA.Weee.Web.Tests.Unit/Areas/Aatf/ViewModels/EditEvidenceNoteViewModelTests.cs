@@ -15,23 +15,23 @@
     using Web.Areas.Aatf.ViewModels;
     using Xunit;
 
-    public class EvidenceNoteViewModelTests
+    public class EditEvidenceNoteViewModelTests
     {
-        private readonly EvidenceNoteViewModel model;
+        private readonly EditEvidenceNoteViewModel model;
         private readonly ICategoryValueTotalCalculator calculator;
 
-        public EvidenceNoteViewModelTests()
+        public EditEvidenceNoteViewModelTests()
         {
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
-            model = new EvidenceNoteViewModel(calculator);
+            model = new EditEvidenceNoteViewModel(calculator);
         }
 
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
         {
-            typeof(EvidenceNoteViewModel).GetProperty(property).Should()
+            typeof(EditEvidenceNoteViewModel).GetProperty(property).Should()
                 .BeDecoratedWith<DisplayNameAttribute>(a => a.DisplayName.Equals(display));
         }
 
@@ -40,7 +40,7 @@
         [InlineData("WasteTypeValue", "Select a type of waste")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredSubmitActionAttribute(string property, string description)
         {
-            typeof(EvidenceNoteViewModel)
+            typeof(EditEvidenceNoteViewModel)
                 .GetProperty(property)
                 .Should()
                 .BeDecoratedWith<RequiredSubmitActionAttribute>(d => d.ErrorMessage.Equals(description));
@@ -54,7 +54,7 @@
         [InlineData("WasteTypeValue", "Type of waste")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
-            typeof(EvidenceNoteViewModel)
+            typeof(EditEvidenceNoteViewModel)
                 .GetProperty(property)
                 .Should()
                 .BeDecoratedWith<DisplayAttribute>(d => d.Name.Equals(description));
@@ -66,7 +66,7 @@
         [InlineData("ReceivedId", "Select a receiving PCS")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string message)
         {
-            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
+            typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
         }
 
         [Theory]
@@ -74,7 +74,7 @@
         [InlineData("EndDate", DataType.Date)]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDataTypeAttribute(string property, DataType type)
         {
-            typeof(EvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<DataTypeAttribute>(d => d.DataType.Equals(type));
+            typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<DataTypeAttribute>(d => d.DataType.Equals(type));
         }
 
         [Fact]
@@ -92,7 +92,7 @@
         {
             for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
             {
-                var local = new EvidenceNoteViewModel();
+                var local = new EditEvidenceNoteViewModel();
                 local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
                 local.Edit.Should().BeTrue();
             }
@@ -101,13 +101,13 @@
         [Fact]
         public void EvidenceNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
+            typeof(EditEvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
         }
 
         [Fact]
         public void EvidenceNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
+            typeof(EditEvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
         }
 
         [Fact]
@@ -137,7 +137,7 @@
 
             foreach (var type in types)
             {
-                var model = new EvidenceNoteViewModel()
+                var model = new EditEvidenceNoteViewModel()
                 {
                     Type = (NoteType)type.Key,
                     Reference = 1

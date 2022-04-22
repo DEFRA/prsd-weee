@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using Core.AatfEvidence;
     using System.ComponentModel;
+    using Core.AatfEvidence;
     using Extensions;
-    using Prsd.Core.Helpers;
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
@@ -27,5 +26,9 @@
         public string RecipientAddress { get; set; }
 
         public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
+
+        public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
+
+        public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);
     }
 }
