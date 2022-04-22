@@ -20,6 +20,7 @@
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;

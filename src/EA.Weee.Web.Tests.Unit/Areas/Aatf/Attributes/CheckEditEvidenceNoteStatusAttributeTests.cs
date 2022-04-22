@@ -12,6 +12,7 @@
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
 

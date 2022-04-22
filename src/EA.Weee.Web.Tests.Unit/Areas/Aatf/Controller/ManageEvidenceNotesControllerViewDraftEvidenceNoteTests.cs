@@ -12,6 +12,8 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
     using Xunit;
 

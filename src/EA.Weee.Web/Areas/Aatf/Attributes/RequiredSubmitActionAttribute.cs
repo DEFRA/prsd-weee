@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Prsd.Core;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class RequiredSubmitActionAttribute : RequiredAttribute

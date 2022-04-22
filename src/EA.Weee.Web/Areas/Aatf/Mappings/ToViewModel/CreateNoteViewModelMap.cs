@@ -8,6 +8,7 @@
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, EvidenceNoteViewModel>
     {
