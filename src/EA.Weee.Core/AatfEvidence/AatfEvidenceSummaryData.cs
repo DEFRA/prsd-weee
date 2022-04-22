@@ -7,7 +7,7 @@
     [Serializable]
     public class AatfEvidenceSummaryData
     {
-        public List<EvidenceTonnageData> EvidenceCategoryTotals { get; protected set; }
+        public List<EvidenceSummaryTonnageData> EvidenceCategoryTotals { get; protected set; }
 
         public int NumberOfDraftNotes { get; protected set; }
 
@@ -15,7 +15,7 @@
 
         public int NumberOfApprovedNotes { get; protected set; }
 
-        public AatfEvidenceSummaryData(List<EvidenceTonnageData> totals,
+        public AatfEvidenceSummaryData(List<EvidenceSummaryTonnageData> totals,
             int numberOfDraftNotes,
             int numberOfSubmittedNotes,
             int numberOfApprovedNotes)
