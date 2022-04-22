@@ -34,7 +34,7 @@
                 var builder = LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                aatf = AatfDbSetup.Init().WithOrganisation(organisation).Create();
+                aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 scheme = SchemeDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
@@ -84,7 +84,7 @@
                 var builder = LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                aatf = AatfDbSetup.Init().WithOrganisation(organisation).Create();
+                aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 scheme = SchemeDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
