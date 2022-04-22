@@ -18,6 +18,7 @@
     using Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Note;
+    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
@@ -122,7 +123,12 @@
                     var status = model.SelectedEnumValue;
 
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
+
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
                     await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("DownloadEvidenceNote", new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, evidenceNoteId = request.NoteId });
                 }
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
@@ -130,6 +136,25 @@
                 model = await GetNote(model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+
+                // call the api with the new evidence note scheme request
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                //return viewmodel to view
+                return View(model);
             }
         }
 
