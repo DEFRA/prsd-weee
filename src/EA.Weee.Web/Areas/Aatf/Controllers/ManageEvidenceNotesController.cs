@@ -58,7 +58,7 @@
 
             if (activeOverviewDisplayOption == null)
             {
-                activeOverviewDisplayOption = ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                activeOverviewDisplayOption = ManageEvidenceOverviewDisplayOption.EvidenceSummary;
             }
 
             using (var client = this.apiClient())
@@ -82,9 +82,10 @@
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
                         return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, viewModel);
-                        
+
+                    case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
-                        return await EditDraftReturnNoteCase(client, organisationId, aatfId, aatf, models, viewModel);
+                        return await EvidenceSummaryCase(organisationId, aatfId, client);
                 }
             }
         }
@@ -240,6 +241,16 @@
                     models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel));
 
             return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
+        }
+
+        private async Task<ActionResult> EvidenceSummaryCase(Guid organisationId, Guid aatfId, IWeeeClient client)
+        {
+            var result = await client.SendAsync(User.GetAccessToken(), new GetAatfSummaryRequest(aatfId));
+
+            var summaryModel =
+                mapper.Map<EvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+
+            return this.View("Overview/EvidenceSummaryOverview", summaryModel);
         }
 
         private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, 
