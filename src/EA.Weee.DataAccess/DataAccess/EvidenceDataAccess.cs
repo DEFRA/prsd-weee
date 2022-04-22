@@ -67,5 +67,11 @@
 
             return notes;
         }
+
+        public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId)
+        {
+            return await context.Notes.Where(n => n.AatfId.Equals(aatfId) && n.Status.Value.Equals(status.Value))
+                .CountAsync();
+        }
     }
 }

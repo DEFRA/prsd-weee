@@ -53,7 +53,7 @@
                 .Create();
 
                 aatf = AatfDbSetup.Init()
-                .WithOrganisation(organisation)
+                .WithOrganisation(organisation.Id)
                 .Create();
 
                 OrganisationUserDbSetup.Init()
@@ -107,7 +107,7 @@
 
             private readonly It shouldHaveNotesInExpectedOrder = () =>
             {
-                evidenceNoteData.Should().BeInDescendingOrder(e => e.Reference);
+                evidenceNoteData.Select(e => e.Reference).Should().BeInDescendingOrder();
             };
         }
 
@@ -122,7 +122,7 @@
                .Create();
 
                 aatf = AatfDbSetup.Init()
-                .WithOrganisation(organisation)
+                .WithOrganisation(organisation.Id)
                 .Create();
 
                 OrganisationUserDbSetup.Init()
@@ -177,7 +177,7 @@
                .Create();
 
                 aatf = AatfDbSetup.Init()
-                .WithOrganisation(organisation)
+                .WithOrganisation(organisation.Id)
                 .Create();
 
                 OrganisationUserDbSetup.Init()

@@ -98,5 +98,7 @@
         /// granting them access to the specified scheme.
         /// </summary>
         bool CheckInternalOrSchemeAccess(Guid schemeId);
+
+        void EnsureAatfHasOrganisationAccess(Guid aatfId);
     }
 }
