@@ -10,9 +10,9 @@
     using Web.ViewModels.Shared;
     using Weee.Requests.Aatf;
 
-    public abstract class EvidenceNoteRequestCreator<T> : IRequestCreator<EvidenceNoteViewModel, T> where T : new()
+    public abstract class EvidenceNoteRequestCreator<T> : IRequestCreator<EditEvidenceNoteViewModel, T> where T : new()
     {
-        public virtual T ViewModelToRequest(EvidenceNoteViewModel viewModel)
+        public virtual T ViewModelToRequest(EditEvidenceNoteViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
 

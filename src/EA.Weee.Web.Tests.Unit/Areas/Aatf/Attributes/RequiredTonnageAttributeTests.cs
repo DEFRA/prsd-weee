@@ -237,7 +237,7 @@
 
         private EvidenceNoteViewModel ValidViewModel(DateTime date, ActionEnum action)
         {
-            var target = new EvidenceNoteViewModel()
+            var target = new EditEvidenceNoteViewModel()
             {
                 WasteTypeValue = WasteType.Household,
                 ProtocolValue = Protocol.Actual,

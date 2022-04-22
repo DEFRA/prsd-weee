@@ -11,9 +11,9 @@
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var model = validationContext.ObjectInstance as EvidenceNoteViewModel;
+            var model = validationContext.ObjectInstance as EditEvidenceNoteViewModel;
 
-            Guard.ArgumentNotNull(() => model, model, "RequiredSubmitActionAttribute EvidenceViewModel IsNull");
+            Guard.ArgumentNotNull(() => model, model, "RequiredSubmitActionAttribute EditEvidenceNoteViewModel IsNull");
 
             if (model.Action.Equals(ActionEnum.Submit))
             {
