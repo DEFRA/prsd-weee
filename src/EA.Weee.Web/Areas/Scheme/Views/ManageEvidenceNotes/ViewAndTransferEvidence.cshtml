@@ -15,7 +15,7 @@
                     View all reviewed evidence or transfer to another PCS
                 </h2>
 
-                @if (Model.EvidenceNotesDataList.Any(x => x.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
+                @if (Model.DisplayTransferButton)
                 {
                     using (Html.BeginForm(actionName: "Transfer", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
                     {

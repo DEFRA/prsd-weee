@@ -256,7 +256,7 @@
                 var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
                 watch.Stop();
 
-                watch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5));
+                watch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(10));
                 foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                 {
                     var categoryValue = (int)value;
