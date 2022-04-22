@@ -1,21 +1,23 @@
-﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
+﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
     using System.Linq;
     using System.Web.Mvc;
-    using Areas.Aatf.Mappings.ToViewModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
+    using ViewModels;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
-    public class EditNoteViewModelMap : IMap<EditNoteMapTransfer, EvidenceNoteViewModel>
+    public class EditNoteViewModelMap : IMap<EditNoteMapTransfer, EditEvidenceNoteViewModel>
     {
-        public EvidenceNoteViewModel Map(EditNoteMapTransfer source)
+        public EditEvidenceNoteViewModel Map(EditNoteMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new EvidenceNoteViewModel
+            var model = new EditEvidenceNoteViewModel
             {
                 Id = source.ExistingModel?.Id ?? source.NoteData.Id,
                 Status = source.ExistingModel?.Status ?? source.NoteData.Status,

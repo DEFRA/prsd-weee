@@ -86,7 +86,7 @@
             var schemes = fixture.CreateMany<SchemeData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var model = new EvidenceNoteViewModel()
+            var model = new EditEvidenceNoteViewModel()
             {
                 CategoryValues = fixture.CreateMany<EvidenceCategoryValue>().ToList()
             };

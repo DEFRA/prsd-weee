@@ -18,8 +18,6 @@
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Reference)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Status, new { id = "status-id" })
-        @Html.HiddenFor(m => m.SelectedId)
-
 
         @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.OrganisationId, null)), "Manage evidence notes"))
 
@@ -32,11 +30,11 @@
 
         <!-- radiobuttons for approved -->
         <p>Choose whether to approve, reject or return the evidence note</p>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue)" id="WeeeStatusOptions">
-            @Html.Gds().ValidationMessageFor(m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue)
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="approval-options">
+            @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
-                m => m.EvidenceNoteApprovalOptionsViewModel.SelectedValue,
-                Model.EvidenceNoteApprovalOptionsViewModel.PossibleValues,
+                m => m.SelectedValue,
+                Model.PossibleValues,
                 "Choose whether to approve, reject or return the evidence note",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Inline)

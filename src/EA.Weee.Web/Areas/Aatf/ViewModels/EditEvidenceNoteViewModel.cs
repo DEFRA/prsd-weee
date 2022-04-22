@@ -1,0 +1,64 @@
+﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Web.Mvc;
+    using Attributes;
+    using Core.AatfEvidence;
+    using Core.Helpers;
+    using Core.Scheme;
+    using Web.ViewModels.Shared;
+
+    public class EditEvidenceNoteViewModel : EvidenceNoteViewModel
+    {
+        [Required(ErrorMessage = "Enter a start date")]
+        [Display(Name = "Start date")]
+        [DataType(DataType.Date)]
+        [EvidenceNoteStartDate(nameof(EndDate))]
+        public override DateTime StartDate { get; set; }
+
+        [Required(ErrorMessage = "Enter an end date")]
+        [Display(Name = "End date")]
+        [DataType(DataType.Date)]
+        [EvidenceNoteEndDate(nameof(StartDate))]
+        public override DateTime EndDate { get; set; }
+
+        [Required(ErrorMessage = "Select a receiving PCS")]
+        [Display(Name = "Recipient")]
+        public Guid? ReceivedId { get; set; }
+
+        public List<SchemeData> SchemeList { get; set; }
+
+        [RequiredSubmitAction(ErrorMessage = "Select a type of waste")]
+        [Display(Name = "Type of waste")]
+        public override WasteType? WasteTypeValue { get; set; }
+
+        public IEnumerable<SelectListItem> WasteTypeList { get; set; }
+
+        [RequiredSubmitAction(ErrorMessage = "Select actual or protocol")]
+        [Display(Name = "Actual or protocol")]
+        public override Protocol? ProtocolValue { get; set; }
+
+        public IEnumerable<SelectListItem> ProtocolList { get; set; }
+
+        [RequiredTonnage]
+        public override IList<EvidenceCategoryValue> CategoryValues { get; set; }
+
+        public bool Edit
+        {
+            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
+        }
+
+        public ActionEnum Action { get; set; }
+
+        public EditEvidenceNoteViewModel() : base()
+        {
+        }
+
+        public EditEvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator) : base(categoryValueCalculator)
+        {
+        }
+    }
+}

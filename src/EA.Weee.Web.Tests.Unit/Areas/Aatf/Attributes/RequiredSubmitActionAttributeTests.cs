@@ -43,7 +43,7 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EvidenceNoteViewModel()
+            var target = new EditEvidenceNoteViewModel()
             {
                 WasteTypeValue = null,
                 ProtocolValue = null,
@@ -72,7 +72,7 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EvidenceNoteViewModel()
+            var target = new EditEvidenceNoteViewModel()
             {
                 WasteTypeValue = null,
                 ProtocolValue = null,
@@ -106,7 +106,7 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EvidenceNoteViewModel()
+            var target = new EditEvidenceNoteViewModel()
             {
                 WasteTypeValue = WasteType.Household,
                 ProtocolValue = Protocol.SiteSpecificProtocol,

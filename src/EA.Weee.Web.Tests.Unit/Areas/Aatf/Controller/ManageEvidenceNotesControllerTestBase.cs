@@ -81,9 +81,9 @@
                 Guid.NewGuid());
         }
 
-        protected EvidenceNoteViewModel ValidModel()
+        protected EditEvidenceNoteViewModel ValidModel()
         {
-            var model = new EvidenceNoteViewModel()
+            var model = new EditEvidenceNoteViewModel()
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now,

@@ -6,6 +6,6 @@
 
     public interface ICreateEvidenceNoteRequestCreator
     {
-        CreateEvidenceNoteRequest ViewModelToRequest(EvidenceNoteViewModel viewModel);
+        CreateEvidenceNoteRequest ViewModelToRequest(EditEvidenceNoteViewModel viewModel);
     }
 }
