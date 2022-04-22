@@ -4,11 +4,10 @@
     using DataReturns;
 
     [Serializable]
-    public class EvidenceTonnageData : EvidenceTonnageDataBase
+    public class EvidenceSummaryTonnageData : EvidenceTonnageDataBase
     {
-        public EvidenceTonnageData(Guid id, WeeeCategory categoryId, decimal? received, decimal? reused)
+        public EvidenceSummaryTonnageData(WeeeCategory categoryId, decimal? received, decimal? reused)
         {
-            Id = id;
             CategoryId = categoryId;
             Received = received;
             Reused = reused;
