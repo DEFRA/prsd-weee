@@ -12,6 +12,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using RequestHandlers.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
 

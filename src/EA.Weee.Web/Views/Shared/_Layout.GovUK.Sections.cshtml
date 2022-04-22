@@ -64,6 +64,11 @@
                 }
             </div>
         }
-
+        else if (IsSectionDefined("full_main_content"))
+        {
+            <section id="main-content">
+                @RenderSection("full_main_content", required: false)
+            </section>
+        }
     </main>
 </div>
