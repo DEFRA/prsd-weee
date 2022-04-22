@@ -44,7 +44,7 @@
             //assert
             result.Count.Should().Be(source.Count);
             result.Should().BeEquivalentTo(source.Select(e =>
-                new EvidenceTonnageData((WeeeCategory)e.CategoryId, e.Received, e.Reused)));
+                new EvidenceSummaryTonnageData((WeeeCategory)e.CategoryId, e.Received, e.Reused)));
         }
     }
 }

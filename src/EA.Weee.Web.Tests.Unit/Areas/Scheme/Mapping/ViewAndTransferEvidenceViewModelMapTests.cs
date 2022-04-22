@@ -150,5 +150,44 @@
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
+
+        [Fact]
+        public void Map_GivenNoApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).Create()
+            };
+
+            //act
+            var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
+                notes,
+                fixture.Create<string>()));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+            };
+
+            //act
+            var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
+                notes,
+                fixture.Create<string>()));
+
+            //assert
+            result.DisplayTransferButton.Should().BeTrue();
+        }
     }
 }

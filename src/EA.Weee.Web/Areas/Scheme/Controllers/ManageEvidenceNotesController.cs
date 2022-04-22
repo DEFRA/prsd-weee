@@ -55,6 +55,13 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Transfer(Guid organisationId)
+        {
+            return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = organisationId });
+        }
+
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
