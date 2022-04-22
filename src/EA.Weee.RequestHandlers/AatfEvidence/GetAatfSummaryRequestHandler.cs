@@ -50,7 +50,7 @@
             var submittedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, message.AatfId);
             var draftNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, message.AatfId);
 
-            return new AatfEvidenceSummaryData(mapper.Map<IEnumerable<AatfEvidenceSummaryTotalsData>, List<EvidenceTonnageData>>(summaryData), 
+            return new AatfEvidenceSummaryData(mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceTonnageData>>(summaryData), 
                 draftNotes, 
                 submittedNotes,
                 approvedNotes);

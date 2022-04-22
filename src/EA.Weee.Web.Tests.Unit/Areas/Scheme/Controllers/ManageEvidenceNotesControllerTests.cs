@@ -245,7 +245,7 @@
         }
 
         [Fact]
-        public void TransferPost_ValidViewModel_PageRedirectsToTransferPage()
+        public void TransferPost_PageRedirectsToTransferPage()
         {
             // TODO : Change this to Transfer Page once created
             var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
