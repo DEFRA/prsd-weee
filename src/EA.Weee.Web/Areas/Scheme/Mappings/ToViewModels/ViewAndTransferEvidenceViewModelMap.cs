@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Linq;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -18,6 +19,8 @@
             var model = Map(source.Notes);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
+
+            model.DisplayTransferButton = source.Notes.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
 
             return model;
         }
