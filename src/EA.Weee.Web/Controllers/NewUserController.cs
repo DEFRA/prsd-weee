@@ -153,6 +153,13 @@
 
         [HttpGet]
         [AllowAnonymous]
+        public ActionResult Accessibility()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Feedback()
         {
             if (!string.IsNullOrEmpty(appConfig.DonePageUrl))

@@ -57,22 +57,21 @@
       }
     }
     return null;
-  };
-}).call(this);
-(function () {
-  "use strict"
-  var root = this;
-  if(typeof root.GOVUK === 'undefined') { root.GOVUK = {}; }
+    };
 
-  GOVUK.addCookieMessage = function () {
-    var message = document.getElementById('global-cookie-message'),
-        hasCookieMessage = (message && GOVUK.cookie('seen_cookie_message') === null);
-
-    if (hasCookieMessage) {
-      message.style.display = 'block';
-      GOVUK.cookie('seen_cookie_message', 'yes', { days: 28 });
+    GOVUK.acceptCookies = function () {
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+        document.getElementById("global-cookie-message").style.display = "none";
     }
-  };
+
+    GOVUK.rejectCookies = function () {
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
+        document.getElementById("global-cookie-message").style.display = "none";
+        GOVUK.cookie('_ga', null);
+        GOVUK.cookie('_gid', null);
+        GOVUK.cookie('_gat', null);
+        GOVUK.cookie('_gat_govuk_shared', null);
+    }
 }).call(this);
 (function() {
   "use strict"
@@ -88,12 +87,6 @@
     style.setAttribute('media', 'print');
     style.innerHTML = '@font-face { font-family: nta !important; src: local("Arial") !important; }';
     document.getElementsByTagName('head')[0].appendChild(style);
-  }
-
-
-  // add cookie message
-  if (window.GOVUK && GOVUK.addCookieMessage) {
-    GOVUK.addCookieMessage();
   }
 
   // header navigation toggle
