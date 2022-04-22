@@ -55,7 +55,7 @@ a {
 
 #global-cookie-message {
     width: 100%;
-    background-color: #d5e8f3;
+    background-color: #f3f2f1;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -83,23 +83,24 @@ a {
     }
 }
 
-#global-cookie-message p {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 .js-enabled #global-cookie-message {
     display: none;
 }
 
+#global-cookie-message-p1 {
+    font-size: 2.25rem;
+    line-height: 1.11111;
+    font-weight: 700;
+}
+
+#global-cookie-message-p2 {
+    font-size: 1.1875rem;
+    line-height: 1.31579;
+    font-weight: 400;
+}
+
 // Example boxes
 // ==========================================================================
-
 .example {
     @include govuk-clearfix;
     position: relative;
