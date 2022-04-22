@@ -178,20 +178,20 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<IEnumerable<AatfEvidenceSummaryTotalsData>, List<EvidenceTonnageData>>(totalsData)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>(totalsData)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequestAndTotals_AatfEvidenceSummaryDataShouldBeReturned()
         {
             //arrange
-            var tonnageData = fixture.CreateMany<EvidenceTonnageData>().ToList();
+            var tonnageData = fixture.CreateMany<EvidenceSummaryTonnageData>().ToList();
             var approvedNotes = fixture.Create<int>();
             var submittedNotes = fixture.Create<int>();
             var draftNotes = fixture.Create<int>();
 
             A.CallTo(() =>
-                mapper.Map<IEnumerable<AatfEvidenceSummaryTotalsData>, List<EvidenceTonnageData>>(
+                mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>(
                     A<List<AatfEvidenceSummaryTotalsData>>._)).Returns(tonnageData);
 
             A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(A<NoteStatus>._, A<Guid>._)).ReturnsNextFromSequence(approvedNotes, submittedNotes, draftNotes);

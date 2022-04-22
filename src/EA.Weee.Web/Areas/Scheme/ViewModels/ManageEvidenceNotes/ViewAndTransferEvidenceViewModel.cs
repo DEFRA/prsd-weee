@@ -6,6 +6,8 @@
     {
         public Guid? SelectedId { get; set; }
 
+        public bool DisplayTransferButton { get; set; }
+
         public ViewAndTransferEvidenceViewModel()
             : base(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
         {

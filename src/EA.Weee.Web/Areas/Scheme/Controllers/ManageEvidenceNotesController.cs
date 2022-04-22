@@ -57,6 +57,13 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Transfer(Guid organisationId)
+        {
+            return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = organisationId });
+        }
+
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
         {
             using (var client = this.apiClient())
