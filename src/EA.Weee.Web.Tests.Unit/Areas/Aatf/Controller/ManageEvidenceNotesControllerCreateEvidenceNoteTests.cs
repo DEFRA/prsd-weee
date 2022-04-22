@@ -87,7 +87,7 @@
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
 
             //assert
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(
                 A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel == null && c.AatfId.Equals(AatfId)))).MustHaveHappenedOnceExactly();
         }
 
@@ -95,8 +95,8 @@
         public async Task CreateEvidenceNoteGet_GivenViewModel_ViewModelShouldBeReturned()
         {
             //arrange
-            var model = new EvidenceNoteViewModel();
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+            var model = new EditEvidenceNoteViewModel();
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId) as ViewResult;
@@ -108,7 +108,7 @@
         [Fact]
         public void CreateEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
@@ -158,7 +158,7 @@
             await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId);
 
             //assert
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(
                 A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) 
                                                            && c.ExistingModel.Equals(model)
                                                            && c.OrganisationId.Equals(OrganisationId) 
@@ -170,7 +170,7 @@
         {
             //arrange
             var model = new EditEvidenceNoteViewModel();
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
             AddModelError();
 
             //act

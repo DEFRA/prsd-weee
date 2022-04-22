@@ -78,8 +78,20 @@
             {
                 if (noteStatus is NoteStatus status)
                 {
-                    model.SuccessMessage = (status == NoteStatus.Submitted ?
-                        $"You have successfully submitted the evidence note with reference ID E{note.Reference}" : $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft");
+                    switch (status)
+                    {
+                        case NoteStatus.Submitted:
+                            model.SuccessMessage =
+                                $"You have successfully submitted the evidence note with reference ID E{note.Reference}";
+                            break;
+                        case NoteStatus.Draft:
+                            model.SuccessMessage =
+                                $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
+                            break;
+                        case NoteStatus.Approved:
+                            model.SuccessMessage = "success message TODO";
+                            break;
+                    }
 
                     model.Status = status;
                 }

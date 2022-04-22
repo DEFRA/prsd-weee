@@ -1,15 +1,13 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme
+﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.Note;
-    using Prsd.Core.Mediator;
     using System;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Prsd.Core;
+    using Prsd.Core.Domain;
+    using Prsd.Core.Mediator;
+    using Requests.Note;
+    using Security;
 
     public class SetNoteStatusRequestHandler : IRequestHandler<SetNoteStatus, Guid>
     {
@@ -38,12 +36,7 @@
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
             string changedBy = userContext.UserId.ToString();
-
-            if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
-            {
-                // status business rule will be checked in that method
-                evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy);
-            }
+            evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy);
 
             await context.SaveChangesAsync();
 
