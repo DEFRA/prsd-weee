@@ -11,14 +11,14 @@
     {
         public List<SchemeData> Schemes { get; private set; }
 
-        public EvidenceNoteViewModel ExistingModel { get; set; }
+        public EditEvidenceNoteViewModel ExistingModel { get; set; }
 
         public Guid OrganisationId { get; set; }
 
         public Guid AatfId { get; set; }
 
         protected ModifyNoteTransfer(List<SchemeData> schemes,
-            EvidenceNoteViewModel existingModel,
+            EditEvidenceNoteViewModel existingModel,
             Guid organisationId,
             Guid aatfId)
         {

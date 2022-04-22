@@ -1,21 +1,26 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 {
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
-    using System;
-    using System.ComponentModel;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
-    public class ReviewEvidenceNoteViewModel
+    public class ReviewEvidenceNoteViewModel : RadioButtonStringCollectionViewModel
     {
-        public Guid? SelectedId { get; set; }
-
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
-        public EvidenceNoteApprovalOptionsViewModel EvidenceNoteApprovalOptionsViewModel { get; set; }
+        [Required(ErrorMessage = "You must select an option")]
+        public override string SelectedValue { get; set; }
 
-        public ReviewEvidenceNoteViewModel()
+        public Core.AatfEvidence.NoteStatus SelectedEnumValue
         {
-            EvidenceNoteApprovalOptionsViewModel = new EvidenceNoteApprovalOptionsViewModel();
+            get
+            {
+                return (Core.AatfEvidence.NoteStatus)System.Enum.Parse(typeof(Core.AatfEvidence.NoteStatus), SelectedValue, true);
+            }
+        }
+
+        public ReviewEvidenceNoteViewModel() : base(new List<string> { "Approved" })
+        {
         }
     }
 }

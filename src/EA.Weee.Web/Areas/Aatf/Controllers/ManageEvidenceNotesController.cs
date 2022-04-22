@@ -31,15 +31,15 @@
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
-        private readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
+        private readonly IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
+        private readonly IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
             IWeeeCache cache, 
             Func<IWeeeClient> apiClient, 
-            IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
-            IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator)
+            IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
+            IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -103,7 +103,7 @@
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null, organisationId, aatfId));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null, organisationId, aatfId));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -113,7 +113,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
+        public async Task<ActionResult> CreateEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
@@ -130,7 +130,7 @@
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
                 
-                var model = mapper.Map<EvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel, organisationId, aatfId));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel, organisationId, aatfId));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -166,7 +166,7 @@
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, null, organisationId, result.AatfData.Id, result));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, null, organisationId, result.AatfData.Id, result));
                 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -177,7 +177,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [CheckEditEvidenceNoteStatus]
-        public async Task<ActionResult> EditEvidenceNote(EvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
+        public async Task<ActionResult> EditEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
             {
@@ -194,7 +194,7 @@
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
 
-                var model = mapper.Map<EvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, viewModel, organisationId, aatfId, null));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(schemes, viewModel, organisationId, aatfId, null));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 

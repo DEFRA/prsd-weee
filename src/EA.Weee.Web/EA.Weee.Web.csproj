@@ -313,15 +313,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EditNoteMapTransfer.cs" />
-    <Compile Include="ViewModels\Shared\Mapping\EditNoteViewModelMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesViewModelBase.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteRowViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewEvidenceNoteViewModelMap.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\EvidenceNoteApprovalOptionsViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\BaseEvidenceNotesViewModelMapTransfer.cs" />

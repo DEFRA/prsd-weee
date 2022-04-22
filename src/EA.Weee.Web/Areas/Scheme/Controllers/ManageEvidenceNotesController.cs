@@ -104,13 +104,7 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note scheme request from note's Guid
-                var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
-
-                // call the api with the new evidence note scheme request
-                var result = await client.SendAsync(User.GetAccessToken(), request);
-
-                // create new viewmodel mapper to map request to viewmodel
-                var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+                var model = await GetNote(evidenceNoteId, client);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -125,13 +119,15 @@
             {
                 if (ModelState.IsValid)
                 {
-                    var status = model.EvidenceNoteApprovalOptionsViewModel.SelectedEnumValue;
+                    var status = model.SelectedEnumValue;
 
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                model = await GetNote(model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
             }
@@ -142,6 +138,18 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
             breadcrumb.OrganisationId = organisationId;
+        }
+
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid evidenceNoteId, IWeeeClient client)
+        {
+            var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+
+            // call the api with the new evidence note scheme request
+            var result = await client.SendAsync(User.GetAccessToken(), request);
+
+            // create new viewmodel mapper to map request to viewmodel
+            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+            return model;
         }
     }
 }

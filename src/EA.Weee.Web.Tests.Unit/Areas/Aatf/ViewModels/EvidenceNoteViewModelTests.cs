@@ -93,7 +93,7 @@
         {
             for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
             {
-                var local = new EvidenceNoteViewModel();
+                var local = new EditEvidenceNoteViewModel();
                 local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
                 local.Edit.Should().BeTrue();
             }
