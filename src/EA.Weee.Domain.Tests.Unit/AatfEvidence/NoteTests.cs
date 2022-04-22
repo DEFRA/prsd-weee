@@ -221,8 +221,6 @@
 
             //asset
             note.Status.Should().Be(NoteStatus.Submitted);
-            note.SubmittedById.Should().Be("user");
-            note.SubmittedDate.Should().Be(date);
 
             SystemTime.Unfreeze();
         }
