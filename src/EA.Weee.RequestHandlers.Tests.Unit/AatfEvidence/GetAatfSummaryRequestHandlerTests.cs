@@ -2,8 +2,6 @@
 {
     using AutoFixture;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.RequestHandlers.AatfEvidence;
     using EA.Weee.RequestHandlers.Security;
@@ -17,7 +15,6 @@
     using Core.AatfEvidence;
     using DataAccess.StoredProcedure;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.Internal;
     using Weee.Tests.Core;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
@@ -30,11 +27,7 @@
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
-        private readonly IAatfDataAccess aatfDataAccess;
         private readonly GetAatfSummaryRequest request;
-        private readonly Organisation organisation;
-        private readonly Aatf aatf;
-        private readonly Guid aatfId;
 
         public GetAatfSummaryRequestHandlerTests()
         {
@@ -43,24 +36,13 @@
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
-            aatfDataAccess = A.Fake<IAatfDataAccess>();
 
-            organisation = A.Fake<Organisation>();
-            aatf = A.Fake<Aatf>();
-
-            aatfId = fixture.Create<Guid>();
-
-            A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
-            A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
-            A.CallTo(() => aatf.Organisation).Returns(organisation);
-
-            request = new GetAatfSummaryRequest(aatfId);
+            request = new GetAatfSummaryRequest(fixture.Create<Guid>());
 
             handler = new GetAatfSummaryRequestHandler(weeeAuthorization,
                 noteDataAccess,
                 mapper,
-                evidenceStoredProcedures,
-                aatfDataAccess);
+                evidenceStoredProcedures);
         }
 
         [Fact]
@@ -72,8 +54,7 @@
             handler = new GetAatfSummaryRequestHandler(authorization,
                 noteDataAccess,
                 mapper,
-                evidenceStoredProcedures,
-                aatfDataAccess);
+                evidenceStoredProcedures);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -91,8 +72,7 @@
             handler = new GetAatfSummaryRequestHandler(authorization,
                 noteDataAccess,
                 mapper,
-                evidenceStoredProcedures,
-                aatfDataAccess);
+                evidenceStoredProcedures);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
