@@ -313,6 +313,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMap.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
@@ -676,6 +679,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
