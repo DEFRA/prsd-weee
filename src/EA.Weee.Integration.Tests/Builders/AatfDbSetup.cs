@@ -38,17 +38,9 @@
             return instance;
         }
 
-        public AatfDbSetup WithOrganisation(Organisation organisation)
+        public AatfDbSetup WithOrganisation(Guid organisationId)
         {
-            instance.UpdateDetails(instance.Name,
-                instance.CompetentAuthority,
-                instance.ApprovalNumber,
-                instance.AatfStatus,
-                organisation,
-                instance.Size,
-                instance.ApprovalDate,
-                instance.LocalArea,
-                instance.PanArea);
+            instance.UpdateOrganisation(organisationId);
 
             return this;
         }
