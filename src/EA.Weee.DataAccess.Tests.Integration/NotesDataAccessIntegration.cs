@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Evidence;
@@ -438,6 +439,135 @@
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public async Task GetNoteCountByStatusAndAatf_GivenStatusAndAatf_ShouldReturnCorrectNoteCount()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                context.Organisations.Add(organisation);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+
+                context.Aatfs.Add(aatf1);
+                context.Aatfs.Add(aatf2);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var approved1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                approved1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                approved1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                context.Notes.Add(approved1);
+
+                //diff aatf not counted
+                var approved2 = NoteCommon.CreateNote(database, organisation, null, aatf2);
+                approved2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                approved2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                context.Notes.Add(approved2);
+
+                var submitted1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                submitted1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                context.Notes.Add(submitted1);
+
+                var submitted2 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                submitted2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                context.Notes.Add(submitted2);
+
+                //diff aatf not counted
+                var submitted3 = NoteCommon.CreateNote(database, organisation, null, aatf2);
+                submitted3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                context.Notes.Add(submitted3);
+
+                var draft1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                context.Notes.Add(draft1);
+
+                var draft2 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                context.Notes.Add(draft2);
+
+                var draft3 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                context.Notes.Add(draft3);
+
+                //diff aatf not counted
+                var draft4 = NoteCommon.CreateNote(database, organisation, null, aatf2);
+                context.Notes.Add(draft4);
+
+                var rejected1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                rejected1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                rejected1.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(rejected1);
+
+                var rejected2 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                rejected2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                rejected2.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(rejected2);
+
+                var rejected3 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                rejected3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                rejected3.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(rejected3);
+
+                var rejected4 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                rejected4.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                rejected4.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(rejected4);
+
+                //diff aatf not counted
+                var rejected5 = NoteCommon.CreateNote(database, organisation, null, aatf2);
+                rejected5.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                rejected5.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(rejected5);
+
+                var voided1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
+                voided1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                voided1.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
+                context.Notes.Add(voided1);
+
+                //diff aatf not counted
+                var voided2 = NoteCommon.CreateNote(database, organisation, null, aatf2);
+                voided2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                voided2.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
+                context.Notes.Add(voided2);
+
+                await context.SaveChangesAsync();
+
+                var notesAatf1 = await context.Notes.CountAsync(n => n.AatfId.Equals(aatf1.Id));
+                var notesAatf2 = await context.Notes.CountAsync(n => n.AatfId.Equals(aatf2.Id));
+
+                //confirm data added
+                notesAatf1.Should().Be(11);
+                notesAatf2.Should().Be(5);
+
+                var approvedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf1.Id);
+                var submittedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf1.Id);
+                var draftNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf1.Id);
+                var voidNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf1.Id);
+                var rejectedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf1.Id);
+
+                approvedNotesAatf1.Should().Be(1);
+                submittedNotesAatf1.Should().Be(2);
+                draftNotesAatf1.Should().Be(3);
+                voidNotesAatf1.Should().Be(1);
+                rejectedNotesAatf1.Should().Be(4);
+
+                var approvedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf2.Id);
+                var submittedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf2.Id);
+                var draftNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf2.Id);
+                var voidNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf2.Id);
+                var rejectedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf2.Id);
+
+                approvedNotesAatf2.Should().Be(1);
+                submittedNotesAatf2.Should().Be(1);
+                draftNotesAatf2.Should().Be(1);
+                voidNotesAatf2.Should().Be(1);
+                rejectedNotesAatf2.Should().Be(1);
             }
         }
 

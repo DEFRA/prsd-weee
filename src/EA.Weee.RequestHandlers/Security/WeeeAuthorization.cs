@@ -8,6 +8,7 @@
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
+    using CuttingEdge.Conditions;
     using Weee.Security;
 
     /// <summary>
@@ -110,6 +111,20 @@
                     organisationId);
 
                 throw new SecurityException(message);
+            }
+        }
+
+        public void EnsureAatfHasOrganisationAccess(Guid aatfId)
+        {
+            var aatf = context.Aatfs.FirstOrDefault(a => a.Id.Equals(aatfId));
+
+            Condition.Requires(aatf).IsNotNull();
+
+            var access = CheckOrganisationAccess(aatf.OrganisationId);
+
+            if (!access)
+            {
+                throw new SecurityException($"The user does not have access to the organisation with ID \"{aatf.OrganisationId}\".");
             }
         }
 

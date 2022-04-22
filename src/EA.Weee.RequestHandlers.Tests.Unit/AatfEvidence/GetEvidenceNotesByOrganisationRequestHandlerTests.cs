@@ -19,6 +19,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Helpers;
+    using Domain.Scheme;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
 
@@ -105,15 +106,21 @@
         public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
+            var scheme = A.Fake<Scheme>();
+            var schemeId = fixture.Create<Guid>();
+
+            A.CallTo(() => scheme.Id).Returns(schemeId);
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
 
             // act
             await handler.HandleAsync(request);
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
-                                                              e.OrganisationId.Equals(request.OrganisationId) && 
+                                                              e.SchemeId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null))).MustHaveHappenedOnceExactly();
         }
@@ -125,7 +132,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

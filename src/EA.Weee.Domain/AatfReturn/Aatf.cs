@@ -16,6 +16,8 @@
 
         public virtual AatfStatus AatfStatus { get; private set; }
 
+        public virtual Guid OrganisationId { get; private set; }
+
         public virtual Organisation Organisation { get; private set; }
 
         public virtual AatfAddress SiteAddress { get; private set; }
@@ -106,6 +108,16 @@
             LocalArea = localArea;
             PanArea = panArea;
             AatfId = aatfId == null ? Guid.NewGuid() : aatfId.Value;
+        }
+
+        /// <summary>
+        /// Only use for integration tests
+        /// </summary>
+        /// <param name="organisationId"></param>
+        public void UpdateOrganisation(Guid organisationId)
+        {
+            OrganisationId = organisationId;
+            Organisation = null;
         }
     }
 }

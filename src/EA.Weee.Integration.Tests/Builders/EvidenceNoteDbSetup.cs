@@ -7,6 +7,7 @@
     using Autofac;
     using AutoFixture;
     using Base;
+    using Core.Helpers;
     using Domain;
     using Domain.AatfReturn;
     using Domain.Evidence;
@@ -60,7 +61,8 @@
 
         public EvidenceNoteDbSetup WithTonnages(List<NoteTonnage> tonnages)
         {
-            DefaultNote(tonnages);
+            instance.NoteTonnage.Clear();
+            instance.NoteTonnage.AddRange(tonnages);
             return this;
         }
     }
