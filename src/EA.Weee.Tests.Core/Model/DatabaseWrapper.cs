@@ -78,7 +78,7 @@
                 userId = testUser.Id;
             }
 
-            transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            transactionScope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled);
 
             Model = new Entities();
 

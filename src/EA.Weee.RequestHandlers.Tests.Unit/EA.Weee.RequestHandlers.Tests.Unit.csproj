@@ -142,6 +142,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetAatfSummaryRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
+    <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
