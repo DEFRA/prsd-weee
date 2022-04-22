@@ -123,8 +123,6 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Submitted);
-                note.SubmittedById.Should().Be(UserId.ToString());
-                note.SubmittedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
             };
 
             private readonly It shouldHaveCreatedStatusChangeHistory = () =>
