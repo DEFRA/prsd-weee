@@ -15,14 +15,14 @@
 
         public int NumberOfApprovedNotes { get; protected set; }
 
-        public AatfEvidenceSummaryData(List<EvidenceSummaryTonnageData> totals,
+        public AatfEvidenceSummaryData(List<EvidenceSummaryTonnageData> evidenceCategoryTotals,
             int numberOfDraftNotes,
             int numberOfSubmittedNotes,
             int numberOfApprovedNotes)
         {
-            Condition.Requires(totals).IsNotNull();
+            Condition.Requires(evidenceCategoryTotals).IsNotNull();
 
-            EvidenceCategoryTotals = totals;
+            EvidenceCategoryTotals = evidenceCategoryTotals;
             NumberOfDraftNotes = numberOfDraftNotes;
             NumberOfSubmittedNotes = numberOfSubmittedNotes;
             NumberOfApprovedNotes = numberOfApprovedNotes;
