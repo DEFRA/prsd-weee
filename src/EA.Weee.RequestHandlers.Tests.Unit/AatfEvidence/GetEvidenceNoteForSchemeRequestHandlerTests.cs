@@ -21,19 +21,19 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteRequestHandlerTests
+    public class GetEvidenceNoteForSchemeRequestHandlerTests
     {
-        private GetEvidenceNoteRequestHandler handler;
+        private GetEvidenceNoteForSchemeRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly GetEvidenceNoteForAatfRequest request;
+        private readonly GetEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
-        private readonly Guid organisationId;
+        private readonly Guid recipientId;
 
-        public GetEvidenceNoteRequestHandlerTests()
+        public GetEvidenceNoteForSchemeRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -49,15 +49,13 @@
             note = A.Fake<Note>();
             fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
-            organisationId = fixture.Create<Guid>();
+            recipientId = fixture.Create<Guid>();
 
-            A.CallTo(() => note.OrganisationId).Returns(organisationId);
+            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
 
-            request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+            request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            handler = new GetEvidenceNoteRequestHandler(weeeAuthorization,
-                evidenceDataAccess,
-                mapper);
+            handler = new GetEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
@@ -68,9 +66,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNoteRequestHandler(authorization,
-                evidenceDataAccess,
-                mapper);
+            handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -80,14 +76,12 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
            
-            handler = new GetEvidenceNoteRequestHandler(authorization,
-                evidenceDataAccess,
-                mapper);
+            handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -120,13 +114,13 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
+            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
                 .MustHaveHappenedOnceExactly();
         }
 

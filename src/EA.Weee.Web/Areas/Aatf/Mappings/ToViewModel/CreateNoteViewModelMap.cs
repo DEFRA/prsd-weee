@@ -8,14 +8,15 @@
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
-    public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, EvidenceNoteViewModel>
+    public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, EditEvidenceNoteViewModel>
     {
-        public EvidenceNoteViewModel Map(CreateNoteMapTransfer source)
+        public EditEvidenceNoteViewModel Map(CreateNoteMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new EvidenceNoteViewModel
+            var model = new EditEvidenceNoteViewModel
             {
                 OrganisationId = source.OrganisationId,
                 AatfId = source.AatfId,
