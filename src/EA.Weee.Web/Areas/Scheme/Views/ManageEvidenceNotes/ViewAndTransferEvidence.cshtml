@@ -50,7 +50,7 @@
                     <tbody class="govuk-table__body">
                         @if (Model.EvidenceNotesDataList.Any())
                         {
-                            foreach (EditDraftReturnedNote note in Model.EvidenceNotesDataList)
+                            foreach (var note in Model.EvidenceNotesDataList)
                             {
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell">@note.ReferenceDisplay</td>
@@ -73,8 +73,8 @@
                         else
                         {
                             <tr>
-                                <td>
-                                    <p>There are currently no evidence notes to review </p>
+                                <td colspan="5">
+                                    <p>There are currently no evidence notes to view or transfer </p>
                                 </td>
                             </tr>
                             <tr>

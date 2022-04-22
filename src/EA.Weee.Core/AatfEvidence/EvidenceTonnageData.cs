@@ -21,5 +21,12 @@
             Received = received;
             Reused = reused;
         }
+
+        public EvidenceTonnageData(WeeeCategory categoryId, decimal? received, decimal? reused)
+        {
+            CategoryId = categoryId;
+            Received = received;
+            Reused = reused;
+        }
     }
 }

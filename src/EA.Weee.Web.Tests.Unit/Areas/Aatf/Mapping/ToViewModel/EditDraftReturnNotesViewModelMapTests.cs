@@ -10,11 +10,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class EditDraftReturnNotesViewModelMapTests
     {
-        public readonly EditDraftReturnNotesViewModelMap Map;
+        private readonly EditDraftReturnNotesViewModelMap map;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
@@ -22,39 +24,26 @@
         {
             mapper = A.Fake<IMapper>();
 
-            Map = new EditDraftReturnNotesViewModelMap(mapper);
+            map = new EditDraftReturnNotesViewModelMap(mapper);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
+        public void EditDraftReturnNotesViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
+        {
+            typeof(EditDraftReturnNotesViewModelMap).Should()
+                .BeDerivedFrom<ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>>();
+        }
+
+        [Fact]
+        public void Map_GivenNullSource_ArgumentNulLExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EditDraftReturnNotesViewModelTransfer(Guid.NewGuid(), Guid.NewGuid(), null));
+            var exception = Record.Exception(() => map.Map(null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => new EditDraftReturnNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentException>();
-        }
-
-        [Fact]
-        public void Map_GivenEvidenceNotesfIdGuidIsEmpty_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => new EditDraftReturnNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentException>();
         }
 
         [Fact]
@@ -71,13 +60,13 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
  
-            var transfer = new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(notes.Count, Times.Exactly);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -89,13 +78,13 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(0, Times.Exactly);
+            A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
         }
 
         [Fact]
@@ -107,13 +96,13 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert 
-            result.ListOfNotes.Should().BeNullOrEmpty();
+            result.EvidenceNotesDataList.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -122,32 +111,30 @@
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
 
-            var returnedNotes = new List<EditDraftReturnedNote>
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>()
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var model = new EditDraftReturnedNotesViewModel();
-            model.ListOfNotes = returnedNotes;
+            var model = new EditDraftReturnedNotesViewModel
+            {
+                EvidenceNotesDataList = returnedNotes
+            };
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EditDraftReturnNotesViewModelTransfer(organisationId, aatfId, notes);
-
-            foreach (var note in model.ListOfNotes)
-            {
-                A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).ReturnsNextFromSequence(note);
-            }
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert
-            result.ListOfNotes.Should().NotBeEmpty();
-            result.ListOfNotes.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.Should().NotBeEmpty();
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
     }
 }
