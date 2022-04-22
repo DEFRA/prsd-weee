@@ -7,6 +7,7 @@
     using Prsd.Core;
     using ViewModels;
     using Web.Requests.Base;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Aatf;
 
     public abstract class EvidenceNoteRequestCreator<T> : IRequestCreator<EvidenceNoteViewModel, T> where T : new()

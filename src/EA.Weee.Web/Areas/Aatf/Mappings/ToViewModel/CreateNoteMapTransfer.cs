@@ -5,6 +5,7 @@
     using Core.Scheme;
     using Prsd.Core;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     public class CreateNoteMapTransfer : ModifyNoteTransfer
     {

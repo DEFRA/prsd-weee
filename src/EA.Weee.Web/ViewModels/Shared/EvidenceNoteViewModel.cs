@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,8 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
-    using Attributes;
+    using Areas.Aatf.Attributes;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
@@ -50,7 +51,7 @@
 
         public IEnumerable<SelectListItem> ProtocolList { get; set; }
 
-        [RequiredTonnageAttribute]
+        [RequiredTonnage]
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
         public int Reference { get; set; }
