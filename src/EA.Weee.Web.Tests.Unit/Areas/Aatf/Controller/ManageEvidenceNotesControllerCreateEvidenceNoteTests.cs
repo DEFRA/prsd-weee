@@ -17,6 +17,7 @@
     using Web.Areas.Aatf.ViewModels;
     using Web.Areas.AatfEvidence.Controllers;
     using Web.Infrastructure;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Xunit;

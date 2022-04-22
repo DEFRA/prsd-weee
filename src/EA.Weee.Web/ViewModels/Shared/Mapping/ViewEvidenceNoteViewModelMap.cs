@@ -1,16 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
-    using System.Collections.Generic;
     using System.Linq;
-    using Constant;
     using Core.AatfEvidence;
-    using Core.AatfReturn;
-    using Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mapper;
-    using ViewModels;
-    using Web.ViewModels.Returns.Mappings.ToViewModel;
-    using Web.ViewModels.Shared.Utilities;
+    using Returns.Mappings.ToViewModel;
+    using Utilities;
 
     public class ViewEvidenceNoteViewModelMap : IMap<ViewEvidenceNoteMapTransfer, ViewEvidenceNoteViewModel>
     {

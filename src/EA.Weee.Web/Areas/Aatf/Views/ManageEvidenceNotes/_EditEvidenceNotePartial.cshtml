@@ -2,19 +2,17 @@
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
 
-@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.EvidenceNoteViewModel
 
 <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-two-thirds">
 
-       
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status, new { id = "status-id"})
         @Html.HiddenFor(m => m.Reference)
-
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1">Period in which WEEE was received for treatment</div>

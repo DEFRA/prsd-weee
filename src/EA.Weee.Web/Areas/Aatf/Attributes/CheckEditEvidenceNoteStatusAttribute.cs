@@ -8,6 +8,7 @@
     using Filters;
     using Infrastructure;
     using ViewModels;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
 
     public class CheckEditEvidenceNoteStatusAttribute : ActionFilterAttribute

@@ -9,6 +9,7 @@
     using Core.AatfEvidence;
     using Prsd.Core;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class RequiredTonnageAttribute : RequiredAttribute

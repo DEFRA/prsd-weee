@@ -1,13 +1,13 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using System.Linq;
     using System.Web.Mvc;
+    using Areas.Aatf.Mappings.ToViewModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
     public class EditNoteViewModelMap : IMap<EditNoteMapTransfer, EvidenceNoteViewModel>
     {

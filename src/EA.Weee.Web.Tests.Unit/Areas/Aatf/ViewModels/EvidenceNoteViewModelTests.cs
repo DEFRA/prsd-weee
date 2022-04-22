@@ -13,6 +13,7 @@
     using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class EvidenceNoteViewModelTests

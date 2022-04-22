@@ -11,6 +11,7 @@
     using FluentAssertions;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
     using Xunit;
 
