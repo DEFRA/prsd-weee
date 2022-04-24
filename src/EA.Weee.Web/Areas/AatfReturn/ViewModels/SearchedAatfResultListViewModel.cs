@@ -24,9 +24,7 @@
 
         public string SelectedAatfName { get; set; }
 
-        public SearchedAatfResultListViewModel()
-        {
-        }
+        public string SelectedSiteName { get; set; }
 
         public string CreateLongAddress(AatfAddressData address)
         {
