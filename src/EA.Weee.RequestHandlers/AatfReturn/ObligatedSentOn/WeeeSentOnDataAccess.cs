@@ -24,6 +24,13 @@
             return context.SaveChangesAsync();
         }
 
+        public Task Submit(List<WeeeSentOn> weeeSentOnList)
+        {
+            context.WeeeSentOn.AddRange(weeeSentOnList);
+
+            return context.SaveChangesAsync();
+        }
+
         public Task UpdateWithOperatorAddress(WeeeSentOn weeeSentOn, AatfAddress address)
         {
             weeeSentOn.UpdateWithOperatorAddress(address);
@@ -54,6 +61,16 @@
         public async Task<List<WeeeSentOn>> GetWeeeSentOnByReturn(Guid returnId)
         {
             return await context.WeeeSentOn.Where(w => w.ReturnId == returnId).ToListAsync();
+        }
+
+        public async Task<int> GetWeeeSentOnByOperatorId(Guid operatorAddressId)
+        {
+            return await context.WeeeSentOn.Where(w => w.OperatorAddress.Id == operatorAddressId).CountAsync();
+        }
+
+        public async Task<int> GetWeeeSentOnBySiteId(Guid siteAddressId)
+        {
+            return await context.WeeeSentOn.Where(w => w.SiteAddress.Id == siteAddressId).CountAsync();
         }
     }
 }
