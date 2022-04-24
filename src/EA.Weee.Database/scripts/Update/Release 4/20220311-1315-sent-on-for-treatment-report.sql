@@ -1,10 +1,10 @@
 ﻿GO
-/****** Object:  StoredProcedure [AATF].[getAllAatfSentOnCsvData]    Script Date: 11/03/2022 13:15:00 ******/
+/****** Object:  StoredProcedure [AATF].[getAllAatfSentOnCsvData]    Script Date: 24/04/2022 14:23:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
+
 ALTER PROCEDURE [AATF].[getAllAatfSentOnCsvData]
 	@ComplianceYear INT,
 	@ObligationType nvarchar(3),
@@ -90,25 +90,25 @@ FROM
 		ca.Abbreviation,
 		pa.Name AS PName,
 		la.Name AS LaName,
-		ROW_NUMBER() OVER (PARTITION BY ra.AatfId, r.[Quarter] ORDER BY r.[Quarter],r.SubmittedDate DESC) AS RowNumber
-FROM
-	[AATF].[ReturnAatf] ra
-	INNER JOIN [AATF].[Return] r ON r.Id = ra.ReturnId
-	INNER JOIN AATF.AATF a ON a.Id = ra.AatfId  AND a.FacilityType = r.FacilityType
-	INNER JOIN Organisation.Organisation o ON a.OrganisationId = o.Id
-	INNER JOIN [Lookup].CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
-	INNER JOIN [Identity].[AspNetUsers] u ON u.id = r.SubmittedById
-	LEFT JOIN [Lookup].[LocalArea] la ON la.Id = a.LocalAreaId
-	LEFT JOIN [Lookup].[PanArea] pa ON pa.Id = a.PanAreaId
-WHERE
-	r.ComplianceYear = @ComplianceYear
-	AND r.ReturnStatus = 2  -- submitted
-	AND a.FacilityType = 1  --aatf
-	AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
-	AND (
-		@PanArea IS NULL
-		OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId)
-		)
+		ROW_NUMBER() OVER (PARTITION BY ra.AatfId, r.[Quarter] ORDER BY r.[Quarter], r.SubmittedDate DESC) AS RowNumber
+	FROM
+		[AATF].[ReturnAatf] ra
+		INNER JOIN [AATF].[Return] r ON r.Id = ra.ReturnId
+		INNER JOIN AATF.AATF a ON a.Id = ra.AatfId  AND a.FacilityType = r.FacilityType
+		INNER JOIN Organisation.Organisation o ON a.OrganisationId = o.Id
+		INNER JOIN [Lookup].CompetentAuthority ca ON a.CompetentAuthorityId = ca.Id
+		INNER JOIN [Identity].[AspNetUsers] u ON u.id = r.SubmittedById
+		LEFT JOIN [Lookup].[LocalArea] la ON la.Id = a.LocalAreaId
+		LEFT JOIN [Lookup].[PanArea] pa ON pa.Id = a.PanAreaId
+	WHERE
+		r.ComplianceYear = @ComplianceYear
+		AND r.ReturnStatus = 2  -- submitted
+		AND a.FacilityType = 1  --aatf
+		AND a.CompetentAuthorityId = COALESCE(@CA, a.CompetentAuthorityId)
+		AND (
+			@PanArea IS NULL
+			OR a.PanAreaId = COALESCE(@PanArea, a.PanAreaId)
+			)
 ) X
 	INNER JOIN [AATF].[ReturnReportOn] ro on ro.ReturnId = X.ReturnId AND ro.ReportOnQuestionId = 2
 WHERE
@@ -116,64 +116,65 @@ WHERE
 
 --Total Sent to another AATF / ATF (t)
 INSERT INTO #AatfSentOnData (AatfId, ReturnId, [Quarter], CategoryId, TonnageType, TotalSent, OperatorAddressId, SiteAddressId)
-SELECT 
-	u.AatfId,
-	u.ReturnId,
-	u.[Quarter],
-	u.CategoryId,
-	u.Tonnage,
-	SUM(u.value) AS VALUE,
-	OperatorAddressId,
-	SiteAddressId
-FROM (
-		SELECT
-			r.AatfId,
-			r.ReturnId,
-			r.[Quarter],
-			wsoa.CategoryId,
-			COALESCE(wsoa.HouseholdTonnage, 0) HouseholdTonnage,
-			COALESCE(wsoa.NonHouseholdTonnage, 0) NonHouseholdTonnage,
-			wso.OperatorAddressId,
-			wso.SiteAddressId
-		FROM
-			@SUBMITTEDRETURN r
-			INNER JOIN [AATF].WeeeSentOn wso ON r.ReturnId = wso.ReturnId AND wso.AatfId = r.AatfId
-			INNER JOIN [AATF].WeeeSentOnAmount wsoa ON wso.Id = wsoa.WeeeSentOnId
-	) a
-	UNPIVOT(value FOR Tonnage IN (a.HouseholdTonnage, a.NonHouseholdTonnage)) u
-	GROUP BY AatfId, ReturnId, [Quarter], Tonnage, CategoryId, OperatorAddressId, SiteAddressId
-	ORDER BY AatfId, ReturnId, [Quarter], Tonnage, CategoryId, OperatorAddressId, SiteAddressId
+	SELECT
+		r.AatfId,
+		r.ReturnId,
+		r.[Quarter],
+		wsoa.CategoryId,
+		'HouseholdTonnage' AS TonnageType,
+		SUM(COALESCE(wsoa.HouseholdTonnage, 0)) AS TotalSent,
+		wso.OperatorAddressId,
+		wso.SiteAddressId
+	FROM
+		@SUBMITTEDRETURN r
+		INNER JOIN [AATF].WeeeSentOn wso ON r.ReturnId = wso.ReturnId AND wso.AatfId = r.AatfId
+		INNER JOIN [AATF].WeeeSentOnAmount wsoa ON wso.Id = wsoa.WeeeSentOnId
+	GROUP BY r.AatfId, r.ReturnId, r.[Quarter], CategoryId, OperatorAddressId, SiteAddressId
+	
+INSERT INTO #AatfSentOnData (AatfId, ReturnId, [Quarter], CategoryId, TonnageType, TotalSent, OperatorAddressId, SiteAddressId)
+	SELECT
+		r.AatfId,
+		r.ReturnId,
+		r.[Quarter],
+		wsoa.CategoryId,
+		'NonHouseholdTonnage' AS TonnageType,
+		SUM(COALESCE(wsoa.NonHouseholdTonnage, 0)) AS TotalSent,
+		wso.OperatorAddressId,
+		wso.SiteAddressId
+	FROM
+		@SUBMITTEDRETURN r
+		INNER JOIN [AATF].WeeeSentOn wso ON r.ReturnId = wso.ReturnId AND wso.AatfId = r.AatfId
+		INNER JOIN [AATF].WeeeSentOnAmount wsoa ON wso.Id = wsoa.WeeeSentOnId
+	GROUP BY r.AatfId, r.ReturnId, r.[Quarter], CategoryId, OperatorAddressId, SiteAddressId
 
 -------------End of Total Sent to Obligated data by AATF-----------------------------
 
---Address concatenation
+--Address Concatenation
+UPDATE
+	upd 
+SET
+	upd.SiteOperatorData =
+		CONCAT(sa.Name, ', ', sa.Address1, 
+			COALESCE(', ' + NULLIF(sa.Address2, ''), ''), ', ', sa.TownOrCity, 
+			COALESCE(', ' + NULLIF(sa.CountyOrRegion, ''), ''),
+			COALESCE(', ' + NULLIF(sa.Postcode, ''), ''), ', ', sc.Name)
+FROM
+	#AatfSentOnData upd
+	LEFT JOIN [AATF].[Address] AS sa ON sa.Id = upd.SiteAddressId
+	LEFT JOIN [Lookup].[Country] AS sc ON sc.Id = sa.CountryId
 
 UPDATE
-	#AatfSentOnData
-SET 
-	SiteOperatorData = x.SiteOperator
-FROM #AatfSentOnData a
-INNER JOIN (
-	SELECT 
-		o.AatfId,
-		o.ReturnId,
-		o.[Quarter],
-		o.CategoryId,
-		o.TonnageType, 
-		CONCAT(sa.Name, ', ', sa.Address1, COALESCE(', ' + NULLIF(sa.Address2, ''), ''), ', ', sa.TownOrCity, COALESCE(', ' + NULLIF(sa.CountyOrRegion, ''), ''),
-		COALESCE(', ' + NULLIF(sa.Postcode, ''), ''), ', ', sc.Name, ', ', pa.Name, ', ', pa.Address1, COALESCE(', ' + NULLIF(pa.Address2, ''), ''), ', ', pa.TownOrCity,  
-		COALESCE(', ' + NULLIF(pa.CountyOrRegion, ''), ''), COALESCE(', ' + NULLIF(pa.Postcode, ''), ''), ', ', oc.Name) AS SiteOperator
-	FROM 
-		#AatfSentOnData o
-		LEFT JOIN AATF.[Address] pa ON pa.Id = o.OperatorAddressId
-		LEFT JOIN AATF.[Address] sa ON sa.Id = o.SiteAddressId
-		LEFT JOIN [Lookup].[Country] oc ON oc.Id = pa.CountryId
-		LEFT JOIN [Lookup].[Country] sc ON sc.Id = pa.CountryId
-	) X ON X.AatfId = a.AatfId
-			AND X.ReturnId = A.ReturnId
-			AND X.[Quarter] = a.[Quarter]
-			AND X.CategoryId = a.CategoryId
-			AND X.TonnageType = a.TonnageType
+	upd 
+SET
+	upd.SiteOperatorData =
+		CONCAT(upd.SiteOperatorData, ', ', pa.Name, ', ', pa.Address1, 
+			COALESCE(', ' + NULLIF(pa.Address2, ''), ''), ', ', pa.TownOrCity, 
+			COALESCE(', ' + NULLIF(pa.CountyOrRegion, ''), ''),
+			COALESCE(', ' + NULLIF(pa.Postcode, ''), ''), ', ', oc.Name)
+FROM
+	#AatfSentOnData upd
+	LEFT JOIN [AATF].[Address] AS pa ON pa.Id = upd.OperatorAddressId
+	LEFT JOIN [Lookup].[Country] AS oc ON oc.Id = pa.CountryId
 
 INSERT INTO @SiteOperator(SiteOperatorData)
 SELECT DISTINCT SiteOperatorData from #AatfSentOnData
@@ -220,7 +221,6 @@ BEGIN
 		LEFT JOIN @SUBMITTEDRETURN s ON 1 = 1
 	EXCEPT
 		SELECT DISTINCT AatfId, ReturnId, [Quarter], CategoryId, TonnageType, SiteOperatorId FROM #AatfSentOnData
-
 END
 
 -----------------------------------------------------------------------------------
