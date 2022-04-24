@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\CopyPreviousQuarterAatf.cs" />
     <Compile Include="AatfReturn\GetAatfAddressBySearchId.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityType.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="AatfReturn\GetSearchAatfAddress.cs" />
+    <Compile Include="AatfReturn\Obligated\CopyPreviousQuarterAatfData.cs" />
     <Compile Include="AatfReturn\Obligated\CreateWeeeSentOnAatfSite.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />

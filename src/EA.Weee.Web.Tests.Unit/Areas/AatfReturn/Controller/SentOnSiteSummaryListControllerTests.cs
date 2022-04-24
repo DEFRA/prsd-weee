@@ -144,17 +144,17 @@
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
-        {
-            var model = new SentOnSiteSummaryListViewModel();
-            var returnId = new Guid();
-            var result = await controller.Index(model) as RedirectToRouteResult;
+        //[Fact]
+        //public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        //{
+        //    var model = new SentOnSiteSummaryListViewModel();
+        //    var returnId = new Guid();
+        //    var result = await controller.Index(model) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
-            result.RouteValues["area"].Should().Be("AatfReturn");
-            result.RouteValues["returnId"].Should().Be(returnId);
-        }
+        //    result.RouteValues["action"].Should().Be("Index");
+        //    result.RouteValues["controller"].Should().Be("AatfTaskList");
+        //    result.RouteValues["area"].Should().Be("AatfReturn");
+        //    result.RouteValues["returnId"].Should().Be(returnId);
+        //}
     }
 }

@@ -106,7 +106,7 @@
                     var request = requestCreator.ViewModelToRequest(viewModel);
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return AatfRedirect.ObligatedSentOn(searchedAatfModel.AatfName, searchedAatfModel.OrganisationId, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, result);
+                    return AatfRedirect.ObligatedSentOn(searchedAatfModel.SelectedSiteName, searchedAatfModel.OrganisationId, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, result, false, true);
                 }
             }
         }
