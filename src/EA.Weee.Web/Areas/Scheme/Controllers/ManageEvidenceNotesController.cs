@@ -90,10 +90,10 @@
 
                 if (ModelState.IsValid)
                 {
-                    var transferSelectedData = new TransferSelectedDataModel(selectedCaterogyIds, model.SelectedSchema.Value);
+                    var transferRequest = new TransferEvidenceNoteRequest(model.SelectedSchema.Value, selectedCaterogyIds);
 
                     var sessionId = $"TransferEvidenceNoteData_{User.GetUserId()}_{model.SelectedSchema.Value}";
-                    Session[sessionId] = transferSelectedData;
+                    Session[sessionId] = transferRequest;
                 }
                 model.AddCategoryValues();
 
