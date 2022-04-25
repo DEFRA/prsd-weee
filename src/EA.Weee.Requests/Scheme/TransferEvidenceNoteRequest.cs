@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
+    using CuttingEdge.Conditions;
 
     [Serializable]
     public class TransferEvidenceNoteRequest 
@@ -14,8 +14,8 @@
         public TransferEvidenceNoteRequest(Guid schemeId, 
             List<int> categoryIds)
         {
-            Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
-            Guard.ArgumentNotNull(() => categoryIds, categoryIds);
+            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
 
             SchemeId = schemeId;
             CategoryIds = categoryIds;
