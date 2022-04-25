@@ -75,15 +75,5 @@
                 </table>
             </section>
         </div>
-
-        @*this has to be gone but it's here so transfer categories page could be tested*@
-        <br />
-        @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.OrganisationId)
-
-            @(this.WeeeGds().Submit("Transfer Note"))
-        }
     </div>
 </section>
