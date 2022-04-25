@@ -98,7 +98,7 @@
             return stringBuilder.ToString();
         }
 
-        public string FormattedAddress(string companyName,
+        public string FormattedCompanyPcsAddress(string companyName,
             string name,
             string address1,
             string address2,

@@ -9,7 +9,7 @@
         string FormattedAddress(AddressData address, bool includeSiteName = true);
         string FormattedAddress(string name, string address1, string address2, string town, string county,
             string postCode, string approvalNumber = null);
-        string FormattedAddress(string companyName, string name, string address1, string address2, string town, string county,
+        string FormattedCompanyPcsAddress(string companyName, string name, string address1, string address2, string town, string county,
             string postCode, string approvalNumber = null);
     }
 }
