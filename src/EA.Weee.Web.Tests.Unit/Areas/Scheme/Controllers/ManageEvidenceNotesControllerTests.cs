@@ -9,8 +9,10 @@
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -30,6 +32,7 @@
         protected readonly IWeeeCache Cache;
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
+        protected readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -38,7 +41,8 @@
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest>>();
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
             Fixture = new Fixture();
         }
 
@@ -250,8 +254,8 @@
             // TODO : Change this to Transfer Page once created
             var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
         }
     }
