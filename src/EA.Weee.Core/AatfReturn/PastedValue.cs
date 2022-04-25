@@ -2,6 +2,7 @@
 {
     using System;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Shared;
 
     [Serializable]
     public class PastedValue : CategoryValue
