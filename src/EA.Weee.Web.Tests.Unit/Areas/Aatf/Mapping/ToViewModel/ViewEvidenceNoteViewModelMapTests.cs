@@ -9,7 +9,6 @@
     using Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
-    using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
@@ -115,11 +114,12 @@
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                source.EvidenceNoteData.SchemeData.Address.Address1,
-                source.EvidenceNoteData.SchemeData.Address.Address2,
-                source.EvidenceNoteData.SchemeData.Address.TownOrCity,
-                source.EvidenceNoteData.SchemeData.Address.CountyOrRegion,
-                source.EvidenceNoteData.SchemeData.Address.Postcode,
+                source.EvidenceNoteData.OrganisationData.OrganisationName,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
+                source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
                 null)).Returns(recipientAddress);
 
             //act

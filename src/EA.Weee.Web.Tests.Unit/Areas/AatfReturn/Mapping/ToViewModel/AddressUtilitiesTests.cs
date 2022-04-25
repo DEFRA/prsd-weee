@@ -180,5 +180,56 @@
 
             result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
         }
+
+        [Theory]
+        [InlineData("test", "test", "test")]
+        [InlineData("TEST", "test", "test")]
+        [InlineData("!\"£$%^&*()_+-=`¬TEST", @"|\[]{}:;@#~<,>.?/test", @"|\[]{}:;@#~<,>.?/test")]
+        [InlineData(" Test ", "test", "test")]
+        [InlineData("No", "Match", "No<br/>Match")]
+        public void FormattedAddress3_ShouldIgnoreSpacesAndSpecialSymbolsAndCase(string companyName, string name, string expectedNameString)
+        {
+            var address1 = Faker.Address.StreetName();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+
+            var result = addressUtilities.FormattedAddress(companyName, name, address1, null, town,
+                county, postcode, null);
+
+            result.Should().Be($@"{expectedNameString}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
+
+        [Fact]
+        public void FormattedAddress3_ShouldAddCompanyName_OnNonMatch()
+        {
+            var companyName = Faker.Company.Name();
+            var name = Faker.Company.Name();
+            var address1 = Faker.Address.StreetName();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+
+            var result = addressUtilities.FormattedAddress(companyName, name, address1, null, town,
+                county, postcode, null);
+
+            result.Should().Be($@"{companyName}<br/>{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
+
+        [Fact]
+        public void FormattedAddress3_ShouldNotAddCompanyName_OnMatch()
+        {
+            var companyName = "Test";
+            var name = "Test";
+            var address1 = Faker.Address.StreetName();
+            var town = Faker.Address.City();
+            var county = Faker.Address.UkCounty();
+            var postcode = Faker.Address.UkPostCode();
+
+            var result = addressUtilities.FormattedAddress(companyName, name, address1, null, town,
+                county, postcode, null);
+
+            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+        }
     }
 }
