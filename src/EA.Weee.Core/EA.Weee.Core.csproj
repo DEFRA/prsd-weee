@@ -119,6 +119,8 @@
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Shared\CategoryValue.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
@@ -145,7 +147,6 @@
     <Compile Include="AatfReturn\AddressData.cs" />
     <Compile Include="AatfReturn\AddressDataSummary.cs" />
     <Compile Include="AatfReturn\AddressTonnageSummary.cs" />
-    <Compile Include="AatfReturn\CategoryValue.cs" />
     <Compile Include="Aatf\CategoryValues.cs" />
     <Compile Include="AatfReturn\ObligatedCategoryValues.cs" />
     <Compile Include="AatfReturn\NonObligatedData.cs" />
