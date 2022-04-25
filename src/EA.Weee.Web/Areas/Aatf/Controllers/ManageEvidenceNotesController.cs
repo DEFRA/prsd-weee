@@ -12,6 +12,7 @@
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
+    using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -98,6 +99,7 @@
         }
 
         [HttpGet]
+        
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
@@ -132,6 +134,8 @@
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
                 
                 var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel, organisationId, aatfId));
+
+                ModelState.ApplyCustomValidationSummaryOrdering(EditEvidenceNoteViewModel.ValidationMessageDisplayOrder);
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
