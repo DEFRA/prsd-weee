@@ -156,7 +156,7 @@
             <div class="govuk-button-group">
                 @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
 
-                @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
+                @this.WeeeGds().SecondaryButton(Model.Id == Guid.Empty ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
             </div>
 
         </div>
