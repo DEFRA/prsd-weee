@@ -140,7 +140,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetAatfSummaryRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
@@ -296,6 +299,7 @@
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
+    <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />

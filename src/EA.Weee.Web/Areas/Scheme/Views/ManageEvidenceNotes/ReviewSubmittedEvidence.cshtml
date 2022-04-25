@@ -4,7 +4,6 @@
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedEvidenceNotesViewModel
 
-
 <section id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -31,12 +30,15 @@
                             <th class="govuk-table__header">
                                 Type of waste
                             </th>
+                            <th class="govuk-table__header">
+                                &nbsp;
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                         @if (Model.EvidenceNotesDataList.Any())
                         {
-                            foreach (EditDraftReturnedNote note in Model.EvidenceNotesDataList)
+                            foreach (var note in Model.EvidenceNotesDataList)
                             {
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell">@note.ReferenceDisplay</td>
@@ -51,6 +53,7 @@
                                         <td class="govuk-table__cell"> </td>
                                     }
                                     <td class="govuk-table__cell">
+                                        @Html.ActionLink("Review evidence", "ReviewEvidenceNote", new { organisationId = Model.OrganisationId, evidenceNoteId = note.Id })
                                     </td>
                                 </tr>
                             }
@@ -58,7 +61,7 @@
                         else
                         {
                             <tr>
-                                <td>
+                                <td colspan="4">
                                     <p>There are currently no evidence notes to review </p>
                                 </td>
                             </tr>

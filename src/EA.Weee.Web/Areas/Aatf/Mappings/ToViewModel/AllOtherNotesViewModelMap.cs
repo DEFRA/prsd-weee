@@ -1,33 +1,28 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System.Linq;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
     using ViewModels;
+    using Web.ViewModels.Shared.Mapping;
 
-    public class AllOtherNotesViewModelMap : IMap<EditDraftReturnNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
+    public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
     {
-        private readonly IMapper mapper;
-
-        public AllOtherNotesViewModelMap(IMapper mapper)
+        public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
         {
-            this.mapper = mapper;
         }
 
-        public AllOtherEvidenceNotesViewModel Map(EditDraftReturnNotesViewModelTransfer source)
+        public AllOtherEvidenceNotesViewModel Map(EvidenceNotesViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = new AllOtherEvidenceNotesViewModel();
+            var model = Map(source.Notes);
 
-            if (source != null && source.Notes.Any())
+            foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
-                foreach (var res in source.Notes)
-                {
-                    model.ListOfNotes.Add(mapper.Map<EditDraftReturnedNote>(new EditDraftReturnedNotesModel(res.Reference, res.SchemeData.SchemeName, res.Status, res.WasteType, res.Id, res.Type, res.SubmittedDate, string.Empty, res.Status.Equals(NoteStatus.Submitted)))); 
-                }
+                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted);
             }
+            
             return model;
         }
     }

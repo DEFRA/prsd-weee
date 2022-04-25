@@ -9,6 +9,7 @@
     using Prsd.Core;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class RequiredTonnageAttributeTests
@@ -236,7 +237,7 @@
 
         private EvidenceNoteViewModel ValidViewModel(DateTime date, ActionEnum action)
         {
-            var target = new EvidenceNoteViewModel()
+            var target = new EditEvidenceNoteViewModel()
             {
                 WasteTypeValue = WasteType.Household,
                 ProtocolValue = Protocol.Actual,

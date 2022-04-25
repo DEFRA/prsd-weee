@@ -11,6 +11,7 @@
     using FluentAssertions;
     using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
+    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class EditNoteViewModelMapTests
