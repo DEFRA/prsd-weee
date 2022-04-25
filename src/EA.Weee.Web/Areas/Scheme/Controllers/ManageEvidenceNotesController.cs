@@ -179,6 +179,7 @@
 
             // create new viewmodel mapper to map request to viewmodel
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+
             return model;
         }
     }
