@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Utilities
 {
+    using System;
     using System.Text;
+    using System.Text.RegularExpressions;
     using EA.Weee.Core.AatfReturn;
 
     public class AddressUtilities : IAddressUtilities
@@ -94,6 +96,38 @@
             }
 
             return stringBuilder.ToString();
+        }
+
+        public string FormattedAddress(string companyName,
+            string name,
+            string address1,
+            string address2,
+            string town,
+            string county,
+            string postCode,
+            string approvalNumber = null)
+        {
+            if (AreStringsEqual(companyName, name))
+            {
+                return FormattedAddress(name, address1, address2, town, county, postCode, approvalNumber);
+            } 
+            else
+            {
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append($"{companyName}<br/>");
+                stringBuilder.Append(FormattedAddress(name, address1, address2, town, county, postCode, approvalNumber));
+                return stringBuilder.ToString();
+            }
+        }
+
+        private bool AreStringsEqual(string s1, string s2)
+        {
+            var regex = @"[^aA-zZ]|[\^\[\]_\\`]";
+            
+            var compareString1 = Regex.Replace(s1, regex, string.Empty);
+            var compareString2 = Regex.Replace(s2, regex, string.Empty);
+
+            return compareString1.Equals(compareString2, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
