@@ -13,13 +13,20 @@
             var singleAatf = source.Aatfs.Where(a =>
                 a.FacilityType.Equals(FacilityType.Aatf) && ((int)a.ComplianceYear).Equals(SystemTime.Now.Year));
 
-            return new ManageEvidenceNoteViewModel()
+            var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId, 
                 AatfId = source.AatfId, 
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1)
             };
+
+            if (source.FilterViewModel != null)
+            {
+                model.FilterViewModel = source.FilterViewModel;
+            }
+
+            return model;
         }
     }
 }

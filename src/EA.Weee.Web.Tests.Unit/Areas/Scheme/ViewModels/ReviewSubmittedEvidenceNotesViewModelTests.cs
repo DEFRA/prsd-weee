@@ -7,9 +7,9 @@
     public class ReviewSubmittedEvidenceNotesViewModelTests
     {
         [Fact]
-        public void CheckReviewSubmittedEvidenceNotesViewModelInheritsManageEvidenceNoteViewModel()
+        public void ReviewSubmittedEvidenceNotesViewModelInheritsManageEvidenceNoteViewModel()
         {
-            typeof(ReviewSubmittedEvidenceNotesViewModel).BaseType.Name.Should().Be(nameof(ManageEvidenceNoteViewModel));
+            typeof(ReviewSubmittedEvidenceNotesViewModel).Should().BeDerivedFrom<ManageEvidenceNoteViewModel>();
         }
     }
 }

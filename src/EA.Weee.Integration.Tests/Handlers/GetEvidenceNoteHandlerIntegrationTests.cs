@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Autofac;
@@ -11,23 +10,15 @@
     using Builders;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
-    using Domain.User;
     using FluentAssertions;
     using NUnit.Specifications;
-    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using Requests.Aatf;
     using Requests.AatfEvidence;
     using NoteStatus = Domain.Evidence.NoteStatus;
-    using NoteType = Domain.Evidence.NoteType;
-    using Protocol = Core.AatfEvidence.Protocol;
-    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -50,7 +41,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -97,7 +88,7 @@
                     })
                     .Create();
                 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -126,7 +117,7 @@
             {
                 LocalSetup();
 
-                request = new GetEvidenceNoteRequest(Guid.NewGuid());
+                request = new GetEvidenceNoteForAatfRequest(Guid.NewGuid());
             };
 
             private readonly Because of = () =>
@@ -146,7 +137,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNoteRequest(note.Id);
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
 
             private readonly Because of = () =>
@@ -159,9 +150,9 @@
 
         public class GetEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData> handler;
+            protected static IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
-            protected static GetEvidenceNoteRequest request;
+            protected static GetEvidenceNoteForAatfRequest request;
             protected static EvidenceNoteData result;
             protected static Note note;
             protected static Fixture fixture;
@@ -174,7 +165,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteRequest, EvidenceNoteData>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForAatfRequest, EvidenceNoteData>>();
 
                 return setup;
             }
@@ -201,6 +192,7 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.SubmittedDate.Should().Be(note.SubmittedDate);
             }
         }
     }

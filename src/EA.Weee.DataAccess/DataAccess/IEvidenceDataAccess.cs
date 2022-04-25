@@ -20,5 +20,7 @@
             NoteStatus status);
 
         Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter);
+
+        Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId);
     }
 }

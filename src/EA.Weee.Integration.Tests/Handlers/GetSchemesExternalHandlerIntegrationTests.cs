@@ -27,23 +27,27 @@
                 LocalSetup();
 
                 var organisation1 = OrganisationDbSetup.Init().Create();
-                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation1)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation1.Id).Create();
+                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation1.Id)
                     .WithStatus(SchemeStatus.Approved)
                     .Create());
 
                 var organisation2 = OrganisationDbSetup.Init().Create();
-                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation2)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation2.Id).Create();
+                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation2.Id)
                     .WithStatus(SchemeStatus.Approved)
                     .WithStatus(SchemeStatus.Withdrawn)
                     .Create());
 
                 var organisation3 = OrganisationDbSetup.Init().Create();
-                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation3)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation3.Id).Create();
+                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation3.Id)
                     .WithStatus(SchemeStatus.Pending)
                     .Create());
 
                 var organisation4 = OrganisationDbSetup.Init().Create();
-                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation4)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation4.Id).Create();
+                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation4.Id)
                     .WithStatus(SchemeStatus.Pending)
                     .WithStatus(SchemeStatus.Rejected)
                     .Create());
@@ -80,8 +84,8 @@
                 foreach (var includedScheme in includedSchemes)
                 {
                     var expectedResult = result.First(r => r.Id.Equals(includedScheme.Id));
-
-                    expectedResult.ShouldMapScheme(includedScheme);
+                    var scheme = Query.GetSchemeById(includedScheme.Id);
+                    expectedResult.ShouldMapScheme(scheme);
                 }
             };
 
@@ -99,23 +103,27 @@
                 LocalSetup();
 
                 var organisation1 = OrganisationDbSetup.Init().Create();
-                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation1)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation1.Id).Create();
+                includedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation1.Id)
                     .WithStatus(SchemeStatus.Approved)
                     .Create());
 
                 var organisation2 = OrganisationDbSetup.Init().Create();
-                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation2)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation2.Id).Create();
+                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation2.Id)
                     .WithStatus(SchemeStatus.Approved)
                     .WithStatus(SchemeStatus.Withdrawn)
                     .Create());
 
                 var organisation3 = OrganisationDbSetup.Init().Create();
-                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation3)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation3.Id).Create();
+                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation3.Id)
                     .WithStatus(SchemeStatus.Pending)
                     .Create());
 
                 var organisation4 = OrganisationDbSetup.Init().Create();
-                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation4)
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation4.Id).Create();
+                notIncludedSchemes.Add(SchemeDbSetup.Init().WithOrganisation(organisation4.Id)
                     .WithStatus(SchemeStatus.Pending)
                     .WithStatus(SchemeStatus.Rejected)
                     .Create());
@@ -152,8 +160,8 @@
                 foreach (var includedScheme in includedSchemes)
                 {
                     var expectedResult = result.First(r => r.Id.Equals(includedScheme.Id));
-
-                    expectedResult.ShouldMapScheme(includedScheme);
+                    var scheme = Query.GetSchemeById(includedScheme.Id);
+                    expectedResult.ShouldMapScheme(scheme);
                 }
             };
 
