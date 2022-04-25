@@ -32,6 +32,7 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
+            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-visually-hidden" })
             @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false)
         </div>
 
@@ -69,7 +70,6 @@
 
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
                 @Html.HiddenFor(m => m.CategoryValues[i].Id)
-                @Html.HiddenFor(m => m.CategoryValues[i].Selected)
             }
         </div>
 
