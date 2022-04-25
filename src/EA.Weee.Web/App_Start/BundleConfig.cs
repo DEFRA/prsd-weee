@@ -35,7 +35,8 @@
                     "~/Scripts/flatpickr.js",
                     "~/Scripts/flatpickr.uk.js",
                     "~/Scripts/auto-complete.min.js",
-                    "~/Scripts/weee-application.js"));
+                    "~/Scripts/weee-application.js",
+                    "~/Scripts/alt-date.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));
@@ -60,6 +61,7 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                             "~/Content/flatpickr.css",
+                            "~/Content/themes/base/jquery-ui.css",
                             "~/Content/weee-page.css",
                             "~/Content/auto-complete.css",
                             "~/Content/font-awesome.css"));
@@ -75,7 +77,7 @@
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
         }
     }
 }
