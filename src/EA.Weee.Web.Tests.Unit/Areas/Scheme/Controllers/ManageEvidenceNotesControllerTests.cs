@@ -250,8 +250,8 @@
             // TODO : Change this to Transfer Page once created
             var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
         }
     }
