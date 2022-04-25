@@ -8,6 +8,8 @@
 
     public class TransferEvidenceNoteDataViewModel
     {
+        public Guid OrganisationId { get; set; }
+
         [Required(ErrorMessage = "Select a PCS")]
         public Guid? SelectedSchema { get; set; }
 

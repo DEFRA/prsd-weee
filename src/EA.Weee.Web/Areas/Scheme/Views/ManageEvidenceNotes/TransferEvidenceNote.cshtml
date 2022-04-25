@@ -23,6 +23,7 @@
     @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrganisationId)
         @Html.Gds().ValidationSummary()
 
         <h1 class="govuk-heading-m">
@@ -72,10 +73,10 @@
             }
         </div>
 
-            <div class="govuk-!-margin-top-3">
-                <div class="govuk-button-group">
-                    @this.WeeeGds().Button("Continue", new { id = "transfer-continue-btn", @class = "govuk-!-width-one-quarter" })
-                </div>
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Continue", new { id = "transfer-continue-btn", @class = "govuk-!-width-one-quarter" })
             </div>
-            }
-    </section>
+        </div>
+    }
+</section>
