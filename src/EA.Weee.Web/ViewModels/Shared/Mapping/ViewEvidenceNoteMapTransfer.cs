@@ -1,8 +1,7 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
-    using System;
     using Core.AatfEvidence;
-    using EA.Prsd.Core;
+    using Prsd.Core;
 
     public class ViewEvidenceNoteMapTransfer
     {

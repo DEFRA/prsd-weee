@@ -3,8 +3,6 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
@@ -12,11 +10,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class ViewAndTransferEvidenceViewModelMapTests
     {
-        public readonly ViewAndTransferEvidenceViewModelMap Map;
+        private readonly ViewAndTransferEvidenceViewModelMap map;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
@@ -24,9 +24,16 @@
         {
             mapper = A.Fake<IMapper>();
 
-            Map = new ViewAndTransferEvidenceViewModelMap(mapper);
+            map = new ViewAndTransferEvidenceViewModelMap(mapper);
 
             fixture = new Fixture();
+        }
+
+        [Fact]
+        public void ViewAndTransferEvidenceViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
+        {
+            typeof(ViewAndTransferEvidenceViewModelMap).Should()
+                .BeDerivedFrom<ListOfNotesViewModelBase<ViewAndTransferEvidenceViewModel>>();
         }
 
         [Fact]
@@ -75,10 +82,10 @@
             var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(notes.Count, Times.Exactly);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -92,10 +99,10 @@
             var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            Map.Map(transfer);
+            map.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).MustHaveHappened(0, Times.Exactly);
+            A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
         }
 
         [Fact]
@@ -109,7 +116,7 @@
             var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
 
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert 
             result.EvidenceNotesDataList.Should().BeNullOrEmpty();
@@ -121,11 +128,11 @@
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
 
-            var returnedNotes = new List<EditDraftReturnedNote>
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>(),
-                 fixture.Create<EditDraftReturnedNote>()
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>(),
+                 fixture.Create<EvidenceNoteRowViewModel>()
             };
 
             var model = new ViewAndTransferEvidenceViewModel();
@@ -134,18 +141,53 @@
             var organisationId = Guid.NewGuid();
 
             var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
-
-            foreach (var note in model.EvidenceNotesDataList)
-            {
-                A.CallTo(() => mapper.Map<EditDraftReturnedNote>(A<EditDraftReturnedNotesModel>._)).ReturnsNextFromSequence(note);
-            }
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
-            var result = Map.Map(transfer);
+            var result = map.Map(transfer);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+        }
+
+        [Fact]
+        public void Map_GivenNoApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).Create(),
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).Create()
+            };
+
+            //act
+            var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
+                notes,
+                fixture.Create<string>()));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+            };
+
+            //act
+            var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
+                notes,
+                fixture.Create<string>()));
+
+            //assert
+            result.DisplayTransferButton.Should().BeTrue();
         }
     }
 }

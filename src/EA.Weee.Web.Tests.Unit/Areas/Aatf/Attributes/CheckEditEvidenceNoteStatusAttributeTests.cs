@@ -12,6 +12,7 @@
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
@@ -67,7 +68,7 @@
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals(viewModel.Id)))).Returns(note);
+                    A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals(viewModel.Id)))).Returns(note);
 
                 //act
                 var result = Record.Exception(() => attribute.OnActionExecuting(context));
@@ -120,7 +121,7 @@
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+                    A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
 
                 //act
                 var result = Record.Exception(() => attribute.OnActionExecuting(context));
@@ -142,7 +143,7 @@
 
             //act
             A.CallTo(() => client.SendAsync(A<string>._,
-                A<GetEvidenceNoteRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+                A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
 
             //assert
             var result = Record.Exception(() => attribute.OnActionExecuting(context));

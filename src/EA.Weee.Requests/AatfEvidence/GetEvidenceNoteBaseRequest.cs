@@ -6,11 +6,11 @@
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class GetEvidenceNoteRequest : IRequest<EvidenceNoteData>
+    public class GetEvidenceNoteBaseRequest : IRequest<EvidenceNoteData>
     {
         public Guid EvidenceNoteId { get; private set; }
-        
-        public GetEvidenceNoteRequest(Guid evidenceNoteId)
+
+        public GetEvidenceNoteBaseRequest(Guid evidenceNoteId)
         {
             Guard.ArgumentNotDefaultValue(() => evidenceNoteId, evidenceNoteId);
 

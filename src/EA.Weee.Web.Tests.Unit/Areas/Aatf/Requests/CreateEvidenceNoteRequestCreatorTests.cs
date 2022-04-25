@@ -11,6 +11,7 @@
     using Web.Areas.Aatf.Requests;
     using Web.Areas.Aatf.ViewModels;
     using Web.Extensions;
+    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
@@ -232,9 +233,9 @@
             ShouldContainTonnage(tonnageValues, request);
         }
 
-        private EvidenceNoteViewModel ValidModel()
+        private EditEvidenceNoteViewModel ValidModel()
         {
-            var model = new EvidenceNoteViewModel()
+            var model = new EditEvidenceNoteViewModel()
             {
                 ReceivedId = Guid.NewGuid(),
                 Id = Guid.Empty,

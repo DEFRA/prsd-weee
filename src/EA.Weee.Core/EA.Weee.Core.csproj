@@ -98,6 +98,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\AatfEvidenceSummaryData.cs" />
+    <Compile Include="AatfEvidence\EvidenceSummaryTonnageData.cs" />
+    <Compile Include="AatfEvidence\EvidenceTonnageDataBase.cs" />
     <Compile Include="AatfEvidence\NoteType.cs" />
     <Compile Include="AatfEvidence\NoteStatus.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="AatfEvidence\EvidenceNoteData.cs" />
     <Compile Include="AatfEvidence\Protocol.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatus.cs" />
     <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />

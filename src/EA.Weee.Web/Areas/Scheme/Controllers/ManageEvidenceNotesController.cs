@@ -10,6 +10,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.Note;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -18,6 +19,8 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
     {
@@ -114,11 +117,11 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Transfer(Guid organisationId)
         {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
-            breadcrumb.OrganisationId = organisationId;
+            return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = organisationId });
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
@@ -149,8 +152,8 @@
         {
             using (var client = this.apiClient())
             {
-                // TODO: Add NoteStatus Returned to this list
                 var result = await client.SendAsync(User.GetAccessToken(),
+
                 new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
@@ -159,6 +162,86 @@
 
                 return View("ViewAndTransferEvidence", model);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                // create the new evidence note scheme request from note's Guid
+                var model = await GetNote(evidenceNoteId, client);
+
+                //return viewmodel to view
+                return View("ReviewEvidenceNote", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReviewEvidenceNote(ReviewEvidenceNoteViewModel model)
+        {
+            using (var client = this.apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    var status = model.SelectedEnumValue;
+
+                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
+
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+
+                    await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("DownloadEvidenceNote", new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, evidenceNoteId = request.NoteId });
+                }
+
+                await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                model = await GetNote(model.ViewEvidenceNoteViewModel.Id, client);
+
+                return View("ReviewEvidenceNote", model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+                var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+
+                // call the api with the new evidence note scheme request
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                //return viewmodel to view
+                return View(model);
+            }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.OrganisationId = organisationId;
+        }
+
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid evidenceNoteId, IWeeeClient client)
+        {
+            var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+
+            // call the api with the new evidence note scheme request
+            var result = await client.SendAsync(User.GetAccessToken(), request);
+
+            // create new viewmodel mapper to map request to viewmodel
+            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+            return model;
         }
     }
 }
