@@ -44,7 +44,10 @@
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
                 RecipientId = source.Recipient.Id,
-                SubmittedDate = source.SubmittedDate
+                SubmittedDate = source.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.ChangedDate
             };
         }
     }
