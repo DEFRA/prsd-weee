@@ -113,8 +113,8 @@
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
             const string recipientAddress = "recipientAddress";
 
-            A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                source.EvidenceNoteData.OrganisationData.OrganisationName,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                source.EvidenceNoteData.SchemeData.Name,
                 source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                 source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
                 source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
