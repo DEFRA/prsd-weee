@@ -6,18 +6,18 @@
     using EA.Weee.Web.Requests.Base;
     using Prsd.Core;
 
-    public abstract class TransferEvidenceNoteRequestCreator<T> : IRequestCreator<TransferSelectedDataModel, T> where T : new()
+    public abstract class TransferEvidenceNoteRequestCreator<T> : IRequestCreator<TransferEvidenceNoteDataViewModel, T> where T : new()
     {
-        public virtual T ViewModelToRequest(TransferSelectedDataModel model)
+        public virtual T ViewModelToRequest(TransferEvidenceNoteDataViewModel model)
         {
             Guard.ArgumentNotNull(() => model, model);
 
-            if (model.SelectedSchemeId == null)
+            if (model.SelectedSchema == null)
             {
                 throw new InvalidOperationException("TransferEvidenceNoteRequest PCS(Schema) Id Should Be Not NULL");
             }
 
-            if (!model.SelectedCategoryIds.Any())
+            if (!model.CategoryValues.Any())
             {
                 throw new InvalidOperationException("TransferEvidenceNoteRequest At Least One Category Must Be Selected");
             }
