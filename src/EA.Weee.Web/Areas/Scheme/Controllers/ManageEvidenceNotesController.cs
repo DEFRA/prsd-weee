@@ -79,6 +79,7 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
 
                 var model = new TransferEvidenceNoteDataViewModel();
+                model.OrganisationId = organisationId;
                 model.SchemasToDisplay = await GetApprovedSchemes();
                 return this.View(model);
             }
@@ -98,13 +99,17 @@
 
                     var sessionId = $"TransferEvidenceNoteData_{User.GetUserId()}_{model.SelectedSchema.Value}";
                     Session[sessionId] = transferRequest;
+
+                    return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = model.OrganisationId });
                 }
+
+                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
                 model.AddCategoryValues();
                 CheckedCategoryIds(model, ids);
                 model.SchemasToDisplay = await GetApprovedSchemes();
 
-                return this.View(model);
+                return View(model);
             }
         }
 
