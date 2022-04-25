@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
 
     public class CategoryBooleanViewModel : CategoryValue
     {

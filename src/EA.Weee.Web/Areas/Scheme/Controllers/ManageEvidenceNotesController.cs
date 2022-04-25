@@ -62,7 +62,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(Guid organisationId)
+        public ActionResult Transfer(Guid organisationId)
         {
             return RedirectToAction("TransferEvidenceNote", "ManageEvidenceNotes", new { area = "Scheme", organisationId });
         }
@@ -115,13 +115,6 @@
 
                 return this.View(model);
             }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Transfer(Guid organisationId)
-        {
-            return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = organisationId });
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
