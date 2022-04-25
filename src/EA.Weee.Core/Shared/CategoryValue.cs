@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.AatfReturn
+﻿namespace EA.Weee.Core.Shared
 {
     using DataReturns;
     using Helpers;

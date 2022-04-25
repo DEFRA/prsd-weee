@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.AatfEvidence
 {
     using System;
-    using AatfReturn;
     using DataReturns;
+    using EA.Weee.Core.Shared;
     using Validation;
 
     [Serializable]
