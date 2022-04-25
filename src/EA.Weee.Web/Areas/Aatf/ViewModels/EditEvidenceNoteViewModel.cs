@@ -15,9 +15,9 @@
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date, ErrorMessage = "Start date must be in the dd/mm/yyyy format")]
         [EvidenceNoteStartDate(nameof(EndDate))]
-        public override DateTime StartDate { get; set; }
+        public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
