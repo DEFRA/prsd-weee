@@ -60,5 +60,15 @@
         public EditEvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator) : base(categoryValueCalculator)
         {
         }
+
+        public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
+        {
+            nameof(StartDate),
+            $"{nameof(EndDate)}",
+            $"{nameof(ReceivedId)}",
+            "Received-auto",
+            $"{nameof(WasteTypeValue)}",
+            $"{nameof(ProtocolValue)}"
+        };
     }
 }
