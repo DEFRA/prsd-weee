@@ -13,8 +13,8 @@
             Selected = false;
         }
 
-        public CategoryBooleanViewModel(WeeeCategory dave)
-            : base(dave)
+        public CategoryBooleanViewModel(WeeeCategory category)
+            : base(category)
         {
             Selected = false;
         }
