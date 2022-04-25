@@ -39,7 +39,6 @@
         private readonly Organisation organisation;
         private readonly Aatf aatf;
         private readonly Scheme scheme;
-        private readonly Note note;
         private readonly Guid userId;
 
         public CreateEvidenceNoteRequestHandlerTests()
@@ -53,7 +52,7 @@
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
             scheme = A.Fake<Scheme>();
-            note = A.Fake<Note>();
+            var note = A.Fake<Note>();
             userId = fixture.Create<Guid>();
 
             A.CallTo(() => note.Reference).Returns(1);
@@ -255,9 +254,7 @@
                                                                            n.NoteType.Equals(NoteType.EvidenceNote) &&
                                                                            n.Status.Equals(NoteStatus.Submitted) &&
                                                                            n.NoteTonnage.Count.Equals(request.TonnageValues.Count) &&
-                                                                           n.NoteStatusHistory.Count.Equals(1) &&
-                                                                           n.SubmittedById.Equals(userId.ToString()) &&
-                                                                           n.SubmittedDate.Equals(date))))
+                                                                           n.NoteStatusHistory.Count.Equals(1))))
                                                                            .MustHaveHappenedOnceExactly();
 
             foreach (var requestTonnageValue in request.TonnageValues)
