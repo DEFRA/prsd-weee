@@ -49,11 +49,13 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
                 RecipientAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                    source.EvidenceNoteData.SchemeData.Address.Address1,
-                    source.EvidenceNoteData.SchemeData.Address.Address2,
-                    source.EvidenceNoteData.SchemeData.Address.TownOrCity,
-                    source.EvidenceNoteData.SchemeData.Address.CountyOrRegion,
-                    source.EvidenceNoteData.SchemeData.Address.Postcode)
+                    source.EvidenceNoteData.OrganisationData.OrganisationName,
+                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
+                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
+                    source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
+                    source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
+                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                    null),
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
