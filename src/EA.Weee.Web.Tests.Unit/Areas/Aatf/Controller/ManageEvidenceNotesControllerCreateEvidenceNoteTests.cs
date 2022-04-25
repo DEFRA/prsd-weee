@@ -286,5 +286,37 @@
             //assert
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(status);
         }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenModelStateErrors_ErrorsShouldBeOrdered()
+        {
+            //arrange
+            var model = ValidModel();
+            var request = Request(NoteStatus.Submitted);
+
+            A.CallTo(() => CreateRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            ManageEvidenceController.ModelState.AddModelError("ProtocolValue", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("ReceivedId", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("CategoryValues2", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("WasteTypeValue", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("StartDate", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("EndDate", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("Received-auto", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("CategoryValues", new Exception());
+
+            //act
+            await ManageEvidenceController.CreateEvidenceNote(model, Fixture.Create<Guid>(), Fixture.Create<Guid>());
+
+            //assert
+            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().Be("StartDate");
+            ManageEvidenceController.ModelState.ElementAt(1).Key.Should().Be("EndDate");
+            ManageEvidenceController.ModelState.ElementAt(2).Key.Should().Be("ReceivedId");
+            ManageEvidenceController.ModelState.ElementAt(3).Key.Should().Be("Received-auto");
+            ManageEvidenceController.ModelState.ElementAt(4).Key.Should().Be("WasteTypeValue");
+            ManageEvidenceController.ModelState.ElementAt(5).Key.Should().Be("ProtocolValue");
+            ManageEvidenceController.ModelState.ElementAt(6).Key.Should().Be("CategoryValues2");
+            ManageEvidenceController.ModelState.ElementAt(7).Key.Should().Be("CategoryValues");
+        }
     }
 }
