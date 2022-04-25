@@ -8,21 +8,25 @@
 
     public abstract class TransferEvidenceNoteRequestCreator<T> : IRequestCreator<TransferEvidenceNoteDataViewModel, T> where T : new()
     {
-        public virtual T ViewModelToRequest(TransferEvidenceNoteDataViewModel model)
+        public virtual T ViewModelToRequest(TransferEvidenceNoteDataViewModel viewModel)
         {
-            Guard.ArgumentNotNull(() => model, model);
+            Guard.ArgumentNotNull(() => viewModel, viewModel);
 
-            if (model.SelectedSchema == null)
+            if (viewModel.SelectedSchema == null)
             {
                 throw new InvalidOperationException("TransferEvidenceNoteRequest PCS(Schema) Id Should Be Not NULL");
             }
 
-            if (!model.CategoryValues.Any())
+            var selectedIds = viewModel.CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
+
+            if (!selectedIds.Any())
             {
-                throw new InvalidOperationException("TransferEvidenceNoteRequest At Least One Category Must Be Selected");
+                throw new InvalidOperationException("TransferEvidenceNoteRequest At Least One Category Id Must Be Selected");
             }
 
-            var newRequest = (T)Activator.CreateInstance(typeof(T));
+            var newRequest = (T)Activator.CreateInstance(typeof(T), 
+                viewModel.SelectedSchema,
+                selectedIds);
 
             return newRequest;
         }

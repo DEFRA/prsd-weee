@@ -17,6 +17,7 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Web.ViewModels.Shared;
@@ -28,16 +29,19 @@
         private readonly IMapper mapper;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient)
+            Func<IWeeeClient> apiClient,
+            IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.apiClient = apiClient;
+            this.transferNoteRequestCreator = transferNoteRequestCreator;
         }
 
         [HttpGet]
@@ -84,33 +88,20 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferEvidenceNote(TransferEvidenceNoteDataViewModel model)
         {
+            var ids = model.CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
+
             using (var client = apiClient())
             {
-                var selectedCaterogyIds = model.CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
-
                 if (ModelState.IsValid)
                 {
-                    var transferRequest = new TransferEvidenceNoteRequest(model.SelectedSchema.Value, selectedCaterogyIds);
+                    var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
 
                     var sessionId = $"TransferEvidenceNoteData_{User.GetUserId()}_{model.SelectedSchema.Value}";
                     Session[sessionId] = transferRequest;
                 }
-                model.AddCategoryValues();
 
-                // need to be refactored to look nicer
-                if (selectedCaterogyIds.Any())
-                {
-                    foreach (var cat in selectedCaterogyIds)
-                    {
-                        for (int i = 0; i < model.CategoryValues.Count; i++)
-                        {
-                            if (model.CategoryValues[i].CategoryId == cat)
-                            {
-                                model.CategoryValues[i].Selected = true;
-                            }
-                        }
-                    }
-                }
+                model.AddCategoryValues();
+                CheckedCategoryIds(model, ids);
                 model.SchemasToDisplay = await GetApprovedSchemes();
 
                 return this.View(model);
@@ -235,6 +226,23 @@
             // create new viewmodel mapper to map request to viewmodel
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
             return model;
+        }
+
+        private void CheckedCategoryIds(TransferEvidenceNoteDataViewModel model, List<int> ids)
+        {
+            if (ids.Any())
+            {
+                foreach (var id in ids)
+                {
+                    for (int i = 0; i < model.CategoryValues.Count; i++)
+                    {
+                        if (model.CategoryValues[i].CategoryId == id)
+                        {
+                            model.CategoryValues[i].Selected = true;
+                        }
+                    }
+                }
+            }
         }
     }
 }
