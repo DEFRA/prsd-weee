@@ -146,5 +146,13 @@
                 model.ReferenceDisplay.Should().Be($"{type.Value}1");
             }
         }
+
+        [Fact]
+        public void ValidationMessageDisplayOrder_ShouldHaveValidEntries()
+        {
+            var validationOrdering = EditEvidenceNoteViewModel.ValidationMessageDisplayOrder;
+
+            validationOrdering.Should().BeEquivalentTo("StartDate", "EndDate", "ReceivedId", "Received-auto", "WasteTypeValue", "ProtocolValue");
+        }
     }
 }
