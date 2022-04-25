@@ -5,20 +5,20 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public sealed class NoteStatusHistory : Entity
+    public class NoteStatusHistory : Entity
     {
         [ForeignKey("NoteId")]
-        public Note Note { get; set; }
+        public virtual Note Note { get; set; }
 
-        public Guid NoteId { get; private set; }
+        public virtual Guid NoteId { get; private set; }
 
-        public DateTime ChangedDate { get; set; }
+        public virtual DateTime ChangedDate { get; set; }
 
-        public string ChangedById { get; private set; }
+        public virtual string ChangedById { get; private set; }
 
-        public NoteStatus FromStatus { get; private set; }
+        public virtual NoteStatus FromStatus { get; private set; }
 
-        public NoteStatus ToStatus { get; private set; }
+        public virtual NoteStatus ToStatus { get; private set; }
 
         public NoteStatusHistory()
         {
