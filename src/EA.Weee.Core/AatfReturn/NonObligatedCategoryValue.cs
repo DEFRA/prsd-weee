@@ -2,6 +2,7 @@
 {
     using System;
     using DataReturns;
+    using EA.Weee.Core.Shared;
     using Validation;
 
     [Serializable]

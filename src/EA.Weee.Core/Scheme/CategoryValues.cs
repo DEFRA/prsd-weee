@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Core.Aatf
+﻿namespace EA.Weee.Core.Scheme
 {
     using System;
     using System.Collections.Generic;
-    using DataReturns;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Shared;
 
     public class CategoryValues<T> : List<T> where T : CategoryValue, new()
