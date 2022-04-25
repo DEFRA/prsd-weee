@@ -21,13 +21,15 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
+                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, placeholder = "dd/mm/yyyy", autocomplete = "off" }, false, "{0:yyyy-MM-dd}")
+                    
                     @if (Model.StartDate.Equals(default(DateTime)))
                     {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, placeholder = "hello" })
                     }
                     else
                     {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+                        @*@Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString }, false, "{0:yyyy-MM-dd}")*@
                     }
                 </div>
 
@@ -60,6 +62,7 @@
                 </div>
             </div>
         </div>
+
         <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
@@ -98,55 +101,55 @@
         <table class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
             <thead class="govuk-table__head">
-                <tr>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
-                </tr>
+            <tr>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
+            </tr>
             </thead>
 
             <tbody class="govuk-table__body">
 
-                @for (var i = 0; i < Model.CategoryValues.Count; i++)
-                {
-                    var category = Model.CategoryValues[i];
+            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            {
+                var category = Model.CategoryValues[i];
 
-                    <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                        <td class="govuk-table__cell">
-                            @(@category.CategoryId). @category.CategoryDisplay
-                            @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
-                            @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
-                            @Html.HiddenFor(m => m.CategoryValues[i].Id)
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
-                                <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
-                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
-                                @Html.TextBoxFor(m => m.CategoryValues[i].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
-                                <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
-                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
-                                @Html.TextBoxFor(m => m.CategoryValues[i].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                            </div>
-                        </td>
-                    </tr>
-
-                }
-
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row" id="category-row-@category.CategoryId">
                     <td class="govuk-table__cell">
-                        <p class="govuk-body"><strong>Total</strong></p>
+                        @(@category.CategoryId). @category.CategoryDisplay
+                        @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                        @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                        @Html.HiddenFor(m => m.CategoryValues[i].Id)
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                    <td class="govuk-table__cell">
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
+                            <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
+                            @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
+                            @Html.TextBoxFor(m => m.CategoryValues[i].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                        </div>
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
+                    <td class="govuk-table__cell">
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
+                            <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
+                            @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
+                            @Html.TextBoxFor(m => m.CategoryValues[i].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                        </div>
                     </td>
                 </tr>
+
+            }
+
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <p class="govuk-body"><strong>Total</strong></p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
+                </td>
+            </tr>
 
             </tbody>
         </table>
@@ -163,3 +166,10 @@
     </div>
 
 </div>
+
+<script>
+
+   
+       
+   
+</script>
