@@ -1,13 +1,12 @@
 ﻿@using EA.Weee.Core.Helpers
-@model EA.Weee.Web.Areas.Aatf.ViewModels.ViewEvidenceNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 
 @{
-
     <h1 class="govuk-heading-l">
         Evidence note
     </h1>
     
-    <div class="govuk-width-container govuk-!-margin-top-3 ">
+    <div class="govuk-width-container govuk-!-margin-top-3">
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay)
@@ -16,6 +15,20 @@
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
         </div>
+
+        @if (Model.HasSubmittedDate)
+        {
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+                @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate)
+            </div>
+        }
+
+        @if (Model.HasApprovedDate)
+        {
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+                @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate)
+            </div>
+        }
 
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay)
@@ -55,10 +68,10 @@
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
         <thead class="govuk-table__head">
-        <tr>
+        <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
             <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Re-used as whole appliances (tonnes)</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
         </tr>
         </thead>
 
@@ -86,7 +99,7 @@
                 <p class="govuk-body"><strong>Total</strong></p>
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                <p class="govuk-body weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
                 <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
@@ -95,5 +108,4 @@
 
         </tbody>
     </table>
-
 }

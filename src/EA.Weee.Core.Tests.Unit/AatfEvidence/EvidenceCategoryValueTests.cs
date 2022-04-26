@@ -4,6 +4,7 @@
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Validation;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Xunit;
 

@@ -15,6 +15,7 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
     using Web.Requests.Base;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
 
@@ -80,9 +81,9 @@
                 Guid.NewGuid());
         }
 
-        protected EvidenceNoteViewModel ValidModel()
+        protected EditEvidenceNoteViewModel ValidModel()
         {
-            var model = new EvidenceNoteViewModel()
+            var model = new EditEvidenceNoteViewModel()
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now,

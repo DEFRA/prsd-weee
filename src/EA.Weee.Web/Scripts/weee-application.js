@@ -152,7 +152,7 @@
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
         var newLabel = document.createElement("label");
-        newLabel.setAttribute("for", "ReceivedId__listbox");
+        newLabel.setAttribute("for", element.id + "__listbox");
         newLabel.setAttribute("class", "govuk-visually-hidden");
         newLabel.innerHTML = "Options for " + document.getElementById(element.id + "-label").innerText;
 
@@ -168,6 +168,7 @@
             defaultValue: selected,
             //source: suggest,
             element: newElement,
+            name: element.id + "-auto",
             onConfirm: function (confirmed) {
 
                 function isNullOrWhitespace(input) {
@@ -182,7 +183,6 @@
                     
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
-
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
                         if (text === selectedValue) {
                             postBackElement.value = findSelectedOption.value;
@@ -201,7 +201,6 @@
             var autoCompletes = $(element.parentNode).find(".autocomplete__input");
             autoCompletes[0].classList.add("autocomplete__error");
         }
-
         element.style.display = "none";
         element.id = element.id + "-select";
     });

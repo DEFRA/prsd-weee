@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using AatfReturn;
     using DataReturns;
+    using EA.Weee.Core.Shared;
 
     public class CategoryValues<T> : List<T> where T : CategoryValue, new()
     {
