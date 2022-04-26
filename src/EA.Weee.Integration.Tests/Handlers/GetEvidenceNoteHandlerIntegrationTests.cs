@@ -194,6 +194,8 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.RecipientOrganisationData.Should().NotBeNull();
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
             }
         }
     }
