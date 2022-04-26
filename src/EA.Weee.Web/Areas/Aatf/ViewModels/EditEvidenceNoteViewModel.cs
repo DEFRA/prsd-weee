@@ -46,10 +46,7 @@
         [RequiredTonnage]
         public override IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        public bool Edit
-        {
-            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
-        }
+        public bool Edit => Id != Guid.Empty;
 
         public ActionEnum Action { get; set; }
 
@@ -60,5 +57,15 @@
         public EditEvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator) : base(categoryValueCalculator)
         {
         }
+
+        public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
+        {
+            nameof(StartDate),
+            $"{nameof(EndDate)}",
+            $"{nameof(ReceivedId)}",
+            "Received-auto",
+            $"{nameof(WasteTypeValue)}",
+            $"{nameof(ProtocolValue)}"
+        };
     }
 }

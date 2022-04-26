@@ -168,6 +168,7 @@
             defaultValue: selected,
             //source: suggest,
             element: newElement,
+            name: element.id + "-auto",
             onConfirm: function (confirmed) {
 
                 function isNullOrWhitespace(input) {
@@ -182,7 +183,6 @@
                     
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
-
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
                         if (text === selectedValue) {
                             postBackElement.value = findSelectedOption.value;
@@ -201,7 +201,6 @@
             var autoCompletes = $(element.parentNode).find(".autocomplete__input");
             autoCompletes[0].classList.add("autocomplete__error");
         }
-
         element.style.display = "none";
         element.id = element.id + "-select";
     });
