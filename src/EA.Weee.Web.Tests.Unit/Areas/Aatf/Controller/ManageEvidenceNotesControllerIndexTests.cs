@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
     using Constant;
@@ -16,7 +15,6 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
-    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Xunit;
@@ -438,12 +436,17 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var model = Fixture.Create<EvidenceSummaryViewModel>();
+            var evidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => Mapper.Map<EvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
+                .Returns(evidenceNoteViewModel);
 
             var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab) as ViewResult;
 
-            result.Model.Should().Be(model);
+            var resultModel = (EvidenceSummaryViewModel)result.Model;
+            resultModel.Should().Be(model);
+            resultModel.ManageEvidenceNoteViewModel.Should().Be(evidenceNoteViewModel);
         }
     }
 }
