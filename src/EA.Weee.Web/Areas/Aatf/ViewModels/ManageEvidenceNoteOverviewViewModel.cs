@@ -14,6 +14,7 @@
         protected ManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
         {
             ActiveOverviewDisplayOption = activeOverviewDisplayOption;
+            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
 
         public ManageEvidenceOverviewDisplayOption ActiveOverviewDisplayOption { get; private set; }
