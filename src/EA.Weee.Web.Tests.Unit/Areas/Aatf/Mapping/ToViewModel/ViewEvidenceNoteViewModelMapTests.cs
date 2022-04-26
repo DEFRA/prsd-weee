@@ -202,5 +202,27 @@
                 .Be($"You have successfully submitted the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
+
+        [Fact]
+        public void Map_GivenSubmittedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be(string.Empty);
+        }
     }
 }
