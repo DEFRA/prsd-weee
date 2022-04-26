@@ -33,6 +33,7 @@
                 Type = source.EvidenceNoteData.Type,
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
+                SubmittedDate = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss \"(GMT)\"") : string.Empty,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
