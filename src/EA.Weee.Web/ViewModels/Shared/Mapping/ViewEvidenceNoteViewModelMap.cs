@@ -23,6 +23,10 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            var organisationAddress = source.EvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
+                ? source.EvidenceNoteData.RecipientOrganisationData.BusinessAddress
+                : source.EvidenceNoteData.RecipientOrganisationData.NotificationAddress;
+
             var model = new ViewEvidenceNoteViewModel
             {
                 Id = source.EvidenceNoteData.Id,
@@ -49,12 +53,12 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
                 RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                    source.EvidenceNoteData.SchemeData.Name,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                    source.EvidenceNoteData.RecipientOrganisationData.Name,
+                    organisationAddress.Address1,
+                    organisationAddress.Address2,
+                    organisationAddress.TownOrCity,
+                    organisationAddress.CountyOrRegion,
+                    organisationAddress.Postcode,
                     null),
             };
 

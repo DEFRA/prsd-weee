@@ -266,6 +266,23 @@
             //arrange
             result.OrganisationData.Should().Be(organisationData);
         }
+        [Fact]
+        public void Map_GivenNote_SchemeOrganisationDataShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            var organisationData = fixture.Create<OrganisationData>();
+
+            A.CallTo(() => note.Recipient.Organisation).Returns(organisation);
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.RecipientOrganisationData.Should().Be(organisationData);
+        }
 
         [Fact]
         public void Map_GivenNote_TonnageDataShouldBeMapped()
