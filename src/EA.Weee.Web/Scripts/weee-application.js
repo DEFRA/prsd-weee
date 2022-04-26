@@ -152,7 +152,7 @@
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
         var newLabel = document.createElement("label");
-        newLabel.setAttribute("for", "ReceivedId__listbox");
+        newLabel.setAttribute("for", element.id + "__listbox");
         newLabel.setAttribute("class", "govuk-visually-hidden");
         newLabel.innerHTML = "Options for " + document.getElementById(element.id + "-label").innerText;
 
