@@ -46,6 +46,8 @@
 
         public IStoredProcedures StoredProcedures { get; private set; }
 
+        public IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
+
         private TransactionScope transactionScope;
 
         public DatabaseWrapper()
@@ -76,7 +78,7 @@
                 userId = testUser.Id;
             }
 
-            transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            transactionScope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled);
 
             Model = new Entities();
 
@@ -89,6 +91,8 @@
             WeeeContext = new WeeeContext(userContext, eventDispatcher);
 
             StoredProcedures = new StoredProcedures(WeeeContext);
+
+            EvidenceStoredProcedures = new EvidenceStoredProcedures(WeeeContext);
         }
 
         public void Dispose()

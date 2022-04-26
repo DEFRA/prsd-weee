@@ -5,6 +5,7 @@
     using Core.DataReturns;
     using Core.Organisations;
     using Core.Scheme;
+    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
@@ -43,8 +44,12 @@
                 SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
+                RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
                 RecipientId = source.Recipient.Id,
-                SubmittedDate = source.SubmittedDate
+                SubmittedDate = source.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.ChangedDate
             };
         }
     }
