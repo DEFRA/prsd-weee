@@ -304,6 +304,7 @@
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
+    <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="ViewModels\ListOfNotesMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\CreateNoteViewModelMapTests.cs" />
