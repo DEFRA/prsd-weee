@@ -7,6 +7,8 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using Core.Organisations;
+    using Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -107,19 +109,56 @@
         }
 
         [Fact]
-        public void Map_GivenSource_RecipientAddressShouldBeSet()
+        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, true)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+            
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                source.EvidenceNoteData.SchemeData.Name,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                organisation.Name,
+                organisation.BusinessAddress.Address1,
+                organisation.BusinessAddress.Address2,
+                organisation.BusinessAddress.TownOrCity,
+                organisation.BusinessAddress.CountyOrRegion,
+                organisation.BusinessAddress.Postcode,
+                null)).Returns(recipientAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be(recipientAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveBusinessAddress_RecipientAddressShouldBeSetToNotificationAddress()
+        {
+            //arrange
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+
+            const string recipientAddress = "recipientAddress";
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                organisation.Name,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
                 null)).Returns(recipientAddress);
 
             //act
