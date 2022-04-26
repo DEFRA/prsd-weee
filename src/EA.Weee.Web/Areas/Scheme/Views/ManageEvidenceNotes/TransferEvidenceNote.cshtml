@@ -29,26 +29,16 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.Gds().ValidationSummary()
 
-        <h1 id="selectSchemaHeading" class="govuk-heading-m">
-            Who would you like to transfer evidence to?
-        </h1>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+        <div class="govuk-form-group govuk-!-width-one-half @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m"})
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
             @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
-
         </div>
 
-        <br />
-
-        <h1 class="govuk-heading-m">
-            Which categories would you like to transfer?
-        </h1>
-
-        <br />
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
+        <div class="govuk-!-padding-top-5 govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
+            @Html.Gds().LabelFor(m => m.HasSelectedAtLeastOneCategory, new { @class = "govuk-label--m"})
             @Html.Gds().ValidationMessageFor(m => m.HasSelectedAtLeastOneCategory)
+            <div class="govuk-!-padding-top-5"></div>
             @for (var i = 0; i < Model.CategoryValues.Count; i++)
             {
 
@@ -64,14 +54,14 @@
                                 var name = "CategoryValues[" + i + "].Selected";
                             }
 
-                            <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
+                            <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption/>
                             <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
                                 @category.CategoryId. @category.CategoryDisplay
                             </label>
                             <input name="@name" type="hidden" value="false">
                         </div>
                     </div>
-                    <br />
+                    <br/>
                 </div>
                 @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
             }
