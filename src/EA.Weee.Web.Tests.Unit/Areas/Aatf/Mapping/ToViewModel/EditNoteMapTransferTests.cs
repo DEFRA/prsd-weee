@@ -10,6 +10,8 @@
     using FluentAssertions;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class EditNoteMapTransferTests
@@ -26,7 +28,7 @@
         {
             //arrange
             var exception = Record.Exception(() => new EditNoteMapTransfer(null,
-                new EvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -37,7 +39,7 @@
         {
             //arrange
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<SchemeData>(),
-                new EvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -48,7 +50,7 @@
         {
             //arrange
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<SchemeData>(),
-                new EvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -59,7 +61,7 @@
         {
             //arrange
             var schemes = fixture.CreateMany<SchemeData>().ToList();
-            var evidenceModel = fixture.Create<EvidenceNoteViewModel>();
+            var evidenceModel = fixture.Create<EditEvidenceNoteViewModel>();
             var organisationId = fixture.Create<Guid>();
             var aatfId = fixture.Create<Guid>();
             var noteData = fixture.Create<EvidenceNoteData>();

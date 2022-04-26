@@ -84,10 +84,9 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if (newStatus.Equals(NoteStatus.Submitted))
+            if ((newStatus.Equals(NoteStatus.Approved) && !Status.Equals(NoteStatus.Submitted)))
             {
-                SubmittedDate = SystemTime.UtcNow;
-                SubmittedById = changedBy;
+                ThrowInvalidStateTransitionError(newStatus);
             }
 
             NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
@@ -119,9 +118,19 @@
             Aatf = null;
         }
 
+        public void UpdateScheme(Guid schemeId)
+        {
+            Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
+
+            RecipientId = schemeId;
+            Recipient = null;
+        }
+
         public virtual Guid OrganisationId { get; set; }
 
         public virtual Guid AatfId { get; set; }
+
+        public virtual Guid RecipientId { get; set; }
 
         public virtual Organisation Organisation { get; private set; }
 
@@ -143,15 +152,9 @@
 
         public virtual DateTime CreatedDate { get; private set; }
 
-        public virtual DateTime? SubmittedDate { get; set; }
-
         public virtual string CreatedById { get; private set; }
 
-        public virtual string SubmittedById { get; set; }
-
         public virtual User CreatedBy { get; set; }
-
-        public virtual User SubmittedBy { get; set; }
 
         public virtual int Reference { get; set; }
 

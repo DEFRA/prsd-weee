@@ -10,13 +10,13 @@
         [Fact]
         public void GetEvidenceNoteRequest_ShouldHaveSerializableAttribute()
         {
-            typeof(GetEvidenceNoteRequest).Should().BeDecoratedWith<SerializableAttribute>();
+            typeof(GetEvidenceNoteForAatfRequest).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]
         public void GetEvidenceNoteRequest_Constructor_GivenEmptyEvidenceNote()
         {
-            var result = Record.Exception(() => new GetEvidenceNoteRequest(Guid.Empty));
+            var result = Record.Exception(() => new GetEvidenceNoteForAatfRequest(Guid.Empty));
 
                 result.Should().BeOfType<ArgumentException>();
         }
@@ -28,7 +28,7 @@
             var id = Guid.NewGuid();
 
             //act
-            var result = new GetEvidenceNoteRequest(id);
+            var result = new GetEvidenceNoteForAatfRequest(id);
 
             //assert
             result.EvidenceNoteId.Should().Be(id);

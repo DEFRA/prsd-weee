@@ -15,6 +15,8 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Infrastructure;
+    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Xunit;
@@ -27,7 +29,7 @@
         {
             noteData = Fixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
         }
 
         [Fact]
@@ -83,7 +85,7 @@
             await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>.That.Matches(
                 g => g.EvidenceNoteId.Equals(EvidenceNoteId)))).MustHaveHappenedOnceExactly();
         }
 
@@ -93,14 +95,14 @@
             //arrange
             var schemes = Fixture.CreateMany<SchemeData>().ToList();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
 
             //act
             await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId);
 
             //asset
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(
                 v => v.Schemes.Equals(schemes) &&
                      v.NoteData.Equals(noteData) &&
                      v.OrganisationId.Equals(OrganisationId) &&
@@ -112,9 +114,9 @@
         public async Task EditDraftEvidenceNoteGet_GivenViewModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = Fixture.Create<EvidenceNoteViewModel>();
+            var model = Fixture.Create<EditEvidenceNoteViewModel>();
 
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(A<EditNoteMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
@@ -126,7 +128,7 @@
         [Fact]
         public void EditDraftEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
@@ -141,7 +143,7 @@
             AddModelError();
 
             //act
-            await ManageEvidenceController.EditEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), organisationId, AatfId);
+            await ManageEvidenceController.EditEvidenceNote(A.Dummy<EditEvidenceNoteViewModel>(), organisationId, AatfId);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -156,7 +158,7 @@
             AddModelError();
 
             //act
-            await ManageEvidenceController.EditEvidenceNote(A.Dummy<EvidenceNoteViewModel>(), OrganisationId, AatfId);
+            await ManageEvidenceController.EditEvidenceNote(A.Dummy<EditEvidenceNoteViewModel>(), OrganisationId, AatfId);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
@@ -169,14 +171,14 @@
             //arrange
             var schemes = Fixture.CreateMany<SchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
-            var model = A.Dummy<EvidenceNoteViewModel>();
+            var model = A.Dummy<EditEvidenceNoteViewModel>();
             AddModelError();
 
             //act
             await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId);
 
             //assert
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(
                 A<EditNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes)
                                                          && c.ExistingModel.Equals(model)
                                                          && c.OrganisationId.Equals(OrganisationId)
@@ -188,8 +190,8 @@
         public async Task EditDraftEvidenceNotePost_GivenInvalidModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = new EvidenceNoteViewModel();
-            A.CallTo(() => Mapper.Map<EvidenceNoteViewModel>(A<EditNoteMapTransfer>._)).Returns(model);
+            var model = new EditEvidenceNoteViewModel();
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>._)).Returns(model);
             AddModelError();
 
             //act
@@ -203,7 +205,7 @@
         public async Task EditDraftEvidenceNotePost_GivenModelIsValid_ModelShouldNotBeRebuilt()
         {
             //arrange
-            var model = new EvidenceNoteViewModel()
+            var model = new EditEvidenceNoteViewModel()
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now,
@@ -316,7 +318,7 @@
         [Fact]
         public void EditDraftEvidenceNotePost_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
         }
     }

@@ -15,5 +15,34 @@
                 .Should()
                 .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals("Search by reference ID"));
         }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void SearchPerformed_GivenNoSearchRef_ShouldReturnFalse(string search)
+        {
+            //arrange
+            var model = new FilterViewModel() { SearchRef = search };
+
+            //act
+            var result = model.SearchPerformed;
+
+            //assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+       public void SearchPerformed_GivenSearchRef_ShouldReturnTrue()
+        {
+            //arrange
+            var model = new FilterViewModel() { SearchRef = "search" };
+
+            //act
+            var result = model.SearchPerformed;
+
+            //assert
+            result.Should().BeTrue();
+        }
     }
 }

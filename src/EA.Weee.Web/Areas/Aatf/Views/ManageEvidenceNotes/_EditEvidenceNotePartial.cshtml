@@ -2,22 +2,20 @@
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
 
-@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceNoteViewModel
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EditEvidenceNoteViewModel
 
 <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-two-thirds">
 
-       
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status, new { id = "status-id"})
         @Html.HiddenFor(m => m.Reference)
 
-
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1">Period in which WEEE was received for treatment</div>
+            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
@@ -103,7 +101,7 @@
                 <tr>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Re-used as whole appliances (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
                 </tr>
             </thead>
 
@@ -158,7 +156,7 @@
             <div class="govuk-button-group">
                 @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
 
-                @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
+                @this.WeeeGds().SecondaryButton(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
             </div>
 
         </div>

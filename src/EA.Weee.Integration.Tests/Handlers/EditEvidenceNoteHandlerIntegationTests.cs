@@ -100,8 +100,6 @@
             {
                 ShouldMapToNote();
                 updatedNote.Status.Should().Be(NoteStatus.Submitted);
-                updatedNote.SubmittedById.Should().Be(UserId.ToString());
-                updatedNote.SubmittedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
             };
 
             private readonly It shouldHaveCreatedStatusChangeHistory = () =>
@@ -173,7 +171,7 @@
                 existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
 
                 var newOrganisation = OrganisationDbSetup.Init().Create();
-                updatedScheme = SchemeDbSetup.Init().WithOrganisation(newOrganisation).Create();
+                updatedScheme = SchemeDbSetup.Init().WithOrganisation(newOrganisation.Id).Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, existingNote.OrganisationId).Create();
 
                 noteTonnages = new List<TonnageValues>();

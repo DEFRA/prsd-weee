@@ -45,7 +45,7 @@
 
             var filter = new EvidenceNoteFilter()
             {
-                OrganisationId = message.OrganisationId,
+                SchemeId = scheme.Id,
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
