@@ -18,19 +18,22 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
-        private readonly IMap<AatfAddress, AatfAddressData> addressMapper;        
+        private readonly IMap<AatfAddress, AatfAddressData> addressMapper;
+        private readonly IObligatedSentOnDataAccess obligatedSentOnDataAccess;
 
         public CopyPreviousQuarterAatfDataHandler(IWeeeAuthorization authorization,
                                                   IReturnDataAccess returnDataAccess,
                                                   IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess,
                                                   IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess,
-                                                  IMap<AatfAddress, AatfAddressData> addressMapper)
+                                                  IMap<AatfAddress, AatfAddressData> addressMapper,
+                                                  IObligatedSentOnDataAccess obligatedSentOnDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
             this.fetchWeeeSentOnAmountDataAccess = fetchWeeeSentOnAmountDataAccess;
             this.addressMapper = addressMapper;
+            this.obligatedSentOnDataAccess = obligatedSentOnDataAccess;
         }
 
         public async Task<bool> HandleAsync(CopyPreviousQuarterAatf message)
@@ -57,21 +60,32 @@
                 }                
                 
                 var returnData = await returnDataAccess.GetByYearAndQuarter(message.OrganisationId, copyAatfYear, copyAatfYQuarter);
-                var weeeSentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturn(returnData.Id);
+                var previousQuarterWeeeSentOnList = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(message.AatfId, returnData.Id);
 
-                foreach (var item in weeeSentOn)
+                foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
                 {
-                    var amount = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(item.Id);
-
-                    var weeeSentOnObligatedData = amount.Select(n => new WeeeObligatedData(n.Id, new AatfData(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber, n.WeeeSentOn.Aatf.ComplianceYear), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
-
-                    var copyWeeeSentOn = new WeeeSentOn(message.ReturnId, message.AatfId, item.OperatorAddressId, item.SiteAddressId);
-                    copyWeeeSentOn.WeeeSentOnAmounts = amount;
-
+                    var copyWeeeSentOn = new WeeeSentOn(message.ReturnId, message.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
                     weeeSentOnList.Add(copyWeeeSentOn);
                 }
-            }
-            await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
+
+                await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
+
+                var currentQuarterAmounts = new List<WeeeSentOnAmount>();
+
+                foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
+                {
+                    var previousQuarterAmounts = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(weeeSentOnItem.Id);
+                    var currentCopyWeeeSentOn = weeeSentOnList.Find(x => x.OperatorAddressId == weeeSentOnItem.OperatorAddressId && x.SiteAddressId == weeeSentOnItem.SiteAddressId);
+                    
+                    foreach (var previousQuarterAmount in previousQuarterAmounts)
+                    {
+                        var weeeSentOnAmount = new WeeeSentOnAmount(currentCopyWeeeSentOn, previousQuarterAmount.CategoryId, previousQuarterAmount.HouseholdTonnage, previousQuarterAmount.NonHouseholdTonnage);
+                        currentQuarterAmounts.Add(weeeSentOnAmount);
+                    }                    
+                }
+
+                await obligatedSentOnDataAccess.Submit(currentQuarterAmounts);
+            }            
 
             return true;
         }
