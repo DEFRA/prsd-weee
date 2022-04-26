@@ -6,5 +6,13 @@
     {
         [DisplayName("Search by reference ID")]
         public string SearchRef { get; set; }
+
+        public bool SearchPerformed
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(SearchRef);
+            }
+        }
     }
 }
