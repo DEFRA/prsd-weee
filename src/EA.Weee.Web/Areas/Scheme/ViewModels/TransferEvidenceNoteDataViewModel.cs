@@ -16,7 +16,6 @@
 
         public IList<SchemeData> SchemasToDisplay { get; set; }
 
-        
         public CategoryValues<CategoryBooleanViewModel> CategoryValues { get; set; }
 
         [Display(Name = "Which categories would you like to transfer?")]
