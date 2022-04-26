@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
+    using EA.Weee.Web.Constant;
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     public static class DisplayExtensions
@@ -19,6 +21,18 @@
             return descriptionAttributes.Length > 0
                 ? descriptionAttributes[0].Name
                 : value.ToString();
+        }
+
+        public static string ToDisplayGMTDateTimeString(this DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                return value.Value.ToString(DateTimeConstants.GeneralDateTimeGMTFormat);
+            } 
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }
