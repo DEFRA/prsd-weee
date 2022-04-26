@@ -29,14 +29,14 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.Gds().ValidationSummary()
 
-        <h1 class="govuk-heading-m">
+        <h1 id="selectSchemaHeading" class="govuk-heading-m">
             Who would you like to transfer evidence to?
         </h1>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
-            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-visually-hidden aria-label" })
-            @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false)
+            @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
+
         </div>
 
         <br />
