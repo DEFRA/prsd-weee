@@ -105,7 +105,7 @@
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGetWithDefaultTab_GivenRequiredData_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGet_GivenRequiredData_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
             var organisationId = Guid.NewGuid();
@@ -139,10 +139,45 @@
         }
 
         [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGetWithEvidenceSummary_GivenRequiredData_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatfs = Fixture.CreateMany<AatfData>().ToList();
+            var aatfData = Fixture.Create<AatfData>();
+            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
+
+            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
+                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
+                .Returns(selectYourAatfViewModel);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
+
+            //act
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
+                m => m.AatfId.Equals(aatfId)
+                     && m.AatfData.Equals(aatfData)
+                     && m.OrganisationId.Equals(organisationId)
+                     && m.FilterViewModel == null))).MustHaveHappenedOnceExactly();
+
+            foreach (var aatf in selectYourAatfViewModel.AatfList)
+            {
+                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
+                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
+            }
+        }
+
+        [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGetWithDefaultTab_GivenRequiredDataAndFilterModel_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGet_GivenRequiredDataAndFilterModel_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
             var organisationId = Guid.NewGuid();
@@ -167,6 +202,43 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId) 
+                     && m.FilterViewModel.Equals(filter.FilterViewModel)))).MustHaveHappenedOnceExactly();
+
+            foreach (var aatf in selectYourAatfViewModel.AatfList)
+            {
+                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
+                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
+            }
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        public async void IndexGetWithDefaultTab_GivenRequiredDataAndFilterModel_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var aatfs = Fixture.CreateMany<AatfData>().ToList();
+            var aatfData = Fixture.Create<AatfData>();
+            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
+            var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
+
+            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
+                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
+                .Returns(selectYourAatfViewModel);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
+
+            //act
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab, filter);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
+                m => m.AatfId.Equals(aatfId)
+                     && m.AatfData.Equals(aatfData)
+                     && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel.Equals(filter.FilterViewModel)))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
