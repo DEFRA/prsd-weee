@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Extensions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Returns.Mappings.ToViewModel;
@@ -33,7 +34,7 @@
                 Type = source.EvidenceNoteData.Type,
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
-                SubmittedDate = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss \"(GMT)\"") : string.Empty,
+                SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
