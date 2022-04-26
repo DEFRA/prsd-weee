@@ -36,6 +36,8 @@
         public AatfData AatfData { get; set; }
         public OrganisationData OrganisationData { get; set; }
 
+        public OrganisationData RecipientOrganisationData { get; set; }
+
         public EvidenceNoteData()
         {
         }

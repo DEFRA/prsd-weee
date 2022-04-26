@@ -12,6 +12,7 @@
     using Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
+    using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -85,7 +86,7 @@
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
-                        return await EvidenceSummaryCase(organisationId, aatfId, client);
+                        return await EvidenceSummaryCase(organisationId, aatfId, client, aatf, models);
                 }
             }
         }
@@ -98,6 +99,7 @@
         }
 
         [HttpGet]
+        
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
@@ -132,6 +134,8 @@
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
                 
                 var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, viewModel, organisationId, aatfId));
+
+                ModelState.ApplyCustomValidationSummaryOrdering(EditEvidenceNoteViewModel.ValidationMessageDisplayOrder);
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -243,12 +247,16 @@
             return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
         }
 
-        private async Task<ActionResult> EvidenceSummaryCase(Guid organisationId, Guid aatfId, IWeeeClient client)
+        private async Task<ActionResult> EvidenceSummaryCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf, SelectYourAatfViewModel models)
         {
             var result = await client.SendAsync(User.GetAccessToken(), new GetAatfSummaryRequest(aatfId));
 
             var summaryModel =
                 mapper.Map<EvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+
+            summaryModel.ManageEvidenceNoteViewModel =
+                mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId,
+                    aatf, models.AatfList.ToList(), null));
 
             return this.View("Overview/EvidenceSummaryOverview", summaryModel);
         }
