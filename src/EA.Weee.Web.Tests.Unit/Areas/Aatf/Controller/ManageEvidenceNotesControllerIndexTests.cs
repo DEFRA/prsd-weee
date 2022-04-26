@@ -36,6 +36,7 @@
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationName = "Organisation";
@@ -52,6 +53,7 @@
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationId = Guid.NewGuid();
@@ -66,6 +68,7 @@
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenOrganisationId_AatfsShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationId = Guid.NewGuid();
@@ -80,6 +83,7 @@
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenOrganisationId_SelectYourAatfViewModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
@@ -102,6 +106,7 @@
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
@@ -138,6 +143,7 @@
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGetWithDefaultTab_GivenRequiredDataAndFilterModel_ModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
@@ -224,7 +230,7 @@
 
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        public async void IndexGetWithDefaultTab_GivenSearchFilterParameters_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenSearchFilterParameters_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
@@ -259,7 +265,7 @@
 
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        public async void IndexGetWithDefaultTab_GivenRequiredData_NoteViewModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenRequiredData_NoteViewModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
             var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
@@ -299,7 +305,7 @@
 
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        public async void IndexGetWithDefaultTab_GivenRequiredData_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenRequiredData_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //arrange
             var manageNoteViewModel = new ManageEvidenceNoteViewModel();
@@ -332,7 +338,7 @@
 
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        public async void IndexGetWithDefaultTab_GivenAction_EditDraftReturnedNotesOverviewViewShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenAction_EditDraftReturnedNotesOverviewViewShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -373,6 +379,71 @@
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             result.RouteValues["aatfId"].Should().Be(model.AatfId); 
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAction_EvidenceSummaryOverviewViewShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab) as ViewResult;
+
+            result.ViewName.Should().Be("Overview/EvidenceSummaryOverview");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatf_EvidenceSummaryShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab);
+
+            A.CallTo(() =>
+                    WeeeClient.SendAsync(A<string>._,
+                        A<GetAatfSummaryRequest>.That.Matches(g => g.AatfId.Equals(aatfId))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatfSummary_ModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var summary = Fixture.Create<AatfEvidenceSummaryData>();
+
+            A.CallTo(() =>
+                WeeeClient.SendAsync(A<string>._,
+                    A<GetAatfSummaryRequest>._)).Returns(summary);
+
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab);
+
+            A.CallTo(() => Mapper.Map<EvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
+                e.AatfEvidenceSummaryData.Equals(summary) && e.AatfId.Equals(aatfId) &&
+                e.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_Model_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var model = Fixture.Create<EvidenceSummaryViewModel>();
+
+            A.CallTo(() => Mapper.Map<EvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
+
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab) as ViewResult;
+
+            result.Model.Should().Be(model);
         }
     }
 }
