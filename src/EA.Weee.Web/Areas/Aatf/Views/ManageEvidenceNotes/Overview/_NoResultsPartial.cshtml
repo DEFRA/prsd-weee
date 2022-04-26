@@ -1,0 +1,14 @@
+﻿@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteOverviewViewModel
+
+<br/>
+@if (!Model.EvidenceNotesDataList.Any())
+{
+    if (Model.ManageEvidenceNoteViewModel.FilterViewModel != null && Model.ManageEvidenceNoteViewModel.FilterViewModel.SearchPerformed)
+    {
+        <p>There are no search results with those search terms. Please try again with another search term.</p>
+    }
+    else
+    {
+        @Html.Raw(@ViewData["no-results-message"])
+    }
+}
