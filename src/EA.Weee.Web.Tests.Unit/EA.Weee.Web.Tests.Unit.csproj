@@ -299,6 +299,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerTransferEvidenceNoteTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
+    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
