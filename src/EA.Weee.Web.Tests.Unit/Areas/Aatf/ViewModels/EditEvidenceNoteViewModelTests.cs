@@ -88,14 +88,25 @@
         }
 
         [Fact]
-        public void EvidenceNoteViewModel_Edit_GivenSavedCategoryValuesExist_EditShouldBeTrue()
+        public void EvidenceNoteViewModel_Edit_GivenIdIsEmpty_EditShouldBeFalse()
         {
-            for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
+            var local = new EditEvidenceNoteViewModel
             {
-                var local = new EditEvidenceNoteViewModel();
-                local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
-                local.Edit.Should().BeTrue();
-            }
+                Id = Guid.Empty
+            };
+
+            local.Edit.Should().BeFalse();
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_Edit_GivenIdIsNotEmpty_EditShouldBeTrue()
+        {
+            var local = new EditEvidenceNoteViewModel
+            {
+                Id = Guid.NewGuid()
+            };
+
+            local.Edit.Should().BeTrue();
         }
 
         [Fact]
@@ -145,6 +156,14 @@
 
                 model.ReferenceDisplay.Should().Be($"{type.Value}1");
             }
+        }
+
+        [Fact]
+        public void ValidationMessageDisplayOrder_ShouldHaveValidEntries()
+        {
+            var validationOrdering = EditEvidenceNoteViewModel.ValidationMessageDisplayOrder;
+
+            validationOrdering.Should().BeEquivalentTo("StartDate", "EndDate", "ReceivedId", "Received-auto", "WasteTypeValue", "ProtocolValue");
         }
     }
 }
