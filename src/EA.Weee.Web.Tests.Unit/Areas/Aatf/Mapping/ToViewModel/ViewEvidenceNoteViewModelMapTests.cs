@@ -243,6 +243,20 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
