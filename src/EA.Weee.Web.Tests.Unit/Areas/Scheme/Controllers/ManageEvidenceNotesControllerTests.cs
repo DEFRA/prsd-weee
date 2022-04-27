@@ -233,5 +233,15 @@
             //asset
             result.Model.Should().Be(model);
         }
+
+        [Fact]
+        public void TransferPost_PageRedirectsToTransferPage()
+        {
+            var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["organisationId"].Should().Be(OrganisationId);
+        }
     }
 }

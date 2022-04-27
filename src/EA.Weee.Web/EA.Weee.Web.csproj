@@ -317,7 +317,10 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMapTransfer.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Scheme\Controllers\TransferEvidenceController.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
+    <Compile Include="Services\ISessionService.cs" />
+    <Compile Include="Services\SessionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EditNoteMapTransfer.cs" />
@@ -686,7 +689,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\TransferEvidenceNote.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\TransferEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
