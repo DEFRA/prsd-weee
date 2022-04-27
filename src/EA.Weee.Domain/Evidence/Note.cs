@@ -67,7 +67,7 @@
             EndDate = endDate;
         }
 
-        public void UpdateStatus(NoteStatus newStatus, string changedBy)
+        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
             {
