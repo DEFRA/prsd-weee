@@ -196,7 +196,7 @@
             var autoCompletes = $(element.parentNode).find(".autocomplete__input");
             autoCompletes[0].classList.add("autocomplete__error");
         }
-        console.log(document.getElementById(element.id));
+        
         var newListBox = document.getElementById(element.id + "__listbox");
         newListBox.setAttribute("aria-labelledby", element.id + "-label");
         element.style.display = "none";
