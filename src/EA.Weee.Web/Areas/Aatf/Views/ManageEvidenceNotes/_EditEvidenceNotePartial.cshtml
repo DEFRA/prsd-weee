@@ -15,7 +15,7 @@
         @Html.HiddenFor(m => m.Reference)
 
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1">Period in which WEEE was received for treatment</div>
+            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
@@ -101,7 +101,7 @@
                 <tr>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Re-used as whole appliances (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
                 </tr>
             </thead>
 
@@ -154,9 +154,10 @@
         <div class="govuk-!-margin-top-3">
 
             <div class="govuk-button-group">
+                @* This is a hidden button to force the default action to be save rather than submit*@
+                <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
                 @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-
-                @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
             </div>
 
         </div>

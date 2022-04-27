@@ -7,9 +7,10 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using Core.Organisations;
+    using Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
-    using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
@@ -108,18 +109,56 @@
         }
 
         [Fact]
-        public void Map_GivenSource_RecipientAddressShouldBeSet()
+        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, true)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+            
             const string recipientAddress = "recipientAddress";
 
-            A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                source.EvidenceNoteData.SchemeData.Address.Address1,
-                source.EvidenceNoteData.SchemeData.Address.Address2,
-                source.EvidenceNoteData.SchemeData.Address.TownOrCity,
-                source.EvidenceNoteData.SchemeData.Address.CountyOrRegion,
-                source.EvidenceNoteData.SchemeData.Address.Postcode,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.BusinessAddress.Address1,
+                organisation.BusinessAddress.Address2,
+                organisation.BusinessAddress.TownOrCity,
+                organisation.BusinessAddress.CountyOrRegion,
+                organisation.BusinessAddress.Postcode,
+                null)).Returns(recipientAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be(recipientAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveBusinessAddress_RecipientAddressShouldBeSetToNotificationAddress()
+        {
+            //arrange
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+
+            const string recipientAddress = "recipientAddress";
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
                 null)).Returns(recipientAddress);
 
             //act
@@ -216,6 +255,27 @@
             result.SuccessMessage.Should()
                 .Be($"You have successfully approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
+
+        [Fact]
+        public void Map_GivenSubmittedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be(string.Empty);
         }
     }
 }
