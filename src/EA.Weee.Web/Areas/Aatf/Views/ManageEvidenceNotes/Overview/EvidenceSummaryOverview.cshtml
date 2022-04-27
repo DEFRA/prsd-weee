@@ -1,0 +1,79 @@
+﻿@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceSummaryViewModel
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_CreateEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
+
+            <div class="govuk-tabs">
+                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
+
+                <section class="govuk-tabs__panel" id="evidence-summary-panel">
+                    
+                    <h2 class="govuk-heading-m">
+                        Evidence summary for 2022
+                    </h2>
+
+                    <p class="govuk-body">
+                        <span class="govuk-!-font-size-36 govuk-!-font-weight-bold">@Model.NumberOfDraftNotes&nbsp;<span class="govuk-body">Draft notes&nbsp;</span> </span>
+                        <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-5">@Model.NumberOfSubmittedNotes&nbsp;<span class="govuk-body">Submitted notes waiting for approval &nbsp;</span> </span>
+                        <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-5">@Model.NumberOfApprovedNotes&nbsp;<span class="govuk-body">Approved notes &nbsp;</span> </span>
+                    </p>
+
+                    <table id="evidence-summary-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">Evidence summary</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header">
+                                    Category
+                                </th>
+                                <th class="govuk-table__header govuk-!-text-align-right">
+                                    Evidence approved (tonnes)
+                                </th>
+                                <th class="govuk-table__header govuk-!-text-align-right">
+                                    Reuse (tonnes)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+                            {
+                                var category = Model.CategoryValues[i];
+
+                                <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                                    <td class="govuk-table__cell">
+                                        <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                                    </td>
+                                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                        @category.Received
+                                    </td>
+                                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                        @category.Reused
+                                    </td>
+                                </tr>
+                            }
+                            
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <p class="govuk-body"><strong>Total</strong></p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.TotalReceivedEvidence</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.TotalReuseEvidence</p>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <br />
+                </section>
+            </div>
+        </div>
+    </div>
+</section>

@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Extensions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Returns.Mappings.ToViewModel;
@@ -23,6 +24,10 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            var organisationAddress = source.EvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
+                ? source.EvidenceNoteData.RecipientOrganisationData.BusinessAddress
+                : source.EvidenceNoteData.RecipientOrganisationData.NotificationAddress;
+
             var model = new ViewEvidenceNoteViewModel
             {
                 Id = source.EvidenceNoteData.Id,
@@ -33,6 +38,7 @@
                 Type = source.EvidenceNoteData.Type,
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
+                SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
@@ -48,12 +54,14 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                    source.EvidenceNoteData.SchemeData.Address.Address1,
-                    source.EvidenceNoteData.SchemeData.Address.Address2,
-                    source.EvidenceNoteData.SchemeData.Address.TownOrCity,
-                    source.EvidenceNoteData.SchemeData.Address.CountyOrRegion,
-                    source.EvidenceNoteData.SchemeData.Address.Postcode)
+                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                    source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
+                    organisationAddress.Address1,
+                    organisationAddress.Address2,
+                    organisationAddress.TownOrCity,
+                    organisationAddress.CountyOrRegion,
+                    organisationAddress.Postcode,
+                    null),
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)

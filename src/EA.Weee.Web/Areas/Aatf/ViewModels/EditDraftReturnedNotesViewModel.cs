@@ -8,7 +8,6 @@
         public EditDraftReturnedNotesViewModel()
          : base(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)
         {
-            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
     }
 }
