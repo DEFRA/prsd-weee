@@ -328,6 +328,7 @@
     <Content Include="scripts\Update\Release 5\Sprint03\20220420-1439-totals-stored-proc.sql" />
     <Content Include="scripts\Update\Release 5\Sprint03\20220422-1538-remove-submitted-column.sql" />
     <Content Include="scripts\Update\Release 5\Sprint03\20220421-0959-constraint.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint04\20220427-1402-add-status-reason.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
