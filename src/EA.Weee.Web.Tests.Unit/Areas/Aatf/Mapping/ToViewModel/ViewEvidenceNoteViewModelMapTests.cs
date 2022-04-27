@@ -8,7 +8,6 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Organisations;
-    using Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -262,6 +261,28 @@
             var result = map.Map(source);
 
             result.SubmittedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenReturnedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ReturnedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.ReturnedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ReturnedDate = null;
+
+            var result = map.Map(source);
+
+            result.ReturnedDate.Should().Be(string.Empty);
         }
     }
 }

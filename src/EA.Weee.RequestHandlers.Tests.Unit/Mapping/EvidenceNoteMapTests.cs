@@ -17,7 +17,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
@@ -67,6 +66,7 @@
             result.EndDate.Should().Be(endDate);
             result.RecipientId.Should().Be(recipientId);
             result.SubmittedDate.Should().BeNull();
+            result.ReturnedDate.Should().BeNull();
         }
 
         [Theory]
@@ -97,6 +97,34 @@
             result.SubmittedDate.Should().BeNull();
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ReturnedDateShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().BeNull();
+        }
+
         [Fact]
         public void Map_GivenNoteWithSubmittedHistory_SubmittedDateShouldBeSet()
         {
@@ -118,6 +146,29 @@
 
             //arrange
             result.SubmittedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().Be(date);
         }
 
         [Fact]
@@ -147,6 +198,35 @@
 
             //arrange
             result.SubmittedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddHours(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Returned);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().Be(latestDate);
         }
 
         [Theory]
