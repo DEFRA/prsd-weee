@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
+    using CuttingEdge.Conditions;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -12,7 +13,7 @@
 
         public virtual Guid NoteId { get; private set; }
 
-        public virtual DateTime ChangedDate { get; set; }
+        public virtual DateTime ChangedDate { get; private set; }
 
         public virtual string ChangedById { get; private set; }
 
@@ -20,20 +21,23 @@
 
         public virtual NoteStatus ToStatus { get; private set; }
 
+        public virtual string Reason { get; private set; }
+
         public NoteStatusHistory()
         {
         }
 
-        public NoteStatusHistory(string changedById, NoteStatus fromStatus, NoteStatus toStatus)
+        public NoteStatusHistory(string changedById, NoteStatus fromStatus, NoteStatus toStatus, string reason = null)
         {
-            Guard.ArgumentNotNullOrEmpty(() => changedById, changedById);
-            Guard.ArgumentNotNull(() => fromStatus, fromStatus);
-            Guard.ArgumentNotNull(() => toStatus, toStatus);
+            Condition.Requires(changedById).IsNotNullOrWhiteSpace();
+            Condition.Requires(fromStatus).IsNotNull();
+            Condition.Requires(toStatus).IsNotNull();
 
             ChangedById = changedById;
             FromStatus = fromStatus;
             ToStatus = toStatus;
             ChangedDate = SystemTime.UtcNow;
+            Reason = reason;
         }
     }
 }
