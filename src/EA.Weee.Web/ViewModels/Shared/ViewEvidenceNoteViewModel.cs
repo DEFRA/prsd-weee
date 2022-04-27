@@ -30,5 +30,7 @@
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
 
         public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);
+
+        public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
     }
 }

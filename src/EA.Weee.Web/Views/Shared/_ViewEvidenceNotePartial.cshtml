@@ -30,6 +30,13 @@
             </div>
         }
 
+        @if (Model.HasReturnedDate)
+        {
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+                @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate)
+            </div>
+        }
+
         <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay)
         </div>
