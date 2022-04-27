@@ -49,6 +49,10 @@
                 SubmittedDate = source.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.ChangedDate,
+                ReturnedDate = source.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate
             };
         }
