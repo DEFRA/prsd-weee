@@ -16,6 +16,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
@@ -115,11 +116,26 @@
 
             // assert
             model.CategoryValues.Should().AllBeOfType(typeof(CategoryBooleanViewModel));
-            model.CategoryValues.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
             model.OrganisationId.Should().Be(OrganisationId);
             model.SchemasToDisplay.Should().BeEmpty();
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNoteGet_GivenANewModelIsCreated_CategoryValuesShouldBeRetrievedFromTheWeeCategory()
+        {
+            // act
+            var categoryValues = new CategoryValues<CategoryBooleanViewModel>();
+            var result = await ManageEvidenceController.TransferEvidenceNote(OrganisationId) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteDataViewModel;
+       
+            // assert
+            model.CategoryValues.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
+            for (int i = 0; i < categoryValues.Count; i++)
+            {
+                model.CategoryValues.ElementAt(i).Should().BeEquivalentTo(categoryValues.ElementAt(i));
+            }
         }
 
         [Fact]
@@ -135,7 +151,21 @@
 
             // assert
             model.SchemasToDisplay.Should().Equal(schemeData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened();
+        }
 
+        [Fact]
+        public async Task TransferEvidenceNoteGet_GivenSchemesListIsNotEmpty_ShouldCallToGetScgemes()
+        {
+            // arrange
+            var schemeData = Fixture.CreateMany<SchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+
+            // act
+            var result = await ManageEvidenceController.TransferEvidenceNote(OrganisationId) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteDataViewModel;
+
+            // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
                 .Matches(s => s.IncludeWithdrawn.Equals(false))))
                 .MustHaveHappenedOnceExactly();
@@ -235,10 +265,47 @@
             //act
             var result = await ManageEvidenceController.TransferEvidenceNote(model) as RedirectToRouteResult;
 
-            /* to be updated */
+            // assert
+            /* to be updated when actual redirect happens */
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenRequestIsCreated_SessionShouldNotBeNull()
+        {
+            //arrange
+            var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
+            var transferRequest = GetRequest();
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(ManageEvidenceController);
+
+            A.CallTo(() => TransferNoteRequestCreator.ViewModelToRequest(A<TransferEvidenceNoteDataViewModel>._)).Returns(transferRequest);
+
+            //act
+            await ManageEvidenceController.TransferEvidenceNote(model);
+
+            // assert
+            ManageEvidenceController.Session.Should().NotBeNull();
+            ManageEvidenceController.Session.SessionID.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenInvalidModel_SessionShouldBeEmpty()
+        {
+            //arrange
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(ManageEvidenceController);
+
+            AddModelError();
+
+            //act
+            await ManageEvidenceController.TransferEvidenceNote(A.Dummy<TransferEvidenceNoteDataViewModel>());
+
+            // assert
+            ManageEvidenceController.Session.Keys.Should().BeNull();
+            ManageEvidenceController.Session.SessionID.Should().BeEmpty();
         }
 
         private void AddModelError()
