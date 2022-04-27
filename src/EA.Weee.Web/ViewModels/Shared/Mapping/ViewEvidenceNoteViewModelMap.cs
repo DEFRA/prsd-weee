@@ -89,7 +89,7 @@
                                 $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
                             break;
                         case NoteStatus.Approved:
-                            model.SuccessMessage = "Your evidence note has successfully been set to 'Approved'";
+                            model.SuccessMessage = $"You have successfully approved the evidence note with reference ID E{note.Reference}";
                             break;
                     }
 
