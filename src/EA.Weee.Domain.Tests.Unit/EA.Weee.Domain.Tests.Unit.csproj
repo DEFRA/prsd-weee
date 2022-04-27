@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\EvidenceNoteFilterTests.cs" />
+    <Compile Include="AatfEvidence\NoteStatusHistoryTests.cs" />
     <Compile Include="AatfEvidence\NoteTests.cs" />
     <Compile Include="AatfEvidence\ProtocolEnumTests.cs" />
     <Compile Include="AatfEvidence\WasteTypeEnumTests.cs" />
