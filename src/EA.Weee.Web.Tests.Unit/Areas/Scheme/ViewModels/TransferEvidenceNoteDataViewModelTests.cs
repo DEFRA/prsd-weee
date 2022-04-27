@@ -44,14 +44,9 @@
         public void TransferEvidenceNoteDataViewModel_HasSelectedAtLeastOneCategory_RangeValuesShouldBeTrue()
         {
             var property = "HasSelectedAtLeastOneCategory";
-
-            var getPropertiesForHasSelectedCategory = typeof(TransferEvidenceNoteDataViewModel)
-                .GetProperty(property);
-                
-            var args = getPropertiesForHasSelectedCategory.CustomAttributes.ElementAt(0).ConstructorArguments;
-
-            args.ElementAt(1).Value.Should().Be("true");
-            args.ElementAt(2).Value.Should().Be("true");
+            typeof(TransferEvidenceNoteDataViewModel)
+                .GetProperty(property).Should()
+                .BeDecoratedWith<RangeAttribute>(e => e.Equals(new RangeAttribute(typeof(bool), "true", "true")));
         }
 
         [Fact]
