@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Autofac;
@@ -51,15 +52,15 @@
                 note = Query.GetEvidenceNoteById(note.Id);
             };
 
-            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNote = () =>
             {
-                note.Should().NotBeNull();
+                result.Should().NotBeNull();
             };
 
-            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNoteWithExpectedPropertyValues = () =>
             {
                 ShouldMapToNote();
-                note.Status.Should().Be(NoteStatus.Draft);
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
         }
 
@@ -98,15 +99,16 @@
                 note = Query.GetEvidenceNoteById(note.Id);
             };
 
-            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNote = () =>
             {
-                note.Should().NotBeNull();
+                result.Should().NotBeNull();
             };
 
-            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNoteWithExpectedPropertyValues = () =>
             {
                 ShouldMapToNote();
-                note.Status.Should().Be(NoteStatus.Submitted);
+                result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Submitted);
+                result.SubmittedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate);
             };
         }
 
@@ -192,7 +194,8 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
-                result.SubmittedDate.Should().Be(note.SubmittedDate);
+                result.RecipientOrganisationData.Should().NotBeNull();
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
             }
         }
     }

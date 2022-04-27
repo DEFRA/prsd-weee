@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Autofac;
@@ -52,15 +53,15 @@
                 note = Query.GetEvidenceNoteById(note.Id);
             };
 
-            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNote = () =>
             {
-                note.Should().NotBeNull();
+                result.Should().NotBeNull();
             };
 
-            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            private readonly It shouldHaveReturnedTheEvidenceNoteWithExpectedPropertyValues = () =>
             {
                 ShouldMapToNote();
-                note.Status.Should().Be(NoteStatus.Draft);
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
         }
 
@@ -102,13 +103,14 @@
 
             private readonly It shouldHaveCreatedEvidenceNote = () =>
             {
-                note.Should().NotBeNull();
+                result.Should().NotBeNull();
             };
 
             private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
             {
                 ShouldMapToNote();
-                note.Status.Should().Be(NoteStatus.Submitted);
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Submitted);
+                result.SubmittedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate);
             };
         }
 
@@ -182,9 +184,7 @@
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
                 result.SchemeData.Should().NotBeNull();
-
-                result.SchemeData.Id.Should().Be(note.Recipient.Id);  // how can we associate note.Recipient.Id with Scheme.Id ?
-
+                result.SchemeData.Id.Should().Be(note.Recipient.Id);
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
@@ -196,6 +196,8 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.RecipientOrganisationData.Should().NotBeNull();
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
             }
         }
     }
