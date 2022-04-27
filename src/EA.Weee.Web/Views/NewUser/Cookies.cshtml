@@ -96,6 +96,11 @@
                     <td class="govuk-table__cell">This tells us if you consent to cookies being stored on your machine or not.</td>
                     <td class="govuk-table__cell">28 days</td>
                 </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">seen_cookie_message</td>
+                    <td class="govuk-table__cell">This tells us if you have been shown the cookie message.</td>
+                    <td class="govuk-table__cell">28 days</td>
+                </tr>
             </tbody>
         </table>
 
@@ -134,9 +139,15 @@
             return;
         }
         if (document.getElementById("yes").checked) {
-            GOVUK.acceptCookies();
+            GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+            document.getElementById("global-cookie-message").style.display = "none";
         } else {
-            GOVUK.rejectCookies();
+            GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
+            document.getElementById("global-cookie-message").style.display = "none";
+            GOVUK.cookie('_ga', null);
+            GOVUK.cookie('_gid', null);
+            GOVUK.cookie('_gat', null);
+            GOVUK.cookie('_gat_govuk_shared', null);
         }
         document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
         document.getElementById("cookieSettings").style.display = "none";
