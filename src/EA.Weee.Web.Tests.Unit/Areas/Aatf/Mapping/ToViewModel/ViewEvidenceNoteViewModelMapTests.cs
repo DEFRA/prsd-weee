@@ -45,7 +45,7 @@
         public void Map_GivenSource_StandardPropertiesShouldBeMapped()
         {
             //arrange
-            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.SchemeId, null).Create();
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
 
             //act
             var result = map.Map(source);
