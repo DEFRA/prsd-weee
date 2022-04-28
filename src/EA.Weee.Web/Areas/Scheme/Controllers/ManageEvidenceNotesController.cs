@@ -134,7 +134,7 @@
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
             }
@@ -152,7 +152,10 @@
                 // call the api with the new evidence note scheme request
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
+                {
+                    SchemeId = pcsId
+                });
 
                 //return viewmodel to view
                 return View(model);

@@ -1,21 +1,24 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 @{
-    ViewBag.Title = "Manage Evidence";
+    ViewBag.Title = "Review evidence - GOV.UK";
+
+    
 }
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, null)), "Manage evidence notes"))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.SchemeId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)), "Manage evidence notes"))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
-        @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Reference)
