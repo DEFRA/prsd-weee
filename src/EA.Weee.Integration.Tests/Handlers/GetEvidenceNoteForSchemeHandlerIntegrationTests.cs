@@ -74,7 +74,7 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 var categories = new List<NoteTonnage>()
                 {

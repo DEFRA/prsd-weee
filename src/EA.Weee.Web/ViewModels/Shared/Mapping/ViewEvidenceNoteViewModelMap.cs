@@ -63,6 +63,7 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
+                SchemeId = source.SchemeId
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
