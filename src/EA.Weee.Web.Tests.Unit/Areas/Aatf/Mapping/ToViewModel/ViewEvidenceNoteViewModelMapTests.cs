@@ -122,7 +122,7 @@
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                organisation.Name,
+                organisation.OrganisationName,
                 organisation.BusinessAddress.Address1,
                 organisation.BusinessAddress.Address2,
                 organisation.BusinessAddress.TownOrCity,
@@ -152,7 +152,7 @@
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                organisation.Name,
+                organisation.OrganisationName,
                 organisation.NotificationAddress.Address1,
                 organisation.NotificationAddress.Address2,
                 organisation.NotificationAddress.TownOrCity,
@@ -240,6 +240,22 @@
                 .Be($"You have successfully submitted the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
+
+        [Fact]
+        public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be(
+                    $"You have successfully approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+         }
 
         [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()

@@ -117,7 +117,7 @@
             var result = map.Map(note);
 
             //arrange
-            result.SubmittedDate.Should().BeSameDateAs(date);
+            result.SubmittedDate.Should().Be(date);
         }
 
         [Fact]
