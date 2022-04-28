@@ -1,55 +1,61 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
-    using AutoFixture;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Evidence;
-    using EA.Weee.RequestHandlers.AatfEvidence;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Tests.Core;
-    using FakeItEasy;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Helpers;
+    using AutoFixture;
+    using Core.AatfEvidence;
+    using Core.DataReturns;
+    using DataAccess.DataAccess;
+    using Domain.AatfReturn;
+    using Domain.Evidence;
+    using Domain.Organisation;
     using Domain.Scheme;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Mappings;
+    using Prsd.Core.Domain;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.AatfEvidence;
+    using RequestHandlers.AatfReturn.Internal;
+    using RequestHandlers.Security;
+    using Weee.Requests.AatfEvidence;
+    using Weee.Tests.Core;
     using Xunit;
-    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
-    public class GetEvidenceNotesByOrganisationRequestHandlerTests
+    public class GetEvidenceNotesForTransferRequestHandlerTests
     {
-        private GetEvidenceNotesByOrganisationRequestHandler handler;
+        private GetEvidenceNotesForTransferRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private readonly IMapper mapper;
-        private readonly Guid organisationId;
-        private readonly GetEvidenceNotesByOrganisationRequest request;
+        private readonly GetEvidenceNotesForTransferRequest request;
+        private readonly Note note;
+        private readonly Guid evidenceNoteId;
+        private readonly Guid recipientId;
 
-        public GetEvidenceNotesByOrganisationRequestHandlerTests()
+        public GetEvidenceNotesForTransferRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
             mapper = A.Fake<IMapper>();
+            note = A.Fake<Note>();
+            fixture.Create<Guid>();
+            evidenceNoteId = fixture.Create<Guid>();
+            recipientId = fixture.Create<Guid>();
 
-            organisationId = Guid.NewGuid();
+            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
+            request = new GetEvidenceNotesForTransferRequest(evidenceNoteId, fixture.CreateMany<WeeeCategory>().ToList());
 
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
-                evidenceDataAccess,
-                mapper,
-                schemeDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
+
+            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
 
         [Fact]
@@ -57,72 +63,63 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
             //assert
             result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+           
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
             //assert
             result.Should().BeOfType<SecurityException>();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        public async Task HandleAsync_GivenRequest_EvidenceNoteShouldBeRetrieved()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldExternalAccess()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea())
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestAndEvidenceNoteNotFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
-            var scheme = A.Fake<Scheme>();
-            var schemeId = fixture.Create<Guid>();
+            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns((Note)null);
 
-            A.CallTo(() => scheme.Id).Returns(schemeId);
-            var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+            //assert
+            result.Should().BeOfType<ArgumentNullException>();
+        }
 
-            // act
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
+        {
+            //act
             await handler.HandleAsync(request);
 
-            // assert
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
-                                                              e.SchemeId.Equals(schemeId) && 
-                                                              e.AllowedStatuses.SequenceEqual(status) &&
-                                                              e.AatfId == null))).MustHaveHappenedOnceExactly();
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -193,11 +190,6 @@
 
             // assert
             result.Should().BeEquivalentTo(noteData);
-        }
-
-        private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
-        {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
         }
     }
 }
