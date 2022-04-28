@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using CuttingEdge.Conditions;
     using DataAccess;
     using Prsd.Core;
     using Prsd.Core.Domain;
@@ -31,7 +32,7 @@
 
             var evidenceNote = await context.Notes.FindAsync(message.NoteId);
 
-            Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.NoteId} not found");
+            Condition.Requires(evidenceNote).IsNotNull();
             
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
@@ -40,7 +41,7 @@
 
             await context.SaveChangesAsync();
 
-            return message.NoteId;
+            return evidenceNote.Id;
         }
     }
 }

@@ -318,6 +318,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceController.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Services\ISessionService.cs" />
     <Compile Include="Services\SessionService.cs" />
