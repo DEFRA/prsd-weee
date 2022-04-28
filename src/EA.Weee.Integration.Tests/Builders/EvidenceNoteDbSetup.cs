@@ -41,7 +41,7 @@
             tonnages);
         }
 
-        public EvidenceNoteDbSetup WithScheme(Guid schemeId)
+        public EvidenceNoteDbSetup WithRecipient(Guid schemeId)
         {
             instance.UpdateScheme(schemeId);
             return this;
