@@ -29,6 +29,8 @@
 
         public DateTime? SubmittedDate { get; set; }
 
+        public DateTime? ApprovedDate { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }
