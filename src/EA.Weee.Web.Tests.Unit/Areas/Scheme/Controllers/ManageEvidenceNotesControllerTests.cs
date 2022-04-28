@@ -74,6 +74,13 @@
         }
 
         [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task IndexGet_BreadcrumbShouldBeSet()
         {
             //arrange
