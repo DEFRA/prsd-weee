@@ -45,7 +45,7 @@
         public void Map_GivenSource_StandardPropertiesShouldBeMapped()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.SchemeId, null).Create();
 
             //act
             var result = map.Map(source);
@@ -61,6 +61,7 @@
             result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+            result.SchemeId.Should().Be(source.SchemeId);
         }
 
         [Fact]
