@@ -8,7 +8,6 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Organisations;
-    using Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -62,6 +61,7 @@
             result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+            result.SchemeId.Should().Be(source.SchemeId);
         }
 
         [Fact]
@@ -243,6 +243,22 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be(
+                    $"You have successfully approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+         }
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
@@ -262,6 +278,28 @@
             var result = map.Map(source);
 
             result.SubmittedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenApprovedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = null;
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be(string.Empty);
         }
     }
 }
