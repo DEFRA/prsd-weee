@@ -7,24 +7,25 @@
     ViewBag.Title = "Manage Evidence";
 }
 
-<section id="main-content">
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, null)), "Manage evidence notes"))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
+        @Html.HiddenFor(m => m.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Reference)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Status, new { id = "status-id" })
 
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.OrganisationId, null)), "Manage evidence notes"))
-
         @Html.Gds().ValidationSummary()
 
         <h1 class="govuk-heading-l">Review evidence</h1>
-        <p class="govuk-body govuk-!-margin-bottom-7">After review, you can choose whether to approve, reject or return the evidence note.</p>
+        <p class="govuk-body govuk-!-margin-bottom-5">After review, you can choose whether to approve, reject or return the evidence note.</p>
 
         @Html.Partial("_ViewEvidenceNotePartial", Model.ViewEvidenceNoteViewModel)
 
@@ -45,4 +46,4 @@
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
-</section>
+}

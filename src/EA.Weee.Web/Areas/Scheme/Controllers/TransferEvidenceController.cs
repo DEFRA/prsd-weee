@@ -32,14 +32,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferEvidenceNote(Guid organisationId)
+        public async Task<ActionResult> TransferEvidenceNote(Guid pcsId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 var model = new TransferEvidenceNoteDataViewModel();
-                model.OrganisationId = organisationId;
+                model.OrganisationId = pcsId;
                 model.SchemasToDisplay = await GetApprovedSchemes();
                 return this.View("TransferEvidenceNote", model);
             }
@@ -57,9 +57,9 @@
                 {
                     var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
 
-                    sessionService.SetTransferNoteSessionObject(Session, transferRequest);
+                    sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
 
-                    return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = model.OrganisationId });
+                    return RedirectToAction("Index", "Holding", new { area = "Scheme", OrganisationId = model.OrganisationId });
                 }
 
                 await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
