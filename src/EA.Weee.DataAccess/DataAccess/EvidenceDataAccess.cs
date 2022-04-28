@@ -68,6 +68,15 @@
             return notes;
         }
 
+        public async Task<List<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories)
+        {
+            var notes = await context.Notes.Where(n => n.RecipientId == schemeId &&
+                                                        n.NoteType.Value == NoteType.EvidenceNote.Value &&
+                                                        n.Status.Value == NoteStatus.Approved.Value &&
+                                                        n.NoteTonnage.Select(nt => (int)nt.CategoryId).Any(categories.Contains)).ToListAsync();
+
+            return notes;
+        }
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId)
         {
             return await context.Notes.Where(n => n.AatfId.Equals(aatfId) && n.Status.Value.Equals(status.Value))

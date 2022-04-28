@@ -22,5 +22,7 @@
         Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter);
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId);
+
+        Task<List<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories);
     }
 }
