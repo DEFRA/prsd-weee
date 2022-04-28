@@ -41,21 +41,21 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
+        public async Task<ActionResult> Index(Guid pcsId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
 
                 switch (activeDisplayOption)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
                 }
             }
         }
@@ -64,7 +64,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Transfer(Guid organisationId)
         {
-            return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { area = "Scheme", organisationId });
+            return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId });
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
@@ -82,31 +82,31 @@
             }
         }
 
-        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemeData scheme)
+        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, SchemeData scheme)
         {
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
 
-                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
+                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
-                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, result, schemeName));
+                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName));
 
                 return View("ViewAndTransferEvidence", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note scheme request from note's Guid
-                var model = await GetNote(evidenceNoteId, client);
+                var model = await GetNote(pcsId, evidenceNoteId, client);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -134,18 +134,18 @@
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -159,7 +159,7 @@
             }
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid evidenceNoteId, IWeeeClient client)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -167,7 +167,10 @@
             var result = await client.SendAsync(User.GetAccessToken(), request);
 
             // create new viewmodel mapper to map request to viewmodel
-            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
+            {
+                SchemeId = pcsId
+            });
 
             return model;
         }

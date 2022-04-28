@@ -5,9 +5,14 @@
 
     public class SessionService : ISessionService
     {
-        public void SetTransferNoteSessionObject(HttpSessionStateBase session, TransferEvidenceNoteRequest request)
+        public void SetTransferSessionObject(HttpSessionStateBase session, object request, string sessionKey)
         {
-            session["TransferEvidenceNoteData"] = request;
+            session[sessionKey] = request;
+        }
+
+        public T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -5,6 +5,8 @@
 
     public interface ISessionService
     {
-        void SetTransferNoteSessionObject(HttpSessionStateBase session, TransferEvidenceNoteRequest request);
+        void SetTransferSessionObject(HttpSessionStateBase session, object request, string sessionKey);
+
+        T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey);
     }
 }
