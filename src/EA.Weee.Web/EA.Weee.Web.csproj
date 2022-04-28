@@ -317,6 +317,7 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMapTransfer.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
