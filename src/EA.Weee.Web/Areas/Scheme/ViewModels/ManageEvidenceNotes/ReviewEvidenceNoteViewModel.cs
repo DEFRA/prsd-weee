@@ -9,8 +9,6 @@
     {
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
-        public Guid SchemeId { get; set; }
-
         [Required(ErrorMessage = "You must select an option")]
         public override string SelectedValue { get; set; }
 
