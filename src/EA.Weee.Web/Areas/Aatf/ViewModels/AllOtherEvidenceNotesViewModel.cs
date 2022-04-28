@@ -8,7 +8,6 @@
         public AllOtherEvidenceNotesViewModel()
         : base(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)
         {
-            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
     }
 }
