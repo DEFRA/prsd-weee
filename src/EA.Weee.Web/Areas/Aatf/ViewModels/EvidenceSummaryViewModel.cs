@@ -21,7 +21,6 @@
         public EvidenceSummaryViewModel()
         : base(ManageEvidenceOverviewDisplayOption.EvidenceSummary)
         {
-            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
         }
     }
 }
