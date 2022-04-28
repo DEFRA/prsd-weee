@@ -55,6 +55,7 @@
     <Compile Include="AatfEvidence\GetAatfNotesRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequest.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteFilterBaseRequest.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequest.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />

@@ -123,11 +123,6 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    if (status == NoteStatus.Approved)
-                    {
-                        model.ViewEvidenceNoteViewModel.SuccessMessage = "Your evidence note has successfully been set to 'Approved'.";
-                    }
-
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
