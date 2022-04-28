@@ -76,46 +76,27 @@
             return img.ToString(TagRenderMode.SelfClosing);
         }
 
-        public MvcHtmlString SecondaryButton(string innerHtml,
-            object htmlAttributes = null)
-        {
-            return SecondaryButton(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
-        }
-
         public MvcHtmlString Button(string innerHtml,
-            object htmlAttributes = null)
+            object htmlAttributes = null, bool secondaryButton = false)
         {
-            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), secondaryButton);
         }
 
-        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes)
+        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes, bool secondaryButton = false)
         {
             var builder = new TagBuilder("button")
             {
                 InnerHtml = innerHtml
             };
-            builder.AddCssClass("govuk-button");
-            builder.Attributes.Add("data-module", "govuk-button");
-            builder.Attributes.Add("data-prevent-double-click", "true");
-            builder.Attributes.Add("type", "submit");
-            builder.MergeAttributes(htmlAttributes);
-            
-            return MvcHtmlString.Create(builder.ToString());
-        }
-
-        public MvcHtmlString SecondaryButton(string innerHtml, IDictionary<string, object> htmlAttributes)
-        {
-            var builder = new TagBuilder("button")
+            if (secondaryButton)
             {
-                InnerHtml = innerHtml
-            };
-
-            builder.MergeAttributes(htmlAttributes);
-            builder.AddCssClass("govuk-button--secondary");
+                builder.AddCssClass("govuk-button--secondary");
+            }
             builder.AddCssClass("govuk-button");
             builder.Attributes.Add("data-module", "govuk-button");
             builder.Attributes.Add("data-prevent-double-click", "true");
             builder.Attributes.Add("type", "submit");
+            builder.MergeAttributes(htmlAttributes);
             
             return MvcHtmlString.Create(builder.ToString());
         }

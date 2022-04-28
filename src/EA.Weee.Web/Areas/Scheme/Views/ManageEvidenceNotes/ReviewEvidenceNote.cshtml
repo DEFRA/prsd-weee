@@ -37,11 +37,12 @@
                 Model.PossibleValues,
                 "Choose whether to approve, reject or return the evidence note",
                 RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Inline)
+                RadioButtonLayout.Stacked,
+                Model.HintItems)
         </div>
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Save and continue</button>
+            @this.WeeeGds().Button("Save and continue")
         </div>
     }
 </section>
