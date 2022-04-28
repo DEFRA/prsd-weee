@@ -60,6 +60,27 @@
         }
 
         [Fact]
+        public void TransferPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void TransferPost_ShouldHaveAntiForgeryAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task IndexGet_BreadcrumbShouldBeSet()
         {
             //arrange
@@ -232,6 +253,16 @@
 
             //asset
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public void TransferPost_PageRedirectsToTransferPage()
+        {
+            var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(OrganisationId);
         }
     }
 }

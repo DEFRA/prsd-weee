@@ -23,7 +23,7 @@
         Transfer evidence to another scheme
     </h1>
 
-    @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationId)

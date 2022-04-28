@@ -301,7 +301,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
-    <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerTransferEvidenceNoteTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
