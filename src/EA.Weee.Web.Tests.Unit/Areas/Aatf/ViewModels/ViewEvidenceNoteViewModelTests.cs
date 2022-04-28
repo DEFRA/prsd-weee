@@ -4,7 +4,6 @@
     using Core.AatfEvidence;
     using FluentAssertions;
     using Prsd.Core.Helpers;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Xunit;
 
@@ -161,6 +160,52 @@
             var result = model.DisplayEditButton;
 
             //assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasSubmittedDate_GivenSubmittedDate_ShouldBeTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                SubmittedDate = "Test",
+            };
+
+            var result = model.HasSubmittedDate;
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasSubmittedDate_GivenNoSubmittedDate_ShouldBeFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel();
+
+            var result = model.HasSubmittedDate;
+
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasApprovedDate_GivenApprovedDate_ShouldBeTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                ApprovedDate = "Test",
+            };
+
+            var result = model.HasApprovedDate;
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasApprovedDate_GivenNoApprovedDate_ShouldBeFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel();
+
+            var result = model.HasApprovedDate;
+
             result.Should().BeFalse();
         }
     }
