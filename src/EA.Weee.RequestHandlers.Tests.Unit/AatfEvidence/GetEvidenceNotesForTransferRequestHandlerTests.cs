@@ -9,17 +9,13 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
@@ -34,28 +30,27 @@
         private readonly ISchemeDataAccess schemeDataAccess;
         private readonly IMapper mapper;
         private readonly GetEvidenceNotesForTransferRequest request;
-        private readonly Note note;
-        private readonly Guid evidenceNoteId;
-        private readonly Guid recipientId;
+        private readonly Scheme scheme;
+        private readonly Guid schemeId;
 
         public GetEvidenceNotesForTransferRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
+            schemeDataAccess = A.Fake<ISchemeDataAccess>();
             mapper = A.Fake<IMapper>();
-            note = A.Fake<Note>();
             fixture.Create<Guid>();
-            evidenceNoteId = fixture.Create<Guid>();
-            recipientId = fixture.Create<Guid>();
+            schemeId = fixture.Create<Guid>();
+            scheme = A.Fake<Scheme>();
+            var organisationId = fixture.Create<Guid>();
 
-            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
+            A.CallTo(() => scheme.Id).Returns(schemeId);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
 
-            request = new GetEvidenceNotesForTransferRequest(evidenceNoteId, fixture.CreateMany<WeeeCategory>().ToList());
+            request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<WeeeCategory>().ToList());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
-
-            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
 
         [Fact]
@@ -89,36 +84,16 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_EvidenceNoteShouldBeRetrieved()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequestAndEvidenceNoteNotFound_ShowThrowArgumentNullExceptionExpected()
-        {
-            //arrange
-            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns((Note)null);
-
-            //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
-
-            //assert
-            result.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
+            //arrange
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
+            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(schemeId))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -130,6 +105,18 @@
 
             // assert
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequest_DataAccessGetNotesToTransferShouldBeCalled()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() =>
+                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList())))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -154,7 +141,8 @@
                 note3
             };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
+            A.CallTo(() =>
+                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -181,8 +169,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
-
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._)).Returns(noteList);
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
