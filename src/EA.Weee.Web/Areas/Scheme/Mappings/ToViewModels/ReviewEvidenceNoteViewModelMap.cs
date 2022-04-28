@@ -22,7 +22,8 @@
 
             var model = new ReviewEvidenceNoteViewModel()
             {
-                ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source)
+                ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source),
+                SchemeId = source.SchemeId
             };
 
             return model;

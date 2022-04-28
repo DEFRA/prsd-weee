@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
@@ -7,6 +8,8 @@
     public class ReviewEvidenceNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint
     {
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
+
+        public Guid SchemeId { get; set; }
 
         [Required(ErrorMessage = "You must select an option")]
         public override string SelectedValue { get; set; }

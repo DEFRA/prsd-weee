@@ -265,7 +265,7 @@
 
             // assert
             A.CallTo(() =>
-                    sessionService.SetTransferNoteSessionObject(transferEvidenceController.Session, transferRequest))
+                    sessionService.SetTransferSessionObject(transferEvidenceController.Session, transferRequest, SessionKeyConstant.TransferNoteKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -283,7 +283,7 @@
 
             // assert
             A.CallTo(() =>
-                    sessionService.SetTransferNoteSessionObject(transferEvidenceController.Session, A<TransferEvidenceNoteRequest>._)).MustNotHaveHappened();
+                    sessionService.SetTransferSessionObject(transferEvidenceController.Session, A<TransferEvidenceNoteRequest>._, A<string>._)).MustNotHaveHappened();
         }
 
         private void AddModelError()
