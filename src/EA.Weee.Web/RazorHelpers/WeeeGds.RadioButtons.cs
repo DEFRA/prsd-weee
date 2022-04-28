@@ -78,7 +78,7 @@
 
                 string radioButton;
                 var hint = string.Empty;
-                if (hintValues != null && hintValues.ContainsKey(possibleValues[i]))
+                if (hintValues != null && hintValues.ContainsKey(possibleValues[i]) && layout.Equals(RadioButtonLayout.Stacked))
                 {
                     radioButton = HtmlHelper.RadioButtonFor(expression, possibleValues[i], 
                         new { id = idForThisButton, @class = "govuk-radios__input", @data_aria_controls = $"conditional-{idForThisButton}" }).ToString();
