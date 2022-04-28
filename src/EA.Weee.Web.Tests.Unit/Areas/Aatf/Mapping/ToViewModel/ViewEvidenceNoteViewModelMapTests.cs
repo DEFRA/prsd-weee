@@ -61,6 +61,7 @@
             result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+            result.SchemeId.Should().Be(source.SchemeId);
         }
 
         [Fact]
