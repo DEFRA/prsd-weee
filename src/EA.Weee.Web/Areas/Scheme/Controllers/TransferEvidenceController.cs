@@ -104,9 +104,12 @@
         {
             if (ModelState.IsValid)
             {
-                //var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
+                // TODO update the request values with notes captured on the form
+                var transferRequest =
+                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                        SessionKeyConstant.TransferNoteKey);
 
-                sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.TransferNoteKey);
+                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
 
                 return RedirectToAction("Index", "Holding", new { area = "Scheme", organisationId = model.PcsId });
             }
