@@ -39,8 +39,10 @@
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
                 SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
+                ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
@@ -62,6 +64,7 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
+                SchemeId = source.SchemeId,
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
@@ -75,6 +78,9 @@
                     category.Id = tonnageData.Id;
                 }
             }
+
+            model.TotalReceivedDisplay = model.ReceivedTotal;
+
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
@@ -97,7 +103,7 @@
                                 $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
                             break;
                         case NoteStatus.Approved:
-                            model.SuccessMessage = $"You have successfully approved the evidence note with reference ID E{note.Reference}";
+                            model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
                             break;
                     }
 

@@ -32,7 +32,7 @@
         protected readonly IWeeeCache Cache;
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
-        protected readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
+        protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -41,7 +41,7 @@
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
-            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest>>();
+            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
             Fixture = new Fixture();
         }
@@ -56,6 +56,27 @@
         public void IndexGet_ShouldHaveHttpGetAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(ManageEvidenceNotesDisplayOptions) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void TransferPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void TransferPost_ShouldHaveAntiForgeryAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -232,6 +253,16 @@
 
             //asset
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public void TransferPost_PageRedirectsToTransferPage()
+        {
+            var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(OrganisationId);
         }
     }
 }
