@@ -214,12 +214,12 @@ input[type="file"].form-control {
 
 
 .warning-details-summary {
-    color: govuk-colour('black');
+    color: govuk-colour('black') !important;
     width: calc(100% - 25px);
 }
 
 .error-details-summary {
-    color: govuk-colour('black');
+    color: govuk-colour('black') !important;
     width: calc(100% - 25px);
 }
 
