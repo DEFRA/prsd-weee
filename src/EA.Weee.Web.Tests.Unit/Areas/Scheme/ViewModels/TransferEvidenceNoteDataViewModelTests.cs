@@ -20,7 +20,7 @@
         public void TransferEvidenceNoteDataViewModel_SelectedScheme_ShouldHaveRequiredAttribute()
         {
             var property = "SelectedSchema";
-            var description = "Select a PCS";
+            var description = "Select who you would like to transfer evidence to";
 
             typeof(TransferEvidenceNoteDataViewModel)
                 .GetProperty(property)
