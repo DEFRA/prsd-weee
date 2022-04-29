@@ -1592,7 +1592,7 @@
     <Compile Include="ViewModels\Shared\KeyValueRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonGenericStringCollectionViewModel.cs" />
-    <Compile Include="ViewModels\Shared\RadioButtonPair.cs" />
+    <Compile Include="ViewModels\Shared\GenericControlPair.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
