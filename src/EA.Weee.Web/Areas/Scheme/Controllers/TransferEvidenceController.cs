@@ -54,27 +54,24 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferEvidenceNote(TransferEvidenceNoteCategoriesViewModel model)
         {
-            using (var client = apiClient())
+            var selectedCategoryIds = model.SelectedCategoryValues;
+
+            if (ModelState.IsValid)
             {
-                var selectedCategoryIds = model.SelectedCategoryValues;
+                var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
 
-                if (ModelState.IsValid)
-                {
-                    var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
+                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
 
-                    sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
-
-                    return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId });
-                }
-
-                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
-
-                model.AddCategoryValues();
-                CheckedCategoryIds(model, selectedCategoryIds);
-                model.SchemasToDisplay = await GetApprovedSchemes();
-
-                return View(model);
+                return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId });
             }
+
+            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+            model.AddCategoryValues();
+            CheckedCategoryIds(model, selectedCategoryIds);
+            model.SchemasToDisplay = await GetApprovedSchemes();
+
+            return View(model);
         }
 
         [HttpGet]
@@ -99,6 +96,24 @@
 
                 return this.View("TransferFrom", model);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
+
+                sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.TransferNoteKey);
+
+                return RedirectToAction("Index", "Holding", new { area = "Scheme", organisationId = model.PcsId });
+            }
+
+            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            return View(model);
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)

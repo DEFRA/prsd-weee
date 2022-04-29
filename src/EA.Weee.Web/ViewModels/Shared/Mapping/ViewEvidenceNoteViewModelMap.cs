@@ -42,6 +42,7 @@
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
@@ -77,6 +78,7 @@
                     category.Id = tonnageData.Id;
                 }
             }
+
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
