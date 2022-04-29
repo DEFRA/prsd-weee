@@ -120,6 +120,10 @@
         {
             using (var client = apiClient())
             {
+                if (viewModel != null && viewModel.Action == ActionEnum.CopyAndPaste)
+                {
+                    return RedirectToAction("Index", "EvidenceTonnageValueCopyPaste", new { });
+                }
                 if (ModelState.IsValid)
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
