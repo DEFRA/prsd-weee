@@ -254,7 +254,7 @@
             //assert
             result.SuccessMessage.Should()
                 .Be(
-                    $"You have successfully approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+                    $"You have approved the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
          }
 
