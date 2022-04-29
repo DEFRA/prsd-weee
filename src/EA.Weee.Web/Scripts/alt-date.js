@@ -1,17 +1,17 @@
 ﻿$
     (function () {
-        $('#StartDate').datepicker({
-            showOn: 'button',
+        $("#StartDate").datepicker({
+            showOn: "button",
 
             buttonText: "",
             dayNamesShort: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             showButtonPanel: true,
-            closeText: 'Close',
+            closeText: "Close",
             onClose: removeAria,
             dateFormat: "dd/mm/yy"
-        }).next('button').button({
+        }).next("button").button({
             icons: {
-                primary: ''
+                primary: ""
             },
             text: false
         }).addClass("weee-calendar-button")
@@ -19,7 +19,9 @@
            
 
         // Add aria-describedby to the button referring to the label
-        $('.ui-datepicker-trigger').attr('aria-describedby', 'datepickerLabel');
+        var id = $(".ui-datepicker-trigger").prevAll("label").first().attr("id");
+
+        $(".ui-datepicker-trigger").attr("aria-describedby", id);
 
         dayTripper();
 
@@ -29,22 +31,22 @@
 
 function dayTripper() {
     $
-        ('.ui-datepicker-trigger').click(function () {
+        (".ui-datepicker-trigger").click(function () {
             setTimeout(function () {
-                var today = $('.ui-datepicker-today a')[0];
+                var today = $(".ui-datepicker-today a")[0];
 
                 if (!today) {
-                    today = $('.ui-state-active')[0] ||
-                        $('.ui-state-default')[0];
+                    today = $(".ui-state-active")[0] ||
+                        $(".ui-state-default")[0];
                 }
 
 
                 // Hide the entire page (except the date picker)
                 // from screen readers to prevent document navigation
                 // (by headings, etc.) while the popup is open
-                $("main").attr('id', 'dp-container');
-                $("#dp-container").attr('aria-hidden', 'true');
-                $("#skipnav").attr('aria-hidden', 'true');
+                $("main").attr("id", "dp-container");
+                $("#dp-container").attr("aria-hidden", "true");
+                $("#skipnav").attr("aria-hidden", "true");
 
                 // Hide the "today" button because it doesn't do what
                 // you think it supposed to do
@@ -52,7 +54,7 @@ function dayTripper() {
 
                 today.focus();
                 datePickHandler();
-                $(document).on('click', '#ui-datepicker-div .ui-datepicker-close', function () {
+                $(document).on("click", "#ui-datepicker-div .ui-datepicker-close", function () {
                     closeCalendar();
                 });
             }, 0);
@@ -62,29 +64,29 @@ function dayTripper() {
 
 function datePickHandler() {
     var activeDate;
-    var container = document.getElementById('ui-datepicker-div');
-    var input = document.getElementById('datepicker');
+    var container = document.getElementById("ui-datepicker-div");
+    var input = document.getElementById("datepicker");
 
     if (!container || !input) {
         return;
     }
     // $(container).find('table').first().attr('role', 'grid');
 
-    container.setAttribute('role', 'application');
-    container.setAttribute('aria-label', 'Calendar view date-picker');
+    container.setAttribute("role", "application");
+    container.setAttribute("aria-label", "Calendar view date-picker");
     // the top controls:
-    var prev = $('.ui-datepicker-prev', container)[0],
-        next = $('.ui-datepicker-next', container)[0];
+    var prev = $(".ui-datepicker-prev", container)[0],
+        next = $(".ui-datepicker-next", container)[0];
 
 
     // This is the line that needs to be fixed for use on pages with base URL set in head
-    next.href = 'javascript:void(0)';
-    prev.href = 'javascript:void(0)';
+    next.href = "javascript:void(0)";
+    prev.href = "javascript:void(0)";
 
-    next.setAttribute('role', 'button');
-    next.removeAttribute('title');
-    prev.setAttribute('role', 'button');
-    prev.removeAttribute('title');
+    next.setAttribute("role", "button");
+    next.removeAttribute("title");
+    prev.setAttribute("role", "button");
+    prev.removeAttribute("title");
 
     appendOffscreenMonthText(next);
     appendOffscreenMonthText(prev);
@@ -92,18 +94,18 @@ function datePickHandler() {
     // delegation won't work here for whatever reason, so we are
     // forced to attach individual click listeners to the prev /
     // next month buttons each time they are added to the DOM
-    $(next).on('click', handleNextClicks);
-    $(prev).on('click', handlePrevClicks);
+    $(next).on("click", handleNextClicks);
+    $(prev).on("click", handlePrevClicks);
 
     monthDayYearText();
 
-    $(container).on('keydown', function calendarKeyboardListener(keyVent) {
+    $(container).on("keydown", function calendarKeyboardListener(keyVent) {
         var which = keyVent.which;
         var target = keyVent.target;
         var dateCurrent = getCurrentDate(container);
 
         if (!dateCurrent) {
-            dateCurrent = $('a.ui-state-default')[0];
+            dateCurrent = $("a.ui-state-default")[0];
             setHighlightState(dateCurrent, container);
         }
 
@@ -112,86 +114,86 @@ function datePickHandler() {
             return closeCalendar();
         } else if (which === 9 && keyVent.shiftKey) { // SHIFT + TAB
             keyVent.preventDefault();
-            if ($(target).hasClass('ui-datepicker-close')) { // close button
-                $('.ui-datepicker-prev')[0].focus();
-            } else if ($(target).hasClass('ui-state-default')) { // a date link
-                $('.ui-datepicker-close')[0].focus();
-            } else if ($(target).hasClass('ui-datepicker-prev')) { // the prev link
-                $('.ui-datepicker-next')[0].focus();
-            } else if ($(target).hasClass('ui-datepicker-next')) { // the next link
-                activeDate = $('.ui-state-highlight') ||
-                    $('.ui-state-active')[0];
+            if ($(target).hasClass("ui-datepicker-close")) { // close button
+                $(".ui-datepicker-prev")[0].focus();
+            } else if ($(target).hasClass("ui-state-default")) { // a date link
+                $(".ui-datepicker-close")[0].focus();
+            } else if ($(target).hasClass("ui-datepicker-prev")) { // the prev link
+                $(".ui-datepicker-next")[0].focus();
+            } else if ($(target).hasClass("ui-datepicker-next")) { // the next link
+                activeDate = $(".ui-state-highlight") ||
+                    $(".ui-state-active")[0];
                 if (activeDate) {
                     activeDate.focus();
                 }
             }
         } else if (which === 9) { // TAB
             keyVent.preventDefault();
-            if ($(target).hasClass('ui-datepicker-close')) { // close button
-                activeDate = $('.ui-state-highlight') ||
-                    $('.ui-state-active')[0];
+            if ($(target).hasClass("ui-datepicker-close")) { // close button
+                activeDate = $(".ui-state-highlight") ||
+                    $(".ui-state-active")[0];
                 if (activeDate) {
                     activeDate.focus();
                 }
-            } else if ($(target).hasClass('ui-state-default')) {
-                $('.ui-datepicker-next')[0].focus();
-            } else if ($(target).hasClass('ui-datepicker-next')) {
-                $('.ui-datepicker-prev')[0].focus();
-            } else if ($(target).hasClass('ui-datepicker-prev')) {
-                $('.ui-datepicker-close')[0].focus();
+            } else if ($(target).hasClass("ui-state-default")) {
+                $(".ui-datepicker-next")[0].focus();
+            } else if ($(target).hasClass("ui-datepicker-next")) {
+                $(".ui-datepicker-prev")[0].focus();
+            } else if ($(target).hasClass("ui-datepicker-prev")) {
+                $(".ui-datepicker-close")[0].focus();
             }
         } else if (which === 37) { // LEFT arrow key
             // if we're on a date link...
-            if (!$(target).hasClass('ui-datepicker-close') && $(target).hasClass('ui-state-default')) {
+            if (!$(target).hasClass("ui-datepicker-close") && $(target).hasClass("ui-state-default")) {
                 keyVent.preventDefault();
                 previousDay(target);
             }
         } else if (which === 39) { // RIGHT arrow key
             // if we're on a date link...
-            if (!$(target).hasClass('ui-datepicker-close') && $(target).hasClass('ui-state-default')) {
+            if (!$(target).hasClass("ui-datepicker-close") && $(target).hasClass("ui-state-default")) {
                 keyVent.preventDefault();
                 nextDay(target);
             }
         } else if (which === 38) { // UP arrow key
-            if (!$(target).hasClass('ui-datepicker-close') && $(target).hasClass('ui-state-default')) {
+            if (!$(target).hasClass("ui-datepicker-close") && $(target).hasClass("ui-state-default")) {
                 keyVent.preventDefault();
                 upHandler(target, container, prev);
             }
         } else if (which === 40) { // DOWN arrow key
-            if (!$(target).hasClass('ui-datepicker-close') && $(target).hasClass('ui-state-default')) {
+            if (!$(target).hasClass("ui-datepicker-close") && $(target).hasClass("ui-state-default")) {
                 keyVent.preventDefault();
                 downHandler(target, container, next);
             }
         } else if (which === 13) { // ENTER
-            if ($(target).hasClass('ui-state-default')) {
+            if ($(target).hasClass("ui-state-default")) {
                 setTimeout(function () {
                     closeCalendar();
                 }, 100);
-            } else if ($(target).hasClass('ui-datepicker-prev')) {
+            } else if ($(target).hasClass("ui-datepicker-prev")) {
                 handlePrevClicks();
-            } else if ($(target).hasClass('ui-datepicker-next')) {
+            } else if ($(target).hasClass("ui-datepicker-next")) {
                 handleNextClicks();
             }
         } else if (32 === which) {
-            if ($(target).hasClass('ui-datepicker-prev') || $(target).hasClass('ui-datepicker-next')) {
+            if ($(target).hasClass("ui-datepicker-prev") || $(target).hasClass("ui-datepicker-next")) {
                 target.click();
             }
         } else if (33 === which) { // PAGE UP
-            moveOneMonth(target, 'prev');
+            moveOneMonth(target, "prev");
         } else if (34 === which) { // PAGE DOWN
-            moveOneMonth(target, 'next');
+            moveOneMonth(target, "next");
         } else if (36 === which) { // HOME
-            var firstOfMonth = $(target).closest('tbody').find('.ui-state-default')[0];
+            var firstOfMonth = $(target).closest("tbody").find(".ui-state-default")[0];
             if (firstOfMonth) {
                 firstOfMonth.focus();
-                setHighlightState(firstOfMonth, $('#ui-datepicker-div')[0]);
+                setHighlightState(firstOfMonth, $("#ui-datepicker-div")[0]);
             }
         } else if (35 === which) { // END
-            var $daysOfMonth = $(target).closest('tbody').find('.ui-state-default');
+            var $daysOfMonth = $(target).closest("tbody").find(".ui-state-default");
             var lastDay = $daysOfMonth[$daysOfMonth.length - 1];
             if (lastDay) {
                 lastDay.focus();
-                setHighlightState(lastDay, $('#ui-datepicker-div')[0]);
+                setHighlightState(lastDay, $("#ui-datepicker-div")[0]);
             }
         }
         $(".ui-datepicker-current").hide();
@@ -199,11 +201,11 @@ function datePickHandler() {
 }
 
 function closeCalendar() {
-    var container = $('#ui-datepicker-div');
+    var container = $("#ui-datepicker-div");
     $
-        (container).off('keydown');
-    var input = $('#datepicker')[0];
-    $(input).datepicker('hide');
+        (container).off("keydown");
+    var input = $("#datepicker")[0];
+    $(input).datepicker("hide");
 
     input.focus();
 }
@@ -211,9 +213,9 @@ function closeCalendar() {
 function removeAria() {
     // make the rest of the page accessible again:
     $
-        ("#dp-container").removeAttr('aria-hidden');
+        ("#dp-container").removeAttr("aria-hidden");
     $
-        ("#skipnav").removeAttr('aria-hidden');
+        ("#skipnav").removeAttr("aria-hidden");
 }
 
 ///////////////////////////////
@@ -228,14 +230,14 @@ function isOdd(num) {
 }
 
 function moveOneMonth(currentDate, dir) {
-    var button = (dir === 'next') ? $('.ui-datepicker-next')[0]
-        : $('.ui-datepicker-prev')[0];
+    var button = (dir === "next") ? $(".ui-datepicker-next")[0]
+        : $(".ui-datepicker-prev")[0];
 
     if (!button) {
         return;
     }
 
-    var ENABLED_SELECTOR = '#ui-datepicker-div tbody td:not(.ui-state-disabled)';
+    var ENABLED_SELECTOR = "#ui-datepicker-div tbody td:not(.ui-state-disabled)";
     var $currentCells = $(ENABLED_SELECTOR);
     var currentIdx = $.inArray(currentDate.parentNode, $currentCells);
 
@@ -245,15 +247,15 @@ function moveOneMonth(currentDate, dir) {
 
         var $newCells = $(ENABLED_SELECTOR);
         var newTd = $newCells[currentIdx];
-        var newAnchor = newTd && $(newTd).find('a')[0];
+        var newAnchor = newTd && $(newTd).find("a")[0];
 
         while (!newAnchor) {
             currentIdx--;
             newTd = $newCells[currentIdx];
-            newAnchor = newTd && $(newTd).find('a')[0];
+            newAnchor = newTd && $(newTd).find("a")[0];
         }
 
-        setHighlightState(newAnchor, $('#ui-datepicker-div')[0]);
+        setHighlightState(newAnchor, $("#ui-datepicker-div")[0]);
         newAnchor.focus();
 
     }, 0);
@@ -263,7 +265,7 @@ function handleNextClicks() {
     setTimeout(function () {
         updateHeaderElements();
         prepHighlightState();
-        $('.ui-datepicker-next').focus();
+        $(".ui-datepicker-next").focus();
         $(".ui-datepicker-current").hide();
     }, 0)
         ;
@@ -273,26 +275,26 @@ function handlePrevClicks() {
     setTimeout(function () {
         updateHeaderElements();
         prepHighlightState();
-        $('.ui-datepicker-prev').focus();
+        $(".ui-datepicker-prev").focus();
         $(".ui-datepicker-current").hide();
     }, 0)
         ;
 }
 
 function previousDay(dateLink) {
-    var container = document.getElementById('ui-datepicker-div');
+    var container = document.getElementById("ui-datepicker-div");
 
     if (!dateLink) {
         return;
     }
 
-    var td = $(dateLink).closest('td');
+    var td = $(dateLink).closest("td");
 
     if (!td) {
         return;
     }
 
-    var prevTd = $(td).prev(), prevDateLink = $('a.ui-state-default', prevTd)[0];
+    var prevTd = $(td).prev(), prevDateLink = $("a.ui-state-default", prevTd)[0];
 
     if (prevTd && prevDateLink) {
         setHighlightState(prevDateLink, container);
@@ -304,13 +306,13 @@ function previousDay(dateLink) {
 
 
 function handlePrevious(target) {
-    var container = document.getElementById('ui-datepicker-div');
+    var container = document.getElementById("ui-datepicker-div");
 
     if (!target) {
         return;
     }
 
-    var currentRow = $(target).closest('tr');
+    var currentRow = $(target).closest("tr");
 
     if (!currentRow) {
         return;
@@ -324,7 +326,7 @@ function handlePrevious(target) {
     }
 
     else {
-        var prevRowDates = $('td a.ui-state-default', previousRow);
+        var prevRowDates = $("td a.ui-state-default", previousRow);
         var prevRowDate = prevRowDates[prevRowDates.length - 1];
 
         if (prevRowDate) {
@@ -337,13 +339,13 @@ function handlePrevious(target) {
 }
 
 function previousMonth() {
-    var prevLink = $('.ui-datepicker-prev')[0];
-    var container = document.getElementById('ui-datepicker-div');
+    var prevLink = $(".ui-datepicker-prev")[0];
+    var container = document.getElementById("ui-datepicker-div");
     prevLink.click();
     // focus last day of new month
     setTimeout(function () {
-        var trs = $('tr', container),
-            lastRowTdLinks = $('td a.ui-state-default', trs[trs.length - 1]),
+        var trs = $("tr", container),
+            lastRowTdLinks = $("td a.ui-state-default", trs[trs.length - 1]),
             lastDate = lastRowTdLinks[lastRowTdLinks.length - 1];
 
         // updating the cached header elements
@@ -361,19 +363,19 @@ function previousMonth() {
  * @param  {HTMLElement} dateLink The target of the keyboard event
  */
 function nextDay(dateLink) {
-    var container = document.getElementById('ui-datepicker-div');
+    var container = document.getElementById("ui-datepicker-div");
 
     if (!dateLink) {
         return;
     }
 
-    var td = $(dateLink).closest('td');
+    var td = $(dateLink).closest("td");
 
     if (!td) {
         return;
     }
 
-    var nextTd = $(td).next(), nextDateLink = $('a.ui-state-default', nextTd)[0];
+    var nextTd = $(td).next(), nextDateLink = $("a.ui-state-default", nextTd)[0];
 
     if (nextTd && nextDateLink) {
         setHighlightState(nextDateLink, container);
@@ -384,20 +386,20 @@ function nextDay(dateLink) {
 }
 
 function handleNext(target) {
-    var container = document.getElementById('ui-datepicker-div');
+    var container = document.getElementById("ui-datepicker-div");
 
     if (!target) {
         return;
     }
 
-    var currentRow = $(target).closest('tr'), nextRow = $(currentRow).next();
+    var currentRow = $(target).closest("tr"), nextRow = $(currentRow).next();
 
     if (!nextRow || nextRow.length === 0) {
         nextMonth();
     }
 
     else {
-        var nextRowFirstDate = $('a.ui-state-default', nextRow)[0];
+        var nextRowFirstDate = $("a.ui-state-default", nextRow)[0];
         if (nextRowFirstDate) {
             setHighlightState(nextRowFirstDate, container);
             nextRowFirstDate.focus();
@@ -406,15 +408,15 @@ function handleNext(target) {
 }
 
 function nextMonth() {
-    nextMon = $('.ui-datepicker-next')[0];
-    var container = document.getElementById('ui-datepicker-div');
+    nextMon = $(".ui-datepicker-next")[0];
+    var container = document.getElementById("ui-datepicker-div");
     nextMon.click();
     // focus the first day of the new month
     setTimeout(function () {
         // updating the cached header elements
         updateHeaderElements();
 
-        var firstDate = $('a.ui-state-default', container)[0];
+        var firstDate = $("a.ui-state-default", container)[0];
         setHighlightState(firstDate, container);
         firstDate.focus();
     }, 0);
@@ -428,18 +430,18 @@ function nextMonth() {
  * @param  {HTMLElement} prevLink Link to navigate to previous month
  */
 function upHandler(target, cont, prevLink) {
-    prevLink = $('.ui-datepicker-prev')[0];
-    var rowContext = $(target).closest('tr');
+    prevLink = $(".ui-datepicker-prev")[0];
+    var rowContext = $(target).closest("tr");
     if (!rowContext) {
         return;
     }
-    var rowTds = $('td', rowContext),
-        rowLinks = $('a.ui-state-default', rowContext),
+    var rowTds = $("td", rowContext),
+        rowLinks = $("a.ui-state-default", rowContext),
         targetIndex = $.inArray(target, rowLinks),
         prevRow = $(rowContext).prev(),
-        prevRowTds = $('td', prevRow),
+        prevRowTds = $("td", prevRow),
         parallel = prevRowTds[targetIndex],
-        linkCheck = $('a.ui-state-default', parallel)[0];
+        linkCheck = $("a.ui-state-default", parallel)[0];
 
     if (prevRow && parallel && linkCheck) {
         // there is a previous row, a td at the same index
@@ -453,12 +455,12 @@ function upHandler(target, cont, prevLink) {
         setTimeout(function () {
             // updating the cached header elements
             updateHeaderElements();
-            var newRows = $('tr', cont),
+            var newRows = $("tr", cont),
                 lastRow = newRows[newRows.length - 1],
-                lastRowTds = $('td', lastRow),
+                lastRowTds = $("td", lastRow),
                 tdParallelIndex = $.inArray(target.parentNode, rowTds),
                 newParallel = lastRowTds[tdParallelIndex],
-                newCheck = $('a.ui-state-default', newParallel)[0];
+                newCheck = $("a.ui-state-default", newParallel)[0];
 
             if (lastRow && newParallel && newCheck) {
                 setHighlightState(newCheck, cont);
@@ -467,9 +469,9 @@ function upHandler(target, cont, prevLink) {
                 // theres no date link on the last week (row) of the new month
                 // meaning its an empty cell, so we'll try the 2nd to last week
                 var secondLastRow = newRows[newRows.length - 2],
-                    secondTds = $('td', secondLastRow),
+                    secondTds = $("td", secondLastRow),
                     targetTd = secondTds[tdParallelIndex],
-                    linkCheck = $('a.ui-state-default', targetTd)[0];
+                    linkCheck = $("a.ui-state-default", targetTd)[0];
 
                 if (linkCheck) {
                     setHighlightState(linkCheck, cont);
@@ -489,17 +491,17 @@ function upHandler(target, cont, prevLink) {
  * @param  {HTMLElement} nextLink Link to navigate to next month
  */
 function downHandler(target, cont, nextLink) {
-    nextLink = $('.ui-datepicker-next')[0];
-    var targetRow = $(target).closest('tr');
+    nextLink = $(".ui-datepicker-next")[0];
+    var targetRow = $(target).closest("tr");
     if (!targetRow) {
         return;
     }
-    var targetCells = $('td', targetRow),
+    var targetCells = $("td", targetRow),
         cellIndex = $.inArray(target.parentNode, targetCells), // the td (parent of target) index
         nextRow = $(targetRow).next(),
-        nextRowCells = $('td', nextRow),
+        nextRowCells = $("td", nextRow),
         nextWeekTd = nextRowCells[cellIndex],
-        nextWeekCheck = $('a.ui-state-default', nextWeekTd)[0];
+        nextWeekCheck = $("a.ui-state-default", nextWeekTd)[0];
 
     if (nextRow && nextWeekTd && nextWeekCheck) {
         // theres a next row, a TD at the same index of `target`,
@@ -513,10 +515,10 @@ function downHandler(target, cont, nextLink) {
             // updating the cached header elements
             updateHeaderElements();
 
-            var nextMonthTrs = $('tbody tr', cont),
-                firstTds = $('td', nextMonthTrs[0]),
+            var nextMonthTrs = $("tbody tr", cont),
+                firstTds = $("td", nextMonthTrs[0]),
                 firstParallel = firstTds[cellIndex],
-                firstCheck = $('a.ui-state-default', firstParallel)[0];
+                firstCheck = $("a.ui-state-default", firstParallel)[0];
 
             if (firstParallel && firstCheck) {
                 setHighlightState(firstCheck, cont);
@@ -525,9 +527,9 @@ function downHandler(target, cont, nextLink) {
                 // lets try the second row b/c we didnt find a
                 // date link in the first row at the target's index
                 var secondRow = nextMonthTrs[1],
-                    secondTds = $('td', secondRow),
+                    secondTds = $("td", secondRow),
                     secondRowTd = secondTds[cellIndex],
-                    secondCheck = $('a.ui-state-default', secondRowTd)[0];
+                    secondCheck = $("a.ui-state-default", secondRowTd)[0];
 
                 if (secondRow && secondCheck) {
                     setHighlightState(secondCheck, cont);
@@ -546,7 +548,7 @@ function onCalendarHide() {
 // add an aria-label to the date link indicating the currently focused date
 // (formatted identically to the required format: mm/dd/yyyy)
 function monthDayYearText() {
-    var cleanUps = $('.amaze-date');
+    var cleanUps = $(".amaze-date");
 
     $
         (cleanUps).each(function (clean) {
@@ -554,15 +556,15 @@ function monthDayYearText() {
             clean.parentNode.removeChild(clean);
         })
         ;
-    var datePickDiv = document.getElementById('ui-datepicker-div');
+    var datePickDiv = document.getElementById("ui-datepicker-div");
     // in case we find no datepick div
     if (!datePickDiv) {
         return;
     }
 
-    var dates = $('a.ui-state-default', datePickDiv);
+    var dates = $("a.ui-state-default", datePickDiv);
     $
-        (dates).attr('role', 'button').on('keydown', function (e) {
+        (dates).attr("role", "button").on("keydown", function (e) {
             if (e.which === 32) {
                 e.preventDefault();
                 e.target.click();
@@ -574,14 +576,14 @@ function monthDayYearText() {
         ;
     $
         (dates).each(function (index, date) {
-            var currentRow = $(date).closest('tr'),
-                currentTds = $('td', currentRow),
+            var currentRow = $(date).closest("tr"),
+                currentTds = $("td", currentRow),
                 currentIndex = $.inArray(date.parentNode, currentTds),
-                headThs = $('thead tr th', datePickDiv),
+                headThs = $("thead tr th", datePickDiv),
                 dayIndex = headThs[currentIndex],
-                daySpan = $('span', dayIndex)[0],
-                monthName = $('.ui-datepicker-month', datePickDiv)[0].innerHTML,
-                year = $('.ui-datepicker-year', datePickDiv)[0].innerHTML,
+                daySpan = $("span", dayIndex)[0],
+                monthName = $(".ui-datepicker-month", datePickDiv)[0].innerHTML,
+                year = $(".ui-datepicker-year", datePickDiv)[0].innerHTML,
                 number = date.innerHTML;
 
             if (!daySpan || !monthName || !number || !year) {
@@ -590,11 +592,11 @@ function monthDayYearText() {
 
             // AT Reads: {month} {date} {year} {day}
             // "December 18 2014 Thursday"
-            var dateText = date.innerHTML + ' ' + monthName + ' ' + year + ' ' + daySpan.title;
+            var dateText = date.innerHTML + " " + monthName + " " + year + " " + daySpan.title;
             // AT Reads: {date(number)} {name of day} {name of month} {year(number)}
             // var dateText = date.innerHTML + ' ' + daySpan.title + ' ' + monthName + ' ' + year;
             // add an aria-label to the date link reading out the currently focused date
-            date.setAttribute('aria-label', dateText);
+            date.setAttribute("aria-label", dateText);
         })
         ;
 }
@@ -603,27 +605,27 @@ function monthDayYearText() {
 
 // update the cached header elements because we're in a new month or year
 function updateHeaderElements() {
-    var context = document.getElementById('ui-datepicker-div');
+    var context = document.getElementById("ui-datepicker-div");
 
     if (!context) {
         return;
     }
     //  $(context).find('table').first().attr('role', 'grid');
 
-    prev = $('.ui-datepicker-prev', context)[0];
-    next = $('.ui-datepicker-next', context)[0];
+    prev = $(".ui-datepicker-prev", context)[0];
+    next = $(".ui-datepicker-next", context)[0];
 
     //make them click/focus - able
-    next.href = 'javascript:void(0)';
-    prev.href = 'javascript:void(0)';
+    next.href = "javascript:void(0)";
+    prev.href = "javascript:void(0)";
 
-    next.setAttribute('role', 'button');
-    prev.setAttribute('role', 'button');
+    next.setAttribute("role", "button");
+    prev.setAttribute("role", "button");
     appendOffscreenMonthText(next);
     appendOffscreenMonthText(prev);
 
-    $(next).on('click', handleNextClicks);
-    $(prev).on('click', handlePrevClicks);
+    $(next).on("click", handleNextClicks);
+    $(prev).on("click", handlePrevClicks);
 
     // add month day year text
     monthDayYearText();
@@ -632,9 +634,9 @@ function updateHeaderElements() {
 
 function prepHighlightState() {
     var highlight;
-    var cage = document.getElementById('ui-datepicker-div');
-    highlight = $('.ui-state-highlight', cage)[0] ||
-        $('.ui-state-default', cage)[0];
+    var cage = document.getElementById("ui-datepicker-div");
+    highlight = $(".ui-state-highlight", cage)[0] ||
+        $(".ui-state-default", cage)[0];
     if (highlight && cage) {
         setHighlightState(highlight, cage);
     }
@@ -646,15 +648,15 @@ function setHighlightState(newHighlight, container) {
     // remove the highlight state from previously
     // highlighted date and add it to our newly active date
     $
-        (prevHighlight).removeClass('ui-state-highlight');
+        (prevHighlight).removeClass("ui-state-highlight");
     $
-        (newHighlight).addClass('ui-state-highlight');
+        (newHighlight).addClass("ui-state-highlight");
 }
 
 
 // grabs the current date based on the highlight class
 function getCurrentDate(container) {
-    var currentDate = $('.ui-state-highlight', container)[0];
+    var currentDate = $(".ui-state-highlight", container)[0];
     return currentDate;
 }
 
@@ -665,34 +667,34 @@ function getCurrentDate(container) {
  */
 function appendOffscreenMonthText(button) {
     var buttonText;
-    var isNext = $(button).hasClass('ui-datepicker-next');
+    var isNext = $(button).hasClass("ui-datepicker-next");
     var months = [
-        'january', 'february',
-        'march', 'april',
-        'may', 'june', 'july',
-        'august', 'september',
-        'october',
-        'november', 'december'
+        "january", "february",
+        "march", "april",
+        "may", "june", "july",
+        "august", "september",
+        "october",
+        "november", "december"
     ];
 
-    var currentMonth = $('.ui-datepicker-title .ui-datepicker-month').text().toLowerCase();
+    var currentMonth = $(".ui-datepicker-title .ui-datepicker-month").text().toLowerCase();
     var monthIndex = $.inArray(currentMonth.toLowerCase(), months);
-    var currentYear = $('.ui-datepicker-title .ui-datepicker-year').text().toLowerCase();
+    var currentYear = $(".ui-datepicker-title .ui-datepicker-year").text().toLowerCase();
     var adjacentIndex = (isNext) ? monthIndex + 1 : monthIndex - 1;
 
-    if (isNext && currentMonth === 'december') {
+    if (isNext && currentMonth === "december") {
         currentYear = parseInt(currentYear, 10) + 1;
         adjacentIndex = 0;
-    } else if (!isNext && currentMonth === 'january') {
+    } else if (!isNext && currentMonth === "january") {
         currentYear = parseInt(currentYear, 10) - 1;
         adjacentIndex = months.length - 1;
     }
 
     buttonText = (isNext)
-        ? 'Next Month, ' + firstToCap(months[adjacentIndex]) + ' ' + currentYear
-        : 'Previous Month, ' + firstToCap(months[adjacentIndex]) + ' ' + currentYear;
+        ? "Next Month, " + firstToCap(months[adjacentIndex]) + " " + currentYear
+        : "Previous Month, " + firstToCap(months[adjacentIndex]) + " " + currentYear;
 
-    $(button).find('.ui-icon').html(buttonText);
+    $(button).find(".ui-icon").html(buttonText);
 }
 
 // Returns the string with the first letter capitalized
