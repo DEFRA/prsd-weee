@@ -64,7 +64,7 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
-                SchemeId = source.SchemeId
+                SchemeId = source.SchemeId,
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
@@ -78,6 +78,8 @@
                     category.Id = tonnageData.Id;
                 }
             }
+
+            model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 

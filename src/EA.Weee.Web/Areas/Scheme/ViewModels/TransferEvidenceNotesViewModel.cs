@@ -2,14 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
     using Core.Shared;
     using Web.ViewModels.Shared;
 
-    public class TransferEvidenceNotesViewModel
+    public class TransferEvidenceNotesViewModel : IValidatableObject
     {
         public Guid PcsId { get; set; }
-
-        public Guid RecipientId { get; set; }
 
         public string RecipientName { get; set; }
 
@@ -24,6 +25,14 @@
             CategoryValues = new List<CategoryValue>();
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
             SelectedEvidenceNotes = new List<bool>();
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!SelectedEvidenceNotes.Any(s => s.Equals(true)))
+            {
+                yield return new ValidationResult("Select at least one evidence note to transfer from", new[] { nameof(SelectedEvidenceNotes) });
+            }
         }
     }
 }
