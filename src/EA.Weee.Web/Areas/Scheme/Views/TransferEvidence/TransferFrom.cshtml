@@ -13,18 +13,73 @@
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
     </h1>
-    
+
     <p class="govuk-body-m govuk-!-font-weight-bold">Showing approved evidence notes with categories</p>
-    <ul>
+    <ul class="govuk-list">
         @foreach (var item in Model.CategoryValues)
         {
-            <li>@item.CategoryId @item.CategoryDisplay</li>
+            <li>@item.CategoryId. @item.CategoryDisplay</li>
         }
     </ul>
-    @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "TransferFrom", method: FormMethod.Post))
+    <p class="govuk-body-m">Select up to 5 notes</p>
+    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+
+        <table id="transfer-notes-selection" class="govuk-table">
+            <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">
+                    Reference ID
+                </th>
+                <th class="govuk-table__header">
+                    Submitted by
+                </th>
+                <th class="govuk-table__header">
+                    Total (tonnes)
+                </th>
+                <th class="govuk-table__header">
+                    &nbsp;
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+            @for (var count = 0; count < Model.EvidenceNotesDataList.Count; count++)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <div>
+                            <div class='govuk-checkboxes'>
+                                <div class='govuk-checkboxes__item'>
+                                    @{
+                                        var note = Model.EvidenceNotesDataList[count];
+                                        var selectedOption = Model.SelectedEvidenceNotes[count] ? "checked" : "";
+                                        var id = "SelectedEvidenceNotes_" + count;
+                                        var name = "SelectedEvidenceNotes[" + count + "]";
+                                    }
+
+                                    <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption/>
+                                    <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                        @Model.EvidenceNotesDataList[count].ReferenceDisplay
+                                    </label>
+                                    <input name="@name" type="hidden" value="false">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="govuk-table__cell">@Model.EvidenceNotesDataList[count].SubmittedBy</td>
+                    <td class="govuk-table__cell">@Model.EvidenceNotesDataList[count].ReceivedTotal</td>
+                    <td class="govuk-table__cell">
+                  
+                    </td>
+                </tr>
+            }
+
+            </tbody>
+        </table>
 
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">

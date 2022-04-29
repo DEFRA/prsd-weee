@@ -95,6 +95,17 @@
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithTonnages(categories5).WithRecipient(scheme.Id).Create());
 
+                var categories6 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                };
+
+                // not to not be included no tonnage entry
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories6).WithRecipient(scheme.Id).Create());
+
                 request = new GetEvidenceNotesForTransferRequest(organisation.Id,
                     new List<int>()
                     {
