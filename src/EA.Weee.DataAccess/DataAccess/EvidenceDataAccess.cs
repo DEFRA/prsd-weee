@@ -73,7 +73,7 @@
             var notes = await context.Notes.Where(n => n.RecipientId == schemeId &&
                                                         n.NoteType.Value == NoteType.EvidenceNote.Value &&
                                                         n.Status.Value == NoteStatus.Approved.Value &&
-                                                        n.NoteTonnage.Select(nt => (int)nt.CategoryId).Any(categories.Contains)).ToListAsync();
+                                                        n.NoteTonnage.Select(nt => (int)nt.CategoryId).AsEnumerable().Any(categories.Contains)).ToListAsync();
 
             return notes;
         }

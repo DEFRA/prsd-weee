@@ -45,7 +45,7 @@
                 notesSet.Add(note);
                 
                 request = new GetEvidenceNotesForTransferRequest(organisation.Id,
-                    new List<Core.DataReturns.WeeeCategory>());
+                    new List<Core.DataReturns.WeeeCategory>() { Core.DataReturns.WeeeCategory.AutomaticDispensers });
             };
 
             private readonly Because of = () =>
