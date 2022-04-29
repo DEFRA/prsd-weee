@@ -9,7 +9,7 @@
     {
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
-        [Required(ErrorMessage = "You must select an option")]
+        [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note")]
         public override string SelectedValue { get; set; }
 
         public Core.AatfEvidence.NoteStatus SelectedEnumValue
