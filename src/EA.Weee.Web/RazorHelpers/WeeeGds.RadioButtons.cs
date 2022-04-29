@@ -2,9 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public partial class WeeeGds<TModel>
     {
@@ -55,7 +58,8 @@
             IList<string> possibleValues,
             string legendText,
             RadioButtonLegend legend,
-            RadioButtonLayout layout)
+            RadioButtonLayout layout,
+            Dictionary<string, string> hintValues = null)
         {
             if (string.IsNullOrEmpty(legendText))
             {
@@ -72,8 +76,25 @@
 
                 var radioButtonDiv = "<div class=\"govuk-radios__item\">{0}</div>";
 
-                var radioButton = HtmlHelper.RadioButtonFor(expression,
-                    possibleValues[i], new { id = idForThisButton, @class = "govuk-radios__input" }).ToString();
+                string radioButton;
+                var hint = string.Empty;
+                if (hintValues != null && hintValues.ContainsKey(possibleValues[i]) && layout.Equals(RadioButtonLayout.Stacked))
+                {
+                    radioButton = HtmlHelper.RadioButtonFor(expression, possibleValues[i], 
+                        new { id = idForThisButton, @class = "govuk-radios__input", @data_aria_controls = $"conditional-{idForThisButton}" }).ToString();
+                    hintValues.TryGetValue(possibleValues[i], out var hintText);
+
+                    hint = $@"<div class=""govuk-radios__conditional govuk-radios__conditional--hidden"" id=""conditional-{idForThisButton}"">
+                    <div class=""govuk-form-group"">
+                    <p class=""govuk-body"">{hintText}</p>
+                    </div>
+                    </div>";
+                }
+                else
+                {
+                    radioButton = HtmlHelper.RadioButtonFor(expression,
+                        possibleValues[i], new { id = idForThisButton, @class = "govuk-radios__input" }).ToString();
+                }
 
                 var display = HtmlHelper.DisplayFor(m => possibleValues[i]);
 
@@ -81,6 +102,11 @@
 
                 radioButtonDiv = string.Format(radioButtonDiv, HtmlHelper.HiddenFor(m => possibleValues[i]) + radioButton + label);
 
+                if (!string.IsNullOrWhiteSpace(hint))
+                {
+                    radioButtonDiv += hint;
+                }
+                
                 radioButtonHtml += radioButtonDiv;
             }
 
@@ -106,7 +132,7 @@
 
             var classAttribute = string.Format("class=\"govuk-radios {0}\"", style);
 
-            return string.Format("<div {0}>{1}</div>", classAttribute, "{0}");
+            return string.Format("<div data-module=\"govuk-radios\" {0}>{1}</div>", classAttribute, "{0}");
         }
 
         private MvcHtmlString WrapRadioButtonsInFieldSet(
