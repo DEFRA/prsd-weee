@@ -54,13 +54,13 @@
                     new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null),
                 };
 
-                // not to not be included no matching category
+                // note to not be included no matching category
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(categories2).WithRecipient(scheme.Id).Create());
 
-                // not to be included not matching on scheme
+                // note to be included not matching on scheme
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(new List<NoteTonnage>()).WithRecipient(scheme2.Id).Create());
@@ -70,7 +70,7 @@
                     new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 4, 8),
                 };
 
-                // to be included
+                // not to be included
                 notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
@@ -81,7 +81,7 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
                 };
 
-                // not to be included as submitted
+                // note to be included as submitted
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithTonnages(categories4).WithRecipient(scheme.Id).Create());
@@ -91,7 +91,7 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
                 };
 
-                // not to be included as draft
+                // note to be included as draft
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithTonnages(categories5).WithRecipient(scheme.Id).Create());
 
@@ -100,7 +100,7 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
                 };
 
-                // not to not be included no tonnage entry
+                // note to not be included no tonnage entry
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
