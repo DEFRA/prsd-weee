@@ -2,7 +2,6 @@
 {
     using Core.Helpers;
     using DataAccess.DataAccess;
-    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
