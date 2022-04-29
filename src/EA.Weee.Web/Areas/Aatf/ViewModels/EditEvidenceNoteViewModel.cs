@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Web.Mvc;
     using Attributes;
     using Core.AatfEvidence;
@@ -25,7 +24,7 @@
         [EvidenceNoteEndDate(nameof(StartDate))]
         public override DateTime EndDate { get; set; }
 
-        [Required(ErrorMessage = "Select a receiving PCS")]
+        [Required(ErrorMessage = "Select a recipient")]
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
