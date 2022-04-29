@@ -48,7 +48,7 @@
             A.CallTo(() => scheme.Id).Returns(schemeId);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
 
-            request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<WeeeCategory>().ToList());
+            request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<int>().ToList());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
         }

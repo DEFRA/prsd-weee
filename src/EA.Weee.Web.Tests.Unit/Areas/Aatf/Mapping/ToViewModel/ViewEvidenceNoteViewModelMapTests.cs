@@ -62,6 +62,7 @@
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
             result.SchemeId.Should().Be(source.SchemeId);
+            result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
         }
 
         [Fact]
@@ -278,6 +279,17 @@
             var result = map.Map(source);
 
             result.SubmittedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedBy.Should().BeEmpty();
         }
 
         [Fact]

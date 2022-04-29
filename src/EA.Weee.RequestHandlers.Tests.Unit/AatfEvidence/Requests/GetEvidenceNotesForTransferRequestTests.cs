@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.DataReturns;
+    using Core.Helpers;
     using FluentAssertions;
     using Weee.Requests.AatfEvidence;
     using Xunit;
@@ -13,9 +14,9 @@
         public void GetEvidenceNotesForTransferRequest_GivenEmptyGuid_ArgumentExceptionExpected()
         {
             var exception = Record.Exception(() => new GetEvidenceNotesForTransferRequest(Guid.Empty,
-                new List<WeeeCategory>()
+                new List<int>()
                 {
-                    WeeeCategory.ConsumerEquipment
+                    WeeeCategory.ConsumerEquipment.ToInt()
                 }));
 
             exception.Should().BeOfType<ArgumentException>();
@@ -25,7 +26,7 @@
         public void GetEvidenceNotesForTransferRequest_GivenEmptyCategories_ArgumentExceptionExpected()
         {
             var exception = Record.Exception(() => new GetEvidenceNotesForTransferRequest(Guid.NewGuid(), 
-                new List<WeeeCategory>()));
+                new List<int>()));
 
             exception.Should().BeOfType<ArgumentException>();
         }
@@ -42,7 +43,7 @@
         public void GetEvidenceNotesForTransferRequest_GivenValues_PropertiesShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
-            var categories = new List<WeeeCategory>() { WeeeCategory.ConsumerEquipment, WeeeCategory.DisplayEquipment };
+            var categories = new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.DisplayEquipment.ToInt() };
 
             var request = new GetEvidenceNotesForTransferRequest(organisationId, categories);
 
