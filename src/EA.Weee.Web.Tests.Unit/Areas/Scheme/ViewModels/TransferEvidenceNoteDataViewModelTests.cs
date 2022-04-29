@@ -9,11 +9,11 @@
 
     public class TransferEvidenceNoteDataViewModelTests
     {
-        private readonly TransferEvidenceNoteDataViewModel model;
+        private readonly TransferEvidenceNoteCategoriesViewModel model;
 
         public TransferEvidenceNoteDataViewModelTests()
         {
-            model = new TransferEvidenceNoteDataViewModel();
+            model = new TransferEvidenceNoteCategoriesViewModel();
         }
 
         [Fact]
@@ -22,7 +22,7 @@
             var property = "SelectedSchema";
             var description = "Select a PCS";
 
-            typeof(TransferEvidenceNoteDataViewModel)
+            typeof(TransferEvidenceNoteCategoriesViewModel)
                 .GetProperty(property)
                 .Should()
                 .BeDecoratedWith<RequiredAttribute>(d => d.ErrorMessage.Equals(description));
@@ -34,7 +34,7 @@
             var property = "HasSelectedAtLeastOneCategory";
             var errorMessage = "Select a category you would like to transfer evidence from";
 
-            typeof(TransferEvidenceNoteDataViewModel)
+            typeof(TransferEvidenceNoteCategoriesViewModel)
                 .GetProperty(property)
                 .Should()
                 .BeDecoratedWith<RangeAttribute>(d => d.ErrorMessage.Equals(errorMessage));
@@ -44,7 +44,7 @@
         public void TransferEvidenceNoteDataViewModel_HasSelectedAtLeastOneCategory_RangeValuesShouldBeTrue()
         {
             var property = "HasSelectedAtLeastOneCategory";
-            typeof(TransferEvidenceNoteDataViewModel)
+            typeof(TransferEvidenceNoteCategoriesViewModel)
                 .GetProperty(property).Should()
                 .BeDecoratedWith<RangeAttribute>(e => e.Equals(new RangeAttribute(typeof(bool), "true", "true")));
         }

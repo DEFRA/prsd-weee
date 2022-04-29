@@ -7,6 +7,6 @@
     {
         void SetTransferSessionObject(HttpSessionStateBase session, object request, string sessionKey);
 
-        T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey);
+        T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey) where T : class;
     }
 }

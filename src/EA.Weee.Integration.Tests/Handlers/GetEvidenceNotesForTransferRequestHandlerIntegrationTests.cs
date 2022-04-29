@@ -10,6 +10,7 @@
     using Base;
     using Builders;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -95,10 +96,10 @@
                     .WithTonnages(categories5).WithRecipient(scheme.Id).Create());
 
                 request = new GetEvidenceNotesForTransferRequest(organisation.Id,
-                    new List<Core.DataReturns.WeeeCategory>()
+                    new List<int>()
                     {
-                        Core.DataReturns.WeeeCategory.AutomaticDispensers,
-                        Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools
+                        Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
+                        Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools.ToInt()
                     });
             };
 
@@ -131,7 +132,7 @@
                 note = EvidenceNoteDbSetup.Init().Create();
 
                 request = new GetEvidenceNotesForTransferRequest(Guid.NewGuid(),
-                    new List<Core.DataReturns.WeeeCategory>());
+                    new List<int>() {1});
             };
 
             private readonly Because of = () =>

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using System.Web;
-    using Weee.Requests.Scheme;
 
     public class SessionService : ISessionService
     {
@@ -10,9 +9,14 @@
             session[sessionKey] = request;
         }
 
-        public T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey)
+        public T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey) where T : class
         {
-            throw new System.NotImplementedException();
+            if (session[sessionKey] != null)
+            {
+                return session[sessionKey] as T;
+            }
+
+            return null;
         }
     }
 }
