@@ -10,7 +10,7 @@
     {
         public Guid OrganisationId { get; set; }
 
-        [Required(ErrorMessage = "Select a PCS")]
+        [Required(ErrorMessage = "Select who you would like to transfer evidence to")]
         [Display(Name = "Who would you like to transfer evidence to?")]
         public Guid? SelectedSchema { get; set; }
 
