@@ -68,12 +68,12 @@
             return notes;
         }
 
-        public async Task<List<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories)
         {
             var notes = await context.Notes.Where(n => n.RecipientId == schemeId &&
                                                         n.NoteType.Value == NoteType.EvidenceNote.Value &&
                                                         n.Status.Value == NoteStatus.Approved.Value &&
-                                                        n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e))).ToListAsync();
+                                                        n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e))).ToArrayAsync();
 
             return notes;
         }

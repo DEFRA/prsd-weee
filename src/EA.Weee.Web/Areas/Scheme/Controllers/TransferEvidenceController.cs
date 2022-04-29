@@ -104,12 +104,17 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO update the request values with notes captured on the form
                 var transferRequest =
                     sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                         SessionKeyConstant.TransferNoteKey);
 
-                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
+                var selectedEvidenceNotes =
+                    model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
+
+                var updatedTransferRequest =
+                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+
+                sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 
                 return RedirectToAction("Index", "Holding", new { area = "Scheme", organisationId = model.PcsId });
             }
