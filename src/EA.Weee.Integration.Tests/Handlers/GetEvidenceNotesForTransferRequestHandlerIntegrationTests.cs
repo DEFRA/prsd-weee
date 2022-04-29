@@ -10,7 +10,6 @@
     using Base;
     using Builders;
     using Core.AatfEvidence;
-    using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -35,17 +34,72 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
                 scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
-                var categories = new List<NoteTonnage>()
+                var scheme2 = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories1 = new List<NoteTonnage>()
                 {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                    new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 1, 2),
                 };
 
-                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithRecipient(scheme.Id).Create();
+                // note to be included
+                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories1).WithRecipient(scheme.Id).Create());
 
-                notesSet.Add(note);
-                
+                var categories2 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null),
+                };
+
+                // not to not be included no matching category
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories2).WithRecipient(scheme.Id).Create());
+
+                // not to be included not matching on scheme
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(new List<NoteTonnage>()).WithRecipient(scheme2.Id).Create());
+
+                var categories3 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 4, 8),
+                };
+
+                // to be included
+                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories3).WithRecipient(scheme.Id).Create());
+
+                var categories4 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                };
+
+                // not to be included as submitted
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithTonnages(categories4).WithRecipient(scheme.Id).Create());
+
+                var categories5 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                };
+
+                // not to be included as draft
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithTonnages(categories5).WithRecipient(scheme.Id).Create());
+
                 request = new GetEvidenceNotesForTransferRequest(organisation.Id,
-                    new List<Core.DataReturns.WeeeCategory>() { Core.DataReturns.WeeeCategory.AutomaticDispensers });
+                    new List<Core.DataReturns.WeeeCategory>()
+                    {
+                        Core.DataReturns.WeeeCategory.AutomaticDispensers,
+                        Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools
+                    });
             };
 
             private readonly Because of = () =>
@@ -53,19 +107,22 @@
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
-            private readonly It shouldHaveReturnedTheEvidenceNote = () =>
+            private readonly It shouldHaveReturnedCorrectEvidenceNotes = () =>
             {
-                result.Should().NotBeNull();
-            };
+                result.Should().HaveCount(2);
+                foreach (var evidenceNoteData in result)
+                {
+                    notesSetToBeIncluded.First(n => n.Id.Equals(evidenceNoteData.Id)).Should().NotBeNull();
 
-            private readonly It shouldHaveReturnedTheEvidenceNoteWithExpectedPropertyValues = () =>
-            {
-                //ShouldMapToNote();
+                    var refreshedNote = Query.GetEvidenceNoteById(evidenceNoteData.Id);
+
+                    evidenceNoteData.ShouldMapToNote(refreshedNote);
+                }
             };
         }
 
         [Component]
-        public class WhenIGetANotesToTransferWhereUserIsNotAuthorised : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
+        public class WhenIGetNotesToTransferWhereUserIsNotAuthorised : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -94,7 +151,8 @@
             protected static Scheme scheme;  
             protected static Note note;
             protected static Fixture fixture;
-            protected static List<Note> notesSet;
+            protected static List<Note> notesSetToBeIncluded;
+            protected static List<Note> notesSetToNotBeIncluded;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -103,38 +161,14 @@
                     .WithTestData()
                     .WithExternalUserAccess();
 
-                notesSet = new List<Note>();
+                notesSetToBeIncluded = new List<Note>();
+                notesSetToNotBeIncluded = new List<Note>();
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetEvidenceNotesForTransferRequest, List<EvidenceNoteData>>>();
 
                 return setup;
             }
-            //protected static void ShouldMapToNote()
-            //{
-            //    result.EndDate.Should().Be(note.EndDate);
-            //    result.StartDate.Should().Be(note.StartDate);
-            //    result.Reference.Should().Be(note.Reference);
-            //    result.Protocol.ToInt().Should().Be(note.Protocol.ToInt());
-            //    result.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
-            //    result.AatfData.Should().NotBeNull();
-            //    result.AatfData.Id.Should().Be(note.Aatf.Id);
-            //    result.SchemeData.Should().NotBeNull();
-            //    result.SchemeData.Id.Should().Be(note.Recipient.Id);
-            //    result.EvidenceTonnageData.Count.Should().Be(3);
-            //    result.OrganisationData.Should().NotBeNull();
-            //    result.OrganisationData.Id.Should().Be(note.Organisation.Id);
-            //    ((int)result.Type).Should().Be(note.NoteType.Value);
-            //    result.Id.Should().Be(note.Id);
-            //    foreach (var noteTonnage in note.NoteTonnage)
-            //    {
-            //        result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
-            //                                                 n.Reused.Equals(noteTonnage.Reused) &&
-            //                                                 ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
-            //    }
-            //    result.RecipientOrganisationData.Should().NotBeNull();
-            //    result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
-            //}
         }
     }
 }
