@@ -35,5 +35,7 @@
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
+
+        public string TotalReceivedDisplay { get; set; }
     }
 }

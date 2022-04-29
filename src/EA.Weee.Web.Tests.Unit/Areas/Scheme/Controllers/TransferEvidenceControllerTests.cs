@@ -244,9 +244,9 @@
 
             // assert
             /* to be updated when actual redirect happens */
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
-            result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
+            result.RouteValues["action"].Should().Be("TransferFrom");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(model.OrganisationId);
         }
 
         [Fact]

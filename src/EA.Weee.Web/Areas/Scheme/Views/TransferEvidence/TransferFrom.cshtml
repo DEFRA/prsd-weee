@@ -10,22 +10,33 @@
 
 @section full_main_content
 {
-    <h1 class="govuk-heading-l">
-        From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
-    </h1>
-
-    <p class="govuk-body-m govuk-!-font-weight-bold">Showing approved evidence notes with categories</p>
-    <ul class="govuk-list">
-        @foreach (var item in Model.CategoryValues)
-        {
-            <li>@item.CategoryId. @item.CategoryDisplay</li>
-        }
-    </ul>
-    <p class="govuk-body-m">Select up to 5 notes</p>
     @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l">
+            From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
+        </h1>
+
+        <p class="govuk-body-m govuk-!-font-weight-bold">Showing approved evidence notes with categories</p>
+        <ul class="govuk-list">
+            @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
+            {
+                var item = categoryCount;
+                
+                @Html.HiddenFor(m => m.CategoryValues[item].CategoryId)
+                @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
+
+                <li>@Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay</li>
+            }
+        </ul>
+        <p class="govuk-body-m">Select up to 5 notes</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotes)">
+            <label for="SelectedEvidenceNotes" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotes" class="govuk-visually-hidden" />
+            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotes)
+        </div>
 
         <table id="transfer-notes-selection" class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
@@ -47,36 +58,42 @@
             </thead>
             <tbody class="govuk-table__body">
 
-            @for (var count = 0; count < Model.EvidenceNotesDataList.Count; count++)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <div>
-                            <div class='govuk-checkboxes'>
-                                <div class='govuk-checkboxes__item'>
-                                    @{
-                                        var note = Model.EvidenceNotesDataList[count];
-                                        var selectedOption = Model.SelectedEvidenceNotes[count] ? "checked" : "";
-                                        var id = "SelectedEvidenceNotes_" + count;
-                                        var name = "SelectedEvidenceNotes[" + count + "]";
-                                    }
+                @for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+                {
+                    var i1 = i;
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Type)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Reference)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].SubmittedBy)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].TotalReceivedDisplay)
 
-                                    <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption/>
-                                    <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
-                                        @Model.EvidenceNotesDataList[count].ReferenceDisplay
-                                    </label>
-                                    <input name="@name" type="hidden" value="false">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <div>
+                                <div class='govuk-checkboxes'>
+                                    <div class='govuk-checkboxes__item'>
+                                        @{
+                                            var selectedOption = Model.SelectedEvidenceNotes[i1] ? "checked" : "";
+                                            var id = "SelectedEvidenceNotes_" + i1;
+                                            var name = "SelectedEvidenceNotes[" + i1 + "]";
+                                        }
+
+                                        <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
+                                        <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                            @Model.EvidenceNotesDataList[i].ReferenceDisplay
+                                        </label>
+                                        <input name="@name" type="hidden" value="false">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="govuk-table__cell">@Model.EvidenceNotesDataList[count].SubmittedBy</td>
-                    <td class="govuk-table__cell">@Model.EvidenceNotesDataList[count].ReceivedTotal</td>
-                    <td class="govuk-table__cell">
-                  
-                    </td>
-                </tr>
-            }
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.EvidenceNotesDataList[i].SubmittedBy
+                        </td>
+                        <td class="govuk-table__cell">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
+                        <td class="govuk-table__cell">
+                        </td>
+                    </tr>
+                }
 
             </tbody>
         </table>
