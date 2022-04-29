@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Core.AatfEvidence;
+    using Microsoft.Ajax.Utilities;
     using Web.ViewModels.Shared;
 
     public class ReviewEvidenceNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint
@@ -16,11 +18,17 @@
         {
             get
             {
-                return (Core.AatfEvidence.NoteStatus)System.Enum.Parse(typeof(Core.AatfEvidence.NoteStatus), SelectedValue, true);
+                switch (SelectedValue)
+                {
+                    case "Approve":
+                        return NoteStatus.Approved;
+                }
+
+                return NoteStatus.Approved;
             }
         }
 
-        public ReviewEvidenceNoteViewModel() : base(new List<string> { "Approved" })
+        public ReviewEvidenceNoteViewModel() : base(new List<string> { "Approve" })
         {
         }
 
