@@ -1,22 +1,17 @@
-﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Aatf.ViewModels
-@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using MvcNavigationHelpers
-@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Scheme.ViewModels
-@using EA.Weee.Requests.Scheme;
 @using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 
-@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNoteDataViewModel
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNoteCategoriesViewModel
 
 @{
-    ViewBag.Title = "Transfer Evidence - GOV.UK";
+    ViewBag.Title = "Transfer evidence - GOV.UK";
 }
 
-<section id="main-content">
-
+@section full_main_content
+{
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence))))
 
     <h1 class="govuk-heading-l">
@@ -30,13 +25,13 @@
         @Html.Gds().ValidationSummary()
 
         <div class="govuk-form-group govuk-!-width-one-half @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
-            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m"})
+            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
             @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
         </div>
 
         <div class="govuk-!-padding-top-5 govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
-            @Html.Gds().LabelFor(m => m.HasSelectedAtLeastOneCategory, new { @class = "govuk-label--m"})
+            @Html.Gds().LabelFor(m => m.HasSelectedAtLeastOneCategory, new { @class = "govuk-label--m" })
             @Html.Gds().ValidationMessageFor(m => m.HasSelectedAtLeastOneCategory)
             <div class="govuk-!-padding-top-5"></div>
             @for (var i = 0; i < Model.CategoryValues.Count; i++)
@@ -73,4 +68,4 @@
             </div>
         </div>
     }
-</section>
+}
