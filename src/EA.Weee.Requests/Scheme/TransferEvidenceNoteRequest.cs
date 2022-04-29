@@ -23,6 +23,6 @@
 
         public Guid SchemeId { get; set; } 
 
-        public IList<int> CategoryIds { get; set; }
+        public List<int> CategoryIds { get; set; }
     }
 }
