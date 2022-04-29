@@ -33,9 +33,9 @@
         </ul>
         <p class="govuk-body-m">Select up to 5 notes</p>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotes)">
-            <label for="SelectedEvidenceNotes" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotes" class="govuk-visually-hidden" />
-            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotes)
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotePairs)">
+            <label for="SelectedEvidenceNotePairs" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotePairs" class="govuk-visually-hidden" />
+            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotePairs)
         </div>
 
         <table id="transfer-notes-selection" class="govuk-table">
@@ -65,6 +65,7 @@
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Reference)
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].SubmittedBy)
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].TotalReceivedDisplay)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Id)
 
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
@@ -72,10 +73,12 @@
                                 <div class='govuk-checkboxes'>
                                     <div class='govuk-checkboxes__item'>
                                         @{
-                                            var selectedOption = Model.SelectedEvidenceNotes[i1] ? "checked" : "";
-                                            var id = "SelectedEvidenceNotes_" + i1;
-                                            var name = "SelectedEvidenceNotes[" + i1 + "]";
+                                            var selectedOption = Model.SelectedEvidenceNotePairs[i1].Value ? "checked" : "";
+                                            var id = "SelectedEvidenceNotePairs_" + i1;
+                                            var name = "SelectedEvidenceNotePairs[" + i1 + "].Value";
                                         }
+                                        
+                                        @Html.Hidden("SelectedEvidenceNotePairs[" + i1 + "].Key", Model.SelectedEvidenceNotePairs[i1].Key)
 
                                         <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
                                         <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
