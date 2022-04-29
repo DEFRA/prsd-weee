@@ -33,6 +33,14 @@
             {
                 yield return new ValidationResult("Select at least one evidence note to transfer from", new[] { nameof(SelectedEvidenceNotes) });
             }
+            else
+            {
+                if (SelectedEvidenceNotes.Count(s => s.Equals(true)) > 5)
+                {
+                    yield return new ValidationResult("You cannot select more than 5 notes",
+                        new[] { nameof(SelectedEvidenceNotes) });
+                }
+            }
         }
     }
 }
