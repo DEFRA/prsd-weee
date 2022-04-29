@@ -164,7 +164,6 @@
             //source: suggest,
             element: newElement,
             name: element.id + "-auto",
-            confirmOnBlur: true,
             onConfirm: function (confirmed) {
 
                 function isNullOrWhitespace(input) {
@@ -173,8 +172,9 @@
                 }
 
                 var postBackElement = document.getElementById(existingId + "-select");
+                var selectedValue = document.getElementById(existingId).value;
 
-                if (!isNullOrWhitespace(confirmed)) {
+                if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
 
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
@@ -199,8 +199,9 @@
 
         var newListBox = document.getElementById(element.id + "__listbox");
         newListBox.setAttribute("aria-labelledby", element.id + "-label");
+        var autocomplete = document.getElementById(element.id);
+        autocomplete.setAttribute("type", "search");
 
-        //document.getElementById(element.id).setAttribute("type", "search");
         element.style.display = "none";
         element.id = element.id + "-select";
 
