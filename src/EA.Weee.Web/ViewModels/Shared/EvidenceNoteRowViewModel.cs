@@ -16,6 +16,10 @@
 
         public DateTime? SubmittedDate { get; set; }
 
+        public DateTime? ReturnedDate { get; set; }
+
+        public string Reason { get; set; }
+
         public string SubmittedBy { get; set; }
 
         public Guid Id { get; set; }
