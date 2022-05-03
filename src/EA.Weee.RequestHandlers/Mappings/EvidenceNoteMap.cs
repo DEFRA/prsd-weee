@@ -46,12 +46,21 @@
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
                 RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
                 RecipientId = source.Recipient.Id,
+                //must be updated when a rejected case is added
+                Reason = source.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.Reason,
                 SubmittedDate = source.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 ApprovedDate = source.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Approved))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.ChangedDate,
+                ReturnedDate = source.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate
             };
