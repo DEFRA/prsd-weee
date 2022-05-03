@@ -67,6 +67,7 @@
             result.RecipientId.Should().Be(recipientId);
             result.SubmittedDate.Should().BeNull();
             result.ApprovedDate.Should().BeNull();
+            result.ReturnedDate.Should().BeNull();
         }
 
         [Theory]
@@ -97,6 +98,62 @@
             result.SubmittedDate.Should().BeNull();
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ReturnedDateShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ReturnedReasonShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.Reason.Should().BeNull();
+        }
+
         [Fact]
         public void Map_GivenNoteWithSubmittedHistory_SubmittedDateShouldBeSet()
         {
@@ -118,6 +175,52 @@
 
             //arrange
             result.SubmittedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithReturnedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.Reason.Should().Be(reason);
         }
 
         [Fact]
@@ -147,6 +250,68 @@
 
             //arrange
             result.SubmittedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddHours(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Returned);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleReturnedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var reasonEarly = fixture.Create<string>();
+            var returnedDateEarly = DateTime.Now;
+            var reasonLate = fixture.Create<string>();
+            var returnedDateLate = DateTime.Now.AddMinutes(10);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.Reason).Returns(reasonEarly);
+            A.CallTo(() => history1.ChangedDate).Returns(returnedDateEarly);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Returned);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.Reason).Returns(reasonLate);
+            A.CallTo(() => history2.ChangedDate).Returns(returnedDateLate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Returned);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.Reason.Should().Be(reasonLate);
         }
 
         [Theory]
