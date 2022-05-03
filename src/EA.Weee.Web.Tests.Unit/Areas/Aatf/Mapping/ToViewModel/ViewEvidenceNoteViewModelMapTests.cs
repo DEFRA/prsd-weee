@@ -284,5 +284,27 @@
 
             result.ReturnedDate.Should().Be(string.Empty);
         }
+
+        [Fact]
+        public void Map_GivenReason_ReasonMustBeSet()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var reason = fixture.Create<string>();
+            source.EvidenceNoteData.Reason = reason;
+            var result = map.Map(source);
+
+            result.Reason.Should().Be(reason);
+        }
+
+        [Fact]
+        public void Map_GivenNoReason_ReasonMustBeNullOrEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.Reason = null;
+
+            var result = map.Map(source);
+
+            result.Reason.Should().BeNullOrEmpty();
+        }
     }
 }
