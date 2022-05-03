@@ -14,7 +14,7 @@
             Property(n => n.FromStatus.Value).HasColumnName("FromStatus").IsRequired();
             Property(n => n.ChangedDate).HasColumnName("ChangedDate").IsRequired();
             Property(n => n.ChangedById).HasColumnName("ChangedById").IsRequired();
-            Property(n => n.Reason).HasColumnName("Reason").IsOptional().IsUnicode().HasMaxLength(2000);
+            Property(n => n.Reason).HasColumnName("Reason").IsOptional().IsUnicode().HasMaxLength(200);
 
             HasRequired(n => n.Note);
         }
