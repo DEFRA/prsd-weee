@@ -176,13 +176,13 @@
             // arrange
             var noteList = fixture.CreateMany<Note>().ToList();
 
-            var evidenceNoteDatas = new List<EvidenceNoteData>()
+            var noteData = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
 
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
 
@@ -192,8 +192,7 @@
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Should().BeOfType<List<EvidenceNoteData>>();
-            result.Count().Should().Be(evidenceNoteDatas.Count);
+            result.Should().BeEquivalentTo(noteData);
         }
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()

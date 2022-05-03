@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
+    using System;
     using System.ComponentModel;
     using Core.AatfEvidence;
     using Extensions;
@@ -32,6 +33,12 @@
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
 
         public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);
+
+        public Guid SchemeId { get; set; }
+
+        public string SubmittedBy { get; set; }
+
+        public string TotalReceivedDisplay { get; set; }
 
         public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
     }

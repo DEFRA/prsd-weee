@@ -151,8 +151,7 @@
                 // 1. placeholder for Manage PCS evidence notes
                 if (viewModel.SelectedValue == PcsAction.ManagePcsEvidenceNotes)
                 {
-                    //TODO: invoke holding page in Aatf area - possibly need to create a Pcs area with same
-                    return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = viewModel.OrganisationId });
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId });
                 }
 
                 // 2. Manage PCS Members

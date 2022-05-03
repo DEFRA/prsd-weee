@@ -8,11 +8,10 @@
 @{
     var title = Model.Status == NoteStatus.Draft ? "Draft evidence note" : "Submitted evidence note";
     var navigateBackToSelectedTab = Model.Status == NoteStatus.Draft ? ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes : ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
-    ViewBag.Title = title;
+    ViewBag.Title = title + " - GOV.UK";
 }
 
-<section id="main-content">
-
+@section full_main_content{
 
     @if (Model.DisplayMessage)
     {
@@ -26,11 +25,12 @@
 
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
-    
+
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3">
-            @Html.RouteLink("Edit evidence note", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id}, new { @class="govuk-button govuk-button--secondary"})
+            @Html.RouteLink("Edit evidence note", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
         </div>
     }
-</section>
+}
+

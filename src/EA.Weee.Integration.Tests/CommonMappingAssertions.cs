@@ -1,6 +1,9 @@
 ﻿namespace EA.Weee.Integration.Tests
 {
+    using Core.AatfEvidence;
+    using Core.Helpers;
     using Core.Scheme;
+    using Domain.Evidence;
     using Domain.Scheme;
     using FluentAssertions;
 
@@ -18,6 +21,32 @@
             schemeData.Name.Should().Be(scheme.Organisation.Name);
             schemeData.OrganisationId.Should().Be(scheme.OrganisationId);
             ((int)schemeData.SchemeStatus).Should().Be((int)scheme.SchemeStatus.Value);
+        }
+
+        public static void ShouldMapToNote(this EvidenceNoteData result, Note note)
+        {
+            result.EndDate.Date.Should().Be(note.EndDate.Date);
+            result.StartDate.Date.Should().Be(note.StartDate.Date);
+            result.Reference.Should().Be(note.Reference);
+            result.Protocol.ToInt().Should().Be(note.Protocol.ToInt());
+            result.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
+            result.AatfData.Should().NotBeNull();
+            result.AatfData.Id.Should().Be(note.Aatf.Id);
+            result.SchemeData.Should().NotBeNull();
+            result.SchemeData.Id.Should().Be(note.Recipient.Id);
+            result.EvidenceTonnageData.Count.Should().Be(note.NoteTonnage.Count);
+            result.OrganisationData.Should().NotBeNull();
+            result.OrganisationData.Id.Should().Be(note.Organisation.Id);
+            ((int)result.Type).Should().Be(note.NoteType.Value);
+            result.Id.Should().Be(note.Id);
+            foreach (var noteTonnage in note.NoteTonnage)
+            {
+                result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
+                                                         n.Reused.Equals(noteTonnage.Reused) &&
+                                                         ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
+            }
+            result.RecipientOrganisationData.Should().NotBeNull();
+            result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
         }
     }
 }
