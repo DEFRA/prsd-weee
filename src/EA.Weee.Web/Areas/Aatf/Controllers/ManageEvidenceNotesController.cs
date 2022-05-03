@@ -269,7 +269,7 @@
             ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
-                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
+                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
             
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result));
             
