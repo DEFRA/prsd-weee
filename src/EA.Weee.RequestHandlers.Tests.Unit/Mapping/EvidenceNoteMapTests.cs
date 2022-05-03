@@ -66,6 +66,7 @@
             result.EndDate.Should().Be(endDate);
             result.RecipientId.Should().Be(recipientId);
             result.SubmittedDate.Should().BeNull();
+            result.ApprovedDate.Should().BeNull();
             result.ReturnedDate.Should().BeNull();
         }
 
@@ -311,6 +312,86 @@
 
             //arrange
             result.Reason.Should().Be(reasonLate);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ApprovedDateShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Approved))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ApprovedDate.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithApprovedHistory_ApprovedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Approved);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ApprovedDate.Should().BeSameDateAs(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleApprovedHistory_ApprovedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddMilliseconds(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Approved);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Approved);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ApprovedDate.Should().Be(latestDate);
         }
 
         [Theory]

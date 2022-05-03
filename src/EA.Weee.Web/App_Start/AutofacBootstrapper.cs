@@ -98,8 +98,8 @@
             builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
-
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
+            builder.RegisterType<SessionService>().As<ISessionService>();
 
             return builder.Build();
         }

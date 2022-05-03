@@ -61,6 +61,8 @@
             result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+            result.SchemeId.Should().Be(source.SchemeId);
+            result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
         }
 
         [Fact]
@@ -199,6 +201,32 @@
         }
 
         [Fact]
+        public void Map_GivenTonnages_TotalReceivedShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+
+            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, 1, 5),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.GasDischargeLampsAndLedLightSources, 3, 20),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ITAndTelecommsEquipment, null, 50)
+            };
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns("1");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received)).Returns("2");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(2).Received)).Returns("3");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(3).Received)).Returns("-");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TotalReceivedDisplay.Should().Be("6.000");
+        }
+
+        [Fact]
         public void Map_GivenNoteStatusIsNull_SuccessMessageShouldNotBeShown()
         {
             //arrange
@@ -242,6 +270,22 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be(
+                    $"You have approved the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+         }
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
@@ -261,6 +305,39 @@
             var result = map.Map(source);
 
             result.SubmittedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedBy.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenApprovedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = null;
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be(string.Empty);
         }
 
         [Fact]

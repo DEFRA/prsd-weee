@@ -154,9 +154,10 @@
         <div class="govuk-!-margin-top-3">
 
             <div class="govuk-button-group">
+                @* This is a hidden button to force the default action to be save rather than submit*@
+                <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
                 @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-
-                @this.WeeeGds().SecondaryButton(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
             </div>
 
         </div>

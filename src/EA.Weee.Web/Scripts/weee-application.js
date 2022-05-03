@@ -136,7 +136,7 @@
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
-    selectElements.forEach(function(element) {
+    selectElements.forEach(function (element) {
         var items = Array.from(element.options).map(el => el.textContent || el.innerText);
 
         // get the default selected value
@@ -148,19 +148,14 @@
                 break;
             }
         }
-        
+
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
-        var newLabel = document.createElement("label");
-        newLabel.setAttribute("for", element.id + "__listbox");
-        newLabel.setAttribute("class", "govuk-visually-hidden");
-        newLabel.innerHTML = "Options for " + document.getElementById(element.id + "-label").innerText;
 
-        element.parentNode.insertBefore(newLabel, element);
         element.parentNode.insertBefore(newElement, element);
 
         var existingId = element.id;
-        
+
         accessibleAutocomplete({
             showAllValues: true,
             id: element.id,
@@ -176,15 +171,15 @@
                     return input.replace(/\s/g, "").length < 1;
                 }
 
-                var selectedValue = document.getElementById(existingId).value;
                 var postBackElement = document.getElementById(existingId + "-select");
-                
-                if (!isNullOrWhitespace(selectedValue)) {
-                    
+                var selectedValue = document.getElementById(existingId).value;
+
+                if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
+
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
-                        if (text === selectedValue) {
+                        if (text === confirmed) {
                             postBackElement.value = findSelectedOption.value;
                         }
                     }
@@ -201,8 +196,15 @@
             var autoCompletes = $(element.parentNode).find(".autocomplete__input");
             autoCompletes[0].classList.add("autocomplete__error");
         }
+
+        var newListBox = document.getElementById(element.id + "__listbox");
+        newListBox.setAttribute("aria-labelledby", element.id + "-label");
+        var autocomplete = document.getElementById(element.id);
+        autocomplete.setAttribute("type", "search");
+
         element.style.display = "none";
         element.id = element.id + "-select";
+
     });
 });
 
