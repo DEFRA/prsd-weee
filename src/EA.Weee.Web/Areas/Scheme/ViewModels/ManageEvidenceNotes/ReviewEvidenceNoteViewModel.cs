@@ -20,7 +20,7 @@
             {
                 switch (SelectedValue)
                 {
-                    case "Approve":
+                    case "Approve evidence note":
                         return NoteStatus.Approved;
                 }
 
@@ -28,7 +28,7 @@
             }
         }
 
-        public ReviewEvidenceNoteViewModel() : base(new List<string> { "Approve" })
+        public ReviewEvidenceNoteViewModel() : base(new List<string> { "Approve evidence note" })
         {
         }
 

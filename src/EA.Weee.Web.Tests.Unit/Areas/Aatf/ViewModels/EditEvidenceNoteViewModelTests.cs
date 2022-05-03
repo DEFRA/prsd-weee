@@ -63,7 +63,7 @@
         [Theory]
         [InlineData("StartDate", "Enter a start date")]
         [InlineData("EndDate", "Enter an end date")]
-        [InlineData("ReceivedId", "Select a receiving PCS")]
+        [InlineData("ReceivedId", "Select a recipient")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string message)
         {
             typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));

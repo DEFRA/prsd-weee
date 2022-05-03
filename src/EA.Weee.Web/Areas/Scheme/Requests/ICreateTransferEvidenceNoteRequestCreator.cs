@@ -5,6 +5,6 @@
 
     public interface ICreateTransferEvidenceNoteRequestCreator
     {
-        TransferEvidenceNoteRequest ViewModelToRequest(TransferEvidenceNoteDataViewModel viewModel);
+        TransferEvidenceNoteRequest ViewModelToRequest(TransferEvidenceNoteCategoriesViewModel viewModel);
     }
 }

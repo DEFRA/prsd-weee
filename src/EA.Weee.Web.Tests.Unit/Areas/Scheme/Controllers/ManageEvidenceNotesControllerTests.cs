@@ -32,7 +32,7 @@
         protected readonly IWeeeCache Cache;
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
-        protected readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
+        protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -41,7 +41,7 @@
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
-            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest>>();
+            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
             Fixture = new Fixture();
         }
