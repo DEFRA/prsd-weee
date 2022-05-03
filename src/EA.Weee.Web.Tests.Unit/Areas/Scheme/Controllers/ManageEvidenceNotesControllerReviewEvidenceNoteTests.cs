@@ -40,7 +40,6 @@
         protected readonly Guid OrganisationId;
         protected readonly Guid EvidenceNoteId;
         protected readonly Fixture Fixture;
-        protected readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
 
         public ManageEvidenceNotesControllerReviewEvidenceNoteTests()
         {
@@ -51,8 +50,7 @@
             RecipientId = Guid.NewGuid();
             OrganisationId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
             Fixture = new Fixture();
         }
 
