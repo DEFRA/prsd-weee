@@ -7,6 +7,7 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.Note;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
@@ -152,7 +153,7 @@
             // act
             var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
             var model = result.Model as ReviewEvidenceNoteViewModel;
-            var expected = new List<string> { "Approve" };
+            var expected = new List<string> { "Approve evidence note" };
 
             // assert
             Assert.Equal<IList<string>>(expected, model.PossibleValues);
@@ -175,43 +176,10 @@
             // act
             var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
             var model = result.Model as ReviewEvidenceNoteViewModel;
-            //model.SelectedValue = "Approved";
-            model.SelectedValue = "Approve";
+            model.SelectedValue = "Approve evidence note";
 
             // assert
             model.SelectedEnumValue.Should().Be(Core.AatfEvidence.NoteStatus.Approved);
-        }
-
-        //[Fact]
-        public async Task ReviewEvidenceNoteGet_GivenSchemesListIsNotEmpty_ModelWithSchemesIsCreated()
-        {
-            // arrange
-            var schemeData = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(Fixture.Create<EvidenceNoteData>());
-
-            // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
-
-            // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappenedOnceExactly();
-        }
-
-        //[Fact]
-        public async Task ReviewEvidenceNoteGet_GivenSchemesListIsNotEmpty_ShouldCallToGetSchemes()
-        {
-            // arrange
-            var schemeData = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
-
-            // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
-            var model = result.Model as ReviewEvidenceNoteViewModel;
-
-            // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
-                .Matches(s => s.IncludeWithdrawn.Equals(false))))
-                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -287,36 +255,29 @@
         }
 
         [Fact]
-        public async Task ReviewEvidenceNotePost_GivenRequestIsCreated_SessionShouldNotBeNull()
+        public async Task ReviewEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
         {
             //arrange
-            var model = GetValidModel();
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(ManageEvidenceController);
+            var model = Fixture.Create<ReviewEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.ReviewEvidenceNote(model);
+            var result = await ManageEvidenceController.ReviewEvidenceNote(model) as ViewResult;
 
-            // assert
-            ManageEvidenceController.Session.Should().NotBeNull();
-            ManageEvidenceController.Session.SessionID.Should().BeNullOrEmpty();
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<SetNoteStatus>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task ReviewEvidenceNotePost_GivenInvalidModel_SessionShouldBeEmpty()
+        public async Task ReviewEvidenceNotePost_GivenApiHasBeenCalled_TempViewDataShouldHaveNoteStatusAdded()
         {
             //arrange
-            var httpContext = new HttpContextMocker();
-            httpContext.AttachToController(ManageEvidenceController);
-            var model = Fixture.Create<ReviewEvidenceNoteViewModel>();
-            AddModelError();
+            var model = GetValidModel();
 
             //act
             await ManageEvidenceController.ReviewEvidenceNote(model);
 
-            // assert
-            ManageEvidenceController.Session.Keys.Should().BeNull();
-            ManageEvidenceController.Session.SessionID.Should().BeEmpty();
+            //assert
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Approved);
         }
 
         private void AddModelError()
@@ -326,7 +287,7 @@
 
         private ReviewEvidenceNoteViewModel GetValidModel()
         {
-            return new ReviewEvidenceNoteViewModel { PossibleValues = new List<string> { "Approved" }, SelectedValue = "Approved", ViewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel() };
+            return new ReviewEvidenceNoteViewModel { PossibleValues = new List<string> { "Approved" }, SelectedValue = "Approve evidence note", ViewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel() };
         }
     }
 }
