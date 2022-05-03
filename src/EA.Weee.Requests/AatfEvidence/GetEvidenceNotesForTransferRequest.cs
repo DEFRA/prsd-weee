@@ -11,9 +11,9 @@
     {
         public Guid OrganisationId { get; protected set; }
 
-        public List<WeeeCategory> Categories { get; private set; }
+        public List<int> Categories { get; private set; }
 
-        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<WeeeCategory> categories)
+        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();

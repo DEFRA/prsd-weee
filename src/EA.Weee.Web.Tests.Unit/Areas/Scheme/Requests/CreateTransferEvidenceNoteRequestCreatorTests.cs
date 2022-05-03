@@ -77,12 +77,12 @@
             request.SchemeId.Should().Be(selectedScheme);
         }
 
-        private TransferEvidenceNoteDataViewModel GetModel()
+        private TransferEvidenceNoteCategoriesViewModel GetModel()
         {
-            return new TransferEvidenceNoteDataViewModel();
+            return new TransferEvidenceNoteCategoriesViewModel();
         }
 
-        private TransferEvidenceNoteDataViewModel GetValidModelWithSelectedCategories(Guid selectedScheme)
+        private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme)
         {
             var model = GetModel();
             model.CategoryValues.ElementAt(0).Selected = true;

@@ -42,6 +42,7 @@
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
@@ -63,7 +64,7 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
-                SchemeId = source.SchemeId
+                SchemeId = source.SchemeId,
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
@@ -77,6 +78,9 @@
                     category.Id = tonnageData.Id;
                 }
             }
+
+            model.TotalReceivedDisplay = model.ReceivedTotal;
+
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;

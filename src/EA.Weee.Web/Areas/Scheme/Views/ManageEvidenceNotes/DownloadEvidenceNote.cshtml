@@ -6,7 +6,7 @@
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 @{
 
-    var navigateBackToSelectedTab = Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence;
+    var navigateBackToSelectedTab = Model.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence;
 
     string title;
     if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
