@@ -27,17 +27,14 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
-        private readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient,
-            IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator) : base(breadcrumb, cache)
+            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
-            this.transferNoteRequestCreator = transferNoteRequestCreator;
         }
 
         [HttpGet]
