@@ -17,7 +17,9 @@
                 Id = source.Id,
                 Type = source.Type,
                 SubmittedDate = source.SubmittedDate,
-                SubmittedBy = source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty
+                SubmittedBy = source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty,
+                ReturnedDate = source.ReturnedDate,
+                Reason = source.Reason
             };
         }
     }
