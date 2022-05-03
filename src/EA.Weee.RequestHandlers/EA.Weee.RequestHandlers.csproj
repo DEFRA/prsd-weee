@@ -93,6 +93,7 @@
     <Compile Include="AatfEvidence\GetAatfSummaryRequestHandler.cs" />
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
