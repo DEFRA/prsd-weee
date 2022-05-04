@@ -119,6 +119,30 @@
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> TransferTonnage(Guid pcsId)
+        {
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                    SessionKeyConstant.TransferNoteKey);
+
+                Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+
+                var result = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
+
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
+
+                var model =
+                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+
+                return this.View("TransferTonnage", model);
+            }
+        }
+
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
         {
             if (ids.Any())

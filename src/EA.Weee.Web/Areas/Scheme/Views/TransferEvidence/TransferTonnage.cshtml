@@ -1,0 +1,107 @@
+﻿
+@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
+@{
+    ViewBag.Title = "Transfer tonnage - GOV.UK";
+}
+
+@section full_main_content
+{
+    @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l">
+            From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
+        </h1>
+
+        <h2 class="govuk-heading-m">Showing approved evidence notes with categories</h2>
+        <ul class="govuk-list">
+            @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
+            {
+                var item = categoryCount;
+                
+                @Html.HiddenFor(m => m.CategoryValues[item].CategoryId)
+                @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
+
+                <li>@Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay</li>
+            }
+        </ul>
+        <p class="govuk-body-m">Select up to 5 notes</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotes)">
+            <label for="SelectedEvidenceNotes" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotes" class="govuk-visually-hidden" />
+            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotes)
+        </div>
+
+        <table id="transfer-notes-selection" class="govuk-table">
+            <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">
+                    Reference ID
+                </th>
+                <th class="govuk-table__header">
+                    Submitted by
+                </th>
+                <th class="govuk-table__header">
+                    Total (tonnes)
+                </th>
+                <th class="govuk-table__header">
+                    <span class="govuk-visually-hidden">actions</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+                @for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+                {
+                    var i1 = i;
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Type)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Reference)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].SubmittedBy)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].TotalReceivedDisplay)
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <div>
+                                <div class='govuk-checkboxes'>
+                                    <div class='govuk-checkboxes__item'>
+                                        @{
+                                            var selectedOption = Model.SelectedEvidenceNotes[i1] ? "checked" : "";
+                                            var id = "SelectedEvidenceNotes_" + i1;
+                                            var name = "SelectedEvidenceNotes[" + i1 + "]";
+                                        }
+
+                                        <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
+                                        <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                            @Model.EvidenceNotesDataList[i].ReferenceDisplay
+                                        </label>
+                                        <input name="@name" type="hidden" value="false">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.EvidenceNotesDataList[i].SubmittedBy
+                        </td>
+                        <td class="govuk-table__cell">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
+                        <td class="govuk-table__cell">
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Continue", new { id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+            </div>
+        </div>
+    }
+}
