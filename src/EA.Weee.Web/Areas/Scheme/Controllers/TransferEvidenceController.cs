@@ -121,7 +121,7 @@
 
             await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-            return View(model);
+            return View("TransferFrom", model);
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
