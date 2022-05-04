@@ -30,6 +30,9 @@
 
         public List<SchemeData> SchemeList { get; set; }
 
+        [Display(Name = "Recipient")]
+        public string SelectedSchemeName { get; set; }
+
         [RequiredSubmitAction(ErrorMessage = "Select a type of waste")]
         [Display(Name = "Type of waste")]
         public override WasteType? WasteTypeValue { get; set; }

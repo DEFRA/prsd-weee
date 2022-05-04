@@ -83,6 +83,8 @@
 
             model.TotalReceivedDisplay = model.ReceivedTotal;
 
+            SetNavigateBackOption(source.EvidenceNoteData.Status, model);
+
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
@@ -107,6 +109,9 @@
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
                             break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a returned note";
+                            break;
                     }
 
                     model.Status = status;
@@ -114,6 +119,37 @@
                 else
                 {
                     model.Status = NoteStatus.Draft;
+                }
+            }
+        }
+
+        private void SetNavigateBackOption(object noteStatus, ViewEvidenceNoteViewModel model)
+        {
+            if (noteStatus != null)
+            {
+                if (noteStatus is NoteStatus status)
+                {
+                    switch (status)
+                    {
+                        case NoteStatus.Submitted:
+                            model.NavigateBackOption = Areas.Aatf.ViewModels.ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+                            break;
+                        case NoteStatus.Draft:
+                            model.NavigateBackOption = Areas.Aatf.ViewModels.ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                            break;
+                        case NoteStatus.Approved:
+                            model.NavigateBackOption = Areas.Aatf.ViewModels.ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+                            break;
+                        case NoteStatus.Returned:
+                            model.NavigateBackOption = Areas.Aatf.ViewModels.ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                            break;
+                    }
+
+                    model.Status = status;
+                }
+                else
+                {
+                    model.NavigateBackOption = model.NavigateBackOption = Areas.Aatf.ViewModels.ManageEvidenceOverviewDisplayOption.EvidenceSummary;
                 }
             }
         }

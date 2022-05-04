@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Extensions;
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
@@ -26,8 +27,6 @@
 
         public string RecipientAddress { get; set; }
 
-        public string Reason { get; set; }
-
         public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
 
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
@@ -41,5 +40,7 @@
         public string TotalReceivedDisplay { get; set; }
 
         public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+
+        public ManageEvidenceOverviewDisplayOption NavigateBackOption { get; set; }
     }
 }

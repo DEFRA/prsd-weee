@@ -42,6 +42,9 @@
 
         public int Reference { get; set; }
 
+        [DisplayName("Reason for return")]
+        public string Reason { get; set; }
+
         public EvidenceNoteViewModel()
         {
             categoryValueCalculator = new CategoryValueTotalCalculator();
