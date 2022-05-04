@@ -594,7 +594,7 @@
 
                 context.Notes.Add(note1ToBeFound);
 
-                // note not to be found null category, matching scheme and status
+                // note not to be found has category but with not tonnage, matching scheme and status
                 var note2ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
                 note2ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 note2ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
@@ -665,6 +665,14 @@
 
                 context.Notes.Add(note10ToBeFound);
 
+                // to not be found matching category but received is null and reused is not null, also with matching scheme and status
+                var note11ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note11ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note11ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note11ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, null, 1));
+
+                context.Notes.Add(note11ToNotBeFound);
+
                 await context.SaveChangesAsync();
 
                 var notes = await dataAccess.GetNotesToTransfer(scheme.Id, new List<int>()
@@ -684,6 +692,7 @@
                 notes.Should().NotContain(n => n.Id.Equals(note7ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note8ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note9ToNotBeFound.Id));
+                notes.Should().NotContain(n => n.Id.Equals(note11ToNotBeFound.Id));
             }
         }
 
