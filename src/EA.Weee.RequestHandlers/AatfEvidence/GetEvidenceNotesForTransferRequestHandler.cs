@@ -13,7 +13,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetEvidenceNotesForTransferRequestHandler : IRequestHandler<GetEvidenceNotesForTransferRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNotesForTransferRequestHandler : IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
@@ -31,7 +31,7 @@
             this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesForTransferRequest message)
+        public async Task<IList<EvidenceNoteData>> HandleAsync(GetEvidenceNotesForTransferRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
