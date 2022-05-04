@@ -10,10 +10,13 @@
 
         public NoteStatus Status { get; set; }
 
-        public SetNoteStatus(Guid noteId, NoteStatus status)
+        public string Reason { get; set; }
+
+        public SetNoteStatus(Guid noteId, NoteStatus status, string reason = null)
         {
             this.NoteId = noteId;
             this.Status = status;
+            this.Reason = reason;
         }
     }
 }
