@@ -111,7 +111,7 @@
 
                 sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
 
-                return RedirectToAction("Index", "Holding", new { area = "Scheme", organisationId = model.PcsId });
+                return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", organisationId = model.PcsId });
             }
 
             await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
