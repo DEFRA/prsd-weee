@@ -57,7 +57,7 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
                 //Added Copy Previous Quater logic
-                model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable();
+                model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable(weeeSentOn.Count);
 
                 return View(model);
             }
@@ -87,7 +87,7 @@
                     await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
                     //Added Copy Previous Quater logic
-                    model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable();
+                    model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable(weeeSentOn.Count);
 
                     return View(model);
                 }
@@ -121,12 +121,12 @@
             breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
 
-        private bool IsChkCopyPreviousQuarterVisiable()
+        private bool IsChkCopyPreviousQuarterVisiable(int weeeSentOnListCount)
         {
             DateTime copyPreviousQuarterDataDisabledDate = Convert.ToDateTime(ConfigurationManager.AppSettings["Weee.CopyPreviousQuarterDataDisabledDate"]);
             DateTime utcCurrentDate = DateTime.UtcNow;
 
-            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate)
+            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate && weeeSentOnListCount == 0)
             {
                 return true;
             }

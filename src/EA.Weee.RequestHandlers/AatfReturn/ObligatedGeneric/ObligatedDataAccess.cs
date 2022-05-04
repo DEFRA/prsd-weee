@@ -19,14 +19,7 @@
             context.Set<T>().AddRange(amounts);
 
             return context.SaveChangesAsync();
-        }
-
-        public Task Submit(List<WeeeSentOnAmount> weeeSentOnAmounts)
-        {
-            context.WeeeSentOnAmount.AddRange(weeeSentOnAmounts);
-
-            return context.SaveChangesAsync();
-        }
+        }        
 
         public Task UpdateAmounts(T receivedAmount, decimal? houseHoldTonnage, decimal? nonHouseHoldTonnage)
         {

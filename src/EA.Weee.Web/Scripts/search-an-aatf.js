@@ -15,7 +15,7 @@
         },
         minLength: 3,
         select: function (event, ui) {            
-            $("#hidden").val(ui.item.id);
+            $("#hdnSelectedAatfId").val(ui.item.id);
         },
         messages: {
             noResults: "", results: ""

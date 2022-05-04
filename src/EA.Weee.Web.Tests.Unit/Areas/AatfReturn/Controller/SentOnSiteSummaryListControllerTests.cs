@@ -144,17 +144,46 @@
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        //[Fact]
-        //public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
-        //{
-        //    var model = new SentOnSiteSummaryListViewModel();
-        //    var returnId = new Guid();
-        //    var result = await controller.Index(model) as RedirectToRouteResult;
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var returnId = Guid.NewGuid();            
 
-        //    result.RouteValues["action"].Should().Be("Index");
-        //    result.RouteValues["controller"].Should().Be("AatfTaskList");
-        //    result.RouteValues["area"].Should().Be("AatfReturn");
-        //    result.RouteValues["returnId"].Should().Be(returnId);
-        //}
+            controller.ModelState.AddModelError("error", "Please select copy selection from previous quarter");
+            var viewModel = new SentOnSiteSummaryListViewModel()
+            {
+                OrganisationId = organisationId,
+                AatfId = aatfId,
+                ReturnId = returnId
+            };
+
+            await controller.Index(viewModel);
+
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
+        }
+
+        [Fact]
+        public async void IndexPost_OnSubmit_CopyPreviousQuarterData_And_PageRedirectsToSentOnSiteSummaryList()
+        {
+            var returnId = new Guid();
+            var organisationId = new Guid();
+            var aatfId = new Guid();
+            var model = new SentOnSiteSummaryListViewModel()
+            {
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                AatfId = aatfId
+            };
+            var result = await controller.Index(model) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
+            result.RouteValues["area"].Should().Be("AatfReturn");
+            result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
+        }
     }
 }
