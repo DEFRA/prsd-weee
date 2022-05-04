@@ -34,6 +34,9 @@
         [DisplayName("Date submitted")]
         public string SubmittedDate { get; set; }
 
+        [DisplayName("Date rejected")]
+        public string RejectedDate { get; set; }
+
         [DisplayName("Date returned")]
         public string ReturnedDate { get; set; }
 

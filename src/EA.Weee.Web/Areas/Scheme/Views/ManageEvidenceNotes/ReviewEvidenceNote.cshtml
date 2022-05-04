@@ -6,8 +6,6 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 @{
     ViewBag.Title = "Review evidence - GOV.UK";
-
-    
 }
 
 @section full_main_content
@@ -33,20 +31,46 @@
         @Html.Partial("_ViewEvidenceNotePartial", Model.ViewEvidenceNoteViewModel)
 
         <!-- radiobuttons for approved -->
-        <p>Choose whether to approve, reject or return the evidence note</p>
+        <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note</p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="approval-options">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Choose whether to approve, reject or return the evidence note",
-                RadioButtonLegend.VisuallyHidden,
+                " ",
+                RadioButtonLegend.Displayed,
                 RadioButtonLayout.Stacked,
                 Model.HintItems)
+        </div>
+
+        <div id="reason-text" style="display: none;" class="govuk-!-margin-bottom-7">
+            <div class="govuk-body">What is the reason you are rejecting or returning the evidence note?</div>
+            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @class = "govuk-input", @id = "return-reject-reason", @name = "return-reject-reason", @style = "height: 100px;", @maxlength = "200", @title = "You can type up to 200 characters" })
+            <!-- textarea data-bind="*Model.Reason" class="govuk-input" id="return-reject-reason" name="return-reject-reason" style="height: 100px;" maxlength="200" title="You can type up to 200 characters"></textarea -->
         </div>
 
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
+
+    <script type="text/javascript">
+        document.getElementById("conditional-SelectedValue-0").style = "display: block;";
+        document.getElementById("conditional-SelectedValue-1").style = "display: block;";
+        document.getElementById("conditional-SelectedValue-2").style = "display: block;";
+
+        function showReasonText(event)
+        {
+            document.getElementById("reason-text").style = "display: block;";
+        }
+
+        function hideReasonText(event)
+        {
+            document.getElementById("reason-text").style = "display: none;";
+        }
+
+        document.getElementById("SelectedValue-0").addEventListener("click", hideReasonText);
+        document.getElementById("SelectedValue-1").addEventListener("click", showReasonText);
+        document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
+    </script>
 }
