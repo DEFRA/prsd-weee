@@ -94,16 +94,17 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusData))]
-        public async Task HandleAsync_GivenNoteIsNotInDraft_ShouldInvalidOperationException(NoteStatus status)
+        public async Task HandleAsync_GivenNoteIsNotInDraftAndReturned_ShouldInvalidOperationException(NoteStatus status)
         {
             //arrange
-            var allowedStatus = new List<int>() { NoteStatus.Draft.Value };
+            var allowedStatus = new List<int>() { NoteStatus.Draft.Value, NoteStatus.Returned.Value };
 
             if (!allowedStatus.Contains(status.Value))
             {
                 A.CallTo(() => note.Status).Returns(status);
+                A.CallTo(() => note.RecipientId).Returns(scheme.Id);
                 A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-
+             
                 //act
                 var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
