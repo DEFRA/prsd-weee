@@ -19,10 +19,10 @@
         @if (Model.HasReturnedDate)
         {
             <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-                <span class="govuk-label--s govuk-grid-column-one-quarter" style="width:200px">
+                <span class="govuk-label--s govuk-grid-column-one-quarter" style="max-width:200px">
                     @Html.DisplayNameFor(m => m.Reason)
                 </span>
-                <span class="govuk-grid-column-three-quarters govuk-body" style="word-break: break-word" maxlength="200">
+                <span class="govuk-grid-column-three-quarters govuk-body govuk-!-margin-bottom-0" style="word-break: break-word" maxlength="200">
                     @Html.DisplayTextFor(m => m.Reason)
                 </span>
             </div>
