@@ -5,13 +5,11 @@
     using Core.DataReturns;
     using Core.Organisations;
     using Core.Scheme;
-    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Organisation;
-    using AddressData = Core.Shared.AddressData;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
     using Protocol = Core.AatfEvidence.Protocol;
