@@ -41,7 +41,7 @@
 
             if (!EnsureTheSchemeNotChanged(evidenceNote, message.RecipientId))
             {
-                throw new InvalidOperationException($"Evidence note {evidenceNote.Id} has incorrect Recipient Id to be edited");
+                throw new InvalidOperationException($"Evidence note {evidenceNote.Id} has incorrect Recipient Id to be saved");
             }
             
             var scheme = await schemeDataAccess.GetSchemeOrDefault(message.RecipientId);
