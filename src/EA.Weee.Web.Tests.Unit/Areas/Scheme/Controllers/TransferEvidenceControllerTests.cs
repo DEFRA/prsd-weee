@@ -424,7 +424,7 @@
         }
 
         [Fact]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectAndNotes_TransferFromViewShouldBeReturned()
+        public async Task TransferFromGet_TransferFromViewShouldBeReturned()
         {
             // act
             var result = await transferEvidenceController.TransferFrom(organisationId) as ViewResult;
