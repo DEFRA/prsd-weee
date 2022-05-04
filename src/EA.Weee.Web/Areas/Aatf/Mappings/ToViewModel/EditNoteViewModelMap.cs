@@ -18,7 +18,7 @@
             Guard.ArgumentNotNull(() => source, source);
 
             var recipientId = source.ExistingModel?.ReceivedId ?? source.NoteData.RecipientId;
-            var recipientName = source.Schemes.Where(s => s.Id == recipientId).First();
+            var recipientName = source.Schemes.Where(s => s.Id == recipientId).FirstOrDefault();
             
             var model = new EditEvidenceNoteViewModel
             {
