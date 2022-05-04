@@ -408,7 +408,7 @@
         }
 
         [Fact]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectAndNotes_ModelShouldBeReturned()
+        public async Task TransferFromGet_GivenMappedViewModel_ModelShouldBeReturned()
         {
             //arrange
             var model = fixture.Create<TransferEvidenceNotesViewModel>();
