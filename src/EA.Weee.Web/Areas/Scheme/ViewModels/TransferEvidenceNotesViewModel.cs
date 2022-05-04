@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Core.Shared;
     using Web.ViewModels.Shared;
