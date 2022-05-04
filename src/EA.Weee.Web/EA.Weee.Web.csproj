@@ -322,7 +322,9 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBase.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
     <Compile Include="Services\ISessionService.cs" />
@@ -699,6 +701,7 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferFrom.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
