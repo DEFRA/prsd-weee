@@ -1,6 +1,7 @@
 ﻿
 @using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Scheme.ViewModels
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
@@ -8,7 +9,7 @@
 
 @section full_main_content
 {
-    @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new Dictionary<string, object>() { { "id", "TransferEvidenceForm" } }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -16,11 +17,22 @@
         <h1 class="govuk-heading-l">
             Transfer tonnage to @Model.RecipientName from selected evidence notes
         </h1>
-        <p>Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</p>
-        <div class="govuk-!-margin-top-3">
-            <div class="govuk-button-group">
-                @this.WeeeGds().Button("Continue", new { id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+        <p class="govuk-body">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</p>
+
+        @Html.Gds().CheckBoxFrontEndFor(m => m.TransferAllTonnage, new { @id = "transferAllTonnage", @class = "govuk-checkboxes__input" })
+
+        <noscript>
+            <div class="govuk-!-margin-top-3">
+                <div class="govuk-button-group">
+                    @this.WeeeGds().Button("Copy tonnage", new { name = "action", value = TransferEvidenceTonnageViewModel.ActionEnum.Copy, id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                </div>
             </div>
-        </div>
-    }
+        </noscript>
+        <input type="hidden" name = "action" value="@TransferEvidenceTonnageViewModel.ActionEnum.Copy"/>
+        <div class="govuk-!-margin-top-3">
+    <div class="govuk-button-group">
+        @this.WeeeGds().Button("Continue", new { name="action", value=TransferEvidenceTonnageViewModel.ActionEnum.Save, id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
+    </div>
+</div>
+}
 }

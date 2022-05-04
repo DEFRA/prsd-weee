@@ -133,6 +133,9 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
+    $("#transferAllTonnage").change(function () {
+        $("#TransferEvidenceForm").submit();
+    });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
