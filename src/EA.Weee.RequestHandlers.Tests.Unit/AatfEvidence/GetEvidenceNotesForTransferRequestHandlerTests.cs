@@ -115,7 +115,26 @@
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList())))
+                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetNotesToTransferShouldBeCalled()
+        {
+            //arrange
+            var request = new GetEvidenceNotesForTransferRequest(fixture.Create<Guid>(), fixture.CreateMany<int>().ToList(),
+                fixture.CreateMany<Guid>().ToList());
+            
+            A.CallTo(() => scheme.Id).Returns(schemeId);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() =>
+                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -142,7 +161,7 @@
             };
 
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._)).Returns(noteList);
+                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -169,7 +188,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
 
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._)).Returns(noteList);
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
