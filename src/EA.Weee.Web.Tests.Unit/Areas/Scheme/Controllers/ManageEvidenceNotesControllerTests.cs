@@ -42,7 +42,7 @@
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
             Fixture = new Fixture();
         }
 
