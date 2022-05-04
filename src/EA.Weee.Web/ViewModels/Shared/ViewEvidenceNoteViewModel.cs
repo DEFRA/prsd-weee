@@ -41,5 +41,9 @@
         public string TotalReceivedDisplay { get; set; }
 
         public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+
+        public string AatfApprovalNumber { get; set; }
+
+        public bool DisplayAatfName { get; set; }
     }
 }

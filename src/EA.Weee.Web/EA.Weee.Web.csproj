@@ -324,6 +324,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageAatfViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBase.cs" />
