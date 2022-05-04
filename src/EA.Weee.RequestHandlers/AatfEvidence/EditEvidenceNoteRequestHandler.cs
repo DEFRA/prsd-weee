@@ -43,7 +43,7 @@
 
             Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme {message.RecipientId} not found");
 
-            if (!evidenceNote.Status.Equals(NoteStatus.Draft))
+            if (!evidenceNote.Status.Equals(NoteStatus.Draft) && !evidenceNote.Status.Equals(NoteStatus.Returned))
             {
                 throw new InvalidOperationException($"Evidence note {evidenceNote.Id} is incorrect state to be edited");
             }

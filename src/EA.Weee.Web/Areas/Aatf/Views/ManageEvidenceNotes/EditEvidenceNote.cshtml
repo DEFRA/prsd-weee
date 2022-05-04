@@ -31,6 +31,19 @@
             <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-padding-bottom-1">
                 @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
             </div>
+
+            @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
+            {
+                <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+                    <span class="govuk-label--s govuk-grid-column-one-quarter" style="width:200px">
+                        @Html.DisplayNameFor(m => m.Reason)
+                    </span>
+                    <span class="govuk-grid-column-three-quarters govuk-body" style="word-break: break-word" maxlength="200">
+                        @Html.DisplayTextFor(m => m.Reason)
+                    </span>
+                </div>
+            }
+
         </div>
 
         @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/_EditEvidenceNotePartial.cshtml", Model)
