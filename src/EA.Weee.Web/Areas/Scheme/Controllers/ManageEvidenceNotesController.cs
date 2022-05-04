@@ -120,7 +120,7 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
+                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
 

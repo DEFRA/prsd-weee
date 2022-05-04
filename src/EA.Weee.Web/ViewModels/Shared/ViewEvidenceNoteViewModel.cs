@@ -40,6 +40,10 @@
 
         public string TotalReceivedDisplay { get; set; }
 
+        public bool HasRejectedDate => !string.IsNullOrWhiteSpace(RejectedDate);
+
         public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+
+        public bool HasReason => !string.IsNullOrWhiteSpace(Reason);
     }
 }

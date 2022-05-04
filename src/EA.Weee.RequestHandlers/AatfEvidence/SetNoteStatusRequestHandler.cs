@@ -37,7 +37,7 @@
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
             string changedBy = userContext.UserId.ToString();
-            evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy);
+            evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy, message.Reason);
 
             await context.SaveChangesAsync();
 
