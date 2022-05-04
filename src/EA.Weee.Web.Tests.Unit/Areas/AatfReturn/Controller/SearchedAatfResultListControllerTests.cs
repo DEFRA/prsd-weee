@@ -203,7 +203,9 @@
                 SelectedWeeeSentOnId = selectedAatfId,
                 SelectedAatfName = aatfName
             };
-            var result = await controller.Index(model.OrganisationId, model.ReturnId, model.AatfId, model.SelectedAatfId, model.SelectedAatfName) as RedirectToRouteResult;
+
+            var frmCollections = new FormCollection();
+            var result = await controller.Index(model, frmCollections) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ObligatedSentOn");
