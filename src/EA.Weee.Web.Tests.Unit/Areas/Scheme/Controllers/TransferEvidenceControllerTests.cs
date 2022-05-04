@@ -518,7 +518,7 @@
             A.CallTo(() =>
                 sessionService.SetTransferSessionObject(transferEvidenceController.Session, 
                     A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
-                                                ((TransferEvidenceNoteRequest)a).SchemeId.Equals(model.PcsId) &&
+                                                ((TransferEvidenceNoteRequest)a).SchemeId.Equals(request.SchemeId) &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.TrueForAll(s => selectedNotes.Contains(s))),
                     SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();

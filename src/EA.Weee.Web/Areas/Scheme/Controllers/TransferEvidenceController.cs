@@ -112,7 +112,7 @@
                     model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
 
                 var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+                    new TransferEvidenceNoteRequest(transferRequest.SchemeId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 
@@ -137,7 +137,7 @@
                 Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
 
