@@ -156,10 +156,10 @@
 
         public class GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNotesForTransferRequest, List<EvidenceNoteData>> handler;
+            protected static IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>> handler;
             protected static Organisation organisation;
             protected static GetEvidenceNotesForTransferRequest request;
-            protected static List<EvidenceNoteData> result;
+            protected static IList<EvidenceNoteData> result;
             protected static Scheme scheme;  
             protected static Note note;
             protected static Fixture fixture;
@@ -177,7 +177,7 @@
                 notesSetToNotBeIncluded = new List<Note>();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNotesForTransferRequest, List<EvidenceNoteData>>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>>>();
 
                 return setup;
             }

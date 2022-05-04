@@ -304,10 +304,13 @@
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
