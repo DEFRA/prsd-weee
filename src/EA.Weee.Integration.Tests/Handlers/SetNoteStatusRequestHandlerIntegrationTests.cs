@@ -75,7 +75,7 @@
             protected static Organisation organisation;
             protected static SetNoteStatus request;
             protected static Guid result;
-            protected static Scheme scheme;  // added by Guido
+            protected static Scheme scheme;
             protected static Note note;
             protected static Fixture fixture;
 
