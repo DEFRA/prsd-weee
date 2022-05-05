@@ -130,26 +130,32 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-
-                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
-
-                Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
-
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
-                {
-                    TransferAllTonnage = transferAllTonnage
-                };
-
-                var model =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+                var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, client);
 
                 return this.View("TransferTonnage", model);
             }
+        }
+
+        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, IWeeeClient client)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
+            Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+
+            var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
+            {
+                TransferAllTonnage = transferAllTonnage
+            };
+
+            var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+
+            return model;
         }
 
         [HttpPost]
@@ -162,24 +168,8 @@
                 {
                 }
 
-                await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
 
-                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
-
-                Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
-
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(model.PcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, model.PcsId)
-                {
-                    ExistingModel = model
-                };
-
-                var updatedModel =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
-                
                 return this.View("TransferTonnage", updatedModel);
             }
         }
