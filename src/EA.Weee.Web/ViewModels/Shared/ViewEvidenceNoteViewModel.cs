@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Extensions;
 
@@ -26,9 +27,6 @@
 
         public string RecipientAddress { get; set; }
 
-        [DisplayName("What is the reason you are rejecting or returning the evidence note?")]
-        public string Reason { get; set; }
-
         public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
 
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
@@ -41,10 +39,27 @@
 
         public string TotalReceivedDisplay { get; set; }
 
-        public bool HasRejectedDate => !string.IsNullOrWhiteSpace(RejectedDate);
+        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
 
-        public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+        public bool HasReturnedDate => Status.Equals(NoteStatus.Returned);
 
-        public bool HasReason => !string.IsNullOrWhiteSpace(Reason);
+        public bool DisplayReason
+        {
+            get
+            {
+                if (Status.Equals(NoteStatus.Submitted))
+                {
+                    return false;
+                }
+                else
+                {
+                    return !string.IsNullOrWhiteSpace(Reason);
+                }
+            }
+        }
+
+        public string AatfApprovalNumber { get; set; }
+
+        public bool DisplayAatfName { get; set; }
     }
 }

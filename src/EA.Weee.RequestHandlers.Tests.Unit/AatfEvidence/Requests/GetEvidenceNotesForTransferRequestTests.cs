@@ -49,6 +49,21 @@
 
             request.Categories.Should().BeEquivalentTo(categories);
             request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNotes.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GetEvidenceNotesForTransferRequest_GivenValuesWithEvidenceNotes_PropertiesShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var categories = new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.DisplayEquipment.ToInt() };
+            var notes = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() };
+
+            var request = new GetEvidenceNotesForTransferRequest(organisationId, categories, notes);
+
+            request.Categories.Should().BeEquivalentTo(categories);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNotes.Should().BeEquivalentTo(notes);
         }
     }
 }

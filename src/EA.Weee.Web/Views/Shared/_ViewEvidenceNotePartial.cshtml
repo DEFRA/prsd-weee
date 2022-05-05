@@ -8,21 +8,21 @@
     
     <div class="govuk-width-container govuk-!-margin-top-3">
 
-        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay)
         </div>
 
-        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
         </div>
 
-        @if (Model.HasReason)
+        @if (Model.DisplayReason)
         {
             <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-                <span class="govuk-label--s govuk-grid-column-one-quarter" style="width:200px">
+                <span id="reason-label" class="govuk-label--s govuk-grid-column-one-third">
                     @Html.DisplayNameFor(m => m.Reason)
                 </span>
-                <span class="govuk-grid-column-three-quarters govuk-body" style="word-break: break-word" maxlength="200">
+                <span aria-labelledby="reason-label" class="govuk-body govuk-grid-column-two-thirds govuk-!-padding-left-0 govuk-!-margin-bottom-0" style="word-break: break-word" maxlength="200">
                     @Html.DisplayTextFor(m => m.Reason)
                 </span>
             </div>
@@ -30,14 +30,14 @@
 
         @if (Model.HasSubmittedDate)
         {
-            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            <div class="govuk-grid-row govuk-!-margin-bottom-1">
                 @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate)
             </div>
         }
 
         @if (Model.HasApprovedDate)
         {
-            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            <div class="govuk-grid-row govuk-!-margin-bottom-1">
                 @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate)
             </div>
         }
@@ -51,20 +51,20 @@
 
         @if (Model.HasReturnedDate)
         {
-            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+            <div class="govuk-grid-row govuk-!-margin-bottom-1">
                 @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate)
             </div>
         }
 
-        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay)
         </div>
 
-        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay)
         </div>
 
-        <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
             @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay)
         </div>
     </div>
