@@ -5,7 +5,6 @@
     using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Prsd.Core.Helpers;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Xunit;
 
@@ -211,36 +210,87 @@
             result.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(NoteStatus.Rejected)]
-        [InlineData(NoteStatus.Returned)]
-        [InlineData(NoteStatus.Draft)]
-        public void RedirectTab_GivenStatusIsDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        [Fact]
+        public void HasReturnedDate_GivenStatusIsReturned_ShouldReturnTrue()
         {
             var model = new ViewEvidenceNoteViewModel()
             {
-                Status = status
+                Status = NoteStatus.Returned
             };
 
-            var tab = model.RedirectTab;
+            model.HasReturnedDate.Should().BeTrue();
+        }
 
-            tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes);
+        [Fact]
+        public void HasReturnedDate_GivenStatusIsReturned_ShouldReturnFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Submitted
+            };
+
+            model.DisplayReason.Should().BeFalse();
         }
 
         [Theory]
-        [InlineData(NoteStatus.Void)]
-        [InlineData(NoteStatus.Submitted)]
-        [InlineData(NoteStatus.Approved)]
-        public void RedirectTab_GivenStatusIsNotDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayReason_GivenStatusIsNotReturned_ShouldReturnFalse(NoteStatus status)
         {
+            if (status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
             var model = new ViewEvidenceNoteViewModel()
             {
                 Status = status
             };
 
-            var tab = model.RedirectTab;
+            model.DisplayReason.Should().BeFalse();
+        }
 
-            tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
+        [Fact]
+        public void DisplayReason_GivenStatusIsSubmitted_ShouldReturnFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Submitted
+            };
+
+            model.DisplayReason.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsPopulated_ShouldReturnTrue(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                return;
+            }
+
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status,
+                Reason = "returned"
+            };
+
+            model.DisplayReason.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsPopulated_ShouldReturnFalse(string reason)
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Approved,
+                Reason = reason
+            };
+
+            model.DisplayReason.Should().BeFalse();
         }
     }
 }

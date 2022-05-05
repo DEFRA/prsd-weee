@@ -226,6 +226,46 @@
         }
 
         [Fact]
+        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Returned, "user");
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Returned);
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Approved, "user");
+            note.UpdateStatus(NoteStatus.Returned, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Submitted);
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
         public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_ShouldAddStatusHistory()
         {
             //arrange
@@ -242,6 +282,51 @@
             note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
             note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
             note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Returned, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(3);
+            note.NoteStatusHistory.ElementAt(2).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(2).FromStatus.Should().Be(NoteStatus.Returned);
+            note.NoteStatusHistory.ElementAt(2).ToStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(2).ChangedDate.Should().Be(date);
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+            SystemTime.Freeze(date);
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Returned, "user");
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(2);
+            note.NoteStatusHistory.ElementAt(1).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(1).FromStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(1).ToStatus.Should().Be(NoteStatus.Returned);
+            note.NoteStatusHistory.ElementAt(1).ChangedDate.Should().Be(date);
 
             SystemTime.Unfreeze();
         }
