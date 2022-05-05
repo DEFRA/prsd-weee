@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Extensions;
 
@@ -41,6 +42,21 @@
         public string TotalReceivedDisplay { get; set; }
 
         public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+
+        public ManageEvidenceOverviewDisplayOption RedirectTab
+        {
+            get
+            {
+                if (Status.Equals(NoteStatus.Draft) ||
+                    Status.Equals(NoteStatus.Rejected) ||
+                    Status.Equals(NoteStatus.Returned))
+                {
+                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                }
+
+                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+            }
+        }
 
         public string AatfApprovalNumber { get; set; }
 

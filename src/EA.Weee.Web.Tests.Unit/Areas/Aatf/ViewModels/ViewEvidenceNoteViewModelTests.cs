@@ -2,8 +2,10 @@
 {
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Prsd.Core.Helpers;
+    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Xunit;
 
@@ -207,6 +209,38 @@
             var result = model.HasApprovedDate;
 
             result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Rejected)]
+        [InlineData(NoteStatus.Returned)]
+        [InlineData(NoteStatus.Draft)]
+        public void RedirectTab_GivenStatusIsDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
+            };
+
+            var tab = model.RedirectTab;
+
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes);
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Void)]
+        [InlineData(NoteStatus.Submitted)]
+        [InlineData(NoteStatus.Approved)]
+        public void RedirectTab_GivenStatusIsNotDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
+            };
+
+            var tab = model.RedirectTab;
+
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
         }
     }
 }
