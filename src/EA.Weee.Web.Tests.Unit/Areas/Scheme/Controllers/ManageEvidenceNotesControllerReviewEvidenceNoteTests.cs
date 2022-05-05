@@ -241,7 +241,7 @@
             // act
             var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
             var model = result.Model as ReviewEvidenceNoteViewModel;
-            var expected = new List<string> { "Approve evidence note" };
+            var expected = new List<string> { "Approve evidence note", "Reject evidence note", "Return evidence note" };
 
             // assert
             Assert.Equal<IList<string>>(expected, model.PossibleValues);

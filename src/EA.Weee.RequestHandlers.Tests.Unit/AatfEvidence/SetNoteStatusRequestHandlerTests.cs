@@ -185,7 +185,7 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(NoteStatus.Approved, userId.ToString()))
+            A.CallTo(() => note.UpdateStatus(NoteStatus.Approved, userId.ToString(), null))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                     .MustHaveHappenedOnceExactly());
