@@ -134,7 +134,9 @@
         $("#SelectPcsForm").submit();
     });
     $("#transferAllTonnage").change(function () {
-        $("#TransferEvidenceForm").submit();
+        if ($("#transferAllTonnage").is(':checked')) {
+            $("#TransferEvidenceForm").submit();
+        }
     });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");

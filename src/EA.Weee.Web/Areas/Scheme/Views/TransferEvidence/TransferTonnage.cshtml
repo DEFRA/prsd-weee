@@ -129,13 +129,13 @@
             <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence to transfer</caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header govuk-!-text-align-left">
+                <th class="govuk-table__header govuk-!-text-align-left  govuk-!-padding-left-2">
                     Category
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right">
                     Total to transfer(tonnes)
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-right">
+                <th class="govuk-table__header govuk-!-text-align-right govuk-!-padding-right-2">
                     Total reused to transfer (tonnes)
                 </th>
             </tr>
@@ -152,24 +152,24 @@
                 var reusedId = "Reused" + Model.CategoryValues.ElementAt(categoryCount).CategoryId + "Total";
 
                 <tr class="govuk-table__row govuk-panel-grey-background">
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell govuk-!-padding-left-2">
 
                         @Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay
                     </td>
                     
                     <td class="govuk-table__cell govuk-!-text-align-right" id="@receivedId">@Model.CategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                    <td class="govuk-table__cell govuk-!-text-align-right" id="@reusedId">@Model.CategoryValues.ElementAt(categoryCount).TotalReused</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2" id="@reusedId">@Model.CategoryValues.ElementAt(categoryCount).TotalReused</td>
                 </tr>
 
             }
             </tbody>
         </table>
 
-        <div class="govuk-!-margin-top-3">
+        @*<div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
                 @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
             </div>
-        </div>
+        </div>*@
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")
     @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)

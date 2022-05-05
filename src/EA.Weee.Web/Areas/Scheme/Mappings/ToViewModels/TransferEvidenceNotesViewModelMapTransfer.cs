@@ -15,8 +15,6 @@
 
         public Guid OrganisationId { get; private set; }
 
-        public TransferEvidenceTonnageViewModel ExistingModel { get; set; }
-
         public bool TransferAllTonnage { get; set; }
 
         public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
