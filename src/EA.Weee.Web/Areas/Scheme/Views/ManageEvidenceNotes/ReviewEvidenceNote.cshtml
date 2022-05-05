@@ -37,16 +37,15 @@
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                " ",
-                RadioButtonLegend.Displayed,
+                "Choose whether to approve, reject or return the evidence note",
+                RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked,
                 Model.HintItems)
         </div>
 
-        <div id="reason-text" style="display: none;" class="govuk-!-margin-bottom-7">
+        <div id="reason-text" class="govuk-!-margin-bottom-7">
             <div class="govuk-body">What is the reason you are rejecting or returning the evidence note?</div>
-            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @class = "govuk-input", @id = "return-reject-reason", @name = "return-reject-reason", @style = "height: 100px;", @maxlength = "200", @title = "You can type up to 200 characters" })
-            <!-- textarea data-bind="*Model.Reason" class="govuk-input" id="return-reject-reason" name="return-reject-reason" style="height: 100px;" maxlength="200" title="You can type up to 200 characters"></textarea -->
+            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @class = "govuk-textarea", @id = "return-reject-reason", @name = "return-reject-reason", @maxlength = "200", @title = "You can type up to 200 characters" })
         </div>
 
         <div class="govuk-form-group">
@@ -55,22 +54,6 @@
     }
 
     <script type="text/javascript">
-        document.getElementById("conditional-SelectedValue-0").style = "display: block;";
-        document.getElementById("conditional-SelectedValue-1").style = "display: block;";
-        document.getElementById("conditional-SelectedValue-2").style = "display: block;";
-
-        function showReasonText(event)
-        {
-            document.getElementById("reason-text").style = "display: block;";
-        }
-
-        function hideReasonText(event)
-        {
-            document.getElementById("reason-text").style = "display: none;";
-        }
-
-        document.getElementById("SelectedValue-0").addEventListener("click", hideReasonText);
-        document.getElementById("SelectedValue-1").addEventListener("click", showReasonText);
-        document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
+        initReviewEvidenceNote();
     </script>
 }

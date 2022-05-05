@@ -26,6 +26,7 @@
 
         public string RecipientAddress { get; set; }
 
+        [DisplayName("What is the reason you are rejecting or returning the evidence note?")]
         public string Reason { get; set; }
 
         public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
