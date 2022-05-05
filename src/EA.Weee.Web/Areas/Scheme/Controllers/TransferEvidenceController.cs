@@ -156,25 +156,12 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                //var transferRequest =
-                //    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                //        SessionKeyConstant.TransferNoteKey);
-
-                //var selectedEvidenceNotes =
-                //    model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
-
-                //var updatedTransferRequest =
-                //    new TransferEvidenceNoteRequest(transferRequest.SchemeId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
-
-                //sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
-
-                //return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId });
-            }
-
             using (var client = this.apiClient())
             {
+                if (ModelState.IsValid)
+                {
+                }
+
                 await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
@@ -193,8 +180,6 @@
                 var updatedModel =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
                 
-                //ModelState.Clear();
-
                 return this.View("TransferTonnage", updatedModel);
             }
         }
