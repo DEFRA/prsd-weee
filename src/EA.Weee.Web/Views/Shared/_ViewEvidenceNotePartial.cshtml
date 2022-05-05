@@ -42,6 +42,13 @@
             </div>
         }
 
+        @if (Model.HasRejectedDate)
+        {
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
+                @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate)
+            </div>
+        }
+
         @if (Model.HasReturnedDate)
         {
             <div class="govuk-grid-row govuk-!-margin-bottom-1">
