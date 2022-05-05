@@ -31,11 +31,16 @@
         }
 
         [HttpGet]
-        public async virtual Task<ActionResult> Index(Guid organisationId, string returnAction)
+        public async Task<ActionResult> Index(Guid organisationId, string returnAction, bool redirect = false)
         { 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
             var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
+
+            if (redirect)
+            {
+                return ReturnLinkCase(returnAction, evidenceModel);
+            }
 
             var model = new EvidenceTonnageValueCopyPasteViewModel() { OrganisationId = evidenceModel.OrganisationId, AatfId = evidenceModel.AatfId, Action = returnAction, EvidenceId = evidenceModel.Id };
 
@@ -64,21 +69,12 @@
             return ReturnLinkCase(model.Action, evidenceModel);
         }
 
-        [HttpGet]
-        public virtual ActionResult ReturnToAction(string returnAction)
-        {
-            var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
-
-            return ReturnLinkCase(returnAction, evidenceModel);
-        }
-
         private ActionResult ReturnLinkCase(string returnAction, EditEvidenceNoteViewModel evidenceModel)
         {
             switch (returnAction)
             {
                 case EvidenceCopyPasteActionConstants.EditEvidenceNoteAction:
-                    return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
-                case EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction:
+                    return RedirectToAction(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
                 default: 
                     return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, returnFromCopyPaste = true });
             }
