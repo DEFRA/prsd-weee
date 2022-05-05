@@ -79,7 +79,8 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Submitted) && Status != NoteStatus.Draft))
+            if ((newStatus.Equals(NoteStatus.Submitted) && 
+                 (Status != NoteStatus.Draft && Status != NoteStatus.Returned)))
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }

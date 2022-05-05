@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Helpers;
 
@@ -78,5 +79,20 @@
         public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
 
         public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
+
+        public ManageEvidenceOverviewDisplayOption RedirectTab
+        {
+            get
+            {
+                if (Status.Equals(NoteStatus.Draft) ||
+                    Status.Equals(NoteStatus.Rejected) ||
+                    Status.Equals(NoteStatus.Returned))
+                {
+                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                }
+
+                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+            }
+        }
     }
 }
