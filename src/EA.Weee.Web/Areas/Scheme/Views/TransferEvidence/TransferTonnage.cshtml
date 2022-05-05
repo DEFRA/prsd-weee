@@ -52,69 +52,71 @@
                     <h2 class="govuk-heading-m">@note.SubmittedBy (@note.AatfApprovalNumber)</h2>
                 }
 
-                <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br />
+                <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br/>
                 <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.ToShortDateString() - @note.EndDate.ToShortDateString()</span>
 
                 <table id="transfer-notes-tonnage-@i.ToString()" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnage for @note.SubmittedBy</caption>
                     <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
-                                Category
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
-                                Total received available (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
-                                Total reused available (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
-                                Transfer received (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
-                                Transfer reused (tonnes)
-                            </th>
-                        </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
+                            Category
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
+                            Total received available (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
+                            Total reused available (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
+                            Transfer received (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
+                            Transfer reused (tonnes)
+                        </th>
+                    </tr>
                     </thead>
                     <tbody class="govuk-table__body">
 
-                        @for (var j = 0; j < Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Count; j++)
-                        {
+                    @for (var j = 0; j < Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Count; j++)
+                    {
 
-                            var category = Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.ElementAt(j);
+                        var category = Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.ElementAt(j);
 
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">
-                                    @category.CategoryId. @category.CategoryDisplay
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @category.CategoryId. @category.CategoryDisplay
 
-                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
-                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
-                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].Id)
+                                @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
+                                @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
+                                @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].Id)
 
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Received
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Reused
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Received)">
-                                        <span class="govuk-visually-hidden" id="category-received-@category.CategoryId-@i.ToString()">Transfer received (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
-                                        @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Received)
-                                        @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                                    </div>
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Reused)">
-                                        <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId-@i.ToString()">Transfer reused (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
-                                        @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Reused)
-                                        @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                                    </div>
-                                </td>
-                            </tr>
-                            elementCount++;
-                        }
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                @category.Received
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                @category.Reused
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Received)">
+                                    <span class="govuk-visually-hidden" id="category-received-@category.CategoryId-@i.ToString()">Transfer received (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
+                                    @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Received)
+                                    @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Received,
+                                        new { id = "Received" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Reused)">
+                                    <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId-@i.ToString()">Transfer reused (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
+                                    @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Reused)
+                                    @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Reused, 
+                                        new { id = "Reused" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                </div>
+                            </td>
+                        </tr>
+                        elementCount++;
+                    }
 
                     </tbody>
                 </table>
@@ -136,35 +138,54 @@
                     Category
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right">
-                    Total to transfer(tonnes) 
+                    Total to transfer(tonnes)
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right">
-                    Total reused to transfer (tonnes) 
+                    Total reused to transfer (tonnes)
                 </th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
-                
+
             @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
             {
                 var item = categoryCount;
 
                 @Html.HiddenFor(m => m.CategoryValues[item].CategoryId)
                 @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
+                var receivedId = "Received" + Model.CategoryValues.ElementAt(categoryCount).CategoryId + "Total";
+                var reusedId = "Reused" + Model.CategoryValues.ElementAt(categoryCount).CategoryId + "Total";
 
                 <tr class="govuk-table__row govuk-panel-grey-background">
                     <td class="govuk-table__cell">
 
                         @Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay
                     </td>
-                    <td></td>
-                    <td></td>
+                    
+                    <td class="govuk-table__cell govuk-!-text-align-right" id="@receivedId"></td>
+                    <td class="govuk-table__cell govuk-!-text-align-right" id="@reusedId"></td>
                 </tr>
 
             }
-                </tbody>
+            </tbody>
         </table>
 
-        
+
+    }
+    @Scripts.Render("~/bundles/weee_tonnage_totals")
+    @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
+    {
+
+        var category = Model.CategoryValues.ElementAt(categoryCount);
+
+<script>
+            var scriptReceivedId = 'Received' + '@category.CategoryId.ToString()';
+            var scriptReusedId = 'Reused' + '@category.CategoryId.ToString()';
+            TonnageTotals(scriptReceivedId);
+    TonnageTotals(scriptReusedId);
+</script>
+
+
     }
 }
+
