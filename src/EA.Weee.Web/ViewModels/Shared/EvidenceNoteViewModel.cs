@@ -8,6 +8,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
 
+    [Serializable]
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
