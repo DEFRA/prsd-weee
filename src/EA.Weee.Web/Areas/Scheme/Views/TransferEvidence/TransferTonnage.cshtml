@@ -24,7 +24,7 @@
         <noscript>
             <div class="govuk-!-margin-top-3">
                 <div class="govuk-button-group">
-                    @this.WeeeGds().Button("Copy tonnage", new { name = "action", value = TransferEvidenceTonnageViewModel.ActionEnum.Copy, id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                    @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
                 </div>
             </div>
         </noscript>
@@ -124,12 +124,7 @@
         }
 
         <h2 class="govuk-heading-m">Summary of total evidence to transfer</h2>
-        <div class="govuk-!-margin-top-3">
-            <div class="govuk-button-group">
-                @this.WeeeGds().Button("Continue", new { name = "action", value = TransferEvidenceTonnageViewModel.ActionEnum.Save, id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
-            </div>
-        </div>
-
+       
         <table id="transfer-tonnage-summary" class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence to transfer</caption>
             <thead class="govuk-table__head">
@@ -170,7 +165,11 @@
             </tbody>
         </table>
 
-
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
+            </div>
+        </div>
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")
     @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
