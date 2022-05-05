@@ -27,17 +27,14 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
-        private readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient,
-            IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator) : base(breadcrumb, cache)
+            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
-            this.transferNoteRequestCreator = transferNoteRequestCreator;
         }
 
         [HttpGet]
@@ -106,7 +103,7 @@
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note scheme request from note's Guid
-                var model = await GetNote(pcsId, evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);

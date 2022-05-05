@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using System.Collections.Generic;
     using Core.Shared;
     using CuttingEdge.Conditions;
@@ -39,9 +40,8 @@
             foreach (var evidenceNoteData in source.Notes)
             {
                 model.EvidenceNotesDataList.Add(mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)));
+                model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, false));
             }
-
-            model.SelectedEvidenceNotes = new List<bool>(new bool[model.EvidenceNotesDataList.Count]);
 
             return model;
         }
