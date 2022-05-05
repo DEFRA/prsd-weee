@@ -27,8 +27,6 @@
 
         public string RecipientAddress { get; set; }
 
-        public string Reason { get; set; }
-
         public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
 
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
@@ -41,20 +39,20 @@
 
         public string TotalReceivedDisplay { get; set; }
 
-        public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+        public bool HasReturnedDate => Status.Equals(NoteStatus.Returned);
 
-        public ManageEvidenceOverviewDisplayOption RedirectTab
+        public bool DisplayReason
         {
             get
             {
-                if (Status.Equals(NoteStatus.Draft) ||
-                    Status.Equals(NoteStatus.Rejected) ||
-                    Status.Equals(NoteStatus.Returned))
+                if (Status.Equals(NoteStatus.Submitted))
                 {
-                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                    return false;
                 }
-
-                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+                else
+                {
+                    return !string.IsNullOrWhiteSpace(Reason);
+                }
             }
         }
     }

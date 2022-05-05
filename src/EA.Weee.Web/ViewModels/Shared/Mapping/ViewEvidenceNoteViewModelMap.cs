@@ -107,6 +107,9 @@
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
                             break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a returned note";
+                            break;
                     }
 
                     model.Status = status;
