@@ -15,7 +15,7 @@
         /// </summary>
         public KeyValueRadioButtons()
         {
-            PossibleValues = new List<RadioButtonPair<TKey, TValue>>();
+            PossibleValues = new List<GenericControlPair<TKey, TValue>>();
         }
 
         /// <summary>
@@ -25,11 +25,11 @@
         /// <param name="keysAndValues">The enumerable of KeyValue pairs to use for PossibleValues.</param>
         public KeyValueRadioButtons(IEnumerable<KeyValuePair<TKey, TValue>> keysAndValues)
         {
-            var possibleValues = new List<RadioButtonPair<TKey, TValue>>();
+            var possibleValues = new List<GenericControlPair<TKey, TValue>>();
 
             foreach (var kvp in keysAndValues)
             {
-                possibleValues.Add(new RadioButtonPair<TKey, TValue>(kvp));
+                possibleValues.Add(new GenericControlPair<TKey, TValue>(kvp));
             }
 
             PossibleValues = possibleValues;
@@ -38,12 +38,12 @@
         /// <summary>
         /// The RadioButtonPairs to use for the list of radio buttons.
         /// </summary>
-        public virtual IList<RadioButtonPair<TKey, TValue>> PossibleValues { get; set; }
+        public virtual IList<GenericControlPair<TKey, TValue>> PossibleValues { get; set; }
 
         /// <summary>
-        /// The selected RadioButtonPair when a selection has been made.
+        /// The selected GenericControlPair when a selection has been made.
         /// </summary>
-        public virtual RadioButtonPair<TKey, TValue> Selected
+        public virtual GenericControlPair<TKey, TValue> Selected
         {
             get
             {
@@ -60,7 +60,7 @@
         }
 
         /// <summary>
-        /// The value passed to the controller from the view, used to populate the Selected RadioButtonPair.
+        /// The value passed to the controller from the view, used to populate the Selected GenericControlPair.
         /// </summary>
         public virtual TValue SelectedValue { get; set; }
     }

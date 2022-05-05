@@ -54,7 +54,7 @@
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => note.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => note.Status).Returns(NoteStatus.Draft);
-            
+
             request = Request();
 
             handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess);
@@ -94,14 +94,15 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusData))]
-        public async Task HandleAsync_GivenNoteIsNotInDraft_ShouldInvalidOperationException(NoteStatus status)
+        public async Task HandleAsync_GivenNoteIsNotInDraftAndReturned_ShouldInvalidOperationException(NoteStatus status)
         {
             //arrange
-            var allowedStatus = new List<int>() { NoteStatus.Draft.Value };
+            var allowedStatus = new List<int>() { NoteStatus.Draft.Value, NoteStatus.Returned.Value };
 
             if (!allowedStatus.Contains(status.Value))
             {
                 A.CallTo(() => note.Status).Returns(status);
+                A.CallTo(() => note.RecipientId).Returns(scheme.Id);
                 A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
 
                 //act
@@ -110,6 +111,21 @@
                 //assert
                 result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Evidence note {note.Id} is incorrect state to be edited");
             }
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoteStatusIsReturnedAndSchemeChanged_ShouldThrowInvalidOperationException()
+        {
+            //arrange 
+            A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
+            A.CallTo(() => note.RecipientId).Returns(fixture.Create<Guid>());
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Evidence note {note.Id} has incorrect Recipient Id to be saved");
         }
 
         [Fact]
@@ -229,6 +245,22 @@
         {
             //act
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+
+            //arrange
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.Should().Be(note.Id);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndReturnedStatus_IdShouldBeReturned()
+        {
+            //act
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
+            A.CallTo(() => note.RecipientId).Returns(scheme.Id);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
 
             //arrange

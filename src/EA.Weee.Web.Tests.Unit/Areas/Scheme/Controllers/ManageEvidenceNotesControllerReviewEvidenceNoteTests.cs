@@ -4,30 +4,22 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Note;
-    using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Controllers;
-    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using EA.Weee.Web.ViewModels.Shared;
-    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
+    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class ManageEvidenceNotesControllerReviewEvidenceNoteTests
@@ -63,6 +55,12 @@
         }
 
         [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+        [Fact]
         public void ReviewEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(ReviewEvidenceNoteViewModel) }).Should()
@@ -75,12 +73,102 @@
             typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(ReviewEvidenceNoteViewModel) }).Should()
              .BeDecoratedWith<HttpPostAttribute>();
         }
-        
+
         [Fact]
-        public async Task DownloadEvidenceNoteGet_GivenAModelIsValid_ShouldReturnModel()
+        public async Task DownloadEvidenceGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var organisationId = Fixture.Create<Guid>();
+            
+            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(organisationId, EvidenceNoteId);
+
+            // assert
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenEvidenceNoteId_ShouldRetrieveNote()
+        {
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                    A<GetEvidenceNoteForSchemeRequest>.That.Matches(g => g.EvidenceNoteId.Equals(EvidenceNoteId))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenEvidenceNote_ModelMapperShouldBeCalled()
         {
             //arrange
-            ReviewEvidenceNoteViewModel model = GetValidModel();
+            var noteData = Fixture.Create<EvidenceNoteData>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            // assert
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && v.SchemeId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenEvidenceNoteAndStatusTempData_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var noteData = Fixture.Create<EvidenceNoteData>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Approved;
+
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            // assert
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
+                                                                 v.SchemeId.Equals(OrganisationId) &&
+                                                                 v.NoteStatus.Equals(NoteStatus.Approved)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenModelIsBuilt_ModelShouldBeReturned()
+        {
+            //arrange
+            var model = Fixture.Create<ViewEvidenceNoteViewModel>();
+
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
+
+            // act
+            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
+
+            // assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenModelIsBuilt_DefaultViewShouldBeReturned()
+        {
+            // act
+            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
+
+            // assert
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceNoteGet_ShouldReturnModel()
+        {
+            //arrange
 
             //act
             var result = await ManageEvidenceController.DownloadEvidenceNote(RecipientId, EvidenceNoteId) as ViewResult;
