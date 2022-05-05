@@ -67,6 +67,7 @@
                     organisationAddress.Postcode,
                     null),
                 SchemeId = source.SchemeId,
+                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)

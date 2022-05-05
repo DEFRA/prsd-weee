@@ -54,7 +54,8 @@
         public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
-            var notes = await context.Notes.Where(p =>
+            var notes = await context.Notes
+                .Where(p =>
                     ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                      && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                      && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
@@ -68,12 +69,13 @@
             return notes;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes)
         {
             var notes = await context.Notes.Where(n => n.RecipientId == schemeId &&
                                                         n.NoteType.Value == NoteType.EvidenceNote.Value &&
                                                         n.Status.Value == NoteStatus.Approved.Value &&
-                                                        n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e))).ToArrayAsync();
+                                                        n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)) &&
+                                    evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)).ToListAsync();
 
             return notes;
         }

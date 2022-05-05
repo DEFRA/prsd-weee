@@ -23,6 +23,6 @@
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId);
 
-        Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories);
+        Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes);
     }
 }

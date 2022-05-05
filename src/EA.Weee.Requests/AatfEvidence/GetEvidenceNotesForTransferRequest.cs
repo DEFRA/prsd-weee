@@ -13,13 +13,17 @@
 
         public List<int> Categories { get; private set; }
 
-        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories)
+        public List<Guid> EvidenceNotes { get; private set; }
+
+        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories, List<Guid> evidenceNotes = null)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();
 
             OrganisationId = organisationId;
             Categories = categories;
+
+            EvidenceNotes = evidenceNotes ?? new List<Guid>();
         }
     }
 }
