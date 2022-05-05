@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Constant;
+    using Core.Helpers;
     using Core.Scheme;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -116,7 +117,7 @@
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 
-                return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId });
+                return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId, transferAllTonnage = false });
             }
 
             await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -125,7 +126,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferTonnage(Guid pcsId)
+        public async Task<ActionResult> TransferTonnage(Guid pcsId, bool transferAllTonnage = false)
         {
             using (var client = this.apiClient())
             {
@@ -139,7 +140,10 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                     new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
 
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
+                {
+                    TransferAllTonnage = transferAllTonnage
+                };
 
                 var model =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
@@ -169,9 +173,30 @@
                 //return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId });
             }
 
-            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+            using (var client = this.apiClient())
+            {
+                await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-            return View("TransferTonnage", model);
+                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                    SessionKeyConstant.TransferNoteKey);
+
+                Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+
+                var result = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(model.PcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
+
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, model.PcsId)
+                {
+                    ExistingModel = model
+                };
+
+                var updatedModel =
+                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+                
+                //ModelState.Clear();
+
+                return this.View("TransferTonnage", updatedModel);
+            }
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
