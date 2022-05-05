@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;
@@ -32,6 +33,11 @@
             foreach (var evidenceNoteData in source.Notes)
             {
                 model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)));
+            }
+
+            foreach (var requestCategoryId in source.Request.CategoryIds)
+            {
+                model.CategoryValues.Add(new CategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }
 
             return model;

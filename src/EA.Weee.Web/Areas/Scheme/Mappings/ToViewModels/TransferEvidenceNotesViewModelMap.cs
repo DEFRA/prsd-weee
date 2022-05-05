@@ -22,11 +22,6 @@
 
             var model = MapBaseProperties(source);
 
-            foreach (var requestCategoryId in source.Request.CategoryIds)
-            {
-                model.CategoryValues.Add(new CategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
-            }
-
             foreach (var evidenceNoteData in source.Notes)
             {
                 model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, false));

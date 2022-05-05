@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
+    using Core.DataReturns;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
+    using ViewModels.ManageEvidenceNotes;
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
@@ -25,9 +28,13 @@
 
             for (var i = 0; i < model.EvidenceNotesDataList.Count; i++)
             {
+                //model.EvidenceNotesDataList.ElementAt(i).CategoryValues =
+                //    model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Where(c =>
+                //        source.Request.CategoryIds.Contains(c.CategoryId) && !c.Received.Equals("-")).ToList();
+
                 model.EvidenceNotesDataList.ElementAt(i).CategoryValues =
                     model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Where(c =>
-                        source.Request.CategoryIds.Contains(c.CategoryId) && !c.Received.Equals("-")).ToList();
+                        source.Request.CategoryIds.Contains(c.CategoryId)).ToList();
 
                 if (i > 0 && model.EvidenceNotesDataList.Count > 1 && model.EvidenceNotesDataList.ElementAt(i).SubmittedBy.Equals(model.EvidenceNotesDataList.ElementAt(i - 1).SubmittedBy))
                 {
@@ -40,10 +47,22 @@
 
                 foreach (var evidenceCategoryValue in model.EvidenceNotesDataList.ElementAt(i).CategoryValues)
                 {
-                    model.TransferCategoryValues.Add(new EvidenceCategoryValue()
+                    var tonnage = new EvidenceCategoryValue((WeeeCategory)evidenceCategoryValue.CategoryId)
                     {
+                        Id = model.EvidenceNotesDataList.ElementAt(i).Id,
+                    };
 
-                    });
+                    if (source.TransferAllTonnage)
+                    {
+                        tonnage.Received = evidenceCategoryValue.Received != "-"
+                            ? evidenceCategoryValue.Received
+                            : null;
+                        tonnage.Reused = evidenceCategoryValue.Reused != "-"
+                            ? evidenceCategoryValue.Reused
+                            : null;
+                    }
+
+                    model.TransferCategoryValues.Add(tonnage);
                 }
             }
 
