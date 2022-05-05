@@ -7,7 +7,7 @@
     using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
 
-    public class GetEvidenceNotesForTransferRequest : IRequest<List<EvidenceNoteData>>
+    public class GetEvidenceNotesForTransferRequest : IRequest<IList<EvidenceNoteData>>
     {
         public Guid OrganisationId { get; protected set; }
 
