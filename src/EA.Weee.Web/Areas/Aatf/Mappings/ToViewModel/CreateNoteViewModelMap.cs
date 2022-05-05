@@ -2,13 +2,10 @@
 {
     using System.Web.Mvc;
     using Core.AatfEvidence;
-    using Core.Shared;
     using Prsd.Core;
-    using Prsd.Core.Domain;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using ViewModels;
-    using Web.ViewModels.Shared;
 
     public class CreateNoteViewModelMap : IMap<CreateNoteMapTransfer, EditEvidenceNoteViewModel>
     {
@@ -28,6 +25,11 @@
             if (source.ExistingModel != null)
             {
                 model.CategoryValues = source.ExistingModel.CategoryValues;
+                model.StartDate = source.ExistingModel.StartDate;
+                model.EndDate = source.ExistingModel.EndDate;
+                model.WasteTypeValue = source.ExistingModel.WasteTypeValue;
+                model.ProtocolValue = source.ExistingModel.ProtocolValue;
+                model.ReceivedId = source.ExistingModel.ReceivedId;
             }
 
             return model;
