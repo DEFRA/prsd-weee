@@ -40,15 +40,13 @@
                 SetupTonnages(source, model, i);
             }
 
+            //TODO: actual totals calculated during edit
             foreach (var category in model.CategoryValues)
             {
-                var categories = model.EvidenceNotesDataList.SelectMany(e =>
-                    e.CategoryValues.Where(ec => ec.CategoryId.Equals(category.CategoryId)));
-
-                category.TotalReceived = categoryValueTotalCalculator.Total(categories.Select(e1 => e1.Received).ToList());
-
-                category.TotalReused = categoryValueTotalCalculator.Total(categories.Select(e1 => e1.Reused).ToList());
+                category.TotalReceived = "0.000";
+                category.TotalReused = "0.000";
             }
+
             return model;
         }
 
