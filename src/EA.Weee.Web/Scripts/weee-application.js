@@ -208,6 +208,24 @@
     });
 });
 
+var initReviewEvidenceNote = function () {
+    document.getElementById("reason-text").style = "display: none;";
+    document.getElementById("conditional-SelectedValue-0").style = "display: block;";
+    document.getElementById("conditional-SelectedValue-1").style = "display: block;";
+    document.getElementById("conditional-SelectedValue-2").style = "display: block;";
+
+    function showReasonText(event) {
+        document.getElementById("reason-text").style = "display: block;";
+    }
+
+    function hideReasonText(event) {
+        document.getElementById("reason-text").style = "display: none;";
+    }
+
+    document.getElementById("SelectedValue-0").addEventListener("click", hideReasonText);
+    document.getElementById("SelectedValue-1").addEventListener("click", showReasonText);
+    document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
+}
 
 
 //USAGE: $("#form").serializeFiles();
