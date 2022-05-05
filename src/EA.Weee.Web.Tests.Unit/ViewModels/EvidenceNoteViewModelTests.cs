@@ -95,5 +95,30 @@
                 model.ReferenceDisplay.Should().Be($"{type.Value}1");
             }
         }
+        [Theory]
+        [InlineData(NoteStatus.Rejected)]
+        [InlineData(NoteStatus.Returned)]
+        [InlineData(NoteStatus.Draft)]
+        public void RedirectTab_GivenStatusIsDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        {
+            model.Status = status;
+
+            var tab = model.RedirectTab;
+
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes);
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Void)]
+        [InlineData(NoteStatus.Submitted)]
+        [InlineData(NoteStatus.Approved)]
+        public void RedirectTab_GivenStatusIsNotDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
+        {
+            model.Status = status;
+
+            var tab = model.RedirectTab;
+
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
+        }
     }
 }

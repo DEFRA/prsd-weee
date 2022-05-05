@@ -10,7 +10,7 @@
 }
 
 <section id="main-content">
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, Model.RedirectTab, null))))
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {

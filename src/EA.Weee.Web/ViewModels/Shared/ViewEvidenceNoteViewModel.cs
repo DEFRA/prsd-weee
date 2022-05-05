@@ -4,7 +4,6 @@
     using System.ComponentModel;
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Extensions;
 
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
@@ -40,20 +39,20 @@
 
         public string TotalReceivedDisplay { get; set; }
 
-        public bool HasReturnedDate => !string.IsNullOrWhiteSpace(ReturnedDate);
+        public bool HasReturnedDate => Status.Equals(NoteStatus.Returned);
 
-        public ManageEvidenceOverviewDisplayOption RedirectTab
+        public bool DisplayReason
         {
             get
             {
-                if (Status.Equals(NoteStatus.Draft) ||
-                    Status.Equals(NoteStatus.Rejected) ||
-                    Status.Equals(NoteStatus.Returned))
+                if (Status.Equals(NoteStatus.Submitted))
                 {
-                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                    return false;
                 }
-
-                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+                else
+                {
+                    return !string.IsNullOrWhiteSpace(Reason);
+                }
             }
         }
     }
