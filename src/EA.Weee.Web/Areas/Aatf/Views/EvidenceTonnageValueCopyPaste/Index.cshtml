@@ -3,8 +3,10 @@
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceTonnageValueCopyPasteViewModel
-<section id="main-content">
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EvidenceTonnageValueCopyPasteController>(a => a.ReturnToAction(Model.Action))))
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EvidenceTonnageValueCopyPasteController>(a => a.Index(Model.OrganisationId, Model.Action, true))))
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">WEEE received for treatment</h1>
@@ -42,4 +44,4 @@
             Save and continue
         </button>
     }
-</section>
+}
