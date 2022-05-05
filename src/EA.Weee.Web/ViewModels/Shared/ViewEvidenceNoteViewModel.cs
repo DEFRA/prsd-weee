@@ -39,6 +39,8 @@
 
         public string TotalReceivedDisplay { get; set; }
 
+        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
+
         public bool HasReturnedDate => Status.Equals(NoteStatus.Returned);
 
         public bool DisplayReason
