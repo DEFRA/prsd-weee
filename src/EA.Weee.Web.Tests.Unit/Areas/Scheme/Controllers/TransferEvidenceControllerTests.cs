@@ -518,14 +518,14 @@
             A.CallTo(() =>
                 sessionService.SetTransferSessionObject(transferEvidenceController.Session, 
                     A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
-                                                ((TransferEvidenceNoteRequest)a).SchemeId.Equals(model.PcsId) &&
+                                                ((TransferEvidenceNoteRequest)a).SchemeId.Equals(request.SchemeId) &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.TrueForAll(s => selectedNotes.Contains(s))),
                     SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task TransferFromGet_GivenModelIsValid_ShouldRedirectToHolding()
+        public async Task TransferFromGet_GivenModelIsValid_ShouldRedirectToTransferTonnage()
         {
             // arrange 
             var model = fixture.Create<TransferEvidenceNotesViewModel>();
@@ -534,10 +534,10 @@
             var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
 
             // assert
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("TransferTonnage");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["area"].Should().Be("Scheme");
-            result.RouteValues["organisationId"].Should().Be(model.PcsId);
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
         }
 
         private void AddModelError()

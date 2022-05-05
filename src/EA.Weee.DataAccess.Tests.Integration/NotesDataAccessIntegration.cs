@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -679,7 +680,7 @@
                 {
                     WeeeCategory.ConsumerEquipment.ToInt(),
                     WeeeCategory.MedicalDevices.ToInt()
-                });
+                }, new List<Guid>());
 
                 notes.Count().Should().Be(2);
                 notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));

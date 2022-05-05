@@ -55,5 +55,9 @@
                 }
             }
         }
+
+        public string AatfApprovalNumber { get; set; }
+
+        public bool DisplayAatfName { get; set; }
     }
 }

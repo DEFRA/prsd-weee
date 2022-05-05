@@ -42,7 +42,8 @@
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var notes = await noteDataAccess.GetNotesToTransfer(scheme.Id, message.Categories.Select(c => c.ToInt()).ToList());
+            var notes = await noteDataAccess.GetNotesToTransfer(scheme.Id, 
+                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes);
 
             return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }
