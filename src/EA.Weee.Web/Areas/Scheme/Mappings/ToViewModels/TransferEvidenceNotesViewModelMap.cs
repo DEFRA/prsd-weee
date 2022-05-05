@@ -5,41 +5,25 @@
     using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
-    using Filters;
     using Services.Caching;
     using ViewModels;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
 
-    public class TransferEvidenceNotesViewModelMap : IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>
+    public class TransferEvidenceNotesViewModelMap : TransferEvidenceMapBase<TransferEvidenceNotesViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>
     {
-        private readonly IWeeeCache cache;
-        private readonly IMapper mapper;
-
-        public TransferEvidenceNotesViewModelMap(IMapper mapper, IWeeeCache cache)
+        public TransferEvidenceNotesViewModelMap(IMapper mapper, IWeeeCache cache) : base(mapper, cache)
         {
-            this.mapper = mapper;
-            this.cache = cache;
         }
 
         public TransferEvidenceNotesViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
+            Condition.Requires(source.Request).IsNotNull();
 
-            var model = new TransferEvidenceNotesViewModel()
-            {
-                PcsId = source.OrganisationId,
-                RecipientName = AsyncHelpers.RunSync(async () => await cache.FetchSchemeName(source.Request.SchemeId))
-            };
-
-            foreach (var requestCategoryId in source.Request.CategoryIds)
-            {
-                model.CategoryValues.Add(new CategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
-            }
+            var model = MapBaseProperties(source);
 
             foreach (var evidenceNoteData in source.Notes)
             {
-                model.EvidenceNotesDataList.Add(mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)));
                 model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, false));
             }
 

@@ -7,22 +7,12 @@
     using Core.Shared;
     using Web.ViewModels.Shared;
 
-    public class TransferEvidenceNotesViewModel : IValidatableObject
+    public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
-        public Guid PcsId { get; set; }
-
-        public string RecipientName { get; set; }
-
-        public List<CategoryValue> CategoryValues { get; set; }
-
-        public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
-
         public List<GenericControlPair<Guid, bool>> SelectedEvidenceNotePairs { get; set; }
 
         public TransferEvidenceNotesViewModel()
         {
-            CategoryValues = new List<CategoryValue>();
-            EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
             SelectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>>();
         }
 

@@ -63,6 +63,7 @@
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
             result.SchemeId.Should().Be(source.SchemeId);
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
+            result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
         }
 
         [Fact]
@@ -293,7 +294,7 @@
 
             var result = map.Map(source);
 
-            result.SubmittedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+            result.SubmittedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
         }
 
         [Fact]
@@ -326,7 +327,7 @@
 
             var result = map.Map(source);
 
-            result.ApprovedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+            result.ApprovedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
         }
 
         [Fact]
@@ -348,7 +349,7 @@
 
             var result = map.Map(source);
 
-            result.ReturnedDate.Should().Be($"01/01/2001 13:30:30 (GMT)");
+            result.ReturnedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
         }
 
         [Fact]
