@@ -537,7 +537,7 @@
             result.RouteValues["action"].Should().Be("TransferTonnage");
             result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["area"].Should().Be("Scheme");
-            result.RouteValues["organisationId"].Should().Be(model.PcsId);
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
         }
 
         private void AddModelError()

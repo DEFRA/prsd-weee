@@ -37,7 +37,7 @@
 
             foreach (var requestCategoryId in source.Request.CategoryIds)
             {
-                model.CategoryValues.Add(new CategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
+                model.CategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }
 
             return model;

@@ -13,12 +13,12 @@
 
         public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
 
-        public List<CategoryValue> CategoryValues { get; set; }
+        public List<TotalCategoryValue> CategoryValues { get; set; }
 
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
-            CategoryValues = new List<CategoryValue>();
+            CategoryValues = new List<TotalCategoryValue>();
         }
     }
 }
