@@ -9,14 +9,10 @@
 
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
-        public List<CategoryValue> CategoryValues { get; set; }
-
         public List<GenericControlPair<Guid, bool>> SelectedEvidenceNotePairs { get; set; }
 
         public TransferEvidenceNotesViewModel()
         {
-            CategoryValues = new List<CategoryValue>();
-            EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
             SelectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>>();
         }
 
