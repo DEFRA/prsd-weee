@@ -213,7 +213,7 @@
     });
 });
 
-var initReviewEvidenceNote = function () {
+function initReviewEvidenceNote() {
     document.getElementById("reason-text").style = "display: none;";
     document.getElementById("conditional-SelectedValue-0").style = "display: block;";
     document.getElementById("conditional-SelectedValue-1").style = "display: block;";
