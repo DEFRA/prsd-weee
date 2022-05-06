@@ -85,7 +85,13 @@
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
 
-                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
+                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() 
+                { 
+                    NoteStatus.Approved, 
+                    NoteStatus.Rejected,
+                    NoteStatus.Void,
+                    NoteStatus.Returned
+                }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
