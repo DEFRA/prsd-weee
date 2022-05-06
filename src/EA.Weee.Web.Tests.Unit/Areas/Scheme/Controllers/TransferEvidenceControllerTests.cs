@@ -149,10 +149,14 @@
         }
 
         [Fact]
-        public async Task TransferEvidenceNoteGet_GivenSchemesListIsNotEmpty_ModelWithSchemesIsCreated()
+        public async Task TransferEvidenceNoteGet_GivenSchemesList_ModelSchemesShouldBeSet()
         {
             // arrange
-            var schemeData = fixture.CreateMany<SchemeData>().ToList();
+            var schemeData = new List<SchemeData>()
+            {
+                fixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                fixture.Create<SchemeData>(),
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
 
             // act
@@ -160,20 +164,15 @@
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
-            model.SchemasToDisplay.Should().Equal(schemeData);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).MustHaveHappened();
+            model.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
+            model.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
         }
 
         [Fact]
         public async Task TransferEvidenceNoteGet_GivenSchemesListIsNotEmpty_ShouldCallToGetSchemes()
         {
-            // arrange
-            var schemeData = fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
-
             // act
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
-            var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
+            await transferEvidenceController.TransferEvidenceNote(organisationId);
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
@@ -213,6 +212,30 @@
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetSchemesExternal>.That.Matches(sh => sh.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenInvalidModelAndGivenSchemesList_ModelSchemesShouldBeSet()
+        {
+            var model = new TransferEvidenceNoteCategoriesViewModel()
+            {
+                OrganisationId = organisationId
+            };
+            var schemeData = new List<SchemeData>()
+            {
+                fixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                fixture.Create<SchemeData>(),
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+            AddModelError();
+
+            // act
+            var result = await transferEvidenceController.TransferEvidenceNote(model) as ViewResult;
+            var updatedModel = result.Model as TransferEvidenceNoteCategoriesViewModel;
+
+            // assert
+            updatedModel.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
+            updatedModel.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
         }
 
         [Fact]
