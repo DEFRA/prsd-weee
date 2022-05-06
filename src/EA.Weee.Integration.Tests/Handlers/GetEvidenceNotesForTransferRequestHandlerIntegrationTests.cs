@@ -51,7 +51,7 @@
 
                 var categories2 = new List<NoteTonnage>()
                 {
-                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null),
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 4, null),
                 };
 
                 // note to not be included no matching category
