@@ -7,6 +7,7 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -60,6 +61,9 @@
             result.EndDate.Should().Be(source.EvidenceNoteData.EndDate);
             result.ProtocolValue.Should().Be(source.EvidenceNoteData.Protocol);
             result.WasteTypeValue.Should().Be(source.EvidenceNoteData.WasteType);
+            result.SchemeId.Should().Be(source.SchemeId);
+            result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
+            result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
         }
 
         [Fact]
@@ -107,19 +111,56 @@
         }
 
         [Fact]
-        public void Map_GivenSource_RecipientAddressShouldBeSet()
+        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, true)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+            
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                source.EvidenceNoteData.SchemeData.Name,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
-                source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                organisation.OrganisationName,
+                organisation.BusinessAddress.Address1,
+                organisation.BusinessAddress.Address2,
+                organisation.BusinessAddress.TownOrCity,
+                organisation.BusinessAddress.CountyOrRegion,
+                organisation.BusinessAddress.Postcode,
+                null)).Returns(recipientAddress);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be(recipientAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveBusinessAddress_RecipientAddressShouldBeSetToNotificationAddress()
+        {
+            //arrange
+            var organisation = fixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = fixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+
+            const string recipientAddress = "recipientAddress";
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
                 null)).Returns(recipientAddress);
 
             //act
@@ -158,6 +199,32 @@
                 .Should().Be("2");
             result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Reused
                 .Should().Be(null);
+        }
+
+        [Fact]
+        public void Map_GivenTonnages_TotalReceivedShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+
+            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, 1, 5),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.GasDischargeLampsAndLedLightSources, 3, 20),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ITAndTelecommsEquipment, null, 50)
+            };
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns("1");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received)).Returns("2");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(2).Received)).Returns("3");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(3).Received)).Returns("-");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TotalReceivedDisplay.Should().Be("6.000");
         }
 
         [Fact]
@@ -201,6 +268,121 @@
             result.SuccessMessage.Should()
                 .Be($"You have successfully submitted the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be(
+                    $"You have approved the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+         }
+
+        [Fact]
+        public void Map_GivenSubmittedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.SubmittedDate = null;
+
+            var result = map.Map(source);
+
+            result.SubmittedBy.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenApprovedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ApprovedDate = null;
+
+            var result = map.Map(source);
+
+            result.ApprovedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenReturnedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ReturnedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.ReturnedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoReturnedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ReturnedDate = null;
+
+            var result = map.Map(source);
+
+            result.ReturnedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenReason_ReasonMustBeSet()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var reason = fixture.Create<string>();
+            source.EvidenceNoteData.Reason = reason;
+            var result = map.Map(source);
+
+            result.Reason.Should().Be(reason);
+        }
+
+        [Fact]
+        public void Map_GivenNoReason_ReasonMustBeNullOrEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.Reason = null;
+
+            var result = map.Map(source);
+
+            result.Reason.Should().BeNullOrEmpty();
         }
     }
 }

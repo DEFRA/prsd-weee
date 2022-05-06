@@ -27,7 +27,9 @@
 
         public Note GetEvidenceNoteById(Guid id)
         {
-            return dbContext.Notes.FirstOrDefault(n => n.Id.Equals(id));
+            return dbContext.Notes
+                .Include(n => n.Recipient)
+                .FirstOrDefault(n => n.Id.Equals(id));
         }
 
         public Scheme GetSchemeById(Guid id)

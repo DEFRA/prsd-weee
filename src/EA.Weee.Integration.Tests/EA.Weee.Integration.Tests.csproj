@@ -195,6 +195,8 @@
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
+    <Compile Include="Handlers\GetEvidenceNotesForTransferRequestHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\SetNoteStatusRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteForSchemeHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAatfSummaryRequestHandlerTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteHandlerIntegrationTests.cs" />

@@ -2,9 +2,9 @@
 {
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Prsd.Core.Helpers;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Xunit;
 
@@ -162,6 +162,135 @@
 
             //assert
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasSubmittedDate_GivenSubmittedDate_ShouldBeTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                SubmittedDate = "Test",
+            };
+
+            var result = model.HasSubmittedDate;
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasSubmittedDate_GivenNoSubmittedDate_ShouldBeFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel();
+
+            var result = model.HasSubmittedDate;
+
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasApprovedDate_GivenApprovedDate_ShouldBeTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                ApprovedDate = "Test",
+            };
+
+            var result = model.HasApprovedDate;
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasApprovedDate_GivenNoApprovedDate_ShouldBeFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel();
+
+            var result = model.HasApprovedDate;
+
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasReturnedDate_GivenStatusIsReturned_ShouldReturnTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Returned
+            };
+
+            model.HasReturnedDate.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasReturnedDate_GivenStatusIsReturned_ShouldReturnFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Submitted
+            };
+
+            model.DisplayReason.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayReason_GivenStatusIsNotReturned_ShouldReturnFalse(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
+            };
+
+            model.DisplayReason.Should().BeFalse();
+        }
+
+        [Fact]
+        public void DisplayReason_GivenStatusIsSubmitted_ShouldReturnFalse()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Submitted
+            };
+
+            model.DisplayReason.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsPopulated_ShouldReturnTrue(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                return;
+            }
+
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status,
+                Reason = "returned"
+            };
+
+            model.DisplayReason.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsPopulated_ShouldReturnFalse(string reason)
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Approved,
+                Reason = reason
+            };
+
+            model.DisplayReason.Should().BeFalse();
         }
     }
 }
