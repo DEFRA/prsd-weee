@@ -271,7 +271,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public async Task IndexGetWithDefaultTab_GivenRequiredData_NotesShouldBeRetrieved_EvidenceNotesShouldNotBeRetrievedForInvalidStatus(NoteStatus status)
         {
-            if (status.Equals(NoteStatus.Draft))
+            if (status.Equals(NoteStatus.Draft) || status.Equals(NoteStatus.Returned))
             {
                 return;
             }
@@ -292,7 +292,7 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_EmptySearchRef_NoteShouldBeRetrieved()
         {
             //arrange
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Returned };
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
             
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
@@ -309,7 +309,7 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenSearchFilterParameters_NoteShouldBeRetrieved()
         {
             //arrange
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Returned };
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
@@ -334,7 +334,7 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
-                g.AllowedStatuses.Contains(NoteStatus.Draft)))).MustNotHaveHappened();
+                g.AllowedStatuses.Contains(NoteStatus.Draft) || g.AllowedStatuses.Contains(NoteStatus.Returned)))).MustNotHaveHappened();
         }
 
         [Theory]
