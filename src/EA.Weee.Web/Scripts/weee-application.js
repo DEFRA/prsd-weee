@@ -137,6 +137,8 @@
         if ($("#transferAllTonnage").is(':checked')) {
             $("#TransferEvidenceForm").submit();
         }
+
+        
     });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
