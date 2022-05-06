@@ -180,11 +180,11 @@
                 var selectedValue = document.getElementById(existingId).value;
 
                 if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
-
+                    var selected = confirmed || selectedValue;
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
-                        if (text === confirmed) {
+                        if (text === selected) {
                             postBackElement.value = findSelectedOption.value;
                         }
                     }

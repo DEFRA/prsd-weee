@@ -46,7 +46,7 @@
 
                 var model = new TransferEvidenceNoteCategoriesViewModel();
                 model.OrganisationId = pcsId;
-                model.SchemasToDisplay = await GetApprovedSchemes();
+                model.SchemasToDisplay = await GetApprovedSchemes(pcsId);
                 return this.View("TransferEvidenceNote", model);
             }
         }
@@ -70,7 +70,7 @@
 
             model.AddCategoryValues();
             CheckedCategoryIds(model, selectedCategoryIds);
-            model.SchemasToDisplay = await GetApprovedSchemes();
+            model.SchemasToDisplay = await GetApprovedSchemes(model.OrganisationId);
 
             return View(model);
         }
@@ -191,11 +191,14 @@
             }
         }
 
-        private async Task<List<SchemeData>> GetApprovedSchemes()
+        private async Task<List<SchemeData>> GetApprovedSchemes(Guid pcsId)
         {
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                schemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
+
                 return schemes;
             }
         }

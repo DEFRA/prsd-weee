@@ -51,7 +51,7 @@
 
                 var categories2 = new List<NoteTonnage>()
                 {
-                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null),
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 4, null),
                 };
 
                 // note to not be included no matching category
@@ -88,7 +88,7 @@
 
                 var categories5 = new List<NoteTonnage>()
                 {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, null),
                 };
 
                 // note to be included as draft

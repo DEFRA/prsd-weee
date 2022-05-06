@@ -51,7 +51,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void OnActionExecuting_GivenViewModel_AndEvidenceNoteIsNotDraft_InvalidOperationExceptionExpected(NoteStatus noteStatus)
+        public void OnActionExecuting_GivenViewModel_AndEvidenceNoteIsNotDraftOrReturned_InvalidOperationExceptionExpected(NoteStatus noteStatus)
         {
             if (noteStatus != NoteStatus.Draft && noteStatus != NoteStatus.Returned)
             {
