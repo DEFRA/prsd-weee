@@ -17,7 +17,7 @@
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            object idActionParameter = 0;
+            object idActionParameter;
 
             if (context.ActionParameters.TryGetValue("viewModel", out var viewModel))
             {
