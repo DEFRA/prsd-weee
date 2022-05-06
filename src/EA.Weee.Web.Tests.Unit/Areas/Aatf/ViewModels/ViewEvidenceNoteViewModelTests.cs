@@ -147,14 +147,35 @@
             //assert
             result.Should().BeTrue();
         }
-
         [Fact]
-        public void DisplayEditButton_GivenNotDraft_ShouldBeFalse()
+        public void DisplayEditButton_GivenReturned_ShouldBeTrue()
         {
             //arrange
             var model = new ViewEvidenceNoteViewModel()
             {
-                Status = NoteStatus.Submitted
+                Status = NoteStatus.Returned
+            };
+
+            //act
+            var result = model.DisplayEditButton;
+
+            //assert
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayEditButton_GivenNotDraft_ShouldBeFalse(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Draft) || status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
             };
 
             //act

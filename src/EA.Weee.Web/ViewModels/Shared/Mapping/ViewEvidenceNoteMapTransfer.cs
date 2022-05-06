@@ -12,12 +12,15 @@
 
         public object NoteStatus { get; private set; }
 
+        public bool IncludeAllCategories { get; set; }
+
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
 
             EvidenceNoteData = evidenceNoteData;
             NoteStatus = noteStatus;
+            IncludeAllCategories = true;
         }
     }
 }
