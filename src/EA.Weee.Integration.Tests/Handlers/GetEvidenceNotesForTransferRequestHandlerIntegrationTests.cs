@@ -88,7 +88,7 @@
 
                 var categories5 = new List<NoteTonnage>()
                 {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, null),
                 };
 
                 // note to be included as draft
