@@ -111,12 +111,12 @@
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item">
                             <input name="cookieChoices" type="hidden" value="True">
-                            <input id="yes" name="cookieChoices" class="govuk-radios__input" type="radio" value="True">
+                            <input id="cookieChoiceYes" name="cookieChoices" class="govuk-radios__input" type="radio" value="True">
                             <label class="govuk-label govuk-radios__label" for="yes">Yes</label>
                         </div>
                         <div class="govuk-radios__item">
                             <input name="cookieChoices" type="hidden" value="False">
-                            <input id="no" name="cookieChoices" class="govuk-radios__input" type="radio" value="False">
+                            <input id="cookieChoiceNo" name="cookieChoices" class="govuk-radios__input" type="radio" value="False">
                             <label class="govuk-label govuk-radios__label" for="no">No</label>
                         </div>
                     </div>
@@ -128,28 +128,3 @@
         </div>
     </div><!-- end text -->
 }
-<script>
-    function setCookieChoice() {
-        if (document.getElementById("yes").checked === false && document.getElementById("no").checked === false) {
-            return;
-        }
-        if (document.getElementById("saveCookieChoice").value === "Saved Cookie Settings") {
-            document.getElementById("saveCookieChoice").value = "Accept additional cookies";
-            document.getElementById("cookieSettings").style.display = "block";
-            return;
-        }
-        if (document.getElementById("yes").checked) {
-            GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
-            document.getElementById("global-cookie-message").style.display = "none";
-        } else {
-            GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
-            document.getElementById("global-cookie-message").style.display = "none";
-            GOVUK.cookie('_ga', null);
-            GOVUK.cookie('_gid', null);
-            GOVUK.cookie('_gat', null);
-            GOVUK.cookie('_gat_govuk_shared', null);
-        }
-        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
-        document.getElementById("cookieSettings").style.display = "none";
-    }
-</script>
