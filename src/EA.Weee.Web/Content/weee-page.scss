@@ -214,12 +214,12 @@ input[type="file"].form-control {
 
 
 .warning-details-summary {
-    color: govuk-colour('black');
+    color: govuk-colour('black') !important;
     width: calc(100% - 25px);
 }
 
 .error-details-summary {
-    color: govuk-colour('black');
+    color: govuk-colour('black') !important;
     width: calc(100% - 25px);
 }
 
@@ -546,6 +546,11 @@ input.tonnage-entry {
 
 .govuk-panel-grey-background {
     background-color: govuk-colour("light-grey");
+}
+
+.weee-word-break {
+    word-wrap: break-word;
+}
 }
 
 

@@ -9,6 +9,7 @@
         public static readonly NoteStatus Approved = new NoteStatus(3, "Approved");
         public static readonly NoteStatus Rejected = new NoteStatus(4, "Rejected");
         public static readonly NoteStatus Void = new NoteStatus(5, "Void");
+        public static readonly NoteStatus Returned = new NoteStatus(6, "Returned");
 
         protected NoteStatus()
         {

@@ -63,7 +63,7 @@
         [Theory]
         [InlineData("StartDate", "Enter a start date")]
         [InlineData("EndDate", "Enter an end date")]
-        [InlineData("ReceivedId", "Select a receiving PCS")]
+        [InlineData("ReceivedId", "Select a recipient")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string message)
         {
             typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
@@ -88,14 +88,25 @@
         }
 
         [Fact]
-        public void EvidenceNoteViewModel_Edit_GivenSavedCategoryValuesExist_EditShouldBeTrue()
+        public void EvidenceNoteViewModel_Edit_GivenIdIsEmpty_EditShouldBeFalse()
         {
-            for (var count = 0; count < new EvidenceCategoryValues().Count; count++)
+            var local = new EditEvidenceNoteViewModel
             {
-                var local = new EditEvidenceNoteViewModel();
-                local.CategoryValues.ElementAt(0).Id = Guid.NewGuid();
-                local.Edit.Should().BeTrue();
-            }
+                Id = Guid.Empty
+            };
+
+            local.Edit.Should().BeFalse();
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_Edit_GivenIdIsNotEmpty_EditShouldBeTrue()
+        {
+            var local = new EditEvidenceNoteViewModel
+            {
+                Id = Guid.NewGuid()
+            };
+
+            local.Edit.Should().BeTrue();
         }
 
         [Fact]

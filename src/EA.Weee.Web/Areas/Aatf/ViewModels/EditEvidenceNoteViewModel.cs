@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Web.Mvc;
     using Attributes;
     using Core.AatfEvidence;
@@ -25,11 +24,14 @@
         [EvidenceNoteEndDate(nameof(StartDate))]
         public override DateTime EndDate { get; set; }
 
-        [Required(ErrorMessage = "Select a receiving PCS")]
+        [Required(ErrorMessage = "Select a recipient")]
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
         public List<SchemeData> SchemeList { get; set; }
+
+        [Display(Name = "Recipient")]
+        public string SelectedSchemeName { get; set; }
 
         [RequiredSubmitAction(ErrorMessage = "Select a type of waste")]
         [Display(Name = "Type of waste")]
@@ -46,10 +48,7 @@
         [RequiredTonnage]
         public override IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        public bool Edit
-        {
-            get { return CategoryValues.Any(c => c.Id != Guid.Empty); }
-        }
+        public bool Edit => Id != Guid.Empty;
 
         public ActionEnum Action { get; set; }
 

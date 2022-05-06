@@ -32,7 +32,7 @@
         protected readonly IWeeeCache Cache;
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
-        protected readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
+        protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -41,8 +41,8 @@
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
-            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
+            TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
             Fixture = new Fixture();
         }
 
@@ -71,6 +71,13 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
@@ -251,12 +258,11 @@
         [Fact]
         public void TransferPost_PageRedirectsToTransferPage()
         {
-            // TODO : Change this to Transfer Page once created
             var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("TransferEvidenceNote");
-            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
-            result.RouteValues["organisationId"].Should().Be(OrganisationId);
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(OrganisationId);
         }
     }
 }

@@ -56,7 +56,7 @@
             {
                 var evidenceNoteData = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetEvidenceNoteForAatfRequest(evidenceNoteId));
 
-                if (!evidenceNoteData.Status.Equals(NoteStatus.Draft))
+                if (!evidenceNoteData.Status.Equals(NoteStatus.Draft) && !evidenceNoteData.Status.Equals(NoteStatus.Returned))
                 {
                     throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} is incorrect state to be edited");
                 }

@@ -86,7 +86,7 @@
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
-                        return await EvidenceSummaryCase(organisationId, aatfId, client);
+                        return await EvidenceSummaryCase(organisationId, aatfId, client, aatf, models);
                 }
             }
         }
@@ -247,12 +247,16 @@
             return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
         }
 
-        private async Task<ActionResult> EvidenceSummaryCase(Guid organisationId, Guid aatfId, IWeeeClient client)
+        private async Task<ActionResult> EvidenceSummaryCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf, SelectYourAatfViewModel models)
         {
             var result = await client.SendAsync(User.GetAccessToken(), new GetAatfSummaryRequest(aatfId));
 
             var summaryModel =
                 mapper.Map<EvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+
+            summaryModel.ManageEvidenceNoteViewModel =
+                mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId,
+                    aatf, models.AatfList.ToList(), null));
 
             return this.View("Overview/EvidenceSummaryOverview", summaryModel);
         }
@@ -265,7 +269,7 @@
             ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
-                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
+                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
             
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result));
             

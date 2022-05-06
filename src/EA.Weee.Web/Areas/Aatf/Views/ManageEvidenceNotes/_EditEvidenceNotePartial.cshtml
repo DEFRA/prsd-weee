@@ -11,11 +11,12 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
-        @Html.HiddenFor(m => m.Status, new { id = "status-id"})
+        @Html.HiddenFor(m => m.Status, new { id = "status-id" })
         @Html.HiddenFor(m => m.Reference)
-
+        @Html.HiddenFor(m => m.Reason)
+    
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1">Period in which WEEE was received for treatment</div>
+            <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
@@ -54,12 +55,22 @@
 
         <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
-
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
+                @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
+                {
+                <div class="govuk-grid-column-full govuk-!-padding-left-0">
                     @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
-                    @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                    @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                    @Html.HiddenFor(m => m.ReceivedId)
+                    <p aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</p>
                 </div>
+                }
+                else
+                {
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
+                        @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
+                        @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
+                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                    </div>
+                }
             </div>
         </div>
 
@@ -139,17 +150,17 @@
 
             }
 
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    <p class="govuk-body"><strong>Total</strong></p>
-                </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
-                </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
-                </td>
-            </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <p class="govuk-body"><strong>Total</strong></p>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <p class="govuk-body govuk-!-text-align-right" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <p class="govuk-body govuk-!-text-align-right" id="ReusedTotal">@Model.ReusedTotal</p>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
@@ -157,9 +168,10 @@
         <div class="govuk-!-margin-top-3">
 
             <div class="govuk-button-group">
+                @* This is a hidden button to force the default action to be save rather than submit*@
+                <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
                 @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-
-                @this.WeeeGds().SecondaryButton("Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class="govuk-!-width-one-quarter" })
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
             </div>
 
         </div>

@@ -6,9 +6,9 @@
     using EA.Weee.Web.Requests.Base;
     using Prsd.Core;
 
-    public abstract class TransferEvidenceNoteRequestCreator<T> : IRequestCreator<TransferEvidenceNoteDataViewModel, T> where T : new()
+    public abstract class TransferEvidenceNoteRequestCreator<T> : IRequestCreator<TransferEvidenceNoteCategoriesViewModel, T> where T : new()
     {
-        public virtual T ViewModelToRequest(TransferEvidenceNoteDataViewModel viewModel)
+        public virtual T ViewModelToRequest(TransferEvidenceNoteCategoriesViewModel viewModel)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
 

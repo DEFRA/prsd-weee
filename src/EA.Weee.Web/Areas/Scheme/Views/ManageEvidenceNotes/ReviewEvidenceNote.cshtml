@@ -1,30 +1,34 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 @{
-    ViewBag.Title = "Manage Evidence";
+    ViewBag.Title = "Review evidence - GOV.UK";
+
+    
 }
 
-<section id="main-content">
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.SchemeId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
+        @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Reference)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Status, new { id = "status-id" })
 
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.OrganisationId, null)), "Manage evidence notes"))
-
         @Html.Gds().ValidationSummary()
 
         <h1 class="govuk-heading-l">Review evidence</h1>
-        <p class="govuk-body govuk-!-margin-bottom-7">After review, you can choose whether to approve, reject or return the evidence note.</p>
+        <p class="govuk-body govuk-!-margin-bottom-5">After review, you can choose whether to approve, reject or return the evidence note.</p>
 
         @Html.Partial("_ViewEvidenceNotePartial", Model.ViewEvidenceNoteViewModel)
 
@@ -37,11 +41,12 @@
                 Model.PossibleValues,
                 "Choose whether to approve, reject or return the evidence note",
                 RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Inline)
+                RadioButtonLayout.Stacked,
+                Model.HintItems)
         </div>
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Save and continue</button>
+            @this.WeeeGds().Button("Save and continue")
         </div>
     }
-</section>
+}

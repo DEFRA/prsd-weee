@@ -39,13 +39,6 @@
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
-
-            A.Fake<IAatfDataAccess>();
-            A.Fake<IUserContext>();
-
-            A.Fake<Organisation>();
-            A.Fake<Aatf>();
-            A.Fake<Scheme>();
             note = A.Fake<Note>();
             fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();

@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Extensions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using Returns.Mappings.ToViewModel;
@@ -23,6 +24,10 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
+            var organisationAddress = source.EvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
+                ? source.EvidenceNoteData.RecipientOrganisationData.BusinessAddress
+                : source.EvidenceNoteData.RecipientOrganisationData.NotificationAddress;
+
             var model = new ViewEvidenceNoteViewModel
             {
                 Id = source.EvidenceNoteData.Id,
@@ -33,8 +38,13 @@
                 Type = source.EvidenceNoteData.Type,
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
+                SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
+                ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                ReturnedDate = source.EvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
+                Reason = source.EvidenceNoteData.Reason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
@@ -49,13 +59,15 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
                 RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
-                    source.EvidenceNoteData.SchemeData.Name,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.TownOrCity,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.CountyOrRegion,
-                    source.EvidenceNoteData.OrganisationData.BusinessAddress.Postcode,
+                    source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
+                    organisationAddress.Address1,
+                    organisationAddress.Address2,
+                    organisationAddress.TownOrCity,
+                    organisationAddress.CountyOrRegion,
+                    organisationAddress.Postcode,
                     null),
+                SchemeId = source.SchemeId,
+                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber
             };
 
             foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
@@ -69,6 +81,9 @@
                     category.Id = tonnageData.Id;
                 }
             }
+
+            model.TotalReceivedDisplay = model.ReceivedTotal;
+
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
@@ -91,7 +106,10 @@
                                 $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
                             break;
                         case NoteStatus.Approved:
-                            model.SuccessMessage = "success message TODO";
+                            model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
+                            break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a returned note";
                             break;
                     }
 
