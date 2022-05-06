@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
     using Core.AatfReturn;
+    using Core.Scheme;
+    using Core.Tests.Unit.Helpers;
     using EA.Weee.Requests.Aatf;
     using FakeItEasy;
     using FluentAssertions;
@@ -17,6 +20,7 @@
     using Web.Areas.Aatf.ViewModels;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class ManageEvidenceNotesControllerIndexTests : ManageEvidenceNotesControllerTestsBase
@@ -250,7 +254,7 @@
 
         [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        public async void IndexGetWithDefaultTab_GivenRequiredData_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithDefaultTab_GivenRequiredData_NotesShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab);
@@ -263,12 +267,33 @@
                 g.SearchRef == null))).MustHaveHappenedOnceExactly();
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task IndexGetWithDefaultTab_GivenRequiredData_NotesShouldBeRetrieved_EvidenceNotesShouldNotBeRetrievedForInvalidStatus(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Draft) || status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            // Arrange
+            var organisationName = Faker.Company.Name();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
+                g.Equals(status)))).MustNotHaveHappened();
+        }
+
         [Fact]
-        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredData_NoteShouldBeRetrieved()
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_EmptySearchRef_NoteShouldBeRetrieved()
         {
             //arrange
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void };
-
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
+            
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
 
@@ -276,7 +301,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
                 g.AatfId.Equals(AatfId) &&
                 g.OrganisationId.Equals(OrganisationId) &&
-                g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                allowedStatus.SequenceEqual(g.AllowedStatuses) &&
                 g.SearchRef == null))).MustHaveHappenedOnceExactly();
         }
 
@@ -284,7 +309,7 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenSearchFilterParameters_NoteShouldBeRetrieved()
         {
             //arrange
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void };
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
@@ -296,6 +321,20 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.SequenceEqual(allowedStatus) &&
                 g.SearchRef.Equals(filter.FilterViewModel.SearchRef)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_NotesShouldNotBeRetrievedWithDraftStatus()
+        {
+            //arrange
+            var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, filter);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
+                g.AllowedStatuses.Contains(NoteStatus.Draft) || g.AllowedStatuses.Contains(NoteStatus.Returned)))).MustNotHaveHappened();
         }
 
         [Theory]
