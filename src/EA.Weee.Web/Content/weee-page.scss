@@ -53,7 +53,7 @@ a {
     margin-bottom: ($govuk-gutter*1.5);
 }
 
-#global-cookie-message {
+#global-cookie-message, #global-cookie-accept-message, #global-cookie-reject-message {
     width: 100%;
     background-color: #f3f2f1;
     padding-top: 10px;
@@ -65,7 +65,7 @@ a {
     visibility: hidden;
 }
 
-#global-header-bar, #global-cookie-message p {
+#global-header-bar, #global-cookie-message p, #global-cookie-accept-message p, #global-cookie-reject-message p {
     max-width: 960px;
     margin: 0 15px;
 }

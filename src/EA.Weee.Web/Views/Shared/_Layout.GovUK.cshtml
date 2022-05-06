@@ -34,13 +34,13 @@
     </script>
 
     @RenderSection("body_start", required: false)
-    
+
     <div id="skiplink-container">
         <div>
             <a href="#main-content" class="govuk-skip-link skiplink">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
         </div>
     </div>
-        
+
     <div id="global-cookie-message" style="display: none;">
         <p id="global-cookie-message-p1" style="margin-bottom: 15px; margin-top: 10px;">Cookies on Waste Electrical and Electronic Equipment</p>
         <p id="global-cookie-message-p2" style="margin-bottom: 10px;">We also use essential cookies to remember if you've accepted analytics cookies.</p>
@@ -49,6 +49,20 @@
             <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button" style="margin-right: 5px;">
             <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button" style="margin-right: 5px;">
             <a href="/new-user/cookies" style="vertical-align: sub;">View cookies</a>
+        </p>
+    </div>
+
+    <div id="global-cookie-accept-message" style="display:none;">
+        <p id="global-cookie-message-p2" style="padding: 15px">
+            You have accepted additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
+            <input type="submit" id="hideAcceptCookies" value="Hide this message" class="govuk-cookie-button" style="margin-left: 15px">
+        </p>
+    </div>
+
+    <div id="global-cookie-reject-message" style="display:none;">
+        <p id="global-cookie-message-p2" style="padding: 15px">
+            You have rejected additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
+            <input type="submit" id="hideRejectCookies" value="Hide this message" class="govuk-cookie-button" style="margin-left: 15px">
         </p>
     </div>
     <!--end global-cookie-message-->
@@ -120,16 +134,22 @@
 </html>
 
 <script>
+    var self = this;
     var cookieConsent = GOVUK.getCookie("weee-cookie-consent");
+
     if (cookieConsent === null || cookieConsent === "null") {
         document.getElementById("global-cookie-message").style.display = "block";
     } else {
         document.getElementById("global-cookie-message").style.display = "none";
     }
+
     $("#acceptCookies").click(function () {
         GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+        self.startGoogleTracking();
         document.getElementById("global-cookie-message").style.display = "none";
+        document.getElementById("global-cookie-accept-message").style.display = "block";
     });
+
     $("#rejectCookies").click(function () {
         GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
         document.getElementById("global-cookie-message").style.display = "none";
@@ -137,5 +157,79 @@
         GOVUK.cookie('_gid', null);
         GOVUK.cookie('_gat', null);
         GOVUK.cookie('_gat_govuk_shared', null);
+        document.getElementById("global-cookie-accept-message").style.display = "block";
     });
+
+    $("#hideAcceptCookies").click(function () {
+        document.getElementById("global-cookie-accept-message").style.display = "none";
+    });
+
+    $("#hideRejectCookies").click(function () {
+        document.getElementById("global-cookie-reject-message").style.display = "none";
+    });
+
+    self.startGoogleTracking = function () {
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-145652997-1', 'auto', 'govuk_shared', { 'allowLinker': true });
+        ga('govuk_shared.require', 'linker');
+        ga('govuk_shared.linker.set', 'anonymizeIp', true);
+        ga('govuk_shared.linker.set', 'allowAdFeatures', false);
+        ga('govuk_shared.linker:autoLink', ['www.gov.uk', 'www.nationalarchives.gov.uk', 'www.daera-ni.gov.uk', 'www.data.gov.uk']);
+        ga('send', 'pageview');
+        ga('govuk_shared.send', 'pageview');
+    }
+
+    var element = document.getElementById('saveCookieChoice');
+    if (typeof (element) != 'undefined' && element != null) {
+        if (cookieConsent && cookieConsent === "yes") {
+            document.getElementById("cookieChoiceYes").checked = true;
+        } else {
+            document.getElementById("cookieChoiceNo").checked = true;
+        }
+    }
+
+    function acceptCookies() {
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+        self.startGoogleTracking();
+        document.getElementById("global-cookie-message").style.display = "none";
+        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
+        document.getElementById("cookieSettings").style.display = "none";
+    }
+
+    function rejectCookies() {
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
+        document.getElementById("global-cookie-message").style.display = "none";
+        GOVUK.cookie('_ga', null);
+        GOVUK.cookie('_gid', null);
+        GOVUK.cookie('_gat', null);
+        GOVUK.cookie('_gat_govuk_shared', null);
+        document.getElementById("global-cookie-accept-message").style.display = "none";
+        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
+        document.getElementById("cookieSettings").style.display = "none";
+    }
+
+    function setCookieChoice() {
+        if (document.getElementById("cookieChoiceYes").checked === false && document.getElementById("cookieChoiceNo").checked === false) {
+            return;
+        }
+
+        if (document.getElementById("saveCookieChoice").value === "Saved Cookie Settings") {
+            document.getElementById("saveCookieChoice").value = "Accept additional cookies";
+            document.getElementById("cookieSettings").style.display = "block";
+            return;
+        }
+
+        if (document.getElementById("cookieChoiceYes").checked) {
+            acceptCookies();
+        } else {
+            rejectCookies();
+        }
+        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
+        document.getElementById("cookieSettings").style.display = "none";
+    }
 </script>
