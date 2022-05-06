@@ -74,7 +74,7 @@
             switch (returnAction)
             {
                 case EvidenceCopyPasteActionConstants.EditEvidenceNoteAction:
-                    return RedirectToAction(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
+                    return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
                 default: 
                     return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, returnFromCopyPaste = true });
             }
