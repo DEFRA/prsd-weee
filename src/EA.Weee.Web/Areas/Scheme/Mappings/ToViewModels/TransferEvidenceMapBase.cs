@@ -32,7 +32,11 @@
 
             foreach (var evidenceNoteData in source.Notes)
             {
-                model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)));
+                model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+                    new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)
+                    {
+                        IncludeAllCategories = false
+                    }));
             }
 
             foreach (var requestCategoryId in source.Request.CategoryIds)
