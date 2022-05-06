@@ -89,18 +89,7 @@
                     category.Id = noteTonnage.Id;
                 }
             }
-            //foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
-            //{
-            //    var category = model.CategoryValues.FirstOrDefault(c => c.CategoryId == (int)tonnageData.CategoryId);
-
-            //    if (category != null)
-            //    {
-            //        category.Received = tonnageUtilities.CheckIfTonnageIsNull(tonnageData.Received);
-            //        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(tonnageData.Reused);
-            //        category.Id = tonnageData.Id;
-            //    }
-            //}
-
+          
             model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
