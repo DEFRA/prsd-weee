@@ -74,7 +74,8 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                var scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
                 var categories = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
@@ -84,7 +85,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
                     .WithOrganisation(organisation.Id)
-                    .WithScheme(scheme.Id)
+                    .WithRecipient(scheme.Id)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
@@ -196,6 +197,8 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.RecipientOrganisationData.Should().NotBeNull();
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
             }
         }
     }

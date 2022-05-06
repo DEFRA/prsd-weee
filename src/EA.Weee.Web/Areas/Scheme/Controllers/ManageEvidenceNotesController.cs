@@ -27,39 +27,32 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
-        private readonly BreadcrumbService breadcrumb;
-        private readonly IWeeeCache cache;
-        private readonly IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient,
-            IRequestCreator<TransferEvidenceNoteDataViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator)
+            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
-            this.breadcrumb = breadcrumb;
-            this.cache = cache;
             this.apiClient = apiClient;
-            this.transferNoteRequestCreator = transferNoteRequestCreator;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
+        public async Task<ActionResult> Index(Guid pcsId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(organisationId));
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
 
                 switch (activeDisplayOption)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(organisationId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
                 }
             }
         }
@@ -68,49 +61,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Transfer(Guid organisationId)
         {
-            return RedirectToAction("TransferEvidenceNote", "ManageEvidenceNotes", new { area = "Scheme", organisationId });
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> TransferEvidenceNote(Guid organisationId)
-        {
-            using (var client = this.apiClient())
-            {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
-
-                var model = new TransferEvidenceNoteDataViewModel();
-                model.OrganisationId = organisationId;
-                model.SchemasToDisplay = await GetApprovedSchemes();
-                return this.View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> TransferEvidenceNote(TransferEvidenceNoteDataViewModel model)
-        {
-            var ids = model.CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
-
-            using (var client = apiClient())
-            {
-                if (ModelState.IsValid)
-                {
-                    var transferRequest = transferNoteRequestCreator.ViewModelToRequest(model);
-
-                    var sessionId = $"TransferEvidenceNoteData_{User.GetUserId()}_{model.SelectedSchema.Value}";
-                    Session[sessionId] = transferRequest;
-
-                    return RedirectToAction("Index", "Holding", new { Area = "Aatf", OrganisationId = model.OrganisationId });
-                }
-
-                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
-
-                model.AddCategoryValues();
-                CheckedCategoryIds(model, ids);
-                model.SchemasToDisplay = await GetApprovedSchemes();
-
-                return View(model);
-            }
+            return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId });
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
@@ -128,40 +79,31 @@
             }
         }
 
-        private async Task<List<SchemeData>> GetApprovedSchemes()
-        {
-            using (var client = apiClient())
-            {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
-                return schemes;
-            }
-        }
-
-        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemeData scheme)
+        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, SchemeData scheme)
         {
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
 
-                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
+                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
-                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, result, schemeName));
+                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName));
 
                 return View("ViewAndTransferEvidence", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note scheme request from note's Guid
-                var model = await GetNote(evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -178,11 +120,6 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    if (status == NoteStatus.Approved)
-                    {
-                        model.ViewEvidenceNoteViewModel.SuccessMessage = "Your evidence note has successfully been set to 'Approved'.";
-                    }
-
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
@@ -194,39 +131,35 @@
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(organisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
                 // call the api with the new evidence note scheme request
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
+                {
+                    SchemeId = pcsId
+                });
 
                 //return viewmodel to view
                 return View(model);
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
-        {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
-            breadcrumb.OrganisationId = organisationId;
-        }
-
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid evidenceNoteId, IWeeeClient client)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -234,26 +167,12 @@
             var result = await client.SendAsync(User.GetAccessToken(), request);
 
             // create new viewmodel mapper to map request to viewmodel
-            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null));
+            var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
+            {
+                SchemeId = pcsId
+            });
 
             return model;
-        }
-
-        private void CheckedCategoryIds(TransferEvidenceNoteDataViewModel model, List<int> ids)
-        {
-            if (ids.Any())
-            {
-                foreach (var id in ids)
-                {
-                    for (int i = 0; i < model.CategoryValues.Count; i++)
-                    {
-                        if (model.CategoryValues[i].CategoryId == id)
-                        {
-                            model.CategoryValues[i].Selected = true;
-                        }
-                    }
-                }
-            }
         }
     }
 }

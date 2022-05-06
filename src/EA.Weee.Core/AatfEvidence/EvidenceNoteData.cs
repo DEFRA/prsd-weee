@@ -29,12 +29,20 @@
 
         public DateTime? SubmittedDate { get; set; }
 
+        public DateTime? ApprovedDate { get; set; }
+
+        public DateTime? ReturnedDate { get; set; }
+
+        public string Reason { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }
 
         public AatfData AatfData { get; set; }
         public OrganisationData OrganisationData { get; set; }
+
+        public OrganisationData RecipientOrganisationData { get; set; }
 
         public EvidenceNoteData()
         {

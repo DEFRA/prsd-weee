@@ -3,7 +3,6 @@
     using System.Web.Mvc;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Web.Mvc.Tests.Helpers;
     using Prsd.Core.Web.Mvc.Tests.ViewModels;
     using Web.RazorHelpers;
     using Xunit;
@@ -28,7 +27,7 @@
         [Fact]
         public void SecondaryButton_ShouldRenderCorrectHtml()
         {
-            var button = htmlHelper.SecondaryButton("my button");
+            var button = htmlHelper.Button("my button", secondaryButton: true);
 
             button.ToHtmlString().Should().Be(@"<button class=""govuk-button govuk-button--secondary"" data-module=""govuk-button"" data-prevent-double-click=""true"" type=""submit"">my button</button>");
         }

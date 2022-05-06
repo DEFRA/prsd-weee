@@ -6,21 +6,23 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    public class TransferEvidenceNoteDataViewModel
+    public class TransferEvidenceNoteCategoriesViewModel
     {
         public Guid OrganisationId { get; set; }
 
-        [Required(ErrorMessage = "Select a PCS")]
+        [Required(ErrorMessage = "Select who you would like to transfer evidence to")]
+        [Display(Name = "Who would you like to transfer evidence to?")]
         public Guid? SelectedSchema { get; set; }
 
         public IList<SchemeData> SchemasToDisplay { get; set; }
 
         public CategoryValues<CategoryBooleanViewModel> CategoryValues { get; set; }
 
+        [Display(Name = "Which categories would you like to transfer?")]
         [Range(typeof(bool), "true", "true", ErrorMessage = "Select a category you would like to transfer evidence from")]
         public bool HasSelectedAtLeastOneCategory => CategoryValues != null && CategoryValues.Any(c => c.Selected);
 
-        public TransferEvidenceNoteDataViewModel()
+        public TransferEvidenceNoteCategoriesViewModel()
         {
             AddCategoryValues();
         }
@@ -28,6 +30,19 @@
         public void AddCategoryValues()
         {
             CategoryValues = new CategoryValues<CategoryBooleanViewModel>();
+        }
+
+        public List<int> SelectedCategoryValues
+        {
+            get
+            {
+                if (CategoryValues != null)
+                {
+                    return CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
+                }
+
+                return new List<int>();
+            }
         }
     }
 }

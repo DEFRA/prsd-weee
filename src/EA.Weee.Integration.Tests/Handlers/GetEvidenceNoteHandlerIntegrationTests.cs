@@ -113,6 +113,55 @@
         }
 
         [Component]
+        public class WhenIGetAReturnedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString());
+                    })
+                    .Create();
+
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveReturnedTheEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveReturnedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Returned);
+                result.Reason.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).Reason);
+                result.ReturnedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).ChangedDate);
+            };
+        }
+
+        [Component]
         public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
@@ -194,6 +243,8 @@
                                                              n.Reused.Equals(noteTonnage.Reused) &&
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
+                result.RecipientOrganisationData.Should().NotBeNull();
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
             }
         }
     }

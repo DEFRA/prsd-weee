@@ -15,6 +15,8 @@
         [Display(Name = "Rejected")]
         Rejected = 4,
         [Display(Name = "Void")]
-        Void = 5
+        Void = 5,
+        [Display(Name = "Returned")]
+        Returned = 6
     }
 }

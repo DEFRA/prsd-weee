@@ -36,7 +36,7 @@
                     viewModel.WasteTypeValue,
                     viewModel.ProtocolValue,
                     tonnageValues,
-                    viewModel.Action == ActionEnum.Save ? NoteStatus.Draft : NoteStatus.Submitted,
+                    viewModel.Action == ActionEnum.Save ? (viewModel.Status == 0 ? NoteStatus.Draft : viewModel.Status) : NoteStatus.Submitted,
                     viewModel.Id);
 
                 return request;

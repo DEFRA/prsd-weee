@@ -67,7 +67,7 @@
             EndDate = endDate;
         }
 
-        public void UpdateStatus(NoteStatus newStatus, string changedBy)
+        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
             {
@@ -79,7 +79,8 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Submitted) && Status != NoteStatus.Draft))
+            if ((newStatus.Equals(NoteStatus.Submitted) && 
+                 (Status != NoteStatus.Draft && Status != NoteStatus.Returned)))
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
