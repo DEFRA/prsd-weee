@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 {
-    using System;
+    using Core.AatfEvidence;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.AatfEvidence;
-    using Microsoft.Ajax.Utilities;
     using Web.ViewModels.Shared;
 
-    public class ReviewEvidenceNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint
+    public class ReviewEvidenceNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint, IValidatableObject
     {
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
@@ -44,8 +42,16 @@
             new Dictionary<string, string>
             {
                 { "Approve evidence note", null },
-                { "Reject evidence note", "Reject an evidence note if you have received the evidence note by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note." },
+                { "Reject evidence note", "Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note." },
                 { "Return evidence note", "Return an evidence note if there are some minor updates to be made by the AATF." }
             };
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (this.SelectedEnumValue == NoteStatus.Approved && this.Reason != null)
+            {
+                yield return new ValidationResult("A reason can only be entered if you are rejecting or returning the evidence note. Delete any text you have entered.");
+            }
+        }
     }
 }

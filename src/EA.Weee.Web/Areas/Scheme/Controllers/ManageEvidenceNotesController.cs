@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -13,13 +8,15 @@
     using EA.Weee.Requests.Note;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
