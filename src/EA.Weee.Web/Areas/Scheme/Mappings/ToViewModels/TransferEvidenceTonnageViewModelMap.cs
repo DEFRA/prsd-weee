@@ -1,24 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
-    using Core.DataReturns;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
-    using ViewModels.ManageEvidenceNotes;
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
-        private const string EmptyTonnage = "-";
-        private readonly ICategoryValueTotalCalculator categoryValueTotalCalculator;
-
         public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache, ICategoryValueTotalCalculator categoryValueTotalCalculator) : base(mapper, cache)
         {
-            this.categoryValueTotalCalculator = categoryValueTotalCalculator;
         }
 
         public TransferEvidenceTonnageViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
@@ -33,24 +26,66 @@
 
             for (var i = 0; i < model.EvidenceNotesDataList.Count; i++)
             {
-                FilterCategories(source, model, i);
-
                 DisplayAatf(i, model);
-
-                SetupTonnages(source, model, i);
             }
 
-            //TODO: actual totals calculated during edit
-            foreach (var category in model.CategoryValues)
-            {
-                category.TotalReceived = "0.000";
-                category.TotalReused = "0.000";
-            }
+            SetupTonnages(source, model);
+
+            SetupTotals(source, model);
 
             return model;
         }
 
-        private static void DisplayAatf(int i, TransferEvidenceTonnageViewModel model)
+        private static void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            foreach (var category in model.CategoryValues)
+            {
+                if (source.TransferAllTonnage)
+                {
+                    category.TotalReceived = source.Notes.SelectMany(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.Received)
+                        .ToTonnageDisplay();
+                    category.TotalReused = source.Notes.SelectMany(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.Reused)
+                        .ToTonnageDisplay();
+                }
+                else
+                {
+                    category.TotalReceived = 0m.ToTonnageDisplay();
+                    category.TotalReused = 0m.ToTonnageDisplay();
+                }
+            }
+        }
+
+        private void SetupTonnages(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            foreach (var evidenceNoteData in source.Notes)
+            {
+                foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
+                {
+                    var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
+                    {
+                        Id = evidenceTonnageData.Id,
+                    };
+
+                    if (source.TransferAllTonnage)
+                    {
+                        tonnage.Received = evidenceTonnageData.Received.HasValue
+                            ? evidenceTonnageData.Received.ToTonnageDisplay()
+                            : null;
+                        tonnage.Reused = evidenceTonnageData.Reused.HasValue
+                            ? evidenceTonnageData.Reused.ToTonnageDisplay()
+                            : null;
+                    }
+
+                    model.TransferCategoryValues.Add(tonnage);
+                }
+            }
+        }
+
+        private void DisplayAatf(int i, TransferEvidenceViewModelBase model)
         {
             if (i > 0 && model.EvidenceNotesDataList.Count > 1 && model.EvidenceNotesDataList.ElementAt(i).SubmittedBy
                     .Equals(model.EvidenceNotesDataList.ElementAt(i - 1).SubmittedBy))
@@ -60,38 +95,6 @@
             else
             {
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = true;
-            }
-        }
-
-        private static void FilterCategories(TransferEvidenceNotesViewModelMapTransfer source,
-            TransferEvidenceTonnageViewModel model, int i)
-        {
-            model.EvidenceNotesDataList.ElementAt(i).CategoryValues =
-                model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Where(c =>
-                    source.Request.CategoryIds.Contains(c.CategoryId) && !c.Received.Equals(EmptyTonnage)).ToList();
-        }
-
-        private static void SetupTonnages(TransferEvidenceNotesViewModelMapTransfer source,
-            TransferEvidenceTonnageViewModel model, int i)
-        {
-            foreach (var evidenceCategoryValue in model.EvidenceNotesDataList.ElementAt(i).CategoryValues)
-            {
-                var tonnage = new EvidenceCategoryValue((WeeeCategory)evidenceCategoryValue.CategoryId)
-                {
-                    Id = model.EvidenceNotesDataList.ElementAt(i).Id,
-                };
-
-                if (source.TransferAllTonnage)
-                {
-                    tonnage.Received = evidenceCategoryValue.Received != EmptyTonnage
-                        ? evidenceCategoryValue.Received
-                        : null;
-                    tonnage.Reused = evidenceCategoryValue.Reused != EmptyTonnage
-                        ? evidenceCategoryValue.Reused
-                        : null;
-                }
-
-                model.TransferCategoryValues.Add(tonnage);
             }
         }
     }
