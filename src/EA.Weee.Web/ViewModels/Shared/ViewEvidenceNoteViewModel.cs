@@ -27,7 +27,7 @@
 
         public string RecipientAddress { get; set; }
 
-        public bool DisplayEditButton => Status.Equals(NoteStatus.Draft);
+        public bool DisplayEditButton => Status.Equals(NoteStatus.Draft) || Status.Equals(NoteStatus.Returned);
 
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
 

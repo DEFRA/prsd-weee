@@ -32,7 +32,7 @@
 
         <!-- radiobuttons for approved -->
         <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note</p>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="approval-options">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
