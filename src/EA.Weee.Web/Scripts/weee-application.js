@@ -133,10 +133,9 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
+    $("#copy-tonnage-button").hide();
     $("#transferAllTonnage").change(function () {
-        if ($("#transferAllTonnage").is(':checked')) {
-            $("#TransferEvidenceForm").submit();
-        }
+        $("#TransferEvidenceForm").submit();
     });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
