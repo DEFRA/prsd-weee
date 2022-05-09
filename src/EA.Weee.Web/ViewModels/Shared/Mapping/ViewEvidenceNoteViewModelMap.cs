@@ -106,18 +106,19 @@
                     switch (status)
                     {
                         case NoteStatus.Submitted:
-                            model.SuccessMessage =
-                                $"You have successfully submitted the evidence note with reference ID E{note.Reference}";
+                            model.SuccessMessage = $"You have successfully submitted the evidence note with reference ID E{note.Reference}";
                             break;
                         case NoteStatus.Draft:
-                            model.SuccessMessage =
-                                $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
+                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
                             break;
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
                             break;
+                        case NoteStatus.Rejected:
+                            model.SuccessMessage = $"You have rejected the evidence note with reference ID E{note.Reference}";
+                            break;
                         case NoteStatus.Returned:
-                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a returned note";
+                            model.SuccessMessage = $"You have returned the evidence note with reference ID E{note.Reference}";
                             break;
                     }
 
