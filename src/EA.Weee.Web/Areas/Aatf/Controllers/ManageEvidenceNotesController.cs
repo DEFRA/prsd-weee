@@ -126,10 +126,10 @@
         {
             using (var client = apiClient())
             {
-                if (viewModel != null && viewModel.Action == ActionEnum.CopyAndPaste)
+                if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
                     sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
-                    return RedirectToAction("Index", "EvidenceTonnageValueCopyPaste", new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction });
+                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction });
                 }
                 if (ModelState.IsValid)
                 {
@@ -200,10 +200,10 @@
         {
             using (var client = apiClient())
             {
-                if (viewModel != null && viewModel.Action == ActionEnum.CopyAndPaste)
+                if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
                     sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
-                    return RedirectToAction("Index", "EvidenceTonnageValueCopyPaste", new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction });
+                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction });
                 }
                 if (ModelState.IsValid)
                 {
