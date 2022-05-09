@@ -8,10 +8,6 @@
     <meta name="theme-color" content="#0b0c0c" />
     <title>@Html.Raw(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
 
-    @*<script type="text/javascript">
-                (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
-        </script>*@
-
     <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/images/favicon.ico")" type="image/x-icon" />
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@Url.Content("~/Content/govuk_frontend/images/favicon.ico")" type="image/x-icon" />
     <link rel="mask-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-mask-icon.svg")" color="#0b0c0c" />
@@ -19,10 +15,6 @@
     <link rel="apple-touch-icon" sizes="167x167" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-167x167.png")" />
     <link rel="apple-touch-icon" sizes="152x152" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon-152x152.png")" />
     <link rel="apple-touch-icon" href="@Url.Content("~/Content/govuk_frontend/images/govuk-apple-touch-icon.png")" />
-
-    <!--[if IE 8]>
-        <link href="@Url.Content("~/Content/govuk_frontend/govuk-frontend-ie8-2.7.0.min.css")" rel="stylesheet" />
-    <![endif]-->
 
     <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/images/opengraph-image.png")" />
     @RenderSection("head", required: false)
@@ -41,32 +33,37 @@
         </div>
     </div>
 
-    <div id="global-cookie-message" style="display: none;">
-        <p id="global-cookie-message-p1" style="margin-bottom: 15px; margin-top: 10px;">Cookies on Waste Electrical and Electronic Equipment</p>
-        <p id="global-cookie-message-p2" style="margin-bottom: 10px;">We also use essential cookies to remember if you've accepted analytics cookies.</p>
-        <p id="global-cookie-message-p2" style="margin-bottom: 20px;">We'd like to use analystics cookies so we can understand how you use Waste Electrical and Electronic Equipment and make improvements.</p>
-        <p>
-            <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button" style="margin-right: 5px;">
-            <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button" style="margin-right: 5px;">
-            <a href="/new-user/cookies" style="vertical-align: sub;">View cookies</a>
+    <!--start global-cookie-message-->
+    <div id="global-cookie-message" style="display:none;">
+        <p id="global-cookie-message-p1">Cookies on Waste Electrical and Electronic Equipment</p>
+        <p id="global-cookie-message-p2">We also use essential cookies to remember if you've accepted analytics cookies.</p>
+        <p id="global-cookie-message-p3">We'd like to use analystics cookies so we can understand how you use Waste Electrical and Electronic Equipment and make improvements.</p>
+        <p id="#global-cookie-message-p4">
+            <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button">
+            <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button">
+            @Html.ActionLink("View cookies", "Cookies", "NewUser", new { area = string.Empty }, null)
         </p>
     </div>
 
     <div id="global-cookie-accept-message" style="display:none;">
-        <p id="global-cookie-message-p2" style="padding: 15px">
+        <p id="global-cookie-message-p2">
             You have accepted additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
-            <input type="submit" id="hideAcceptCookies" value="Hide this message" class="govuk-cookie-button" style="margin-left: 15px">
+        </p>
+        <p>
+            <input type="submit" id="hideAcceptCookies" value="Hide this message" class="govuk-cookie-button">
         </p>
     </div>
 
     <div id="global-cookie-reject-message" style="display:none;">
-        <p id="global-cookie-message-p2" style="padding: 15px">
+        <p id="global-cookie-message-p2">
             You have rejected additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
-            <input type="submit" id="hideRejectCookies" value="Hide this message" class="govuk-cookie-button" style="margin-left: 15px">
+        </p>
+        <p>
+            <input type="submit" id="hideRejectCookies" value="Hide this message" class="govuk-cookie-button">
         </p>
     </div>
     <!--end global-cookie-message-->
-    <!--end header-->
+
 
     <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="header">
         <div class="govuk-header__container govuk-width-container">
