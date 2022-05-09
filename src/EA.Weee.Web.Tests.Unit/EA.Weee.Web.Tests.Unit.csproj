@@ -311,6 +311,7 @@
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
