@@ -133,10 +133,9 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
+    $("#copy-tonnage-button").hide();
     $("#transferAllTonnage").change(function () {
-        if ($("#transferAllTonnage").is(':checked')) {
-            $("#TransferEvidenceForm").submit();
-        }
+        $("#TransferEvidenceForm").submit();
     });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
@@ -213,7 +212,7 @@
     });
 });
 
-var initReviewEvidenceNote = function () {
+function initReviewEvidenceNote() {
     document.getElementById("reason-text").style = "display: none;";
     document.getElementById("conditional-SelectedValue-0").style = "display: block;";
     document.getElementById("conditional-SelectedValue-1").style = "display: block;";
