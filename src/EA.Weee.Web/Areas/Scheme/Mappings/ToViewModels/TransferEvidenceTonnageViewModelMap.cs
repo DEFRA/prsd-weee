@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
     using Core.Helpers;
@@ -7,6 +8,7 @@
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
@@ -30,7 +32,7 @@
                 DisplayAatf(i, model);
             }
 
-            SetupTonnages(source, model);
+            SetupTonnages(source, model, model.EvidenceNotesDataList);
 
             SetupTotals(source, model);
 
@@ -60,10 +62,12 @@
         }
 
         private void SetupTonnages(TransferEvidenceNotesViewModelMapTransfer source,
-            TransferEvidenceTonnageViewModel model)
+            TransferEvidenceTonnageViewModel model, List<ViewEvidenceNoteViewModel> models)
         {
-            foreach (var evidenceNoteData in source.Notes.OrderBy(a => a.AatfData.Name).ThenBy(ab => ab.Id).ToList())
+            foreach (var viewModel in models)
             {
+                var evidenceNoteData = source.Notes.First(n => n.Id.Equals(viewModel.Id));
+
                 foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
                 {
                     var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)

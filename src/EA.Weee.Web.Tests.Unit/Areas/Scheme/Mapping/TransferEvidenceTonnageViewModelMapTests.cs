@@ -5,6 +5,7 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Helpers;
     using FakeItEasy;
@@ -192,47 +193,99 @@
         [Fact]
         public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsFalse_TransferTonnageCategoriesShouldBeSet()
         {
-            //arrange
-            var notes = new List<EvidenceNoteData>()
-            {
-                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
-                    new List<EvidenceTonnageData>()
-                    {
-                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, 1, null),
-                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1)
-                    }).Create(),
-                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
-                    new List<EvidenceTonnageData>()
-                    {
-                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
-                            null),
-                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4)
-                    }).Create()
-            };
-
-            var request = fixture.Create<TransferEvidenceNoteRequest>();
-            var organisationId = fixture.Create<Guid>();
-
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
-
-            var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
-            {
-                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF1").Create(),
-                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
-                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
-                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF3").Create()
-            };
-
-            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
+            var source = SetupTransferTonnages(out var viewEvidenceNoteViewModels);
 
             //act
             var result = map.Map(source);
 
             //assert
-            result.EvidenceNotesDataList.ElementAt(0).DisplayAatfName.Should().BeTrue();
-            result.EvidenceNotesDataList.ElementAt(1).DisplayAatfName.Should().BeTrue();
-            result.EvidenceNotesDataList.ElementAt(2).DisplayAatfName.Should().BeFalse();
-            result.EvidenceNotesDataList.ElementAt(3).DisplayAatfName.Should().BeTrue();
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
+            result.TransferCategoryValues.Count.Should()
+                .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
+        }
+
+        private TransferEvidenceNotesViewModelMapTransfer SetupTransferTonnages(out List<ViewEvidenceNoteViewModel> viewEvidenceNoteViewModels)
+        {
+            //arrange
+            var noteId1 = fixture.Create<Guid>();
+            var noteId2 = fixture.Create<Guid>();
+
+            var notes = new List<EvidenceNoteData>()
+            {
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                        new List<EvidenceTonnageData>()
+                        {
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1)
+                        })
+                    .With(e => e.AatfData, new AatfData() { Name = "Z" })
+                    .With(e => e.Id, noteId2).Create(),
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                        new List<EvidenceTonnageData>()
+                        {
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
+                                null),
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4)
+                        }).With(e => e.AatfData, new AatfData() { Name = "A" })
+                    .With(e => e.Id, noteId1).Create()
+            };
+
+            var request = fixture.Build<TransferEvidenceNoteRequest>().With(t => t.CategoryIds, new List<int>()).Create();
+            var organisationId = fixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+
+            viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.CategoryValues,
+                        new List<EvidenceCategoryValue>()
+                        {
+                            new EvidenceCategoryValue(WeeeCategory.AutomaticDispensers)
+                        })
+                    .With(n => n.Id, noteId1)
+                    .Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.CategoryValues,
+                        new List<EvidenceCategoryValue>()
+                        {
+                            new EvidenceCategoryValue(WeeeCategory.GasDischargeLampsAndLedLightSources),
+                            new EvidenceCategoryValue(WeeeCategory.MedicalDevices)
+                        }).With(n => n.Id, noteId2)
+                    .Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._))
+                .ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
+            return source;
+        }
+
+        [Fact]
+        public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsTrue_TransferTonnageCategoriesShouldBeSet()
+        {
+            var source = SetupTransferTonnages(out var viewEvidenceNoteViewModels);
+            source.TransferAllTonnage = true;
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("2.000");
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("1.000");
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("10.000");
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("12.000");
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("4.000");
+            result.TransferCategoryValues.Count.Should()
+                .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }
 
         private TransferEvidenceNotesViewModelMapTransfer GetTransferObject()
