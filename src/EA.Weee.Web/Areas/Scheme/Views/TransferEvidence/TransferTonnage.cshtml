@@ -18,8 +18,6 @@
 
     @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Get, htmlAttributes: new Dictionary<string, object>() { { "id", "TransferEvidenceForm" } }))
     {
-        @*@Html.Hidden("action", true)*@
-
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-body">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</legend>
             <div class="govuk-checkboxes">
@@ -175,9 +173,9 @@
             </tbody>
         </table>
 
-        <div class="govuk-!-margin-top-3">
+        @*<div class="govuk-!-margin-top-3">
             @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
-        </div>
+        </div>*@
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")
     <script type="text/javascript">
