@@ -334,7 +334,7 @@
         {
             //Arrange
             var model = ValidModel();
-            A.CallTo(() => SessionService.GetTransferSessionObject<EvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
             var schemes = Fixture.CreateMany<SchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
