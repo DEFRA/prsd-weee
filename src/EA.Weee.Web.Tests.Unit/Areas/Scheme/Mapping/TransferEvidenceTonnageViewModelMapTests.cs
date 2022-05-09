@@ -17,21 +17,21 @@
     using Weee.Requests.Scheme;
     using Xunit;
 
-    public class TransferEvidenceNotesViewModelMapTests
+    public class TransferEvidenceTonnageViewModelMapTests
     {
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
         private readonly Fixture fixture;
 
-        private readonly TransferEvidenceNotesViewModelMap map;
+        private readonly TransferEvidenceTonnageViewModelMap map;
 
-        public TransferEvidenceNotesViewModelMapTests()
+        public TransferEvidenceTonnageViewModelMapTests()
         {
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
             fixture = new Fixture();
 
-            map = new TransferEvidenceNotesViewModelMap(mapper, cache);
+            map = new TransferEvidenceTonnageViewModelMap(mapper, cache);
         }
 
         [Fact]
@@ -40,6 +40,16 @@
             //act
             var exception = Record.Exception(() => map.Map(null));
             
+            //asset
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenSourceRequestIsNull_ArgumentNullExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() => map.Map(new TransferEvidenceNotesViewModelMapTransfer()));
+
             //asset
             exception.Should().BeOfType<ArgumentNullException>();
         }
@@ -123,13 +133,13 @@
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
+                            v => v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) &&  v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
+                            v => v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             //act

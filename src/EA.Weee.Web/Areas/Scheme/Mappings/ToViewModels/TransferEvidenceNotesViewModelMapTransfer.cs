@@ -4,7 +4,6 @@
     using EA.Weee.Core.AatfEvidence;
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
-    using ViewModels;
     using Weee.Requests.Scheme;
 
     public class TransferEvidenceNotesViewModelMapTransfer
