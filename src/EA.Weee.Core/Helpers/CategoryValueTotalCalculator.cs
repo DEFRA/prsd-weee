@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
 
+    [Serializable]
     public class CategoryValueTotalCalculator : ICategoryValueTotalCalculator
     {
         public string Total(IList<string> categoryValues)
