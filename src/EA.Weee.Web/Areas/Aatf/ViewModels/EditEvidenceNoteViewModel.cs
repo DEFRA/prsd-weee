@@ -10,6 +10,7 @@
     using Core.Scheme;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public class EditEvidenceNoteViewModel : EvidenceNoteViewModel
     {
         [Required(ErrorMessage = "Enter a start date")]

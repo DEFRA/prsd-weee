@@ -2,14 +2,12 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
     using Core.Scheme;
-    using EA.Weee.Requests.Aatf;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -33,7 +31,7 @@
         [Fact]
         public void CreateEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 

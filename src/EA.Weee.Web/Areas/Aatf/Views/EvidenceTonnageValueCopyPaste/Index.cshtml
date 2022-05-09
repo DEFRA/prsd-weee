@@ -1,0 +1,45 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EvidenceTonnageValueCopyPasteViewModel
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EvidenceTonnageValueCopyPasteController>(a => a.Index(Model.OrganisationId, Model.Action, true))))
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">WEEE received for treatment</h1>
+        </div>
+    </header>
+    <p class="govuk-body">
+        Provide tonnage to 3 decimal places for 14 categories. For example 1.238
+    </p>
+    <p class="govuk-body">
+        You can copy the WEEE in tonnes from an Excel spreadsheet
+    </p>
+    <p class="govuk-body">
+        Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
+    </p>
+    @using (Html.BeginForm("Index", "EvidenceTonnageValueCopyPaste", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.EvidenceId)
+        @Html.HiddenFor(m => m.Action)
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-heading-s">@Html.LabelFor(m => m.ReceievedPastedValues)</div>
+                @Html.TextAreaFor(m => m.ReceievedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;" })
+            </div>
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-heading-s">@Html.LabelFor(m => m.ReusedPastedValues)</div>
+                @Html.TextAreaFor(m => m.ReusedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;" })
+            </div>
+</div>
+        @(this.WeeeGds().Submit("Save and continue"))
+    }
+}
