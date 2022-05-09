@@ -67,7 +67,7 @@
             EndDate = endDate;
         }
 
-        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy)
+        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, string reason = null)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
             {
@@ -79,7 +79,8 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Submitted) && Status != NoteStatus.Draft))
+            if ((newStatus.Equals(NoteStatus.Submitted) && 
+                 (Status != NoteStatus.Draft && Status != NoteStatus.Returned)))
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
@@ -89,7 +90,7 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus));
+            NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus, reason));
 
             Status = newStatus;
         }

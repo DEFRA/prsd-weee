@@ -19,8 +19,10 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Tests.Unit.Helpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerTests
@@ -42,7 +44,7 @@
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, TransferNoteRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
             Fixture = new Fixture();
         }
 
@@ -122,14 +124,35 @@
             // Arrange
             var organisationName = Faker.Company.Name();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            var status = new List<NoteStatus>() { NoteStatus.Submitted };
 
             //act
             await ManageEvidenceController.Index(OrganisationId);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) &&
-                     g.AllowedStatuses.Contains(NoteStatus.Submitted)))).MustHaveHappenedOnceExactly();
+                g => g.OrganisationId.Equals(OrganisationId) && status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task IndexGet_GivenOrganisationId_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                return;
+            }
+
+            // Arrange
+            var organisationName = Faker.Company.Name();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            
+            //act
+            await ManageEvidenceController.Index(OrganisationId);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) && g.AllowedStatuses.Contains(status)))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -233,6 +256,43 @@
 
             //asset
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_EvidenceNotesShouldBeRetrieved()
+        {
+            // Arrange
+            var organisationName = Faker.Company.Name();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            var status = new List<NoteStatus>()
+            {
+                NoteStatus.Approved,
+                NoteStatus.Rejected,
+                NoteStatus.Void,
+                NoteStatus.Returned
+            };
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) && status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus()
+        {
+            // Arrange
+            var organisationName = Faker.Company.Name();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) && g.AllowedStatuses.Contains(NoteStatus.Submitted)))).MustNotHaveHappened();
         }
 
         [Fact]

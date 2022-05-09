@@ -51,9 +51,9 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void OnActionExecuting_GivenViewModel_AndEvidenceNoteIsNotDraft_InvalidOperationExceptionExpected(NoteStatus noteStatus)
+        public void OnActionExecuting_GivenViewModel_AndEvidenceNoteIsNotDraftOrReturned_InvalidOperationExceptionExpected(NoteStatus noteStatus)
         {
-            if (noteStatus != NoteStatus.Draft)
+            if (noteStatus != NoteStatus.Draft && noteStatus != NoteStatus.Returned)
             {
                 //arrange
                 var viewModel = new EvidenceNoteViewModel()
@@ -114,7 +114,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void OnActionExecuting_GivenEvidenceNoteIdIsNotDraft_InvalidOperationExceptionExpected(NoteStatus noteStatus)
         {
-            if (noteStatus != NoteStatus.Draft)
+            if (noteStatus != NoteStatus.Draft && noteStatus != NoteStatus.Returned)
             {
                 //arrange
                 var note = fixture.Create<EvidenceNoteData>();

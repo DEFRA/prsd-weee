@@ -133,6 +133,11 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
+    $("#transferAllTonnage").change(function () {
+        if ($("#transferAllTonnage").is(':checked')) {
+            $("#TransferEvidenceForm").submit();
+        }
+    });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
@@ -175,11 +180,11 @@
                 var selectedValue = document.getElementById(existingId).value;
 
                 if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
-
+                    var selected = confirmed || selectedValue;
                     for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
                         var findSelectedOption = postBackElement.options[postBackOptions];
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
-                        if (text === confirmed) {
+                        if (text === selected) {
                             postBackElement.value = findSelectedOption.value;
                         }
                     }
@@ -208,6 +213,24 @@
     });
 });
 
+var initReviewEvidenceNote = function () {
+    document.getElementById("reason-text").style = "display: none;";
+    document.getElementById("conditional-SelectedValue-0").style = "display: block;";
+    document.getElementById("conditional-SelectedValue-1").style = "display: block;";
+    document.getElementById("conditional-SelectedValue-2").style = "display: block;";
+
+    function showReasonText(event) {
+        document.getElementById("reason-text").style = "display: block;";
+    }
+
+    function hideReasonText(event) {
+        document.getElementById("reason-text").style = "display: none;";
+    }
+
+    document.getElementById("SelectedValue-0").addEventListener("click", hideReasonText);
+    document.getElementById("SelectedValue-1").addEventListener("click", showReasonText);
+    document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
+}
 
 
 //USAGE: $("#form").serializeFiles();

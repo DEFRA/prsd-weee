@@ -34,17 +34,18 @@
             result.AatfData.Id.Should().Be(note.Aatf.Id);
             result.SchemeData.Should().NotBeNull();
             result.SchemeData.Id.Should().Be(note.Recipient.Id);
-            result.EvidenceTonnageData.Count.Should().Be(note.NoteTonnage.Count);
+            result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
+            foreach (var evidenceTonnageData in result.EvidenceTonnageData)
+            {
+                note.NoteTonnage.Should().Contain(n => n.Received.Equals(evidenceTonnageData.Received) &&
+                                                       n.Reused.Equals(evidenceTonnageData.Reused) &&
+                                                       ((int)n.CategoryId).Equals(
+                                                           evidenceTonnageData.CategoryId.ToInt()));
+            }
             result.OrganisationData.Should().NotBeNull();
             result.OrganisationData.Id.Should().Be(note.Organisation.Id);
             ((int)result.Type).Should().Be(note.NoteType.Value);
             result.Id.Should().Be(note.Id);
-            foreach (var noteTonnage in note.NoteTonnage)
-            {
-                result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
-                                                         n.Reused.Equals(noteTonnage.Reused) &&
-                                                         ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
-            }
             result.RecipientOrganisationData.Should().NotBeNull();
             result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
         }

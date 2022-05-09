@@ -33,6 +33,7 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+
 function TonnageTotals(controlId) {
   
     var tonnageElements = document.querySelectorAll('input[id$=' + controlId + ']');
@@ -66,5 +67,15 @@ function TonnageTotals(controlId) {
                     tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3));
                 }
             });
+    }
+}
+
+
+function initialiseTransferCategoryTotals() {
+    var categoryToCalc = document.querySelectorAll('input[id^=categoryid_to_calculate]');
+    for (var elementCount = 0; elementCount < categoryToCalc.length; elementCount++) {
+        var element = categoryToCalc[elementCount];
+        TonnageTotals('Received' + element.value);
+        TonnageTotals('Reused' + element.value);
     }
 }
