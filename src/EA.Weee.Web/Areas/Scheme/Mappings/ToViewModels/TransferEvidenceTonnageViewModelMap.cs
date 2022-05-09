@@ -20,6 +20,7 @@
             Condition.Requires(source.Request).IsNotNull();
             
             var model = MapBaseProperties(source);
+            model.TransferAllTonnage = source.TransferAllTonnage;
 
             model.EvidenceNotesDataList =
                 model.EvidenceNotesDataList.OrderBy(a => a.SubmittedBy).ThenBy(ab => ab.Id).ToList();
@@ -61,7 +62,7 @@
         private void SetupTonnages(TransferEvidenceNotesViewModelMapTransfer source,
             TransferEvidenceTonnageViewModel model)
         {
-            foreach (var evidenceNoteData in source.Notes)
+            foreach (var evidenceNoteData in source.Notes.OrderBy(a => a.AatfData.Name).ThenBy(ab => ab.Id).ToList())
             {
                 foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
                 {
