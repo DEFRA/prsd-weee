@@ -69,6 +69,51 @@
             };
         }
 
+        [Component]
+        public class WhenIUpdateANoteStatusToReturned : SetNoteStatusRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme.Id)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    })
+                    .Create();
+
+                request = new SetNoteStatus(note.Id, Core.AatfEvidence.NoteStatus.Returned, "reason returned");
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveUpdatedTheEvidenceNoteWithStatusReturned = () =>
+            {
+                note.Status.Should().Be(NoteStatus.Returned);
+            };
+
+            private readonly It shouldHaveCreatedANoteStatusHistory = () =>
+            {
+                var history = Query.GetLatestNoteStatusHistoryForNote(note.Id);
+                history.ChangedById.Should().Be(UserId.ToString());
+                history.ChangedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                history.FromStatus.Should().Be(NoteStatus.Submitted);
+                history.ToStatus.Should().Be(NoteStatus.Returned);
+                history.Reason.Should().Be("reason returned");
+            };
+        }
+
         public class SetNoteStatusRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<SetNoteStatus, Guid> handler;
