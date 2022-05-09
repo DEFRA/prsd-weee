@@ -5,6 +5,7 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.DataReturns;
     using Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
@@ -45,16 +46,6 @@
         }
 
         [Fact]
-        public void Map_GivenSourceRequestIsNull_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => map.Map(new TransferEvidenceNotesViewModelMapTransfer()));
-
-            //asset
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Map_GivenSource_TransferEvidenceNotesViewModelShouldBeReturned()
         {
             //arrange
@@ -64,7 +55,7 @@
             var result = map.Map(source);
 
             //assert
-            result.Should().BeOfType<TransferEvidenceNotesViewModel>();
+            result.Should().BeOfType<TransferEvidenceTonnageViewModel>();
             result.Should().NotBeNull();
         }
 
@@ -133,44 +124,139 @@
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             //act
             var result = map.Map(source);
 
             //assert
-            result.EvidenceNotesDataList.ElementAt(0).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(0));
-            result.EvidenceNotesDataList.ElementAt(1).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(1));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModel.ElementAt(0));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModel.ElementAt(1));
+            result.EvidenceNotesDataList.Should().BeInAscendingOrder(e => e.SubmittedBy).And
+                .ThenBeInAscendingOrder(e => e.Id);
         }
 
-        [Fact]
-        public void Map_GivenSource_SelectedEvidenceNotePairsShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenSourceHasTransferAllTonnages_TransferAllTonnagesPropertyShouldBeSet(bool transferAllTonnages)
         {
             //arrange
             var source = GetTransferObject();
+            source.TransferAllTonnage = transferAllTonnages;
 
             //act
             var result = map.Map(source);
 
             //assert
-            result.SelectedEvidenceNotePairs.Should().NotBeEmpty();
-            foreach (var evidenceNoteData in source.Notes)
+            result.TransferAllTonnage.Should().Be(transferAllTonnages);
+        }
+
+        [Fact]
+        public void Map_GivenSourceEvidenceListsWithAatfs_DisplayAatfPropertyShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>(4).ToList();
+            var request = fixture.Create<TransferEvidenceNoteRequest>();
+            var organisationId = fixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+
+            var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
-                result.SelectedEvidenceNotePairs.Should()
-                    .Contain(p => p.Value.Equals(false) && p.Key.Equals(evidenceNoteData.Id));
-            }
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF1").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF3").Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNotesDataList.ElementAt(0).DisplayAatfName.Should().BeTrue();
+            result.EvidenceNotesDataList.ElementAt(1).DisplayAatfName.Should().BeTrue();
+            result.EvidenceNotesDataList.ElementAt(2).DisplayAatfName.Should().BeFalse();
+            result.EvidenceNotesDataList.ElementAt(3).DisplayAatfName.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsFalse_TransferTonnageCategoriesShouldBeSet()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>()
+            {
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                    new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, 1, null),
+                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1)
+                    }).Create(),
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                    new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
+                            null),
+                        new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4)
+                    }).Create()
+            };
+
+            var request = fixture.Create<TransferEvidenceNoteRequest>();
+            var organisationId = fixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+
+            var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF1").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF2").Create(),
+                fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.SubmittedBy, "AATF3").Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNotesDataList.ElementAt(0).DisplayAatfName.Should().BeTrue();
+            result.EvidenceNotesDataList.ElementAt(1).DisplayAatfName.Should().BeTrue();
+            result.EvidenceNotesDataList.ElementAt(2).DisplayAatfName.Should().BeFalse();
+            result.EvidenceNotesDataList.ElementAt(3).DisplayAatfName.Should().BeTrue();
         }
 
         private TransferEvidenceNotesViewModelMapTransfer GetTransferObject()
         {
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new List<EvidenceNoteData>()
+            {
+                fixture.Create<EvidenceNoteData>(),
+                fixture.Create<EvidenceNoteData>()
+            };
+
+            var viewEvidenceNoteViewModel = fixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
+
+            A.CallTo(() =>
+                    mapper.Map<ViewEvidenceNoteViewModel>(
+                        A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
+                .Returns(viewEvidenceNoteViewModel.ElementAt(0));
+
+            A.CallTo(() =>
+                    mapper.Map<ViewEvidenceNoteViewModel>(
+                        A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
+                .Returns(viewEvidenceNoteViewModel.ElementAt(1));
+
             var request = fixture.Build<TransferEvidenceNoteRequest>()
                 .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ConsumerEquipment.ToInt(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 

@@ -24,6 +24,7 @@
             model.EvidenceNotesDataList =
                 model.EvidenceNotesDataList.OrderBy(a => a.SubmittedBy).ThenBy(ab => ab.Id).ToList();
 
+            // Multiple evidence notes can come from the same AATF, where the AATF is the same for sequential evidence notes the aatf name isn't displayed
             for (var i = 0; i < model.EvidenceNotesDataList.Count; i++)
             {
                 DisplayAatf(i, model);
