@@ -12,7 +12,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
-    using Requests.Scheme;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -663,6 +662,8 @@
                 note10ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 note10ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
                 note10ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, 1, null));
+                note10ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, null));
+                note10ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 1, null));
 
                 context.Notes.Add(note10ToBeFound);
 
@@ -676,11 +677,13 @@
 
                 await context.SaveChangesAsync();
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, new List<int>()
+                var categorySearch = new List<int>()
                 {
                     WeeeCategory.ConsumerEquipment.ToInt(),
                     WeeeCategory.MedicalDevices.ToInt()
-                }, new List<Guid>());
+                };
+
+                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>());
 
                 notes.Count().Should().Be(2);
                 notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
