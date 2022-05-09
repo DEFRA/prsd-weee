@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using EA.Weee.Web.Extensions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
@@ -40,6 +41,8 @@
                 EndDate = source.EvidenceNoteData.EndDate,
                 SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                ReturnedDate = source.EvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
+                Reason = source.EvidenceNoteData.Reason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
@@ -65,20 +68,28 @@
                     organisationAddress.Postcode,
                     null),
                 SchemeId = source.SchemeId,
+                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber
             };
 
-            foreach (var tonnageData in source.EvidenceNoteData.EvidenceTonnageData)
+            for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
             {
-                var category = model.CategoryValues.FirstOrDefault(c => c.CategoryId == (int)tonnageData.CategoryId);
+                var category = model.CategoryValues.ElementAt(i);
 
-                if (category != null)
+                var noteTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
+                    t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
+
+                if (noteTonnage == null && !source.IncludeAllCategories)
                 {
-                    category.Received = tonnageUtilities.CheckIfTonnageIsNull(tonnageData.Received);
-                    category.Reused = tonnageUtilities.CheckIfTonnageIsNull(tonnageData.Reused);
-                    category.Id = tonnageData.Id;
+                    model.CategoryValues.RemoveAt(i);
+                }
+                else if (noteTonnage != null)
+                {
+                    category.Received = tonnageUtilities.CheckIfTonnageIsNull(noteTonnage.Received);
+                    category.Reused = tonnageUtilities.CheckIfTonnageIsNull(noteTonnage.Reused);
+                    category.Id = noteTonnage.Id;
                 }
             }
-
+          
             model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
@@ -104,6 +115,9 @@
                             break;
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
+                            break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a returned note";
                             break;
                     }
 

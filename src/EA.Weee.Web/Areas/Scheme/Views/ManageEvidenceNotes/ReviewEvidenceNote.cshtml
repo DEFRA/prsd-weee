@@ -6,8 +6,6 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 @{
     ViewBag.Title = "Review evidence - GOV.UK";
-
-    
 }
 
 @section full_main_content
@@ -33,8 +31,8 @@
         @Html.Partial("_ViewEvidenceNotePartial", Model.ViewEvidenceNoteViewModel)
 
         <!-- radiobuttons for approved -->
-        <p>Choose whether to approve, reject or return the evidence note</p>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="approval-options">
+        <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note</p>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
@@ -45,8 +43,17 @@
                 Model.HintItems)
         </div>
 
+        <div id="reason-text" class="govuk-!-margin-bottom-7">
+            @Html.Gds().LabelFor(m => m.Reason, showOptionalLabel: false)
+            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @class = "govuk-textarea", @maxlength = "200", @title = "You can type up to 200 characters" })
+        </div>
+
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
+
+    <script type="text/javascript">
+        initReviewEvidenceNote();
+    </script>
 }
