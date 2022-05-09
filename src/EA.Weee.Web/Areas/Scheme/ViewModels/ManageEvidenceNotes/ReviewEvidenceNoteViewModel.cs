@@ -44,8 +44,8 @@
             new Dictionary<string, string>
             {
                 { "Approve evidence note", null },
-                { "Reject evidence note", "Reject an evidence note if you have received the evidence note by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note." },
-                { "Return evidence note", "Return an evidence note if there are some minor updates to be made by the AATF." }
+                { "Reject evidence note", "Reject an evidence note if you have received the evidence note by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note" },
+                { "Return evidence note", "Return an evidence note if there are some minor updates to be made by the AATF" }
             };
     }
 }
