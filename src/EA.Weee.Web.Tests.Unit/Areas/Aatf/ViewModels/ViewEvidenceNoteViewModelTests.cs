@@ -239,7 +239,7 @@
                 Status = NoteStatus.Returned
             };
 
-            model.HasReturnedDate.Should().BeTrue();
+            model.HasBeenReturned.Should().BeTrue();
         }
 
         [Theory]
@@ -256,7 +256,7 @@
                 Status = status
             };
 
-            model.HasReturnedDate.Should().BeFalse();
+            model.HasBeenReturned.Should().BeFalse();
         }
 
         [Theory]
