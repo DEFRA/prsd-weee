@@ -115,5 +115,25 @@
             // assert
             result.Should().NotBeNull();
         }
+
+        [Fact]
+        public void Map_GivenValidEvidenceNoteData_ShouldContainHintItems()
+        {
+            //arrange
+            EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
+            ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status);
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert
+            result.HintItems.Count.Should().Be(3);
+            result.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note");
+            result.HintItems.ElementAt(0).Value.Should().BeNull();
+            result.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note");
+            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note if you have received the evidence note by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note");
+            result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note");
+            result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note if there are some minor updates to be made by the AATF");
+        }
     }
 }
