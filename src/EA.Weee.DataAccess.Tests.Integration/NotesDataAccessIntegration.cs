@@ -675,6 +675,14 @@
 
                 context.Notes.Add(note11ToNotBeFound);
 
+                // to not be found as transfer note, matching scheme, category
+                var note12ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, scheme);
+                note12ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note12ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note12ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, 1,  null));
+
+                context.Notes.Add(note12ToNotBeFound);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -697,6 +705,62 @@
                 notes.Should().NotContain(n => n.Id.Equals(note8ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note9ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note11ToNotBeFound.Id));
+                notes.Should().NotContain(n => n.Id.Equals(note12ToNotBeFound.Id));
+            }
+        }
+
+        [Fact]
+        public async Task GetNotesToTransfer_GivenEvidenceNotes_NotesShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                // to be found matching category, scheme and status and id is requested
+                var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note1ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note1ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note1ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note1ToBeFound);
+
+                // to be found matching category, scheme and status and id is requested
+                var note2ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note2ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note2ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note2ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note2ToBeFound);
+
+                // note not to be found matching scheme, status but not in evidence note list
+                var note3NotToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note3NotToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note3NotToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note3NotToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note3NotToBeFound);
+
+                await context.SaveChangesAsync();
+
+                var categorySearch = new List<int>()
+                {
+                    WeeeCategory.ConsumerEquipment.ToInt()
+                };
+
+                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>()
+                {
+                    note1ToBeFound.Id,
+                    note2ToBeFound.Id
+                });
+
+                notes.Count().Should().Be(2);
+                notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
+                notes.Should().Contain(n => n.Id.Equals(note2ToBeFound.Id));
+                notes.Should().NotContain(n => n.Id.Equals(note3NotToBeFound.Id));
             }
         }
 
