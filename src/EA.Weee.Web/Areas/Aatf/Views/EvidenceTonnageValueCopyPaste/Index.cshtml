@@ -30,18 +30,16 @@
         @Html.HiddenFor(m => m.EvidenceId)
         @Html.HiddenFor(m => m.Action)
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="received-entry">Total received (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste values here" id="ReceievedPastedValues" name="ReceievedPastedValues" style="height: 400px;" aria-labelledby="received-entry"></textarea>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-heading-s">@Html.LabelFor(m => m.ReceievedPastedValues)</div>
+                @Html.TextAreaFor(m => m.ReceievedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;" })
             </div>
-            <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-s" id="reused-entry">Reused as whole appliances (tonnes)</h2>
-                <textarea class="govuk-textarea govuk-!-width-three-quarters" placeholder="Paste values here" id="ReusedPastedValues" name="ReusedPastedValues" style="height: 400px;" aria-labelledby="reused-entry"></textarea>
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-heading-s">@Html.LabelFor(m => m.ReusedPastedValues)</div>
+                @Html.TextAreaFor(m => m.ReusedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;" })
             </div>
-        </div>
-        <button type="submit" class="govuk-button" id="aatf-task-list" data-module="govuk-button" data-prevent-double-click="true">
-            Save and continue
-        </button>
+</div>
+        @(this.WeeeGds().Submit("Save and continue"))
     }
 }
