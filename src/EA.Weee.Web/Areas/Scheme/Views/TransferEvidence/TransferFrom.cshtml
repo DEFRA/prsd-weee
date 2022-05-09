@@ -14,6 +14,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.PcsId)
+        @Html.HiddenFor(m => m.RecipientName)
 
         <h1 class="govuk-heading-l">
             From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
@@ -24,7 +26,7 @@
             @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
             {
                 var item = categoryCount;
-                
+
                 @Html.HiddenFor(m => m.CategoryValues[item].CategoryId)
                 @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
 
@@ -33,28 +35,28 @@
         </ul>
         <p class="govuk-body-m">Select up to 5 notes</p>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotes)">
-            <label for="SelectedEvidenceNotes" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotes" class="govuk-visually-hidden" />
-            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotes)
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedEvidenceNotePairs)">
+            <label for="SelectedEvidenceNotePairs" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> <input id="SelectedEvidenceNotePairs" class="govuk-visually-hidden" />
+            @Html.Gds().ValidationMessageFor(m => m.SelectedEvidenceNotePairs)
         </div>
 
         <table id="transfer-notes-selection" class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
             <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header">
-                    Reference ID
-                </th>
-                <th class="govuk-table__header">
-                    Submitted by
-                </th>
-                <th class="govuk-table__header">
-                    Total (tonnes)
-                </th>
-                <th class="govuk-table__header">
-                    <span class="govuk-visually-hidden">actions</span>
-                </th>
-            </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">
+                        Reference ID
+                    </th>
+                    <th class="govuk-table__header">
+                        Submitted by
+                    </th>
+                    <th class="govuk-table__header">
+                        Total (tonnes)
+                    </th>
+                    <th class="govuk-table__header">
+                        <span class="govuk-visually-hidden">actions</span>
+                    </th>
+                </tr>
             </thead>
             <tbody class="govuk-table__body">
 
@@ -65,6 +67,7 @@
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Reference)
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].SubmittedBy)
                     @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].TotalReceivedDisplay)
+                    @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Id)
 
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
@@ -72,10 +75,12 @@
                                 <div class='govuk-checkboxes'>
                                     <div class='govuk-checkboxes__item'>
                                         @{
-                                            var selectedOption = Model.SelectedEvidenceNotes[i1] ? "checked" : "";
-                                            var id = "SelectedEvidenceNotes_" + i1;
-                                            var name = "SelectedEvidenceNotes[" + i1 + "]";
+                                            var selectedOption = Model.SelectedEvidenceNotePairs[i1].Value ? "checked" : "";
+                                            var id = "SelectedEvidenceNotePairs_" + i1;
+                                            var name = "SelectedEvidenceNotePairs[" + i1 + "].Value";
                                         }
+
+                                        @Html.Hidden("SelectedEvidenceNotePairs[" + i1 + "].Key", Model.SelectedEvidenceNotePairs[i1].Key)
 
                                         <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
                                         <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">

@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using System;
-    using System.Threading.Tasks;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess;
-    using Prsd.Core;
+    using Domain.Evidence;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Note;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class SetNoteStatusRequestHandler : IRequestHandler<SetNoteStatus, Guid>
     {
@@ -37,7 +38,7 @@
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
             string changedBy = userContext.UserId.ToString();
-            evidenceNote.UpdateStatus(Domain.Evidence.NoteStatus.Approved, changedBy);
+            evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, message.Reason);
 
             await context.SaveChangesAsync();
 

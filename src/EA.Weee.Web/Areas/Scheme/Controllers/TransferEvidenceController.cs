@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Constant;
+    using Core.Helpers;
     using Core.Scheme;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -45,7 +46,7 @@
 
                 var model = new TransferEvidenceNoteCategoriesViewModel();
                 model.OrganisationId = pcsId;
-                model.SchemasToDisplay = await GetApprovedSchemes();
+                model.SchemasToDisplay = await GetApprovedSchemes(pcsId);
                 return this.View("TransferEvidenceNote", model);
             }
         }
@@ -69,7 +70,7 @@
 
             model.AddCategoryValues();
             CheckedCategoryIds(model, selectedCategoryIds);
-            model.SchemasToDisplay = await GetApprovedSchemes();
+            model.SchemasToDisplay = await GetApprovedSchemes(model.OrganisationId);
 
             return View(model);
         }
@@ -104,19 +105,73 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO update the request values with notes captured on the form
                 var transferRequest =
                     sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                         SessionKeyConstant.TransferNoteKey);
 
-                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
+                var selectedEvidenceNotes =
+                    model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
 
-                return RedirectToAction("Index", "Holding", new { area = "Scheme", organisationId = model.PcsId });
+                var updatedTransferRequest =
+                    new TransferEvidenceNoteRequest(transferRequest.SchemeId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+
+                sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
+
+                return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId, transferAllTonnage = false });
             }
 
             await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-            return View(model);
+            return View("TransferFrom", model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> TransferTonnage(Guid pcsId, bool transferAllTonnage = false)
+        {
+            using (var client = this.apiClient())
+            {
+                var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, client);
+
+                return this.View("TransferTonnage", model);
+            }
+        }
+
+        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, IWeeeClient client)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
+            Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+
+            var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
+            {
+                TransferAllTonnage = transferAllTonnage
+            };
+
+            var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+
+            return model;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
+        {
+            using (var client = this.apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                }
+
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
+
+                return this.View("TransferTonnage", updatedModel);
+            }
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
@@ -136,11 +191,14 @@
             }
         }
 
-        private async Task<List<SchemeData>> GetApprovedSchemes()
+        private async Task<List<SchemeData>> GetApprovedSchemes(Guid pcsId)
         {
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                schemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
+
                 return schemes;
             }
         }

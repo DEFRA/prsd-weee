@@ -11,9 +11,10 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
-        @Html.HiddenFor(m => m.Status, new { id = "status-id"})
+        @Html.HiddenFor(m => m.Status, new { id = "status-id" })
         @Html.HiddenFor(m => m.Reference)
-
+        @Html.HiddenFor(m => m.Reason)
+    
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
@@ -52,12 +53,22 @@
 
         <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
-
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
+                @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
+                {
+                <div class="govuk-grid-column-full govuk-!-padding-left-0">
                     @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
-                    @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                    @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                    @Html.HiddenFor(m => m.ReceivedId)
+                    <p aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</p>
                 </div>
+                }
+                else
+                {
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
+                        @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
+                        @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
+                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                    </div>
+                }
             </div>
         </div>
         <div class="govuk-grid-row govuk-!-padding-top-3">
@@ -145,17 +156,17 @@
 
                     }
 
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <p class="govuk-body"><strong>Total</strong></p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.ReceivedTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReusedTotal</p>
-                        </td>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <p class="govuk-body"><strong>Total</strong></p>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <p class="govuk-body govuk-!-text-align-right" id="ReceivedTotal">@Model.ReceivedTotal</p>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <p class="govuk-body govuk-!-text-align-right" id="ReusedTotal">@Model.ReusedTotal</p>
+                    </td>
+                </tr>
 
                 </tbody>
             </table>

@@ -27,17 +27,14 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
-        private readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient,
-            IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator) : base(breadcrumb, cache)
+            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
-            this.transferNoteRequestCreator = transferNoteRequestCreator;
         }
 
         [HttpGet]
@@ -88,7 +85,13 @@
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
 
-                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void }));
+                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() 
+                { 
+                    NoteStatus.Approved, 
+                    NoteStatus.Rejected,
+                    NoteStatus.Void,
+                    NoteStatus.Returned
+                }));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
@@ -106,7 +109,7 @@
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note scheme request from note's Guid
-                var model = await GetNote(pcsId, evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -123,7 +126,7 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status);
+                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
 

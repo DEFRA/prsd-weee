@@ -7,19 +7,23 @@
     using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
 
-    public class GetEvidenceNotesForTransferRequest : IRequest<List<EvidenceNoteData>>
+    public class GetEvidenceNotesForTransferRequest : IRequest<IList<EvidenceNoteData>>
     {
         public Guid OrganisationId { get; protected set; }
 
         public List<int> Categories { get; private set; }
 
-        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories)
+        public List<Guid> EvidenceNotes { get; private set; }
+
+        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories, List<Guid> evidenceNotes = null)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();
 
             OrganisationId = organisationId;
             Categories = categories;
+
+            EvidenceNotes = evidenceNotes ?? new List<Guid>();
         }
     }
 }
