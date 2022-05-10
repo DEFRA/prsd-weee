@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Api.Client;
     using AutoFixture;
     using Core.AatfEvidence;
@@ -26,6 +23,7 @@
         protected readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly BreadcrumbService Breadcrumb;
         protected readonly IWeeeCache Cache;
+        protected readonly ISessionService SessionService;
         protected readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> CreateRequestCreator;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> EditRequestCreator;
         protected readonly Fixture Fixture;
@@ -39,13 +37,14 @@
             Breadcrumb = A.Fake<BreadcrumbService>();
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
+            SessionService = A.Fake<ISessionService>();
             CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
             EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator, SessionService);
         }
 
         protected void AddModelError()

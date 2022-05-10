@@ -52,6 +52,7 @@
         [InlineData("ReceivedId", "Recipient")]
         [InlineData("ProtocolValue", "Actual or protocol")]
         [InlineData("WasteTypeValue", "Type of waste")]
+        [InlineData("SelectedSchemeName", "Recipient")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
             typeof(EditEvidenceNoteViewModel)
