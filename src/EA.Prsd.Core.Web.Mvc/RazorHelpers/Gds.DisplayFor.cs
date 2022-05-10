@@ -1,16 +1,12 @@
 ﻿namespace EA.Prsd.Core.Web.Mvc.RazorHelpers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.Routing;
 
     public partial class Gds<TModel>
     {
-        public MvcHtmlString DisplayFor<TValue>(Expression<Func<TModel, TValue>> expression, string value)
+        public MvcHtmlString DisplayFor<TValue>(Expression<Func<TModel, TValue>> expression, string value, string widthCss = "govuk-grid-column-one-third")
         {
             var modelMetadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
             var labelSpan = new TagBuilder("span");
@@ -20,7 +16,7 @@
                             ?? modelMetadata.PropertyName;
 
             labelSpan.AddCssClass("govuk-label--s");
-            labelSpan.AddCssClass("govuk-grid-column-one-third");
+            labelSpan.AddCssClass(widthCss);
 
             labelSpan.Attributes.Add("for",
                 htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(spanName));

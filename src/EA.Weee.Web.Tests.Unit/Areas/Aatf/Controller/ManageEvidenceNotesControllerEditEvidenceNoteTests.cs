@@ -12,7 +12,6 @@
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
-    using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
@@ -35,7 +34,7 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -311,7 +310,7 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
                 .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
         }
 
