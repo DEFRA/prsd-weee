@@ -22,7 +22,7 @@
                 <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter">
                     @Html.DisplayNameFor(m => m.Reason)
                 </span>
-                <span aria-labelledby="reason-label" class="govuk-body govuk-grid-column-two-thirds govuk-!-padding-left-0 govuk-!-margin-bottom-0" style="word-break: break-word" maxlength="200">
+                <span aria-labelledby="reason-label" class="govuk-body govuk-grid-column-two-thirds govuk-!-padding-left-0 govuk-!-margin-bottom-0 weee-word-break" maxlength="200">
                     @Html.DisplayTextFor(m => m.Reason)
                 </span>
             </div>
@@ -49,7 +49,7 @@
             </div>
         }
 
-        @if (Model.HasReturnedDate)
+        @if (Model.HasBeenReturned)
         {
             <div class="govuk-grid-row govuk-!-margin-bottom-1">
                 @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
