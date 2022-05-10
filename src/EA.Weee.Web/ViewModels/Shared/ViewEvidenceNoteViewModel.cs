@@ -35,7 +35,7 @@
 
         public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
 
-        public bool HasReturnedDate => Status.Equals(NoteStatus.Returned);
+        public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
 
         public Guid SchemeId { get; set; }
 
