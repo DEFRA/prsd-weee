@@ -17,15 +17,15 @@
         public bool TransferAllTonnage { get; set; }
 
         public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
-            TransferEvidenceNoteRequest transferRequest,
+            TransferEvidenceNoteRequest request,
             Guid organisationId)
         {
             Condition.Requires(notes).IsNotNull();
-            Condition.Requires(transferRequest).IsNotNull();
+            Condition.Requires(request).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
             Notes = notes;
-            Request = transferRequest;
+            Request = request;
             OrganisationId = organisationId;
         }
     }
