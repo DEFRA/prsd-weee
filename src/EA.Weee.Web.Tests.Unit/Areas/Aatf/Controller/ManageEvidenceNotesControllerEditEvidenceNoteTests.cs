@@ -320,5 +320,65 @@
             typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
         }
+
+        //[Fact]
+        //public async Task CreateEvidenceNotePost_GivenCopyPasteAction_Should_RedirectToCopyPaste()
+        //{
+        //    //Arrange
+        //    var model = ValidModel();
+        //    model.Action = ActionEnum.CopyAndPaste;
+
+        //    //Act
+        //    var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+        //    //assert
+        //    result.RouteValues["action"].Should().Be("Index");
+        //    result.RouteValues["controller"].Should().Be(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
+        //    result.RouteValues["organisationId"].Should().Be(OrganisationId);
+        //    result.RouteValues["returnAction"].Should().Be(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction);
+        //}
+
+        //[Fact]
+        //public async Task CreateEvidenceNotePost_NotGivenCopyPasteAction_ShouldNot_RedirectToCopyPaste()
+        //{
+        //    //Arrange
+        //    var model = ValidModel();
+        //    model.Action = ActionEnum.Submit;
+
+        //    //Act
+        //    var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+        //    //assert
+        //    result.RouteValues["controller"].Should().NotBe(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
+        //    result.RouteValues["returnAction"].Should().NotBe(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction);
+        //}
+
+        //[Fact]
+        //public async Task CreateEvidenceNotePost_GivenCopyPasteAction_Should_CallSessionService()
+        //{
+        //    //Arrange
+        //    var model = ValidModel();
+        //    model.Action = ActionEnum.CopyAndPaste;
+
+        //    //Act
+        //    var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+        //    //Assert
+        //    A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustHaveHappenedOnceExactly();
+        //}
+
+        //[Fact]
+        //public async Task CreateEvidenceNotePost_NotGivenCopyPasteAction_ShouldNot_CallSessionService()
+        //{
+        //    //Arrange
+        //    var model = ValidModel();
+        //    model.Action = ActionEnum.Submit;
+
+        //    //Act
+        //    var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+        //    //Assert
+        //    A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustNotHaveHappened();
+        //}
     }
 }
