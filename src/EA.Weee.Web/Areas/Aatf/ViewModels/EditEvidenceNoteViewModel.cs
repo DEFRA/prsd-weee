@@ -8,21 +8,22 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
+    using Core.Validation;
     using Web.ViewModels.Shared;
 
     public class EditEvidenceNoteViewModel : EvidenceNoteViewModel
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [DataType(DataType.Date, ErrorMessage = "Start date must be in the dd/mm/yyyy format")]
         [EvidenceNoteStartDate(nameof(EndDate))]
+        [DataType(DataType.Date)]
         public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
         [EvidenceNoteEndDate(nameof(StartDate))]
-        public override DateTime EndDate { get; set; }
+        public override DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Select a recipient")]
         [Display(Name = "Recipient")]

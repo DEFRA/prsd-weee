@@ -22,33 +22,15 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
-                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, placeholder = "dd/mm/yyyy", autocomplete = "off" }, false, "{0:yyyy-MM-dd}")
-                    
-                    @if (Model.StartDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, placeholder = "hello" })
-                    }
-                    else
-                    {
-                        @*@Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString }, false, "{0:yyyy-MM-dd}")*@
-                    }
+                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete="off" }, false, "{0:yyyy-MM-dd}")
                 </div>
-
             </div>
 
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EndDate)">
                     @Html.Gds().LabelFor(m => m.EndDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.EndDate)
-
-                    @if (Model.EndDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off" }, false, "{0:yyyy-MM-dd}")
                 </div>
             </div>
         </div>
