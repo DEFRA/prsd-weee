@@ -39,7 +39,7 @@
             return model;
         }
 
-        private static void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
+        private void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
             TransferEvidenceTonnageViewModel model)
         {
             foreach (var category in model.CategoryValues)
@@ -66,26 +66,29 @@
         {
             foreach (var viewModel in models)
             {
-                var evidenceNoteData = source.Notes.First(n => n.Id.Equals(viewModel.Id));
+                var evidenceNoteData = source.Notes.FirstOrDefault(n => n.Id.Equals(viewModel.Id));
 
-                foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
+                if (evidenceNoteData != null)
                 {
-                    var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
+                    foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
                     {
-                        Id = evidenceTonnageData.Id,
-                    };
+                        var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
+                        {
+                            Id = evidenceTonnageData.Id,
+                        };
 
-                    if (source.TransferAllTonnage)
-                    {
-                        tonnage.Received = evidenceTonnageData.Received.HasValue
-                            ? evidenceTonnageData.Received.ToTonnageDisplay()
-                            : null;
-                        tonnage.Reused = evidenceTonnageData.Reused.HasValue
-                            ? evidenceTonnageData.Reused.ToTonnageDisplay()
-                            : null;
+                        if (source.TransferAllTonnage)
+                        {
+                            tonnage.Received = evidenceTonnageData.Received.HasValue
+                                ? evidenceTonnageData.Received.ToTonnageDisplay()
+                                : null;
+                            tonnage.Reused = evidenceTonnageData.Reused.HasValue
+                                ? evidenceTonnageData.Reused.ToTonnageDisplay()
+                                : null;
+                        }
+
+                        model.TransferCategoryValues.Add(tonnage);
                     }
-
-                    model.TransferCategoryValues.Add(tonnage);
                 }
             }
         }
