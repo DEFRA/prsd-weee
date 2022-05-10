@@ -114,7 +114,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoteStatusIsReturnedAndSchemeChanged_ShouldThrowInvalidOperationException()
+        public async Task HandleAsync_EnsureTheSchemeNotChanged_GivenNoteStatusIsReturnedAndSchemeChanged_ShouldThrowInvalidOperationException()
         {
             //arrange 
             A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
