@@ -196,15 +196,18 @@
             var result = map.Map(source);
 
             //assert
-            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
             result.TransferCategoryValues.ElementAt(0).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(0).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(1).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
             result.TransferCategoryValues.ElementAt(2).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(3).Received.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(3).Reused.Should().BeNull();
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }
@@ -220,15 +223,18 @@
             var result = map.Map(source);
 
             //assert
-            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
-            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("10.000");
-            result.TransferCategoryValues.ElementAt(0).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
-            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("12.000");
-            result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("4.000");
-            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
-            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("2.000");
-            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("1.000");
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("12.000");
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("4.000");
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("2.000");
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("1.000");
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("10.000");
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(3).Received.Should().Be("2.000");
+            result.TransferCategoryValues.ElementAt(3).Reused.Should().Be("1.000");
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }
@@ -320,6 +326,7 @@
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
                         new List<EvidenceTonnageData>()
                         {
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1),
                             new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
                                 null),
                             new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4)
@@ -339,14 +346,18 @@
                         {
                             new EvidenceCategoryValue(WeeeCategory.AutomaticDispensers)
                         })
-                    .With(n => n.Id, noteId1)
+                    .With(n => n.Id, noteId2)
+                    .With(n => n.SubmittedBy, "Z")
                     .Create(),
                 fixture.Build<ViewEvidenceNoteViewModel>().With(v => v.CategoryValues,
                         new List<EvidenceCategoryValue>()
                         {
+                            new EvidenceCategoryValue(WeeeCategory.AutomaticDispensers),
                             new EvidenceCategoryValue(WeeeCategory.GasDischargeLampsAndLedLightSources),
                             new EvidenceCategoryValue(WeeeCategory.MedicalDevices)
-                        }).With(n => n.Id, noteId2)
+                        })
+                    .With(n => n.SubmittedBy, "A")
+                    .With(n => n.Id, noteId1)
                     .Create()
             };
 
