@@ -14,9 +14,12 @@
 
         public FilterViewModel FilterViewModel { get; set; }
 
+        public SubmittedDatesFilterViewModel SubmittedDatesFilterViewModel { get; set; }
+
         public ManageEvidenceNoteViewModel()
         {
             FilterViewModel = new FilterViewModel();
+            SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel();
         }
     }
 }
