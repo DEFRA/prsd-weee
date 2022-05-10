@@ -20,9 +20,12 @@
                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
 
                 <section class="govuk-tabs__panel" id="allOtherNotes">
-                    
+
                     @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                        new ViewDataDictionary(){ new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+                        new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+
+                    @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchBySubmittedDatesPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                      new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
 
                     <table id="all-other-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">All other evidence notes</caption>
@@ -90,7 +93,7 @@
                             {
                                 <tr>
                                     <td colspan="6">
-                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_NoResultsPartial.cshtml", Model, new ViewDataDictionary(){new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
+                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
                                     </td>
                                 </tr>
                                 <tr>
