@@ -116,7 +116,7 @@
             var viewEvidenceNoteViewModel = fixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
 
             var request = fixture.Build<TransferEvidenceNoteRequest>()
-                .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+                .With(e => e.CategoryIds, new List<int>() { WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 
             var organisationId = fixture.Create<Guid>();
 
@@ -193,6 +193,7 @@
         [Fact]
         public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsFalse_TransferTonnageCategoriesShouldBeSet()
         {
+            //arrange
             var source = SetupTransferTonnages(out var viewEvidenceNoteViewModels);
 
             //act
@@ -210,6 +211,99 @@
             result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
+        }
+
+        [Fact]
+        public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsTrue_TransferTonnageCategoriesShouldBeSet()
+        {
+            //arrange
+            var source = SetupTransferTonnages(out var viewEvidenceNoteViewModels);
+            source.TransferAllTonnage = true;
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("2.000");
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("1.000");
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("10.000");
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("12.000");
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("4.000");
+            result.TransferCategoryValues.Count.Should()
+                .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
+        }
+
+        [Fact]
+        public void Map_GivenCategoriesAndEvidenceNoteTonnage_TotalsShouldBeInitialised()
+        {
+            //arrange
+            var source = SetupTotals();
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
+            result.CategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
+        }
+
+        [Fact]
+        public void Map_GivenCategoriesAndEvidenceNoteTonnageAndTransferAllTonnageIsSelected_TotalsShouldBeInitialised()
+        {
+            //arrange
+            var source = SetupTotals();
+            source.TransferAllTonnage = true;
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("3.000");
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("6.000");
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("15.000");
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("17.000");
+            result.CategoryValues.Count.Should().Be(2);
+        }
+
+        private TransferEvidenceNotesViewModelMapTransfer SetupTotals()
+        {
+            var notes = new List<EvidenceNoteData>()
+            {
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                {
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, 3, 2),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10, 7),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.LargeHouseholdAppliances, 100, 700)
+                }).Create(),
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                {
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, null, 4),
+                }).Create(),
+                fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                {
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 10),
+                }).Create()
+            };
+
+            var viewEvidenceNoteViewModel = fixture.Create<ViewEvidenceNoteViewModel>();
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._))
+                .Returns(viewEvidenceNoteViewModel);
+
+            var request = fixture.Build<TransferEvidenceNoteRequest>()
+                .With(e => e.CategoryIds,
+                    new List<int>()
+                    {
+                        WeeeCategory.ITAndTelecommsEquipment.ToInt(), WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt()
+                    }).Create();
+
+            var organisationId = fixture.Create<Guid>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            return source;
         }
 
         private TransferEvidenceNotesViewModelMapTransfer SetupTransferTonnages(out List<ViewEvidenceNoteViewModel> viewEvidenceNoteViewModels)
@@ -265,29 +359,6 @@
             return source;
         }
 
-        [Fact]
-        public void Map_GivenSourceEvidenceListsWithTonnageAndTransferAllTonnageIsTrue_TransferTonnageCategoriesShouldBeSet()
-        {
-            var source = SetupTransferTonnages(out var viewEvidenceNoteViewModels);
-            source.TransferAllTonnage = true;
-
-            //act
-            var result = map.Map(source);
-
-            //assert
-            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
-            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("2.000");
-            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("1.000");
-            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
-            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("10.000");
-            result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
-            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("12.000");
-            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("4.000");
-            result.TransferCategoryValues.Count.Should()
-                .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
-        }
-
         private TransferEvidenceNotesViewModelMapTransfer GetTransferObject()
         {
             var notes = new List<EvidenceNoteData>()
@@ -311,7 +382,7 @@
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             var request = fixture.Build<TransferEvidenceNoteRequest>()
-                .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ConsumerEquipment.ToInt(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+                .With(e => e.CategoryIds, new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 
             var organisationId = fixture.Create<Guid>();
 
