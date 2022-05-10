@@ -9,6 +9,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
+    [Serializable]
     public class EvidenceNoteViewModel
     {
         private readonly ICategoryValueTotalCalculator categoryValueCalculator;
