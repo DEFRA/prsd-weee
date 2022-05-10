@@ -120,9 +120,6 @@
                         case NoteStatus.Returned:
                             model.SuccessMessage = $"You have returned the evidence note with reference ID E{note.Reference}";
                             break;
-                        case NoteStatus.Rejected:
-                            model.SuccessMessage = $"You have rejected the evidence note with reference ID E{note.Reference}";
-                            break;
                     }
 
                     model.Status = status;
