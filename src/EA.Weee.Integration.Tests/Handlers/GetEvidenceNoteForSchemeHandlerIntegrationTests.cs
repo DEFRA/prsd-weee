@@ -116,6 +116,57 @@
         }
 
         [Component]
+        public class WhenIGetAReturnedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+     
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .WithRecipient(scheme.Id)
+                     .With(n =>
+                     {
+                         n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), "reason returned");
+                     })
+                    .Create();
+
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Returned);
+                result.Reason.Should().Be("reason returned");
+                result.ReturnedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).ChangedDate);
+            };
+        }
+
+        [Component]
         public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>

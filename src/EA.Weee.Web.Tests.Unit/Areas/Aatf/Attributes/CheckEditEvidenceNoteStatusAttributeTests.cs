@@ -11,7 +11,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
@@ -140,6 +139,22 @@
             //arrange
             var note = fixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Draft;
+
+            //act
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+
+            //assert
+            var result = Record.Exception(() => attribute.OnActionExecuting(context));
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEvidenceNoteIdIsReturned_NoExceptionExpected()
+        {
+            //arrange
+            var note = fixture.Create<EvidenceNoteData>();
+            note.Status = NoteStatus.Returned;
 
             //act
             A.CallTo(() => client.SendAsync(A<string>._,
