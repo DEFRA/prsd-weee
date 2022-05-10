@@ -7,7 +7,7 @@
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<EvidenceTonnageValueCopyPasteController>(a => a.Index(Model.OrganisationId, Model.Action, true))))
-    <header class="hgroup">
+    <header class="hgroup govuk-!-padding-top-5">
         <div>
             <h1 class="govuk-heading-l">WEEE received for treatment</h1>
         </div>
@@ -21,6 +21,7 @@
     <p class="govuk-body">
         Data entered here will be interpreted as category 1 at the top through to category 14 at the bottom
     </p>
+    <div class="govuk-!-margin-top-6"></div>
     @using (Html.BeginForm("Index", "EvidenceTonnageValueCopyPaste", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -33,10 +34,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
         <div class="govuk-heading-s">@Html.LabelFor(m => m.ReceievedPastedValues)</div>
+        <div class="govuk-!-margin-top-5"></div>
                 @Html.TextAreaFor(m => m.ReceievedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;", @placeholder = "Paste values here" })
             </div>
     <div class="govuk-grid-column-one-half">
         <div class="govuk-heading-s">@Html.LabelFor(m => m.ReusedPastedValues)</div>
+        <div class="govuk-!-margin-top-5"></div>
                 @Html.TextAreaFor(m => m.ReusedPastedValues, htmlAttributes: new { @class = "govuk-textarea govuk-!-width-three-quarters", @title = "Paste values here", @style = "height: 400px;", @placeholder = "Paste values here" })
             </div>
 </div>
