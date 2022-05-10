@@ -25,6 +25,8 @@
                 ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source)
             };
 
+            model.ViewEvidenceNoteViewModel.DisplayH2Title = true;
+
             return model;
         }
     }
