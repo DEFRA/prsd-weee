@@ -49,7 +49,7 @@
             </div>
         }
 
-        @if (Model.HasReturnedDate)
+        @if (Model.HasBeenReturned)
         {
             <div class="govuk-grid-row govuk-!-margin-bottom-1">
                 @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
