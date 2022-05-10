@@ -112,6 +112,7 @@
     <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
+    <Compile Include="Aatf\EvidencePastedValues.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
