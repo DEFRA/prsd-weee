@@ -35,13 +35,13 @@
             @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
             {
                 <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-                    <span class="govuk-label--s govuk-grid-column-one-quarter" style="width:200px">
-                        @Html.DisplayNameFor(m => m.Reason)
+                   <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter" style="width:198px">
+                            @Html.DisplayNameFor(m => m.Reason)
+                   </span>
+                    <span aria-labelledby="reason-label" class="govuk-grid-column-three-quarters govuk-body" style="word-break: break-word" maxlength="200">
+                            @Html.DisplayTextFor(m => m.Reason)
                     </span>
-                    <span class="govuk-grid-column-three-quarters govuk-body" style="word-break: break-word" maxlength="200">
-                        @Html.DisplayTextFor(m => m.Reason)
-                    </span>
-                </div>
+               </div>
             }
 
         </div>
