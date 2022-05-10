@@ -278,6 +278,18 @@
             }
         }
 
+        //[Fact]
+        //public void ParseEvidencePastedValues_GivenPastedDataAndExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
+        //{
+
+        //}
+
+        //[Fact]
+        //public void ParseEvidencePastedValues_GivenPastedDataAndNoExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
+        //{
+
+        //}
+
         private ObligatedPastedValues CreateObligatedPastedData(out ObligatedCategoryValues existingData, bool includeb2b = true, bool includeb2c = true)
         {
             var pastedB2bValues = new PastedValues();
