@@ -136,6 +136,22 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
+        {
+            using (var client = this.apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                }
+
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
+
+                return this.View("TransferTonnage", updatedModel);
+            }
+        }
+
         private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, IWeeeClient client)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -156,22 +172,6 @@
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
 
             return model;
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
-        {
-            using (var client = this.apiClient())
-            {
-                if (ModelState.IsValid)
-                {
-                }
-
-                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
-
-                return this.View("TransferTonnage", updatedModel);
-            }
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
