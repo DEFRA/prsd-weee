@@ -70,7 +70,7 @@
 
                 if (evidenceNoteData != null)
                 {
-                    foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
+                    foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData.OrderBy(c => c.CategoryId.ToInt()))
                     {
                         var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
                         {
