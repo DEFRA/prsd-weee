@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
+    using Areas.Aatf.ViewModels;
+    using Core.AatfEvidence;
+    using Core.Helpers;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Areas.Aatf.ViewModels;
-    using Core.AatfEvidence;
-    using Core.Helpers;
 
     [Serializable]
     public class EvidenceNoteViewModel
@@ -47,7 +47,7 @@
 
         public int Reference { get; set; }
 
-        [DisplayName("Reason for return")]
+        [DisplayName("Reason")]
         public string Reason { get; set; }
 
         public EvidenceNoteViewModel()

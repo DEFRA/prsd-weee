@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using AatfReturn;
     using Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
+    using System;
+    using System.Collections.Generic;
     using User;
 
     public partial class Note : Entity
