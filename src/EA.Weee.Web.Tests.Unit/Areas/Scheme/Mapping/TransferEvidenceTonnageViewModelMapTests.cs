@@ -114,12 +114,8 @@
             };
 
             var viewEvidenceNoteViewModel = fixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
-
-            var request = fixture.Build<TransferEvidenceNoteRequest>()
-                .With(e => e.CategoryIds, new List<int>() { WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
-
+            var request = DefaultRequest();
             var organisationId = fixture.Create<Guid>();
-
             var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
 
             A.CallTo(() =>
@@ -165,7 +161,7 @@
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>(4).ToList();
-            var request = fixture.Create<TransferEvidenceNoteRequest>();
+            var request = DefaultRequest();
             var organisationId = fixture.Create<Guid>();
 
             var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
@@ -224,15 +220,15 @@
             var result = map.Map(source);
 
             //assert
-            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
-            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("2.000");
-            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("1.000");
-            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
-            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("10.000");
-            result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
-            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("12.000");
-            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("4.000");
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("10.000");
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("12.000");
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("4.000");
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("2.000");
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be("1.000");
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }
@@ -381,12 +377,20 @@
                             v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
-            var request = fixture.Build<TransferEvidenceNoteRequest>()
-                .With(e => e.CategoryIds, new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+            var request = DefaultRequest();
 
             var organisationId = fixture.Create<Guid>();
 
             return new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+        }
+
+        private TransferEvidenceNoteRequest DefaultRequest()
+        {
+            var request = fixture.Build<TransferEvidenceNoteRequest>()
+                .With(e => e.CategoryIds,
+                    new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.ITAndTelecommsEquipment.ToInt() })
+                .Create();
+            return request;
         }
     }
 }
