@@ -58,7 +58,7 @@
                 <div class="govuk-grid-column-full govuk-!-padding-left-0">
                     @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                     @Html.HiddenFor(m => m.ReceivedId)
-                    <p aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</p>
+                    <p aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</p>
                 </div>
                 }
                 else
