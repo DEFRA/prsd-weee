@@ -239,18 +239,24 @@
                 Status = NoteStatus.Returned
             };
 
-            model.HasReturnedDate.Should().BeTrue();
+            model.HasBeenReturned.Should().BeTrue();
         }
 
-        [Fact]
-        public void HasReturnedDate_GivenStatusIsReturned_ShouldReturnFalse()
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void HasReturnedDate_GivenStatusIsNotReturned_ShouldReturnFalse(NoteStatus status)
         {
+            if (status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
             var model = new ViewEvidenceNoteViewModel()
             {
-                Status = NoteStatus.Submitted
+                Status = status
             };
 
-            model.DisplayReason.Should().BeFalse();
+            model.HasBeenReturned.Should().BeFalse();
         }
 
         [Theory]
@@ -303,7 +309,7 @@
         [InlineData(" ")]
         [InlineData("")]
         [InlineData(null)]
-        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsPopulated_ShouldReturnFalse(string reason)
+        public void DisplayReason_GivenStatusIsNotSubmittedAndReasonIsNullOrEmpty_ShouldReturnFalse(string reason)
         {
             var model = new ViewEvidenceNoteViewModel()
             {
