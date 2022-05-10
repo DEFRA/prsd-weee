@@ -62,6 +62,8 @@
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
             result.ProtocolValue.Should().Be(source.NoteData.Protocol);
+            result.Reason.Should().Be(source.NoteData.Reason);
+            result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -129,6 +131,23 @@
             result.WasteTypeValue.Should().Be(source.ExistingModel.WasteTypeValue);
             result.ProtocolValue.Should().Be(source.ExistingModel.ProtocolValue);
             result.CategoryValues.Should().BeEquivalentTo(source.ExistingModel.CategoryValues);
+            result.Reason.Should().Be(source.ExistingModel.Reason);
+            result.SelectedSchemeName.Should().BeNullOrEmpty();
+        }
+        [Fact]
+        public void Map_GivenSourceSchemesContainRecipientId_SelectedSchemeNameShouldBeMapped()
+        {
+            //arrange
+            var source = fixture.Create<EditNoteMapTransfer>();
+            source.ExistingModel = null;
+            var recipientId = source.NoteData.RecipientId;
+            source.Schemes[0].Id = recipientId;
+           
+            //act
+            var result = map.Map(source);
+
+            // assert
+            result.SelectedSchemeName.Should().Be(source.Schemes[0].SchemeNameDisplay);
         }
     }
 }
