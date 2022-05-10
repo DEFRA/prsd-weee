@@ -31,7 +31,6 @@
                         @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
                     }
                 </div>
-
             </div>
 
             <div class="govuk-grid-column-one-half">
@@ -51,14 +50,14 @@
             </div>
         </div>
 
-        <div class="govuk-grid-row govuk-!-padding-top-3">
+        <div class="govuk-grid-row govuk-!-padding-top-3" >
             <div class="govuk-grid-column-one-half">
                 @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
                 {
-                <div class="govuk-grid-column-full govuk-!-padding-left-0">
+                <div class="govuk-grid-column-full govuk-!-padding-left-0 govuk-!-padding-bottom-0 govuk-!-margin-0" >
                     @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                     @Html.HiddenFor(m => m.ReceivedId)
-                    <p aria-labelledby="recipient" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</p>
+                    <span aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</span>
                 </div>
                 }
                 else
@@ -104,7 +103,7 @@
                 </p>
             </div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19 govuk-!-padding-top-5" style="padding-left: 1em">
-                <button aria-hidden="true" class="link-submit govuk-link govuk-link--no-visited-state" type="submit" name="Action" value="@ActionEnum.CopyAndPaste" tabindex="-1">Use copy and paste to populate the table</button>
+                <button aria-hidden="true" class="link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-top-5" style="float: right" type="submit" name="Action" value="@ActionEnum.CopyAndPaste" tabindex="-1">Use copy and paste to populate the table</button>
             </div>
             <label for="CategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" class="govuk-visually-hidden" />
             @Html.Gds().ValidationMessageFor(m => m.CategoryValues)
