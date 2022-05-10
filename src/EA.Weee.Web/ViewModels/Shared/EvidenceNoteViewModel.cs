@@ -22,7 +22,7 @@
         public virtual DateTime? StartDate { get; set; }
 
         [Display(Name = "End date")]
-        public virtual DateTime EndDate { get; set; }
+        public virtual DateTime? EndDate { get; set; }
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 

@@ -1,8 +1,7 @@
 ﻿$
     (function () {
-        $("#StartDate").datepicker({
+        $(".jquery-datepicker").datepicker({
             showOn: "button",
-
             buttonText: "",
             dayNamesShort: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             showButtonPanel: true,
@@ -17,16 +16,13 @@
         }).addClass("weee-calendar-button")
             .append('<span class="sr-only">select date</span><i class="fa fa-calendar" aria-hidden="true" title="search date"></i>');
            
-
         // Add aria-describedby to the button referring to the label
         var id = $(".ui-datepicker-trigger").prevAll("label").first().attr("id");
 
         $(".ui-datepicker-trigger").attr("aria-describedby", id);
 
         dayTripper();
-
-    })
-    ;
+    });
 
 
 function dayTripper() {
