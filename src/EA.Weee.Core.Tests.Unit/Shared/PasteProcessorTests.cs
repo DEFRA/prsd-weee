@@ -3,9 +3,12 @@
     using AutoFixture;
     using Core.AatfReturn;
     using Core.Shared;
+    using EA.Weee.Core.Aatf;
+    using EA.Weee.Core.AatfEvidence;
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 
@@ -278,17 +281,38 @@
             }
         }
 
-        //[Fact]
-        //public void ParseEvidencePastedValues_GivenPastedDataAndExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
-        //{
+        [Fact]
+        public void ParseEvidencePastedValues_GivenPastedDataAndExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            var existingData = A.Fake<IList<EvidenceCategoryValue>>();
+            var evidencePastedValues = CreateEvidencePastedData();
 
-        //}
+            foreach (var item in existingData)
+            {
+                item.Id = Guid.NewGuid();
+            }
 
-        //[Fact]
-        //public void ParseEvidencePastedValues_GivenPastedDataAndNoExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
-        //{
+            var results = pasteProcessor.ParseEvidencePastedValues(evidencePastedValues, existingData);
 
-        //}
+            foreach (var result in results)
+            {
+                result.Id.Should().Be(existingData.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
+            }
+        }
+
+        [Fact]
+        public void ParseEvidencePastedValues_GivenPastedDataAndNoExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
+        {
+            var evidencePastedValues = CreateEvidencePastedData();
+
+            var result = pasteProcessor.ParseEvidencePastedValues(evidencePastedValues, null);
+
+            for (var i = 0; i < result.Count; i++)
+            {
+                result[i].Received.Should().Be(evidencePastedValues.Receieved.FirstOrDefault(x => x.CategoryId == result[i].CategoryId).Tonnage);
+                result[i].Reused.Should().Be(evidencePastedValues.Reused.FirstOrDefault(x => x.CategoryId == result[i].CategoryId).Tonnage);
+            }
+        }
 
         private ObligatedPastedValues CreateObligatedPastedData(out ObligatedCategoryValues existingData, bool includeb2b = true, bool includeb2c = true)
         {
@@ -331,6 +355,24 @@
             }
 
             return pastedValues;
+        }
+
+        private EvidencePastedValues CreateEvidencePastedData()
+        {
+            var evidencePastedValues = new EvidencePastedValues();
+            var receivedPastedValues = new PastedValues();
+            var reusedPastedValues = new PastedValues();
+
+            for (var i = 0; i < receivedPastedValues.Count; i++)
+            {
+                receivedPastedValues[i].Tonnage = fixture.Create<int>().ToString();
+                reusedPastedValues[i].Tonnage = fixture.Create<int>().ToString();
+            }
+
+            evidencePastedValues.Reused = reusedPastedValues;
+            evidencePastedValues.Receieved = receivedPastedValues;
+
+            return evidencePastedValues;
         }
 
         private static void AssertEmptyValues(PastedValues result)
