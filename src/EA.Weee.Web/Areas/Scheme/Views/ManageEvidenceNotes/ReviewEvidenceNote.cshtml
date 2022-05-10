@@ -52,8 +52,11 @@
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
-
+}
+@section scripts{
     <script type="text/javascript">
-        initReviewEvidenceNote();
+        $(document).ready(function () {
+            initReviewEvidenceNote();
+        });
     </script>
 }

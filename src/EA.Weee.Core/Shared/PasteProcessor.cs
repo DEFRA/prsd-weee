@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Core.Shared
 {
     using Core.AatfReturn;
+    using EA.Weee.Core.Aatf;
+    using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,6 +80,19 @@
             foreach (var category in categoryValues)
             {
                 category.Tonnage = nonObligatedPastedValues.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+            }
+
+            return categoryValues;
+        }
+
+        public IList<EvidenceCategoryValue> ParseEvidencePastedValues(EvidencePastedValues evidencePastedValues, IList<EvidenceCategoryValue> existingData)
+        {
+            var categoryValues = (existingData != null) ? existingData : new EvidenceCategoryValues();
+
+            foreach (var category in categoryValues)
+            {
+                category.Received = evidencePastedValues.Receieved.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
+                category.Reused = evidencePastedValues.Reused.Where(o => o.CategoryId == category.CategoryId).FirstOrDefault().Tonnage;
             }
 
             return categoryValues;

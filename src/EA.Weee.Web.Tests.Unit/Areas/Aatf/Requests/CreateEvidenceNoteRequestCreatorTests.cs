@@ -11,7 +11,6 @@
     using Web.Areas.Aatf.Requests;
     using Web.Areas.Aatf.ViewModels;
     using Web.Extensions;
-    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
@@ -231,6 +230,40 @@
             request.Protocol.Should().Be(null);
             request.Status.Should().Be(NoteStatus.Draft);
             ShouldContainTonnage(tonnageValues, request);
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenSaveAndViewModelStatusIsNotSet_CreateEvidenceNoteRequestShouldBeCreatedWithDraftStatus()
+        {
+            //arrange
+            var id = fixture.Create<Guid>();
+            var model = ValidModel();
+            model.Id = id;
+            model.Status = 0;
+            model.Action = ActionEnum.Save;
+
+            //act
+            var request = requestCreator.ViewModelToRequest(model);
+
+            //assert
+            request.Status.Should().Be(NoteStatus.Draft);
+        }
+
+        [Fact]
+        public void ViewModelToRequest_GivenSaveAndViewModelStatusIsSet_CreateEvidenceNoteRequestShouldBeCreatedWithCorrectStatus()
+        {
+            //arrange
+            var id = fixture.Create<Guid>();
+            var model = ValidModel();
+            model.Id = id;
+            model.Status = NoteStatus.Returned;
+            model.Action = ActionEnum.Save;
+
+            //act
+            var request = requestCreator.ViewModelToRequest(model);
+
+            //assert
+            request.Status.Should().Be(NoteStatus.Returned);
         }
 
         private EditEvidenceNoteViewModel ValidModel()
