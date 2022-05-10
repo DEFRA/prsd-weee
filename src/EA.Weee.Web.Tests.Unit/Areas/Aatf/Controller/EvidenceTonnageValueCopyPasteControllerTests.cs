@@ -2,10 +2,16 @@
 {
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.Controllers;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.Areas.AatfEvidence.Controllers;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using FluentAssertions;
+    using System;
     using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Xunit;
 
     public class EvidenceTonnageValueCopyPasteControllerTests
@@ -15,6 +21,7 @@
         private readonly IWeeeCache cache;
         private readonly ISessionService sessionService;
         private readonly IPasteProcessor pasteProcessor;
+        private readonly Guid organisationId;
 
         public EvidenceTonnageValueCopyPasteControllerTests()
         {
@@ -23,39 +30,63 @@
             sessionService = A.Fake<ISessionService>();
             pasteProcessor = A.Fake<IPasteProcessor>();
 
+            organisationId = new Guid();
+
             evidenceTonnageValueCopyPasteController = new EvidenceTonnageValueCopyPasteController(breadcrumb, cache, sessionService, pasteProcessor);
         }
 
-        //[Fact]
-        //public void IndexGet_IsDecoratedWith_HttpGetAttribute()
-        //{
+        [Fact]
+        public void EvidenceTonnageValueCopyPasteControllerInheritsExternalSiteController()
+        {
+            typeof(EvidenceTonnageValueCopyPasteController).BaseType.Name.Should().Be(nameof(AatfEvidenceBaseController));
+        }
 
-        //}
+        [Fact]
+        public void IndexGet_IsDecoratedWith_HttpGetAttribute()
+        {
+            typeof(EvidenceTonnageValueCopyPasteController).GetMethod("Index", new[] { typeof(Guid), typeof(string), typeof(bool) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
 
-        //[Fact]
-        //public void IndexPost_IsDecoratedWith_HttpPostAttribute()
-        //{
+        [Fact]
+        public void IndexPost_IsDecoratedWith_HttpPostAttribute()
+        {
+            typeof(EvidenceTonnageValueCopyPasteController).GetMethod("Index", new[] { typeof(EvidenceTonnageValueCopyPasteViewModel) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
 
-        //}
+        [Fact]
+        public void IndexPost_IsDecoratedWith_AntiForgeryAttribute()
+        {
+            typeof(EvidenceTonnageValueCopyPasteController).GetMethod("Index", new[] { typeof(EvidenceTonnageValueCopyPasteViewModel) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
 
-        //[Fact]
-        //public void IndexPost_IsDecoratedWith_AntiForgeryAttribute()
-        //{
+        [Fact]
+        public async Task IndexGet_Calls_SetBreadcrumb()
+        {
+            //arrange
+            var organisationName = Faker.Company.Name();
 
-        //}
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
-        //[Fact]
-        //public async Task IndexGet_Calls_SetBreadcrumb()
-        //{
+            //act
+            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, true);
 
+            //assert
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
 
-        //}
+        [Fact]
+        public async Task IndexGet_RetrievesEvidenceModelSessionObject()
+        {
+            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, true);
 
-        //[Fact]
-        //public async Task IndexGet_RetrievesEvidenceModelSessionObject()
-        //{
-
-        //}
+            A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(evidenceTonnageValueCopyPasteController.Session,
+                SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
+        }
 
         //[Fact]
         //public async Task IndexGet_OnRedirectIsFalse_CreatesModelAndReturnsView()
