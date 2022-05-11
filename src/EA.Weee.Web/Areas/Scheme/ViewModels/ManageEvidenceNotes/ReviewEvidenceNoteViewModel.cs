@@ -48,7 +48,7 @@
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (this.SelectedEnumValue == NoteStatus.Approved && string.IsNullOrEmpty(this.Reason))
+            if (this.SelectedEnumValue == NoteStatus.Approved && !string.IsNullOrEmpty(this.Reason))
             {
                 yield return new ValidationResult("A reason can only be entered if you are rejecting or returning the evidence note. Delete any text you have entered.");
             }
