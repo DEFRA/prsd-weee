@@ -337,6 +337,22 @@
          }
 
         [Fact]
+        public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Rejected);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be(
+                    $"You have rejected the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
         public void Map_GivenNoteStatusReturned_SuccessMessageShouldBeShown()
         {
             //arrange
@@ -348,7 +364,7 @@
             //assert
             result.SuccessMessage.Should()
                 .Be(
-                    $"You have successfully saved the evidence note with reference ID E{ source.EvidenceNoteData.Reference} as a returned note");
+                    $"You have returned the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
 

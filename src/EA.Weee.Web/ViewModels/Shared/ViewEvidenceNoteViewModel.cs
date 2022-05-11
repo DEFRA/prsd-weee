@@ -33,15 +33,15 @@
 
         public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);
 
+        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
+
+        public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
+
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
 
         public string TotalReceivedDisplay { get; set; }
-
-        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
-
-        public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
 
         public bool DisplayReason
         {
@@ -61,5 +61,7 @@
         public string AatfApprovalNumber { get; set; }
 
         public bool DisplayAatfName { get; set; }
+
+        public bool DisplayH2Title { get; set; }
     }
 }
