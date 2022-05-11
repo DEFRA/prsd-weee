@@ -4,7 +4,6 @@
     using EA.Weee.Core.AatfEvidence;
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
-    using ViewModels;
     using Weee.Requests.Scheme;
 
     public class TransferEvidenceNotesViewModelMapTransfer
@@ -18,15 +17,15 @@
         public bool TransferAllTonnage { get; set; }
 
         public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
-            TransferEvidenceNoteRequest transferRequest,
+            TransferEvidenceNoteRequest request,
             Guid organisationId)
         {
             Condition.Requires(notes).IsNotNull();
-            Condition.Requires(transferRequest).IsNotNull();
+            Condition.Requires(request).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
             Notes = notes;
-            Request = transferRequest;
+            Request = request;
             OrganisationId = organisationId;
         }
     }
