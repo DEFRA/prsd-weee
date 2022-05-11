@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfEvidence
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
@@ -66,8 +65,6 @@
         public void TransferNote_Constructor_GivenNullOrganisationArgumentNullExceptionExpected()
         {
             var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
-                DateTime.Now,
-                DateTime.Now,
                 "created",
                 transferTonnages.ToList()));
 
@@ -93,8 +90,6 @@
         public void TransferNote_Constructor_GivenNullSchemeArgumentNullExceptionExpected()
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
-                DateTime.Now,
-                DateTime.Now,
                 "created",
                 transferTonnages.ToList()));
 
@@ -117,18 +112,6 @@
         }
 
         [Fact]
-        public void TransferNote_Constructor_GivenDefaultStartDateArgumentExceptionExpected()
-        {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
-                DateTime.MinValue,
-                DateTime.Now,
-                "created",
-                transferTonnages.ToList()));
-
-            result.Should().BeOfType<ArgumentException>();
-        }
-
-        [Fact]
         public void Note_Constructor_GivenDefaultEndDateArgumentExceptionExpected()
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
@@ -142,19 +125,7 @@
 
             result.Should().BeOfType<ArgumentException>();
         }
-
-        [Fact]
-        public void TransferNote_Constructor_GivenDefaultEndDateArgumentExceptionExpected()
-        {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
-                DateTime.Now,
-                DateTime.MinValue,
-                "created",
-                transferTonnages.ToList()));
-
-            result.Should().BeOfType<ArgumentException>();
-        }
-
+        
         [Fact]
         public void Note_Constructor_GivenNullAatfArgumentNullExceptionExpected()
         {
@@ -189,8 +160,6 @@
         public void TransferNote_Constructor_GivenNullTransferTonnagesArgumentNullExceptionExpected()
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
-                DateTime.Now,
-                DateTime.Now,
                 "created",
                 null));
 
@@ -216,7 +185,7 @@
         [Fact]
         public void Note_Constructor_GivenDraftTransferEvidenceNoteValues_PropertiesShouldBeSet()
         {
-            var date = DateTime.Now;
+            var date = DateTime.UtcNow;
 
             SystemTime.Freeze(date);
 
@@ -479,8 +448,8 @@
             result.Aatf.Should().BeNull();
             result.WasteType.Should().BeNull();
             result.Protocol.Should().BeNull();
-            result.StartDate.Should().Be(startDate);
-            result.EndDate.Should().Be(endDate);
+            result.StartDate.Should().Be(date);
+            result.EndDate.Should().Be(date);
             result.NoteTonnage.Should().BeEmpty();
             result.NoteStatusHistory.Should().BeEmpty();
             result.NoteTransferTonnage.Should().BeEquivalentTo(transferTonnages);
@@ -507,8 +476,6 @@
         {
             return new Note(organisation,
                 scheme,
-                startDate,
-                endDate,
                 createdBy,
                 transferTonnages.ToList());
         }
