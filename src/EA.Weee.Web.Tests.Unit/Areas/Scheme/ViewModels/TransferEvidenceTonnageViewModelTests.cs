@@ -27,7 +27,7 @@
         public void TransferAllTonnageProperty_ShouldHaveDisplayNameAttribute()
         {
             typeof(TransferEvidenceTonnageViewModel).GetProperty("TransferAllTonnage").Should()
-                .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals(("Transfer all tonnage from all notes that you have selected")));
+                .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals("Transfer all available tonnage from all notes that you have selected"));
         }
     }
 }
