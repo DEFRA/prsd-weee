@@ -70,8 +70,7 @@
             var status = Core.AatfEvidence.NoteStatus.Approved;
 
             var note = new Note(A.Fake<Organisation>(), A.Fake<Scheme>(), DateTime.Now, DateTime.Now,
-                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), NoteType.EvidenceNote, "created",
-                new List<NoteTonnage>());
+                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), "created", new List<NoteTonnage>());
 
             note.UpdateStatus(NoteStatus.Submitted, "updatedBy");
 
@@ -95,7 +94,7 @@
             var status = Core.AatfEvidence.NoteStatus.Rejected;
 
             var note = new Note(A.Fake<Organisation>(), A.Fake<Scheme>(), DateTime.Now, DateTime.Now,
-                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), NoteType.EvidenceNote, "created",
+                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), "created",
                 new List<NoteTonnage>());
 
             note.UpdateStatus(NoteStatus.Submitted, "updatedBy");
@@ -120,7 +119,7 @@
             var status = Core.AatfEvidence.NoteStatus.Returned;
 
             var note = new Note(A.Fake<Organisation>(), A.Fake<Scheme>(), DateTime.Now, DateTime.Now,
-                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), NoteType.EvidenceNote, "created",
+                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), "created",
                 new List<NoteTonnage>());
 
             note.UpdateStatus(NoteStatus.Submitted, "updatedBy");

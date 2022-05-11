@@ -36,7 +36,6 @@
             Fixture.Create<WasteType>(),
             Fixture.Create<Protocol>(),
             aatf,
-            NoteType.EvidenceNote,
             user.UserId.ToString(),
             tonnages);
         }

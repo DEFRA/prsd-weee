@@ -25,6 +25,7 @@
         private Aatf aatf;
         private string createdBy;
         private IEnumerable<NoteTonnage> tonnages;
+        private IEnumerable<NoteTransferTonnage> transferTonnages;
         private NoteStatus status;
         private NoteType noteType;
         private readonly Fixture fixture;
@@ -41,6 +42,7 @@
             aatf = A.Fake<Aatf>();
             createdBy = fixture.Create<string>();
             tonnages = fixture.CreateMany<NoteTonnage>();
+            transferTonnages = fixture.CreateMany<NoteTransferTonnage>();
             status = NoteStatus.Draft;
             noteType = NoteType.EvidenceNote;
         }
@@ -54,9 +56,20 @@
                 null,
                 null,
                 A.Fake<Aatf>(),
-                NoteType.EvidenceNote,
                 "created",
                 new List<NoteTonnage>()));
+
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TransferNote_Constructor_GivenNullOrganisationArgumentNullExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
+                DateTime.Now,
+                DateTime.Now,
+                "created",
+                transferTonnages.ToList()));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -70,7 +83,6 @@
                 null,
                 null,
                 A.Fake<Aatf>(),
-                NoteType.EvidenceNote,
                 "created",
                 new List<NoteTonnage>()));
 
@@ -78,7 +90,19 @@
         }
 
         [Fact]
-        public void Note_Constructor_GivenDefaultStartDateSchemeArgumentExceptionExpected()
+        public void TransferNote_Constructor_GivenNullSchemeArgumentNullExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
+                DateTime.Now,
+                DateTime.Now,
+                "created",
+                transferTonnages.ToList()));
+
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Note_Constructor_GivenDefaultStartDateArgumentExceptionExpected()
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 DateTime.MinValue,
@@ -86,7 +110,6 @@
                 null,
                 null,
                 A.Fake<Aatf>(),
-                NoteType.EvidenceNote,
                 "created",
                 new List<NoteTonnage>()));
 
@@ -94,7 +117,19 @@
         }
 
         [Fact]
-        public void Note_Constructor_GivenDefaultEndDateSchemeArgumentExceptionExpected()
+        public void TransferNote_Constructor_GivenDefaultStartDateArgumentExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+                DateTime.MinValue,
+                DateTime.Now,
+                "created",
+                transferTonnages.ToList()));
+
+            result.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Note_Constructor_GivenDefaultEndDateArgumentExceptionExpected()
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 DateTime.Now,
@@ -102,9 +137,20 @@
                 null,
                 null,
                 A.Fake<Aatf>(),
-                NoteType.EvidenceNote,
                 "created",
                 new List<NoteTonnage>()));
+
+            result.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void TransferNote_Constructor_GivenDefaultEndDateArgumentExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+                DateTime.Now,
+                DateTime.MinValue,
+                "created",
+                transferTonnages.ToList()));
 
             result.Should().BeOfType<ArgumentException>();
         }
@@ -118,7 +164,6 @@
                 null,
                 null,
                 null,
-                NoteType.EvidenceNote,
                 "created",
                 new List<NoteTonnage>()));
 
@@ -134,7 +179,18 @@
                 null,
                 null,
                 null,
-                NoteType.EvidenceNote,
+                "created",
+                null));
+
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TransferNote_Constructor_GivenNullTransferTonnagesArgumentNullExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+                DateTime.Now,
+                DateTime.Now,
                 "created",
                 null));
 
@@ -148,56 +204,6 @@
 
             SystemTime.Freeze(date);
 
-            noteType = NoteType.EvidenceNote;
-            status = NoteStatus.Draft;
-            
-            var result = CreateNote();
-
-            ShouldBeEqualTo(result, date);
-
-            SystemTime.Unfreeze();
-        }
-
-        [Fact]
-        public void Note_Constructor_GivenSubmittedEvidenceNoteValues_PropertiesShouldBeSet()
-        {
-            var date = DateTime.Now;
-
-            SystemTime.Freeze(date);
-
-            noteType = NoteType.EvidenceNote;
-
-            var result = CreateNote();
-
-            ShouldBeEqualTo(result, date);
-
-            SystemTime.Unfreeze();
-        }
-
-        [Fact]
-        public void Note_Constructor_GivenSubmittedTransferNoteValues_PropertiesShouldBeSet()
-        {
-            var date = DateTime.Now;
-
-            SystemTime.Freeze(date);
-
-            noteType = NoteType.TransferNote;
-
-            var result = CreateNote();
-
-            ShouldBeEqualTo(result, date);
-
-            SystemTime.Unfreeze();
-        }
-
-        [Fact]
-        public void Note_Constructor_GivenDraftTransferNoteValues_PropertiesShouldBeSet()
-        {
-            var date = DateTime.Now;
-
-            SystemTime.Freeze(date);
-
-            noteType = NoteType.TransferNote;
             status = NoteStatus.Draft;
 
             var result = CreateNote();
@@ -207,6 +213,20 @@
             SystemTime.Unfreeze();
         }
 
+        [Fact]
+        public void Note_Constructor_GivenDraftTransferEvidenceNoteValues_PropertiesShouldBeSet()
+        {
+            var date = DateTime.Now;
+
+            SystemTime.Freeze(date);
+
+            var result = CreateTransferNote();
+
+            TransferNoteShouldBeEqualTo(result, date);
+
+            SystemTime.Unfreeze();
+        }
+        
         [Fact]
         public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_StatusShouldBeUpdated()
         {
@@ -416,7 +436,7 @@
             status = NoteStatus.Draft;
             noteType = NoteType.EvidenceNote;
 
-            var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, noteType, createdBy, tonnages.ToList());
+            var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());
 
             var updatedScheme = A.Fake<Scheme>();
             var updatedStartDate = DateTime.Now;
@@ -445,9 +465,28 @@
             result.StartDate.Should().Be(startDate);
             result.EndDate.Should().Be(endDate);
             result.NoteTonnage.Should().BeEquivalentTo(tonnages);
+            result.NoteStatusHistory.Should().BeEmpty();
             result.CreatedDate.Should().Be(date);
             result.CreatedById.Should().Be(createdBy);
-            result.NoteType.Should().Be(noteType);
+            result.NoteType.Should().Be(NoteType.EvidenceNote);
+            result.Status.Should().Be(status);
+        }
+
+        private void TransferNoteShouldBeEqualTo(Note result, DateTime date)
+        {
+            result.Organisation.Should().Be(organisation);
+            result.Recipient.Should().Be(scheme);
+            result.Aatf.Should().BeNull();
+            result.WasteType.Should().BeNull();
+            result.Protocol.Should().BeNull();
+            result.StartDate.Should().Be(startDate);
+            result.EndDate.Should().Be(endDate);
+            result.NoteTonnage.Should().BeEmpty();
+            result.NoteStatusHistory.Should().BeEmpty();
+            result.NoteTransferTonnage.Should().BeEquivalentTo(transferTonnages);
+            result.CreatedDate.Should().Be(date);
+            result.CreatedById.Should().Be(createdBy);
+            result.NoteType.Should().Be(NoteType.TransferNote);
             result.Status.Should().Be(status);
         }
 
@@ -460,9 +499,18 @@
                 wasteType,
                 protocol,
                 aatf,
-                noteType,
                 createdBy,
                 tonnages.ToList());
+        }
+
+        public Note CreateTransferNote()
+        {
+            return new Note(organisation,
+                scheme,
+                startDate,
+                endDate,
+                createdBy,
+                transferTonnages.ToList());
         }
     }
 }
