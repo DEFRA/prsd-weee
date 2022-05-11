@@ -74,7 +74,6 @@
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 aatf,
-                NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
                 tonnageValues.ToList());
 
