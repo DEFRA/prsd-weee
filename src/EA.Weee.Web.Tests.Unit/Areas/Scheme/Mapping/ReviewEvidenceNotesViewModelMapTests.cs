@@ -135,5 +135,19 @@
             result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note");
             result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note if there are some minor updates to be made by the AATF");
         }
+
+        [Fact]
+        public void ReviewEvidenceNotesViewModelMap_ShouldSetDisplayH2TitleTrue()
+        {
+            // act
+            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status)
+            {
+                SchemeId = note.RecipientId
+            });
+
+            // asset
+            modelCreated.Should().NotBeNull();
+            modelCreated.ViewEvidenceNoteViewModel.DisplayH2Title.Should().BeTrue();
+        }
     }
 }
