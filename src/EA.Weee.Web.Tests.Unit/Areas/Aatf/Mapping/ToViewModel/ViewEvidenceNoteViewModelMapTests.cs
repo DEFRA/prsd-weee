@@ -171,34 +171,84 @@
         }
 
         [Fact]
-        public void Map_GivenTonnages_TonnagesShouldBeFormatted()
+        public void Map_GivenTonnagesAndIncludeAllCategories_TonnagesShouldBeFormatted()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, true).Create();
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, null, 1),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null)
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1),
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
             };
 
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns(null);
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused)).Returns("1");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received)).Returns("2");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Reused)).Returns(null);
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
+                .Returns(null);
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused))
+                .Returns("1");
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received))
+                .Returns("2");
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Reused))
+                .Returns(null);
 
             //act
             var result = map.Map(source);
 
             //assert
-            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt())).Received
-                .Should().Be(null);
-            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt())).Reused
-                .Should().Be("1");
-            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Received
-                .Should().Be("2");
-            result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())).Reused
-                .Should().Be(null);
+            result.CategoryValues.Count.Should().Be(14);
+
+            var consumerCategory =
+                result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt()));
+            consumerCategory.Received.Should().Be(null);
+            consumerCategory.Reused.Should().Be("1");
+            consumerCategory.Id.Should().Be(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Id);
+
+            var electricalCategory = result.CategoryValues.First(c =>
+                c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt()));
+            electricalCategory.Received.Should().Be("2");
+            electricalCategory.Reused.Should().Be(null);
+            electricalCategory.Id.Should().Be(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Id);
+
+            foreach (var evidenceCategoryValue in result.CategoryValues.Where(c => !c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt())
+                     && !c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt())))
+            {
+                evidenceCategoryValue.Reused.Should().BeNull();
+                evidenceCategoryValue.Received.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public void Map_GivenTonnagesAndNotIncludeAllCategories_OnlyCategoriesThatNoteTonnageShouldBeIncluded()
+        {
+            //arrange
+            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, false).Create();
+
+            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
+            };
+
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
+                .Returns("2");
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused))
+                .Returns(null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CategoryValues.Count.Should().Be(1);
+
+            var electricalCategory = result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools.ToInt()));
+            electricalCategory.Received.Should().Be("2");
+            electricalCategory.Reused.Should().Be(null);
+            electricalCategory.Id.Should().Be(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Id);
         }
 
         [Fact]
@@ -399,6 +449,31 @@
             var result = map.Map(source);
 
             result.Reason.Should().BeNullOrEmpty();
+        }
+
+        private ViewEvidenceNoteMapTransfer SetupTonnage(bool includeAll)
+        {
+            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, includeAll).Create();
+
+            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1),
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
+            };
+
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
+                .Returns(null);
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused))
+                .Returns("1");
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received))
+                .Returns("2");
+            A.CallTo(() =>
+                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Reused))
+                .Returns(null);
+            return source;
         }
     }
 }
