@@ -147,6 +147,7 @@
             //assert
             result.Should().BeTrue();
         }
+
         [Fact]
         public void DisplayEditButton_GivenReturned_ShouldBeTrue()
         {
@@ -240,6 +241,17 @@
             };
 
             model.HasBeenReturned.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasRejectedDate_GivenStatusIsRejected_ShouldReturnTrue()
+        {
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Rejected
+            };
+
+            model.HasRejectedDate.Should().BeTrue();
         }
 
         [Theory]
