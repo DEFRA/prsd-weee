@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
+    <Compile Include="TransferNotesDataAccessIntegration.cs" />
     <Compile Include="NotesDataAccessIntegration.cs" />
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
