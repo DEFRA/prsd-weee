@@ -3,32 +3,39 @@
     using System;
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
+    using Prsd.Core.Mediator;
 
     [Serializable]
-    public class TransferEvidenceNoteRequest 
+    public class TransferEvidenceNoteRequest : IRequest<Guid>
     {
         public TransferEvidenceNoteRequest()
         { 
         }
 
-        public TransferEvidenceNoteRequest(Guid schemeId, 
+        public TransferEvidenceNoteRequest(Guid organisationId,
+            Guid schemeId, 
             List<int> categoryIds)
         {
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
 
+            OrganisationId = organisationId;
             SchemeId = schemeId;
             CategoryIds = categoryIds;
         }
 
-        public TransferEvidenceNoteRequest(Guid schemeId,
+        public TransferEvidenceNoteRequest(Guid organisationId,
+            Guid schemeId,
             List<int> categoryIds,
             List<Guid> evidenceNoteIds)
         {
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
             Condition.Requires(evidenceNoteIds).IsNotEmpty().IsNotNull();
 
+            OrganisationId = organisationId;
             SchemeId = schemeId;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
@@ -39,5 +46,7 @@
         public List<int> CategoryIds { get; set; }
 
         public List<Guid> EvidenceNoteIds { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }

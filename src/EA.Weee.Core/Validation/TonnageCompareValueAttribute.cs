@@ -6,7 +6,7 @@
     using System.Globalization;
     using System.Linq;
 
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TonnageCompareValueAttribute : ValidationAttribute
     {
         private string categoryPropertyErrorMessage;

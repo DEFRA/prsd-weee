@@ -14,11 +14,12 @@
         public Guid TransferTonnageId { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived))]
+        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived), ErrorMessage = "TBD: Content")]
         public sealed override string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
-        //[TonnageCompareValue(nameof(CategoryId), nameof(Received))]
+        [TonnageCompareValue(nameof(CategoryId), nameof(Received), ErrorMessage = "The reused tonnage must be equivalent or lower than the received tonnage")]
+        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReused), ErrorMessage = "TBD: Content")]
         public sealed override string Reused { get; set; }
 
         public TransferEvidenceCategoryValue()

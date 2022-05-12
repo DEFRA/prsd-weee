@@ -4,6 +4,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Core.Validation;
     using DataReturns;
     using FluentAssertions;
     using Xunit;
@@ -41,6 +42,65 @@
             result.AvailableReused.Should().Be(availableReused);
             result.Reused.Should().Be(reused);
             result.Received.Should().Be(received);
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ShouldInheritFrom_CategoryValue()
+        {
+            typeof(TransferEvidenceCategoryValue).Should().BeDerivedFrom<EvidenceCategoryValue>();
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReceivedProperty_ShouldBeDecoratedWith_TonnageValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Received")
+                .Should()
+                .BeDecoratedWith<TonnageValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
+                    t.DisplayCategory.Equals(true));
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReusedProperty_ShouldBeDecoratedWith_TonnageValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Reused")
+                .Should()
+                .BeDecoratedWith<TonnageValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
+                    t.DisplayCategory.Equals(true));
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReusedPropertyToCompareToReceived_ShouldBeDecoratedWith_TonnageCompareValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Reused")
+                .Should()
+                .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") &&
+                    t.ComparePropertyName.Equals("Received") &&
+                    t.ErrorMessage.Equals("The reused tonnage must be equivalent or lower than the received tonnage"));
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReusedPropertyToCompareToAvailableReused_ShouldBeDecoratedWith_TonnageCompareValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Reused")
+                .Should()
+                .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") &&
+                    t.ComparePropertyName.Equals("AvailableReused") &&
+                    t.ErrorMessage.Equals("TBD: Content"));
+        }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReceivedPropertyToCompareToAvailableReceived_ShouldBeDecoratedWith_TonnageCompareValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Received")
+                .Should()
+                .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") &&
+                    t.ComparePropertyName.Equals("AvailableReceived") &&
+                    t.ErrorMessage.Equals("TBD: Content"));
         }
     }
 }
