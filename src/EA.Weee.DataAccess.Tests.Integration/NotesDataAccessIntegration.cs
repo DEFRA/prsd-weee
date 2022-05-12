@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Domain.Evidence;
     using EA.Weee.Core.Tests.Unit.Helpers;
+    using EA.Weee.DataAccess.Tests.Integration.Base;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
@@ -16,7 +17,7 @@
     using NoteStatus = Domain.Evidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class NotesDataAccessIntegration
+    public class NotesDataAccessIntegration : EvidenceNoteBaseDataAccess
     {
         [Fact]
         public async Task GetAllNotes_ShouldMatchOnOrganisationId()
@@ -538,8 +539,8 @@
 
                 await context.SaveChangesAsync();
 
-                var notesAatf1 = await context.Notes.CountAsync(n => n.AatfId.Equals(aatf1.Id));
-                var notesAatf2 = await context.Notes.CountAsync(n => n.AatfId.Equals(aatf2.Id));
+                var notesAatf1 = await context.Notes.CountAsync(n => n.AatfId.Value.Equals(aatf1.Id));
+                var notesAatf2 = await context.Notes.CountAsync(n => n.AatfId.Value.Equals(aatf2.Id));
 
                 //confirm data added
                 notesAatf1.Should().Be(11);
@@ -569,39 +570,6 @@
                 voidNotesAatf2.Should().Be(1);
                 rejectedNotesAatf2.Should().Be(1);
             }
-        }
-
-        private async Task<Note> SetupSingleNote(WeeeContext context, 
-            DatabaseWrapper database, 
-            NoteType noteType = null,
-            EA.Weee.Domain.Scheme.Scheme scheme = null)
-        {
-            var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-
-            context.Organisations.Add(organisation);
-
-            var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
-
-            context.Aatfs.Add(aatf1);
-
-            await database.WeeeContext.SaveChangesAsync();
-
-            if (noteType == null)
-            {
-                noteType = NoteType.EvidenceNote;
-            }
-
-            if (scheme == null)
-            {
-                scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            }
-
-            var note1 = NoteCommon.CreateNote(database, organisation, scheme, aatf1, noteType: noteType);
-
-            context.Notes.Add(note1);
-
-            await database.WeeeContext.SaveChangesAsync();
-            return note1;
         }
     }
 }

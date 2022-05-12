@@ -185,6 +185,8 @@
 
         public virtual DbSet<NoteStatusHistory> NoteStatusHistory { get; set; }
 
+        public virtual DbSet<NoteTransferTonnage> NoteTransferTonnage { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
