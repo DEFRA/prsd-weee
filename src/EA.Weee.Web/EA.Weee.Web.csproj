@@ -755,7 +755,6 @@
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
@@ -1092,7 +1091,6 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\weee-returns-ae-mobile.scss" />
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="fonts\fontawesome-webfont.svg" />
