@@ -62,7 +62,7 @@
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
             result.ProtocolValue.Should().Be(source.NoteData.Protocol);
-            result.Reason.Should().Be(source.NoteData.Reason);
+            result.Reason.Should().Be(source.NoteData.ReturnedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
 

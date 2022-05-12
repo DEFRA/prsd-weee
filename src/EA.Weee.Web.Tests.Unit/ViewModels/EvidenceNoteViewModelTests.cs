@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -8,10 +7,10 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Helpers;
-    using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Xunit;
@@ -119,6 +118,51 @@
             var tab = model.RedirectTab;
 
             tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayReturnedReason_GivenStatusIsNotReturnedAndHasReason_ShouldReturnFalse(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            var model = new EvidenceNoteViewModel()
+            {
+                Status = status,
+                Reason = "reason"
+            };
+
+            model.DisplayReturnedReason.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void DisplayReturnedReason_GivenStatusIsReturnedAndReasonIsEmpty_ShouldReturnFalse(string reason)
+        {
+            var model = new EvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Returned,
+                Reason = reason
+            };
+
+            model.DisplayReturnedReason.Should().BeFalse();
+        }
+
+        [Fact]
+        public void DisplayReturnedReason_GivenStatusIsReturnedAndReasonIsNotEmpty_ShouldReturnTrue()
+        {
+            var model = new EvidenceNoteViewModel()
+            {
+                Status = NoteStatus.Returned,
+                Reason = "reason"
+            };
+
+            model.DisplayReturnedReason.Should().BeTrue();
         }
     }
 }

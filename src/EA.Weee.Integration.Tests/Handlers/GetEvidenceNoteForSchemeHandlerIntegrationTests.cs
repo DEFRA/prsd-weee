@@ -161,7 +161,7 @@
             {
                 ShouldMapToNote();
                 result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Returned);
-                result.Reason.Should().Be("reason returned");
+                result.ReturnedReason.Should().Be("reason returned");
                 result.ReturnedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).ChangedDate);
             };
         }
