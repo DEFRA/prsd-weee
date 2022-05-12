@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using AutoFixture;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.Scheme.Requests;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FluentAssertions;
@@ -59,14 +58,13 @@
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenValidModel_CreateTransferNoteRequestShoulBeCreated()
+        public void ViewModelToRequest_GivenValidModel_CreateTransferNoteRequestShouldBeCreated()
         {
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
-            var schemes = fixture.CreateMany<SchemeData>().ToList();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
             var selectedIds = model.CategoryValues.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
            //act
@@ -75,6 +73,7 @@
             //assert
             request.CategoryIds.Should().BeEquivalentTo(selectedIds);
             request.SchemeId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
         }
 
         private TransferEvidenceNoteCategoriesViewModel GetModel()
@@ -82,13 +81,14 @@
             return new TransferEvidenceNoteCategoriesViewModel();
         }
 
-        private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme)
+        private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme, Guid organisationId)
         {
             var model = GetModel();
             model.CategoryValues.ElementAt(0).Selected = true;
             model.CategoryValues.ElementAt(1).Selected = true;
             model.CategoryValues.ElementAt(2).Selected = true;
             model.SelectedSchema = selectedScheme;
+            model.OrganisationId = organisationId;
 
             return model;
         }
