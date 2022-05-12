@@ -22,11 +22,11 @@
             <legend class="govuk-fieldset__legend govuk-body">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</legend>
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
-                     @{
-                          var selectedOption = Model.TransferAllTonnage ? "checked" : "";
-                      }
-                    <input class="govuk-checkboxes__input" id="transferAllTonnage" name="TransferAllTonnage" type="checkbox" value="true" @selectedOption>
-                    <label class="govuk-label govuk-checkboxes__label" for="transferAllTonnage">Transfer all tonnage from all notes that you have selected</label>
+                    @{
+                        var selectedOption = Model.TransferAllTonnage ? "checked" : "";
+                    }
+                    <input class="govuk-checkboxes__input" id="TransferAllTonnage" name="TransferAllTonnage" type="checkbox" value="true" @selectedOption>
+                    @Html.LabelFor(m => m.TransferAllTonnage, new { @class="govuk-label govuk-checkboxes__label"})
                 </div>
             </div>
         </fieldset>

@@ -6,7 +6,7 @@
 
     public class TransferEvidenceTonnageViewModel : TransferEvidenceViewModelBase
     {
-        [DisplayName("Transfer all tonnage from all notes that you have selected")]
+        [DisplayName("Transfer all available tonnage from all notes that you have selected")]
         public bool TransferAllTonnage { get; set; }
 
         public List<EvidenceCategoryValue> TransferCategoryValues { get; set; }
