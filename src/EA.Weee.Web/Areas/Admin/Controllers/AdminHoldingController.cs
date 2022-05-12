@@ -5,7 +5,7 @@
 
     public class AdminHoldingController : AdminController
     {
-        // GET: AatfReturn/Holding
+        // GET: Admin/Holding page
         public ActionResult Index()
         {
             return View();

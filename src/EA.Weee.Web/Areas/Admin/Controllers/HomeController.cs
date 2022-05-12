@@ -96,6 +96,9 @@
                 case InternalUserActivity.ViewReports:
                     return RedirectToAction("ChooseReport", "Reports");
 
+                case InternalUserActivity.ManagePcsObligations:
+                    return RedirectToAction("Index", "AdminHolding");
+
                 case InternalUserActivity.ManagePcsCharges:
                     {
                         if (!configuration.EnableInvoicing)
@@ -120,6 +123,7 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
+            viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
