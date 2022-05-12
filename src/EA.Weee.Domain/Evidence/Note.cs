@@ -7,6 +7,7 @@
     using Scheme;
     using System;
     using System.Collections.Generic;
+    using CuttingEdge.Conditions;
     using User;
 
     public partial class Note : Entity
@@ -23,15 +24,13 @@
             DateTime endDate,
             WasteType? wasteType,
             Protocol? protocol,
-            Aatf aatf,
-            NoteType noteType,
+            Aatf aatf, 
             string createdBy,
             IList<NoteTonnage> tonnages)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNull(() => aatf, aatf);
-            Guard.ArgumentNotNull(() => noteType, noteType);
             Guard.ArgumentNotDefaultValue(() => startDate, startDate);
             Guard.ArgumentNotDefaultValue(() => endDate, endDate);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
@@ -45,11 +44,35 @@
             EndDate = endDate;
             Aatf = aatf;
             CreatedById = createdBy;
-            NoteType = noteType;
+            NoteType = NoteType.EvidenceNote;
             CreatedDate = SystemTime.UtcNow;
             Status = NoteStatus.Draft;
             NoteTonnage = tonnages;
             NoteStatusHistory = new List<NoteStatusHistory>();
+            NoteTransferTonnage = new List<NoteTransferTonnage>();
+        }
+
+        public Note(Organisation organisation,
+            Scheme recipient,
+            string createdBy,
+            IList<NoteTransferTonnage> transfer)
+        {
+            Guard.ArgumentNotNull(() => organisation, organisation);
+            Guard.ArgumentNotNull(() => recipient, recipient);
+            Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
+            Guard.ArgumentNotNull(() => transfer, transfer);
+
+            Organisation = organisation;
+            Recipient = recipient;
+            StartDate = SystemTime.UtcNow;
+            EndDate = SystemTime.UtcNow;
+            CreatedById = createdBy;
+            NoteType = NoteType.TransferNote;
+            CreatedDate = SystemTime.UtcNow;
+            Status = NoteStatus.Draft;
+            NoteTonnage = new List<NoteTonnage>();
+            NoteStatusHistory = new List<NoteStatusHistory>();
+            NoteTransferTonnage = transfer;
         }
 
         public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
@@ -128,7 +151,7 @@
 
         public virtual Guid OrganisationId { get; set; }
 
-        public virtual Guid AatfId { get; set; }
+        public virtual Guid? AatfId { get; set; }
 
         public virtual Guid RecipientId { get; set; }
 
@@ -161,5 +184,7 @@
         public virtual ICollection<NoteTonnage> NoteTonnage { get; protected set; }
 
         public virtual ICollection<NoteStatusHistory> NoteStatusHistory { get; protected set; }
+
+        public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
     }
 }

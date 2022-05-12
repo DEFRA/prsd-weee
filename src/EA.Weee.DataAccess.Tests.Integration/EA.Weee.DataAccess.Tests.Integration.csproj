@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
+    <Compile Include="Base\EvidenceNoteBaseDataAccess.cs" />
     <Compile Include="TransferNotesDataAccessIntegration.cs" />
     <Compile Include="NotesDataAccessIntegration.cs" />
     <Compile Include="AatfSiteIntegration.cs" />
@@ -219,6 +220,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

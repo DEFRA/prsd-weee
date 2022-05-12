@@ -6,6 +6,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
     using Z.EntityFramework.Plus;
@@ -58,7 +59,7 @@
             var notes = await context.Notes
                 .Where(p =>
                     ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                     && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
+                     && (!filter.AatfId.HasValue || (p.AatfId.HasValue && p.AatfId.Value == filter.AatfId.Value))
                      && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                      && (allowedStatus.Contains(p.Status.Value))) && 
                      (filter.SearchRef == null ||
@@ -84,8 +85,27 @@
         }
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId)
         {
-            return await context.Notes.Where(n => n.AatfId.Equals(aatfId) && n.Status.Value.Equals(status.Value))
+            return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value))
                 .CountAsync();
+        }
+
+        public async Task<Guid> AddTransferNote(Organisation organisation, Scheme scheme, List<NoteTransferTonnage> transferTonnage, NoteStatus status, string userId)
+        {
+            var evidenceNote = new Note(organisation,
+                scheme,
+                userId,
+                transferTonnage.ToList());
+
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+            }
+
+            context.Set<Note>().Add(evidenceNote);
+
+            await context.SaveChangesAsync();
+
+            return evidenceNote.Id;
         }
     }
 }

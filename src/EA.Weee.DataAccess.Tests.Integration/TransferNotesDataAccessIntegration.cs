@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure.Design;
     using System.Linq;
     using System.Threading.Tasks;
+    using Base;
     using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -17,7 +20,7 @@
     using NoteStatus = Domain.Evidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class TransferNotesDataAccessIntegration
+    public class TransferNotesDataAccessIntegration : EvidenceNoteBaseDataAccess
     {
         [Fact]
         public async Task GetNotesToTransfer_GivenSchemeAndCategories_NotesShouldBeReturned()
@@ -66,20 +69,20 @@
                 context.Notes.Add(note4ToNotBeFound);
 
                 // note not to be found not matching status, matching type and category
-                var note5ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, scheme);
+                var note5ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
                 note5ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 note5ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null));
 
                 context.Notes.Add(note5ToNotBeFound);
 
                 // note not to be found not matching status, matching type and category
-                var note6ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, scheme);
+                var note6ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
                 note6ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null));
 
                 context.Notes.Add(note6ToNotBeFound);
 
                 // note not to be found not matching note type, matching status and category
-                var note7ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, scheme);
+                var note7ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
                 note7ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 note7ToNotBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
                 note7ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null));
@@ -125,7 +128,7 @@
                 note12ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 note12ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
                 note12ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, 1,  null));
-
+                
                 context.Notes.Add(note12ToNotBeFound);
 
                 await context.SaveChangesAsync();
@@ -209,37 +212,84 @@
             }
         }
 
-        private async Task<Note> SetupSingleNote(WeeeContext context, 
-            DatabaseWrapper database, 
-            NoteType noteType = null,
-            EA.Weee.Domain.Scheme.Scheme scheme = null)
+        [Fact]
+        public async Task AddTransferNote_NotesShouldBeAdded()
         {
-            var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-
-            context.Organisations.Add(organisation);
-
-            var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
-
-            context.Aatfs.Add(aatf1);
-
-            await database.WeeeContext.SaveChangesAsync();
-
-            if (noteType == null)
+            using (var database = new DatabaseWrapper())
             {
-                noteType = NoteType.EvidenceNote;
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                // create note that has tonnage to be transferred
+                var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                noteToBeTransferred1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                noteToBeTransferred1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 1, null));
+
+                context.Notes.Add(noteToBeTransferred1);
+
+                var noteToBeTransferred2 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                noteToBeTransferred2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                noteToBeTransferred2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                noteToBeTransferred2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 10, null));
+                noteToBeTransferred2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LightingEquipment, 30, null));
+                noteToBeTransferred2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 20, null));
+
+                context.Notes.Add(noteToBeTransferred2);
+
+                await context.SaveChangesAsync();
+
+                var transferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation);
+
+                var transferTonnages = new List<NoteTransferTonnage>
+                {
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)), 5, 4),
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources)), 8, 7),
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)), 4, null)
+                };
+
+                var noteId = await dataAccess.AddTransferNote(transferOrganisation, recipientScheme, transferTonnages,
+                    NoteStatus.Draft, context.GetCurrentUser());
+
+                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
+
+                refreshedTransferNote.Aatf.Should().BeNull();
+                refreshedTransferNote.CreatedById.Should().Be(context.GetCurrentUser());
+                refreshedTransferNote.StartDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                refreshedTransferNote.EndDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                refreshedTransferNote.NoteType.Should().Be(NoteType.TransferNote);
+                refreshedTransferNote.Organisation.Should().Be(transferOrganisation);
+                refreshedTransferNote.NoteStatusHistory.Count.Should().Be(0);
+                refreshedTransferNote.NoteTonnage.Count.Should().Be(0);
+                refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(3);
+
+                var transferTonnage = refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt =>
+                    nt.NoteTonnageId.Equals(
+                        noteToBeTransferred1.NoteTonnage
+                            .First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id));
+                transferTonnage.Should().NotBeNull();
+                transferTonnage.Received.Should().Be(5);
+                transferTonnage.Reused.Should().Be(4);
+                transferTonnage = refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt =>
+                    nt.NoteTonnageId.Equals(
+                        noteToBeTransferred2.NoteTonnage
+                            .First(c => c.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources)).Id));
+                transferTonnage.Should().NotBeNull();
+                transferTonnage.Received.Should().Be(8);
+                transferTonnage.Reused.Should().Be(7);
+                transferTonnage = refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt =>
+                    nt.NoteTonnageId.Equals(
+                        noteToBeTransferred2.NoteTonnage
+                            .First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id));
+                transferTonnage.Should().NotBeNull();
+                transferTonnage.Received.Should().Be(4);
+                transferTonnage.Reused.Should().Be(null);
             }
-
-            if (scheme == null)
-            {
-                scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-            }
-
-            var note1 = NoteCommon.CreateNote(database, organisation, scheme, aatf1, noteType: noteType);
-
-            context.Notes.Add(note1);
-
-            await database.WeeeContext.SaveChangesAsync();
-            return note1;
         }
     }
 }

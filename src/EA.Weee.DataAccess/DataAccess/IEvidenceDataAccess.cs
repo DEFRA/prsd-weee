@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Organisation;
     using Domain.Scheme;
 
     public interface IEvidenceDataAccess
@@ -24,5 +25,7 @@
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId);
 
         Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes);
+
+        Task<Guid> AddTransferNote(Organisation organisation, Scheme scheme, List<NoteTransferTonnage> transferTonnage, NoteStatus status, string userId);
     }
 }

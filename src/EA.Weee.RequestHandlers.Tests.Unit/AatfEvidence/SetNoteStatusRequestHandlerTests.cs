@@ -73,8 +73,7 @@
             var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
 
             var note = new Note(A.Fake<Organisation>(), A.Fake<Scheme>(), DateTime.Now, DateTime.Now,
-                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), NoteType.EvidenceNote, "created",
-                new List<NoteTonnage>());
+                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), "created", new List<NoteTonnage>());
 
             note.UpdateStatus(NoteStatus.Submitted, "updatedBy");
 
