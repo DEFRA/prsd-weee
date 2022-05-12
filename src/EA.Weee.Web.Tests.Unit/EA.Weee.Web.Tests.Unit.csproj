@@ -281,6 +281,7 @@
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToUserFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\FromViewModel\FilteringViewModelToAatfFilterMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\AssociatedEntitiesViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\EvidenceTonnageValueCopyPasteControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
@@ -301,6 +302,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />

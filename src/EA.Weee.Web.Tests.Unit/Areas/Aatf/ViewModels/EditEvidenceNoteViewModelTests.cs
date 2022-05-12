@@ -27,6 +27,13 @@
             model = new EditEvidenceNoteViewModel(calculator);
         }
 
+        [Fact]
+        public void EditEvidenceNoteViewModel_IsDecoratedWith_SerializableAttribute()
+        {
+            typeof(EditEvidenceNoteViewModel).Should()
+                .BeDecoratedWith<SerializableAttribute>();
+        }
+
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
