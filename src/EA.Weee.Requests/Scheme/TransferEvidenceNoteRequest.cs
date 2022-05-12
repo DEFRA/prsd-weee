@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using AatfEvidence;
     using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     [Serializable]
     public class TransferEvidenceNoteRequest : IRequest<Guid>
@@ -48,5 +50,9 @@
         public List<Guid> EvidenceNoteIds { get; set; }
 
         public Guid OrganisationId { get; set; }
+
+        public EA.Weee.Core.AatfEvidence.NoteStatus Status { get; set; }
+
+        public List<TransferTonnageValue> TransferValues;
     }
 }

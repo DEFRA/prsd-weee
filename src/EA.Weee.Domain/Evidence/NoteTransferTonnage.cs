@@ -10,11 +10,11 @@
         {
         }
 
-        public NoteTransferTonnage(NoteTonnage noteTonnage,
-            decimal received,
+        public NoteTransferTonnage(Guid noteTonnageId,
+            decimal? received,
             decimal? reused)
         {
-            NoteTonnage = noteTonnage;
+            NoteTonnageId = noteTonnageId;
             Reused = reused;
             Received = received;
         }
@@ -29,7 +29,7 @@
 
         public Guid TransferNoteId { get; private set; }
 
-        public decimal Received { get; private set; }
+        public decimal? Received { get; private set; }
 
         public decimal? Reused { get; private set; }
     }
