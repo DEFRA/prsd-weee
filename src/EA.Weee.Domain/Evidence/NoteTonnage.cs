@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using Lookup;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public sealed partial class NoteTonnage : Entity
+    public partial class NoteTonnage : Entity
     {
         private NoteTonnage()
         {
@@ -37,5 +38,7 @@
             Received = received;
             Reused = reused;
         }
+
+        public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; set; }
     }
 }
