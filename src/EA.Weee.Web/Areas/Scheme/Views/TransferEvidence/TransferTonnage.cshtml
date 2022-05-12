@@ -99,6 +99,9 @@
                                     @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
                                     @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
                                     @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].Id)
+                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].TransferTonnageId)
+                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].AvailableReused)
+                                    @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].AvailableReceived)
 
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
@@ -174,9 +177,9 @@
             </tbody>
         </table>
 
-       @* <div class="govuk-!-margin-top-3">
+        <div class="govuk-!-margin-top-3">
             @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
-        </div>*@
+        </div>
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")
     <script type="text/javascript">
