@@ -151,7 +151,7 @@
             var result = map.Map(note);
 
             //arrange
-            result.Reason.Should().BeNull();
+            result.ReturnedReason.Should().BeNull();
         }
 
         [Fact]
@@ -214,13 +214,44 @@
             historyList.Add(history);
 
             var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
             var result = map.Map(note);
 
             //arrange
-            result.Reason.Should().Be(reason);
+            result.ReturnedReason.Should().Be(reason);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithReturnedHistoryAndNoteIsNotReturned_ReasonShouldBeNull(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(status);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(status);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //arrange
+            result.ReturnedReason.Should().BeNull();
         }
 
         [Fact]
@@ -305,13 +336,14 @@
             historyList.Add(history2);
 
             var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
             var result = map.Map(note);
 
             //arrange
-            result.Reason.Should().Be(reasonLate);
+            result.ReturnedReason.Should().Be(reasonLate);
         }
 
         [Theory]

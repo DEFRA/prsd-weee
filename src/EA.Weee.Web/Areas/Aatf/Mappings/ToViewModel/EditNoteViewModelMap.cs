@@ -18,7 +18,7 @@
             Guard.ArgumentNotNull(() => source, source);
 
             var recipientId = source.ExistingModel?.ReceivedId ?? source.NoteData.RecipientId;
-            var recipientName = source.Schemes.Where(s => s.Id == recipientId).FirstOrDefault();
+            var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
             
             var model = new EditEvidenceNoteViewModel
             {
@@ -31,7 +31,7 @@
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetOrderedValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
-                Reason = source.ExistingModel?.Reason ?? source.NoteData.Reason,
+                Reason = source.ExistingModel?.Reason ?? source.NoteData.ReturnedReason,
                 SelectedSchemeName = recipientName == null ? string.Empty : recipientName.SchemeNameDisplay
             };
 
