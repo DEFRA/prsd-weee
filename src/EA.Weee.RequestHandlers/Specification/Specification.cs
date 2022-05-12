@@ -1,8 +1,9 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Specification
+﻿namespace EA.Weee.RequestHandlers.Specification
 {
-    using Prsd.Core.Domain;
     using System;
     using System.Linq.Expressions;
+    using AatfReturn.Specification;
+    using Prsd.Core.Domain;
 
     public abstract class Specification<T> : ISpecification<T> where T : Entity
     {

@@ -43,6 +43,20 @@
             EvidenceNoteIds = evidenceNoteIds;
         }
 
+        public TransferEvidenceNoteRequest(Guid organisationId,
+            Guid schemeId,
+            List<TransferTonnageValue> transferValues,
+            Core.AatfEvidence.NoteStatus status)
+        {
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+
+            OrganisationId = organisationId;
+            SchemeId = schemeId;
+            TransferValues = transferValues;
+            Status = status;
+        }
+
         public Guid SchemeId { get; set; } 
 
         public List<int> CategoryIds { get; set; }
@@ -53,6 +67,6 @@
 
         public EA.Weee.Core.AatfEvidence.NoteStatus Status { get; set; }
 
-        public List<TransferTonnageValue> TransferValues;
+        public List<TransferTonnageValue> TransferValues { get; set; }
     }
 }

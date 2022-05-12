@@ -107,5 +107,14 @@
 
             return evidenceNote.Id;
         }
+
+        public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)
+        {
+            //TODO: only include totals of approved notes
+            return await context.NoteTonnages
+                .Where(n => ids.Contains(n.Id))
+                .Include(n => n.Note)
+                .Include(n => n.NoteTransferTonnage).ToListAsync();
+        }
     }
 }
