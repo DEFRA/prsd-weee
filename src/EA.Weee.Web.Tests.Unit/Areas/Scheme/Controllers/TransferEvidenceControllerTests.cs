@@ -878,7 +878,7 @@
             var categoryIds = fixture.CreateMany<int>().ToList();
             var evidenceNoteIds = fixture.CreateMany<Guid>().ToList();
 
-            return new TransferEvidenceNoteRequest(Guid.NewGuid(), categoryIds)
+            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
             {
                 EvidenceNoteIds = evidenceNoteIds
             };

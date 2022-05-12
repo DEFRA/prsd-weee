@@ -25,6 +25,7 @@
             }
 
             var newRequest = (T)Activator.CreateInstance(typeof(T), 
+                viewModel.OrganisationId,
                 viewModel.SelectedSchema,
                 selectedIds);
 
