@@ -57,7 +57,6 @@
 
             var transferNoteTonnages = new List<NoteTransferTonnage>();
 
-            // first out the null values
             foreach (var transferValue in request.TransferValues)
             {
                 transferNoteTonnages.Add(new NoteTransferTonnage(transferValue.TransferTonnageId, 
@@ -65,9 +64,8 @@
                     transferValue.SecondTonnage));
             }
 
-           var existingNoteTonnage = await evidenceDataAccess.GetTonnageByIds(request.TransferValues.Select(t => t.TransferTonnageId).ToList());
+            var existingNoteTonnage = await evidenceDataAccess.GetTonnageByIds(request.TransferValues.Select(t => t.TransferTonnageId).ToList());
 
-            //TODO: validate that the passed notes belong to the notes with the transfer ids
             foreach (var noteTonnage in existingNoteTonnage)
             {
                 if (!noteTonnage.Received.HasValue)
@@ -75,7 +73,7 @@
                     throw new InvalidOperationException();
                 }
 
-                var totalReceivedAvailable = noteTonnage.Received.Value - noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue).Sum(nt => nt.Received.Value);
+                var totalReceivedAvailable = noteTonnage.Received.Value - noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && nt.TransferNote.Status.Value.Equals(NoteStatus.Approved.Value)).Sum(nt => nt.Received.Value);
                 var requestedTonnage = request.TransferValues.First(t => t.TransferTonnageId.Equals(noteTonnage.Id));
                 
                 if (requestedTonnage.FirstTonnage.HasValue && decimal.Compare(requestedTonnage.FirstTonnage.Value, totalReceivedAvailable).Equals(1))

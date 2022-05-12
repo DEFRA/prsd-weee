@@ -118,7 +118,11 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage1).Create();
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).WithTonnages(newTransferNoteTonnage1).Create();
 
                 // create another transfer from note 1
                 var newTransferNoteTonnage2 = new List<NoteTransferTonnage>()
@@ -126,7 +130,22 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage2).Create();
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).WithTonnages(newTransferNoteTonnage2).Create();
+
+                // create another transfer from note 1 but not is not approved so wont be included
+                var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 1002, null)
+                };
+
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                }).WithTonnages(newTransferNoteTonnage3).Create();
 
                 // now to call the request to take the last 1 tonne
                 transferTonnageValues = new List<TransferTonnageValue>()
@@ -185,7 +204,11 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage).Create();
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).WithTonnages(newTransferNoteTonnage).Create();
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
