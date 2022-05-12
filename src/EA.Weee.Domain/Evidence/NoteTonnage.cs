@@ -39,6 +39,6 @@
             Reused = reused;
         }
 
-        public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; set; }
+        public ICollection<NoteTransferTonnage> NoteTransferTonnage { get; set; }
     }
 }

@@ -110,11 +110,13 @@
 
         public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)
         {
-            //TODO: only include totals of approved notes
+            //TODO: Dataaccess test to test for the includes
             return await context.NoteTonnages
-                .Where(n => ids.Contains(n.Id))
                 .Include(n => n.Note)
-                .Include(n => n.NoteTransferTonnage).ToListAsync();
+                .Include(n => n.NoteTransferTonnage)
+                .Include(n => n.NoteTransferTonnage.Select(nt => nt.TransferNote))
+                .Where(n => ids.Contains(n.Id))
+                .ToListAsync();
         }
     }
 }

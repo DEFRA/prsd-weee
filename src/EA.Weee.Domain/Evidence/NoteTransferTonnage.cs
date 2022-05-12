@@ -19,8 +19,8 @@
             Received = received;
         }
 
-        [ForeignKey("NoteTonnageId")]
-        public NoteTonnage NoteTonnage { get; set; }
+        //[ForeignKey("NoteTonnageId")]
+        //public NoteTonnage NoteTonnage { get; set; }
 
         public Guid NoteTonnageId { get; private set; }
 
