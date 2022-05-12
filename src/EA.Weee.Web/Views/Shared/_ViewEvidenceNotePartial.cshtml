@@ -21,7 +21,7 @@
             @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
         </div>
 
-        @if (Model.DisplayReason)
+        @if (Model.DisplayReturnedReason)
         {
             <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
                 <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter">

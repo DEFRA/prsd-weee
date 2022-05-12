@@ -43,21 +43,6 @@
 
         public string TotalReceivedDisplay { get; set; }
 
-        public bool DisplayReason
-        {
-            get
-            {
-                if (Status.Equals(NoteStatus.Submitted))
-                {
-                    return false;
-                }
-                else
-                {
-                    return !string.IsNullOrWhiteSpace(Reason);
-                }
-            }
-        }
-
         public string AatfApprovalNumber { get; set; }
 
         public bool DisplayAatfName { get; set; }

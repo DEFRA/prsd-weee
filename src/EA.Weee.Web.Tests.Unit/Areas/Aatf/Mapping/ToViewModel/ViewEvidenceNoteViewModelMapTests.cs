@@ -446,21 +446,21 @@
         }
 
         [Fact]
-        public void Map_GivenReason_ReasonMustBeSet()
+        public void Map_GivenReturnedReason_ReasonMustBeSet()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
             var reason = fixture.Create<string>();
-            source.EvidenceNoteData.Reason = reason;
+            source.EvidenceNoteData.ReturnedReason = reason;
             var result = map.Map(source);
 
             result.Reason.Should().Be(reason);
         }
 
         [Fact]
-        public void Map_GivenNoReason_ReasonMustBeNullOrEmpty()
+        public void Map_GivenNoReturnedReason_ReasonMustBeNullOrEmpty()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
-            source.EvidenceNoteData.Reason = null;
+            source.EvidenceNoteData.ReturnedReason = null;
 
             var result = map.Map(source);
 
