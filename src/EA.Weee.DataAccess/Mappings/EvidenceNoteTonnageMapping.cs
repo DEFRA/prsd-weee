@@ -14,7 +14,7 @@
             Property(n => n.Received).IsOptional().HasPrecision(28, 3);
             Property(n => n.Reused).IsOptional().HasPrecision(28, 3);
 
-            HasRequired(a => a.Note).WithMany(b => b.NoteTonnage).HasForeignKey(c => c.NoteId);
+            HasRequired(a => a.Note).WithMany(n => n.NoteTonnage).HasForeignKey(n => n.NoteId);
         }
     }
 }
