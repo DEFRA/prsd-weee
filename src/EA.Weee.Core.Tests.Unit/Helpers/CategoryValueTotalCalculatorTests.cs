@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
     using EA.Weee.Core.Helpers;
+    using FluentAssertions;
+    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -11,6 +13,13 @@
         public CategoryValueTotalCalculatorTests()
         {
             calculator = new CategoryValueTotalCalculator();
+        }
+
+        [Fact]
+        public void CategoryValueTotalCalculator_IsDecoratedWith_SerializableAttribute()
+        {
+            typeof(CategoryValueTotalCalculator).Should()
+                .BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]

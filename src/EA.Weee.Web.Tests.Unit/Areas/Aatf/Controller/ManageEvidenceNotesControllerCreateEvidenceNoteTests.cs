@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using AutoFixture;
     using Constant;
@@ -315,6 +316,114 @@
             ManageEvidenceController.ModelState.ElementAt(5).Key.Should().Be("ProtocolValue");
             ManageEvidenceController.ModelState.ElementAt(6).Key.Should().Be("CategoryValues2");
             ManageEvidenceController.ModelState.ElementAt(7).Key.Should().Be("CategoryValues");
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNoteGet_Should_CallAndClearSessionService()
+        {
+            //Act
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
+
+            //Assert
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(A<HttpSessionStateBase>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, null, A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNoteGet_GivenTrueReturnFromCopyPaste_Should_CallMapperWithExistingModel()
+        {
+            //Arrange
+            var model = ValidModel();
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
+
+            var schemes = Fixture.CreateMany<SchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+
+            //Act
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
+
+            //Assert
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>.That.Matches(x => x.AatfId == AatfId
+                && x.ExistingModel == model
+                && x.OrganisationId == OrganisationId
+                && x.Schemes == schemes))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNoteGet_GivenFalseReturnFromCopyPaste_Should_CallMapperWithoutExistingModel()
+        {
+            //Arrange
+            var schemes = Fixture.CreateMany<SchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+
+            //Act
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, false);
+
+            //Assert
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>.That.Matches(x => x.AatfId == AatfId
+                && x.ExistingModel == null
+                && x.OrganisationId == OrganisationId
+                && x.Schemes == schemes))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenCopyPasteAction_Should_RedirectToCopyPaste()
+        {
+            //Arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.CopyAndPaste;
+
+            //Act
+            var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
+            result.RouteValues["organisationId"].Should().Be(OrganisationId);
+            result.RouteValues["returnAction"].Should().Be(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction);
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_NotGivenCopyPasteAction_ShouldNot_RedirectToCopyPaste()
+        {
+            //Arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+
+            //Act
+            var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["controller"].Should().NotBe(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
+            result.RouteValues["returnAction"].Should().NotBe(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction);
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenCopyPasteAction_Should_CallSessionService()
+        {
+            //Arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.CopyAndPaste;
+
+            //Act
+            var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+            //Assert
+            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_NotGivenCopyPasteAction_ShouldNot_CallSessionService()
+        {
+            //Arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+
+            //Act
+            var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+
+            //Assert
+            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustNotHaveHappened();
         }
     }
 }
