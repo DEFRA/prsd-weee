@@ -50,6 +50,8 @@
         [DisplayName("Reason")]
         public string Reason { get; set; }
 
+        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(Reason);
+
         public EvidenceNoteViewModel()
         {
             categoryValueCalculator = new CategoryValueTotalCalculator();
