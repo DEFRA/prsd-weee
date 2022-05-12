@@ -284,6 +284,7 @@
         [Fact]
         public void ParseEvidencePastedValues_GivenPastedDataAndExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
         {
+            //Arrange
             var existingData = A.Fake<IList<EvidenceCategoryValue>>();
             var evidencePastedValues = CreateEvidencePastedData();
 
@@ -292,8 +293,10 @@
                 item.Id = Guid.NewGuid();
             }
 
+            //Act
             var results = pasteProcessor.ParseEvidencePastedValues(evidencePastedValues, existingData);
 
+            //Assert
             foreach (var result in results)
             {
                 result.Id.Should().Be(existingData.Where(s => s.CategoryId == result.CategoryId).FirstOrDefault().Id);
@@ -303,10 +306,13 @@
         [Fact]
         public void ParseEvidencePastedValues_GivenPastedDataAndNoExistingData_EvidenceCategoryValuesShouldBeCorrectlyPopulated()
         {
+            //Arrange
             var evidencePastedValues = CreateEvidencePastedData();
 
+            //Act
             var result = pasteProcessor.ParseEvidencePastedValues(evidencePastedValues, null);
 
+            //Assert
             for (var i = 0; i < result.Count; i++)
             {
                 result[i].Received.Should().Be(evidencePastedValues.Receieved.FirstOrDefault(x => x.CategoryId == result[i].CategoryId).Tonnage);
