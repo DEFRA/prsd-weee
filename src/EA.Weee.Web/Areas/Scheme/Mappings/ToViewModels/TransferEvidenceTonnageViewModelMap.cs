@@ -72,20 +72,24 @@
                 {
                     foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData.OrderBy(c => c.CategoryId.ToInt()))
                     {
-                        var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
-                        {
-                            Id = evidenceTonnageData.Id,
-                        };
-
+                        string receivedTonnage = null;
+                        string reusedTonnage = null;
                         if (source.TransferAllTonnage)
                         {
-                            tonnage.Received = evidenceTonnageData.Received.HasValue
+                            receivedTonnage = evidenceTonnageData.Received.HasValue
                                 ? evidenceTonnageData.Received.ToTonnageDisplay()
                                 : null;
-                            tonnage.Reused = evidenceTonnageData.Reused.HasValue
+                            reusedTonnage = evidenceTonnageData.Reused.HasValue
                                 ? evidenceTonnageData.Reused.ToTonnageDisplay()
                                 : null;
                         }
+
+                        var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
+                            evidenceTonnageData.Id,
+                            evidenceTonnageData.Received,
+                            evidenceTonnageData.Reused,
+                            receivedTonnage,
+                            reusedTonnage);
 
                         model.TransferCategoryValues.Add(tonnage);
                     }
