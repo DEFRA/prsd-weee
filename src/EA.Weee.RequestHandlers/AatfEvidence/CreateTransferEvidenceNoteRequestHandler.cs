@@ -71,7 +71,7 @@
                 Guid transferNoteId;
                 try
                 {
-                    await transferTonnagesValidator.Validate(request);
+                    await transferTonnagesValidator.Validate(request.TransferValues);
 
                     transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(),
