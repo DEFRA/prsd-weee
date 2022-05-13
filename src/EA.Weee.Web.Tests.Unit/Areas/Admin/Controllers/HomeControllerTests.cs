@@ -8,6 +8,9 @@
     using Prsd.Core.Mediator;
     using Services;
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
@@ -133,7 +136,7 @@
             if (selection == InternalUserActivity.ManagePcsObligations)
             {
                 // is holding page pointed to when selecting InternalUserActivity.ManagePcsObligations ?
-                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+                Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
             }
 
             if (selection == InternalUserActivity.ManageAatfs)
@@ -172,6 +175,36 @@
 
             // Assert
             Assert.Throws<InvalidOperationException>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the "ManagePcsCharges" option is considered invalid for the POST ChoooseActivity
+        /// action when the configuration has "EnabledInvoicing" set to false.
+        /// </summary>
+        [Fact]
+        public void PostChooseActivity_SelectedManagePcsObligationsWhenConfigSetToFalse_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            HomeController controller = new HomeController(() => apiClient, A.Fake<IAppConfiguration>());
+            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+
+            // Act
+            Func<ActionResult> testCode = () => controller.ChooseActivity(viewModel);
+
+            // Assert
+            NotSupportedException error = Assert.Throws<NotSupportedException>(testCode);
+            Assert.True(ValidateModel(viewModel).Any(v => v.MemberNames.Contains("SelectedValue") && v.ErrorMessage.Contains("Select the activity you would like to do")));
+        }
+
+        private IList<ValidationResult> ValidateModel(object model)
+        {
+            // could not get the ModelState.IsValid to false by merely getting the required attribute
+            // so this is a little helper
+            var validationResults = new List<ValidationResult>();
+            var ctx = new ValidationContext(model, null, null);
+            Validator.TryValidateObject(model, ctx, validationResults, true);
+
+            return validationResults;
         }
 
         [Fact]
