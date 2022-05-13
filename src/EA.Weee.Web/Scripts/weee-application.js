@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-
+    $("#copy-tonnage-button").hide();
     function focusMainContent() {
         $("#main-content").attr("tabindex", 1);
         $("#main-content").focus(function () {
@@ -133,8 +133,8 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
-    $("#copy-tonnage-button").hide();
-    $("#transferAllTonnage").change(function () {
+ 
+    $("#TransferAllTonnage").change(function () {
         $("#TransferEvidenceForm").submit();
     });
 
