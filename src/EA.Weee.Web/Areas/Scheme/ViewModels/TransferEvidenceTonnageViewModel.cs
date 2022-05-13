@@ -9,11 +9,11 @@
         [DisplayName("Transfer all available tonnage from all notes that you have selected")]
         public bool TransferAllTonnage { get; set; }
 
-        public List<EvidenceCategoryValue> TransferCategoryValues { get; set; }
+        public List<TransferEvidenceCategoryValue> TransferCategoryValues { get; set; }
 
         public TransferEvidenceTonnageViewModel()
         {
-            TransferCategoryValues = new List<EvidenceCategoryValue>();
+            TransferCategoryValues = new List<TransferEvidenceCategoryValue>();
         }
     }
 }

@@ -9,11 +9,11 @@
     public class EvidenceCategoryValue : CategoryValue
     {
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
-        public string Received { get; set; }
+        public virtual string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(Received))]
-        public string Reused { get; set; }
+        [TonnageCompareValue(nameof(CategoryId), nameof(Received), ErrorMessage = "The reused tonnage must be equivalent or lower than the received tonnage")]
+        public virtual string Reused { get; set; }
 
         public EvidenceCategoryValue()
         {

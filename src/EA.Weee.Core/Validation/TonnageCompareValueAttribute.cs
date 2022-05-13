@@ -6,7 +6,7 @@
     using System.Globalization;
     using System.Linq;
 
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TonnageCompareValueAttribute : ValidationAttribute
     {
         private string categoryPropertyErrorMessage;
@@ -64,7 +64,7 @@
             if ((decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                     CultureInfo.InvariantCulture, out var decimalResult) && (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))))
             {
-                return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
+                return new ValidationResult(GenerateMessage());
             }
 
             if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
@@ -72,16 +72,16 @@
             {
                 if (decimalResult > decimalDependentResult)
                 {
-                    return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
+                    return new ValidationResult(GenerateMessage());
                 }
             }
             
             return ValidationResult.Success;
         }
 
-        private string GenerateMessage(int categoryId)
+        private string GenerateMessage()
         {
-            return "The reused tonnage must be equivalent or lower than the received tonnage";
+            return ErrorMessage;
         }
     }
 }
