@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     public enum ActionEnum
     {
