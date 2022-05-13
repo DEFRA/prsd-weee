@@ -327,12 +327,15 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceTonnageViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewTransferNoteViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewTransferNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Requests\ITransferEvidenceRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TotalCategoryValue.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBase.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModel.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
@@ -711,6 +714,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <Content Include="Areas\Aatf\Views\EvidenceTonnageValueCopyPaste\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\TransferredEvidence.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

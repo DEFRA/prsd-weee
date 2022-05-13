@@ -6,22 +6,17 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
-    using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteForSchemeRequestHandlerTests
+    public class GetTransferEvidenceNoteForSchemeRequestHandlerTests
     {
         private GetEvidenceNoteForSchemeRequestHandler handler;
         private readonly Fixture fixture;
@@ -33,7 +28,7 @@
         private readonly Guid evidenceNoteId;
         private readonly Guid recipientId;
 
-        public GetEvidenceNoteForSchemeRequestHandlerTests()
+        public GetTransferEvidenceNoteForSchemeRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
