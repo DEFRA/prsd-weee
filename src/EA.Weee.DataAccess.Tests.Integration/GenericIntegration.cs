@@ -11,6 +11,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
     using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;

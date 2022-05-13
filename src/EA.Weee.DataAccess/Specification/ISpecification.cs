@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Specification
+﻿namespace EA.Weee.DataAccess.Specification
 {
     using System;
     using System.Linq.Expressions;

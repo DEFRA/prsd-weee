@@ -1,6 +1,5 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn
+﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using DataAccess;
     using Domain.AatfReturn;
     using Prsd.Core.Domain;
     using Specification;
@@ -9,7 +8,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using RequestHandlers.Specification;
+    using Weee.DataAccess;
 
     public class GenericDataAccess : IGenericDataAccess
     {

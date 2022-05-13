@@ -9,6 +9,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class GetContactHandler : IRequestHandler<GetContact, ContactData>
     {
