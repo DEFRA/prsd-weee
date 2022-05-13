@@ -325,6 +325,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceTonnageViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Requests\ITransferEvidenceRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TotalCategoryValue.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModel.cs" />
@@ -349,8 +350,6 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ViewAndTransferEvidenceViewModel.cs" />
-    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
-    <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteCategoriesViewModel.cs" />
@@ -423,7 +422,7 @@
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
+    <Compile Include="ViewModels\Shared\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />

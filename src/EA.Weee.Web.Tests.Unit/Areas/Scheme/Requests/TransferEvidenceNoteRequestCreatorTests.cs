@@ -3,62 +3,62 @@
     using System;
     using System.Linq;
     using AutoFixture;
-    using EA.Weee.Web.Areas.Scheme.Requests;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FluentAssertions;
+    using Web.Areas.Scheme.Requests;
     using Xunit;
 
-    public class CreateTransferEvidenceNoteRequestCreatorTests
+    public class TransferEvidenceNoteRequestCreatorTests
     {
-        private readonly CreateTransferEvidenceNoteRequestCreator requestCreator;
+        private readonly TransferEvidenceNoteRequestCreator requestCreator;
         private readonly Fixture fixture;
 
-        public CreateTransferEvidenceNoteRequestCreatorTests()
+        public TransferEvidenceNoteRequestCreatorTests()
         {
             fixture = new Fixture();
 
-            requestCreator = new CreateTransferEvidenceNoteRequestCreator();
+            requestCreator = new TransferEvidenceNoteRequestCreator();
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenNullViewModel_ArgumentNullExceptionExpected()
+        public void SelectCategoriesToRequest_GivenNullViewModel_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => requestCreator.ViewModelToRequest(null));
+            var exception = Record.Exception(() => requestCreator.SelectCategoriesToRequest(null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenSelectedSchemeIsNull_InvalidOperationExceptionExpected()
+        public void SelectCategoriesToRequest_GivenSelectedSchemeIsNull_InvalidOperationExceptionExpected()
         {
             //arrange
             var model = GetModel();
             model.SelectedSchema = null;
 
             //act
-            var exception = Record.Exception(() => requestCreator.ViewModelToRequest(model));
+            var exception = Record.Exception(() => requestCreator.SelectCategoriesToRequest(model));
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenThereIsNoCategorySelected_InvalidOperationExceptionExpected()
+        public void SelectCategoriesToRequest_GivenThereIsNoCategorySelected_InvalidOperationExceptionExpected()
         {
             //arrange
             var model = GetModel();
            
             //act
-            var exception = Record.Exception(() => requestCreator.ViewModelToRequest(model));
+            var exception = Record.Exception(() => requestCreator.SelectCategoriesToRequest(model));
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
         }
 
         [Fact]
-        public void ViewModelToRequest_GivenValidModel_CreateTransferNoteRequestShouldBeCreated()
+        public void SelectCategoriesToRequest_GivenValidModel_CreateTransferNoteRequestShouldBeCreated()
         {
             //arrange
             var organisationId = Guid.NewGuid();
@@ -68,7 +68,7 @@
             var selectedIds = model.CategoryValues.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
            //act
-           var request = requestCreator.ViewModelToRequest(model);
+           var request = requestCreator.SelectCategoriesToRequest(model);
 
             //assert
             request.CategoryIds.Should().BeEquivalentTo(selectedIds);

@@ -3,6 +3,7 @@
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
@@ -178,7 +179,10 @@
         </table>
 
         <div class="govuk-!-margin-top-3">
-            @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
+            <div class="govuk-button-group">
+                @*@this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })*@
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+            </div>
         </div>
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")
