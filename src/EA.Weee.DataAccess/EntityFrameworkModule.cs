@@ -30,9 +30,7 @@
             builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
             builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GenericDataAccess, IGenericDataAccess>(environment);
-
-            builder.RegisterType<WeeeTransactionAdapter>().As<IWeeeTransactionAdapter>()
-                .InstancePerRequest();
+            builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 

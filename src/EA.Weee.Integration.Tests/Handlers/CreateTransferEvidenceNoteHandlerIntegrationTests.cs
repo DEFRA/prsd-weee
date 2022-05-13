@@ -257,8 +257,8 @@
             {
                 note.CreatedById.Should().Be(UserId.ToString());
                 note.Aatf.Should().BeNull();
-                note.EndDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                note.StartDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                note.EndDate.Date.Should().BeSameDateAs(SystemTime.UtcNow.Date);
+                note.StartDate.Date.Should().BeSameDateAs(SystemTime.UtcNow.Date);
                 note.WasteType.Should().BeNull();
                 note.Protocol.Should().BeNull();
                 note.Recipient.Should().Be(recipient);
