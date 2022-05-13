@@ -21,6 +21,7 @@
     using Security;
     using System.Reflection;
     using Areas.Aatf.Mappings.Filters;
+    using Areas.Scheme.Requests;
 
     public class AutofacBootstrapper
     {
@@ -92,7 +93,6 @@
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces().InstancePerRequest();
 
-            // AATF View Model Mapping Utilties
             builder.RegisterType<CategoryValueTotalCalculator>().As<ICategoryValueTotalCalculator>();
             builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
             builder.RegisterType<ReturnsOrdering>().As<IReturnsOrdering>();
@@ -100,7 +100,7 @@
             builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
             builder.RegisterType<SessionService>().As<ISessionService>();
-
+            builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
             return builder.Build();
         }
     }

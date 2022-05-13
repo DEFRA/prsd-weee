@@ -23,6 +23,7 @@
     using System.Web.Mvc;
     using Core.AatfEvidence;
     using Web.Areas.Scheme.Mappings.ToViewModels;
+    using Web.Areas.Scheme.Requests;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
@@ -36,7 +37,7 @@
         private readonly IWeeeCache cache;
         private readonly Guid organisationId;
         private readonly Fixture fixture;
-        private readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> transferNoteRequestCreator;
+        private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
         
         public TransferEvidenceControllerTests()
@@ -49,7 +50,7 @@
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             organisationId = Guid.NewGuid();
-            transferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
+            transferNoteRequestCreator = A.Fake<ITransferEvidenceRequestCreator>();
 
             transferEvidenceController = new TransferEvidenceController(() => weeeClient, breadcrumb, mapper, transferNoteRequestCreator, cache, sessionService);
 
@@ -302,7 +303,7 @@
             await transferEvidenceController.TransferEvidenceNote(model);
 
             //assert
-            A.CallTo(() => transferNoteRequestCreator.ViewModelToRequest(model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(model)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -314,7 +315,7 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
-            A.CallTo(() => transferNoteRequestCreator.ViewModelToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
 
             //act
             var result = await transferEvidenceController.TransferEvidenceNote(model) as RedirectToRouteResult;
@@ -334,7 +335,7 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
-            A.CallTo(() => transferNoteRequestCreator.ViewModelToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
 
             //act
             await transferEvidenceController.TransferEvidenceNote(model);
