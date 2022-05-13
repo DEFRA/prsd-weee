@@ -158,5 +158,33 @@
             //assert
             result.Should().Be(id);
         }
+
+        [Fact]
+        public async Task GetNoteById_GivenNoNoteFound_ArgumentExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => genericDataAccess.GetById<Note>(A<Guid>._)).Returns((Note)null);
+
+            //act
+            var exception = await Record.ExceptionAsync(() => evidenceDataAccess.GetNoteById(Guid.NewGuid()));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task GetNoteById_GivenNotFound_NoteShouldBeReturned()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var id = Guid.NewGuid();
+            A.CallTo(() => genericDataAccess.GetById<Note>(id)).Returns(note);
+
+            //act
+            var result = await evidenceDataAccess.GetNoteById(id);
+
+            //assert
+            result.Should().Be(note);
+        }
     }
 }
