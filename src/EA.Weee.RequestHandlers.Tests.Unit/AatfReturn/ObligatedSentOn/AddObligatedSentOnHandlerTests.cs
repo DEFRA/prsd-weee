@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Requests.Aatf;
     using Xunit;
 

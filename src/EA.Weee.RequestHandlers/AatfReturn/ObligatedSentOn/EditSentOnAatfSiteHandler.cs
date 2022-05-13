@@ -9,6 +9,7 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class EditSentOnAatfSiteHandler : IRequestHandler<EditSentOnAatfSite, Guid>
     {

@@ -13,6 +13,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Mappings;
+    using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
 

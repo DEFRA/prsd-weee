@@ -3,7 +3,7 @@
     using EA.Weee.Domain.AatfReturn;
     using System;
     using System.Linq.Expressions;
-    using RequestHandlers.Specification;
+    using DataAccess.Specification;
 
     public class ReturnReportOnByReturnIdSpecification : Specification<ReturnReportOn>
     {

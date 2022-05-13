@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Helpers;
+    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;

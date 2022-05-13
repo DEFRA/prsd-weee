@@ -26,6 +26,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

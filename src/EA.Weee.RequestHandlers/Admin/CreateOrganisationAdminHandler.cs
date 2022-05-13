@@ -12,6 +12,7 @@
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class CreateOrganisationAdminHandler : IRequestHandler<CreateOrganisationAdmin, Guid>
     {

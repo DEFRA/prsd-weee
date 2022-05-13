@@ -1,8 +1,7 @@
-﻿namespace EA.Weee.RequestHandlers.Specification
+﻿namespace EA.Weee.DataAccess.Specification
 {
     using System;
     using System.Linq.Expressions;
-    using AatfReturn.Specification;
     using Prsd.Core.Domain;
 
     public abstract class Specification<T> : ISpecification<T> where T : Entity

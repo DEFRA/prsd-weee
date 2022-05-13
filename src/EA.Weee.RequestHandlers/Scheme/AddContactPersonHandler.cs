@@ -9,6 +9,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     internal class AddContactPersonHandler : IRequestHandler<AddContactPerson, Guid>
     {
