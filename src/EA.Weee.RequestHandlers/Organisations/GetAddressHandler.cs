@@ -9,6 +9,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class GetAddressHandler : IRequestHandler<GetAddress, AddressData>
     {

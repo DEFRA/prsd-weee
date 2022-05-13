@@ -18,6 +18,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Weee.Security;
     using PanArea = Domain.Lookup.PanArea;
 

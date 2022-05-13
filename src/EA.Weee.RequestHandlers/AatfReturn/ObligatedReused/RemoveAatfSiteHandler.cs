@@ -7,6 +7,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class RemoveAatfSiteHandler : IRequestHandler<RemoveAatfSite, bool>
     {

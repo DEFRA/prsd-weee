@@ -20,6 +20,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
     using NonObligatedWeee = Domain.AatfReturn.NonObligatedWeee;

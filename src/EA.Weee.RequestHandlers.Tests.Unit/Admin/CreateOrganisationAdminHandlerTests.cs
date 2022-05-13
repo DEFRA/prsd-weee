@@ -19,6 +19,7 @@
     using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Xunit;
 
     public class CreateOrganisationAdminHandlerTests

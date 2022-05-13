@@ -5,6 +5,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     internal class EditObligatedReusedHandler : IRequestHandler<EditObligatedReused, bool>
     {
