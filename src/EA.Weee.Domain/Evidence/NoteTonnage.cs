@@ -23,15 +23,15 @@
         }
 
         [ForeignKey("NoteId")]
-        public Note Note { get; set; }
+        public virtual Note Note { get; set; }
 
-        public Guid NoteId { get; private set; }
+        public virtual Guid NoteId { get; private set; }
 
-        public WeeeCategory CategoryId { get; private set; }
+        public virtual WeeeCategory CategoryId { get; private set; }
 
-        public decimal? Received { get; private set; }
+        public virtual decimal? Received { get; private set; }
 
-        public decimal? Reused { get; private set; }
+        public virtual decimal? Reused { get; private set; }
 
         public void UpdateValues(decimal? received, decimal? reused)
         {
@@ -39,6 +39,6 @@
             Reused = reused;
         }
 
-        public ICollection<NoteTransferTonnage> NoteTransferTonnage { get; set; }
+        public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; set; }
     }
 }
