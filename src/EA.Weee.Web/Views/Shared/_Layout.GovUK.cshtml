@@ -154,7 +154,7 @@
         GOVUK.cookie('_gid', null);
         GOVUK.cookie('_gat', null);
         GOVUK.cookie('_gat_govuk_shared', null);
-        document.getElementById("global-cookie-accept-message").style.display = "block";
+        document.getElementById("global-cookie-reject-message").style.display = "block";
     });
 
     $("#hideAcceptCookies").click(function () {
@@ -194,8 +194,6 @@
         GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
         self.startGoogleTracking();
         document.getElementById("global-cookie-message").style.display = "none";
-        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
-        document.getElementById("cookieSettings").style.display = "none";
     }
 
     function rejectCookies() {
@@ -205,28 +203,22 @@
         GOVUK.cookie('_gid', null);
         GOVUK.cookie('_gat', null);
         GOVUK.cookie('_gat_govuk_shared', null);
-        document.getElementById("global-cookie-accept-message").style.display = "none";
-        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
-        document.getElementById("cookieSettings").style.display = "none";
     }
 
     function setCookieChoice() {
         if (document.getElementById("cookieChoiceYes").checked === false && document.getElementById("cookieChoiceNo").checked === false) {
             return;
-        }
-
-        if (document.getElementById("saveCookieChoice").value === "Saved Cookie Settings") {
-            document.getElementById("saveCookieChoice").value = "Accept additional cookies";
-            document.getElementById("cookieSettings").style.display = "block";
-            return;
-        }
+        }        
 
         if (document.getElementById("cookieChoiceYes").checked) {
             acceptCookies();
         } else {
             rejectCookies();
         }
-        document.getElementById("saveCookieChoice").value = "Saved Cookie Settings";
-        document.getElementById("cookieSettings").style.display = "none";
+
+        window.scrollTo({ top: 0 });
+        document.getElementById("dvSuccessMessage").style.display = "block";
+        document.getElementById("global-cookie-accept-message").style.display = "none";
+        document.getElementById("global-cookie-reject-message").style.display = "none";
     }
 </script>
