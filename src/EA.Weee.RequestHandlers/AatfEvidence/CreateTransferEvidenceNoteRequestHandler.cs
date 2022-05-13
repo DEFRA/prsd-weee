@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using AatfReturn;
-    using AatfReturn.Internal;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess;
@@ -18,7 +15,6 @@
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using Security;
-    using Specification;
 
     public class CreateTransferEvidenceNoteRequestHandler : IRequestHandler<TransferEvidenceNoteRequest, Guid>
     {
@@ -27,20 +23,21 @@
         private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
-        private readonly WeeeContext context;
+        private readonly IWeeeTransactionAdapter transactionAdapter;
 
         public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
-            IAatfDataAccess aatfDataAccess, 
             IUserContext userContext, 
-            IEvidenceDataAccess evidenceDataAccess, WeeeContext context, ITransferTonnagesValidator transferTonnagesValidator)
+            IEvidenceDataAccess evidenceDataAccess, 
+            ITransferTonnagesValidator transferTonnagesValidator, 
+            IWeeeTransactionAdapter transactionAdapter)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
-            this.context = context;
             this.transferTonnagesValidator = transferTonnagesValidator;
+            this.transactionAdapter = transactionAdapter;
         }
 
         public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
@@ -57,21 +54,16 @@
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(scheme).IsNotNull();
 
-            var transferNoteTonnages = new List<NoteTransferTonnage>();
-
-            foreach (var transferValue in request.TransferValues)
-            {
-                transferNoteTonnages.Add(new NoteTransferTonnage(transferValue.TransferTonnageId,
-                    transferValue.FirstTonnage,
-                    transferValue.SecondTonnage));
-            }
-
-            using (var transaction = context.Database.BeginTransaction())
+            using (var transaction = transactionAdapter.BeginTransaction())
             {
                 Guid transferNoteId;
                 try
                 {
                     await transferTonnagesValidator.Validate(request.TransferValues);
+
+                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
+                        t.FirstTonnage,
+                        t.SecondTonnage)).ToList();
 
                     transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(),
@@ -79,11 +71,11 @@
                 }
                 catch
                 {
-                    transaction.Rollback();
+                    transactionAdapter.Rollback(transaction);
                     throw;
                 }
 
-                transaction.Commit();
+                transactionAdapter.Commit(transaction);
 
                 return transferNoteId;
             }
