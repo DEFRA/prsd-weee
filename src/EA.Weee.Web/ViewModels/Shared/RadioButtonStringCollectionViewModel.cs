@@ -8,7 +8,7 @@
 
     public class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
     {
-        [Required(ErrorMessage = "Please answer this question")]
+        [Required(ErrorMessage = "Select the activity you would like to do")]
         public override string SelectedValue { get; set; }
 
         public override IList<string> PossibleValues { get; set; }
