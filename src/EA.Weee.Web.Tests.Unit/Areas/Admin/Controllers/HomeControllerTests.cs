@@ -133,7 +133,7 @@
             if (selection == InternalUserActivity.ManagePcsObligations)
             {
                 // is holding page pointed to when selecting InternalUserActivity.ManagePcsObligations ?
-                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+                Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
             }
 
             if (selection == InternalUserActivity.ManageAatfs)
