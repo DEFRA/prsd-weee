@@ -86,7 +86,7 @@
             model.PossibleValues[0].Should().Be(InternalUserActivity.ManageScheme);
             model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
             model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
-            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsObligations);
+            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsObligations);  // GC: done in my previous PR
             model.PossibleValues[4].Should().Be(InternalUserActivity.ManagePcsCharges);
             model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAatfs);
             model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAes);
@@ -115,6 +115,7 @@
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
         [InlineData(InternalUserActivity.ManagePcsCharges, "SelectAuthority")]
+        [InlineData(InternalUserActivity.ManagePcsObligations, "Index")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -128,6 +129,12 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
+
+            if (selection == InternalUserActivity.ManagePcsObligations)
+            {
+                // is holding page pointed to when selecting InternalUserActivity.ManagePcsObligations ?
+                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+            }
 
             if (selection == InternalUserActivity.ManageAatfs)
             {
