@@ -346,7 +346,7 @@
         public async Task ReviewEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
         {
             //arrange
-            var model = Fixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = Fixture.Build<ReviewEvidenceNoteViewModel>().With(r => r.SelectedValue, "Approve evidence note").Create();
 
             //act
             var result = await ManageEvidenceController.ReviewEvidenceNote(model) as ViewResult;
