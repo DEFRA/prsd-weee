@@ -26,19 +26,21 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
+        private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly WeeeContext context;
 
         public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IAatfDataAccess aatfDataAccess, 
             IUserContext userContext, 
-            IEvidenceDataAccess evidenceDataAccess, WeeeContext context)
+            IEvidenceDataAccess evidenceDataAccess, WeeeContext context, ITransferTonnagesValidator transferTonnagesValidator)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.context = context;
+            this.transferTonnagesValidator = transferTonnagesValidator;
         }
 
         public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
@@ -59,34 +61,32 @@
 
             foreach (var transferValue in request.TransferValues)
             {
-                transferNoteTonnages.Add(new NoteTransferTonnage(transferValue.TransferTonnageId, 
-                    transferValue.FirstTonnage, 
+                transferNoteTonnages.Add(new NoteTransferTonnage(transferValue.TransferTonnageId,
+                    transferValue.FirstTonnage,
                     transferValue.SecondTonnage));
             }
 
-            var existingNoteTonnage = await evidenceDataAccess.GetTonnageByIds(request.TransferValues.Select(t => t.TransferTonnageId).ToList());
-
-            foreach (var noteTonnage in existingNoteTonnage)
+            using (var transaction = context.Database.BeginTransaction())
             {
-                if (!noteTonnage.Received.HasValue)
+                Guid transferNoteId;
+                try
                 {
-                    throw new InvalidOperationException();
+                    await transferTonnagesValidator.Validate(request);
+
+                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
+                        transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(),
+                        userContext.UserId.ToString());
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
                 }
 
-                var totalReceivedAvailable = noteTonnage.Received.Value - noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && nt.TransferNote.Status.Value.Equals(NoteStatus.Approved.Value)).Sum(nt => nt.Received.Value);
-                var requestedTonnage = request.TransferValues.First(t => t.TransferTonnageId.Equals(noteTonnage.Id));
-                
-                if (requestedTonnage.FirstTonnage.HasValue && decimal.Compare(requestedTonnage.FirstTonnage.Value, totalReceivedAvailable).Equals(1))
-                {
-                    // can't transfer more than is available
-                    throw new InvalidOperationException();
-                }
+                transaction.Commit();
+
+                return transferNoteId;
             }
-
-            var transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme, transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(),
-                userContext.UserId.ToString());
-
-            return transferNoteId;
         }
     }
 }

@@ -95,8 +95,10 @@
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
+    <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
+    <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchAatfDataAccess.cs" />

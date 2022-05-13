@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.DataAccess.Tests.Integration.EvidenceNote
 {
     using System;
     using System.Collections.Generic;
