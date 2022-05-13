@@ -299,6 +299,8 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceNotesViewModelTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
@@ -319,6 +321,7 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="ViewModels\ListOfNotesMapTests.cs" />

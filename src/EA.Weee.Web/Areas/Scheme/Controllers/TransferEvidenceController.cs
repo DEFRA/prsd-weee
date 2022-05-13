@@ -154,12 +154,34 @@
 
                     var updatedRequest = transferNoteRequestCreator.SelectTonnageToRequest(transferRequest, model);
 
-                    await client.SendAsync(User.GetAccessToken(), updatedRequest);
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
+
+                    var id = await client.SendAsync(User.GetAccessToken(), updatedRequest);
+
+                    return RedirectToAction("TransferredEvidence", "TransferEvidence",
+                        new { pcsId = model.PcsId, evidenceNoteId = id });
                 }
 
                 var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
 
                 return this.View("TransferTonnage", updatedModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = this.apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
+                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+
+                return this.View("TransferredEvidence", model);
             }
         }
 

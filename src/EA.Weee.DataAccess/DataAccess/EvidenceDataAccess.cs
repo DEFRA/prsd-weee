@@ -6,6 +6,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using CuttingEdge.Conditions;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
@@ -27,7 +28,11 @@
 
         public async Task<Note> GetNoteById(Guid id)
         {
-            return await context.Notes.FindAsync(id);
+            var note = await genericDataAccess.GetById<Note>(id);
+
+            Condition.Requires(note).IsNotNull($"Evidence note {id} not found");
+
+            return note;
         }
 
         public async Task<Note> Update(Note note, Scheme recipient, DateTime startDate, DateTime endDate,
