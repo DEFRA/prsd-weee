@@ -142,12 +142,13 @@
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
     <Compile Include="Base\EvidenceNoteBaseDataAccess.cs" />
-    <Compile Include="TransferNotesDataAccessIntegration.cs" />
-    <Compile Include="NotesDataAccessIntegration.cs" />
+    <Compile Include="EvidenceNote\NotesDataAccessGetTonnageByIdsIntegration.cs" />
+    <Compile Include="EvidenceNote\TransferNotesDataAccessIntegration.cs" />
+    <Compile Include="EvidenceNote\NotesDataAccessIntegration.cs" />
     <Compile Include="AatfSiteIntegration.cs" />
     <Compile Include="AddReturnSchemeIntegration.cs" />
     <Compile Include="DataAccess\OrganisationDataAccessTests.cs" />
-    <Compile Include="EvidenceDataAccessIntegration.cs" />
+    <Compile Include="EvidenceNote\EvidenceDataAccessIntegration.cs" />
     <Compile Include="GenericIntegration.cs" />
     <Compile Include="ObligatedSentOnWeeeIntegration.cs" />
     <Compile Include="ReportOptionsIntegration.cs" />
