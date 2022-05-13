@@ -24,7 +24,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
