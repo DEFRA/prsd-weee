@@ -1,9 +1,8 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.DataAccess.Tests.Integration.EvidenceNote
 {
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure.Design;
     using System.Linq;
     using System.Threading.Tasks;
     using Base;

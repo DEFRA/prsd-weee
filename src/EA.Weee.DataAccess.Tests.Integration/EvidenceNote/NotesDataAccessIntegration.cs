@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.DataAccess.Tests.Integration.EvidenceNote
 {
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Base;
+    using Core.Tests.Unit.Helpers;
     using Domain.Evidence;
-    using EA.Weee.Core.Tests.Unit.Helpers;
-    using EA.Weee.DataAccess.Tests.Integration.Base;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
