@@ -97,7 +97,7 @@
                     return RedirectToAction("ChooseReport", "Reports");
 
                 case InternalUserActivity.ManagePcsObligations:
-                    return RedirectToAction("Index", "AdminHolding");
+                    return RedirectToAction("Index", "Obligations");
 
                 case InternalUserActivity.ManagePcsCharges:
                     {
