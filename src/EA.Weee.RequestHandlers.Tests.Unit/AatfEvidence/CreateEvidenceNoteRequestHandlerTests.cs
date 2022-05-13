@@ -169,6 +169,17 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldEnsureCanAccessExternalArea()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea())
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
         {
             //act
