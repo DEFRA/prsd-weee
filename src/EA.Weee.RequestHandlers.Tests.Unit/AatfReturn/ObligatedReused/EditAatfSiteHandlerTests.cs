@@ -14,6 +14,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
 

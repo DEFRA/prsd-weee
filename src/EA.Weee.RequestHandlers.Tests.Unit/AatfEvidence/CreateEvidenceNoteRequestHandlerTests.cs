@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Helpers;
+    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -165,6 +166,17 @@
 
             //assert
             A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldEnsureCanAccessExternalArea()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea())
                 .MustHaveHappenedOnceExactly();
         }
 
