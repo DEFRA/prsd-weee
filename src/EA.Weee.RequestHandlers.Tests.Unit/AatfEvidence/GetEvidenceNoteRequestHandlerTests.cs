@@ -107,19 +107,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndEvidenceNoteNotFound_ShowThrowArgumentNullExceptionExpected()
-        {
-            //arrange
-            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns((Note)null);
-
-            //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
-
-            //assert
-            result.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
         {
             //act
