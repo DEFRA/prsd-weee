@@ -181,7 +181,8 @@
             result.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact]
+        [Fact(Skip = "Re-instate when available tonnages is returned to the creation screen")]
+        //TODO: Re-instate when available tonnages is returned to the creation screen
         public async Task HandleAsync_GivenRequest_TransferValuesShouldBeValidated()
         {
             //act
@@ -249,7 +250,7 @@
                 .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
         }
 
-        [Fact]
+        [Fact(Skip = "Re-instate when available tonnages is returned to the creation screen")]
         public async Task HandleAsync_GivenErrorDuringValidation_TransactionShouldBeRolledBack()
         {
             //arrange

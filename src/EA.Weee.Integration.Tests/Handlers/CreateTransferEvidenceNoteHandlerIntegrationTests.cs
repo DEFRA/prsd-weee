@@ -14,6 +14,7 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
+    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
@@ -177,6 +178,8 @@
         }
 
         [Component]
+        [Ignore("Re-instate when available tonnages is returned to the creation screen")]
+        //TODO: Re-instate when available tonnages is returned to the creation screen
         public class WhenICreateADraftTransferEvidenceNoteWhereThereIsNoAvailableTonnage : CreateTransferEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
