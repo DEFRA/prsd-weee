@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [Evidence].[NoteTransferCategory](
 	[Id] [uniqueidentifier] NOT NULL,
 	[TransferNoteId] [uniqueidentifier] NOT NULL,
-	[CategoryId] [uniqueidentifier] NOT NULL,
+	[CategoryId] [int] NOT NULL,
 	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_NoteTransferCategory_Id] PRIMARY KEY CLUSTERED 
 (
