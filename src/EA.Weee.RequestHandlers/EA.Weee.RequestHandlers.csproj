@@ -110,6 +110,7 @@
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Mappings\TransferEvidenceNoteMap.cs" />
     <Compile Include="Mappings\EvidenceNoteMap.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />

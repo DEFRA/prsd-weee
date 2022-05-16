@@ -16,19 +16,19 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteForSchemeRequestHandlerTests
+    public class GetTransferEvidenceNoteForSchemeRequestHandlerTests
     {
-        private GetEvidenceNoteForSchemeRequestHandler handler;
+        private GetTransferEvidenceNoteForSchemeRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly GetEvidenceNoteForSchemeRequest request;
+        private readonly GetTransferEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
-        private readonly Guid recipientId;
+        private readonly Guid organisationId;
 
-        public GetEvidenceNoteForSchemeRequestHandlerTests()
+        public GetTransferEvidenceNoteForSchemeRequestHandlerTests()
         {
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -37,13 +37,13 @@
             note = A.Fake<Note>();
             fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
-            recipientId = fixture.Create<Guid>();
+            organisationId = fixture.Create<Guid>();
 
-            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
+            A.CallTo(() => note.OrganisationId).Returns(organisationId);
 
-            request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
+            request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            handler = new GetEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
@@ -54,7 +54,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -64,12 +64,12 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
-           
-            handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -89,13 +89,13 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
+        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -106,16 +106,16 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<Note, TransferEvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequestAndNote_MappedNoteShouldBeReturned()
         {
             //arrange
-            var evidenceNote = fixture.Create<EvidenceNoteData>();
+            var evidenceNote = fixture.Create<TransferEvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<Note, TransferEvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

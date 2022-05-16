@@ -5,7 +5,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
-    using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
@@ -31,14 +30,9 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(request.EvidenceNoteId);
 
-            //TODO: this will be moved to a mapper when doing the view transfer note story
-            return new TransferEvidenceNoteData()
-            {
-                Id = evidenceNote.Id,
-                Reference = evidenceNote.Reference,
-                Type = (Core.AatfEvidence.NoteType)evidenceNote.NoteType.Value,
-                Status = (Core.AatfEvidence.NoteStatus)evidenceNote.Status.Value,
-            };
+            authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
+
+            return mapper.Map<Note, TransferEvidenceNoteData>(evidenceNote);
         }
     }
 }
