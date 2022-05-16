@@ -179,6 +179,7 @@
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
+    <Compile Include="Builders\TransferEvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\EvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\OrganisationContactDbSetup.cs" />
     <Compile Include="Builders\SchemeDbSetup.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNotesForTransferRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\SetNoteStatusRequestHandlerIntegrationTests.cs" />

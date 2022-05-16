@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
+    using System;
     using System.Linq;
     using System.Web.Mvc;
     using Core.AatfEvidence;
@@ -17,7 +18,9 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var recipientId = source.ExistingModel?.ReceivedId ?? source.NoteData.RecipientId;
+            var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientId;
+            var reason = source.ExistingModel != null ? source.ExistingModel.Reason : source.NoteData.ReturnedReason;
+
             var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
             
             var model = new EditEvidenceNoteViewModel
@@ -31,7 +34,7 @@
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetOrderedValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
-                Reason = source.ExistingModel?.Reason ?? source.NoteData.ReturnedReason,
+                Reason = reason,
                 SelectedSchemeName = recipientName == null ? string.Empty : recipientName.SchemeNameDisplay
             };
 

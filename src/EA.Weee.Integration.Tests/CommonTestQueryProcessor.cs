@@ -29,6 +29,8 @@
         {
             return dbContext.Notes
                 .Include(n => n.Recipient)
+                .Include(n => n.NoteTransferTonnage)
+                .Include(n => n.NoteTonnage)
                 .FirstOrDefault(n => n.Id.Equals(id));
         }
 
