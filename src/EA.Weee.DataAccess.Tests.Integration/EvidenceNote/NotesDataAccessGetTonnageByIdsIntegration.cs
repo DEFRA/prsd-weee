@@ -42,11 +42,21 @@
 
                 context.Notes.Add(note2);
 
+                var note3 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note3.NoteTonnage.Add(new NoteTonnage(WeeeCategory.DisplayEquipment, null, 2));
+
+                context.Notes.Add(note3);
+
                 await context.SaveChangesAsync();
 
-                var noteTonnages = await dataAccess.GetTonnageByIds(new List<Guid>() { note1.NoteTonnage.ElementAt(1).Id, note2.NoteTonnage.ElementAt(0).Id });
+                var noteTonnages = await dataAccess.GetTonnageByIds(new List<Guid>()
+                {
+                    note1.NoteTonnage.ElementAt(1).Id, 
+                    note2.NoteTonnage.ElementAt(0).Id,
+                    note3.NoteTonnage.ElementAt(0).Id
+                });
 
-                noteTonnages.Count().Should().Be(2);
+                noteTonnages.Count().Should().Be(3);
                 var noteTonnage1 = noteTonnages.First(nt => nt.Id.Equals(note1.NoteTonnage.ElementAt(1).Id));
                 noteTonnage1.Should().NotBeNull();
                 noteTonnage1.CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources);
@@ -63,6 +73,14 @@
                 noteTonnage2.Note.Should().NotBeNull();
                 noteTonnage2.NoteTransferTonnage.Should().NotBeNull();
                 noteTonnage2.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
+
+                var noteTonnage3 = noteTonnages.First(nt => nt.Id.Equals(note3.NoteTonnage.ElementAt(0).Id));
+                noteTonnage3.CategoryId.Should().Be(WeeeCategory.DisplayEquipment);
+                noteTonnage3.Received.Should().Be(null);
+                noteTonnage3.Reused.Should().Be(2);
+                noteTonnage3.Note.Should().NotBeNull();
+                noteTonnage3.NoteTransferTonnage.Should().NotBeNull();
+                noteTonnage3.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
             }
         }
     }
