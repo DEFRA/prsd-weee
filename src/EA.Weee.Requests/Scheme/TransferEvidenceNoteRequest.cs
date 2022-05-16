@@ -5,7 +5,6 @@
     using AatfEvidence;
     using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
-    using NoteStatus = Domain.Evidence.NoteStatus;
 
     [Serializable]
     public class TransferEvidenceNoteRequest : IRequest<Guid>
@@ -45,16 +44,19 @@
 
         public TransferEvidenceNoteRequest(Guid organisationId,
             Guid schemeId,
+            List<int> categoryIds,
             List<TransferTonnageValue> transferValues,
             Core.AatfEvidence.NoteStatus status)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
             SchemeId = schemeId;
             TransferValues = transferValues;
             Status = status;
+            CategoryIds = categoryIds;
         }
 
         public Guid SchemeId { get; set; } 

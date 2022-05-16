@@ -1,11 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Requests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using Core.AatfEvidence;
+    using Core.DataReturns;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FluentAssertions;
     using Web.Areas.Scheme.Requests;
+    using Web.Extensions;
+    using Web.ViewModels.Shared;
+    using Weee.Requests.AatfEvidence;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class TransferEvidenceNoteRequestCreatorTests
@@ -75,6 +82,54 @@
             request.SchemeId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
         }
+
+        [Theory]
+        [InlineData(ActionEnum.Save, NoteStatus.Draft)]
+        [InlineData(ActionEnum.Submit, NoteStatus.Submitted)]
+        public void SelectTonnageToRequest_RequestAndViewModel_RequestShouldBeCreated(ActionEnum action, NoteStatus expectedStatus)
+        {
+            //arrange
+            var organisationId = fixture.Create<Guid>();
+            var schemeId = fixture.Create<Guid>();
+            var categories = fixture.CreateMany<int>().ToList();
+            var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
+            {
+                new TransferEvidenceCategoryValue(WeeeCategory.ConsumerEquipment, Guid.NewGuid(), 2, 1, "2", "1"),
+                new TransferEvidenceCategoryValue(WeeeCategory.DisplayEquipment, Guid.NewGuid(), null, null, null, null)
+            };
+
+            var request = new TransferEvidenceNoteRequest(organisationId,
+                schemeId,
+                categories);
+
+            var model = fixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(v => v.Action, action)
+                .With(v => v.TransferCategoryValues, transferCategoryTonnage)
+                .Create();
+            
+            //act
+            var result = requestCreator.SelectTonnageToRequest(request, model);
+
+            //assert
+            result.OrganisationId.Should().Be(organisationId);
+            result.SchemeId.Should().Be(schemeId);
+            result.Status.Should().Be(expectedStatus);
+            result.CategoryIds.Should().BeEquivalentTo(categories);
+            var category1ToFind = transferCategoryTonnage.ElementAt(0);
+            result.TransferValues.Should().Contain(t =>
+                t.TransferTonnageId.Equals(category1ToFind.TransferTonnageId) &&
+                t.CategoryId.Equals(category1ToFind.CategoryId) &&
+                t.FirstTonnage.Equals(category1ToFind.Received.ToDecimal()) &&
+                t.SecondTonnage.Equals(category1ToFind.Reused.ToDecimal()));
+            var category2ToFind = transferCategoryTonnage.ElementAt(1);
+            result.TransferValues.Should().Contain(t =>
+                t.TransferTonnageId.Equals(category2ToFind.TransferTonnageId) &&
+                t.CategoryId.Equals(category2ToFind.CategoryId) &&
+                t.FirstTonnage.Equals(category2ToFind.Received.ToDecimal()) &&
+                t.SecondTonnage.Equals(category2ToFind.Reused.ToDecimal()));
+        }
+
+        [Fact]
 
         private TransferEvidenceNoteCategoriesViewModel GetModel()
         {
