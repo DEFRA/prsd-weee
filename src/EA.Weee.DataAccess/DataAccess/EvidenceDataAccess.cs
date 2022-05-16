@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
+    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
@@ -96,12 +97,18 @@
                 .CountAsync();
         }
 
-        public async Task<Guid> AddTransferNote(Organisation organisation, Scheme scheme, List<NoteTransferTonnage> transferTonnage, NoteStatus status, string userId)
+        public async Task<Guid> AddTransferNote(Organisation organisation, 
+            Scheme scheme, 
+            List<NoteTransferCategory> transferCategories,
+            List<NoteTransferTonnage> transferTonnage, 
+            NoteStatus status, 
+            string userId)
         {
             var evidenceNote = new Note(organisation,
                 scheme,
                 userId,
-                transferTonnage);
+                transferTonnage,
+                transferCategories);
 
             if (status.Equals(NoteStatus.Submitted))
             {

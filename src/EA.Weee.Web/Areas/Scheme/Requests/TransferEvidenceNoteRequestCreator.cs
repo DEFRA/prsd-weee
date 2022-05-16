@@ -48,6 +48,7 @@
 
             return new TransferEvidenceNoteRequest(request.OrganisationId, 
                 request.SchemeId, 
+                request.CategoryIds,
                 transferValues.ToList(),
                 viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
         }

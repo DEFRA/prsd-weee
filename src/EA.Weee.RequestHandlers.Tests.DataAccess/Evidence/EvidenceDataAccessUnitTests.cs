@@ -26,6 +26,7 @@
         private readonly Organisation organisation;
         private readonly Scheme scheme;
         private readonly List<NoteTransferTonnage> tonnages;
+        private readonly List<NoteTransferCategory> categories;
 
         public EvidenceDataAccessUnitTests()
         {
@@ -42,6 +43,11 @@
                 fixture.Create<NoteTransferTonnage>(),
                 fixture.Create<NoteTransferTonnage>()
             };
+            categories = new List<NoteTransferCategory>()
+            {
+                fixture.Create<NoteTransferCategory>(),
+                fixture.Create<NoteTransferCategory>()
+            };
 
             A.CallTo(() => userContext.UserId).Returns(userId);
 
@@ -56,11 +62,10 @@
             SystemTime.Freeze(date);
             
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, NoteStatus.Draft, userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Draft, userId.ToString());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
-
                                                                            n.Aatf == null &&
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
@@ -85,6 +90,12 @@
                     c.Received.Equals(requestTonnageValue.Received)) != null))).MustHaveHappenedOnceExactly();
             }
 
+            foreach (var category in categories) 
+            {
+                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTransferCategories.FirstOrDefault(c =>
+                    c.CategoryId.Equals(category.CategoryId)) != null))).MustHaveHappenedOnceExactly();
+            }
+
             SystemTime.Unfreeze();
         }
 
@@ -96,11 +107,10 @@
             SystemTime.Freeze(date);
 
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, NoteStatus.Submitted, userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Submitted, userId.ToString());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
-
                                                                            n.Aatf == null &&
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
@@ -124,6 +134,12 @@
                     c.Reused.Equals(requestTonnageValue.Reused) &&
                     c.Received.Equals(requestTonnageValue.Received)) != null))).MustHaveHappenedOnceExactly();
             }
+            
+            foreach (var category in categories)
+            {
+                A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteTransferCategories.FirstOrDefault(c =>
+                    c.CategoryId.Equals(category.CategoryId)) != null))).MustHaveHappenedOnceExactly();
+            }
 
             SystemTime.Unfreeze();
         }
@@ -134,7 +150,7 @@
         public async Task HandleAsync_GivenTransferNote_NoteShouldBeAddedAndSaveChangesCalled(Core.AatfEvidence.NoteStatus status)
         {
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, status.ToDomainEnumeration<NoteStatus>(), userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), userId.ToString());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).MustHaveHappenedOnceExactly().Then(
@@ -153,7 +169,7 @@
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
             //act
-            var result = await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, status.ToDomainEnumeration<NoteStatus>(), userId.ToString());
+            var result = await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), userId.ToString());
 
             //assert
             result.Should().Be(id);
