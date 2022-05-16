@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.DataAccess.Tests.Integration.EvidenceNote
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext);
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
                 var noteTonnages = new List<NoteTonnage>()
                 {
