@@ -86,7 +86,7 @@
 
         public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
 
-        public ManageEvidenceOverviewDisplayOption RedirectTab
+        public string RedirectTab
         {
             get
             {
@@ -94,10 +94,10 @@
                     Status.Equals(NoteStatus.Rejected) ||
                     Status.Equals(NoteStatus.Returned))
                 {
-                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes;
+                    return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString();
                 }
 
-                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes;
+                return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString();
             }
         }
     }
