@@ -104,7 +104,7 @@
 
             var tab = model.RedirectTab;
 
-            tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes);
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString());
         }
 
         [Theory]
@@ -117,7 +117,7 @@
 
             var tab = model.RedirectTab;
 
-            tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
+            tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
         }
 
         [Theory]

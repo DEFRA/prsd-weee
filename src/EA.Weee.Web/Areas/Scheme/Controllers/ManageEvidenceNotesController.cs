@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Helpers;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
@@ -35,14 +36,19 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid pcsId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
+        public async Task<ActionResult> Index(Guid pcsId, string tab = null)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
 
-                switch (activeDisplayOption)
+                if (tab == null)
+                {
+                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
+                }
+                var value = tab.GetValueFromName<ManageEvidenceNotesDisplayOptions>();
+                switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
