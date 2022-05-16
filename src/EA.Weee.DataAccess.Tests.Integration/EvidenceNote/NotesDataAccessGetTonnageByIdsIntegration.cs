@@ -47,22 +47,22 @@
                 var noteTonnages = await dataAccess.GetTonnageByIds(new List<Guid>() { note1.NoteTonnage.ElementAt(1).Id, note2.NoteTonnage.ElementAt(0).Id });
 
                 noteTonnages.Count().Should().Be(2);
-                var noteTonnage = noteTonnages.First(nt => nt.Id.Equals(note1.NoteTonnage.ElementAt(1).Id));
-                noteTonnage.Should().NotBeNull();
-                noteTonnage.CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources);
-                noteTonnage.Received.Should().Be(2);
-                noteTonnage.Reused.Should().Be(1);
-                noteTonnage.Note.Should().NotBeNull();
-                noteTonnage.NoteTransferTonnage.Should().NotBeNull();
-                noteTonnage.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
+                var noteTonnage1 = noteTonnages.First(nt => nt.Id.Equals(note1.NoteTonnage.ElementAt(1).Id));
+                noteTonnage1.Should().NotBeNull();
+                noteTonnage1.CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources);
+                noteTonnage1.Received.Should().Be(2);
+                noteTonnage1.Reused.Should().Be(1);
+                noteTonnage1.Note.Should().NotBeNull();
+                noteTonnage1.NoteTransferTonnage.Should().NotBeNull();
+                noteTonnage1.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
 
-                noteTonnage = noteTonnages.First(nt => nt.Id.Equals(note2.NoteTonnage.ElementAt(0).Id));
-                noteTonnage.CategoryId.Should().Be(WeeeCategory.DisplayEquipment);
-                noteTonnage.Received.Should().Be(8);
-                noteTonnage.Reused.Should().Be(null);
-                noteTonnage.Note.Should().NotBeNull();
-                noteTonnage.NoteTransferTonnage.Should().NotBeNull();
-                noteTonnage.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
+                var noteTonnage2 = noteTonnages.First(nt => nt.Id.Equals(note2.NoteTonnage.ElementAt(0).Id));
+                noteTonnage2.CategoryId.Should().Be(WeeeCategory.DisplayEquipment);
+                noteTonnage2.Received.Should().Be(8);
+                noteTonnage2.Reused.Should().Be(null);
+                noteTonnage2.Note.Should().NotBeNull();
+                noteTonnage2.NoteTransferTonnage.Should().NotBeNull();
+                noteTonnage2.NoteTransferTonnage.Select(nt => nt.TransferNote).Should().NotBeNull();
             }
         }
     }

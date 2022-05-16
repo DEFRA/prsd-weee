@@ -68,7 +68,7 @@
                 };
 
                 request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
-                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                    Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -154,7 +154,7 @@
                 };
 
                 request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
-                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                    Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -216,7 +216,7 @@
                 };
 
                 request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
-                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                    Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -224,7 +224,7 @@
                 CatchExceptionAsync(() => handler.HandleAsync(request));
             };
 
-            private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<InvalidOperationException>;
+            private readonly It shouldHaveCaughtInvalidOperationException = ShouldThrowException<InvalidOperationException>;
         }
 
         public class CreateTransferEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
@@ -236,7 +236,6 @@
             protected static Scheme recipient;
             protected static Guid result;
             protected static Note note;
-            protected static Fixture fixture;
             protected static List<TransferTonnageValue> transferTonnageValues;
 
             public static IntegrationTestSetupBuilder LocalSetup()
@@ -246,7 +245,6 @@
                     .WithTestData()
                     .WithExternalUserAccess();
 
-                fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<TransferEvidenceNoteRequest, Guid>>();
 
                 transferTonnageValues = new List<TransferTonnageValue>();
