@@ -78,7 +78,7 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("Received") &&
-                    t.ErrorMessage.Equals("The reused tonnage must be equivalent or lower than the received tonnage"));
+                    t.ErrorMessage.Equals("The transfer reused in tonnes must be equivalent or lower than the transfer received for this category"));
         }
 
         [Fact]
@@ -89,7 +89,7 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("AvailableReused") &&
-                    t.ErrorMessage.Equals("TBD: Content"));
+                    t.ErrorMessage.Equals("The transfer reused in tonnes must be equivalent or lower than the total reused available"));
         }
 
         [Fact]
@@ -100,7 +100,7 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("AvailableReceived") &&
-                    t.ErrorMessage.Equals("TBD: Content"));
+                    t.ErrorMessage.Equals("The transfer received in tonnes must be equivalent or lower than the total received available"));
         }
     }
 }
