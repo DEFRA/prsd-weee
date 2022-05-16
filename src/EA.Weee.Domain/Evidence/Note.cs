@@ -186,5 +186,7 @@
         public virtual ICollection<NoteStatusHistory> NoteStatusHistory { get; protected set; }
 
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
+
+        public virtual ICollection<NoteTransferCategory> NoteTransferCategories { get; protected set; }
     }
 }
