@@ -7,14 +7,14 @@
 <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-two-thirds">
-
+        <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status, new { id = "status-id" })
         @Html.HiddenFor(m => m.Reference)
         @Html.HiddenFor(m => m.Reason)
-    
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
@@ -50,15 +50,15 @@
             </div>
         </div>
 
-        <div class="govuk-grid-row govuk-!-padding-top-3" >
+        <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
                 @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
                 {
-                <div class="govuk-grid-column-full govuk-!-padding-left-0 govuk-!-padding-bottom-0 govuk-!-margin-0" >
-                    @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
-                    @Html.HiddenFor(m => m.ReceivedId)
-                    <span aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</span>
-                </div>
+                    <div class="govuk-grid-column-full govuk-!-padding-left-0 govuk-!-padding-bottom-0 govuk-!-margin-0">
+                        @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
+                        @Html.HiddenFor(m => m.ReceivedId)
+                        <span aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</span>
+                    </div>
                 }
                 else
                 {
@@ -168,7 +168,6 @@
 
                 <div class="govuk-button-group">
                     @* This is a hidden button to force the default action to be save rather than submit*@
-                    <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
                     @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
                     @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
                 </div>
