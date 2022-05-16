@@ -50,6 +50,7 @@
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(transferValues).IsNotNull();
 
             OrganisationId = organisationId;
             SchemeId = schemeId;
