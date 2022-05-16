@@ -321,6 +321,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\ObligationsBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsController.cs" />
+    <Compile Include="Areas\Scheme\Attributes\ValidatePcsObligationsEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceController.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceMapBase.cs" />
