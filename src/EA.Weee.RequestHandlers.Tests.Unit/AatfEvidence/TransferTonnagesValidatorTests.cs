@@ -129,9 +129,13 @@
             exception.Should().BeNull();
         }
 
+        /// <summary>
+        /// Test checks that when a new transfer is made that when tonnage is no longer still available to be transferred an exception is thrown
+        /// </summary>
         [Fact]
         public async Task Validate_GivenRequestedTonnageIsNoLongerAvailable_InvalidOperationExceptionExpected()
         {
+            //create the selected transfer tonnages
             var transferValueTonnageId1 = Guid.NewGuid();
             var transferValuesTonnage1 = A.Fake<TransferTonnageValue>();
             A.CallTo(() => transferValuesTonnage1.TransferTonnageId).Returns(transferValueTonnageId1);
@@ -141,20 +145,17 @@
                 transferValuesTonnage1
             };
 
-            var approvedNote = A.Fake<Note>();
-            A.CallTo(() => approvedNote.Status).Returns(NoteStatus.Approved);
-            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
-            A.CallTo(() => noteTransferTonnage1.Received).Returns(5);
-            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(approvedNote);
-            var noteTransferTonnage2 = A.Fake<NoteTransferTonnage>();
-            A.CallTo(() => noteTransferTonnage2.Received).Returns(5);
-            A.CallTo(() => noteTransferTonnage2.TransferNote).Returns(approvedNote);
+            var noteTransferTonnage1 = CreateNoteWithTonnage(5, NoteStatus.Approved);
+            var noteTransferTonnage2 = CreateNoteWithTonnage(5, NoteStatus.Approved);
+
+            // create the transfers that have already happened
             var noteTransferTonnages = new List<NoteTransferTonnage>()
             {
                 noteTransferTonnage1,
                 noteTransferTonnage2
             };
 
+            // setup the tonnages for the new transfer
             var noteTonnage1 = A.Fake<NoteTonnage>();
             A.CallTo(() => noteTonnage1.Id).Returns(transferValueTonnageId1);
             A.CallTo(() => noteTonnage1.Received).Returns(10);
@@ -169,6 +170,11 @@
             exception.Should().BeOfType<InvalidOperationException>();
         }
 
+        /// <summary>
+        /// Test checks that when a new transfer is made that when tonnage is still available to be transferred no exception is thrown
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         [Theory]
         [ClassData(typeof(NoteStatusData))]
         public async Task Validate_GivenRequestedTonnageIsAvailableAsNoteIsNoteTransferIsNotApproved_NoExceptionExpected(NoteStatus status)
@@ -178,6 +184,7 @@
                 return;
             }
 
+            //create the selected transfer tonnages
             var transferValueTonnageId1 = Guid.NewGuid();
             var transferValuesTonnage1 = A.Fake<TransferTonnageValue>();
             A.CallTo(() => transferValuesTonnage1.TransferTonnageId).Returns(transferValueTonnageId1);
@@ -187,26 +194,22 @@
                 transferValuesTonnage1
             };
 
-            var approvedNote = A.Fake<Note>();
-            var notApprovedNote = A.Fake<Note>();
-            A.CallTo(() => approvedNote.Status).Returns(NoteStatus.Approved);
-            A.CallTo(() => approvedNote.Status).Returns(status);
-            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
-            A.CallTo(() => noteTransferTonnage1.Received).Returns(5);
-            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(approvedNote);
-            var noteTransferTonnage2 = A.Fake<NoteTransferTonnage>();
-            A.CallTo(() => noteTransferTonnage2.Received).Returns(5);
-            A.CallTo(() => noteTransferTonnage2.TransferNote).Returns(notApprovedNote);
+            var noteTransferTonnage1 = CreateNoteWithTonnage(5, NoteStatus.Approved);
+            var noteTransferTonnage2 = CreateNoteWithTonnage(5, status);
+
+            // create the transfers that have already happened
             var noteTransferTonnages = new List<NoteTransferTonnage>()
             {
                 noteTransferTonnage1,
                 noteTransferTonnage2
             };
 
+            // setup the tonnages for the new transfer
             var noteTonnage1 = A.Fake<NoteTonnage>();
             A.CallTo(() => noteTonnage1.Id).Returns(transferValueTonnageId1);
             A.CallTo(() => noteTonnage1.Received).Returns(10);
             A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnages);
+
             A.CallTo(() => evidenceDataAccess.GetTonnageByIds(A<List<Guid>>._))
                 .Returns(new List<NoteTonnage>() { noteTonnage1 });
 
@@ -215,6 +218,16 @@
 
             //assert
             exception.Should().BeNull();
+        }
+
+        private static NoteTransferTonnage CreateNoteWithTonnage(int tonnage, NoteStatus status)
+        {
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(status);
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnage1.Received).Returns(tonnage);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(note);
+            return noteTransferTonnage1;
         }
 
         private List<TransferTonnageValue> TransferTonnageValues()

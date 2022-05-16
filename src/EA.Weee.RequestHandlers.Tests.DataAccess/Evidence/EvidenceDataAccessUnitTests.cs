@@ -89,7 +89,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenSubmittedTransferNote_NoteShouldBeAddedToContext()
+        public async Task AddTransferNote_GivenSubmittedTransferNote_NoteShouldBeAddedToContext()
         {
             //arrange
             var date = new DateTime();
@@ -131,7 +131,7 @@
         [Theory]
         [InlineData(Core.AatfEvidence.NoteStatus.Submitted)]
         [InlineData(Core.AatfEvidence.NoteStatus.Draft)]
-        public async Task HandleAsync_GivenTransferNote_NoteShouldBeAddedAndSaveChangesCalled(Core.AatfEvidence.NoteStatus status)
+        public async Task AddTransferNote_GivenTransferNote_NoteShouldBeAddedAndSaveChangesCalled(Core.AatfEvidence.NoteStatus status)
         {
             //act
             await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, status.ToDomainEnumeration<NoteStatus>(), userId.ToString());
@@ -144,8 +144,9 @@
         [Theory]
         [InlineData(Core.AatfEvidence.NoteStatus.Submitted)]
         [InlineData(Core.AatfEvidence.NoteStatus.Draft)]
-        public async Task HandleAsync_GivenAddedTransferNote_NoteIdShouldBeReturned(Core.AatfEvidence.NoteStatus status)
+        public async Task AddTransferNote_GivenAddedTransferNote_NoteIdShouldBeReturned(Core.AatfEvidence.NoteStatus status)
         {
+            //arrange
             var note = A.Fake<Note>();
             var id = Guid.NewGuid();
             A.CallTo(() => note.Id).Returns(id);
