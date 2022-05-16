@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration
+﻿namespace EA.Weee.DataAccess.Tests.Integration.EvidenceNote
 {
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Base;
+    using Core.Tests.Unit.Helpers;
     using Domain.Evidence;
-    using EA.Weee.Core.Tests.Unit.Helpers;
-    using EA.Weee.DataAccess.Tests.Integration.Base;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
@@ -25,7 +25,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
@@ -69,7 +69,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -110,7 +110,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -151,7 +151,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -192,7 +192,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -236,7 +236,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 
@@ -279,7 +279,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
@@ -323,7 +323,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
@@ -348,7 +348,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
@@ -375,7 +375,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
@@ -398,7 +398,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var noteShouldBeFound = await SetupSingleNote(context, database, noteType);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
@@ -425,7 +425,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
 
@@ -449,7 +449,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>());
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 

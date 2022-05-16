@@ -15,12 +15,14 @@
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public EvidenceDataAccess(WeeeContext context, 
-            IUserContext userContext)
+            IUserContext userContext, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.userContext = userContext;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<Note> GetNoteById(Guid id)
@@ -94,18 +96,28 @@
             var evidenceNote = new Note(organisation,
                 scheme,
                 userId,
-                transferTonnage.ToList());
+                transferTonnage);
 
             if (status.Equals(NoteStatus.Submitted))
             {
                 evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
             }
 
-            context.Set<Note>().Add(evidenceNote);
+            var note = await genericDataAccess.Add(evidenceNote);
 
             await context.SaveChangesAsync();
 
-            return evidenceNote.Id;
+            return note.Id;
+        }
+
+        public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)
+        {
+            return await context.NoteTonnages
+                .Include(n => n.Note)
+                .Include(n => n.NoteTransferTonnage)
+                .Include(n => n.NoteTransferTonnage.Select(nt => nt.TransferNote))
+                .Where(n => ids.Contains(n.Id))
+                .ToListAsync();
         }
     }
 }

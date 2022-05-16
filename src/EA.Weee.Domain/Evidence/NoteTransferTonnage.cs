@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using Prsd.Core.Domain;
 
-    public sealed partial class NoteTransferTonnage : Entity
+    public partial class NoteTransferTonnage : Entity
     {
         private NoteTransferTonnage()
         {
@@ -19,18 +19,15 @@
             Received = received;
         }
 
-        [ForeignKey("NoteTonnageId")]
-        public NoteTonnage NoteTonnage { get; set; }
-
-        public Guid NoteTonnageId { get; private set; }
+        public virtual Guid NoteTonnageId { get; private set; }
 
         [ForeignKey("TransferNoteId")]
-        public Note TransferNote { get; set; }
+        public virtual Note TransferNote { get; set; }
 
-        public Guid TransferNoteId { get; private set; }
+        public virtual Guid TransferNoteId { get; private set; }
 
-        public decimal? Received { get; private set; }
+        public virtual decimal? Received { get; private set; }
 
-        public decimal? Reused { get; private set; }
+        public virtual decimal? Reused { get; private set; }
     }
 }
