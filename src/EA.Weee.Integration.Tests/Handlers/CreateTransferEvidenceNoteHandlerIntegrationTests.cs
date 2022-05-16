@@ -14,6 +14,7 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
+    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
@@ -67,8 +68,14 @@
                     new TransferTonnageValue(Guid.Empty, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, transferTonnage3.Id),
                 };
 
-                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
-                    Core.AatfEvidence.NoteStatus.Draft);
+                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, new List<int>()
+                    {
+                        WeeeCategory.DisplayEquipment.ToInt(),
+                        WeeeCategory.LargeHouseholdAppliances.ToInt(),
+                        WeeeCategory.MonitoringAndControlInstruments.ToInt(),
+                    }, 
+                    transferTonnageValues,
+                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -87,6 +94,17 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
+            };
+
+            private readonly It shouldHaveCreatedNoteCategories = () =>
+            {
+                note.NoteTransferCategories.Count.Should().Be(3);
+                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.DisplayEquipment)).Should()
+                    .NotBeNull();
+                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Should()
+                    .NotBeNull();
+                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments)).Should()
+                    .NotBeNull();
             };
         }
 
@@ -153,8 +171,12 @@
                     new TransferTonnageValue(Guid.Empty, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, transferTonnage1.Id)
                 };
 
-                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
-                    Core.AatfEvidence.NoteStatus.Draft);
+                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, new List<int>()
+                    {
+                        WeeeCategory.ConsumerEquipment.ToInt()
+                    },
+                    transferTonnageValues,
+                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -174,9 +196,18 @@
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
             };
+
+            private readonly It shouldHaveCreatedNoteCategories = () =>
+            {
+                note.NoteTransferCategories.Count.Should().Be(1);
+                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.ConsumerEquipment)).Should()
+                    .NotBeNull();
+            };
         }
 
         [Component]
+        [Ignore("Re-instate when available tonnages is returned to the creation screen")]
+        //TODO: Re-instate when available tonnages is returned to the creation screen
         public class WhenICreateADraftTransferEvidenceNoteWhereThereIsNoAvailableTonnage : CreateTransferEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
@@ -215,7 +246,12 @@
                     new TransferTonnageValue(Guid.Empty, WeeeCategory.DisplayEquipment.ToInt(), 1, null, transferTonnage1.Id)
                 };
 
-                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, transferTonnageValues,
+                request = new TransferEvidenceNoteRequest(organisation.Id, recipient.Id, 
+                    new List<int>()
+                    {
+                        WeeeCategory.DisplayEquipment.ToInt()
+                    },
+                    transferTonnageValues,
                     Core.AatfEvidence.NoteStatus.Draft);
             };
 

@@ -9,6 +9,7 @@
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
+    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
@@ -59,13 +60,18 @@
                 Guid transferNoteId;
                 try
                 {
-                    await transferTonnagesValidator.Validate(request.TransferValues);
+                    //Validation will be put back in when only available tonnages are returned to the front end. 
+                    //currently this will restrict testing too much
+                    //await transferTonnagesValidator.Validate(request.TransferValues);
 
                     var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
+                    var transferCategories = request.CategoryIds.Select(t =>
+                        new NoteTransferCategory((WeeeCategory)t)).ToList();
+
+                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme, transferCategories,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(),
                         userContext.UserId.ToString());
                 }
