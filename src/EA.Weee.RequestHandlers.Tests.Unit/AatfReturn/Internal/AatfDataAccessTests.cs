@@ -14,6 +14,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;

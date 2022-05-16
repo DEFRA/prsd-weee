@@ -27,5 +27,7 @@
         Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes);
 
         Task<Guid> AddTransferNote(Organisation organisation, Scheme scheme, List<NoteTransferTonnage> transferTonnage, NoteStatus status, string userId);
+
+        Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
     }
 }

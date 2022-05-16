@@ -95,8 +95,10 @@
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
+    <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
+    <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchAatfDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\FetchObligatedWeeeForReturnDataAccess.cs" />
     <Compile Include="AatfReturn\AatfTaskList\IFetchAatfDataAccess.cs" />
@@ -159,7 +161,6 @@
     <Compile Include="Factories\IReturnFactoryDataAccess.cs" />
     <Compile Include="Factories\ReturnFactory.cs" />
     <Compile Include="Factories\ReturnFactoryDataAccess.cs" />
-    <Compile Include="AatfReturn\GenericDataAccess.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
     <Compile Include="AatfReturn\CopyReturnHandler.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
@@ -181,7 +182,6 @@
     <Compile Include="AatfReturn\GetReturnHandler.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandler.cs" />
     <Compile Include="AatfReturn\GetSchemeRequestHandler.cs" />
-    <Compile Include="AatfReturn\IGenericDataAccess.cs" />
     <Compile Include="AatfReturn\IGetPopulatedReturn.cs" />
     <Compile Include="AatfReturn\IReturnSchemeDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\EditNonObligatedHandler.cs" />
@@ -222,10 +222,8 @@
     <Compile Include="AatfReturn\NonObligated\NonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\NonObligated\INonObligatedDataAccess.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccess.cs" />
-    <Compile Include="AatfReturn\Specification\ISpecification.cs" />
     <Compile Include="AatfReturn\Specification\AatfsByOrganisationSpecification.cs" />
     <Compile Include="AatfReturn\Specification\ReturnReportOnByReturnIdSpecification.cs" />
-    <Compile Include="AatfReturn\Specification\Specification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAatfIdAndReturnIdSpecification.cs" />
     <Compile Include="AatfReturn\SubmitReturnHandler.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReusedByAddressIdSpecification.cs" />
