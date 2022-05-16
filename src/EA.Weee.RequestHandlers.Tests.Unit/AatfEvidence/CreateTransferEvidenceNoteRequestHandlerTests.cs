@@ -7,6 +7,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -204,7 +205,8 @@
 
             //assert
             A.CallTo(() =>
-                evidenceDataAccess.AddTransferNote(organisation, scheme, 
+                evidenceDataAccess.AddTransferNote(organisation, scheme,
+                    A<List<NoteTransferCategory>>.That.Matches(t => t.Count.Equals(request.CategoryIds.Count)),
                     A<List<NoteTransferTonnage>>.That.Matches(t => 
                         t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, userId.ToString())).MustHaveHappenedOnceExactly();
 
@@ -212,10 +214,21 @@
             {
                 A.CallTo(() =>
                     evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                        A<List<NoteTransferCategory>>._,
                         A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
                             t2 => t2.NoteTonnageId.Equals(transferValue.TransferTonnageId) && 
                                   t2.Received.Equals(transferValue.FirstTonnage) &&
                                   t2.Reused.Equals(transferValue.SecondTonnage)).Equals(1)), A<NoteStatus>._, A<string>._))
+                    .MustHaveHappenedOnceExactly();
+            }
+
+            foreach (var transferCategories in request.CategoryIds)
+            {
+                A.CallTo(() =>
+                        evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                            A<List<NoteTransferCategory>>.That.Matches(t => t.Count(
+                                t2 => t2.CategoryId.ToInt().Equals(transferCategories)).Equals(1)),
+                            A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._))
                     .MustHaveHappenedOnceExactly();
             }
         }
@@ -227,7 +240,7 @@
             var transferNoteId = fixture.Create<Guid>();
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._)).Returns(transferNoteId);
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._)).Returns(transferNoteId);
 
             //act
             var result = await handler.HandleAsync(request);
@@ -245,8 +258,7 @@
             //assert
             A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferTonnage>>._,
-                    A<NoteStatus>._, A<string>._)).MustHaveHappenedOnceExactly())
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
         }
 
@@ -269,7 +281,7 @@
             //arrange
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._)).ThrowsAsync(new Exception());
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<string>._)).ThrowsAsync(new Exception());
 
             //act
             await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -280,7 +292,7 @@
 
         private TransferEvidenceNoteRequest Request()
         {
-            return new TransferEvidenceNoteRequest(organisation.Id, scheme.Id, fixture.CreateMany<TransferTonnageValue>().ToList(), Core.AatfEvidence.NoteStatus.Draft);
+            return new TransferEvidenceNoteRequest(organisation.Id, scheme.Id, fixture.CreateMany<int>().ToList(), fixture.CreateMany<TransferTonnageValue>().ToList(), Core.AatfEvidence.NoteStatus.Draft);
         }
     }
 }
