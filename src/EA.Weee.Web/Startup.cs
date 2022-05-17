@@ -56,7 +56,6 @@ namespace EA.Weee.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
-            ModelBinders.Binders.Add(typeof(DateTime?), new CustomDateValidationModelBinder());
             DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(WeeeRequiredAttributeAdapter));
 
             ApplicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
