@@ -62,7 +62,7 @@
 
 
                 <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference ID&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br />
-                <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.ToShortDateString() - @note.EndDate.ToShortDateString()</span>
+                <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.Value.ToShortDateString() - @note.EndDate.Value.ToShortDateString()</span>
 
                 <table id="transfer-notes-tonnage-@i.ToString()" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnage for @note.SubmittedBy</caption>
