@@ -336,10 +336,11 @@
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
+    <Compile Include="Extensions\ComplianceYearHelper.cs" />
     <Compile Include="Services\ISessionService.cs" />
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
-    <Compile Include="ViewModels\Shared\IEvidenceNoteRowViewModel.cs" />
+    <Compile Include="ViewModels\Shared\IManageEvidenceViewModel.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EditNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesMap.cs" />
@@ -351,7 +352,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\BaseEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMapTransfer.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ViewAndTransferEvidenceViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SchemeViewAndTransferEvidenceSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
@@ -488,8 +489,8 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewSubmittedEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewSubmittedEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesDisplayOptions.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ManageEvidenceNoteViewModel.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewSubmittedEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ManageEvidenceNoteSchemeViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewSubmittedEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\TestControllerBase.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\ModelStateExtensions.cs" />
@@ -1441,6 +1442,7 @@
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
     <Content Include="Views\Shared\_ViewEvidenceNotePartial.cshtml" />
+    <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

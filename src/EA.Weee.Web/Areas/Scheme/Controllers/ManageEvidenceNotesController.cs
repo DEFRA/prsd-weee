@@ -17,8 +17,10 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
+    using Weee.Requests.Shared;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
     {
@@ -35,21 +37,25 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid pcsId, ManageEvidenceNotesDisplayOptions? activeDisplayOption = null)
+        public async Task<ActionResult> Index(Guid pcsId, 
+            ManageEvidenceNotesDisplayOptions? activeDisplayOption = null,
+            ManageEvidenceNoteViewModel viewModel = null)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
 
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 switch (activeDisplayOption)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, viewModel);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, viewModel);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, viewModel);
                 }
             }
         }
@@ -61,38 +67,45 @@
             return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId });
         }
 
-        private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, SchemeData scheme)
+        private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, 
+            SchemeData scheme, 
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }));
+                new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel)));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
-                var model = mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName));
+                var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
 
                 return View("ReviewSubmittedEvidence", model);
             }
         }
 
-        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, SchemeData scheme)
+        private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, 
+            SchemeData scheme, 
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-
-                new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() 
-                { 
-                    NoteStatus.Approved, 
-                    NoteStatus.Rejected,
-                    NoteStatus.Void,
-                    NoteStatus.Returned
-                }));
+                    new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() 
+                    { 
+                        NoteStatus.Approved, 
+                        NoteStatus.Rejected,
+                        NoteStatus.Void,
+                        NoteStatus.Returned
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel)));
 
                 var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
-                var model = mapper.Map<ViewAndTransferEvidenceViewModel>(new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName));
+                var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
+                    new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -160,6 +173,11 @@
                 //return viewmodel to view
                 return View(model);
             }
+        }
+
+        private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            return manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
         }
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)

@@ -32,21 +32,22 @@
             this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesByOrganisationRequest message)
+        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(request.OrganisationId);
 
-            var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
+            var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId);
 
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
+            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {request.OrganisationId}");
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
             var filter = new EvidenceNoteFilter()
             {
                 SchemeId = scheme.Id,
-                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
+                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
+                ComplianceYear = request.ComplianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);

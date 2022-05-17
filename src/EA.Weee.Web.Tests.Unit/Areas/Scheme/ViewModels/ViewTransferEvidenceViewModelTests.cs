@@ -9,7 +9,7 @@
         [Fact]
         public void ViewAndTransferEvidenceViewModelInheritsManageEvidenceNoteViewModel()
         {
-            typeof(ViewAndTransferEvidenceViewModel).Should().BeDerivedFrom<ManageEvidenceNoteViewModel>();
+            typeof(SchemeViewAndTransferManageEvidenceSchemeViewModel).Should().BeDerivedFrom<ManageManageEvidenceNoteSchemeViewModel>();
         }
     }
 }

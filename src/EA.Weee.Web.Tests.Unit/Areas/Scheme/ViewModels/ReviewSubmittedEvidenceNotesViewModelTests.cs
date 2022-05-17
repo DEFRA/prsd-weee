@@ -9,7 +9,7 @@
         [Fact]
         public void ReviewSubmittedEvidenceNotesViewModelInheritsManageEvidenceNoteViewModel()
         {
-            typeof(ReviewSubmittedEvidenceNotesViewModel).Should().BeDerivedFrom<ManageEvidenceNoteViewModel>();
+            typeof(ReviewSubmittedManageEvidenceNotesSchemeViewModel).Should().BeDerivedFrom<ManageManageEvidenceNoteSchemeViewModel>();
         }
     }
 }

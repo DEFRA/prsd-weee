@@ -2,11 +2,11 @@
 {
     using System;
 
-    public class ReviewSubmittedEvidenceNotesViewModel : ManageEvidenceNoteViewModel
+    public class ReviewSubmittedManageEvidenceNotesSchemeViewModel : ManageManageEvidenceNoteSchemeViewModel
     {
         public Guid? SelectedId { get; set; }
 
-        public ReviewSubmittedEvidenceNotesViewModel()
+        public ReviewSubmittedManageEvidenceNotesSchemeViewModel()
             : base(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
         {
         }

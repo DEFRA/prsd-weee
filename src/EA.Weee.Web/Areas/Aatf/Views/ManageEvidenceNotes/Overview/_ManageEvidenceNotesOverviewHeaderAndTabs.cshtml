@@ -3,7 +3,7 @@
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Areas.Aatf.Controllers
 
-@model ManageEvidenceNoteOverviewViewModel
+@model ManageManageEvidenceNoteOverviewViewModel
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Evidence summary",
         Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary, null)),
