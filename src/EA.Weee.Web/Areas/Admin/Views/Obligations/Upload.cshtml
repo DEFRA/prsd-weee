@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Manage PCS obligations";
+}
+<header class="hgroup">
+    <div>
+        <h1 class="govuk-heading-l">Manage PCS obligations</h1>
+    </div>
+</header>
+
+<p>
+    To upload your PCS's obligations, you need to first download the CSV template for the current compliance year. After this you can fill in the template with the data and upload it.
+</p>
+<p>
+    <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Download template</a>
+</p>
+
+<table id="pcs-obligation-table" class="govuk-table">
+    <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header">
+                PCS
+            </th>
+            <th class="govuk-table__header govuk-!-text-align-right">
+                Obligation updated
+            </th>
+        </tr>
+    </thead>
+</table>

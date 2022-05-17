@@ -712,6 +712,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <Content Include="Areas\Aatf\Views\EvidenceTonnageValueCopyPaste\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Obligations\Upload.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

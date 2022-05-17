@@ -137,6 +137,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsv.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsv.cs" />
+    <Compile Include="Admin\Obligations\GetPcsObligationsCsv.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeObligationDataCsv.cs" />
