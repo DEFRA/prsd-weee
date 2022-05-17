@@ -15,7 +15,7 @@
         {
             if (!ConfigService.CurrentConfiguration.EnablePCSObligations)
             {
-                throw new InvalidOperationException("PCS obligations is not enabled.");
+                throw new InvalidOperationException("Manage PCS obligations is not enabled.");
             }
 
             base.OnActionExecuting(context);

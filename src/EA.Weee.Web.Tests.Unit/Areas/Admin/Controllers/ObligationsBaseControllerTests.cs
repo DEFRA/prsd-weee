@@ -2,6 +2,7 @@
 {
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Scheme.Attributes;
     using EA.Weee.Web.Filters;
     using FluentAssertions;
     using Xunit;
@@ -19,6 +20,13 @@
         {
             typeof(ObligationsBaseController).Should()
                 .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void Controller_IsDecoratedWith_ValidatePcsObligationsEnabledAttribute()
+        {
+            typeof(ObligationsBaseController).Should()
+                .BeDecoratedWith<ValidatePcsObligationsEnabledAttribute>(a => a.Match(new ValidatePcsObligationsEnabledAttribute()));
         }
     }
 }
