@@ -28,6 +28,17 @@
         }
 
         [Fact]
+        public void ViewTransferNoteViewModelMapTransfer_GivenEmptySchemeIdAndOtherPropertiesAreValid_ArgumentExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() =>
+                new ViewTransferNoteViewModelMapTransfer(Guid.Empty, new TransferEvidenceNoteData(), new object()));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
         public void ViewTransferNoteViewModelMapTransfer_GivenNullTransferNoteData_ArgumentNullExceptionExpected()
         {
             //act
