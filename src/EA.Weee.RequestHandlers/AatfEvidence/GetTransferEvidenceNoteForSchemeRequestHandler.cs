@@ -9,13 +9,13 @@
     using Requests.AatfEvidence;
     using Security;
 
-    public class GetEvidenceNoteForSchemeRequestHandler : IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData>
+    public class GetTransferEvidenceNoteForSchemeRequestHandler : IRequestHandler<GetTransferEvidenceNoteForSchemeRequest, TransferEvidenceNoteData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
 
-        public GetEvidenceNoteForSchemeRequestHandler(IWeeeAuthorization authorization,
+        public GetTransferEvidenceNoteForSchemeRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
             IMapper mapper)
         {
@@ -24,17 +24,15 @@
             this.mapper = mapper;
         }
 
-        public async Task<EvidenceNoteData> HandleAsync(GetEvidenceNoteForSchemeRequest message)
+        public async Task<TransferEvidenceNoteData> HandleAsync(GetTransferEvidenceNoteForSchemeRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
+            var evidenceNote = await evidenceDataAccess.GetNoteById(request.EvidenceNoteId);
 
-            authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
+            authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
-            var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);
-
-            return evidenceNoteData;
+            return mapper.Map<Note, TransferEvidenceNoteData>(evidenceNote);
         }
     }
 }
