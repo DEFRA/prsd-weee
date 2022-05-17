@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Security.Claims;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
@@ -73,23 +74,61 @@
         [Fact]
         public void HttpGet_ChooseActivity_ShouldReturnsChooseActivityView()
         {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] 
+            {
+                new Claim(ClaimTypes.Role, "InternalAdmin")
+            }, "TestAuthentication"));
             var controller = HomeController();
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
             var result = controller.ChooseActivity();
             var viewResult = ((ViewResult)result);
             Assert.Equal("ChooseActivity", viewResult.ViewName);
         }
 
         [Fact]
-        public void HttpGet_ChooseActivity_ViewModelPossibleValuesShouldBeInCorrectOrder()
+        public void HttpGet_ChooseActivity_WithStandardUserAndFeatureEnabled_ViewModelPossibleValuesShouldBeInCorrectOrder()
         {
-            var controller = HomeController();
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
+            A.CallTo(() => configuration.EnableInvoicing).Returns(true);
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalUser") }, "TestAuthentication"));
+            
+            HomeController controller = new HomeController(() => apiClient, configuration);
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+            var result = controller.ChooseActivity() as ViewResult;
+            var model = result.Model as RadioButtonStringCollectionViewModel;
+
+            // Note: in this case InternalUserActivity.ManagePcsObligations should not be listed
+            model.PossibleValues[0].Should().Be(InternalUserActivity.ManageScheme);
+            model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
+            model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
+            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsCharges);
+            model.PossibleValues[4].Should().Be(InternalUserActivity.ManageAatfs);
+            model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAes);
+            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageUsers);
+            model.PossibleValues[7].Should().Be(InternalUserActivity.ViewReports);
+        }
+
+        [Fact]
+        public void HttpGet_ChooseActivity_WithAdminUserAndFeatureEnabled_ViewModelPossibleValuesShouldBeInCorrectOrder()
+        {
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
+            A.CallTo(() => configuration.EnableInvoicing).Returns(true);
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            HomeController controller = new HomeController(() => apiClient, configuration);
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
             var result = controller.ChooseActivity() as ViewResult;
             var model = result.Model as RadioButtonStringCollectionViewModel;
 
             model.PossibleValues[0].Should().Be(InternalUserActivity.ManageScheme);
             model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
             model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
-            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsObligations);  // GC: done in my previous PR
+            model.PossibleValues[3].Should().Be(InternalUserActivity.ManagePcsObligations);
             model.PossibleValues[4].Should().Be(InternalUserActivity.ManagePcsCharges);
             model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAatfs);
             model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAes);
@@ -101,6 +140,12 @@
         public void HttpPost_ChooseActivity_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             var controller = HomeController();
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Role, "InternalAdmin")
+            }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
             controller.ModelState.AddModelError("Key", "Any error");
 
             var result = controller.ChooseActivity(A.Dummy<RadioButtonStringCollectionViewModel>());
@@ -122,11 +167,16 @@
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
+            A.CallTo(() => configuration.EnableInvoicing).Returns(true);
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
             RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
             viewModel.SelectedValue = selection;
+            HomeController controller = new HomeController(() => apiClient, configuration);
 
             // Act
-            ActionResult result = HomeController().ChooseActivity(viewModel);
+            ActionResult result = controller.ChooseActivity(viewModel);
 
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
@@ -135,7 +185,6 @@
 
             if (selection == InternalUserActivity.ManagePcsObligations)
             {
-                // is holding page pointed to when selecting InternalUserActivity.ManagePcsObligations ?
                 Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
             }
 

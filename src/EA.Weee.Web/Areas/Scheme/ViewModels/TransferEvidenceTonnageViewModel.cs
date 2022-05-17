@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using Web.ViewModels.Shared;
 
     public class TransferEvidenceTonnageViewModel : TransferEvidenceViewModelBase
     {
@@ -10,6 +11,16 @@
         public bool TransferAllTonnage { get; set; }
 
         public List<TransferEvidenceCategoryValue> TransferCategoryValues { get; set; }
+
+        public ActionEnum Action { get; set; }
+
+        public bool Edit
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public TransferEvidenceTonnageViewModel()
         {

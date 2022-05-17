@@ -14,6 +14,7 @@
     {
         private readonly ValidateAatfEvidenceEnabledAttribute aatfAttribute;
         private readonly ValidatePcsEvidenceEnabledAttribute pcsAttribute;
+        private readonly ValidatePcsObligationsEnabledAttribute obligationsAttribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
 
@@ -22,10 +23,12 @@
             client = A.Fake<IWeeeClient>();
             aatfAttribute = new ValidateAatfEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             pcsAttribute = new ValidatePcsEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
+            obligationsAttribute = new ValidatePcsObligationsEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
 
             A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
             A.CallTo(() => aatfAttribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
+            A.CallTo(() => obligationsAttribute.ConfigService.CurrentConfiguration.EnablePCSObligations).Returns(true);
         }
 
         [Fact]
@@ -48,8 +51,6 @@
             action.Should().NotThrow<InvalidOperationException>();
         }
 
-        // ---- GC
-
         [Fact]
         public void OnActionExecuting_GivenEnablePcsEvidenceNotesIsFalse_InvalidOperationExceptionExpected()
         {
@@ -66,6 +67,26 @@
             A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
 
             Action action = () => pcsAttribute.OnActionExecuting(context);
+
+            action.Should().NotThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePcsObligationsIsFalse_InvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => obligationsAttribute.ConfigService.CurrentConfiguration.EnablePCSObligations).Returns(false);
+
+            Action action = () => obligationsAttribute.OnActionExecuting(context);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Manage PCS obligations is not enabled.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePcsObligationssIsTrue_NoInvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => obligationsAttribute.ConfigService.CurrentConfiguration.EnablePCSObligations).Returns(true);
+
+            Action action = () => obligationsAttribute.OnActionExecuting(context);
 
             action.Should().NotThrow<InvalidOperationException>();
         }
