@@ -8,8 +8,6 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
-    using Core.Validation;
-    using Filters;
     using Web.ViewModels.Shared;
 
     [Serializable]
@@ -19,7 +17,6 @@
         [Display(Name = "Start date")]
         [EvidenceNoteStartDate(nameof(EndDate))]
         [DataType(DataType.Date)]
-        [WeeeDateFormat]
         public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
