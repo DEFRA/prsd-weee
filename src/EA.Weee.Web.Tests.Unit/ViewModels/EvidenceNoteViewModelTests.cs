@@ -102,7 +102,7 @@
         {
             model.Status = status;
 
-            var tab = model.RedirectTab;
+            var tab = model.AatfRedirectTab;
 
             tab.Should().Be(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString());
         }
@@ -115,7 +115,7 @@
         {
             model.Status = status;
 
-            var tab = model.RedirectTab;
+            var tab = model.AatfRedirectTab;
 
             tab.Should().Be(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
         }
