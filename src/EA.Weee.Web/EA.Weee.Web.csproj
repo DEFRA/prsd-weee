@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="App_Start\CustomDateValidationModelBinder.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMapTransfer.cs" />
@@ -336,6 +337,7 @@
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
+    <Compile Include="Filters\WeeeDateFormatAttribute.cs" />
     <Compile Include="Services\ISessionService.cs" />
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
