@@ -4,10 +4,12 @@
     using Base;
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Security;
     using Infrastructure;
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Home;
@@ -97,7 +99,14 @@
                     return RedirectToAction("ChooseReport", "Reports");
 
                 case InternalUserActivity.ManagePcsObligations:
-                    return RedirectToAction("Index", "Obligations");
+                    if (!configuration.EnablePCSObligations)
+                    {
+                        throw new InvalidOperationException("Obligations are not enabled.");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Obligations");
+                    }
 
                 case InternalUserActivity.ManagePcsCharges:
                     {
@@ -118,12 +127,17 @@
 
         private void PopulateViewModelPossibleValues(RadioButtonStringCollectionViewModel viewModel)
         {
+            var isAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
+
             viewModel.PossibleValues = new List<string>();
 
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
-            viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
+            if (configuration.EnablePCSObligations && isAdmin)
+            {
+                viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
+            }
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
