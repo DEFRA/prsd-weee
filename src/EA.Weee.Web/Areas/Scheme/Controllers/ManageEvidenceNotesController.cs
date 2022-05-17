@@ -48,6 +48,7 @@
                     tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
                 }
                 var value = tab.GetValueFromName<ManageEvidenceNotesDisplayOptions>();
+
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
