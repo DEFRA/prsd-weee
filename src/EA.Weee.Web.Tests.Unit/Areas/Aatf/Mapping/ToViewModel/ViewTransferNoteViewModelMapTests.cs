@@ -92,8 +92,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
                 fixture.Build<TransferEvidenceNoteData>()
-                    .With(t2 => t2.Status, NoteStatus.Draft)
-                    .With(t1 => t1.Reference, 1).Create(),
+                    .With(t => t.Status, NoteStatus.Draft)
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
                 true);
 
             //act
@@ -101,7 +102,7 @@
 
             //assert
             model.SuccessMessage.Should()
-                .Be($"You have successfully saved the transfer evidence note with reference ID T1 as a draft");
+                .Be($"You have successfully saved the transfer evidence note with reference ID {source.TransferEvidenceNoteData.Type}{source.TransferEvidenceNoteData.Reference} as a draft");
         }
 
         [Theory]

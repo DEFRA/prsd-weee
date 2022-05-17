@@ -34,7 +34,7 @@
                     {
                         case NoteStatus.Draft:
                             model.SuccessMessage =
-                                $"You have successfully saved the transfer evidence note with reference ID T{note.Reference} as a draft";
+                                $"You have successfully saved the transfer evidence note with reference ID {note.Type}{note.Reference} as a draft";
                             break;
                     }
                 }

@@ -17,7 +17,7 @@
         }
 
         [Fact]
-        public void ViewEvidenceNoteMapTransfer_GivenEmptySchemeId_ArgumentExceptionExpected()
+        public void ViewTransferNoteViewModelMapTransfer_GivenEmptySchemeId_ArgumentExceptionExpected()
         {
             //act
             var exception = Record.Exception(() =>
@@ -28,7 +28,7 @@
         }
 
         [Fact]
-        public void ViewEvidenceNoteMapTransfer_GivenNullTransferNoteData_ArgumentNullExceptionExpected()
+        public void ViewTransferNoteViewModelMapTransfer_GivenNullTransferNoteData_ArgumentNullExceptionExpected()
         {
             //act
             var exception = Record.Exception(() =>
@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public void ViewEvidenceNoteMapTransfer_GivenValues_PropertiesShouldBeSet()
+        public void ViewTransferNoteViewModelMapTransfer_GivenValues_PropertiesShouldBeSet()
         {
             //arrange
             var schemeId = fixture.Create<Guid>();
@@ -56,7 +56,7 @@
         }
 
         [Fact]
-        public void ViewEvidenceNoteMapTransfer_GivenValuesWithNullStatus_PropertiesShouldBeSet()
+        public void ViewTransferNoteViewModelMapTransfer_GivenValuesWithNullStatus_PropertiesShouldBeSet()
         {
             //arrange
             var schemeId = fixture.Create<Guid>();
