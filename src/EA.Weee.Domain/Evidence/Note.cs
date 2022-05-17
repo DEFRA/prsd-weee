@@ -47,6 +47,7 @@
             NoteType = NoteType.EvidenceNote;
             CreatedDate = SystemTime.UtcNow;
             Status = NoteStatus.Draft;
+            ComplianceYear = (short)startDate.Year;
             NoteTonnage = tonnages;
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = new List<NoteTransferTonnage>();
@@ -186,5 +187,7 @@
         public virtual ICollection<NoteStatusHistory> NoteStatusHistory { get; protected set; }
 
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
+
+        public virtual short ComplianceYear { get; set; }
     }
 }

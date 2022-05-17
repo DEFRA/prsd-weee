@@ -59,7 +59,7 @@
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
             var notes = await context.Notes
-                .Where(p =>
+                .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear) &&
                     ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                      && (!filter.AatfId.HasValue || (p.AatfId.HasValue && p.AatfId.Value == filter.AatfId.Value))
                      && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)

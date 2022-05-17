@@ -91,7 +91,7 @@
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(new List<EvidenceNoteData>());
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
-            A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedEvidenceNotesViewModel());
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
@@ -170,7 +170,7 @@
             await ManageEvidenceController.Index(OrganisationId);
 
             //asset
-            A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
@@ -191,7 +191,7 @@
             await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
 
             //asset
-            A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
@@ -212,7 +212,7 @@
             await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
 
             //asset
-            A.CallTo(() => Mapper.Map<ViewAndTransferEvidenceViewModel>(
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                 A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
@@ -225,9 +225,9 @@
             var organisationName = Faker.Company.Name();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
-            var model = Fixture.Create<ReviewSubmittedEvidenceNotesViewModel>();
+            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result =
@@ -245,9 +245,9 @@
             var organisationName = Faker.Company.Name();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
-            var model = Fixture.Create<ReviewSubmittedEvidenceNotesViewModel>();
+            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result =
@@ -302,9 +302,9 @@
             var organisationName = Faker.Company.Name();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
-            var model = Fixture.Create<ViewAndTransferEvidenceViewModel>();
+            var model = Fixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAndTransferEvidenceViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result =

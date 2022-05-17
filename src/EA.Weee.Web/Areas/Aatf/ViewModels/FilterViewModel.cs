@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
+    using System;
     using System.ComponentModel;
 
     public class FilterViewModel
