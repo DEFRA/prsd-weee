@@ -328,11 +328,15 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceTonnageViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceNotesViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewTransferNoteViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewTransferNoteViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Requests\ITransferEvidenceRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IRadioButtonHint.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TotalCategoryValue.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBase.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModel.cs" />
     <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
@@ -352,8 +356,6 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ViewAndTransferEvidenceViewModel.cs" />
-    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
-    <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteCategoriesViewModel.cs" />
@@ -426,7 +428,7 @@
     <Compile Include="Areas\Aatf\ViewModels\AatfAction.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\ActionEnum.cs" />
+    <Compile Include="ViewModels\Shared\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />
@@ -713,6 +715,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <Content Include="Areas\Aatf\Views\EvidenceTonnageValueCopyPaste\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\TransferredEvidence.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
