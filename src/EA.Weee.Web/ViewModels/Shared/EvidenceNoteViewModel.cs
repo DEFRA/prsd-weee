@@ -86,7 +86,7 @@
 
         public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
 
-        public string RedirectTab
+        public string AatfRedirectTab
         {
             get
             {
