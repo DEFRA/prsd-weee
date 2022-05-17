@@ -66,7 +66,6 @@ function datePickHandler() {
     if (!container || !input) {
         return;
     }
-    // $(container).find('table').first().attr('role', 'grid');
 
     container.setAttribute("role", "application");
     container.setAttribute("aria-label", "Calendar view date-picker");
