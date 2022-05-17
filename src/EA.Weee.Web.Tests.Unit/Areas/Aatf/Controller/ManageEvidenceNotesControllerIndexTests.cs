@@ -366,7 +366,7 @@
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes);
 
             //assert
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
@@ -396,17 +396,17 @@
         {
             //arrange
             var manageNoteViewModel = new ManageEvidenceNoteViewModel();
-            var evidenceNoteViewModel = new AllOtherEvidenceNotesViewModel();
+            var evidenceNoteViewModel = new AllOtherManageEvidenceNotesViewModel();
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
                 A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes) as ViewResult;
 
             //assert
-            var model = result.Model as AllOtherEvidenceNotesViewModel;
+            var model = result.Model as AllOtherManageEvidenceNotesViewModel;
 
             model.Should().Be(evidenceNoteViewModel);
             model.ManageEvidenceNoteViewModel.Should().Be(manageNoteViewModel);
@@ -534,7 +534,7 @@
 
             await ManageEvidenceController.Index(organisationId, aatfId, selectedTab);
 
-            A.CallTo(() => Mapper.Map<EvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
+            A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
                 e.AatfEvidenceSummaryData.Equals(summary) && e.AatfId.Equals(aatfId) &&
                 e.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
         }
@@ -546,16 +546,16 @@
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var model = Fixture.Create<EvidenceSummaryViewModel>();
+            var model = Fixture.Create<ManageEvidenceSummaryViewModel>();
             var evidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => Mapper.Map<EvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
                 .Returns(evidenceNoteViewModel);
 
             var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab) as ViewResult;
 
-            var resultModel = (EvidenceSummaryViewModel)result.Model;
+            var resultModel = (ManageEvidenceSummaryViewModel)result.Model;
             resultModel.Should().Be(model);
             resultModel.ManageEvidenceNoteViewModel.Should().Be(evidenceNoteViewModel);
         }

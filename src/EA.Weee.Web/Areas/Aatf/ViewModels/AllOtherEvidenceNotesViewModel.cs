@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using Web.ViewModels.Shared;
 
-    public class AllOtherEvidenceNotesViewModel : ManageEvidenceNoteOverviewViewModel
+    public class AllOtherManageEvidenceNotesViewModel : ManageManageEvidenceNoteOverviewViewModel
     {
-        public AllOtherEvidenceNotesViewModel()
+        public AllOtherManageEvidenceNotesViewModel()
         : base(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)
         {
         }

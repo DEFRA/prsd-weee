@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
 
     public class ManageEvidenceNoteViewModel
     {
@@ -13,6 +15,11 @@
         public Guid AatfId { get; set; }
 
         public FilterViewModel FilterViewModel { get; set; }
+
+        public IEnumerable<int> ComplianceYearList { get; set; }
+
+        [DisplayName("Compliance year")]
+        public int SelectedComplianceYear { get; set; }
 
         public ManageEvidenceNoteViewModel()
         {
