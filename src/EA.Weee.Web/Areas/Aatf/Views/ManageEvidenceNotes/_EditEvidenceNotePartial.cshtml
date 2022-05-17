@@ -22,14 +22,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
-                    @if (Model.StartDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete="off", @placeholder="dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
 
@@ -37,15 +30,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EndDate)">
                     @Html.Gds().LabelFor(m => m.EndDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.EndDate)
-
-                    @if (Model.EndDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
         </div>
@@ -70,6 +55,7 @@
                 }
             </div>
         </div>
+
         <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
