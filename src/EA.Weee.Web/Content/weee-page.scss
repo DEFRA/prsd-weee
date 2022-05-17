@@ -551,3 +551,48 @@ input.tonnage-entry {
 .weee-word-break {
     word-wrap: break-word;
 }
+
+
+.ui-datepicker-trigger {
+    margin: 2px;
+    padding: 0;
+}
+
+.offscreen {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+button.ui-datepicker-trigger {
+    background-color: transparent !important;
+    border: none !important;
+    margin: auto !important;
+    margin-left: -20px !important;
+}
+
+button.ui-datepicker-trigger:focus,
+button.ui-datepicker-trigger:hover,
+button.ui-datepicker-trigger:active {
+    border: none !important;
+    margin: auto !important;
+    outline: 2px solid #8cc63f !important;
+    background-color: #fdf6e7 !important;
+    margin-left: -20px !important;
+}
+
+.weee-calendar-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    margin-left: -20px !important;
+}
