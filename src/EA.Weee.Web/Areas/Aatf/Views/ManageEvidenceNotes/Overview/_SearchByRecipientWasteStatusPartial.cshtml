@@ -5,38 +5,32 @@
 
  @Html.Hidden("activeOverviewDisplayOption", ViewData["activeOverviewDisplayOption"])
 
-@*<div class="govuk-!-width-full govuk-panel-grey-background">*@
-<div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-2">
-    <div class="govuk-grid-row ">
-        <div class="govuk-grid-column-two-thirds">
-            <div class="govuk-grid-column-one-third">
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
-                    @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
-                    @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.SchemeListSL,
-                   string.Empty, new { @class = "govuk-!-width-three-quarters" }, useHalfWidth: false, withLookAhead: true)
-                </div>
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
-                    @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
-                    @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
-                    @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
-                   string.Empty, new { @class = "govuk-!-width-one-third" }, useHalfWidth: false, withLookAhead: true)
-                </div>
-            </div>
-            <div class="govuk-grid-column-one-third">
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
-                    @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
-                    @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
-                    @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
-                   string.Empty, new { @class = "govuk-!-width-one-third" }, useHalfWidth: false, withLookAhead: true)
-
-                </div>
-            </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
+            @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
+            @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.SchemeListSL,
+            string.Empty, new { @class = "govuk-!-width-three-quarters" }, useHalfWidth: false, withLookAhead: true)
         </div>
     </div>
-</div>
+
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-6 govuk-!-padding-right-0">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
+            @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
+            @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
+            @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
+            string.Empty, new { @class = "govuk-!-width-one-third" }, useHalfWidth: false, withLookAhead: true)
+        </div>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-8">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
+            @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
+            @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
+            @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
+            string.Empty, new { @class = "govuk-!-width-one-third" }, useHalfWidth: false, withLookAhead: true)
+
+        </div>
+    </div>
+
    
 
 
