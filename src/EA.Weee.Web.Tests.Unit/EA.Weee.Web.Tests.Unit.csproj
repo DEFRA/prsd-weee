@@ -299,6 +299,8 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceNotesViewModelTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
@@ -312,13 +314,14 @@
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
-    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreatorTests.cs" />
+    <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="ViewModels\ListOfNotesMapTests.cs" />
