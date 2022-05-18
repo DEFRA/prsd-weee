@@ -5,6 +5,9 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using CuttingEdge.Conditions;
+    using Domain.Lookup;
+    using Domain.Organisation;
     using Domain.Scheme;
     using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
@@ -14,17 +17,23 @@
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
+        private readonly IGenericDataAccess genericDataAccess;
 
-        public EvidenceDataAccess(WeeeContext context,
-            IUserContext userContext)
+        public EvidenceDataAccess(WeeeContext context, 
+            IUserContext userContext, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.userContext = userContext;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<Note> GetNoteById(Guid id)
         {
-            return await context.Notes.FindAsync(id);
+            var note = await genericDataAccess.GetById<Note>(id);
+
+            Condition.Requires(note).IsNotNull($"Evidence note {id} not found");
+
+            return note;
         }
 
         public async Task<Note> Update(Note note, Scheme recipient, DateTime startDate, DateTime endDate,
@@ -91,8 +100,43 @@
         }
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId)
         {
-            return await context.Notes.Where(n => n.AatfId.Equals(aatfId) && n.Status.Value.Equals(status.Value))
+            return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value))
                 .CountAsync();
+        }
+
+        public async Task<Guid> AddTransferNote(Organisation organisation, 
+            Scheme scheme, 
+            List<NoteTransferCategory> transferCategories,
+            List<NoteTransferTonnage> transferTonnage, 
+            NoteStatus status, 
+            string userId)
+        {
+            var evidenceNote = new Note(organisation,
+                scheme,
+                userId,
+                transferTonnage,
+                transferCategories);
+
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+            }
+
+            var note = await genericDataAccess.Add(evidenceNote);
+
+            await context.SaveChangesAsync();
+
+            return note.Id;
+        }
+
+        public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)
+        {
+            return await context.NoteTonnages
+                .Include(n => n.Note)
+                .Include(n => n.NoteTransferTonnage)
+                .Include(n => n.NoteTransferTonnage.Select(nt => nt.TransferNote))
+                .Where(n => ids.Contains(n.Id))
+                .ToListAsync();
         }
     }
 }

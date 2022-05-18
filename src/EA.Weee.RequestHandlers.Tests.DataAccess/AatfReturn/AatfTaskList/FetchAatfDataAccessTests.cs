@@ -13,6 +13,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;

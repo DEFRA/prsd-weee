@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
     using EA.Weee.Core.Aatf;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.AatfEvidence.Controllers;
@@ -13,7 +12,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
 
     public class EvidenceTonnageValueCopyPasteController : AatfEvidenceBaseController
     {

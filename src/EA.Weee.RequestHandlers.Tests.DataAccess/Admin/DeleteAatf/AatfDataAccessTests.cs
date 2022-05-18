@@ -11,6 +11,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;

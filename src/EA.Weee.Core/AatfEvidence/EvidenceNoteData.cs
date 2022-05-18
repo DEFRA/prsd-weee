@@ -33,7 +33,7 @@
 
         public DateTime? ReturnedDate { get; set; }
 
-        public string Reason { get; set; }
+        public string ReturnedReason { get; set; }
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 

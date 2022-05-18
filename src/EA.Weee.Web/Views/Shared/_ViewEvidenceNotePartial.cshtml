@@ -2,10 +2,15 @@
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 
 @{
-    <h1 class="govuk-heading-l">
-        Evidence note
-    </h1>
-    
+    if (Model.DisplayH2Title)
+    {
+        <h2 class="govuk-heading-m">Evidence note</h2>
+    }
+    else
+    {
+        <h1 class="govuk-heading-l">Evidence note</h1>
+    }
+
     <div class="govuk-width-container govuk-!-margin-top-3">
 
         <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
@@ -16,7 +21,7 @@
             @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
         </div>
 
-        @if (Model.DisplayReason)
+        @if (Model.DisplayReturnedReason)
         {
             <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
                 <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter">
@@ -87,50 +92,50 @@
     <div class="govuk-width-container govuk-!-padding-top-7">
         <p>
             By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.WasteDisplay.ToLower()</strong> has been received between
-            <strong>@(Model.StartDate.ToShortDateString())</strong> and <strong>@(Model.EndDate.ToShortDateString())</strong> at this site.
+            <strong>@(Model.StartDate.Value.ToShortDateString())</strong> and <strong>@(Model.EndDate.Value.ToShortDateString())</strong> at this site.
             It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
         </p>
     </div>
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
         <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-left">Category</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-right">Total received (tonnes)</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-right">Reused as whole appliances (tonnes)</th>
-        </tr>
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-left">Category</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-right">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third govuk-!-text-align-right">Reused as whole appliances (tonnes)</th>
+            </tr>
         </thead>
 
         <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.CategoryValues.Count; i++)
-        {
-            var category = Model.CategoryValues[i];
+            @for (var i = 0; i < Model.CategoryValues.Count; i++)
+            {
+                var category = Model.CategoryValues[i];
 
-            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                    <td class="govuk-table__cell govuk-!-text-align-left">
+                        <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right">
+                        @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right">
+                        @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
+                    </td>
+                </tr>
+            }
+
+            <tr class="govuk-table__row">
                 <td class="govuk-table__cell govuk-!-text-align-left">
-                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                    <p class="govuk-body"><strong>Total (tonnes)</strong></p>
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right">
-                    @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
+                    <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right">
-                    @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
+                    <p class="govuk-body" id="ReusedTotal">@Model.ReusedTotal</p>
                 </td>
             </tr>
-        }
-
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell govuk-!-text-align-left">
-                <p class="govuk-body"><strong>Total (tonnes)</strong></p>
-            </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
-                <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
-            </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
-                <p class="govuk-body" id="ReusedTotal">@Model.ReusedTotal</p>
-            </td>
-        </tr>
 
         </tbody>
     </table>

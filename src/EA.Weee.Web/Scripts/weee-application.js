@@ -133,8 +133,8 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
-    $("#copy-tonnage-button").hide();
-    $("#transferAllTonnage").change(function () {
+ 
+    $("#TransferAllTonnage").change(function () {
         $("#TransferEvidenceForm").submit();
     });
 

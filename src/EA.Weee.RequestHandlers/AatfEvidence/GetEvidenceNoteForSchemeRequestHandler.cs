@@ -5,7 +5,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
-    using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
@@ -30,8 +29,6 @@
             authorization.EnsureCanAccessExternalArea();
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
-
-            Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.EvidenceNoteId} not found");
 
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 

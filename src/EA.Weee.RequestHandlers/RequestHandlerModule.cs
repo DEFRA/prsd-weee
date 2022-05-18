@@ -34,6 +34,10 @@
                 .Where(t => t.Name.Contains("DataAccess"))
                 .AsImplementedInterfaces();
 
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => t.Name.Contains("Validator"))
+                .AsImplementedInterfaces();
+
             // Register the map classes
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Mappings"))

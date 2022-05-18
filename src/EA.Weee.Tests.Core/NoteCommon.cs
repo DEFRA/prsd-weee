@@ -17,8 +17,7 @@
             Aatf aatf,
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
-            List<NoteTonnage> noteTonnages = null,
-            Weee.Domain.Evidence.NoteType noteType = null)
+            List<NoteTonnage> noteTonnages = null)
         {
             if (organisation == null)
             {
@@ -51,11 +50,6 @@
                 noteTonnages = new List<NoteTonnage>();
             }
 
-            if (noteType == null)
-            {
-                noteType = NoteType.EvidenceNote;
-            }
-
             return new Note(organisation,
                 scheme,
                 DateTime.Now,
@@ -63,9 +57,41 @@
                 wasteType,
                 protocol,
                 aatf,
-                noteType,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages);
+        }
+
+        public static Note CreateTransferNote(DatabaseWrapper database,
+            Organisation organisation,
+            Scheme scheme,
+            List<NoteTransferTonnage> noteTonnages = null,
+            List<NoteTransferCategory> noteTransferCategories = null)
+        {
+            if (organisation == null)
+            {
+                organisation = Organisation.CreateSoleTrader("Test Organisation");
+            }
+
+            if (scheme == null)
+            {
+                scheme = new Scheme(organisation);
+            }
+
+            if (noteTonnages == null)
+            {
+                noteTonnages = new List<NoteTransferTonnage>();
+            }
+
+            if (noteTransferCategories == null)
+            {
+                noteTransferCategories = new List<NoteTransferCategory>();
+            }
+
+            return new Note(organisation,
+                scheme,
+                database.WeeeContext.GetCurrentUser(),
+                noteTonnages,
+                noteTransferCategories);
         }
     }
 }

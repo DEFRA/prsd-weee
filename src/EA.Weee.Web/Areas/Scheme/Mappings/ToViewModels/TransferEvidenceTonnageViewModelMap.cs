@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
     using Core.Helpers;
@@ -7,17 +8,17 @@
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
+    using Web.ViewModels.Shared;
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
-        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache, ICategoryValueTotalCalculator categoryValueTotalCalculator) : base(mapper, cache)
+        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache) : base(mapper, cache)
         {
         }
 
         public TransferEvidenceTonnageViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
-            Condition.Requires(source.Request).IsNotNull();
             
             var model = MapBaseProperties(source);
             model.TransferAllTonnage = source.TransferAllTonnage;
@@ -25,19 +26,20 @@
             model.EvidenceNotesDataList =
                 model.EvidenceNotesDataList.OrderBy(a => a.SubmittedBy).ThenBy(ab => ab.Id).ToList();
 
+            // Multiple evidence notes can come from the same AATF, where the AATF is the same for sequential evidence notes the aatf name isn't displayed
             for (var i = 0; i < model.EvidenceNotesDataList.Count; i++)
             {
                 DisplayAatf(i, model);
             }
 
-            SetupTonnages(source, model);
+            SetupTonnages(source, model, model.EvidenceNotesDataList);
 
             SetupTotals(source, model);
 
             return model;
         }
 
-        private static void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
+        private void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
             TransferEvidenceTonnageViewModel model)
         {
             foreach (var category in model.CategoryValues)
@@ -60,28 +62,37 @@
         }
 
         private void SetupTonnages(TransferEvidenceNotesViewModelMapTransfer source,
-            TransferEvidenceTonnageViewModel model)
+            TransferEvidenceTonnageViewModel model, List<ViewEvidenceNoteViewModel> models)
         {
-            foreach (var evidenceNoteData in source.Notes.OrderBy(a => a.AatfData.Name).ThenBy(ab => ab.Id).ToList())
+            foreach (var viewModel in models)
             {
-                foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData)
+                var evidenceNoteData = source.Notes.FirstOrDefault(n => n.Id.Equals(viewModel.Id));
+
+                if (evidenceNoteData != null)
                 {
-                    var tonnage = new EvidenceCategoryValue(evidenceTonnageData.CategoryId)
+                    foreach (var evidenceTonnageData in evidenceNoteData.EvidenceTonnageData.OrderBy(c => c.CategoryId.ToInt()))
                     {
-                        Id = evidenceTonnageData.Id,
-                    };
+                        string receivedTonnage = null;
+                        string reusedTonnage = null;
+                        if (source.TransferAllTonnage)
+                        {
+                            receivedTonnage = evidenceTonnageData.Received.HasValue
+                                ? evidenceTonnageData.Received.ToTonnageDisplay()
+                                : null;
+                            reusedTonnage = evidenceTonnageData.Reused.HasValue
+                                ? evidenceTonnageData.Reused.ToTonnageDisplay()
+                                : null;
+                        }
 
-                    if (source.TransferAllTonnage)
-                    {
-                        tonnage.Received = evidenceTonnageData.Received.HasValue
-                            ? evidenceTonnageData.Received.ToTonnageDisplay()
-                            : null;
-                        tonnage.Reused = evidenceTonnageData.Reused.HasValue
-                            ? evidenceTonnageData.Reused.ToTonnageDisplay()
-                            : null;
+                        var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
+                            evidenceTonnageData.Id,
+                            evidenceTonnageData.Received,
+                            evidenceTonnageData.Reused,
+                            receivedTonnage,
+                            reusedTonnage);
+
+                        model.TransferCategoryValues.Add(tonnage);
                     }
-
-                    model.TransferCategoryValues.Add(tonnage);
                 }
             }
         }
