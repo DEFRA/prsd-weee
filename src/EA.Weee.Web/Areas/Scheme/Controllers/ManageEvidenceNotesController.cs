@@ -44,18 +44,18 @@
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeByOrganisationId(pcsId));
+                var scheme = await Cache.FetchSchemePublicInfo(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
                 switch (activeDisplayOption)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                 }
             }
         }
@@ -68,7 +68,7 @@
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, 
-            SchemeData scheme, 
+            string schemeName, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
@@ -76,8 +76,6 @@
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, new List<NoteStatus>() { NoteStatus.Submitted }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel)));
-
-                var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -87,7 +85,7 @@
         }
 
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, 
-            SchemeData scheme, 
+            string schemeName, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
@@ -101,8 +99,6 @@
                         NoteStatus.Void,
                         NoteStatus.Returned
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel)));
-
-                var schemeName = scheme != null ? scheme.SchemeName : string.Empty;
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                     new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -118,7 +114,7 @@
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-                // create the new evidence note scheme request from note's Guid
+                // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 //return viewmodel to view
@@ -162,7 +158,7 @@
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-                // call the api with the new evidence note scheme request
+                // call the api with the new evidence note schemeName request
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
@@ -184,7 +180,7 @@
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            // call the api with the new evidence note scheme request
+            // call the api with the new evidence note schemeName request
             var result = await client.SendAsync(User.GetAccessToken(), request);
 
             // create new viewmodel mapper to map request to viewmodel
