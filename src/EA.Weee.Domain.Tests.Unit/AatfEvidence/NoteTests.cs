@@ -24,7 +24,8 @@
         private Aatf aatf;
         private string createdBy;
         private IEnumerable<NoteTonnage> tonnages;
-        private IEnumerable<NoteTransferTonnage> transferTonnages;
+        private readonly IEnumerable<NoteTransferTonnage> transferTonnages;
+        private readonly IEnumerable<NoteTransferCategory> transferCategories;
         private NoteStatus status;
         private NoteType noteType;
         private readonly Fixture fixture;
@@ -42,6 +43,7 @@
             createdBy = fixture.Create<string>();
             tonnages = fixture.CreateMany<NoteTonnage>();
             transferTonnages = fixture.CreateMany<NoteTransferTonnage>();
+            transferCategories = fixture.CreateMany<NoteTransferCategory>();
             status = NoteStatus.Draft;
             noteType = NoteType.EvidenceNote;
         }
@@ -66,7 +68,8 @@
         {
             var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
                 "created",
-                transferTonnages.ToList()));
+                transferTonnages.ToList(),
+                transferCategories.ToList()));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -91,7 +94,8 @@
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
                 "created",
-                transferTonnages.ToList()));
+                transferTonnages.ToList(),
+                transferCategories.ToList()));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -161,6 +165,18 @@
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
+                null,
+                transferCategories.ToList()));
+
+            result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TransferNote_Constructor_GivenNullTransferCategoriesArgumentNullExceptionExpected()
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+                "created",
+                transferTonnages.ToList(),
                 null));
 
             result.Should().BeOfType<ArgumentNullException>();
@@ -478,7 +494,8 @@
             return new Note(organisation,
                 scheme,
                 createdBy,
-                transferTonnages.ToList());
+                transferTonnages.ToList(),
+                transferCategories.ToList());
         }
     }
 }
