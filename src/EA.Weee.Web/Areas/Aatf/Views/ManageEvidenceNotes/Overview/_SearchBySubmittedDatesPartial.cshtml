@@ -5,53 +5,38 @@
 
   @Html.Hidden("activeOverviewDisplayOption", ViewData["activeOverviewDisplayOption"])
 
-    @*<div class="govuk-!-width-full govuk-panel-grey-background">*@
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-3">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
+            @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, false)
+            @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
+            @if (Model.SubmittedDatesFilterViewModel.StartDate.Equals(default(DateTime)))
+            {
+                @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+            }
+            else
+            {
+                @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+            }
+        </div>
 
-
-@Html.Label("Filter by", new { @class = "govuk-label--s" })
-<div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-0">
-                <div class="govuk-grid-row ">
-                    <div class="govuk-grid-column-two-thirds">
-                        <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-">
-                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
-                                @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, false)
-                                @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
-
-                                @if (Model.SubmittedDatesFilterViewModel.StartDate.Equals(default(DateTime)))
-                                {
-                                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                                }
-                                else
-                                {
-                                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                                }
-                            </div>
-
-                        </div>
-
-                        <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7 govuk-body" style="text-align:left;width:17px;padding-left:1px" >
-                            to
-                        </div>
-
-                        <div class="govuk-grid-column-one-third" style="padding-left:5px">
-                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
-                                @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, false)
-                                @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
-                                @if (Model.SubmittedDatesFilterViewModel.EndDate.Equals(default(DateTime)))
-                                {
-                                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                                }
-                                else
-                                {
-                                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                                }
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
     </div>
+
+    <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7 govuk-body govuk-!-padding-left-0" style="text-align:left;width:16px;" >
+        to
+    </div>
+
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-3">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
+            @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.EndDate, false)
+            @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)
+            @if (Model.SubmittedDatesFilterViewModel.EndDate.Equals(default(DateTime)))
+            {
+                @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
+            }
+            else
+            {
+                @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
+            }
+        </div>
+    </div>
+           
