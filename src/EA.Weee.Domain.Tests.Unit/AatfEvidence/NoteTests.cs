@@ -27,7 +27,7 @@
         private readonly IEnumerable<NoteTransferTonnage> transferTonnages;
         private readonly IEnumerable<NoteTransferCategory> transferCategories;
         private NoteStatus status;
-        private NoteType noteType;
+        private readonly short complianceYear;
         private readonly Fixture fixture;
 
         public NoteTests()
@@ -45,7 +45,7 @@
             transferTonnages = fixture.CreateMany<NoteTransferTonnage>();
             transferCategories = fixture.CreateMany<NoteTransferCategory>();
             status = NoteStatus.Draft;
-            noteType = NoteType.EvidenceNote;
+            complianceYear = fixture.Create<short>();
         }
 
         [Fact]
@@ -69,7 +69,8 @@
             var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
                 "created",
                 transferTonnages.ToList(),
-                transferCategories.ToList()));
+                transferCategories.ToList(),
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -95,7 +96,8 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
                 "created",
                 transferTonnages.ToList(),
-                transferCategories.ToList()));
+                transferCategories.ToList(),
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -166,7 +168,8 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
                 null,
-                transferCategories.ToList()));
+                transferCategories.ToList(),
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -177,9 +180,24 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
                 transferTonnages.ToList(),
-                null));
+                null,
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void TransferNote_Constructor_GivenInvalidComplianceYearArgumentExceptionExpected(short complianceYear)
+        {
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+                "created",
+                transferTonnages.ToList(),
+                transferCategories.ToList(),
+                complianceYear));
+
+            result.Should().BeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -419,7 +437,6 @@
             createdBy = fixture.Create<string>();
             tonnages = fixture.CreateMany<NoteTonnage>();
             status = NoteStatus.Draft;
-            noteType = NoteType.EvidenceNote;
 
             var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());
 
@@ -495,7 +512,8 @@
                 scheme,
                 createdBy,
                 transferTonnages.ToList(),
-                transferCategories.ToList());
+                transferCategories.ToList(),
+                complianceYear);
         }
     }
 }

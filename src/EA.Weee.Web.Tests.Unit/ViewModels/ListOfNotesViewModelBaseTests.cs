@@ -10,10 +10,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Mapper;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
     public class ListOfNotesViewModelBaseTests

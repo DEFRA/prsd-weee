@@ -59,5 +59,10 @@
                 return -1;
             }
         }
+
+        public EvidenceNoteFilter(short complianceYear)
+        {
+            ComplianceYear = complianceYear;
+        }
     }
 }
