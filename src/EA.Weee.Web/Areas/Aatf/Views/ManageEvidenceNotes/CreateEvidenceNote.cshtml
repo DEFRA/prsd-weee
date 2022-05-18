@@ -11,7 +11,7 @@
     ViewBag.Title = "Create evidence note";
 }
 
-<section id="main-content">
+@section full_main_content{
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
 
     @using (Html.BeginForm("CreateEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
@@ -30,5 +30,5 @@
         TonnageTotals('Received');
         TonnageTotals('Reused');
     </script>
-</section>
+}
 

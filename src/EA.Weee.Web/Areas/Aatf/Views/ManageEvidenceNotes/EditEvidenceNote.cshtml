@@ -9,7 +9,7 @@
     ViewBag.Title = "Edit evidence note details";
 }
 
-<section id="main-content">
+@section full_main_content{
     @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, Model.RedirectTab, null))))
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
@@ -35,13 +35,13 @@
             @if (Model.DisplayReturnedReason)
             {
                 <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-                   <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter" style="width:198px">
-                            @Html.DisplayNameFor(m => m.Reason)
-                   </span>
-                    <span aria-labelledby="reason-label" class="govuk-grid-column-three-quarters govuk-body weee-word-break" maxlength="200">
-                            @Html.DisplayTextFor(m => m.Reason)
+                    <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter" style="width: 198px">
+                        @Html.DisplayNameFor(m => m.Reason)
                     </span>
-               </div>
+                    <span aria-labelledby="reason-label" class="govuk-grid-column-three-quarters govuk-body weee-word-break" maxlength="200">
+                        @Html.DisplayTextFor(m => m.Reason)
+                    </span>
+                </div>
             }
 
         </div>
@@ -53,5 +53,6 @@
         TonnageTotals('Received');
         TonnageTotals('Reused');
     </script>
-</section>
+}
+
 
