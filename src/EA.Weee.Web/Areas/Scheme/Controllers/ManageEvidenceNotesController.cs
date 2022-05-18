@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Extensions;
     using Prsd.Core.Helpers;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
@@ -47,7 +48,7 @@
                 {
                     tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
                 }
-                var value = tab.GetValueFromName<ManageEvidenceNotesDisplayOptions>();
+                var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
                 switch (value)
                 {
