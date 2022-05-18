@@ -105,7 +105,7 @@
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Obligations");
+                        return RedirectToAction("ChooseAuthority", "Obligations");
                     }
 
                 case InternalUserActivity.ManagePcsCharges:
