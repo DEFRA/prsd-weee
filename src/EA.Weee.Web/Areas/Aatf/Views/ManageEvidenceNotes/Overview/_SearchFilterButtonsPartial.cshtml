@@ -1,0 +1,22 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
+
+@Html.Hidden("activeOverviewDisplayOption", ViewData["activeOverviewDisplayOption"])
+
+@*<div class="govuk-!-width-full govuk-panel-grey-background">*@
+    <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Filter", new { name = "ActionFilter", value = @ActionEnum.Filter, id = "filter-apply", @class = "govuk-!-width-one-quarter" },
+            secondaryButton: false, filterButton: true)
+
+                <div class="govuk-grid-column-one-half">
+                    @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
+                   new { organisationId = Model.OrganisationId, aatfId = @Model.AatfId, activeOverviewDisplayOption = "ViewAllOtherEvidenceNotes" }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+                </div>
+            </div>
+        </div>
+        </div>
+   

@@ -37,7 +37,12 @@
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
-                SearchRef = message.SearchRef
+                SearchRef = message.SearchRef,
+                SchemeId = message.RecipientId,
+                WasteTypeId = (int?)message.WasteTypeId,
+                NoteStatusId = (int?)message.NoteStatusFilter,
+                StartDateSubmitted = message.StartDateSubmitted,
+                EndDateSubmitted = message.EndDateSubmitted
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);

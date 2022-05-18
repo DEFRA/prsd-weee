@@ -17,7 +17,13 @@
 
         public FilterViewModel FilterViewModel { get; protected set; }
 
-        public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs, FilterViewModel filterViewModel)
+        public RecipientWasteStatusFilterViewModel RecipientWasteStatusFilterViewModel { get; protected set; }
+
+        public SubmittedDatesFilterViewModel SubmittedDatesFilterViewModel { get; protected set; }
+
+        public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs,
+            FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
+            SubmittedDatesFilterViewModel submittedDatesFilterViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => aatfData, aatfData);
@@ -29,6 +35,8 @@
             Aatfs = aatfs;
             AatfId = aatfId;
             FilterViewModel = filterViewModel;
+            RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
+            SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
         }
     }
 }
