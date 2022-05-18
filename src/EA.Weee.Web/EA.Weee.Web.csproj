@@ -321,6 +321,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\ObligationsBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Scheme\Attributes\ValidatePcsObligationsEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceController.cs" />
@@ -713,6 +714,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <Content Include="Areas\Aatf\Views\EvidenceTonnageValueCopyPaste\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Obligations\SelectAuthority.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
