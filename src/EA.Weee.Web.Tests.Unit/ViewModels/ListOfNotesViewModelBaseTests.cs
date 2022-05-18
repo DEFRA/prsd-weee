@@ -5,6 +5,9 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -51,7 +54,7 @@
         public void Map_GivenNullSource_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => testClass.Map(null, fixture.Create<DateTime>()));
+            var exception = Record.Exception(() => testClass.Map(null, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -69,7 +72,7 @@
             };
 
             //act
-            testClass.Map(notes, fixture.Create<DateTime>());
+            testClass.Map(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
@@ -91,7 +94,7 @@
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
-            var result = testClass.Map(notes, fixture.Create<DateTime>());
+            var result = testClass.Map(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
