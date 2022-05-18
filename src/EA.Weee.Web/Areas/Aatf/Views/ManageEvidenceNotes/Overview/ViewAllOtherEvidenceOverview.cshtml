@@ -41,8 +41,10 @@
                             <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-1 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
                                 <div class="govuk-grid-row ">
                                     <div class="govuk-grid-column-two-thirds">
-                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByRecipientWasteStatusPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                            new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientWasteStatusFilterViewModel")
+
+                                        @*@Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByRecipientWasteStatusPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                            new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })*@
                                     </div>
                                     <div class="govuk-grid-column-one-third govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
                                         @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
