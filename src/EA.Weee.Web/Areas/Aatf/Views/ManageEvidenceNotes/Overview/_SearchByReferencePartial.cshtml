@@ -5,10 +5,10 @@
 
  @Html.Hidden("activeOverviewDisplayOption", ViewData["activeOverviewDisplayOption"])
 
-<div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-2 govuk-!-margin-bottom-0">
-    <div class="govuk-form-group govuk-!-margin-bottom-0 @Html.Gds().FormGroupClass(m => m.FilterViewModel.SearchRef)">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FilterViewModel.SearchRef)">
         @Html.Gds().LabelFor(m => m.FilterViewModel.SearchRef, new { @class = "govuk-label--s" }, false)
         @Html.Gds().TextBoxFor(m => m.FilterViewModel.SearchRef, new { type = "search" })
         <button class="govuk-button"><i class="fa fa-search" aria-hidden="true" title="search by reference"></i><span class="sr-only">Search by reference number</span></button>
     </div>
-</div>
+
+@*@Html.Label("Filter by", new { @class = "govuk-label--s" })*@
