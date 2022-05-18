@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
     using Core.AatfEvidence;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -34,7 +35,7 @@
                     {
                         case NoteStatus.Draft:
                             model.SuccessMessage =
-                                $"You have successfully saved the transfer evidence note with reference ID {note.Type}{note.Reference} as a draft";
+                                $"You have successfully saved the transfer evidence note with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
                             break;
                     }
                 }
