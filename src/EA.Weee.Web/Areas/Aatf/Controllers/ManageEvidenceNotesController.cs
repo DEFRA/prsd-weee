@@ -11,6 +11,7 @@
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Helpers;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Constant;
     using Extensions;
@@ -67,7 +68,7 @@
                 tab = Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.EvidenceSummary);
             }
 
-            var value = tab.GetValueFromName<ManageEvidenceOverviewDisplayOption>();
+            var value = tab.GetValueFromDisplayName<ManageEvidenceOverviewDisplayOption>();
 
             using (var client = this.apiClient())
             {
