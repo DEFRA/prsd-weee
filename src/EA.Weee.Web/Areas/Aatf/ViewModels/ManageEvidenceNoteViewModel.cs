@@ -12,8 +12,6 @@
 
         public Guid AatfId { get; set; }
 
-        public ActionEnum ActionFilter { get; set; }
-
         public FilterViewModel FilterViewModel { get; set; }
 
         public SubmittedDatesFilterViewModel SubmittedDatesFilterViewModel { get; set; }
