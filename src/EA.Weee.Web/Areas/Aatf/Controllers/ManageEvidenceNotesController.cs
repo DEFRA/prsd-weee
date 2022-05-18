@@ -274,6 +274,14 @@
                    .Distinct(new SchemeDataComparer())
                     .OrderByDescending(s => s.SchemeName).ToList();
 
+            Guid? schemeId = manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId;
+
+            if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null)
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeExternalById(schemeId.Value));
+                schemeData.Add(scheme);
+            }
+
             var recipientWasteStatusViewModel =
                      mapper.Map<RecipientWasteStatusFilterViewModel>(
                          new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
