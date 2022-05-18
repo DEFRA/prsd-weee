@@ -92,7 +92,7 @@
     <div class="govuk-width-container govuk-!-padding-top-7">
         <p>
             By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.WasteDisplay.ToLower()</strong> has been received between
-            <strong>@(Model.StartDate.ToShortDateString())</strong> and <strong>@(Model.EndDate.ToShortDateString())</strong> at this site.
+            <strong>@(Model.StartDate.Value.ToShortDateString())</strong> and <strong>@(Model.EndDate.Value.ToShortDateString())</strong> at this site.
             It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
         </p>
     </div>

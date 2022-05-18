@@ -82,6 +82,7 @@
     <Compile Include="Evidence\EvidenceNoteFilter.cs" />
     <Compile Include="Evidence\Note.cs" />
     <Compile Include="Evidence\NoteStatusHistory.cs" />
+    <Compile Include="Evidence\NoteTransferCategory.cs" />
     <Compile Include="Evidence\NoteTransferTonnage.cs" />
     <Compile Include="Evidence\NoteTonnage.cs" />
     <Compile Include="Evidence\Protocol.cs" />

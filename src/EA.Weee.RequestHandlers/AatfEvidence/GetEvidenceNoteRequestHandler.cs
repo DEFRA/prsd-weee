@@ -31,8 +31,6 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            Guard.ArgumentNotNull(() => evidenceNote, evidenceNote, $"Evidence note {message.EvidenceNoteId} not found");
-
             authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
             var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);

@@ -5,6 +5,7 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
+    using System;
     using Autofac;
     using Autofac.Integration.Mvc;
     using FluentValidation.Mvc;
