@@ -15,10 +15,17 @@
         }
 
         [Fact]
-        public void IndexGet_IsDecoratedWith_HttpGetAttribute()
+        public void ChooseAuthorityGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("Index").Should()
+            typeof(ObligationsController).GetMethod("SelectAuthority").Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void HoldingPost_IsDecoratedWith_HttpPostAttribute()
+        {
+            typeof(ObligationsController).GetMethod("Holding").Should()
+                .BeDecoratedWith<HttpPostAttribute>();
         }
     }
 }
