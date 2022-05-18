@@ -253,15 +253,18 @@
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
             SelectYourAatfViewModel models, ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
-            var resultAllNotes = await client.SendAsync(User.GetAccessToken(),
-             new GetAatfNotesRequest(organisationId, aatfId,
-                 new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected },
-                 manageEvidenceViewModel?.FilterViewModel.SearchRef,
-                 manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
-                 manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
-                 manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                 manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
-                 manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
+            var resultAllNotes = new List<EvidenceNoteData>();
+
+            if (ModelState.IsValid)
+            {
+               resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected },
+               manageEvidenceViewModel?.FilterViewModel.SearchRef,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
+               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
+            }
 
             var modelAllNotes =
                     mapper.Map<AllOtherEvidenceNotesViewModel>(
@@ -271,7 +274,7 @@
                    .Distinct(new SchemeDataComparer())
                     .OrderByDescending(s => s.SchemeName).ToList();
 
-               var recipientWasteStatusViewModel =
+            var recipientWasteStatusViewModel =
                      mapper.Map<RecipientWasteStatusFilterViewModel>(
                          new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
 
