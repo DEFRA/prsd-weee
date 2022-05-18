@@ -9,7 +9,9 @@
 {
     <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
     <span class="text-margin">
-        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
+        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, 
+            new SelectList(Model.ComplianceYearList), 
+            new { @class = "govuk-!-width-one-quarter", autocomplete = "false", @id="evidenceSelectedComplianceYear"})
     </span>
     <noscript>
         @(this.WeeeGds().Button("Apply", null, true))

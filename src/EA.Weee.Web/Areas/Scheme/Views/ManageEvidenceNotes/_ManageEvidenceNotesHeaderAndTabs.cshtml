@@ -21,7 +21,7 @@
     </h1>
 </header>
 
-@Html.Partial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageEvidenceNotes" }})
+ @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageEvidenceNotes" }});}
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",
