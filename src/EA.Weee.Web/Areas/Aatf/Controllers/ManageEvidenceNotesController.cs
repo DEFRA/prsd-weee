@@ -10,6 +10,7 @@
     using Attributes;
     using Core.AatfEvidence;
     using Core.AatfReturn;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Areas.Aatf.Comparers;
     using EA.Weee.Web.Areas.Aatf.Mappings;
@@ -274,12 +275,18 @@
                    .Distinct(new SchemeDataComparer())
                     .OrderByDescending(s => s.SchemeName).ToList();
 
+            if (schemeData.Any())
+            {
+                sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
+            }
+
             Guid? schemeId = manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId;
 
             if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null)
             {
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeExternalById(schemeId.Value));
-                schemeData.Add(scheme);
+                var schemeDataFiltered = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+                var selectedScheme = schemeDataFiltered.Where(s => s.Id == schemeId.Value).First();
+                schemeData.Add(selectedScheme);
             }
 
             var recipientWasteStatusViewModel =
