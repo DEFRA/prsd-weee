@@ -1,16 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using EA.Weee.Security;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin.Obligations;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using Services;
     using Services.Caching;
     using System;
-    using System.Security.Claims;
     using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Services;
-    using System;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -18,6 +14,7 @@
     public class ObligationsController : ObligationsBaseController
     {
         private readonly IAppConfiguration configuration;
+        private readonly Func<IWeeeClient> apiClient;
 
         public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache) : base(breadcrumb, cache)
         {
