@@ -5,12 +5,12 @@
 
     public class TransferTonnageValue : TonnageValues
     {
-        public Guid TransferTonnageId { get; private set; }
+        public virtual Guid TransferTonnageId { get; private set; }
 
-        public TransferTonnageValue(Guid id, int categoryId, decimal? firstTonnage, decimal? secondTonnage, Guid transferTonnageValue) : 
+        public TransferTonnageValue(Guid id, int categoryId, decimal? firstTonnage, decimal? secondTonnage, Guid transferTonnageId) : 
             base(id, categoryId, firstTonnage, secondTonnage)
         {
-            TransferTonnageId = transferTonnageValue;
+            TransferTonnageId = transferTonnageId;
         }
     }
 }

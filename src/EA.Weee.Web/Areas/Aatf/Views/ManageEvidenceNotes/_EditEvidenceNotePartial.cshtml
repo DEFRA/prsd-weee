@@ -1,20 +1,21 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.EditEvidenceNoteViewModel
 
 <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-two-thirds">
-
+        <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status, new { id = "status-id" })
         @Html.HiddenFor(m => m.Reference)
         @Html.HiddenFor(m => m.Reason)
-    
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
 
@@ -22,14 +23,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
-                    @if (Model.StartDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete="off", @placeholder="dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
 
@@ -37,28 +31,20 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EndDate)">
                     @Html.Gds().LabelFor(m => m.EndDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.EndDate)
-
-                    @if (Model.EndDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
         </div>
 
-        <div class="govuk-grid-row govuk-!-padding-top-3" >
+        <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
                 @if (Model.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
                 {
-                <div class="govuk-grid-column-full govuk-!-padding-left-0 govuk-!-padding-bottom-0 govuk-!-margin-0" >
-                    @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
-                    @Html.HiddenFor(m => m.ReceivedId)
-                    <span aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</span>
-                </div>
+                    <div class="govuk-grid-column-full govuk-!-padding-left-0 govuk-!-padding-bottom-0 govuk-!-margin-0">
+                        @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
+                        @Html.HiddenFor(m => m.ReceivedId)
+                        <span aria-labelledby="ReceivedId" class="govuk-body">@Html.Raw(Model.SelectedSchemeName)</span>
+                    </div>
                 }
                 else
                 {
@@ -70,6 +56,7 @@
                 }
             </div>
         </div>
+
         <div class="govuk-grid-row govuk-!-padding-top-3">
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.WasteTypeValue)">
@@ -168,7 +155,6 @@
 
                 <div class="govuk-button-group">
                     @* This is a hidden button to force the default action to be save rather than submit*@
-                    <button aria-hidden="true" class="govuk-visually-hidden" type="submit" name="Action" value="@ActionEnum.Save" tabindex="-1">Save</button>
                     @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
                     @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
                 </div>

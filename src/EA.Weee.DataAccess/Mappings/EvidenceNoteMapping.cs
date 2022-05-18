@@ -25,8 +25,6 @@
             HasRequired(n => n.Organisation);
             HasRequired(n => n.Recipient);
             HasRequired(n => n.Aatf);
-            HasMany(n => n.NoteTonnage);
-            HasMany(n => n.NoteTransferTonnage);
         }
     }
 }
