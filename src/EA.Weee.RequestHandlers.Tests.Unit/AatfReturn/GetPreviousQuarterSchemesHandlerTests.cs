@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
     using Xunit;
 
     public class GetPreviousQuarterSchemesHandlerTests

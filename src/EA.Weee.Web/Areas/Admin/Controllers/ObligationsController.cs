@@ -1,8 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using EA.Weee.Security;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin.Obligations;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using Services;
+    using Services.Caching;
+    using System;
+    using System.Security.Claims;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using System;
@@ -12,13 +17,23 @@
 
     public class ObligationsController : ObligationsBaseController
     {
-        private readonly Func<IWeeeClient> apiClient;
-        private readonly BreadcrumbService breadcrumb;
+        private readonly IAppConfiguration configuration;
 
-        public ObligationsController(Func<IWeeeClient> apiClient,BreadcrumbService breadcrumb)
+        public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache) : base(breadcrumb, cache)
         {
-            this.apiClient = apiClient;
-            this.breadcrumb = breadcrumb;
+            this.configuration = configuration;
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (!configuration.EnablePCSObligations)
+            {
+                throw new InvalidOperationException("PCS Obligations is not enabled.");
+            }
+
+            Breadcrumb.InternalActivity = "Manage PCS obligations";
+
+            base.OnActionExecuting(filterContext);
         }
 
         [HttpGet]
