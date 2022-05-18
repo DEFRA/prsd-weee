@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
+    using System;
     using Core.AatfEvidence;
     using Core.Helpers;
     using DataAccess.DataAccess;
@@ -32,7 +33,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var filter = new EvidenceNoteFilter()
+            var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
             {
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,

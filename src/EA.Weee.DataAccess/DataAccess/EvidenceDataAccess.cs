@@ -79,6 +79,14 @@
             return notes;
         }
 
+        public async Task<short> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
+        {
+            var note = await context.Notes.Where(n => evidenceNoteIds.Contains(n.Id))
+                .OrderBy(n1 => n1.StartDate).FirstAsync();
+
+            return note.ComplianceYear;
+        }
+
         public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes)
         {
             var notes = await context.Notes
@@ -102,13 +110,15 @@
             List<NoteTransferCategory> transferCategories,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
+            short complianceYear,
             string userId)
         {
             var evidenceNote = new Note(organisation,
                 scheme,
                 userId,
                 transferTonnage,
-                transferCategories);
+                transferCategories,
+                complianceYear);
 
             if (status.Equals(NoteStatus.Submitted))
             {

@@ -57,13 +57,15 @@
             Scheme recipient,
             string createdBy,
             IList<NoteTransferTonnage> transfer,
-            IList<NoteTransferCategory> categories)
+            IList<NoteTransferCategory> categories,
+            short complianceYear)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
             Guard.ArgumentNotNull(() => transfer, transfer);
             Guard.ArgumentNotNull(() => categories, categories);
+            Condition.Requires(complianceYear).IsGreaterThan(0);
 
             Organisation = organisation;
             Recipient = recipient;
@@ -77,6 +79,7 @@
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = transfer;
             NoteTransferCategories = categories;
+            ComplianceYear = complianceYear;
         }
 
         public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,

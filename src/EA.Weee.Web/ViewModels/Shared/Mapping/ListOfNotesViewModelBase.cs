@@ -26,7 +26,7 @@
             var m = new T
             {
                 EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes),
-                ManageEvidenceNoteViewModel =
+                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
                 {
                     ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
                     SelectedComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year

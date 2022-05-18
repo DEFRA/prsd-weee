@@ -5,7 +5,7 @@ IF NOT EXISTS(SELECT 1 FROM sys.columns
 BEGIN
     ALTER TABLE [Evidence].[Note] ADD [ComplianceYear] [smallint] NULL;
 END
-
+GO
 UPDATE [Evidence].Note SET ComplianceYear = Year(StartDate)
 
 

@@ -23,6 +23,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Tests.Unit.Helpers;
+    using Web.Areas.Aatf.ViewModels;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class ManageEvidenceNotesControllerTests
@@ -45,6 +47,8 @@
             OrganisationId = Guid.NewGuid();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             Fixture = new Fixture();
         }
 
@@ -57,7 +61,12 @@
         [Fact]
         public void IndexGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(ManageEvidenceNotesDisplayOptions) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+                {
+                    typeof(Guid), 
+                    typeof(ManageEvidenceNotesDisplayOptions),
+                    typeof(ManageEvidenceNoteViewModel)
+                }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 

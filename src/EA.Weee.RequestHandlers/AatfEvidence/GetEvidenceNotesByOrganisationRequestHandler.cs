@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
+    using System;
     using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -43,7 +44,7 @@
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var filter = new EvidenceNoteFilter()
+            var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
             {
                 SchemeId = scheme.Id,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
