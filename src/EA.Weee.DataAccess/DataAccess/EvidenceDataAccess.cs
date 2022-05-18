@@ -60,7 +60,11 @@
                    (!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                     && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                     && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
-                    && (!filter.StartDateSubmitted.HasValue || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.ChangedDate != null && nsh.ChangedDate >= filter.StartDateSubmitted))
+                    && (!filter.StartDateSubmitted.HasValue 
+                        || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value) 
+                            && p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
+                                .OrderByDescending(nsh1 => nsh1.ChangedDate).First().ChangedDate >= filter.StartDateSubmitted)
+                   
                     && (!filter.EndDateSubmitted.HasValue || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.ChangedDate != null && nsh.ChangedDate <= filter.EndDateSubmitted))
                     && (!filter.WasteTypeId.HasValue || (int)p.WasteType == filter.WasteTypeId)
                     && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
