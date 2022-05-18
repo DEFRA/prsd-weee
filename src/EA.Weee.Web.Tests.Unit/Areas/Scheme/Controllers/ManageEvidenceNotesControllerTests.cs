@@ -58,7 +58,7 @@
         [Fact]
         public void IndexGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(ManageEvidenceNotesDisplayOptions) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
