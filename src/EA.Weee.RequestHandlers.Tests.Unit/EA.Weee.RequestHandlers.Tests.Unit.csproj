@@ -149,6 +149,7 @@
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
     <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />
