@@ -357,9 +357,6 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SchemeViewAndTransferEvidenceSchemeViewModel.cs" />
-    <Compile Include="Areas\Scheme\Requests\CreateTransferEvidenceNoteRequestCreator.cs" />
-    <Compile Include="Areas\Scheme\Requests\ICreateTransferEvidenceNoteRequestCreator.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ViewAndTransferEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteCategoriesViewModel.cs" />

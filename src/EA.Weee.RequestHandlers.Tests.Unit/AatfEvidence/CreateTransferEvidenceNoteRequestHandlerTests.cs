@@ -292,7 +292,11 @@
 
         private TransferEvidenceNoteRequest Request()
         {
-            return new TransferEvidenceNoteRequest(organisation.Id, scheme.Id, fixture.CreateMany<int>().ToList(), fixture.CreateMany<TransferTonnageValue>().ToList(), Core.AatfEvidence.NoteStatus.Draft);
+            return new TransferEvidenceNoteRequest(organisation.Id, scheme.Id, 
+                fixture.CreateMany<int>().ToList(), 
+                fixture.CreateMany<TransferTonnageValue>().ToList(), 
+                fixture.CreateMany<Guid>().ToList(),
+                Core.AatfEvidence.NoteStatus.Draft);
         }
     }
 }
