@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
 
     using AutoFixture;
-
+    using DataAccess.DataAccess;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;

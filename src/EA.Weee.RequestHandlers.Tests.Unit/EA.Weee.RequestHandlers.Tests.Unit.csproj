@@ -140,6 +140,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
@@ -148,11 +149,13 @@
     <Compile Include="AatfEvidence\CreateEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetAatfNotesRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\TransferTonnagesValidatorTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandlerTests.cs" />
@@ -303,6 +306,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
     <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />

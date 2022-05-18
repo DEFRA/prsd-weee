@@ -1,0 +1,36 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
+@{
+    ViewBag.Title = "Transferred evidence - GOV.UK";
+}
+
+@section full_main_content
+{
+    @if (Model.DisplayMessage)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab)), "Manage evidence notes"))
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab))))
+    }
+
+    @Html.Gds().ValidationSummary()
+    <h1 class="govuk-heading-l">
+    </h1>
+
+
+    @using (Html.BeginForm(actionName: "TransferredEvidence", controllerName: "TransferEvidence", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.SchemeId)
+
+
+    }
+}
+

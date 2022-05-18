@@ -15,6 +15,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using DataAccess.DataAccess;
     using Xunit;
     using ReportOnQuestion = Core.AatfReturn.ReportOnQuestion;
     using ReturnReportOn = Domain.AatfReturn.ReturnReportOn;

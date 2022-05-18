@@ -7,6 +7,7 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     internal class AddSentOnAatfSiteHandler : IRequestHandler<AddSentOnAatfSite, Guid>
     {
