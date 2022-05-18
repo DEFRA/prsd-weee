@@ -28,7 +28,7 @@
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult ChooseAuthority()
         {
             return View("SelectAuthority", new ViewModels.Obligations.SelectAuthorityViewModel());
         }
