@@ -45,10 +45,10 @@
                 RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
                 RecipientId = source.Recipient.Id,
                 //must be updated when a rejected case is added
-                Reason = source.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.Reason,
+                ReturnedReason = source.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned) ? (source.NoteStatusHistory
+                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
+                        .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
+                    ?.Reason : null,
                 SubmittedDate = source.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()

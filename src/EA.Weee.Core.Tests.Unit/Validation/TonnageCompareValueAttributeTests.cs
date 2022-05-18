@@ -10,9 +10,9 @@
 
     public class TonnageCompareValueAttributeTests
     {
+        private const string Error = "Tonnage Error Message";
         private const string CategoryIdProperty = "Category";
         private const string CompareTonnage = "CompareTonnage";
-        private const int CategoryIdValue = 1;
         private readonly List<ValidationResult> validationResults;
         private const WeeeCategory Category = WeeeCategory.AutomaticDispensers;
 
@@ -24,8 +24,8 @@
         [Fact]
         public void TonnageCompareValueAttribute_ShouldBeDecoratedWith_AttributeUsageAttribute()
         {
-            typeof(TonnageCompareValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
-                .Should().Be(AttributeTargets.Property);
+            typeof(TonnageCompareValueAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>(a =>
+                a.AllowMultiple.Equals(true && a.ValidOn.Equals(AttributeTargets.Property)));
         }
 
         [Fact]
@@ -108,8 +108,7 @@
             validationResults.Count.Should().Be(1);
             validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
             {
-                new ValidationResult(
-                    "The reused tonnage must be equivalent or lower than the received tonnage")
+                new ValidationResult(Error)
             });
         }
 
@@ -121,8 +120,7 @@
             result.Should().BeFalse();
             validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
             {
-                new ValidationResult(
-                    "The reused tonnage must be equivalent or lower than the received tonnage")
+                new ValidationResult(Error)
             });
         }
 
@@ -164,7 +162,7 @@
 
         public class TestTonnageValueNonRelatedProperty
         {
-            [TonnageCompareValue(CategoryIdProperty, "CompareTonnageNotMatching")]
+            [TonnageCompareValue(CategoryIdProperty, "CompareTonnageNotMatching", ErrorMessage = Error)]
             public object Tonnage { get; set; }
 
             public object CompareTonnage { get; set; }
@@ -174,7 +172,7 @@
 
         public class TestTonnageValueNonCategoryProperty
         {
-            [TonnageCompareValue("NonMatchingCategory", TonnageCompareValueAttributeTests.CompareTonnage)]
+            [TonnageCompareValue("NonMatchingCategory", TonnageCompareValueAttributeTests.CompareTonnage, ErrorMessage = Error)]
             public object Tonnage { get; set; }
 
             public object CompareTonnage { get; set; }
@@ -184,7 +182,7 @@
 
         public class TestTonnageValueRelatedPropertyNotOfCorrectType
         {
-            [TonnageCompareValue(CategoryIdProperty, CompareTonnage)]
+            [TonnageCompareValue(CategoryIdProperty, CompareTonnage, ErrorMessage = Error)]
             public object Tonnage { get; set; }
 
             public int Category { get; set; }
@@ -192,7 +190,7 @@
 
         public class TestTonnageValue
         {
-            [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage)]
+            [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage, ErrorMessage = Error)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }

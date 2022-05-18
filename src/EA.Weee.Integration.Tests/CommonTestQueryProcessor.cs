@@ -3,7 +3,6 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using Autofac;
     using DataAccess;
     using Domain;
@@ -29,6 +28,9 @@
         {
             return dbContext.Notes
                 .Include(n => n.Recipient)
+                .Include(n => n.NoteTransferTonnage)
+                .Include(n => n.NoteTonnage)
+                .Include(n => n.NoteTransferCategories)
                 .FirstOrDefault(n => n.Id.Equals(id));
         }
 

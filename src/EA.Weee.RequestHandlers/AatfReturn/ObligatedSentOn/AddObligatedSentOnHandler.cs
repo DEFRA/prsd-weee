@@ -6,6 +6,7 @@
     using EA.Weee.Requests.AatfReturn.Obligated;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class AddObligatedSentOnHandler : IRequestHandler<AddObligatedSentOn, bool>
     {

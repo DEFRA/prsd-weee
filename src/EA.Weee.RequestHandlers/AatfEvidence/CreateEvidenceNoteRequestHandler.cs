@@ -3,9 +3,8 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
     using AatfReturn.Internal;
-    using Core.Helpers;
+    using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -74,7 +73,6 @@
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 aatf,
-                NoteType.EvidenceNote,
                 userContext.UserId.ToString(),
                 tonnageValues.ToList());
 

@@ -131,9 +131,23 @@
             result.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note");
             result.HintItems.ElementAt(0).Value.Should().BeNull();
             result.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note");
-            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note if you have received the evidence note by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note");
+            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note");
             result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note");
             result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note if there are some minor updates to be made by the AATF");
+        }
+
+        [Fact]
+        public void ReviewEvidenceNotesViewModelMap_ShouldSetDisplayH2TitleTrue()
+        {
+            // act
+            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status)
+            {
+                SchemeId = note.RecipientId
+            });
+
+            // asset
+            modelCreated.Should().NotBeNull();
+            modelCreated.ViewEvidenceNoteViewModel.DisplayH2Title.Should().BeTrue();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using Core.Shared;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;

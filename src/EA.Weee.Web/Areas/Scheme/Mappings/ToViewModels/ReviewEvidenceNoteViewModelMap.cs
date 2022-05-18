@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using Core.AatfEvidence;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels.ManageEvidenceNotes;
@@ -24,6 +23,8 @@
             {
                 ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source)
             };
+
+            model.ViewEvidenceNoteViewModel.DisplayH2Title = true;
 
             return model;
         }
