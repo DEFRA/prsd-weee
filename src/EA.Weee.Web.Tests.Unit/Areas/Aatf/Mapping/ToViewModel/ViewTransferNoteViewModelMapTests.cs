@@ -3,6 +3,7 @@
     using System;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
@@ -102,7 +103,7 @@
 
             //assert
             model.SuccessMessage.Should()
-                .Be($"You have successfully saved the transfer evidence note with reference ID {source.TransferEvidenceNoteData.Type}{source.TransferEvidenceNoteData.Reference} as a draft");
+                .Be($"You have successfully saved the transfer evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference} as a draft");
         }
 
         [Theory]

@@ -34,7 +34,9 @@
         
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
-                @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                <noscript>
+                    @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                </noscript>
             </div>
         </div>
     }
