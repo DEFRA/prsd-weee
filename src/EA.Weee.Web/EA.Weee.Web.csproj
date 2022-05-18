@@ -313,12 +313,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\RecipientWasteStatusViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceSummaryMapTransfer.cs" />
+    <Compile Include="Areas\Aatf\Mappings\ToViewModel\SubmittedDatesFilterViewModelMap.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SchemeIdNameModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDatesFilterViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\HoldingController.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceController.cs" />
@@ -711,6 +718,8 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
     <Content Include="Areas\Aatf\Views\EvidenceTonnageValueCopyPaste\Index.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchBySubmittedDatesPartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByRecipientWasteStatusPartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchFilterButtonsPartial.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

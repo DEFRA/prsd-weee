@@ -77,12 +77,12 @@
         }
 
         public MvcHtmlString Button(string innerHtml,
-            object htmlAttributes = null, bool secondaryButton = false)
+            object htmlAttributes = null, bool secondaryButton = false, bool filterButton = false)
         {
-            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), secondaryButton);
+            return Button(innerHtml, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), secondaryButton, filterButton);
         }
 
-        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes, bool secondaryButton = false)
+        public MvcHtmlString Button(string innerHtml, IDictionary<string, object> htmlAttributes, bool secondaryButton = false, bool filterButton = false)
         {
             var builder = new TagBuilder("button")
             {
@@ -91,6 +91,10 @@
             if (secondaryButton)
             {
                 builder.AddCssClass("govuk-button--secondary");
+            }
+            if (filterButton)
+            {
+                builder.AddCssClass("govuk-button--secondary-filter");
             }
             builder.AddCssClass("govuk-button");
             builder.Attributes.Add("data-module", "govuk-button");
