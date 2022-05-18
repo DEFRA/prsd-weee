@@ -6,16 +6,11 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
-    using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
@@ -91,19 +86,6 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequestAndEvidenceNoteNotFound_ShowThrowArgumentNullExceptionExpected()
-        {
-            //arrange
-            A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns((Note)null);
-
-            //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
-
-            //assert
-            result.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]

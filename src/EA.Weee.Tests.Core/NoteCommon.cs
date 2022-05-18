@@ -64,7 +64,8 @@
         public static Note CreateTransferNote(DatabaseWrapper database,
             Organisation organisation,
             Scheme scheme,
-            List<NoteTransferTonnage> noteTonnages = null)
+            List<NoteTransferTonnage> noteTonnages = null,
+            List<NoteTransferCategory> noteTransferCategories = null)
         {
             if (organisation == null)
             {
@@ -81,10 +82,16 @@
                 noteTonnages = new List<NoteTransferTonnage>();
             }
 
+            if (noteTransferCategories == null)
+            {
+                noteTransferCategories = new List<NoteTransferCategory>();
+            }
+
             return new Note(organisation,
                 scheme,
                 database.WeeeContext.GetCurrentUser(),
-                noteTonnages);
+                noteTonnages,
+                noteTransferCategories);
         }
     }
 }
