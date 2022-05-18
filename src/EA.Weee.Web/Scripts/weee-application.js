@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $("#copy-tonnage-button").hide();
+
     function focusMainContent() {
         $("#main-content").attr("tabindex", 1);
         $("#main-content").focus(function () {
