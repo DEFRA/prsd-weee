@@ -1,13 +1,6 @@
-﻿@using EA.Weee.Web.Areas.Aatf.Controllers
-@using EA.Weee.Core.Shared
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Extensions
+﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.ViewModels.Shared
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.AllOtherEvidenceNotesViewModel
 
@@ -20,16 +13,17 @@
                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
 
                 <section class="govuk-tabs__panel" id="allOtherNotes">
-                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
-                    {
-                        @Html.Gds().ValidationSummary()
+                        @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                        {
+                            @Html.Gds().ValidationSummary()
 
-                        <div class="govuk-!-width-full govuk-panel-grey-background">
+                            <div class="govuk-!-width-full govuk-panel-grey-background">
                             @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                      new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
-
-                            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchBySubmittedDatesPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                   new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+                            
+                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFilterViewModel")
+                            @*@Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchBySubmittedDatesPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                   new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })*@
 
                            
                                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByRecipientWasteStatusPartial.cshtml", Model.ManageEvidenceNoteViewModel,
@@ -40,7 +34,7 @@
                                     new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
                            
                             </div>
-                            }
+                        }
                             <table id="all-other-notes-table" class="govuk-table">
                                 <caption class="govuk-table__caption govuk-visually-hidden">All other evidence notes</caption>
                                 <thead class="govuk-table__head">
