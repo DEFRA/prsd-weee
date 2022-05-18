@@ -59,7 +59,7 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             ManageEvidenceOverviewDisplayOption? activeOverviewDisplayOption = null,
-            ManageEvidenceNoteViewModel viewModel = null)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
         {
             await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -84,11 +84,11 @@
                             aatfId, 
                             aatf, 
                             models,
-                            viewModel);
+                            manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, viewModel);
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
