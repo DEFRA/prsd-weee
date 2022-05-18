@@ -29,7 +29,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, 
                 aatfId, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null));
+                null, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, 
                 Guid.Empty, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null));
+                null, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -52,7 +52,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAllowedStatusArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -62,7 +62,7 @@
         public void GetAatfNotesRequest_ConstructorListOfAllowedStatusIsNull_ArgumentNullExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -75,7 +75,7 @@
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
 
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null, null, null, null, null, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -90,7 +90,7 @@
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
             var searchRef = fixture.Create<string>();
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, null, null, null, null, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
