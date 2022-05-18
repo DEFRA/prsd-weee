@@ -23,21 +23,11 @@
                             @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                      new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
                         </div>
-
-                        <div class="govuk-!-width-full govuk-!-padding-bottom-3 govuk-!-padding-top-0 govuk-!-padding-left-2 govuk-!-margin-bottom-0">
-                            @Html.Label("Filter by", new { @class = "govuk-label--s" })
-                        </div>
-
-                            <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-0 govuk-!-margin-bottom-1">
                                 <div class="govuk-grid-row ">
-                                    <div class="govuk-grid-column-two-thirds">
-                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFilterViewModel")
-
-                                        @*@Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchBySubmittedDatesPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                            new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })*@
+                                    <div class="govuk-grid-column-full ovuk-!-padding-right-5">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFilterViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-3" } })
                                     </div>
                                 </div>
-                            </div>
                             <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-1 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
                                 <div class="govuk-grid-row ">
                                     <div class="govuk-grid-column-two-thirds">
