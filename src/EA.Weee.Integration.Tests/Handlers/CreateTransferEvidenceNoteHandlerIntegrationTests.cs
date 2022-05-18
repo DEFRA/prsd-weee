@@ -75,7 +75,8 @@
                         WeeeCategory.MonitoringAndControlInstruments.ToInt(),
                     }, 
                     transferTonnageValues,
-                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                    new List<Guid>() { note1.Id },
+                EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -176,6 +177,7 @@
                         WeeeCategory.ConsumerEquipment.ToInt()
                     },
                     transferTonnageValues,
+                    new List<Guid>() { note1.Id },
                     EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
@@ -252,6 +254,7 @@
                         WeeeCategory.DisplayEquipment.ToInt()
                     },
                     transferTonnageValues,
+                    new List<Guid>() { note1.Id },
                     Core.AatfEvidence.NoteStatus.Draft);
             };
 
