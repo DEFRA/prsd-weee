@@ -3,6 +3,7 @@
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
@@ -33,7 +34,9 @@
         
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
-                @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                <noscript>
+                    @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                </noscript>
             </div>
         </div>
     }
@@ -61,7 +64,7 @@
 
 
                 <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference ID&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br />
-                <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.ToShortDateString() - @note.EndDate.ToShortDateString()</span>
+                <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.Value.ToShortDateString() - @note.EndDate.Value.ToShortDateString()</span>
 
                 <table id="transfer-notes-tonnage-@i.ToString()" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnage for @note.SubmittedBy</caption>
@@ -111,19 +114,19 @@
                                     @category.Reused
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Received)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues[elementCount],m => m.TransferCategoryValues[elementCount].Received)">
                                         <span class="govuk-visually-hidden" id="category-received-@category.CategoryId-@i.ToString()">Transfer received (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Received)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Received,
-                                            new { id = "Received" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { @id = "TransferCategoryValues_" + elementCount.ToString() + "__Received", @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Reused)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues[elementCount], m => m.TransferCategoryValues[elementCount].Reused))">
                                         <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId-@i.ToString()">Transfer reused (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Reused)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Reused,
-                                            new { id = "Reused" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { id = "TransferCategoryValues_" + elementCount.ToString() + "__Reused", @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                             </tr>
@@ -178,7 +181,10 @@
         </table>
 
         <div class="govuk-!-margin-top-3">
-            @this.WeeeGds().Button("Continue", new { id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" })
+            <div class="govuk-button-group">
+                @*@this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })*@
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+            </div>
         </div>
     }
     @Scripts.Render("~/bundles/weee_tonnage_totals")

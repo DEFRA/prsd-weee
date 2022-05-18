@@ -120,6 +120,7 @@
     <Compile Include="Mappings\AatfContactMapping.cs" />
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
+    <Compile Include="Mappings\EvidenceNoteTransferCategoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTransferMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteStatusHistoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTonnageMapping.cs" />
