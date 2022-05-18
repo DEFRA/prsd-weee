@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using EA.Weee.Domain.Evidence;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Scheme;
+    using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
     using Z.EntityFramework.Plus;
 
@@ -15,7 +15,7 @@
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
 
-        public EvidenceDataAccess(WeeeContext context, 
+        public EvidenceDataAccess(WeeeContext context,
             IUserContext userContext)
         {
             this.context = context;
@@ -51,21 +51,25 @@
 
             return note;
         }
-
         public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
+         
             var notes = await context.Notes
-                .Where(p =>
-                    ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                     && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
-                     && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
-                     && (allowedStatus.Contains(p.Status.Value))) && 
-                     (filter.SearchRef == null ||
-                      (filter.FormattedNoteType > 0 ? 
-                       (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) : 
-                       (filter.FormattedSearchRef == p.Reference.ToString()))))
-                .ToListAsync();
+               .Where(p =>
+                   (!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
+                    && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
+                    && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
+                    && (!filter.StartDateSubmitted.HasValue || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.ChangedDate != null && nsh.ChangedDate >= filter.StartDateSubmitted))
+                    && (!filter.EndDateSubmitted.HasValue || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.ChangedDate != null && nsh.ChangedDate <= filter.EndDateSubmitted))
+                    && (!filter.WasteTypeId.HasValue || (int)p.WasteType == filter.WasteTypeId)
+                    && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
+                    || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value))
+                    && (filter.SearchRef == null ||
+                     (filter.FormattedNoteType > 0 ?
+                      (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) :
+                      (filter.FormattedSearchRef == p.Reference.ToString()))))
+               .ToListAsync();
 
             return notes;
         }
