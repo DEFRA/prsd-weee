@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class GetAatfByOrganisationFacilityTypeHandler : IRequestHandler<GetAatfByOrganisationFacilityType, List<AatfData>>
     {

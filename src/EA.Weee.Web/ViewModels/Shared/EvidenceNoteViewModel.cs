@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
+    using Areas.Aatf.ViewModels;
+    using Core.AatfEvidence;
+    using Core.Helpers;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Areas.Aatf.ViewModels;
-    using Core.AatfEvidence;
-    using Core.Helpers;
 
     [Serializable]
     public class EvidenceNoteViewModel
@@ -20,10 +20,10 @@
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
         [Display(Name = "Start date")]
-        public virtual DateTime StartDate { get; set; }
+        public virtual DateTime? StartDate { get; set; }
 
         [Display(Name = "End date")]
-        public virtual DateTime EndDate { get; set; }
+        public virtual DateTime? EndDate { get; set; }
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
@@ -47,8 +47,10 @@
 
         public int Reference { get; set; }
 
-        [DisplayName("Reason for return")]
+        [DisplayName("Reason")]
         public string Reason { get; set; }
+
+        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(Reason);
 
         public EvidenceNoteViewModel()
         {

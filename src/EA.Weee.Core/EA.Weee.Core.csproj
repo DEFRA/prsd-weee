@@ -99,6 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\AatfEvidenceSummaryData.cs" />
+    <Compile Include="AatfEvidence\TransferEvidenceNoteData.cs" />
+    <Compile Include="AatfEvidence\TransferEvidenceCategoryValue.cs" />
     <Compile Include="AatfEvidence\EvidenceSummaryTonnageData.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageDataBase.cs" />
     <Compile Include="AatfEvidence\NoteStatusFilter.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="AatfEvidence\Protocol.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
     <Compile Include="AatfEvidence\SetNoteStatus.cs" />
+    <Compile Include="AatfEvidence\TransferEvidenceNoteTonnageData.cs" />
     <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />

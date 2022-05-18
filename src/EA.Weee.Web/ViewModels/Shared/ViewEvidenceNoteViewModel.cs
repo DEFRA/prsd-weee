@@ -19,7 +19,7 @@
         public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Compliance year")]
-        public string ComplianceYearDisplay => StartDate.Year.ToString();
+        public string ComplianceYearDisplay => StartDate.Value.Year.ToString();
 
         public string SiteAddress { get; set; }
 
@@ -33,33 +33,20 @@
 
         public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);
 
+        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
+
+        public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
+
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
 
         public string TotalReceivedDisplay { get; set; }
 
-        public bool HasRejectedDate => Status.Equals(NoteStatus.Rejected);
-
-        public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
-
-        public bool DisplayReason
-        {
-            get
-            {
-                if (Status.Equals(NoteStatus.Submitted))
-                {
-                    return false;
-                }
-                else
-                {
-                    return !string.IsNullOrWhiteSpace(Reason);
-                }
-            }
-        }
-
         public string AatfApprovalNumber { get; set; }
 
         public bool DisplayAatfName { get; set; }
+
+        public bool DisplayH2Title { get; set; }
     }
 }

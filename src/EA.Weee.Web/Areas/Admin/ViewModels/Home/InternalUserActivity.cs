@@ -10,6 +10,7 @@
         public const string ManageUsers = "Manage users";
         public const string ViewReports = "View reports";
         public const string ManagePcsCharges = "Manage PCS charges";
+        public const string ManagePcsObligations = "Manage PCS obligations";
         public const string CreateOrganisation = "Add new organisation";
     }
 }

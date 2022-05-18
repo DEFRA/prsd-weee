@@ -14,6 +14,7 @@
     using EA.Weee.Security;
     using Shared;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class AddAatfRequestHandler : IRequestHandler<AddAatf, bool>
     {
