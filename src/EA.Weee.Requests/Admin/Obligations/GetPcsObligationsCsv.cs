@@ -1,12 +1,16 @@
 ﻿namespace EA.Weee.Requests.Admin.Obligations
 {
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Admin;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    public class GetPcsObligationsCsv
+    public class GetPcsObligationsCsv : IRequest<CSVFileData>
     {
+        public Guid AuthorityId { get; private set; }
+
+        public GetPcsObligationsCsv(Guid authorityId)
+        {
+            AuthorityId = authorityId;
+        }
     }
 }
