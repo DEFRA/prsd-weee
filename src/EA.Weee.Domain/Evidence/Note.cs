@@ -56,12 +56,14 @@
         public Note(Organisation organisation,
             Scheme recipient,
             string createdBy,
-            IList<NoteTransferTonnage> transfer)
+            IList<NoteTransferTonnage> transfer,
+            IList<NoteTransferCategory> categories)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
             Guard.ArgumentNotNull(() => transfer, transfer);
+            Guard.ArgumentNotNull(() => categories, categories);
 
             Organisation = organisation;
             Recipient = recipient;
@@ -74,6 +76,7 @@
             NoteTonnage = new List<NoteTonnage>();
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = transfer;
+            NoteTransferCategories = categories;
         }
 
         public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
@@ -189,5 +192,7 @@
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
 
         public virtual short ComplianceYear { get; set; }
+
+        public virtual ICollection<NoteTransferCategory> NoteTransferCategories { get; protected set; }
     }
 }
