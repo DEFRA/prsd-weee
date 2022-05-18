@@ -706,7 +706,6 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByReferencePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
@@ -722,6 +721,7 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\SubmittedDatesFilterViewModel.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\RecipientWasteStatusFilterViewModel.cshtml" />
+    <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
