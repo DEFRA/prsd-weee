@@ -49,7 +49,7 @@
 
                 if (tab == null)
                 {
-                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
+                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
                 }
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
