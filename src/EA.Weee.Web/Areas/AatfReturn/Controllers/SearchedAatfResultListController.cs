@@ -75,7 +75,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<ActionResult> Index(SearchedAatfResultListViewModel searchedAatfModel, FormCollection frm)
+        public virtual async Task<ActionResult> Index(SearchedAatfResultListViewModel searchedAatfModel)
         {
             if (!ModelState.IsValid)
             {
