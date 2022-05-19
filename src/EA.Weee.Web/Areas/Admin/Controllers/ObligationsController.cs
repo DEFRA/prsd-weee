@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using Services;
     using Services.Caching;
     using System;
-    using System.Security.Claims;
     using System.Web.Mvc;
 
     public class ObligationsController : ObligationsBaseController
@@ -30,9 +28,23 @@
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult SelectAuthority()
         {
-            return View();
+            return View("SelectAuthority", new ViewModels.Obligations.SelectAuthorityViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Holding(ViewModels.Obligations.SelectAuthorityViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return View("Index", new ViewModels.Obligations.SelectAuthorityViewModel());
+            }
+            else
+            {
+                return View("SelectAuthority", model);
+            }
         }
     }
 }
