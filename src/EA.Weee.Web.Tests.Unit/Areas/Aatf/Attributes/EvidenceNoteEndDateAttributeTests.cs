@@ -3,18 +3,33 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
+    using Api.Client;
+    using Autofac;
+    using Autofac.Integration.Mvc;
+    using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using Services;
     using Web.Areas.Aatf.Attributes;
     using Xunit;
 
     public class EvidenceNoteEndDateAttributeTests
     {
         private readonly List<ValidationResult> validationResults;
+        private readonly ISessionService sessionService;
+        private readonly IWeeeClient client;
 
         public EvidenceNoteEndDateAttributeTests()
         {
             validationResults = new List<ValidationResult>();
+            sessionService = A.Fake<ISessionService>();
+            client = A.Fake<IWeeeClient>();
+
+            ContainerBuilder builder = new ContainerBuilder();
+            builder.RegisterInstance<ISessionService>(sessionService).SingleInstance();
+            builder.RegisterInstance<IWeeeClient>(client).SingleInstance();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(builder.Build()));
         }
 
         [Fact]
