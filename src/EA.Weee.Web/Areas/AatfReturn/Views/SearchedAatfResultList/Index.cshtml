@@ -19,6 +19,7 @@
         @Html.HiddenFor(m => m.AatfId)
         @Html.HiddenFor(m => m.SelectedAatfId)
         @Html.HiddenFor(m => m.SelectedAatfName)
+        @Html.HiddenFor(m => m.SelectedSiteName)
 
         <p class="govuk-body">Select the treatment facility the waste was sent to from the list below</p>
         <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
@@ -54,8 +55,7 @@
                             @Html.Raw(address.ApprovalNumber)
                         </div>
                         <div class="govuk-grid-column-one-quarter">
-                            @Html.RadioButtonFor(m => m.SelectedWeeeSentOnId, address.WeeeSentOnId)
-                            @Html.HiddenFor(m => m.SelectedSiteName, address.SiteAddress.Name)
+                            @Html.RadioButtonFor(m => m.SelectedWeeeSentOnId, address.WeeeSentOnId, new { @onclick = "setSiteName('" + address.SiteAddress.Name + "')" })
                         </div>
                     </div>
                 }
@@ -82,3 +82,8 @@
         <div class="govuk-!-padding-bottom-8"></div>
     }
 </section>
+<script type="text/javascript">
+    function setSiteName(siteName) {
+        document.getElementById("SelectedSiteName").value = siteName;
+    }
+</script>
