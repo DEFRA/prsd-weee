@@ -22,6 +22,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using Xunit;
 
@@ -57,7 +58,7 @@
         [Fact]
         public void IndexGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(ManageEvidenceNotesDisplayOptions) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -188,7 +189,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedEvidenceNotesViewModel>(
@@ -209,7 +210,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAndTransferEvidenceViewModel>(
@@ -251,7 +252,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence) as
+                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as
                     ViewResult;
 
             //asset
@@ -273,7 +274,7 @@
             };
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -288,7 +289,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -308,7 +309,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence) as
+                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString()) as
                     ViewResult;
 
             //asset

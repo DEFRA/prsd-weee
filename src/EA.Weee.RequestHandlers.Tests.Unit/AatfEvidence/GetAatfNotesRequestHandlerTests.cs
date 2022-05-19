@@ -120,7 +120,7 @@
                 e.OrganisationId.Equals(request.OrganisationId) && 
                 e.AatfId.Equals(request.AatfId) && 
                 e.AllowedStatuses.SequenceEqual(status) &&
-                e.SchemeId == null))).MustHaveHappenedOnceExactly();
+                e.SchemeId == request.RecipientId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
