@@ -8,6 +8,8 @@
         public SchemeMapping()
         {
             ToTable("Scheme", "PCS");
+
+            HasRequired(a => a.CompetentAuthority).WithMany(b => b.Schemes).HasForeignKey(c => c.CompetentAuthorityId);
         }
     }
 }
