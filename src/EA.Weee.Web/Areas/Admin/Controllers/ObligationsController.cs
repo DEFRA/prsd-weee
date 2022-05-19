@@ -35,7 +35,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Holding()
+        public ActionResult Holding(ViewModels.Obligations.SelectAuthorityViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -43,7 +43,7 @@
             }
             else
             {
-                return View("SelectAuthority", new ViewModels.Obligations.SelectAuthorityViewModel());
+                return View("SelectAuthority", model);
             }
         }
     }
