@@ -50,5 +50,7 @@
         Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid authorityId);
 
         Task<T> FetchLookup<T>(Guid id) where T : AreaBase;
+
+        Task<UKCompetentAuthority> FetchCompetentAuthorityWithSchemes(CompetentAuthority authority);
     }
 }
