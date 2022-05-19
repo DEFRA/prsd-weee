@@ -2,15 +2,15 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
-    using System;
+    using EA.Weee.Core.Shared;
 
     public class GetPcsObligationsCsv : IRequest<CSVFileData>
     {
-        public Guid AuthorityId { get; private set; }
+        public CompetentAuthority Authority { get; private set; }
 
-        public GetPcsObligationsCsv(Guid authorityId)
+        public GetPcsObligationsCsv(CompetentAuthority authority)
         {
-            AuthorityId = authorityId;
+            Authority = authority;
         }
     }
 }

@@ -18,6 +18,5 @@
         public const string Cat12ColumnName = "Cat12 (t)";
         public const string Cat13ColumnName = "Cat13 (t)";
         public const string Cat14ColumnName = "Cat14 (t)";
-        public const string PcsObligationsCsvFileName = "";
     }
 }
