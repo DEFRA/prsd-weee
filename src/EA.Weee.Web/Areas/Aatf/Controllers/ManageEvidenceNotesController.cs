@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
     using Attributes;
@@ -12,15 +7,21 @@
     using Core.AatfReturn;
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Aatf;
+    using EA.Weee.Web.Areas.Aatf.Comparers;
     using EA.Weee.Web.Constant;
     using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
-    using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -59,7 +60,7 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             string tab = null,
-            ManageEvidenceNoteViewModel viewModel = null)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
             
@@ -86,11 +87,11 @@
                             aatfId, 
                             aatf, 
                             models,
-                            viewModel);
+                            manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, viewModel);
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
@@ -255,18 +256,53 @@
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
             SelectYourAatfViewModel models, ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
-            var resultAllNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetAatfNotesRequest(organisationId, aatfId,
-                    new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected },
-                    manageEvidenceViewModel?.FilterViewModel.SearchRef));
+            var resultAllNotes = new List<EvidenceNoteData>();
+
+            if (ModelState.IsValid)
+            {
+               resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected },
+               manageEvidenceViewModel?.FilterViewModel.SearchRef,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
+               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
+            }
 
             var modelAllNotes =
-                mapper.Map<AllOtherEvidenceNotesViewModel>(
-                    new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+                    mapper.Map<AllOtherEvidenceNotesViewModel>(
+                        new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
+            var schemeData = resultAllNotes.Select(x => x.SchemeData)
+                   .Distinct(new SchemeDataComparer())
+                    .OrderByDescending(s => s.SchemeName).ToList();
+
+            if (schemeData.Any())
+            {
+                sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
+            }
+
+            var schemeDataFiltered = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+            Guid? schemeId = manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId;
+
+            if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null && schemeId.HasValue)
+            {
+                var selectedScheme = schemeDataFiltered.FirstOrDefault(s => s.Id == schemeId.Value);
+                if (selectedScheme != null)
+                {
+                    schemeData.Add(selectedScheme);
+                }
+            }
+
+            var recipientWasteStatusViewModel =
+                     mapper.Map<RecipientWasteStatusFilterViewModel>(
+                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+
+            var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(new SubmittedDateFilterBase(manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
+               
             modelAllNotes.ManageEvidenceNoteViewModel =
-                mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf,
-                    models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel));
+                    mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf,
+                        models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel));
 
             return this.View("Overview/ViewAllOtherEvidenceOverview", modelAllNotes);
         }
@@ -280,7 +316,7 @@
 
             summaryModel.ManageEvidenceNoteViewModel =
                 mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId,
-                    aatf, models.AatfList.ToList(), null));
+                    aatf, models.AatfList.ToList(), null, null, null));
 
             return this.View("Overview/EvidenceSummaryOverview", summaryModel);
         }
@@ -293,11 +329,13 @@
             ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
-                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned }, manageEvidenceViewModel?.FilterViewModel.SearchRef));
+                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
+                manageEvidenceViewModel?.FilterViewModel.SearchRef, null, null, null, null, null));
             
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result));
             
-            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel));
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
+                (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel, null, null));
             
             return this.View("Overview/EditDraftReturnedNotesOverview", model);
         }
