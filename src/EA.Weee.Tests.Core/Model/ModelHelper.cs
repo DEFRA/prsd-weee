@@ -138,7 +138,8 @@
                 Organisation = organisation,
                 OrganisationId = organisation.Id,
                 SchemeName = "test scheme name",
-                ApprovalNumber = schemeId.ToString()
+                ApprovalNumber = schemeId.ToString(),
+                CompetentAuthorityId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26")
             };
             model.Schemes.Add(scheme);
 
