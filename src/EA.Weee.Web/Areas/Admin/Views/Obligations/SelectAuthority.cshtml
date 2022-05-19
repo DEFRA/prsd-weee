@@ -1,0 +1,60 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Obligations.SelectAuthorityViewModel
+
+@{
+    ViewBag.Title = "Manage PCS obligations";
+
+    Dictionary<CompetentAuthority, string> displayNames = new Dictionary<CompetentAuthority, string>()
+{
+        { CompetentAuthority.England, "Environment Agency" },
+        { CompetentAuthority.Scotland, "Scottish Environment Protection Agency" },
+        { CompetentAuthority.NorthernIreland, "Northern Ireland Environment Agency" }
+        //{ CompetentAuthority.Wales, "Natural Resources Wales" }, -- will be enabled in later dev -- check view model options
+    };
+}
+
+@section full_main_content
+{
+    <p>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+    </p>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-xl">
+            Which appropriate authority are you managing obligations for?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "Holding", controllerName: "Obligations", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedAuthority)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedAuthority,
+                Model.PossibleValues,
+                a => a,
+                a => displayNames[a],
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <div class="govuk-!-margin-top-7 govuk-!-margin-bottom-7">
+        @this.WeeeGds().CreateProgressiveDisclosure("Why can't I see my appropriate authority?",
+            "Only appropriate authorities with approved PCSs are displayed in the list",
+            "Hidden content",
+            "Progressive disclosure",
+            string.Empty)
+        </div>
+
+        <div class="govuk-!-margin-top-7 govuk-!-margin-bottom-7">
+            @(this.WeeeGds().Submit("Continue"))
+        </div>
+    }
+}
+
