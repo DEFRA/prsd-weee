@@ -313,6 +313,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\RecipientWasteStatusViewModelMap.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SchemeIdNameModel.cs" />
@@ -350,6 +352,8 @@
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
     <Compile Include="Extensions\ComplianceYearHelper.cs" />
+    <Compile Include="Services\HttpContextService.cs" />
+    <Compile Include="Services\IHttpContextService.cs" />
     <Compile Include="Services\ISessionService.cs" />
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
