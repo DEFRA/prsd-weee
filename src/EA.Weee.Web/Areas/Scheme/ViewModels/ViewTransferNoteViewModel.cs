@@ -23,17 +23,17 @@
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
 
-        public ManageEvidenceNotesDisplayOptions RedirectTab
+        public string RedirectTab
         {
             get
             {
                 if (Status.Equals(NoteStatus.Draft))
                 {
-                    return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence;
+                    return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
                 }
 
                 //TODO: this will get updated when viewing and editing of transfer notes is added
-                return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence;
+                return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
             }
         }
     }

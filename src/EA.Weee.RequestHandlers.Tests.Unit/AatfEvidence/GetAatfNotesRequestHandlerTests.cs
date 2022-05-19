@@ -22,6 +22,7 @@
     using System.Threading.Tasks;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetAatfNotesRequestHandlerTests
     {
@@ -33,6 +34,11 @@
         private readonly GetAatfNotesRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
+        private readonly Guid recipientId;
+        private readonly WasteType wasteType;
+        private readonly NoteStatus noteStatus;
+        private readonly DateTime startDate;
+        private readonly DateTime endDate;
 
         public GetAatfNotesRequestHandlerTests()
         {
@@ -43,13 +49,18 @@
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
-            
+            recipientId = fixture.Create<Guid>();
+            wasteType = fixture.Create<WasteType>();
+            noteStatus = fixture.Create<NoteStatus>();
+            startDate = DateTime.UtcNow;
+            endDate = startDate.AddDays(2);
+
             A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>());
+                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), recipientId, wasteType, noteStatus, startDate, endDate);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -109,7 +120,7 @@
                 e.OrganisationId.Equals(request.OrganisationId) && 
                 e.AatfId.Equals(request.AatfId) && 
                 e.AllowedStatuses.SequenceEqual(status) &&
-                e.SchemeId == null))).MustHaveHappenedOnceExactly();
+                e.SchemeId == request.RecipientId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -205,7 +216,7 @@
             return new GetAatfNotesRequest(organisation.Id, 
                 aatf.Id, 
                 fixture.CreateMany<NoteStatus>().ToList(),
-                searchRef);
+                searchRef, null, null, null, null, null);
         }
     }
 }

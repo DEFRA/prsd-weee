@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Areas.Aatf.Controllers
@@ -6,12 +7,12 @@
 @model ManageEvidenceNoteOverviewViewModel
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Evidence summary",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary, null)),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary.ToDisplayString(), null)),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")
     @this.WeeeGds().Tab("Edit draft and returned notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, null)),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString(), null)),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")
     @this.WeeeGds().Tab("View all other evidence notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, null)),
+        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), null)),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")
 </ul>

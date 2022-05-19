@@ -1,0 +1,34 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
+
+<div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.SchemeListSL,
+        string.Empty, new { @class = "govuk-!-width-three-quarters" }, useHalfWidth: false, withLookAhead: true)
+    </div>
+</div>
+
+<div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
+        string.Empty, new { }, useHalfWidth: false, withLookAhead: true)
+    </div>
+</div>
+<div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
+        string.Empty, new { }, useHalfWidth: false, withLookAhead: true)
+
+    </div>
+</div>
+
+
+
+
