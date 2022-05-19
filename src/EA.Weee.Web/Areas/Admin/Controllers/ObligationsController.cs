@@ -34,6 +34,23 @@
         }
 
         [HttpGet]
+        public ActionResult SelectAuthority()
+        {
+            return View("SelectAuthority", new ViewModels.Obligations.SelectAuthorityViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Holding(ViewModels.Obligations.SelectAuthorityViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return View("Index", new ViewModels.Obligations.SelectAuthorityViewModel());
+            }
+            else
+            {
+                return View("SelectAuthority", model);
+            }
         public ActionResult Index()
         {
             return View();
