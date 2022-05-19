@@ -11,10 +11,21 @@
     {
         public Guid AatfId { get; set; }
 
+        public Guid? RecipientId { get; set; }
+
+        public WasteType? WasteTypeId { get; set; }
+
+        public NoteStatus? NoteStatusFilter { get; set; }
+
+        public DateTime? StartDateSubmitted { get; set; }
+
+        public DateTime? EndDateSubmitted { get; set; }
+
         public GetAatfNotesRequest(Guid organisationId, 
             Guid aatfId, 
             List<NoteStatus> allowedStatuses,
-            string searchRef)
+            string searchRef, Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
+            DateTime? startDateSubmitted, DateTime? endDateSubmitted)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
@@ -25,6 +36,11 @@
             AatfId = aatfId;
             SearchRef = searchRef;
             AllowedStatuses = allowedStatuses;
+            RecipientId = recipient;
+            WasteTypeId = wasteType;
+            NoteStatusFilter = noteStatusFilter;
+            StartDateSubmitted = startDateSubmitted;
+            EndDateSubmitted = endDateSubmitted;
         }
     }
 }
