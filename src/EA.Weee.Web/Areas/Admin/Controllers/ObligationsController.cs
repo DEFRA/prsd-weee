@@ -51,9 +51,6 @@
             {
                 return View("SelectAuthority", model);
             }
-        public ActionResult Index()
-        {
-            return View();
         }
 
         [HttpGet]
