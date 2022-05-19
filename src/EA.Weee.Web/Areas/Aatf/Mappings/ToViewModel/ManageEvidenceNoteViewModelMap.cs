@@ -26,6 +26,16 @@
                 model.FilterViewModel = source.FilterViewModel;
             }
 
+            if (source.RecipientWasteStatusFilterViewModel != null)
+            {
+                model.RecipientWasteStatusFilterViewModel = source.RecipientWasteStatusFilterViewModel;
+            }
+
+            if (source.SubmittedDatesFilterViewModel != null)
+            {
+                model.SubmittedDatesFilterViewModel = source.SubmittedDatesFilterViewModel;
+            }
+
             return model;
         }
     }

@@ -21,8 +21,16 @@
 
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
 
-                    @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchByReferencePartial.cshtml",
-                        Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                    {
+                        @Html.Hidden("tab", Model.ActiveOverviewDisplayOption)
+                        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+
+                            <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                            </div>
+                        </div>
+                    }
 
                     <table id="edit-draft-returned-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">Draft evidence notes</caption>
@@ -84,7 +92,7 @@
 
                         </tbody>
                     </table>
-                    
+
                     <br />
                 </section>
             </div>

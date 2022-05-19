@@ -34,7 +34,9 @@
         
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
-                @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                <noscript>
+                    @this.WeeeGds().Button("Copy tonnage", new { id = "copy-tonnage-button", @class = "govuk-!-width-one-quarter" })
+                </noscript>
             </div>
         </div>
     }
@@ -112,19 +114,19 @@
                                     @category.Reused
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Received)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues[elementCount],m => m.TransferCategoryValues[elementCount].Received)">
                                         <span class="govuk-visually-hidden" id="category-received-@category.CategoryId-@i.ToString()">Transfer received (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Received)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Received,
-                                            new { id = "Received" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { @id = "TransferCategoryValues_" + elementCount.ToString() + "__Received", @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
-                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => Model.TransferCategoryValues[elementCount], m => Model.TransferCategoryValues[elementCount].Reused)">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues[elementCount], m => m.TransferCategoryValues[elementCount].Reused))">
                                         <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId-@i.ToString()">Transfer reused (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Reused)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Reused,
-                                            new { id = "Reused" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { id = "TransferCategoryValues_" + elementCount.ToString() + "__Reused", @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                             </tr>

@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Linq.Expressions;
     using System.Web.Mvc;
 
     public static class ModelStateExtensions
@@ -39,6 +42,23 @@
 
             modelState.Clear();
             modelState.Merge(result);
+        }
+
+        public static bool HasErrorForProperty<TModel, TProp>(this System.Web.Mvc.ModelStateDictionary modelState,
+            Expression<Func<TModel, TProp>> expression)
+        {
+            if (expression.Body is MemberExpression memberExpression)
+            {
+                for (var i = 0; i < modelState.Keys.Count; i++)
+                {
+                    if (modelState.Keys.ElementAt(i).Equals(memberExpression.Member.Name))
+                    {
+                        return modelState.Values.ElementAt(i).Errors.Count > 0;
+                    }
+                }
+            }
+            
+            return false;
         }
     }
 }
