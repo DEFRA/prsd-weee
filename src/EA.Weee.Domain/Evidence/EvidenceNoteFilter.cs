@@ -18,6 +18,14 @@
 
         public string SearchRef { get; set; }
 
+        public int? WasteTypeId { get; set; }
+
+        public int? NoteStatusId { get; set; }
+
+        public DateTime? StartDateSubmitted { get; set; }
+
+        public DateTime? EndDateSubmitted { get; set; }
+
         public string FormattedSearchRef
         {
             get
