@@ -16,8 +16,7 @@
             {
                 if (client == null)
                 {
-                    var resolver = DependencyResolver.Current.GetService<AutofacDependencyResolver>();
-                    return () => resolver.GetService<IWeeeClient>();
+                    return () => DependencyResolver.Current.GetService<IWeeeClient>();
                 }
 
                 return client;
