@@ -163,7 +163,7 @@
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
         [InlineData(InternalUserActivity.ManagePcsCharges, "SelectAuthority")]
-        [InlineData(InternalUserActivity.ManagePcsObligations, "Index")]
+        [InlineData(InternalUserActivity.ManagePcsObligations, "SelectAuthority")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange

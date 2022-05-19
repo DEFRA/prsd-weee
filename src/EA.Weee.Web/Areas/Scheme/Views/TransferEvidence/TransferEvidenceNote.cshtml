@@ -31,37 +31,43 @@
         </div>
 
         <div class="govuk-!-padding-top-5 govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
-            @Html.Gds().LabelFor(m => m.HasSelectedAtLeastOneCategory, new { @class = "govuk-label--m" })
+            
+
             @Html.Gds().ValidationMessageFor(m => m.HasSelectedAtLeastOneCategory)
-            <div class="govuk-!-padding-top-5"></div>
-            @for (var i = 0; i < Model.CategoryValues.Count; i++)
-            {
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    Which categories would you like to transfer?
+                </legend>
+                <div class="govuk-!-padding-top-5"></div>
+                @for (var i = 0; i < Model.CategoryValues.Count; i++)
+                {
 
-                @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
+                    @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
 
-                <div>
-                    <div class='govuk-checkboxes'>
-                        <div class='govuk-checkboxes__item'>
-                            @{
-                                var category = Model.CategoryValues[i];
-                                var selectedOption = Model.CategoryValues[i].Selected ? "checked" : "";
-                                var id = "CategoryValues_" + i + "__Selected";
-                                var name = "CategoryValues[" + i + "].Selected";
-                            }
+                    <div>
+                        <div class='govuk-checkboxes'>
+                            <div class='govuk-checkboxes__item'>
+                                @{
+                                    var category = Model.CategoryValues[i];
+                                    var selectedOption = Model.CategoryValues[i].Selected ? "checked" : "";
+                                    var id = "CategoryValues_" + i + "__Selected";
+                                    var name = "CategoryValues[" + i + "].Selected";
+                                }
 
-                            <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption/>
-                            <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
-                                @category.CategoryId. @category.CategoryDisplay
-                            </label>
-                            <input name="@name" type="hidden" value="false">
+                                <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption/>
+                                <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                    @category.CategoryId. @category.CategoryDisplay
+                                </label>
+                                <input name="@name" type="hidden" value="false">
+                            </div>
                         </div>
+                        <br/>
                     </div>
-                    <br/>
-                </div>
-                @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
-            }
+                    @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                }
+            </fieldset>
         </div>
-
+       
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
                 @this.WeeeGds().Button("Continue", new { id = "transfer-continue-btn", @class = "govuk-!-width-one-quarter" })

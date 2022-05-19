@@ -56,7 +56,7 @@
             typeof(TransferEvidenceCategoryValue).GetProperty("Received")
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
-                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
+                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The transfer received in tonnes") &&
                     t.DisplayCategory.Equals(true));
         }
 
@@ -66,7 +66,7 @@
             typeof(TransferEvidenceCategoryValue).GetProperty("Reused")
                 .Should()
                 .BeDecoratedWith<TonnageValueAttribute>(t =>
-                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The tonnage value") &&
+                    t.CategoryProperty.Equals("CategoryId") && t.StartOfValidationMessage.Equals("The transfer reused in tonnes") &&
                     t.DisplayCategory.Equals(true));
         }
 
