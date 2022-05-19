@@ -46,6 +46,13 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
+        public async Task<UKCompetentAuthority> FetchCompetentAuthorityWithSchemes(CompetentAuthority authority)
+        {
+            string authorityName = authorityMapping[authority];
+
+            return await Context.UKCompetentAuthorities.Include(n => n.Schemes).SingleAsync(ca => ca.Name == authorityName);
+        }
+
         public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid id)
         {
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Id == id);

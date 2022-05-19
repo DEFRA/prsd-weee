@@ -23,15 +23,17 @@
         [Fact]
         public void ChooseAuthorityGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("SelectAuthority").Should()
-                .BeDecoratedWith<HttpGetAttribute>();
+            typeof(ObligationsController).GetMethod("SelectAuthority", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void HoldingPost_IsDecoratedWith_HttpPostAttribute()
         {
-            typeof(ObligationsController).GetMethod("Holding").Should()
-                .BeDecoratedWith<HttpPostAttribute>();
+            typeof(ObligationsController).GetMethod("SelectAuthority", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectAuthorityViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<HttpPostAttribute>();
         }
 
         /// <summary>
