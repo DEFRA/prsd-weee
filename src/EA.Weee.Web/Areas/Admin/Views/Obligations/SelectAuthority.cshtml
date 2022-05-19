@@ -29,7 +29,7 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "Holding", controllerName: "Obligations", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "SelectAuthority", controllerName: "Obligations", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
