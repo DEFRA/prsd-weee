@@ -1,27 +1,27 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
     using Attributes;
     using Core.AatfEvidence;
     using Core.AatfReturn;
+    using Core.Helpers;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Web.Areas.Aatf.Comparers;
-    using EA.Weee.Web.Areas.Aatf.Mappings;
     using EA.Weee.Web.Constant;
     using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
-    using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -59,15 +59,17 @@
 
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
-            ManageEvidenceOverviewDisplayOption? activeOverviewDisplayOption = null,
+            string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
         {
-            await this.SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
-
-            if (activeOverviewDisplayOption == null)
+            await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
+            
+            if (tab == null)
             {
-                activeOverviewDisplayOption = ManageEvidenceOverviewDisplayOption.EvidenceSummary;
+                tab = Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.EvidenceSummary);
             }
+
+            var value = tab.GetValueFromDisplayName<ManageEvidenceOverviewDisplayOption>();
 
             using (var client = this.apiClient())
             {
@@ -76,7 +78,7 @@
 
                 var models = mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
 
-                switch (activeOverviewDisplayOption.Value)
+                switch (value)
                 {
                     case ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes:
 
@@ -271,7 +273,7 @@
                     mapper.Map<AllOtherEvidenceNotesViewModel>(
                         new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
-                var schemeData = resultAllNotes.Select(x => x.SchemeData)
+            var schemeData = resultAllNotes.Select(x => x.SchemeData)
                    .Distinct(new SchemeDataComparer())
                     .OrderByDescending(s => s.SchemeName).ToList();
 
@@ -280,13 +282,16 @@
                 sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
             }
 
+            var schemeDataFiltered = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
             Guid? schemeId = manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId;
 
-            if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null)
+            if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null && schemeId.HasValue)
             {
-                var schemeDataFiltered = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
-                var selectedScheme = schemeDataFiltered.Where(s => s.Id == schemeId.Value).First();
-                schemeData.Add(selectedScheme);
+                var selectedScheme = schemeDataFiltered.FirstOrDefault(s => s.Id == schemeId.Value);
+                if (selectedScheme != null)
+                {
+                    schemeData.Add(selectedScheme);
+                }
             }
 
             var recipientWasteStatusViewModel =

@@ -16,7 +16,7 @@
                         @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                         {
                             @Html.Gds().ValidationSummary()
-                            @Html.Hidden("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption)
+                            @Html.Hidden("tab", Model.ActiveOverviewDisplayOption)
 
                             <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 
@@ -34,8 +34,8 @@
                                         @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientWasteStatusFilterViewModel")
                                     </div>
                                     <div class="govuk-grid-column-one-third govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
-                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                            new ViewDataDictionary() { new KeyValuePair<string, object>("activeOverviewDisplayOption", Model.ActiveOverviewDisplayOption) })
+                                         @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                            new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption) })
                                     </div>
                                 </div>
                             </div>
