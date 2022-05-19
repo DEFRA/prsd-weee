@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    public class ManageEvidenceNoteViewModel
+    public class ManageEvidenceNoteViewModel 
     {
         public string AatfName { get; set; }
 
@@ -16,6 +16,10 @@
 
         public FilterViewModel FilterViewModel { get; set; }
 
+        public SubmittedDatesFilterViewModel SubmittedDatesFilterViewModel { get; set; }
+
+        public RecipientWasteStatusFilterViewModel RecipientWasteStatusFilterViewModel { get; set; }
+
         public IEnumerable<int> ComplianceYearList { get; set; }
 
         [DisplayName("Compliance year")]
@@ -24,6 +28,8 @@
         public ManageEvidenceNoteViewModel()
         {
             FilterViewModel = new FilterViewModel();
+            SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel();
+            RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel();
         }
     }
 }

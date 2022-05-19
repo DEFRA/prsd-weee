@@ -22,6 +22,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using Web.Areas.Aatf.ViewModels;
     using Weee.Requests.Shared;
@@ -37,6 +38,7 @@
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
         protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
+        private readonly short complianceYear;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -48,7 +50,7 @@
             OrganisationId = Guid.NewGuid();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
-
+            complianceYear = (short)DateTime.Now.Year;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = Fixture.Create<string>() });
         }
@@ -65,7 +67,7 @@
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
                     typeof(Guid), 
-                    typeof(ManageEvidenceNotesDisplayOptions),
+                    typeof(string),
                     typeof(ManageEvidenceNoteViewModel)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
@@ -94,11 +96,11 @@
 
         [Theory]
         [InlineData(null)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.Summary)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.TransferredOut)]
-        public async Task IndexGet_BreadcrumbShouldBeSet(ManageEvidenceNotesDisplayOptions? tab)
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("transferred-out")]
+        public async Task IndexGet_BreadcrumbShouldBeSet(string tab)
         {
             //arrange
             var organisationName = Faker.Company.Name();
@@ -120,11 +122,11 @@
 
         [Theory]
         [InlineData(null)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.Summary)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.TransferredOut)]
-        public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(ManageEvidenceNotesDisplayOptions? tab)
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("transferred-out")]
+        public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
             // Arrange
 
@@ -137,11 +139,11 @@
 
         [Theory]
         [InlineData(null)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.Summary)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.TransferredOut)]
-        public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(ManageEvidenceNotesDisplayOptions? tab)
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("transferred-out")]
+        public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
@@ -152,8 +154,8 @@
 
         [Theory]
         [InlineData(null)]
-        [InlineData(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        public async Task IndexGet_GivenNullAndReviewTab_SubmittedEvidenceNoteShouldBeRetrieved(ManageEvidenceNotesDisplayOptions? tab)
+        [InlineData("review-submitted-evidence")]
+        public async Task IndexGet_GivenDefaultAndReviewTab_SubmittedEvidenceNoteShouldBeRetrieved(string tab)
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
@@ -167,28 +169,30 @@
         }
 
         [Theory]
-        [InlineData(NoteStatus.Approved, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(NoteStatus.Draft, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(NoteStatus.Returned, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(NoteStatus.Void, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
-        [InlineData(NoteStatus.Rejected, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)]
+        [InlineData(NoteStatus.Approved, "review-submitted-evidence")]
+        [InlineData(NoteStatus.Draft, "review-submitted-evidence")]
+        [InlineData(NoteStatus.Returned, "review-submitted-evidence")]
+        [InlineData(NoteStatus.Void, "review-submitted-evidence")]
+        [InlineData(NoteStatus.Rejected, "review-submitted-evidence")]
         [InlineData(NoteStatus.Approved, null)]
         [InlineData(NoteStatus.Draft, null)]
         [InlineData(NoteStatus.Returned, null)]
         [InlineData(NoteStatus.Void, null)]
         [InlineData(NoteStatus.Rejected, null)]
-        public async Task IndexGet_GivenOrganisationId_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, ManageEvidenceNotesDisplayOptions? tab)
+        public async Task IndexGet_GivenDefaultAndReviewTab_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, string tab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) && g.AllowedStatuses.Contains(status)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(status)))).MustNotHaveHappened();
         }
 
-        [Fact]
-        public async Task IndexGet_GivenReturnedData_AndDefaultAction_DefaultViewModelShouldBeBuilt()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("review-submitted-evidence")]
+        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedData_ViewModelShouldBeBuilt(string tab)
         {
             // Arrange
             var organisationName = Faker.Company.Name();
@@ -196,10 +200,10 @@
             List<EvidenceNoteData> returnList = new List<EvidenceNoteData>() { evidenceData };
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId);
+            
+            await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -220,7 +224,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -241,7 +245,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
@@ -283,7 +287,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence) as
+                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as
                     ViewResult;
 
             //asset
@@ -305,7 +309,7 @@
             };
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -320,7 +324,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -340,7 +344,7 @@
 
             //act
             var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence) as
+                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString()) as
                     ViewResult;
 
             //asset
