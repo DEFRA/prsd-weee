@@ -23,7 +23,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Helpers;
-    using Core.Tests.Unit.Helpers;
     using Web.Areas.Aatf.ViewModels;
     using Weee.Requests.Shared;
     using Xunit;
@@ -38,7 +37,6 @@
         protected readonly Guid OrganisationId;
         protected readonly Fixture Fixture;
         protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
-        private readonly short complianceYear;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -50,7 +48,7 @@
             OrganisationId = Guid.NewGuid();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
-            complianceYear = (short)DateTime.Now.Year;
+        
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = Fixture.Create<string>() });
         }
@@ -103,20 +101,19 @@
         public async Task IndexGet_BreadcrumbShouldBeSet(string tab)
         {
             //arrange
-            var organisationName = Faker.Company.Name();
+            var schemeName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(new List<EvidenceNoteData>());
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
-            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
 
             //act
             await ManageEvidenceController.Index(organisationId, tab);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
-            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
             Breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -128,8 +125,6 @@
         [InlineData("transferred-out")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
-            // Arrange
-
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
@@ -159,13 +154,53 @@
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) && status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
+                g => g.OrganisationId.Equals(OrganisationId) && 
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("review-submitted-evidence")]
+        public async Task IndexGet_GivenDefaultAndReviewTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved(string tab)
+        {
+            // Arrange
+            var status = new List<NoteStatus>() { NoteStatus.Submitted };
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+            var complianceYear = Fixture.Create<short>();
+
+            var model = Fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, tab, model);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -195,54 +230,67 @@
         public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedData_ViewModelShouldBeBuilt(string tab)
         {
             // Arrange
-            var organisationName = Faker.Company.Name();
+            var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
-            List<EvidenceNoteData> returnList = new List<EvidenceNoteData>() { evidenceData };
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName});
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            
             await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
-                         a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task IndexGet_GivenReturnedData_AndReviewSubmittedAction_ReviewSubmittedEvidenceNotesViewModelShouldBeBuilt()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("review-submitted-evidence")]
+        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
         {
             // Arrange
-            var organisationName = Faker.Company.Name();
+            var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
-            List<EvidenceNoteData> returnList = new List<EvidenceNoteData>() { evidenceData };
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+            var model = Fixture.Create<ManageEvidenceNoteViewModel>();
 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
+
+            await ManageEvidenceController.Index(OrganisationId, tab, model);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
-                         a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task IndexGet_GivenReturnedData_AndViewAndTransferAction_ViewAndTransferEvidenceNotesViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenViewAndTransferTabAlongWithReturnedData_ViewAndTransferEvidenceNotesViewModelShouldBeBuilt()
         {
             // Arrange
-            var organisationName = Faker.Company.Name();
+            var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
-            List<EvidenceNoteData> returnList = new List<EvidenceNoteData>() { evidenceData };
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
@@ -251,55 +299,60 @@
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                 A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
-                         a.SchemeName.Equals(organisationName)))).MustHaveHappenedOnceExactly();
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task IndexGet_GivenDefaultViewModel_DefaultModelShouldBeReturned()
-        {
-            //arrange
-            var organisationName = Faker.Company.Name();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
-
-            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
-
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
-
-            //act
-            var result =
-                await ManageEvidenceController.Index(OrganisationId) as
-                    ViewResult;
-
-            //asset
-            result.Model.Should().Be(model);
-        }
-
-        [Fact]
-        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned()
-        {
-            //arrange
-            var organisationName = Faker.Company.Name();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
-
-            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
-
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
-
-            //act
-            var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as
-                    ViewResult;
-
-            //asset
-            result.Model.Should().Be(model);
-        }
-
-        [Fact]
-        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_EvidenceNotesShouldBeRetrieved()
+        public async Task IndexGet_GivenViewAndTransferTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewAndTransferEvidenceNotesViewModelShouldBeBuilt()
         {
             // Arrange
-            var organisationName = Faker.Company.Name();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+            var model = Fixture.Create<ManageEvidenceNoteViewModel>();
+            
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model);
+
+            //asset
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
+                A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
+                    a => a.OrganisationId.Equals(OrganisationId) && 
+                         a.Notes.Equals(returnList) &&
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("review-submitted-evidence")]
+        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned(string tab)
+        {
+            //arrange
+            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
+
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+
+            //asset
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAndTransferTabAlongWithReturnedData_EvidenceNotesShouldBeRetrieved()
+        {
+            // Arrange
+            var schemeName = Faker.Company.Name();
+            var currentDate = Fixture.Create<DateTime>();
             var status = new List<NoteStatus>()
             {
                 NoteStatus.Approved,
@@ -308,44 +361,89 @@
                 NoteStatus.Returned
             };
 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
             //act
             await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) && status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAndTransferTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_EvidenceNotesShouldBeRetrieved()
+        {
+            // Arrange
+            var schemeName = Faker.Company.Name();
+            var currentDate = Fixture.Create<DateTime>();
+            var status = new List<NoteStatus>()
+            {
+                NoteStatus.Approved,
+                NoteStatus.Rejected,
+                NoteStatus.Void,
+                NoteStatus.Returned
+            };
+            var complianceYear = Fixture.Create<short>();
+            var model = Fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals((short)model.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus()
         {
-            // Arrange
-            var organisationName = Faker.Company.Name();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
-
             //act
             await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) && g.AllowedStatuses.Contains(NoteStatus.Submitted)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(NoteStatus.Submitted)))).MustNotHaveHappened();
         }
 
-        [Fact]
-        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_ViewAndTransferEvidenceNotesViewModelShouldBeReturned()
+        [Theory]
+        [InlineData("view-and-transfer-evidence")]
+        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_ViewAndTransferEvidenceNotesViewModelShouldBeReturned(string tab)
         {
             //arrange
-            var organisationName = Faker.Company.Name();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             var model = Fixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result =
-                await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString()) as
-                    ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+
+            //asset
+            result.Model.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData("view-and-transfer-evidence")]
+        public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModelWithExistingManageEvidenceNoteViewModel_ViewAndTransferEvidenceNotesViewModelShouldBeReturned(string tab)
+        {
+            //arrange
+            var manageEvidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var model = Fixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
+
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel) as ViewResult;
 
             //asset
             result.Model.Should().Be(model);
