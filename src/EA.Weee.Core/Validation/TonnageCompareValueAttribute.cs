@@ -79,6 +79,8 @@
             return ValidationResult.Success;
         }
 
+        public override object TypeId => this;
+
         private string GenerateMessage()
         {
             return ErrorMessage;
