@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
@@ -32,5 +33,37 @@
             .Should()
             .BeDecoratedWith<HttpPostAttribute>();
         }
+
+        [Fact]
+        public void UploadObligationsGet_IsDecoratedWith_HttpGetAttribute()
+        {
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void UploadObligationsPost_IsDecoratedWith_HttpPostAttribute()
+        {
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void UploadObligationsPost_IsDecoratedWith_ValidateAntiForgeryTokenAttribute()
+        {
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
+            .Should()
+            .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void DownloadTemplateGet_IsDecoratedWith_HttpGetAttribute()
+        {
+            typeof(ObligationsController).GetMethod("DownloadTemplate", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
+            .Should()
+            .BeDecoratedWith<HttpGetAttribute>();
+        } 
     }
 }
