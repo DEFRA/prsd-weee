@@ -1,0 +1,72 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.CanNotFoundTreatmentFacilityViewModel
+
+@{
+    ViewBag.Title = "Can't find the treatment facility";
+}
+
+<section id="main-content">
+    @if (Model.IsCanNotFindLinkClick)
+    {
+        <h1 class="govuk-heading-l">Can't find the treatment facility you're looking for?</h1>
+    }
+    else
+    {
+        <h1 class="govuk-heading-l">No results found</h1>
+        <h3 class="govuk-heading-m">We found no results for '@Model.AatfName'</h3>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        <div class="govuk-!-padding-bottom-3"></div>
+        <div class="govuk-body">
+            This may be because:
+            <ul>
+                <li>
+                    The treatment facility is as an ATF rather than an AATF<br />
+                    An ATF is an authorised treament facility that is not approved to issue evidence. This means the    details are not stored on this service and you must enter them manually.
+                </li>
+            </ul>
+        </div>
+
+        <p class="govuk-body">
+            @Html.RouteLink("Enter ATF details", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+        </p>
+
+        <div class="govuk-body">
+            <ul>
+                <li>
+                    You mistyped the AATF name/ operator name/ approval number
+                </li>
+                <div class="govuk-!-padding-bottom-4"></div>
+                <li>
+                    You have typed in an abbreviation. Try searching for the full AATF name. <br />
+                    E.g. LW = London Waste
+                </li>
+            </ul>
+        </div>
+
+        <p class="govuk-body">
+            <div>
+                @this.WeeeGds().CreateProgressiveDisclosure("What's the difference between an AATF and an ATF?",
+               @Html.Partial("_DifferenceAnAATFandATFPartial").ToString(),
+               "Hidden content",
+               "Progressive disclosure",
+               "What's the difference between an AATF and an ATF?")
+            </div>
+        </p>
+
+        <div class="govuk-!-padding-bottom-4"></div>
+
+        @Html.RouteLink("Start another search", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SearchAnAatf" }, new { @class = "govuk-button" })
+    }
+</section>

@@ -75,6 +75,8 @@
   <ItemGroup>
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
     <Compile Include="AatfReturn\ReportReturnStatus.cs" />
+    <Compile Include="AatfReturn\ReturnAatfAddressResult.cs" />
+    <Compile Include="AatfReturn\WeeeSearchedAnAatfListData.cs" />
     <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />

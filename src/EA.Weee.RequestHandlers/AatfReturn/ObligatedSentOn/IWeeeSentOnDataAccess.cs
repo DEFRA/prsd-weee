@@ -9,6 +9,8 @@
     {
         Task Submit(WeeeSentOn weeeSentOn);
 
+        Task Submit(List<WeeeSentOn> weeeSentOn);
+
         Task<AatfAddress> GetWeeeSentOnSiteAddress(Guid id);
 
         Task<AatfAddress> GetWeeeSentOnOperatorAddress(Guid id);
@@ -20,5 +22,9 @@
         Task<List<WeeeSentOn>> GetWeeeSentOnByReturn(Guid returnId);
 
         Task<WeeeSentOn> GetWeeeSentOnById(Guid weeeSentOnId);
+
+        Task<int> GetWeeeSentOnByOperatorId(Guid operatorAddressId);
+
+        Task<int> GetWeeeSentOnBySiteId(Guid siteAddressId);
     }
 }

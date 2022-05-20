@@ -1,0 +1,52 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchAnAatfViewModel
+
+@{
+    ViewBag.Title = "Search for an AATF";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">Find the treatment facility that the WEEE was sent to</h1>
+
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        <div class="govuk-!-padding-bottom-3"></div>
+        <p class="govuk-body">
+            Search for the treatment site by site name, operator name or approval number
+        </p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
+            @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
+            @Html.HiddenFor(model => model.SelectedAatfId, new { id = "hdnSelectedAatfId" })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-full" })
+        </div>
+
+        @(this.WeeeGds().Submit("Search"))
+    }
+
+    <p class="govuk-body">
+        @Html.RouteLink("Can't find the treatment facility you're looking for?", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, isCanNotFindLinkClick = true, organisationId = Model.OrganisationId, action = "Index", controller = "CanNotFoundTreatmentFacility" }, null)
+    </p>
+
+    <p class="govuk-body">
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    </p>
+
+</section>
+
+@Scripts.Render("~/bundles/search-an-aatf")
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SearchAnAATF();
+        });
+    </script>
+}
