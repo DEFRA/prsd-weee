@@ -19,7 +19,7 @@
             context.Set<T>().AddRange(amounts);
 
             return context.SaveChangesAsync();
-        }
+        }        
 
         public Task UpdateAmounts(T receivedAmount, decimal? houseHoldTonnage, decimal? nonHouseHoldTonnage)
         {

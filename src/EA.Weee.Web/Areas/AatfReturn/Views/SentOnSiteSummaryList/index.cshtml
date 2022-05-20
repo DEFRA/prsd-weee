@@ -1,5 +1,4 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnSiteSummaryListViewModel
@@ -11,7 +10,8 @@
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Which other AATFs / ATFs has @Model.AatfName sent WEEE to for treatment?</h1>
     <p class="govuk-body">You can add multiple AATFs / ATFs</p>
-    <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere</p>
+    <p class="govuk-body">This is WEEE that you received at your AATF(s) which you have not treated and was sent on for treatment elsewhere</p>    
+
     @using (Html.BeginForm("Index", "SentOnSiteSummaryList", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -19,6 +19,19 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ReturnId)
         @Html.HiddenFor(m => m.AatfId)
+
+        if (Model.IsChkCopyPreviousQuarterVisible)
+        {
+            <div class="govuk-body govuk-form-group @Html.Gds().FormGroupClass(m => m.IsCopyChecked)">
+                @Html.Gds().ValidationMessageFor(m => m.IsCopyChecked)
+                <label>
+                    @Html.CheckBoxFor(m => Model.IsCopyChecked, "chkCopyPreviousQuater") copy selection from previous quarter
+                </label>
+            </div>
+
+            @(this.WeeeGds().Submit("Copy"))
+        }
+    }
     <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
         @if (Model.Sites.Count > 0)
         {
@@ -77,16 +90,17 @@
         else
         {
             <div class="govuk-!-padding-bottom-8"></div>
-            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another AATF / ATF link.</p>
+            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another ATF link.</p>
         }
     </div>
-        <div class="govuk-!-padding-bottom-2"></div>
-        <p class="govuk-body" style="margin-bottom: 0px;">
-            @Html.RouteLink("Add another AATF / ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
-        </p>
-        <div class="govuk-!-padding-bottom-8"></div>
+    <div class="govuk-!-padding-bottom-2"></div>
+    <p class="govuk-body" style="margin-bottom: 0px;">
+        @Html.RouteLink("Add another ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SearchAnAatf" }, null)
+    </p>
+    <div class="govuk-!-padding-bottom-8"></div>
 
-        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-                
-    }
+    <p class="govuk-body" style="margin-bottom: 0px;">
+        @Html.RouteLink("AATF task list", AatfRedirect.Default, new { returnId = Model.ReturnId, controller = "AatfTaskList", action = "Index" }, new { @class = "govuk-button" })
+    </p>
+
 </section>
