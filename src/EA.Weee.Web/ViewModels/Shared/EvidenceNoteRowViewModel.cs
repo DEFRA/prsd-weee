@@ -18,7 +18,11 @@
 
         public DateTime? ReturnedDate { get; set; }
 
-        public string Reason { get; set; }
+        public DateTime? RejectedDate { get; set; }
+
+        public string ReturnedReason { get; set; }
+
+        public string RejectedReason { get; set; }
 
         public string SubmittedBy { get; set; }
 
