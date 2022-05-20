@@ -19,7 +19,7 @@
         public static string ReturnsRouteName = "aatf-returns";
         public static string ReturnsCopyRouteName = "aatf-returns-copy";
         public static string SelectReportOptionsDeselectRouteName = "aatf-report-options-deselect";
-        public static string Download = "returns-download";
+        public static string Download = "returns-download";              
 
         public static RedirectToRouteResult TaskList(Guid returnId)
         {
@@ -76,9 +76,24 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnCreateSite", action = "Index", returnId = returnId, aatfId = aatfId }));
         }
 
+        public static RedirectToRouteResult SearchAnAatf(Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SearchAnAatf", action = "Index", returnId = returnId, aatfId = aatfId }));
+        }
+
+        public static RedirectToRouteResult CanNotFoundTreatmentFacility(Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "CanNotFoundTreatmentFacility", action = "Index", returnId = returnId, aatfId = aatfId }));
+        }
+
         public static RedirectToRouteResult SentOnSummaryList(Guid organisationId, Guid returnId, Guid aatfId)
         {
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SentOnSiteSummaryList", action = "Index", organisationId = organisationId, returnId = returnId, aatfId = aatfId }));
+        }
+
+        public static RedirectToRouteResult SearchedAatfResultList(Guid organisationId, Guid returnId, Guid aatfId)
+        {
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SearchedAatfResultList", action = "Index", organisationId = organisationId, returnId = returnId, aatfId = aatfId }));
         }
 
         public static RedirectToRouteResult ReturnsList(Guid organisationId)

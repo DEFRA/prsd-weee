@@ -4,12 +4,12 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnCreateSiteViewModel
 @{
-    ViewBag.Title = "WEEE sent to another AATF / ATF for treatment - GOV.UK";
+    ViewBag.Title = "WEEE sent to another ATF for treatment - GOV.UK";
 }
 
 <section id="main-content">
-    <h1 class="govuk-heading-l">WEEE sent to another AATF / ATF for treatment</h1>
-    <h2 class="govuk-heading-m">Which AATF / ATF was the WEEE sent to for treatment?</h2>
+    <h1 class="govuk-heading-l">WEEE sent to another ATF for treatment</h1>
+    <h2 class="govuk-heading-m">Which ATF was the WEEE sent to for treatment?</h2>
 
     @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
