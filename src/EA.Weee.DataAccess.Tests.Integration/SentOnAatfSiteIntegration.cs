@@ -25,9 +25,11 @@
 
                 var aatfAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
+                var operatorAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
+
                 var dataAccess = new WeeeSentOnDataAccess(context);
 
-                var returnData = await CreateWeeeSentOn(dataAccess, aatfAddress, database);
+                var returnData = await CreateWeeeSentOn(dataAccess, aatfAddress, operatorAddress, database);
 
                 var testWeeeSentOn = context.WeeeSentOn.Where(t => t.Return.Id == returnData.Item1 && t.Aatf.Id == returnData.Item2).FirstOrDefault();
 
@@ -63,7 +65,7 @@
 
                 var operatorAddress = AddressHelper.GetAatfAddress(database);
 
-                var weeeSentOn = await CreateWeeeSentOnInContext(dataAccess, siteAddress, database);
+                var weeeSentOn = await CreateWeeeSentOnInContext(dataAccess, siteAddress, operatorAddress, database);
 
                 await dataAccess.UpdateWithOperatorAddress(weeeSentOn, operatorAddress);
 
@@ -83,7 +85,9 @@
 
                 var siteAddress = new AatfAddress("Site", "Address1", "Address2", "Town", "County", "PO12ST34", country);
 
-                var weeeSentOn = await CreateWeeeSentOnInContext(dataAccess, siteAddress, database);
+                var operatorAddress = new AatfAddress("Operator", "Address1", "Address2", "Town", "County", "TE12ST34", country);
+
+                var weeeSentOn = await CreateWeeeSentOnInContext(dataAccess, siteAddress, operatorAddress, database);
 
                 var result = await dataAccess.GetWeeeSentOnSiteAddress(weeeSentOn.Id);
 
@@ -115,7 +119,7 @@
             }
         }
 
-        private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
+        private async Task<Tuple<Guid, Guid>> CreateWeeeSentOn(WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, AatfAddress operatorAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
@@ -129,14 +133,14 @@
 
             await database.WeeeContext.SaveChangesAsync();
 
-            var weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 
             await dataAccess.Submit(weeeSentOn);
 
             return Tuple.Create(@return.Id, aatf.Id);
         }
 
-        private async Task<WeeeSentOn> CreateWeeeSentOnInContext(WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, DatabaseWrapper database)
+        private async Task<WeeeSentOn> CreateWeeeSentOnInContext(WeeeSentOnDataAccess dataAccess, AatfAddress siteAddress, AatfAddress operatorAddress, DatabaseWrapper database)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
@@ -150,7 +154,7 @@
 
             await database.WeeeContext.SaveChangesAsync();
 
-            var weeeSentOn = new WeeeSentOn(siteAddress, aatf, @return);
+            var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
 
             await dataAccess.Submit(weeeSentOn);
 
