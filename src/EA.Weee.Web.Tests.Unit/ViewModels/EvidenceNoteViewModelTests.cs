@@ -132,7 +132,7 @@
             var model = new EvidenceNoteViewModel()
             {
                 Status = status,
-                Reason = "reason"
+                ReturnedReason = "reason"
             };
 
             model.DisplayReturnedReason.Should().BeFalse();
@@ -147,7 +147,7 @@
             var model = new EvidenceNoteViewModel()
             {
                 Status = NoteStatus.Returned,
-                Reason = reason
+                ReturnedReason = reason
             };
 
             model.DisplayReturnedReason.Should().BeFalse();
@@ -159,7 +159,7 @@
             var model = new EvidenceNoteViewModel()
             {
                 Status = NoteStatus.Returned,
-                Reason = "reason"
+                ReturnedReason = "reason"
             };
 
             model.DisplayReturnedReason.Should().BeTrue();
