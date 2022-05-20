@@ -47,10 +47,15 @@
 
         public int Reference { get; set; }
 
-        [DisplayName("Reason")]
-        public string Reason { get; set; }
+        [DisplayName("Reason returned")]
+        public string ReturnedReason { get; set; }
 
-        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(Reason);
+        [DisplayName("Reason rejected")]
+        public string RejectedReason { get; set; }
+
+        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
+
+        public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
 
         public EvidenceNoteViewModel()
         {

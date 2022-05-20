@@ -20,9 +20,10 @@
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
-                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted);
+                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted) ||
+                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Rejected);
             }
-            
+
             return model;
         }
     }
