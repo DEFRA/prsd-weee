@@ -46,11 +46,11 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
-        public async Task<UKCompetentAuthority> FetchCompetentAuthorityWithSchemes(CompetentAuthority authority)
+        public async Task<UKCompetentAuthority> FetchCompetentAuthoritySchemesWithStatus(CompetentAuthority authority, Domain.Scheme.SchemeStatus status)
         {
             string authorityName = authorityMapping[authority];
 
-            return await Context.UKCompetentAuthorities.Include(n => n.Schemes).SingleAsync(ca => ca.Name == authorityName);
+            return await Context.UKCompetentAuthorities.Include(n => n.Schemes).Where(n => n.Schemes.Any(s => s.SchemeStatus == status)).SingleAsync(ca => ca.Name == authorityName);
         }
 
         public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid id)

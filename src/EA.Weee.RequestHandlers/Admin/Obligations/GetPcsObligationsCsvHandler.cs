@@ -34,7 +34,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthorityWithSchemes(message.Authority);
+            UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthoritySchemesWithStatus(message.Authority, Domain.Scheme.SchemeStatus.Approved);
 
             var csvWriter = csvWriterFactory.Create<Scheme>();
             csvWriter.DefineColumn(ObligationCsvConstants.SchemeIdentifierColumnName, x => x.ApprovalNumber);
