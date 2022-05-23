@@ -6,6 +6,11 @@
 
     public class EvidenceDateValidationBase : ValidationAttribute
     {
-        protected IWeeeCache Cache => DependencyResolver.Current.GetService<IWeeeCache>();
+        private IWeeeCache cache;
+        public IWeeeCache Cache
+        {
+            get => cache ?? DependencyResolver.Current.GetService<IWeeeCache>();
+            set => cache = value;
+        }
     }
 }

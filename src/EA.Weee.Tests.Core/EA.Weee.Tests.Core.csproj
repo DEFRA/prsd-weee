@@ -161,7 +161,6 @@
     <Compile Include="AuthorizationBuilder.cs" />
     <Compile Include="DbContextHelper.cs" />
     <Compile Include="DomainHelper.cs" />
-    <Compile Include="MockDependencyResolver.cs" />
     <Compile Include="Model\AATF.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
