@@ -270,29 +270,19 @@
             }
 
             var modelAllNotes =
-                    mapper.Map<AllOtherEvidenceNotesViewModel>(
-                        new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+                mapper.Map<AllOtherManageEvidenceNotesViewModel>(
+                    new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
             var schemeData = resultAllNotes.Select(x => x.SchemeData)
                    .Distinct(new SchemeDataComparer())
-                    .OrderByDescending(s => s.SchemeName).ToList();
+                    .OrderBy(s => s.SchemeName).ToList();
 
             if (schemeData.Any())
             {
                 sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
             }
 
-            var schemeDataFiltered = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
-            Guid? schemeId = manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId;
-
-            if (!schemeData.Any() && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != Guid.Empty && manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId != null && schemeId.HasValue)
-            {
-                var selectedScheme = schemeDataFiltered.FirstOrDefault(s => s.Id == schemeId.Value);
-                if (selectedScheme != null)
-                {
-                    schemeData.Add(selectedScheme);
-                }
-            }
+            schemeData = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
 
             var recipientWasteStatusViewModel =
                      mapper.Map<RecipientWasteStatusFilterViewModel>(
@@ -312,7 +302,7 @@
             var result = await client.SendAsync(User.GetAccessToken(), new GetAatfSummaryRequest(aatfId));
 
             var summaryModel =
-                mapper.Map<EvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+                mapper.Map<ManageEvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
 
             summaryModel.ManageEvidenceNoteViewModel =
                 mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId,

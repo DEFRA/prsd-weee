@@ -44,7 +44,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<int>());
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -197,7 +197,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList());
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<int>());
         }
     }
 }

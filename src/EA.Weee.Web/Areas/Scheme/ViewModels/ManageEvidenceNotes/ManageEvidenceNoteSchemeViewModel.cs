@@ -5,7 +5,7 @@
     using Aatf.ViewModels;
     using Web.ViewModels.Shared;
 
-    public abstract class ManageEvidenceNoteViewModel : IEvidenceNoteRowViewModel
+    public abstract class ManageEvidenceNoteSchemeViewModel : IManageEvidenceViewModel
     {
         public Guid OrganisationId { get; set; }
 
@@ -15,10 +15,13 @@
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
 
-        protected ManageEvidenceNoteViewModel(ManageEvidenceNotesDisplayOptions activeDisplayOption)
+        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
+
+        protected ManageEvidenceNoteSchemeViewModel(ManageEvidenceNotesDisplayOptions activeDisplayOption)
         {
             this.ActiveDisplayOption = activeDisplayOption;
             EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
+            ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel();
         }
     }
 }
