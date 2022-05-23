@@ -51,6 +51,6 @@
 
         Task<T> FetchLookup<T>(Guid id) where T : AreaBase;
 
-        Task<UKCompetentAuthority> FetchCompetentAuthorityWithSchemes(CompetentAuthority authority);
+        Task<UKCompetentAuthority> FetchCompetentAuthoritySchemesWithStatus(CompetentAuthority authority, Domain.Scheme.SchemeStatus status);
     }
 }
