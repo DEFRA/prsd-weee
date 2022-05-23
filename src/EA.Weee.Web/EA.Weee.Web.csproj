@@ -347,7 +347,6 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModel.cs" />
-    <Compile Include="Constant\DateTimeConstants.cs" />
     <Compile Include="Constant\EvidenceCopyPasteActionConstants.cs" />
     <Compile Include="Constant\SessionKeyConstant.cs" />
     <Compile Include="Services\ISessionService.cs" />
