@@ -112,8 +112,8 @@
 
             CurrentDate = new SingleItemCache<DateTime>(
                 provider,
-                "CurrentDate",
-                (DateTime.Today.AddDays(1) - DateTime.Now),
+                "CurrentUtcSystemDate",
+                (DateTime.Today.AddDays(1).Subtract(DateTime.Now)),
                 FetchCurrentUtcDateTime);
         }
 
@@ -124,7 +124,7 @@
                 var request = new EA.Weee.Requests.Users.GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
 
-                return string.Format("{0} {1}", result.FirstName, result.Surname).Trim();
+                return $"{result.FirstName} {result.Surname}".Trim();
             }
         }
 
@@ -264,6 +264,11 @@
             return FetchProducerSearchResultList();
         }
 
+        public Task<DateTime> FetchCurrentDate()
+        {
+            return CurrentDate.Fetch();
+        }
+        
         public async Task InvalidateProducerSearch()
         {
             await ProducerSearchResultList.InvalidateCache();
