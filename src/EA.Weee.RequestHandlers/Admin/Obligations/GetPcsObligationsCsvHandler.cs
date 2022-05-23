@@ -56,7 +56,7 @@
 
             var fileContent = csvWriter.Write(authority.Schemes);
             var timestamp = DateTime.Now;
-            var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString("dd/MM/yyyy_HHmm")}.csv";
+            var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString("_yyyy_dd/MM/yyyy_HHmm")}.csv";
 
             return new CSVFileData
             {
