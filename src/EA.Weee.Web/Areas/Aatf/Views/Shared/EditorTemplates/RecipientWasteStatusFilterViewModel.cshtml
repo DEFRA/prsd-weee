@@ -3,7 +3,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
 
-<div class="govuk-grid-column-one-third">
+<div class="govuk-grid-column-one-third govuk-!-margin-left-0 govuk-!-padding-left-2">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.SchemeListSL,
@@ -11,20 +11,20 @@
     </div>
 </div>
 
-<div class="govuk-grid-column-one-third">
+<div class="govuk-grid-column-one-third govuk-!-padding-left-1 govuk-!-padding-right-2">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
-        string.Empty, new { }, useHalfWidth: false, withLookAhead: true)
+        string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false)
     </div>
 </div>
-<div class="govuk-grid-column-one-third">
+<div class="govuk-grid-column-one-third govuk-!-padding-left-1">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
-        string.Empty, new { }, useHalfWidth: false, withLookAhead: true)
+        string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false)
 
     </div>
 </div>
