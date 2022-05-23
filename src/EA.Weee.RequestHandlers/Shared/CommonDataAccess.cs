@@ -11,6 +11,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Z.EntityFramework.Plus;
 
     public class CommonDataAccess : ICommonDataAccess
     {
@@ -46,11 +47,11 @@
             return await Context.UKCompetentAuthorities.SingleAsync(ca => ca.Abbreviation == authority);
         }
 
-        public async Task<UKCompetentAuthority> FetchCompetentAuthorityWithSchemes(CompetentAuthority authority)
+        public async Task<UKCompetentAuthority> FetchCompetentAuthorityApprovedSchemes(CompetentAuthority authority)
         {
             string authorityName = authorityMapping[authority];
 
-            return await Context.UKCompetentAuthorities.Include(n => n.Schemes).SingleAsync(ca => ca.Name == authorityName);
+            return await Context.UKCompetentAuthorities.IncludeFilter(n => n.Schemes.Where(s => s.SchemeStatus.Value == Domain.Scheme.SchemeStatus.Approved.Value)).SingleAsync(ca => ca.Name == authorityName);
         }
 
         public async Task<UKCompetentAuthority> FetchCompetentAuthorityById(Guid id)

@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Core.AatfEvidence;
-    using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
     using Web.Areas.Aatf.Attributes;
@@ -43,18 +41,13 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EditEvidenceNoteViewModel()
+            var target = new RequiredSubmitValidationTarget()
             {
-                WasteTypeValue = null,
-                ProtocolValue = null,
-                ReceivedId = Guid.NewGuid(),
                 StartDate = date,
-                EndDate = date,
                 Action = ActionEnum.Save
             };
 
             var context = new ValidationContext(target);
-
             var result = Validator.TryValidateObject(target, context, validationResults, true);
 
             //assert
@@ -72,19 +65,12 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EditEvidenceNoteViewModel()
+            var target = new RequiredSubmitValidationTarget()
             {
-                WasteTypeValue = null,
-                ProtocolValue = null,
-                ReceivedId = Guid.NewGuid(),
-                StartDate = date,
-                EndDate = date,
                 Action = ActionEnum.Submit,
-                CategoryValues = new List<EvidenceCategoryValue>() { new EvidenceCategoryValue("1", null) }
             };
 
             var context = new ValidationContext(target);
-
             var result = Validator.TryValidateObject(target, context, validationResults, true);
 
             //assert
@@ -92,8 +78,7 @@
 
             validationResults.Select(v => v.ErrorMessage).Should().BeEquivalentTo(new List<string>()
             {
-                "Select a type of waste",
-                "Select actual or protocol",
+                "The StartDate field is required."
             });
 
             SystemTime.Unfreeze();
@@ -106,19 +91,13 @@
             var date = new DateTime(2022, 3, 1);
             SystemTime.Freeze(date);
 
-            var target = new EditEvidenceNoteViewModel()
+            var target = new RequiredSubmitValidationTarget()
             {
-                WasteTypeValue = WasteType.Household,
-                ProtocolValue = Protocol.SiteSpecificProtocol,
-                ReceivedId = Guid.NewGuid(),
-                StartDate = date,
-                EndDate = date,
                 Action = ActionEnum.Submit,
-                CategoryValues = new List<EvidenceCategoryValue>() { new EvidenceCategoryValue("1", null) }
+                StartDate = new DateTime()
             };
 
             var context = new ValidationContext(target);
-
             var result = Validator.TryValidateObject(target, context, validationResults, true);
 
             //assert
@@ -129,10 +108,12 @@
             SystemTime.Unfreeze();
         }
 
-        private class NotValidValidationTarget
+        private class RequiredSubmitValidationTarget : IActionModel
         {
             [RequiredSubmitAction]
             public DateTime? StartDate { get; set; }
+
+            public ActionEnum Action { get; set; }
         }
     }
 }
