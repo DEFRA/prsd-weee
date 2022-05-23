@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using Areas.Aatf.ViewModels;
 
-    public interface IEvidenceNoteRowViewModel
+    public interface IManageEvidenceViewModel
     {
         IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
+
+        ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
     }
 }

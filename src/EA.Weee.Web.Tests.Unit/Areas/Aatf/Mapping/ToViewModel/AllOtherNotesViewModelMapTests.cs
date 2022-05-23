@@ -33,7 +33,7 @@
         public void AllOtherNotesViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
         {
             typeof(AllOtherNotesViewModelMap).Should()
-                .BeDerivedFrom<ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>>();
+                .BeDerivedFrom<ListOfNotesViewModelBase<AllOtherManageEvidenceNotesViewModel>>();
         }
 
         [Fact]

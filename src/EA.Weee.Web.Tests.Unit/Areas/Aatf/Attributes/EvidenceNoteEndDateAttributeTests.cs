@@ -1,20 +1,29 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Attributes
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using Services.Caching;
     using Web.Areas.Aatf.Attributes;
     using Xunit;
 
     public class EvidenceNoteEndDateAttributeTests
     {
-        private readonly List<ValidationResult> validationResults;
+        private readonly IWeeeCache cache;
+        private readonly EvidenceNoteEndDateAttribute attribute;
 
         public EvidenceNoteEndDateAttributeTests()
         {
-            validationResults = new List<ValidationResult>();
+            cache = A.Fake<IWeeeCache>();
+
+            attribute = new EvidenceNoteEndDateAttribute("StartDate")
+            {
+                Cache = cache
+            };
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
         }
 
         [Fact]
@@ -25,7 +34,21 @@
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenEndDateDateIsBeforeStartDate_FalseShouldBeReturned()
+        public void EvidenceNoteEndDateAttribute_CurrentDateShouldBeRetrievedFromCache()
+        {
+            //arrange
+            var target = new ValidationTarget() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            var context = new ValidationContext(target);
+
+            //act
+            attribute.Validate(target.EndDate, context);
+
+            //assert
+            A.CallTo(() => cache.FetchCurrentDate()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEndDateDateIsBeforeStartDate_ValidationExceptionShouldBeThrown()
         {
             //arrange
             var currentDate = DateTime.Now;
@@ -35,21 +58,16 @@
             var context = new ValidationContext(target);
 
             //act
-            var result = Validator.TryValidateObject(target, context, validationResults, true);
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
-            result.Should().BeFalse();
-            validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
-            {
-                new ValidationResult(
-                    "Ensure the end date is after the start date")
-            });
+            result.ValidationResult.ErrorMessage.Should().Be("Ensure the end date is after the start date");
 
             SystemTime.Unfreeze();
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_FalseShouldBeReturned()
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_ValidationExceptionShouldBeThrown()
         {
             //arrange
             var currentDate = DateTime.Now;
@@ -58,23 +76,19 @@
 
             var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
             var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
 
             //act
-            var result = Validator.TryValidateObject(target, context, validationResults, true);
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.Should().BeFalse();
-            validationResults.Should().BeEquivalentTo(new List<ValidationResult>()
-            {
-                new ValidationResult(
-                    "The end date must be within the current compliance year")
-            });
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
 
             SystemTime.Unfreeze();
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenStartDateIsEmpty_TrueShouldBeReturned()
+        public void EvidenceNoteEndDateAttribute_GivenStartDateIsEmpty_NoValidationExceptionShouldBeThrown()
         {
             //arrange
             var currentDate = DateTime.Now;
@@ -84,16 +98,16 @@
             var context = new ValidationContext(target);
 
             //act
-            var result = Validator.TryValidateObject(target, context, validationResults, true);
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
-            result.Should().BeTrue();
+            result.Should().BeNull();
 
             SystemTime.Unfreeze();
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenStartDateIsNull_TrueShouldBeReturned()
+        public void EvidenceNoteEndDateAttribute_GivenStartDateIsNull_NoValidationExceptionShouldBeThrown()
         {
             //arrange
             var currentDate = DateTime.Now;
@@ -103,10 +117,10 @@
             var context = new ValidationContext(target);
 
             //act
-            var result = Validator.TryValidateObject(target, context, validationResults, true);
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
-            result.Should().BeTrue();
+            result.Should().BeNull();
 
             SystemTime.Unfreeze();
         }

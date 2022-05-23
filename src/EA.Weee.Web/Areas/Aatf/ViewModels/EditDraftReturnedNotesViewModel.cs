@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Web.ViewModels.Shared;
 
-    public class EditDraftReturnedNotesViewModel : ManageEvidenceNoteOverviewViewModel
+    public class EditDraftReturnedNotesViewModel : ManageManageEvidenceNoteOverviewViewModel
     {
         public EditDraftReturnedNotesViewModel()
          : base(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)

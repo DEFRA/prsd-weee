@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
+    using System;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using Prsd.Core.Mapper;
@@ -17,7 +18,8 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return Map(source.Notes);
+            //TODO: place holder map values until the compliance year is put in for AATF
+            return Map(source.Notes, new DateTime(), null);
         }
     }
 }

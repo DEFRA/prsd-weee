@@ -118,7 +118,7 @@
                 var years = await client.SendAsync(accessToken, new GetAatfComplianceYearsByAatfId(viewModel.AatfId));
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears(currentDate).Except(years.Select(x => (int)x)));
+                viewModel.ComplianceYearList = new SelectList(ComplianceYearHelper.FetchCurrentComplianceYears(currentDate).Except(years.Select(x => (int)x)));
             }
 
             return viewModel;
