@@ -260,7 +260,7 @@
                 };
 
                 var noteId = await dataAccess.AddTransferNote(transferOrganisation, recipientScheme, transferCategories, transferTonnages,
-                    NoteStatus.Draft, context.GetCurrentUser());
+                    NoteStatus.Draft, noteToBeTransferred1.ComplianceYear, context.GetCurrentUser());
 
                 var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
 
@@ -281,6 +281,7 @@
                 refreshedTransferNote.NoteStatusHistory.Count.Should().Be(0);
                 refreshedTransferNote.NoteTonnage.Count.Should().Be(0);
                 refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(3);
+                refreshedTransferNote.ComplianceYear.Should().Be(noteToBeTransferred1.ComplianceYear);
 
                 var transferTonnage = refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt =>
                     nt.NoteTonnageId.Equals(
