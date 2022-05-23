@@ -13,5 +13,7 @@
         public Guid OrganisationId { get; protected set; }
 
         public string SearchRef { get; protected set; }
+
+        public int ComplianceYear { get; protected set; }
     }
 }

@@ -1,22 +1,23 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using System.Linq;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared.Mapping;
 
-    public class ViewAndTransferEvidenceViewModelMap : ListOfNotesViewModelBase<ViewAndTransferEvidenceViewModel>, IMap<ViewAndTransferEvidenceViewModelMapTransfer, ViewAndTransferEvidenceViewModel>
+    public class ViewAndTransferEvidenceViewModelMap : ListOfNotesViewModelBase<SchemeViewAndTransferManageEvidenceSchemeViewModel>, IMap<ViewAndTransferEvidenceViewModelMapTransfer, SchemeViewAndTransferManageEvidenceSchemeViewModel>
     {
         public ViewAndTransferEvidenceViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
-        public ViewAndTransferEvidenceViewModel Map(ViewAndTransferEvidenceViewModelMapTransfer source)
+        public SchemeViewAndTransferManageEvidenceSchemeViewModel Map(ViewAndTransferEvidenceViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = Map(source.Notes);
+            var model = Map(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
 

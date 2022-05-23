@@ -5,13 +5,13 @@
     using System.ComponentModel;
     using Web.ViewModels.Shared;
 
-    public abstract class ManageEvidenceNoteOverviewViewModel : IEvidenceNoteRowViewModel
+    public abstract class ManageManageEvidenceNoteOverviewViewModel : IManageEvidenceViewModel
     {
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
 
         public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
-        protected ManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
+        protected ManageManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
         {
             ActiveOverviewDisplayOption = activeOverviewDisplayOption;
             EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
