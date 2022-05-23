@@ -18,9 +18,9 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var model = validationContext.ObjectInstance as EditEvidenceNoteViewModel;
+            var model = validationContext.ObjectInstance as IActionModel;
 
-            Guard.ArgumentNotNull(() => model, model, "RequiredSubmitActionAttribute EditEvidenceNoteViewModel is null");
+            Guard.ArgumentNotNull(() => model, model, "RequiredTonnageAttribute Model is null");
             Guard.ArgumentNotNull(() => value, value, "RequiredTonnageAttribute Tonnage Values are null");
 
             var list = value as IList<EvidenceCategoryValue>;

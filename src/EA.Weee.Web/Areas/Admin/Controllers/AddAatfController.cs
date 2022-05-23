@@ -95,7 +95,7 @@ namespace EA.Weee.Web.Areas.Admin.Controllers
                 viewModel = await PopulateFacilityViewModelLists(viewModel, countries, client, User.GetAccessToken());
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                viewModel.ComplianceYearList = new SelectList(AatfHelper.FetchCurrentComplianceYears(currentDate));
+                viewModel.ComplianceYearList = new SelectList(ComplianceYearHelper.FetchCurrentComplianceYears(currentDate));
             }
 
             return viewModel;

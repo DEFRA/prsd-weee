@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
@@ -33,14 +34,18 @@
         public void ViewAndTransferEvidenceViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
         {
             typeof(ViewAndTransferEvidenceViewModelMap).Should()
-                .BeDerivedFrom<ListOfNotesViewModelBase<ViewAndTransferEvidenceViewModel>>();
+                .BeDerivedFrom<ListOfNotesViewModelBase<SchemeViewAndTransferManageEvidenceSchemeViewModel>>();
         }
 
         [Fact]
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), null, "Test"));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), 
+                null, 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -50,7 +55,11 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), "Test"));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.Empty, 
+                fixture.CreateMany<EvidenceNoteData>().ToList(), 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -60,7 +69,10 @@
         public void Map_GivenSchemeNameIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), null));
+            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), 
+                null, 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -79,7 +91,11 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
+                notes, 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             map.Map(transfer);
@@ -96,7 +112,11 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
+                notes, 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             map.Map(transfer);
@@ -113,7 +133,11 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
+                notes, 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             var result = map.Map(transfer);
@@ -135,12 +159,19 @@
                  fixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var model = new ViewAndTransferEvidenceViewModel();
-            model.EvidenceNotesDataList = returnedNotes;
+            var model = new SchemeViewAndTransferManageEvidenceSchemeViewModel
+            {
+                EvidenceNotesDataList = returnedNotes
+            };
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, notes, "Test");
+            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
+                notes, 
+                "Test", 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
+
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
@@ -166,7 +197,9 @@
             //act
             var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
                 notes,
-                fixture.Create<string>()));
+                fixture.Create<string>(), 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -183,8 +216,10 @@
 
             //act
             var result = map.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
-                notes,
-                fixture.Create<string>()));
+                notes, 
+                fixture.Create<string>(), 
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             result.DisplayTransferButton.Should().BeTrue();

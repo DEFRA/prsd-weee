@@ -28,30 +28,5 @@
 
             return data;
         }
-
-        public static List<int> FetchCurrentComplianceYears(DateTime systemDateTime, bool forLinks = false)
-        {
-            var currentYear = systemDateTime.Year;
-
-            var list = Enumerable.Range(currentYear, 2).ToList();
-
-            if (forLinks)
-            {
-                list.Add(systemDateTime.AddYears(-1).Year);
-            }
-            else
-            {
-                //Until end of Jan show previous year
-                DateTime endOfMonth = new DateTime(currentYear, 1,
-                                        DateTime.DaysInMonth(currentYear, 1));
-
-                if (systemDateTime <= endOfMonth)
-                {
-                    list.Add(systemDateTime.AddYears(-1).Year);
-                }
-            }
-
-            return list.OrderByDescending(x => x).ToList();
-        }
     }
 }
