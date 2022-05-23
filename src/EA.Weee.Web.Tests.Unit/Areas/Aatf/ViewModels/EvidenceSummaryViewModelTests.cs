@@ -9,7 +9,7 @@
         [Fact]
         public void EvidenceSummaryViewModel_Constructor_ShouldSetTab()
         {
-            var model = new EvidenceSummaryViewModel();
+            var model = new ManageEvidenceSummaryViewModel();
 
             model.ActiveOverviewDisplayOption.Should().Be(ManageEvidenceOverviewDisplayOption.EvidenceSummary);
         }
@@ -17,7 +17,7 @@
         [Fact]
         public void EvidenceSummaryViewModel_Constructor_ShouldInitialiseList()
         {
-            var model = new EvidenceSummaryViewModel();
+            var model = new ManageEvidenceSummaryViewModel();
 
             model.EvidenceNotesDataList.Should().NotBeNull();
             model.EvidenceNotesDataList.Should().BeEmpty();

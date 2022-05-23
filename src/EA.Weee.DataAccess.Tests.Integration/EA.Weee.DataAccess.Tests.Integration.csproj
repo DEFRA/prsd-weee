@@ -142,6 +142,7 @@
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
     <Compile Include="Base\EvidenceNoteBaseDataAccess.cs" />
+    <Compile Include="EvidenceNote\GetComplianceYearByNotesIntegration.cs" />
     <Compile Include="EvidenceNote\NotesDataAccessGetTonnageByIdsIntegration.cs" />
     <Compile Include="EvidenceNote\TransferNotesDataAccessIntegration.cs" />
     <Compile Include="EvidenceNote\NotesDataAccessIntegration.cs" />

@@ -2,7 +2,7 @@
 {
     using System;
     using EA.Prsd.Core;
-    using EA.Weee.Web.Areas.Admin.Helper;
+    using Web.Extensions;
     using Xunit;
 
     public class AatfHelperTests
@@ -18,7 +18,7 @@
         public void GetValidComplianceYear_BasedOnCurrentDate(DateTime currentDate, int[] yearList)
         {
             SystemTime.Freeze(new DateTime(currentDate.Year, currentDate.Month, currentDate.Day));
-            var value = AatfHelper.FetchCurrentComplianceYears(currentDate);
+            var value = ComplianceYearHelper.FetchCurrentComplianceYears(currentDate);
             SystemTime.Unfreeze();
             Assert.Equal(yearList, value.ToArray());
         }
@@ -34,7 +34,7 @@
         public void GetCurrentComplianceYear_BasedOnCurrentDate(DateTime currentDate, int[] yearList)
         {
             SystemTime.Freeze(new DateTime(currentDate.Year, currentDate.Month, currentDate.Day));
-            var value = AatfHelper.FetchCurrentComplianceYears(currentDate, true);
+            var value = ComplianceYearHelper.FetchCurrentComplianceYears(currentDate, true);
             SystemTime.Unfreeze();
             Assert.Equal(yearList, value.ToArray());
         }
