@@ -2,13 +2,13 @@
 {
     using System;
 
-    public class ViewAndTransferEvidenceViewModel : ManageEvidenceNoteViewModel
+    public class SchemeViewAndTransferManageEvidenceSchemeViewModel : ManageEvidenceNoteSchemeViewModel
     {
         public Guid? SelectedId { get; set; }
 
         public bool DisplayTransferButton { get; set; }
 
-        public ViewAndTransferEvidenceViewModel()
+        public SchemeViewAndTransferManageEvidenceSchemeViewModel()
             : base(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
         {
         }
