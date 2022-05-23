@@ -5,6 +5,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Services.Caching;
     using ViewModels.ManagePcsReturnsSubmissionWindow;
     using Weee.Requests.Test;
 
@@ -12,10 +13,12 @@
     public class ManagePcsReturnsSubmissionWindowController : TestControllerBase
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
 
-        public ManagePcsReturnsSubmissionWindowController(Func<IWeeeClient> apiClient)
+        public ManagePcsReturnsSubmissionWindowController(Func<IWeeeClient> apiClient, IWeeeCache cache)
         {
             this.apiClient = apiClient;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -48,6 +51,8 @@
                     FixCurrentDate = settings.FixCurrentDate,
                     CurrentDate = settings.CurrentDate
                 });
+
+                await cache.InvalidateCurrentDate();
             }
 
             return RedirectToAction("SettingsUpdated", "ManagePcsReturnsSubmissionWindow");

@@ -4,11 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Api.Client;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
-    using Services;
+    using Services.Caching;
     using Web.Areas.Aatf.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -16,20 +15,18 @@
     public class EvidenceNoteEndDateAttributeTests
     {
         private readonly List<ValidationResult> validationResults;
-        private readonly ISessionService sessionService;
-        private readonly IWeeeClient client;
+        private readonly IWeeeCache cache;
 
         public EvidenceNoteEndDateAttributeTests()
         {
             validationResults = new List<ValidationResult>();
-            sessionService = A.Fake<ISessionService>();
-            client = A.Fake<IWeeeClient>();
+            cache = A.Fake<IWeeeCache>();
 
             var container = new MockDependencyResolver();
-            container.Freeze<IWeeeClient>(client);
-            container.Freeze<ISessionService>(sessionService);
-
+            container.Freeze<IWeeeCache>(cache);
             DependencyResolver.SetResolver(container);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
         }
 
         [Fact]
@@ -37,6 +34,21 @@
         {
             typeof(EvidenceNoteEndDateAttribute).Should().BeDecoratedWith<AttributeUsageAttribute>().Which.ValidOn
                 .Should().Be(AttributeTargets.Property);
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_CurrentDateShouldBeRetrievedFromCache()
+        {
+            //arrange
+            var target = new ValidationTarget() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            var context = new ValidationContext(target);
+            var attr = new EvidenceNoteEndDateAttribute("StartDate");
+
+            //act
+            attr.Validate(target.EndDate, context);
+
+            //assert
+            A.CallTo(() => cache.FetchCurrentDate()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -73,6 +85,7 @@
 
             var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
             var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
 
             //act
             var result = Validator.TryValidateObject(target, context, validationResults, true);
