@@ -41,7 +41,7 @@
         }
 
         [Fact]
-        public void ListOfNotesViewModelBase_ShouldHaveIEvidenceNoteRowViewModelAsT()
+        public void ListOfNotesViewModelBase_ShouldHaveIManageEvidenceViewModelAsT()
         {
             typeof(ListOfNotesViewModelBase<>).GetGenericArguments()[0].GetGenericParameterConstraints()[0].Name
                 .Should().Be(nameof(IManageEvidenceViewModel));
