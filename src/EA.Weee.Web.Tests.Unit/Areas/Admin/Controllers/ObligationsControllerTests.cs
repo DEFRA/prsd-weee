@@ -65,5 +65,25 @@
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         } 
+
+        [Fact]
+        public void UploadObligationsGet_PopulatesModel()
+        {
+
+        }
+
+        [Fact]
+        public void UploadObligationsPost_SetsTriggerDownload_ToTrue()
+        {
+
+        }
+
+        [Fact]
+        public void DownloadTemplateGet_CallsGetPcsObligationsCsv_Once()
+        {
+
+        }
+
+
     }
 }
