@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class ReviewSubmittedManageEvidenceNotesSchemeViewModel : ManageManageEvidenceNoteSchemeViewModel
+    public class ReviewSubmittedManageEvidenceNotesSchemeViewModel : ManageEvidenceNoteSchemeViewModel
     {
         public Guid? SelectedId { get; set; }
 
