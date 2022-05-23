@@ -5,7 +5,7 @@
 @using MvcNavigationHelpers
 @using HomeController = EA.Weee.Web.Areas.Scheme.Controllers.HomeController
 
-@model ManageEvidenceNoteViewModel
+@model ManageEvidenceNoteSchemeViewModel
 @{
     var title = String.Format("Manage evidence notes for {0}", Model.SchemeName);
     ViewBag.Title = title + " - GOV.UK";
@@ -22,13 +22,17 @@
     </h1>
 </header>
 
+ @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }});}
+
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",
-                            Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString())),
-                            Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
+        Url.Action("Index", "ManageEvidenceNotes", 
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear=Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
     @this.WeeeGds().Tab("View and transfer evidence",
-                            Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString())),
-                            Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
+        Url.Action("Index", "ManageEvidenceNotes", 
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear=Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
 </ul>
 
 

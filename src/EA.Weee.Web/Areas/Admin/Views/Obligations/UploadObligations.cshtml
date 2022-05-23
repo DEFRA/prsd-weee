@@ -5,13 +5,14 @@
 @{
     ViewBag.Title = "Manage PCS obligations";
 }
+
+@(this.WeeeGds().BackLink(@Url.UrlFor<ObligationsController>(a => a.SelectAuthority())))
+
 <header class="hgroup">
     <div>
         <h1 class="govuk-heading-l">Manage PCS obligations</h1>
     </div>
 </header>
-
-@(this.WeeeGds().BackLink(@Url.UrlFor<ObligationsController>(a => a.SelectAuthority())))
 
 @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Post))
 {
@@ -32,7 +33,7 @@
                     PCS
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right">
-                    Obligation updated
+                    Obligation updated (GMT)
                 </th>
             </tr>
         </thead>
