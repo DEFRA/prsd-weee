@@ -9,7 +9,7 @@
         [Fact]
         public void CheckViewAndTransferEvidenceViewModelInheritsManageEvidenceNoteViewModel()
         {
-            typeof(SchemeViewAndTransferManageEvidenceSchemeViewModel).BaseType.Name.Should().Be(nameof(ManageManageEvidenceNoteSchemeViewModel));
+            typeof(SchemeViewAndTransferManageEvidenceSchemeViewModel).BaseType.Name.Should().Be(nameof(ManageEvidenceNoteSchemeViewModel));
         }
     }
 }
