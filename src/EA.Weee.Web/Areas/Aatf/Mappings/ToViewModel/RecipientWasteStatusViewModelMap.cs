@@ -18,8 +18,8 @@
 
             var sortedmNoteStatusList = new Dictionary<int, string>
             {
-                { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
                 { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
+                { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
                 { (int)NoteStatus.Rejected, NoteStatus.Rejected.ToString() },
                 { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
             };
