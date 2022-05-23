@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -56,7 +57,7 @@
 
             var fileContent = csvWriter.Write(authority.Schemes);
             var timestamp = DateTime.Now;
-            var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString("dd/MM/yyyy_HHmm")}.csv";
+            var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv";
 
             return new CSVFileData
             {
