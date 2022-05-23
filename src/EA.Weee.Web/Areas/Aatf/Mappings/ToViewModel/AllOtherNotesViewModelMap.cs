@@ -1,22 +1,24 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
+    using System;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
     using ViewModels;
     using Web.ViewModels.Shared.Mapping;
 
-    public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherEvidenceNotesViewModel>
+    public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherManageEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherManageEvidenceNotesViewModel>
     {
         public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
-        public AllOtherEvidenceNotesViewModel Map(EvidenceNotesViewModelTransfer source)
+        public AllOtherManageEvidenceNotesViewModel Map(EvidenceNotesViewModelTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = Map(source.Notes);
+            //TODO: place holder map values until the compliance year is put in for AATF
+            var model = Map(source.Notes, new DateTime(), null);
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {

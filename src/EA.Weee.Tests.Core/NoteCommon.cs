@@ -12,12 +12,13 @@
     public static class NoteCommon
     {
         public static Note CreateNote(DatabaseWrapper database, 
-            Organisation organisation, 
-            Scheme scheme, 
-            Aatf aatf,
+            Organisation organisation = null, 
+            Scheme scheme = null, 
+            Aatf aatf = null,
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
-            List<NoteTonnage> noteTonnages = null)
+            List<NoteTonnage> noteTonnages = null,
+            DateTime? startDate = null)
         {
             if (organisation == null)
             {
@@ -29,6 +30,11 @@
                 scheme = new Scheme(organisation);
             }
 
+            if (startDate == null)
+            {
+                startDate = DateTime.Now;
+            }
+
             if (aatf == null)
             {
                 aatf = new Aatf("aatfName", 
@@ -37,10 +43,11 @@
                     AatfStatus.Approved, 
                     organisation, 
                     ObligatedWeeeIntegrationCommon.CreateAatfAddress(database), 
-                    AatfSize.Large, 
-                    DateTime.Now,
+                    AatfSize.Large,
+                    startDate.Value,
                     ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First()), 
-                    FacilityType.Aatf, (short)DateTime.Now.Year,
+                    FacilityType.Aatf, 
+                    (short)startDate.Value.Year,
                     database.WeeeContext.LocalAreas.First(),
                     database.WeeeContext.PanAreas.First());
             }
@@ -52,7 +59,7 @@
 
             return new Note(organisation,
                 scheme,
-                DateTime.Now,
+                startDate.Value,
                 DateTime.Now,
                 wasteType,
                 protocol,
@@ -91,7 +98,8 @@
                 scheme,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
-                noteTransferCategories);
+                noteTransferCategories,
+                (short)DateTime.Now.Year);
         }
     }
 }

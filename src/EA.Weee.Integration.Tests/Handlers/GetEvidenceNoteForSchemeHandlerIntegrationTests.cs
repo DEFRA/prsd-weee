@@ -261,7 +261,7 @@
             protected static Organisation organisation;
             protected static GetEvidenceNoteForSchemeRequest request;
             protected static EvidenceNoteData result;
-            protected static Scheme scheme;  // added by Guido
+            protected static Scheme scheme;
             protected static Note note;
             protected static Fixture fixture;
 

@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
+    using System;
     using System.Collections.Generic;
+    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
+    using Extensions;
     using Prsd.Core.Mapper;
 
-    public abstract class ListOfNotesViewModelBase<T> where T : IEvidenceNoteRowViewModel, new()
+    public abstract class ListOfNotesViewModelBase<T> where T : IManageEvidenceViewModel, new()
     {
         protected readonly IMapper Mapper;
 
@@ -14,13 +17,20 @@
             this.Mapper = mapper;
         }
 
-        public T Map(List<EvidenceNoteData> notes)
+        public T Map(List<EvidenceNoteData> notes, 
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Condition.Requires(notes).IsNotNull();
 
             var m = new T
             {
-                EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes)
+                EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes),
+                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+                {
+                    ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
+                    SelectedComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year
+                }
             };
 
             return m;

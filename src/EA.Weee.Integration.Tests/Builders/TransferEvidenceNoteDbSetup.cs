@@ -27,7 +27,8 @@
             scheme,
             user.UserId.ToString(),
             tonnages,
-            categories);
+            categories,
+            (short)DateTime.Now.Year);
         }
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
