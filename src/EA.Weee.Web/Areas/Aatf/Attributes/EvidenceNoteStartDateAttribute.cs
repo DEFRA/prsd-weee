@@ -27,7 +27,7 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (thisDate > currentDate.Date)
+            if (thisDate > DateTime.UtcNow.Date)
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
             }
