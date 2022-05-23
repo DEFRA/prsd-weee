@@ -4,7 +4,7 @@
     using Core.AatfEvidence;
     using Web.ViewModels.Shared;
 
-    public class EvidenceSummaryViewModel : ManageEvidenceNoteOverviewViewModel
+    public class ManageEvidenceSummaryViewModel : ManageManageEvidenceNoteOverviewViewModel
     {
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
@@ -18,7 +18,7 @@
 
         public string TotalReuseEvidence { get; set; }
 
-        public EvidenceSummaryViewModel()
+        public ManageEvidenceSummaryViewModel()
         : base(ManageEvidenceOverviewDisplayOption.EvidenceSummary)
         {
         }

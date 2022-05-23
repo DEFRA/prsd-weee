@@ -10,6 +10,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Helper;
+    using Extensions;
     using Scheme.Overview.OrganisationDetails;
     using Shared;
 
@@ -115,7 +116,7 @@
             {
                 if (IsLatestComplianceYear)
                 {
-                   var list = AatfHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
+                   var list = ComplianceYearHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
 
                    return list.Any() ? true : false;
                 }
@@ -123,7 +124,7 @@
             }
         }
 
-        public bool IsValidComplianceYear => CurrentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(CurrentDate, true).Any(x => x.Equals(ComplianceYear)) ? true : false;
+        public bool IsValidComplianceYear => CurrentDate.Year > 1 && ComplianceYearHelper.FetchCurrentComplianceYears(CurrentDate, true).Any(x => x.Equals(ComplianceYear)) ? true : false;
 
         public string SelectedTab { get; set; }
     }

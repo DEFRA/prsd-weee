@@ -10,7 +10,7 @@
         [Fact]
         public void ManageEvidenceNoteOverviewViewModel_ShouldBeAbstract()
         {
-            typeof(ManageEvidenceNoteOverviewViewModel).Should().BeAbstract();
+            typeof(ManageManageEvidenceNoteOverviewViewModel).Should().BeAbstract();
         }
     }
 }
