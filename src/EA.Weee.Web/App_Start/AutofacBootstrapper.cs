@@ -100,6 +100,7 @@
             builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
             builder.RegisterType<SessionService>().As<ISessionService>();
+            builder.RegisterType<HttpContextService>().As<IHttpContextService>();
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
             return builder.Build();
         }

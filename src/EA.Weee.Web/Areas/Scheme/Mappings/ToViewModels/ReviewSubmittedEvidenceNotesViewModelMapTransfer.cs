@@ -3,10 +3,15 @@
     using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;
+    using Aatf.ViewModels;
 
     public class ReviewSubmittedEvidenceNotesViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
-        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId, List<EvidenceNoteData> notes, string schemeName) : base(organisationId, notes, schemeName)
+        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId, 
+            List<EvidenceNoteData> notes, 
+            string schemeName, 
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, notes, schemeName, currentDate, manageEvidenceNoteViewModel)
         {
         }
     }

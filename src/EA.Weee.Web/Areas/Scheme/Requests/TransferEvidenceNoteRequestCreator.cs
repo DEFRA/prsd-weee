@@ -50,6 +50,7 @@
                 request.SchemeId, 
                 request.CategoryIds,
                 transferValues.ToList(),
+                request.EvidenceNoteIds,
                 viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
         }
     }

@@ -137,6 +137,9 @@
     $("#TransferAllTonnage").change(function () {
         $("#TransferEvidenceForm").submit();
     });
+    $("#SelectedComplianceYear").change(function () {
+        $("#ComplianceYearForm").submit();
+    });
 
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
