@@ -116,7 +116,7 @@
         }
 
         [Component]
-        public class WhenIGetAReturnedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        public class WhenIGetOneReturnedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -167,7 +167,58 @@
         }
 
         [Component]
-        public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        public class WhenIGetOneRejectedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .WithRecipient(scheme.Id)
+                     .With(n =>
+                     {
+                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), "reason rejected");
+                     })
+                    .Create();
+
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected);
+                result.RejectedReason.Should().Be("reason rejected");
+                result.RejectedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).ChangedDate);
+            };
+        }
+
+        [Component]
+        public class WhenIGetOneNoteWhereNoteDoesNotExist : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -185,7 +236,7 @@
         }
 
         [Component]
-        public class WhenIGetANotesWhereUserIsNotAuthorised : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        public class WhenIGetOneNotesWhereUserIsNotAuthorised : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {

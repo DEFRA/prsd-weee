@@ -6,24 +6,26 @@
     ViewBag.Title = "Manage PCS obligations";
 }
 
-@(this.WeeeGds().BackLink(@Url.UrlFor<ObligationsController>(a => a.SelectAuthority())))
-
-<header class="hgroup">
-    <div>
-        <h1 class="govuk-heading-l">Manage PCS obligations</h1>
-    </div>
-</header>
-
-@using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Post))
+@section full_main_content
 {
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.Authority)
-    <p>
-        To upload your PCS's obligations, you need to first download the CSV template for the current compliance year. After this you can fill in the template with the data and upload it.
-    </p>
-    <p>
-        <button aria-hidden="true" class="link-submit govuk-link govuk-link--no-visited-state" type="submit">Download template</button>
-    </p>
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ObligationsController>(a => a.SelectAuthority())))
+
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Manage PCS obligations</h1>
+        </div>
+    </header>
+
+    @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Authority)
+        <p>
+            To upload your PCS's obligations, you need to first download the CSV template for the current compliance year. After this you can fill in the template with the data and upload it.
+        </p>
+        <p>
+            <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit">Download template</button>
+        </p>
 
     <table id="pcs-obligation-table" class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
@@ -37,7 +39,15 @@
                 </th>
             </tr>
         </thead>
+        <tbody class="govuk-table__body">
+            <tr>
+                <td colspan="2">
+                    <p>There are currently no PCS obligations uploaded</p>
+                </td>
+            </tr>
+        </tbody>
     </table>
+}
 }
 @section scripts {
     @if (ViewBag.TriggerDownload != null && ViewBag.TriggerDownload)
@@ -47,6 +57,6 @@
                                {
                                     authority = Model.Authority
                                }))";
-        </script>
+            </script>
+        }
     }
-}
