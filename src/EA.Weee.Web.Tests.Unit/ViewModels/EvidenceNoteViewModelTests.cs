@@ -29,23 +29,20 @@
 
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
+        [InlineData("StartDate", "Start date")]
+        [InlineData("EndDate", "End date")]
+        [InlineData("WasteTypeValue", "Type of waste")]
+        [InlineData("ProtocolValue", "Actual or protocol")]
+        [InlineData("SubmittedDate", "Date submitted")]
+        [InlineData("RejectedDate", "Date rejected")]
+        [InlineData("ReturnedDate", "Date returned")]
+        [InlineData("ApprovedDate", "Date approved")]
+        [InlineData("ReturnedReason", "Reason")]
+        [InlineData("RejectedReason", "Reason")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
         {
             typeof(EvidenceNoteViewModel).GetProperty(property).Should()
                 .BeDecoratedWith<DisplayNameAttribute>(a => a.DisplayName.Equals(display));
-        }
-
-        [Theory]
-        [InlineData("StartDate", "Start date")]
-        [InlineData("EndDate", "End date")]
-        [InlineData("ProtocolValue", "Actual or protocol")]
-        [InlineData("WasteTypeValue", "Type of waste")]
-        public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
-        {
-            typeof(EvidenceNoteViewModel)
-                .GetProperty(property)
-                .Should()
-                .BeDecoratedWith<DisplayAttribute>(d => d.Name.Equals(description));
         }
 
         [Fact]
