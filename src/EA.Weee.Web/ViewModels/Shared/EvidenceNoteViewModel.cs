@@ -47,10 +47,10 @@
 
         public int Reference { get; set; }
 
-        [DisplayName("Reason returned")]
+        [DisplayName("Reason")]
         public string ReturnedReason { get; set; }
 
-        [DisplayName("Reason rejected")]
+        [DisplayName("Reason")]
         public string RejectedReason { get; set; }
 
         public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
