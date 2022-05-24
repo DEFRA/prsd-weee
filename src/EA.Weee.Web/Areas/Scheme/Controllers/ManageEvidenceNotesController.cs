@@ -115,14 +115,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note schemeName request from note's Guid
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client, selectedComplianceYear);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -145,19 +145,20 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("DownloadEvidenceNote", new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, evidenceNoteId = request.NoteId });
+                    return RedirectToAction("DownloadEvidenceNote", 
+                        new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.SelectedComplianceYear });
                 }
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client, model.ViewEvidenceNoteViewModel.SelectedComplianceYear);
 
                 return View("ReviewEvidenceNote", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -165,15 +166,14 @@
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-                // call the api with the new evidence note schemeName request
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
                 {
-                    SchemeId = pcsId
+                    SchemeId = pcsId,
+                    SelectedComplianceYear = selectedComplianceYear
                 });
 
-                //return viewmodel to view
                 return View(model);
             }
         }
@@ -183,17 +183,16 @@
             return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int selectedComplianceYear)
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            // call the api with the new evidence note schemeName request
             var result = await client.SendAsync(User.GetAccessToken(), request);
 
-            // create new viewmodel mapper to map request to viewmodel
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
             {
-                SchemeId = pcsId
+                SchemeId = pcsId,
+                SelectedComplianceYear = selectedComplianceYear
             });
 
             return model;
