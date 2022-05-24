@@ -1078,7 +1078,7 @@
 	<Content Include="Content\weee-returns-aatf-mobile.scss" />
 	<Content Include="Content\weee-returns-ae-mobile.scss" />
 	<Content Include="Content\themes\base\accordion.css" />
-    <Content Include="Content\themes\base\all.css" />
+	<Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
     <Content Include="Content\themes\base\base.css" />
     <Content Include="Content\themes\base\button.css" />
@@ -1464,6 +1464,8 @@
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
     <Content Include="Views\Shared\_ViewEvidenceNotePartial.cshtml" />
+    <Content Include="Views\Shared\_DisplayReturnedReasonPartial.cshtml" />
+    <Content Include="Views\Shared\_DisplayRejectedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

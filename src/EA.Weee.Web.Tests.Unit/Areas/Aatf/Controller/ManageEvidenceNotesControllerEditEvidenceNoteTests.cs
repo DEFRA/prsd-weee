@@ -289,14 +289,13 @@
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
         }
 
-        [Theory]
-        [InlineData(NoteStatus.Draft)]
-        [InlineData(NoteStatus.Submitted)]
-        public async Task EditDraftEvidenceNotePost_GivenApiHasBeenCalled_ViewDataShouldHaveNoteStatusAdded(NoteStatus status)
+        [Fact]
+        public async Task EditDraftEvidenceNotePost_GivenSaved_ViewDataShouldHaveNoteStatusAdded()
         {
             //arrange
             var model = ValidModel();
-            var request = EditRequest(status);
+            model.Action = ActionEnum.Save;
+            var request = EditRequest();
 
             A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
 
@@ -304,7 +303,24 @@
             await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(status);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Draft);
+        }
+
+        [Fact]
+        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded()
+        {
+            //arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+            var request = EditRequest();
+
+            A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            //act
+            await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Submitted);
         }
 
         [Fact]

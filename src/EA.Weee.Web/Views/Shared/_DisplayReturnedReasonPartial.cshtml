@@ -1,0 +1,15 @@
+﻿@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.ViewModels.Shared.EvidenceNoteViewModel
+
+@if (Model.DisplayReturnedReason)
+{
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter">
+            @Html.DisplayNameFor(m => m.ReturnedReason)
+        </span>
+        <span aria-labelledby="reason-label" class="govuk-body govuk-grid-column-two-thirds govuk-!-padding-left-0 govuk-!-margin-bottom-0 weee-word-break" maxlength="200">
+            @Html.DisplayTextFor(m => m.ReturnedReason)
+        </span>
+    </div>
+}
+

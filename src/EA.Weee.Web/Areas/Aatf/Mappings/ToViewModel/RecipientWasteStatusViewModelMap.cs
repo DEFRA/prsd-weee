@@ -15,6 +15,7 @@
         public RecipientWasteStatusFilterViewModel Map(RecipientWasteStatusFilterBase source)
         {
             Guard.ArgumentNotNull(() => source, source);
+            var viewModel = new RecipientWasteStatusFilterViewModel();
 
             var sortedmNoteStatusList = new Dictionary<int, string>
             {
@@ -24,15 +25,22 @@
                 { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
             };
 
-            return new RecipientWasteStatusFilterViewModel()
-            {   
-                SchemeListSL = new SelectList(source.SchemeList, "Id", "SchemeName"),
-                NoteStatusList = new SelectList(sortedmNoteStatusList, "Key", "Value"),
-                WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
-                ReceivedId = source.ReceivedId,
-                NoteStatusValue = source.NoteStatus,
-                WasteTypeValue = source.WasteType
-            };
+            if (source.SchemeList != null)
+            {
+                viewModel.SchemeListSL = new SelectList(source.SchemeList, "Id", "SchemeName");
+            }
+            else
+            {
+               viewModel.SchemeListSL = new SelectList(new List<SchemeData>(), "Id", "SchemeName");
+            }
+
+            viewModel.NoteStatusList = new SelectList(sortedmNoteStatusList, "Key", "Value");
+            viewModel.WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
+            viewModel.ReceivedId = source.ReceivedId;
+            viewModel.NoteStatusValue = source.NoteStatus;
+            viewModel.WasteTypeValue = source.WasteType;
+       
+            return viewModel;
         }
     }
 }
