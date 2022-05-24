@@ -68,7 +68,6 @@
         [ValidateAntiForgeryToken]
         public ActionResult UploadObligations(UploadObligationsViewModel model)
         {
-            //SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
             return View(model);
