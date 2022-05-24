@@ -14,7 +14,8 @@
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.Status, new { id = "status-id" })
         @Html.HiddenFor(m => m.Reference)
-        @*@Html.HiddenFor(m => m.Reason)*@
+        @Html.HiddenFor(m => m.RejectedReason)
+        @Html.HiddenFor(m => m.ReturnedReason)
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-body-m govuk-!-margin-bottom-1 govuk-label--s">Period in which WEEE was received for treatment</div>
@@ -23,7 +24,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.StartDate)">
                     @Html.Gds().LabelFor(m => m.StartDate, new { @class = "govuk-label--s" })
                     @Html.Gds().ValidationMessageFor(m => m.StartDate)
-                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete="off", @placeholder="dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
+                    @Html.Gds().TextBoxFor(m => m.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
 
