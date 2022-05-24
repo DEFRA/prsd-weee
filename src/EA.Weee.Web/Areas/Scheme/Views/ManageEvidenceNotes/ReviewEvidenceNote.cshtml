@@ -11,12 +11,15 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.SchemeId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), null))))
+    @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.SelectedComplianceYear })))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
+        @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SelectedComplianceYear)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)

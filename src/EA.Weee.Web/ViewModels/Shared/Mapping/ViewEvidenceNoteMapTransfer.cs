@@ -14,6 +14,8 @@
 
         public bool IncludeAllCategories { get; set; }
 
+        public int SelectedComplianceYear { get; set; }
+
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
