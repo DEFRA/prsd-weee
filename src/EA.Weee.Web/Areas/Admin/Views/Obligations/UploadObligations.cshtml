@@ -27,25 +27,31 @@
             <button class="link-submit govuk-link govuk-link--no-visited-state" type="submit">Download template</button>
         </p>
 
-        <table id="pcs-obligation-table" class="govuk-table">
-            <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">
-                        PCS
-                    </th>
-                    <th class="govuk-table__header govuk-!-text-align-right">
-                        Obligation updated (GMT)
-                    </th>
-                </tr>
-            </thead>
-        </table>
-    }
+    <table id="pcs-obligation-table" class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">
+                    PCS
+                </th>
+                <th class="govuk-table__header govuk-!-text-align-right">
+                    Obligation updated (GMT)
+                </th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr>
+                <td colspan="2">
+                    <p>There are currently no PCS obligations uploaded</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 }
-    @section scripts {
-        @if (ViewBag.TriggerDownload != null && ViewBag.TriggerDownload)
-        {
-            <script type="text/javascript">
+@section scripts {
+    @if (ViewBag.TriggerDownload != null && ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadTemplate", new
                                {
                                     authority = Model.Authority
