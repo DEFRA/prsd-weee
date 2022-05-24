@@ -137,7 +137,7 @@
     $("#TransferAllTonnage").change(function () {
         $("#TransferEvidenceForm").submit();
     });
-    $("#evidenceSelectedComplianceYear").change(function () {
+    $("#SelectedComplianceYear").change(function () {
         $("#ComplianceYearForm").submit();
     });
 

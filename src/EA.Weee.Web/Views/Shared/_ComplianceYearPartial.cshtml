@@ -13,10 +13,10 @@
     <span class="text-margin">
         @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, 
             new SelectList(Model.ComplianceYearList), 
-            new { @class = "govuk-!-width-one-quarter", autocomplete = "false", @id="evidenceSelectedComplianceYear"})
+            new { autocomplete = "false", style="min-width: 100px;"}, false, false)
     </span>
     <noscript>
         @(this.WeeeGds().Button("Apply", null, true))
     </noscript>
-    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-!-padding-bottom-7"></div>
 }
