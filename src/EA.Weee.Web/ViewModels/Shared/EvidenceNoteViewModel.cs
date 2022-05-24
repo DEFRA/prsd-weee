@@ -19,18 +19,18 @@
         [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
-        [Display(Name = "Start date")]
+        [DisplayName("Start date")]
         public virtual DateTime? StartDate { get; set; }
 
-        [Display(Name = "End date")]
+        [DisplayName("End date")]
         public virtual DateTime? EndDate { get; set; }
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        [Display(Name = "Type of waste")]
+        [DisplayName("Type of waste")]
         public virtual WasteType? WasteTypeValue { get; set; }
 
-        [Display(Name = "Actual or protocol")]
+        [DisplayName("Actual or protocol")]
         public virtual Protocol? ProtocolValue { get; set; }
 
         [DisplayName("Date submitted")]
