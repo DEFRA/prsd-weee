@@ -120,7 +120,7 @@
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) && 
-                                                                 v.SelectedComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -240,7 +240,7 @@
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
-                                                                 v.SelectedComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
