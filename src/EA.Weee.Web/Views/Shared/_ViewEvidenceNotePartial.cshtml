@@ -11,68 +11,60 @@
         <h1 class="govuk-heading-l">Evidence note</h1>
     }
 
-    <div class="govuk-width-container govuk-!-margin-top-3">
+<div class="govuk-width-container govuk-!-margin-top-3">
 
-        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
-        </div>
-
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
-        </div>
-
-        @if (Model.DisplayReturnedReason)
-        {
-            <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-                <span id="reason-label" class="govuk-label--s govuk-grid-column-one-quarter">
-                    @Html.DisplayNameFor(m => m.Reason)
-                </span>
-                <span aria-labelledby="reason-label" class="govuk-body govuk-grid-column-two-thirds govuk-!-padding-left-0 govuk-!-margin-bottom-0 weee-word-break" maxlength="200">
-                    @Html.DisplayTextFor(m => m.Reason)
-                </span>
-            </div>
-        }
-
-        @if (Model.HasSubmittedDate)
-        {
-            <div class="govuk-grid-row govuk-!-margin-bottom-1">
-                @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
-            </div>
-        }
-
-        @if (Model.HasApprovedDate)
-        {
-            <div class="govuk-grid-row govuk-!-margin-bottom-1">
-                @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
-            </div>
-        }
-
-        @if (Model.HasRejectedDate)
-        {
-            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-margin-bottom-1">
-                @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
-            </div>
-        }
-
-        @if (Model.HasBeenReturned)
-        {
-            <div class="govuk-grid-row govuk-!-margin-bottom-1">
-                @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
-            </div>
-        }
-
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
-        </div>
-
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
-        </div>
-
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
     </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
+    </div>
+
+    @Html.Partial("_DisplayRejectedReasonPartial", Model)
+
+    @Html.Partial("_DisplayReturnedReasonPartial", Model)
+
+    @if (Model.HasSubmittedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
+    @if (Model.HasApprovedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
+    @if (Model.HasRejectedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
+    @if (Model.HasBeenReturned)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
+    </div>
+</div>
 
     <div class="govuk-width-container govuk-!-padding-top-7 govuk-!-padding-left-0">
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
