@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
     using AutoFixture;
+    using AutoFixture.Kernel;
     using EA.Prsd.Core;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Constants;
@@ -34,6 +35,11 @@
         public GetPcsObligationsCsvHandlerTests()
         {
             fixture = new Fixture();
+            fixture.Customizations.Add(
+                new TypeRelay(
+                    typeof(IExcelSanitizer),
+                    typeof(NoFormulaeExcelSanitizer)));
+
             authority = CompetentAuthority.England;
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             context = A.Fake<WeeeContext>();
@@ -149,7 +155,7 @@
             var result = await handler.HandleAsync(request);
 
             //assert
-            result.FileName.Should().Be($"{competentAuthority.Abbreviation}_pcsobligationuploadtemplate{date.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv)");
+            result.FileName.Should().Be($"{competentAuthority.Abbreviation}_pcsobligationuploadtemplate{date.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv");
         }
 
         [Fact]
