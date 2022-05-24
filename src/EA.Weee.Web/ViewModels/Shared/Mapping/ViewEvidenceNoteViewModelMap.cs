@@ -46,6 +46,7 @@
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
+                ComplianceYear = source.EvidenceNoteData.ComplianceYear,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,

@@ -21,6 +21,8 @@
 
         public DateTime? ApprovedDate { get; set; }
 
+        public short ComplianceYear { get; set; }
+
         public List<TransferEvidenceNoteTonnageData> TransferEvidenceNoteTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }
