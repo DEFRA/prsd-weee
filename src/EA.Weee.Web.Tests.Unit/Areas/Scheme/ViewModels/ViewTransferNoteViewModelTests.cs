@@ -2,8 +2,11 @@
 {
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using Core.Helpers;
+    using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
+    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Xunit;
 
     public class ViewTransferNoteViewModelTests
@@ -62,6 +65,39 @@
 
             //assert
             result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void RedirectTab_GivenNoteStatusIsDraft_TabShouldBeViewAndTransferEvidence()
+        {
+            //arrange
+            var model = new ViewTransferNoteViewModel()
+            {
+                Status = NoteStatus.Draft
+            };
+
+            //act
+            var result = model.RedirectTab;
+
+            //assert
+            result.Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void RedirectTab_GivenNoteStatusIsNotDraft_TabShouldBeViewAndTransferEvidence(NoteStatus status)
+        {
+            //arrange
+            var model = new ViewTransferNoteViewModel()
+            {
+                Status = status
+            };
+
+            //act
+            var result = model.RedirectTab;
+
+            //assert
+            result.Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
         }
     }
 }
