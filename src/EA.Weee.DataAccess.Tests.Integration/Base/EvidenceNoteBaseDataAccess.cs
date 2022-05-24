@@ -32,7 +32,9 @@
                 scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             }
 
-            var note = noteType.Equals(NoteType.EvidenceNote) ? NoteCommon.CreateNote(database, organisation, scheme, aatf1) : NoteCommon.CreateTransferNote(database, organisation, scheme);
+            var note = noteType.Equals(NoteType.EvidenceNote) ? 
+                NoteCommon.CreateNote(database, organisation, scheme, aatf1) : 
+                NoteCommon.CreateTransferNote(database, organisation, scheme);
 
             context.Notes.Add(note);
 

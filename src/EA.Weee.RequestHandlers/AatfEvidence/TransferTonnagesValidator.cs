@@ -31,6 +31,7 @@
                     throw new InvalidOperationException($"Note tonnage with id {noteTonnage.Id} has null received");
                 }
 
+                //TODO: this needs to be updated to only exclude rejected, voided notes
                 var totalReceivedAvailable = 
                     noteTonnage.Received.Value - (noteTonnage.NoteTransferTonnage != null && noteTonnage.NoteTransferTonnage.Any() ? 
                                                  noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && nt.TransferNote.Status.Value.Equals(NoteStatus.Approved.Value)).Sum(nt => nt.Received.Value) : 0);

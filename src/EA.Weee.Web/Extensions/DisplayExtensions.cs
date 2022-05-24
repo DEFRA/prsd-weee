@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
-    using EA.Weee.Web.Constant;
+    using EA.Weee.Core.Constants;
     using System;
     using System.ComponentModel.DataAnnotations;
 

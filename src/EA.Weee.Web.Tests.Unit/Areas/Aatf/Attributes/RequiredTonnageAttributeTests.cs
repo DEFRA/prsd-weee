@@ -235,18 +235,29 @@
             public DateTime? StartDate { get; set; }
         }
 
-        private EvidenceNoteViewModel ValidViewModel(DateTime date, ActionEnum action)
+        private class TonnageAttributeValidationTarget : IActionModel
         {
-            var target = new EditEvidenceNoteViewModel()
+            public ActionEnum Action { get; set; }
+
+            [RequiredTonnage]
+            public IList<EvidenceCategoryValue> CategoryValues { get; set; }
+
+            public TonnageAttributeValidationTarget()
             {
-                WasteTypeValue = WasteType.Household,
-                ProtocolValue = Protocol.Actual,
-                ReceivedId = Guid.NewGuid(),
-                StartDate = date,
-                EndDate = date,
+                CategoryValues = new List<EvidenceCategoryValue>();
+
+                foreach (var categoryValue in new EvidenceCategoryValues())
+                {
+                    CategoryValues.Add(categoryValue);
+                }
+            }
+        }
+        private TonnageAttributeValidationTarget ValidViewModel(DateTime date, ActionEnum action)
+        {
+            return new TonnageAttributeValidationTarget()
+            {
                 Action = action
             };
-            return target;
         }
     }
 }

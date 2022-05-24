@@ -6,17 +6,17 @@
     using Prsd.Core;
     using Web.ViewModels.Shared.Mapping;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfNotesViewModelBase<ReviewSubmittedEvidenceNotesViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedEvidenceNotesViewModel>
+    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfNotesViewModelBase<ReviewSubmittedManageEvidenceNotesSchemeViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedManageEvidenceNotesSchemeViewModel>
     {
         public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
-        public ReviewSubmittedEvidenceNotesViewModel Map(ReviewSubmittedEvidenceNotesViewModelMapTransfer source)
+        public ReviewSubmittedManageEvidenceNotesSchemeViewModel Map(ReviewSubmittedEvidenceNotesViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = Map(source.Notes);
+            var model = Map(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
 
