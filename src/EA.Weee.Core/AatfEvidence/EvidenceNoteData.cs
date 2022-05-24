@@ -35,6 +35,8 @@
 
         public string ReturnedReason { get; set; }
 
+        public short ComplianceYear { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }

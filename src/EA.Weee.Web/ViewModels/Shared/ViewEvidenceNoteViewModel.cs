@@ -19,7 +19,9 @@
         public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Compliance year")]
-        public string ComplianceYearDisplay => StartDate.Value.Year.ToString();
+        public string ComplianceYearDisplay => ComplianceYear.ToString();
+
+        public short ComplianceYear { get; set; }
 
         public string SiteAddress { get; set; }
 
