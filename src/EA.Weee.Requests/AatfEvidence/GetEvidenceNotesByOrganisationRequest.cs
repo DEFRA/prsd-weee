@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Requests.AatfEvidence
 {
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;
@@ -15,6 +14,7 @@
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
+            Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
 
             OrganisationId = organisationId;
