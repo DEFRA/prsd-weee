@@ -17,6 +17,12 @@
             Guard.ArgumentNotNull(() => source, source);
 
             var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientId;
+            var rejectedReason = source.ExistingModel != null
+                ? source.ExistingModel.RejectedReason
+                : source.NoteData.RejectedReason;
+            var returnedReason = source.ExistingModel != null
+                ? source.ExistingModel.ReturnedReason
+                : source.NoteData.ReturnedReason;
 
             var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
             
@@ -31,8 +37,8 @@
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetOrderedValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
-                RejectedReason = source.ExistingModel?.RejectedReason ?? source.NoteData.RejectedReason,
-                ReturnedReason = source.ExistingModel?.ReturnedReason ?? source.NoteData.ReturnedReason,
+                RejectedReason = rejectedReason,
+                ReturnedReason = returnedReason,
                 SelectedSchemeName = recipientName == null ? string.Empty : recipientName.SchemeNameDisplay
             };
 
