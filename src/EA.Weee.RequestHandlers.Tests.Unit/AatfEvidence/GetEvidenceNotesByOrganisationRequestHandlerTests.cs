@@ -122,7 +122,8 @@
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
                                                               e.SchemeId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
-                                                              e.AatfId == null))).MustHaveHappenedOnceExactly();
+                                                              e.AatfId == null &&
+                                                              e.ComplianceYear == request.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
