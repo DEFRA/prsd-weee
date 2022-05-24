@@ -27,7 +27,7 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (thisDate >= new DateTime(currentDate.Year + 1, 1, 1))
+            if (thisDate.Year != currentDate.Year)
             {
                 return new ValidationResult("The end date must be within the current compliance year");
             }

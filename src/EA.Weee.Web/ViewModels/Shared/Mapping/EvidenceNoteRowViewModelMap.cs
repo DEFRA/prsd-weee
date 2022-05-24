@@ -18,8 +18,10 @@
                 Type = source.Type,
                 SubmittedDate = source.SubmittedDate,
                 SubmittedBy = source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty,
+                RejectedDate = source.RejectedDate,
                 ReturnedDate = source.ReturnedDate,
-                Reason = source.ReturnedReason
+                RejectedReason = source.RejectedReason,
+                ReturnedReason = source.ReturnedReason
             };
         }
     }

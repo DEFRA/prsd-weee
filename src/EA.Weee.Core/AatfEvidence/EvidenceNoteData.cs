@@ -35,6 +35,10 @@
 
         public string ReturnedReason { get; set; }
 
+        public DateTime? RejectedDate { get; set; }
+
+        public string RejectedReason { get; set; }
+
         public short ComplianceYear { get; set; }
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
