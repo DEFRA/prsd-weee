@@ -33,6 +33,7 @@
             $('.error-summary-valid').removeClass('validation-summary-errors');
             $('.error-summary-valid').removeClass('error-summary');
             $('.error-summary-valid').addClass('govuk-error-summary');
+            $('.error-summary-valid').attr('data-module', 'govuk-error-summary');
             //// Output our error summary and place it in the error container
             $('.error-summary-valid').html(summary);
             
