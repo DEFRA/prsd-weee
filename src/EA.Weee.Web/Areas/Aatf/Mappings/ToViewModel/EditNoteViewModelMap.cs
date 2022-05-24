@@ -1,15 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
-    using System;
-    using System.Linq;
-    using System.Web.Mvc;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Prsd.Core;
     using Prsd.Core.Helpers;
     using Prsd.Core.Mapper;
+    using System.Linq;
+    using System.Web.Mvc;
     using ViewModels;
-    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
     public class EditNoteViewModelMap : IMap<EditNoteMapTransfer, EditEvidenceNoteViewModel>
@@ -19,7 +17,6 @@
             Guard.ArgumentNotNull(() => source, source);
 
             var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientId;
-            var reason = source.ExistingModel != null ? source.ExistingModel.Reason : source.NoteData.ReturnedReason;
 
             var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
             
@@ -34,7 +31,8 @@
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetOrderedValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
-                Reason = reason,
+                RejectedReason = source.ExistingModel?.RejectedReason ?? source.NoteData.RejectedReason,
+                ReturnedReason = source.ExistingModel?.ReturnedReason ?? source.NoteData.ReturnedReason,
                 SelectedSchemeName = recipientName == null ? string.Empty : recipientName.SchemeNameDisplay
             };
 
