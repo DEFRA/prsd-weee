@@ -2,7 +2,9 @@
 {
     using AutoFixture;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Admin.Obligations;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
@@ -12,11 +14,30 @@
     using FluentAssertions;
     using System;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
     public class ObligationsControllerTests
     {
+        private readonly IAppConfiguration configuration;
+        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient client;
+        private readonly IWeeeCache cache;
+        private readonly BreadcrumbService breadcrumb;
+        private readonly ObligationsController controller;
+
+        public ObligationsControllerTests()
+        {
+            configuration = A.Fake<IAppConfiguration>();
+            client = A.Fake<IWeeeClient>();
+            apiClient = () => client;
+            breadcrumb = A.Fake<BreadcrumbService>();
+            cache = A.Fake<IWeeeCache>();
+            
+            controller = new ObligationsController(configuration, breadcrumb, cache, apiClient);
+        }
+
         [Fact]
         public void Controller_ShouldInheritFromObligationsBaseController()
         {
@@ -249,21 +270,45 @@
         [Fact]
         public void UploadObligationsGet_PopulatesModel()
         {
+            //arrange
+            var authority = CompetentAuthority.England;
+            var model = new UploadObligationsViewModel(authority);
 
+            //act
+            var result = controller.UploadObligations(authority) as ViewResult;
+
+            //assert
+            result.Model.Should().BeEquivalentTo(model);
         }
 
         [Fact]
         public void UploadObligationsPost_SetsTriggerDownload_ToTrue()
         {
+            //arrange
+            var authority = CompetentAuthority.England;
+            var model = new UploadObligationsViewModel(authority);
 
+            //act
+            var result = controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            bool triggerDownload = result.ViewBag.TriggerDownload;
+
+            triggerDownload.Should().BeTrue();
         }
 
         [Fact]
-        public void DownloadTemplateGet_CallsGetPcsObligationsCsv_Once()
+        public async Task DownloadTemplateGet_CallsGetPcsObligationsCsv_Once()
         {
+            //arrange
+            var authority = CompetentAuthority.England;
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetPcsObligationsCsv>.That.Matches(c => c.Authority.Equals(authority)))).Returns(new CSVFileData() { FileContent = "Test", FileName = "Test" });
 
+            //act
+            await controller.DownloadTemplate(authority);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetPcsObligationsCsv>.That.Matches(c => c.Authority.Equals(authority)))).MustHaveHappened(1, Times.Exactly);
         }
-
-
     }
 }
