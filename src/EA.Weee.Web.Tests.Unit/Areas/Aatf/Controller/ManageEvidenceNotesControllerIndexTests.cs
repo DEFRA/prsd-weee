@@ -565,7 +565,7 @@
                 .With(r => r.NoteStatusValue, noteStatus)
                 .Create();
             var manageNoteViewModel = Fixture.Build<ManageEvidenceNoteViewModel>().With(r => r.RecipientWasteStatusFilterViewModel, recipientFilter).Create();
-            var allOtherNotes = Fixture.Build<AllOtherEvidenceNotesViewModel>().With(a => a.ManageEvidenceNoteViewModel, manageNoteViewModel).Create();
+            var allOtherNotes = Fixture.Build<AllOtherManageEvidenceNotesViewModel>().With(a => a.ManageEvidenceNoteViewModel, manageNoteViewModel).Create();
             var scheme1 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "vva").Create();
             var scheme2 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "bba").Create();
             var scheme3 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "ccc").Create();
@@ -592,7 +592,7 @@
             var notes = new List<EvidenceNoteData> { note1, note2, note3, note4, note5, note6, note7, note8, note9 };
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotes);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotes);
             A.CallTo(() => SessionService.GetTransferSessionObject<List<SchemeData>>(ManageEvidenceController.Session,
                   SessionKeyConstant.FilterRecipientNameKey)).Returns(schemeDataListOrdered);
 
@@ -618,11 +618,11 @@
                 .With(s => s.EndDate, endDate)
                 .Create();
             var manageNoteViewModel = Fixture.Build<ManageEvidenceNoteViewModel>().With(r => r.SubmittedDatesFilterViewModel, submittedFilter).Create();
-            var allOtherNotes = Fixture.Build<AllOtherEvidenceNotesViewModel>().With(a => a.ManageEvidenceNoteViewModel, manageNoteViewModel).Create();
+            var allOtherNotes = Fixture.Build<AllOtherManageEvidenceNotesViewModel>().With(a => a.ManageEvidenceNoteViewModel, manageNoteViewModel).Create();
             var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._))
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._))
                 .Returns(allOtherNotes);
         
             //act
@@ -649,9 +649,9 @@
 
             var schemeDataList = new List<SchemeData> { schemeData1, schemeData2 };
 
-            var allOtherNotesViewModel = Fixture.Create<AllOtherEvidenceNotesViewModel>();
+            var allOtherNotesViewModel = Fixture.Create<AllOtherManageEvidenceNotesViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
@@ -676,9 +676,9 @@
 
             var schemeDataList = new List<SchemeData> { schemeData1, schemeData2 };
 
-            var allOtherNotesViewModel = Fixture.Create<AllOtherEvidenceNotesViewModel>();
+            var allOtherNotesViewModel = Fixture.Create<AllOtherManageEvidenceNotesViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
@@ -696,10 +696,10 @@
             // arrange
             var notes = new List<EvidenceNoteData>();
             var schemeDataList = new List<SchemeData>();
-            var allOtherNotesViewModel = new AllOtherEvidenceNotesViewModel();
+            var allOtherNotesViewModel = new AllOtherManageEvidenceNotesViewModel();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
             A.CallTo(() => SessionService.GetTransferSessionObject<List<SchemeData>>(ManageEvidenceController.Session,
                   SessionKeyConstant.FilterRecipientNameKey)).Returns(schemeDataList);
 
@@ -721,10 +721,10 @@
             // arrange
             var notes = new List<EvidenceNoteData>();
             var schemeDataList = new List<SchemeData>();
-            var allOtherNotesViewModel = new AllOtherEvidenceNotesViewModel();
+            var allOtherNotesViewModel = new AllOtherManageEvidenceNotesViewModel();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
-            A.CallTo(() => Mapper.Map<AllOtherEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
             await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
