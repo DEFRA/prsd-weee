@@ -1,9 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using AutoFixture;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Reflection;
@@ -32,6 +37,181 @@
             typeof(ObligationsController).GetMethod("SelectAuthority", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectAuthorityViewModel) }, null)
             .Should()
             .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        /// <summary>
+        /// Ensures that the OnActionExecuting method will throw an InvalidOperationException 
+        /// if the application configuration has "EnablePCSObligations" set to false.
+        /// </summary>
+        [Fact]
+        public void OnActionExecuting_WhenPCSObligationsDisabledInConfig_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(false);
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // Act
+            var exception = Record.Exception(() =>
+            {
+                object[] args = new object[] { A.Dummy<ActionExecutingContext>() };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException e)
+                {
+                    throw e.InnerException;
+                }
+            });
+
+            // Assert
+            Assert.Equal("PCS Obligations is not enabled.", exception.Message);
+            exception.Should().BeOfType<InvalidOperationException>();
+        }
+
+        /// <summary>
+        /// Ensures that the OnActionExecuting method will not throw an exception 
+        /// when application configuration has "EnablePCSObligations" set to true.
+        /// </summary>
+        [Fact]
+        public void OnActionExecuting_WhenPCSObligationsEnabledInConfig_NoExceptionThrown()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // Act
+            Action testCode = () =>
+            {
+                object[] args = new object[] { A.Dummy<ActionExecutingContext>() };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException e)
+                {
+                    throw e.InnerException;
+                }
+            };
+
+            // Assert - No exception.
+            testCode.Should().NotThrow<InvalidOperationException>();
+        }
+
+        /// <summary>
+        /// Ensures that the OnActionExecuting method sets the InternalActivity
+        /// property of the breadcrumb to "Manage PCS obligations".
+        /// </summary>
+        [Fact]
+        public void OnActionExecuting_Always_SetsBreadcrumbInternalActivityToManageObligations()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+            ObligationsController controller = new ObligationsController(configuration, breadcrumb, A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            object[] args = new object[] { A.Dummy<ActionExecutingContext>() };
+
+            // Act
+            try
+            {
+                onActionExecutingMethod.Invoke(controller, args);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+
+            // Assert
+            Assert.Equal("Manage PCS obligations", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "SelectAuthority" action always returns
+        /// "SelectAuthority" view with a view model.
+        /// </summary>
+        [Fact]
+        public void GetSelectAuthority_Always_ReturnsSelectAuthorityViewWithViewModel()
+        {
+            // Arrange
+            ObligationsController controller = new ObligationsController(
+                                                                        A.Dummy<IAppConfiguration>(),
+                                                                        A.Dummy<BreadcrumbService>(),
+                                                                        A.Dummy<IWeeeCache>(), 
+                                                                        () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = controller.SelectAuthority();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");
+            Assert.NotNull(viewResult.Model as SelectAuthorityViewModel);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "SelectAuthority" action will return the
+        /// "SelectAuthority" view a view model if the view model provided is invalid.
+        /// </summary>
+        [Fact]
+        public void PostSelectAuthority_WithInvalidModel_ReturnsSelectAuthorityViewWithViewModel()
+        {
+            // Arrange
+            ObligationsController controller = new ObligationsController(
+                                                                        A.Dummy<IAppConfiguration>(),
+                                                                        A.Dummy<BreadcrumbService>(),
+                                                                        A.Dummy<IWeeeCache>(), 
+                                                                        () => A.Dummy<IWeeeClient>());
+            controller.ModelState.AddModelError("key", "Some error");
+
+            // Act - holding page until obligations page is implemented
+            ActionResult result = controller.SelectAuthority(A.Dummy<SelectAuthorityViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");
+
+            SelectAuthorityViewModel viewModel = viewResult.Model as SelectAuthorityViewModel;
+            Assert.NotNull(viewModel);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "Holding" action will return the
+        /// Holding page "Index" view and view model if the view model provided is invalid.
+        /// </summary>
+        [Fact]
+        public void PostSelectAuthority_WithInvalidModel_ReturnsHoldingViewWithViewModel()
+        {
+            // Arrange
+            ObligationsController controller = new ObligationsController(
+                                                                        A.Dummy<IAppConfiguration>(),
+                                                                        A.Dummy<BreadcrumbService>(),
+                                                                        A.Dummy<IWeeeCache>(), 
+                                                                        () => A.Dummy<IWeeeClient>());
+
+            // Act - holding page until obligations page is implemented
+            ActionResult result = controller.SelectAuthority(new Fixture().Create<SelectAuthorityViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "UploadObligations");  // the holding page name in the Obligations folder
+            UploadObligationsViewModel viewModel = viewResult.Model as UploadObligationsViewModel;
+            Assert.NotNull(viewModel);
         }
 
         [Fact]
