@@ -61,7 +61,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.Id.Should().Be(id);
             result.Reference.Should().Be(reference);
             result.StartDate.Should().Be(startDate);
@@ -71,6 +71,7 @@
             result.ApprovedDate.Should().BeNull();
             result.ReturnedDate.Should().BeNull();
             result.ComplianceYear.Should().Be(complianceYear);
+            result.RejectedDate.Should().BeNull();
         }
 
         [Theory]
@@ -97,7 +98,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.SubmittedDate.Should().BeNull();
         }
 
@@ -125,8 +126,36 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedDate.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_RejectedDateShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedDate.Should().BeNull();
         }
 
         [Theory]
@@ -153,8 +182,36 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedReason.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_RejectedReasonShouldNotBeSet(NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedReason.Should().BeNull();
         }
 
         [Fact]
@@ -176,7 +233,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.SubmittedDate.Should().Be(date);
         }
 
@@ -199,8 +256,31 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRejectedHistory_RejectedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Rejected);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedDate.Should().Be(date);
         }
 
         [Fact]
@@ -223,8 +303,32 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedReason.Should().Be(reason);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRejectedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Rejected);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(NoteStatus.Rejected);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedReason.Should().Be(reason);
         }
 
         [Theory]
@@ -253,8 +357,38 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedReason.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithRejectedHistoryAndNoteIsNotRejected_ReasonShouldBeNull(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(status);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(status);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedReason.Should().BeNull();
         }
 
         [Fact]
@@ -282,7 +416,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.SubmittedDate.Should().Be(latestDate);
         }
 
@@ -311,8 +445,37 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleRejectedHistory_RejectedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddHours(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Rejected);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Rejected);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedDate.Should().Be(latestDate);
         }
 
         [Fact]
@@ -345,8 +508,42 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ReturnedReason.Should().Be(reasonLate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleRejectedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var reasonEarly = fixture.Create<string>();
+            var rejectedDateEarly = DateTime.Now;
+            var reasonLate = fixture.Create<string>();
+            var rejectedDateLate = DateTime.Now.AddMinutes(10);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.Reason).Returns(reasonEarly);
+            A.CallTo(() => history1.ChangedDate).Returns(rejectedDateEarly);
+            A.CallTo(() => history1.ToStatus).Returns(NoteStatus.Rejected);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.Reason).Returns(reasonLate);
+            A.CallTo(() => history2.ChangedDate).Returns(rejectedDateLate);
+            A.CallTo(() => history2.ToStatus).Returns(NoteStatus.Rejected);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(NoteStatus.Rejected);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.RejectedReason.Should().Be(reasonLate);
         }
 
         [Theory]
@@ -373,7 +570,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ApprovedDate.Should().BeNull();
         }
 
@@ -396,7 +593,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ApprovedDate.Should().BeSameDateAs(date);
         }
 
@@ -425,7 +622,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.ApprovedDate.Should().Be(latestDate);
         }
 
@@ -441,7 +638,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.Type.ToInt().Should().Be(noteType.Value);
         }
 
@@ -457,7 +654,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.Status.ToInt().Should().Be(noteStatus.Value);
         }
 
@@ -473,7 +670,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.Protocol.ToInt().Should().Be(protocol.ToInt());
         }
 
@@ -489,7 +686,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.WasteType.ToInt().Should().Be(wasteType.ToInt());
         }
 
@@ -507,7 +704,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.SchemeData.Should().Be(schemeData);
         }
 
@@ -525,7 +722,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.AatfData.Should().Be(aatfData);
         }
 
@@ -543,9 +740,10 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.OrganisationData.Should().Be(organisationData);
         }
+        
         [Fact]
         public void Map_GivenNote_SchemeOrganisationDataShouldBeMapped()
         {
@@ -560,7 +758,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.RecipientOrganisationData.Should().Be(organisationData);
         }
 
@@ -580,7 +778,7 @@
             //act
             var result = map.Map(note);
 
-            //arrange
+            //assert
             result.EvidenceTonnageData.Count.Should().Be(tonnages.Count);
             result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
             result.EvidenceTonnageData.Should().BeEquivalentTo(

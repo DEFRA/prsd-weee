@@ -19,18 +19,18 @@
         [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
 
-        [Display(Name = "Start date")]
+        [DisplayName("Start date")]
         public virtual DateTime? StartDate { get; set; }
 
-        [Display(Name = "End date")]
+        [DisplayName("End date")]
         public virtual DateTime? EndDate { get; set; }
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        [Display(Name = "Type of waste")]
+        [DisplayName("Type of waste")]
         public virtual WasteType? WasteTypeValue { get; set; }
 
-        [Display(Name = "Actual or protocol")]
+        [DisplayName("Actual or protocol")]
         public virtual Protocol? ProtocolValue { get; set; }
 
         [DisplayName("Date submitted")]
@@ -48,9 +48,14 @@
         public int Reference { get; set; }
 
         [DisplayName("Reason")]
-        public string Reason { get; set; }
+        public string ReturnedReason { get; set; }
 
-        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(Reason);
+        [DisplayName("Reason")]
+        public string RejectedReason { get; set; }
+
+        public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
+
+        public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
 
         public EvidenceNoteViewModel()
         {
