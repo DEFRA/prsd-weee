@@ -62,7 +62,8 @@
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
             result.ProtocolValue.Should().Be(source.NoteData.Protocol);
-            result.Reason.Should().Be(source.NoteData.ReturnedReason);
+            result.ReturnedReason.Should().Be(source.NoteData.ReturnedReason);
+            result.RejectedReason.Should().Be(source.NoteData.RejectedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
 
@@ -131,7 +132,8 @@
             result.WasteTypeValue.Should().Be(source.ExistingModel.WasteTypeValue);
             result.ProtocolValue.Should().Be(source.ExistingModel.ProtocolValue);
             result.CategoryValues.Should().BeEquivalentTo(source.ExistingModel.CategoryValues);
-            result.Reason.Should().Be(source.ExistingModel.Reason);
+            result.ReturnedReason.Should().Be(source.ExistingModel.ReturnedReason);
+            result.RejectedReason.Should().Be(source.ExistingModel.RejectedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
         [Fact]
