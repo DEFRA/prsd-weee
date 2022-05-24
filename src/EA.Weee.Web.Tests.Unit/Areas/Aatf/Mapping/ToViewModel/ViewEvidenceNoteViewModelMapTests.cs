@@ -64,6 +64,7 @@
             result.SchemeId.Should().Be(source.SchemeId);
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
+            result.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
         }
 
         [Fact]
@@ -446,25 +447,72 @@
         }
 
         [Fact]
-        public void Map_GivenReturnedReason_ReasonMustBeSet()
+        public void Map_GivenReturnedReasonAndNoRejectedReason_ReasonMustBeSet()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
             var reason = fixture.Create<string>();
             source.EvidenceNoteData.ReturnedReason = reason;
+            source.EvidenceNoteData.RejectedReason = null;
             var result = map.Map(source);
 
-            result.Reason.Should().Be(reason);
+            result.ReturnedReason.Should().Be(reason);
         }
 
         [Fact]
-        public void Map_GivenNoReturnedReason_ReasonMustBeNullOrEmpty()
+        public void Map_GivenNoReturnedReasonAndNoRejectedReason_ReasonMustBeNullOrEmpty()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.ReturnedReason = null;
+            source.EvidenceNoteData.RejectedReason = null;
+
+            var result = map.Map(source);
+
+            result.ReturnedReason.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenRejectedDateTime_FormatsToGMTString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.RejectedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            var result = map.Map(source);
+
+            result.RejectedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+        }
+
+        [Fact]
+        public void Map_GivenNoRejectedDateTime_FormatsToEmptyString()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.RejectedDate = null;
+
+            var result = map.Map(source);
+
+            result.RejectedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenRejectedReason_ReasonMustBeSet()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var reason = fixture.Create<string>();
+            source.EvidenceNoteData.RejectedReason = reason;
+            var result = map.Map(source);
+
+            result.RejectedReason.Should().Be(reason);
+        }
+
+        [Fact]
+        public void Map_GivenNoRejectedReasonAndNoReturnedReason_ReasonMustBeNullOrEmpty()
+        {
+            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            source.EvidenceNoteData.RejectedReason = null;
             source.EvidenceNoteData.ReturnedReason = null;
 
             var result = map.Map(source);
 
-            result.Reason.Should().BeNullOrEmpty();
+            result.RejectedReason.Should().BeNullOrEmpty();
         }
 
         private ViewEvidenceNoteMapTransfer SetupTonnage(bool includeAll)

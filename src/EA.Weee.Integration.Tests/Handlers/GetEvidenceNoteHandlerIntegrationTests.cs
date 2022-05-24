@@ -24,7 +24,7 @@
     public class GetEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetADraftEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetOneDraftEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -65,7 +65,7 @@
         }
 
         [Component]
-        public class WhenIGetASubmittedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetOneSubmittedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -113,7 +113,7 @@
         }
 
         [Component]
-        public class WhenIGetAReturnedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetOneReturnedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -162,7 +162,56 @@
         }
 
         [Component]
-        public class WhenIGetANoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetOneRejectedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
+                    })
+                    .Create();
+
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveRejectedTheEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveRejectedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Rejected);
+                result.RejectedReason.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).Reason);
+                result.RejectedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).ChangedDate);
+            };
+        }
+
+        [Component]
+        public class WhenIGetOneNoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -180,7 +229,7 @@
         }
 
         [Component]
-        public class WhenIGetANotesWhereUserIsNotAuthorised : GetEvidenceNoteHandlerIntegrationTestBase
+        public class WhenIGetOneNotesWhereUserIsNotAuthorised : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
