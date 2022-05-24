@@ -88,7 +88,7 @@
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 

@@ -146,9 +146,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     return RedirectToAction("DownloadEvidenceNote", 
-                        new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, 
-                            evidenceNoteId = request.NoteId, 
-                            selectedComplianceYear = model.ViewEvidenceNoteViewModel.SelectedComplianceYear });
+                        new { organisationId = model.ViewEvidenceNoteViewModel.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.SelectedComplianceYear });
                 }
 
                 await SetBreadcrumb(model.ViewEvidenceNoteViewModel.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
