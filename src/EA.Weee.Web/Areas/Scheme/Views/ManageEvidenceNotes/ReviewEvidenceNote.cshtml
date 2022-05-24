@@ -11,7 +11,7 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.SchemeId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewEvidenceNoteViewModel.SchemeId, ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), null))))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
