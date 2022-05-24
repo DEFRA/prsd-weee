@@ -44,6 +44,7 @@
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
                 RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
                 RecipientId = source.Recipient.Id,
+                ComplianceYear = source.ComplianceYear,
                 //must be updated when a rejected case is added
                 ReturnedReason = source.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned) ? (source.NoteStatusHistory
                         .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))

@@ -48,6 +48,7 @@
             var startDate = fixture.Create<DateTime>();
             var endDate = fixture.Create<DateTime>();
             var recipientId = fixture.Create<Guid>();
+            var complianceYear = fixture.Create<short>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
@@ -55,6 +56,7 @@
             A.CallTo(() => note.StartDate).Returns(startDate);
             A.CallTo(() => note.EndDate).Returns(endDate);
             A.CallTo(() => note.Recipient.Id).Returns(recipientId);
+            A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
 
             //act
             var result = map.Map(note);
@@ -68,6 +70,7 @@
             result.SubmittedDate.Should().BeNull();
             result.ApprovedDate.Should().BeNull();
             result.ReturnedDate.Should().BeNull();
+            result.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Theory]
