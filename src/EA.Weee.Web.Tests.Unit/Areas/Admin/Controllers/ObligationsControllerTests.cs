@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using AutoFixture;
     using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -47,15 +48,13 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(false);
-
             ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
-
-            // Act
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Action testCode = () =>
+            // Act
+            var exception = Record.Exception(() =>
             {
                 object[] args = new object[] { A.Dummy<ActionExecutingContext>() };
                 try
@@ -66,11 +65,11 @@
                 {
                     throw e.InnerException;
                 }
-            };
+            });
 
             // Assert
-            InvalidOperationException error = Assert.Throws<InvalidOperationException>(testCode);
-            Assert.Equal("PCS Obligations is not enabled.", error.Message);
+            Assert.Equal("PCS Obligations is not enabled.", exception.Message);
+            exception.Should().BeOfType<InvalidOperationException>();
         }
 
         /// <summary>
@@ -103,7 +102,6 @@
             };
 
             // Assert - No exception.
-            //InvalidOperationException error = Assert.Throws<InvalidOperationException>(testCode);
             testCode.Should().NotThrow<InvalidOperationException>();
         }
 
@@ -203,15 +201,14 @@
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
                                                                         () => A.Dummy<IWeeeClient>());
-            var model = new SelectAuthorityViewModel { SelectedAuthority = Core.Shared.CompetentAuthority.England };
 
             // Act - holding page until obligations page is implemented
-            ActionResult result = controller.SelectAuthority(model);
+            ActionResult result = controller.SelectAuthority(new Fixture().Create<SelectAuthorityViewModel>());
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "UploadObligations");
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "UploadObligations");  // the holding page name in the Obligations folder
             UploadObligationsViewModel viewModel = viewResult.Model as UploadObligationsViewModel;
             Assert.NotNull(viewModel);
         }
