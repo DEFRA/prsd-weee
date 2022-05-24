@@ -127,8 +127,7 @@
 
         private string GetJavascriptEnabledBlankSummary()
         {
-            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' data-module='govuk-error-summary' role='alert' aria-atomic='true'>
-                    </div>";
+            return @"<div class='error-summary-valid govuk-error-summary__body' data-valmsg-summary='true' role='alert' aria-atomic='true'></div>";
         }
 
         private string GetJavascriptDisabledErrorSummary(IEnumerable<ModelErrorWithFieldId> modelErrors)
