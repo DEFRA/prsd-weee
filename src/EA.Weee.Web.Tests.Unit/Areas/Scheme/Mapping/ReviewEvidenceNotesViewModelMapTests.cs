@@ -77,7 +77,7 @@
         {
             // arrange
             var note = fixture.Create<EvidenceNoteData>();
-            var transfer = new ViewEvidenceNoteMapTransfer(note, note.Status);
+            var transfer = fixture.Create<ViewEvidenceNoteMapTransfer>();
 
             // act
             map.Map(transfer);

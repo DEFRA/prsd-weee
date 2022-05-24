@@ -42,7 +42,9 @@
                 SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ReturnedDate = source.EvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
-                Reason = source.EvidenceNoteData.ReturnedReason,
+                RejectedDate = source.EvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
+                RejectedReason = source.EvidenceNoteData.RejectedReason,
+                ReturnedReason = source.EvidenceNoteData.ReturnedReason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
@@ -68,7 +70,8 @@
                     organisationAddress.Postcode,
                     null),
                 SchemeId = source.SchemeId,
-                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber
+                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
+                SelectedComplianceYear = source.SelectedComplianceYear
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)

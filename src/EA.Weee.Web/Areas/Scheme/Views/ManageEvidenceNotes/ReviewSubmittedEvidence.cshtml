@@ -55,7 +55,7 @@
                                     <td class="govuk-table__cell"> </td>
                                 }
                                 <td class="govuk-table__cell">
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id }, null)
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
                                 </td>
                             </tr>
                         }
