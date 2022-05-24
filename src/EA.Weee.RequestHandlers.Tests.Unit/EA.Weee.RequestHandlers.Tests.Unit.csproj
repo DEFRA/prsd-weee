@@ -194,6 +194,7 @@
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Helpers\ReportHelperTests.cs" />
+    <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandlerTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
