@@ -4,6 +4,7 @@
     using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;
+    using Aatf.ViewModels;
 
     public abstract class BaseEvidenceNotesViewModelMapTransfer
     {
@@ -13,7 +14,15 @@
 
         public List<EvidenceNoteData> Notes { get; protected set; }
 
-        public BaseEvidenceNotesViewModelMapTransfer(Guid organisationId, List<EvidenceNoteData> notes, string schemeName)
+        public DateTime CurrentDate { get; protected set; }
+
+        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
+
+        protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId, 
+            List<EvidenceNoteData> notes, 
+            string schemeName,
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => notes, notes);
@@ -22,6 +31,8 @@
             OrganisationId = organisationId;
             Notes = notes;
             SchemeName = schemeName;
+            CurrentDate = currentDate;
+            ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
         }
     }
 }

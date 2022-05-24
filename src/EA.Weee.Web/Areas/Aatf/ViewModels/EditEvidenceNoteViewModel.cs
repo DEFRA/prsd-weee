@@ -11,7 +11,7 @@
     using Web.ViewModels.Shared;
 
     [Serializable]
-    public class EditEvidenceNoteViewModel : EvidenceNoteViewModel
+    public class EditEvidenceNoteViewModel : EvidenceNoteViewModel, IActionModel
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]

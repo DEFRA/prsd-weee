@@ -517,7 +517,7 @@
 
         private bool IsValidRecordToEdit(DateTime currentDate, int complianceYear)
         {
-            return currentDate.Year > 1 && AatfHelper.FetchCurrentComplianceYears(currentDate, true).Any(x => x.Equals(complianceYear)) ? true : false;
+            return currentDate.Year > 1 && ComplianceYearHelper.FetchCurrentComplianceYears(currentDate, true).Any(x => x.Equals(complianceYear)) ? true : false;
         }
     }
 }

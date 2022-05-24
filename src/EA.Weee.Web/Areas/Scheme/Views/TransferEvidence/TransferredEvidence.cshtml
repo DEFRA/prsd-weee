@@ -11,12 +11,12 @@
 {
     @if (Model.DisplayMessage)
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab)), "Manage evidence notes"))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null)), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab))))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null))))
     }
 
     @Html.Gds().ValidationSummary()

@@ -11,7 +11,6 @@
     using Web.Areas.Scheme.Requests;
     using Web.Extensions;
     using Web.ViewModels.Shared;
-    using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Xunit;
 
@@ -92,6 +91,8 @@
             var organisationId = fixture.Create<Guid>();
             var schemeId = fixture.Create<Guid>();
             var categories = fixture.CreateMany<int>().ToList();
+            var evidenceNoteIds = fixture.CreateMany<Guid>().ToList();
+
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
             {
                 new TransferEvidenceCategoryValue(WeeeCategory.ConsumerEquipment, Guid.NewGuid(), 2, 1, "2", "1"),
@@ -100,7 +101,8 @@
 
             var request = new TransferEvidenceNoteRequest(organisationId,
                 schemeId,
-                categories);
+                categories,
+                evidenceNoteIds);
 
             var model = fixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(v => v.Action, action)
@@ -115,6 +117,7 @@
             result.SchemeId.Should().Be(schemeId);
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeEquivalentTo(categories);
+            result.EvidenceNoteIds.Should().BeEquivalentTo(evidenceNoteIds);
             var category1ToFind = transferCategoryTonnage.ElementAt(0);
             result.TransferValues.Should().Contain(t =>
                 t.TransferTonnageId.Equals(category1ToFind.TransferTonnageId) &&

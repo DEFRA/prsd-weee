@@ -8,7 +8,7 @@
     using ViewModels;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
 
-    public class EvidenceSummaryMap : IMap<EvidenceSummaryMapTransfer, EvidenceSummaryViewModel>
+    public class EvidenceSummaryMap : IMap<EvidenceSummaryMapTransfer, ManageEvidenceSummaryViewModel>
     {
         private readonly ICategoryValueTotalCalculator totalCalculator;
         private readonly ITonnageUtilities tonnageUtilities;
@@ -20,11 +20,11 @@
             this.tonnageUtilities = tonnageUtilities;
         }
 
-        public EvidenceSummaryViewModel Map(EvidenceSummaryMapTransfer source)
+        public ManageEvidenceSummaryViewModel Map(EvidenceSummaryMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = new EvidenceSummaryViewModel()
+            var model = new ManageEvidenceSummaryViewModel()
             {
                 CategoryValues = new EvidenceCategoryValues(),
                 ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
