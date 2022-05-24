@@ -258,7 +258,7 @@
         }
 
         [Fact]
-        public void Map_GivenNoteWithReturnedHistory_RejectedDateShouldBeSet()
+        public void Map_GivenNoteWithRejectedHistory_RejectedDateShouldBeSet()
         {
             //arrange
             var date = DateTime.Now;
