@@ -97,5 +97,71 @@
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
+
+        [Fact]
+        public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var model = fixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2022, 1, 1);
+
+            //act
+            var result = testClass.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+
+            //act
+            var result = testClass.Map(notes, date, null);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+
+            //act
+            var result = testClass.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2021).Create();
+
+            //act
+            var result = testClass.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
+        }
     }
 }
