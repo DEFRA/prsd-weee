@@ -36,6 +36,24 @@
         }
 
         [Fact]
+        public void Map_GivenSchemeDataIsNull_PropertiesShouldBeSet()
+        {
+            //arrange
+            var source = fixture.Build<RecipientWasteStatusFilterBase>().With(r => r.SchemeList, (List<SchemeData>)null).Create();
+            var emptyList = new List<SchemeData>();
+            //act
+            var model = mapper.Map(source);
+
+            //assert
+            model.NoteStatusList.Should().BeEquivalentTo(GetNoteStatusList());
+            model.NoteStatusValue.Should().Be(source.NoteStatus);
+            model.WasteTypeList.Should().BeEquivalentTo(GetWasteTypeValuesList());
+            model.WasteTypeValue.Should().Be(source.WasteType);
+            model.SchemeListSL.Should().BeEquivalentTo(GetSchemeListDropDownForm(emptyList));
+            model.ReceivedId.Should().Be(source.ReceivedId);
+        }
+
+        [Fact]
         public void Map_GivenSource_PropertiesShouldBeSet()
         {
             //arrange
