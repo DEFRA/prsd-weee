@@ -6,6 +6,7 @@
     using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     public class RecipientWasteStatusViewModelMap : IMap<RecipientWasteStatusFilterBase, RecipientWasteStatusFilterViewModel>
