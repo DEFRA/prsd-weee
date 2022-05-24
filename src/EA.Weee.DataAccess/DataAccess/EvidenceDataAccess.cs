@@ -63,7 +63,10 @@
         public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
-         
+
+            var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
+            var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
+
             var notes = await context.Notes
                .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear) &&
                            ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
@@ -73,12 +76,12 @@
                                 || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value)))
                             && (!filter.StartDateSubmitted.HasValue
                                 || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                && p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate >= filter.StartDateSubmitted)
+                                && DbFunctions.TruncateTime(p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
+                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) >= submittedStartDateFilter)
                             && (!filter.EndDateSubmitted.HasValue
                                 || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                && p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate <= filter.EndDateSubmitted)
+                                && DbFunctions.TruncateTime(p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
+                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) <= submittedEndDateFilter)
                             && (!filter.WasteTypeId.HasValue || (int)p.WasteType == filter.WasteTypeId)
                             && (filter.SearchRef == null ||
                                 (filter.FormattedNoteType > 0 ?
