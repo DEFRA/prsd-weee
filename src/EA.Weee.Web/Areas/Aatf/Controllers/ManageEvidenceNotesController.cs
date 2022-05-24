@@ -270,8 +270,8 @@
             }
 
             var modelAllNotes =
-                    mapper.Map<AllOtherEvidenceNotesViewModel>(
-                        new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+                mapper.Map<AllOtherManageEvidenceNotesViewModel>(
+                    new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
 
             var schemeData = resultAllNotes.Select(x => x.SchemeData)
                    .Distinct(new SchemeDataComparer())
@@ -302,7 +302,7 @@
             var result = await client.SendAsync(User.GetAccessToken(), new GetAatfSummaryRequest(aatfId));
 
             var summaryModel =
-                mapper.Map<EvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+                mapper.Map<ManageEvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
 
             summaryModel.ManageEvidenceNoteViewModel =
                 mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId,

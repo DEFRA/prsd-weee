@@ -34,12 +34,12 @@
 
     @if (Model.DisplayMessage)
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, navigateBackToSelectedTab)), "Manage evidence notes"))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, navigateBackToSelectedTab, null)), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, navigateBackToSelectedTab))))
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, navigateBackToSelectedTab, null))))
     }
     <div class="govuk-!-margin-top-3"></div>
     @Html.Partial("_ViewEvidenceNotePartial", Model)

@@ -8,6 +8,8 @@
 
     public class EvidenceNoteFilter
     {
+        public int ComplianceYear { get; set; }
+
         public Guid? AatfId { get; set; }
 
         public Guid? OrganisationId { get; set; }
@@ -64,6 +66,11 @@
 
                 return -1;
             }
+        }
+
+        public EvidenceNoteFilter(short complianceYear)
+        {
+            ComplianceYear = complianceYear;
         }
     }
 }

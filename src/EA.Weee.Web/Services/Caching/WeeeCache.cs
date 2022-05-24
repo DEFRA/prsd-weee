@@ -15,6 +15,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.Shared;
 
     public class WeeeCache : IWeeeCache
     {
@@ -32,6 +33,8 @@
         public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
+
+        public SingleItemCache<DateTime> CurrentDate { get; private set; }
 
         private readonly string accessToken;
 
@@ -106,6 +109,12 @@
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
                 FetchAatfInfoFromApi);
+
+            CurrentDate = new SingleItemCache<DateTime>(
+                provider,
+                "CurrentUtcSystemDate",
+                (DateTime.Today.AddDays(1).Subtract(DateTime.Now)),
+                FetchCurrentUtcDateTime);
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -115,7 +124,7 @@
                 var request = new EA.Weee.Requests.Users.GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
 
-                return string.Format("{0} {1}", result.FirstName, result.Surname).Trim();
+                return $"{result.FirstName} {result.Surname}".Trim();
             }
         }
 
@@ -209,6 +218,17 @@
             }
         }
 
+        private async Task<DateTime> FetchCurrentUtcDateTime()
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetApiUtcDate();
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         public Task<string> FetchOrganisationName(Guid organisationId)
         {
             return OrganisationNames.Fetch(organisationId);
@@ -244,6 +264,11 @@
             return FetchProducerSearchResultList();
         }
 
+        public Task<DateTime> FetchCurrentDate()
+        {
+            return CurrentDate.Fetch();
+        }
+        
         public async Task InvalidateProducerSearch()
         {
             await ProducerSearchResultList.InvalidateCache();
@@ -267,6 +292,11 @@
         public async Task InvalidateAatfCache(Guid id)
         {
             await AatfPublicInfo.InvalidateCache(id);
+        }
+
+        public async Task InvalidateCurrentDate()
+        {
+            await CurrentDate.InvalidateCache();
         }
 
         public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)
