@@ -32,9 +32,12 @@
                 @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString())
             </div>
 
-            @Html.Partial("_DisplayRejectedReasonPartial", Model)
-
-            @Html.Partial("_DisplayReturnedReasonPartial", Model)
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-padding-bottom-1">
+                @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-third" } })
+            </div>
+            <div class="govuk-grid-row govuk-!-width-two-thirds govuk-!-padding-bottom-1">
+                @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-third" } })
+            </div>
 
         </div>
 

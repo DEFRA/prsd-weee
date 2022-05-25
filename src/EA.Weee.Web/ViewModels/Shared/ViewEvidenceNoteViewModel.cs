@@ -48,5 +48,7 @@
         public bool DisplayAatfName { get; set; }
 
         public bool DisplayH2Title { get; set; }
+
+        public int SelectedComplianceYear { get; set; }
     }
 }
