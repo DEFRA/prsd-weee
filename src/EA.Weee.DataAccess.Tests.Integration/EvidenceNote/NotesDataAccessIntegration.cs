@@ -344,6 +344,121 @@
         }
 
         [Fact]
+        public async Task GetAllNotes_GivenWasteType_ShouldReturnSingleNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+               
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                context.Organisations.Add(organisation);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+
+                context.Aatfs.Add(aatf1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf1, WasteType.HouseHold);
+                context.Notes.Add(noteShouldBeFound);
+
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf1, WasteType.NonHouseHold);
+                context.Notes.Add(noteShouldNotBeFound);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                {
+                    WasteTypeId = (int?)WasteType.HouseHold,
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+            }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_GivenRecipientFilter_ShouldReturnSingleNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation);
+
+                var schemeToMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var schemeNotMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                context.Aatfs.Add(aatf);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, schemeToMatch, aatf, WasteType.HouseHold);
+                context.Notes.Add(noteShouldBeFound);
+
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, schemeNotMatch, aatf, WasteType.NonHouseHold);
+                context.Notes.Add(noteShouldNotBeFound);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                {
+                    SchemeId = schemeToMatch.Id,
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.ElementAt(0).RecipientId.Should().Be(schemeToMatch.Id);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+            }
+        }
+
+        // to be finished 
+        [Fact]
+        public async Task GetAllNotes_GivenNoteStatusFilter_ShouldReturnSingleNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation);
+
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                context.Aatfs.Add(aatf);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null);
+                context.Notes.Add(noteShouldBeFound);
+
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null);
+                context.Notes.Add(noteShouldNotBeFound);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                {
+                    NoteStatusId = NoteStatus.Void.Value,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
+                };
+            }
+        }
+
+        [Fact]
         public async Task GetAllNotes_GivenSearchRefAlongWithOrganisationAndAatfShouldReturnSingleNote()
         {
             using (var database = new DatabaseWrapper())
