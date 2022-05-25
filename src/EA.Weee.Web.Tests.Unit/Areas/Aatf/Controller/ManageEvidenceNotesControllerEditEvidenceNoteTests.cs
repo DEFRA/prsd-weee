@@ -294,6 +294,7 @@
         {
             //arrange
             var model = ValidModel();
+            model.Status = NoteStatus.Returned;
             model.Action = ActionEnum.Save;
             var request = EditRequest();
 
@@ -303,15 +304,16 @@
             await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Draft);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be((NoteUpdatedStatusEnum)NoteStatus.Draft);
         }
 
         [Fact]
-        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded()
+        public async Task EditDraftEvidenceNotePost_GivenReturnedRecordHasBeenSaved_ViewDataShouldHaveNoteStatusAdded()
         {
             //arrange
             var model = ValidModel();
-            model.Action = ActionEnum.Submit;
+            model.Action = ActionEnum.Save;
+            model.Status = NoteStatus.Returned;
             var request = EditRequest();
 
             A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
@@ -320,7 +322,24 @@
             await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Submitted);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.ReturnedSaved);
+        }
+
+        [Fact]
+        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded()
+        {
+            //arrange
+            var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+            var request = EditRequest(NoteStatus.Submitted);
+
+            A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            //act
+            await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.Submitted);
         }
 
         [Fact]
