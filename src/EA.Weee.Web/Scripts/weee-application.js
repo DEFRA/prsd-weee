@@ -171,6 +171,7 @@
             //source: suggest,
             element: newElement,
             name: element.id + "-auto",
+            displayMenu: 'overlay',
             onConfirm: function (confirmed) {
 
                 function isNullOrWhitespace(input) {
