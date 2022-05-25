@@ -270,5 +270,24 @@
 
             model.HasBeenReturned.Should().BeFalse();
         }
+
+        [Theory]
+        [InlineData(2021)]
+        [InlineData(2020)]
+        [InlineData(2022)]
+        public void ComplianceYearDisplay_GivenComplianceYear_ComplianceYearShouldBeDisplayedCorrectly(short year)
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                ComplianceYear = year
+            };
+
+            //act
+            var result = model.ComplianceYearDisplay;
+
+            //assert
+            result.Should().Be(year.ToString());
+        }
     }
 }
