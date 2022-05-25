@@ -92,7 +92,6 @@
             }
         }
         [Theory]
-        [InlineData(NoteStatus.Rejected)]
         [InlineData(NoteStatus.Returned)]
         [InlineData(NoteStatus.Draft)]
         public void RedirectTab_GivenStatusIsDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
@@ -108,6 +107,7 @@
         [InlineData(NoteStatus.Void)]
         [InlineData(NoteStatus.Submitted)]
         [InlineData(NoteStatus.Approved)]
+        [InlineData(NoteStatus.Rejected)]
         public void RedirectTab_GivenStatusIsNotDraftReturnRejected_ViewAllOtherEvidenceNotesShouldBeReturned(NoteStatus status)
         {
             model.Status = status;

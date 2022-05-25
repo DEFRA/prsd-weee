@@ -94,7 +94,7 @@
                                             @if (note.DisplayViewLink)
                                             {
                                                 <td class="govuk-table__cell">
-                                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
+                                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
                                                 </td>
                                             }
                                             else
