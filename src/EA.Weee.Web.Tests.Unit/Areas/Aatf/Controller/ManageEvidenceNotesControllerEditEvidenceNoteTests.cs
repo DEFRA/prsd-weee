@@ -313,8 +313,7 @@
             //arrange
             var model = ValidModel();
             model.Action = ActionEnum.Save;
-            model.Status = NoteStatus.Returned;
-            var request = EditRequest();
+            var request = EditRequest(NoteStatus.Returned);
 
             A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
 
