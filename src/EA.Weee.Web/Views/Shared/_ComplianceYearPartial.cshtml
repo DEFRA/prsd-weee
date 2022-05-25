@@ -4,6 +4,7 @@
 @{
     var controller = ViewData["controller"] as string;
     var selectedTab = ViewData["tab"] as string;
+    var width = ViewData["width"];
 }
 
 @using (Html.BeginForm("Index", controller, FormMethod.Get, new { id = "ComplianceYearForm" }))
@@ -11,9 +12,9 @@
     @Html.Hidden("tab", selectedTab)
     <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
     <span class="text-margin">
-        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, 
-            new SelectList(Model.ComplianceYearList), 
-            new { autocomplete = "false", style="min-width: 100px;"}, false, false)
+        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
+            new SelectList(Model.ComplianceYearList),
+            new { autocomplete = "false", style="min-width: " + width }, false, false)
     </span>
     <noscript>
         @(this.WeeeGds().Button("Apply", null, true))

@@ -93,12 +93,12 @@
             //arrange
             var currentDate = DateTime.Now;
             SystemTime.Freeze(currentDate);
-
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
             var target = new ValidationTarget() { StartDate = DateTime.MinValue, EndDate = currentDate };
             var context = new ValidationContext(target);
 
             //act
-            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
             result.Should().BeNull();
