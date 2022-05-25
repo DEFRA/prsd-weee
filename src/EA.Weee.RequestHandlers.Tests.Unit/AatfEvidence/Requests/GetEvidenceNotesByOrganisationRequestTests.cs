@@ -60,7 +60,7 @@
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public void GetEvidenceNotesByOrganisationRequest_GivenNComplianceYearIsNotGreaterThanZero_ArgumentOutOfRangeExceptionExpected(int complianceYear)
+        public void GetEvidenceNotesByOrganisationRequest_GivenNComplianceYearIsNotGreaterThanZero_ArgumentOutOfRangeExceptionExpected(short complianceYear)
         {
             //act
             var exception = Record.Exception(() =>
@@ -76,7 +76,7 @@
             //arrange
             var organisationId = fixture.Create<Guid>();
             var statusList = fixture.CreateMany<NoteStatus>().ToList();
-            var complianceYear = fixture.Create<int>();
+            var complianceYear = fixture.Create<short>();
 
             //act
             var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear);

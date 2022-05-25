@@ -21,7 +21,7 @@
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => ComplianceYear.ToString();
 
-        public short ComplianceYear { get; set; }
+        public int ComplianceYear { get; set; }
 
         public string SiteAddress { get; set; }
 
