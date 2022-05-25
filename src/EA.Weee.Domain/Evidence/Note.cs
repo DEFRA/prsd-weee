@@ -58,7 +58,7 @@
             string createdBy,
             IList<NoteTransferTonnage> transfer,
             IList<NoteTransferCategory> categories,
-            short complianceYear)
+            int complianceYear)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -194,7 +194,7 @@
 
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
 
-        public virtual short ComplianceYear { get; set; }
+        public virtual int ComplianceYear { get; set; }
 
         public virtual ICollection<NoteTransferCategory> NoteTransferCategories { get; protected set; }
     }

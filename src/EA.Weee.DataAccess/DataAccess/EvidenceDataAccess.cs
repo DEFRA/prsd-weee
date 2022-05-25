@@ -89,7 +89,7 @@
             return notes;
         }
 
-        public async Task<short> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
+        public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
         {
             var note = await context.Notes.Where(n => evidenceNoteIds.Contains(n.Id))
                 .OrderBy(n1 => n1.StartDate).FirstAsync();
@@ -120,7 +120,7 @@
             List<NoteTransferCategory> transferCategories,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
-            short complianceYear,
+            int complianceYear,
             string userId)
         {
             var evidenceNote = new Note(organisation,
