@@ -96,7 +96,6 @@
             get
             {
                 if (Status.Equals(NoteStatus.Draft) ||
-                    Status.Equals(NoteStatus.Rejected) ||
                     Status.Equals(NoteStatus.Returned))
                 {
                     return ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString();

@@ -141,7 +141,7 @@
 
                     var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
 
-                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
