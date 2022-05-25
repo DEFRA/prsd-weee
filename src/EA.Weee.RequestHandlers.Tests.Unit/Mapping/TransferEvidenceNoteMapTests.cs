@@ -29,11 +29,13 @@
             //arrange
             var id = fixture.Create<Guid>();
             var reference = fixture.Create<int>();
+            var complianceYear = fixture.Create<short>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => note.Reference).Returns(reference);
             A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
 
             //act
             var result = map.Map(note);
@@ -44,6 +46,7 @@
             result.Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
             result.SubmittedDate.Should().BeNull();
             result.ApprovedDate.Should().BeNull();
+            result.ComplianceYear.Should().Be(complianceYear);
         }
     }
 }

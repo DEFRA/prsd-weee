@@ -293,6 +293,7 @@
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
                 ((int)result.Type).Should().Be(note.NoteType.Value);
                 result.Id.Should().Be(note.Id);
+                result.ComplianceYear.Should().Be(note.ComplianceYear);
                 foreach (var noteTonnage in note.NoteTonnage)
                 {
                     result.EvidenceTonnageData.Should().Contain(n => n.Received.Equals(noteTonnage.Received) &&
