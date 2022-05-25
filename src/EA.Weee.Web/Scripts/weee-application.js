@@ -156,7 +156,6 @@
             }
         }
         var useOverLay = element.classList.contains("use-overlay");
-        console.log(useOverLay);
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
 
