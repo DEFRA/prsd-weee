@@ -11,6 +11,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
     using Xunit;
@@ -295,7 +296,7 @@
         public void Map_GivenNoteStatusDraftCreated_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             //act
             var result = map.Map(source);
@@ -310,7 +311,7 @@
         public void Map_GivenNoteStatusSubmitted_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
 
             //act
             var result = map.Map(source);
@@ -325,7 +326,7 @@
         public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
 
             //act
             var result = map.Map(source);
@@ -341,7 +342,7 @@
         public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
 
             //act
             var result = map.Map(source);
@@ -357,7 +358,7 @@
         public void Map_GivenNoteStatusReturned_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
 
             //act
             var result = map.Map(source);

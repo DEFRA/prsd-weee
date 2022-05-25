@@ -283,7 +283,7 @@
             await ManageEvidenceController.CreateEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
 
             //assert
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(status);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be((NoteUpdatedStatusEnum)status);
         }
 
         [Fact]
