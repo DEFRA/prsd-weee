@@ -231,7 +231,7 @@
                         A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
                             t2 => t2.NoteTonnageId.Equals(transferValue.TransferTonnageId) && 
                                   t2.Received.Equals(transferValue.FirstTonnage) &&
-                                  t2.Reused.Equals(transferValue.SecondTonnage)).Equals(1)), A<NoteStatus>._, A<short>._, A<string>._))
+                                  t2.Reused.Equals(transferValue.SecondTonnage)).Equals(1)), A<NoteStatus>._, A<int>._, A<string>._))
                     .MustHaveHappenedOnceExactly();
             }
 
@@ -241,7 +241,7 @@
                         evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
                             A<List<NoteTransferCategory>>.That.Matches(t => t.Count(
                                 t2 => t2.CategoryId.ToInt().Equals(transferCategories)).Equals(1)),
-                            A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<short>._, A<string>._))
+                            A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._))
                     .MustHaveHappenedOnceExactly();
             }
         }
@@ -253,7 +253,7 @@
             var transferNoteId = fixture.Create<Guid>();
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<short>._, A<string>._)).Returns(transferNoteId);
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._)).Returns(transferNoteId);
 
             //act
             var result = await handler.HandleAsync(request);
@@ -271,7 +271,7 @@
             //assert
             A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<short>._, A<string>._)).MustHaveHappenedOnceExactly())
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
         }
 
@@ -294,7 +294,7 @@
             //arrange
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
-                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<short>._, A<string>._)).ThrowsAsync(new Exception());
+                    A<List<NoteTransferCategory>>._, A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._)).ThrowsAsync(new Exception());
 
             //act
             await Record.ExceptionAsync(async () => await handler.HandleAsync(request));

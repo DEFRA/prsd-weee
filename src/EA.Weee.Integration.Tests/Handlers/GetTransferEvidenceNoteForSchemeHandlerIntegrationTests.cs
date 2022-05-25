@@ -186,6 +186,7 @@
                 result.Status.ToInt().Should().Be(note.Status.Value);
                 ((int)result.Type).Should().Be(note.NoteType.Value);
                 result.Id.Should().Be(note.Id);
+                result.ComplianceYear.Should().Be(note.ComplianceYear);
             }
         }
     }
