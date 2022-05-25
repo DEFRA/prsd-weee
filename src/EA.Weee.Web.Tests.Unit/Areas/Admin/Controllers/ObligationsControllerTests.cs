@@ -298,7 +298,7 @@
         }
 
         [Fact]
-        public async Task DownloadTemplateGet_CallsGetPcsObligationsCsv_Once()
+        public async Task DownloadTemplateGet_ShouldCallHandler_Once()
         {
             //arrange
             var authority = CompetentAuthority.England;
