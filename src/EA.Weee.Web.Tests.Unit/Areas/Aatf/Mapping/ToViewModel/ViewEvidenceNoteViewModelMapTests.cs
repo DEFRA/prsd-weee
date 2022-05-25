@@ -65,6 +65,7 @@
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
             result.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
+            result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
         }
 
         [Fact]
