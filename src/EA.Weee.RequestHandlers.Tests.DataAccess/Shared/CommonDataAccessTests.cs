@@ -113,5 +113,23 @@
                 result.Schemes.Should().NotContain(x => x.SchemeStatus.Value == SchemeStatus.Rejected.Value);
             }
         }
+
+        [Fact]
+        public async Task FetchCompetentAuthorityApprovedSchemes_SchemesReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var authorityId = Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
+
+                var dataAccess = new CommonDataAccess(database.WeeeContext);
+
+                await database.Model.SaveChangesAsync();
+
+                var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(Core.Shared.CompetentAuthority.England);
+
+                result.Schemes.Should().Contain(x => x.SchemeStatus.Value == SchemeStatus.Approved.Value);
+            }
+        }
     }
 }
