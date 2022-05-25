@@ -21,11 +21,11 @@
 
                     @if (Model.SubmittedDatesFilterViewModel.StartDate.Equals(default(DateTime)))
                     {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @style = "width:175px;" }, false)
+                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class= "weee-date-filter-width" }, false)
                     }
                     else
                     {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @style = "width:175px;"}, false, "{0:yyyy-MM-dd}")
+                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false, "{0:yyyy-MM-dd}")
                     }
                 </div>
 
@@ -43,11 +43,11 @@
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)
                     @if (Model.SubmittedDatesFilterViewModel.EndDate.Equals(default(DateTime)))
                     {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @style = "width:175px;" }, false)
+                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false)
                     }
                     else
                     {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @style = "width:175px;" }, false, "{0:yyyy-MM-dd}")
+                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false, "{0:yyyy-MM-dd}")
                     }
 
                 </div>
