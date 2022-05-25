@@ -20,7 +20,7 @@
 @section full_main_content
 {
     <p>
-        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+        @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity())))
     </p>
 
     <header class="hgroup">
