@@ -372,6 +372,21 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusReturnedSaved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully saved the returned evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
