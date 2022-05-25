@@ -14,7 +14,7 @@
             },
             text: false
         }).addClass("weee-calendar-button")
-            .append('<span class="sr-only">select date</span><i class="fa fa-calendar" aria-hidden="true" title="search date"></i>');
+            .append('<span class="sr-only">select date</span><span class="fa fa-calendar" aria-hidden="true" title="search date"></span>');
            
         // Add aria-describedby to the button referring to the label
         var id = $(".ui-datepicker-trigger").prevAll("label").first().attr("id");
