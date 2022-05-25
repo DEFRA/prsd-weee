@@ -6,4 +6,3 @@ BEGIN
     ALTER TABLE [Evidence].[Note] ALTER COLUMN [ComplianceYear] INT NOT NULL;
 END
 GO
-UPDATE [Evidence].Note SET ComplianceYear = Year(StartDate)
