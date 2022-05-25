@@ -116,18 +116,21 @@
             result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
         }
 
-        [Fact]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet()
+        [Theory]
+        [InlineData(2021)]
+        [InlineData(2020)]
+        [InlineData(2022)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var date = new DateTime(2022, 1, 1);
+            var date = new DateTime(year, 1, 1);
 
             //act
             var result = testClass.Map(notes, date, null);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
         }
 
         [Theory]
