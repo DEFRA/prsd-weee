@@ -182,7 +182,7 @@
 
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
-                @*@this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })*@
+                @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
                 @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
             </div>
         </div>
