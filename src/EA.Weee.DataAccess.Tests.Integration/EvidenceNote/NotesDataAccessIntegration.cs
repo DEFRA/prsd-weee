@@ -442,10 +442,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
                 context.Notes.Add(noteShouldBeFound);
 
-                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null);
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
                 context.Notes.Add(noteShouldNotBeFound);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -455,6 +456,13 @@
                     NoteStatusId = NoteStatus.Void.Value,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
                 };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.ElementAt(0).Status.Should().Be(NoteStatus.Void);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
