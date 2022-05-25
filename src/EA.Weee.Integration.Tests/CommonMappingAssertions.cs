@@ -30,6 +30,7 @@
             result.Reference.Should().Be(note.Reference);
             result.Protocol.ToInt().Should().Be(note.Protocol.ToInt());
             result.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
+            result.ComplianceYear.ToInt().Should().Be(note.ComplianceYear);
             result.AatfData.Should().NotBeNull();
             result.AatfData.Id.Should().Be(note.Aatf.Id);
             result.SchemeData.Should().NotBeNull();
