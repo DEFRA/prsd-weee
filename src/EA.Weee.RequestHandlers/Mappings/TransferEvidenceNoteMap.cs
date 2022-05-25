@@ -22,7 +22,8 @@
                 Id = source.Id,
                 Reference = source.Reference,
                 Type = (NoteType)source.NoteType.Value,
-                Status = (NoteStatus)source.Status.Value
+                Status = (NoteStatus)source.Status.Value,
+                ComplianceYear = source.ComplianceYear
             };
         }
     }

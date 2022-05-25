@@ -155,7 +155,7 @@
                 break;
             }
         }
-
+        var useOverLay = element.classList.contains("use-overlay");
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
 
@@ -168,8 +168,8 @@
             id: element.id,
             source: items,
             defaultValue: selected,
-            //source: suggest,
             element: newElement,
+            displayMenu: useOverLay ? 'overlay' : 'inline',
             name: element.id + "-auto",
             onConfirm: function (confirmed) {
 
@@ -208,7 +208,7 @@
         newListBox.setAttribute("aria-labelledby", element.id + "-label");
         var autocomplete = document.getElementById(element.id);
         autocomplete.setAttribute("type", "search");
-
+        autocomplete.removeAttribute("role");
         element.style.display = "none";
         element.id = element.id + "-select";
 
