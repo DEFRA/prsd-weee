@@ -209,7 +209,7 @@
         newListBox.setAttribute("aria-labelledby", element.id + "-label");
         var autocomplete = document.getElementById(element.id);
         autocomplete.setAttribute("type", "search");
-
+        autocomplete.removeAttribute("role");
         element.style.display = "none";
         element.id = element.id + "-select";
 
