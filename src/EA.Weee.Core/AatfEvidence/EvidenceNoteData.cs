@@ -39,7 +39,7 @@
 
         public string RejectedReason { get; set; }
 
-        public short ComplianceYear { get; set; }
+        public int ComplianceYear { get; set; }
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
