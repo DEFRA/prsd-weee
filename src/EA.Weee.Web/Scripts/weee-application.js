@@ -155,7 +155,8 @@
                 break;
             }
         }
-
+        var useOverLay = element.classList.contains("use-overlay");
+        console.log(useOverLay);
         var newElement = document.createElement("div");
         newElement.setAttribute("style", "width: 100%");
 
@@ -168,10 +169,9 @@
             id: element.id,
             source: items,
             defaultValue: selected,
-            //source: suggest,
             element: newElement,
+            displayMenu: useOverLay ? 'overlay' : 'inline',
             name: element.id + "-auto",
-            displayMenu: 'overlay',
             onConfirm: function (confirmed) {
 
                 function isNullOrWhitespace(input) {
