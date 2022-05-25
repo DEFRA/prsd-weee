@@ -16,7 +16,7 @@
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
-        string.Empty, new { @style = "width:190px;" }, useHalfWidth: false)
+        string.Empty, new { @class = "weee-drop-down-filter-width" }, useHalfWidth: false)
     </div>
 </div>
 <div class="govuk-grid-column-one-third govuk-!-padding-left-7 govuk-!-padding-right-0">
@@ -24,7 +24,7 @@
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
-        string.Empty, new { @style = "width:190px;" }, useHalfWidth: false)
+        string.Empty, new { @class = "weee-drop-down-filter-width" }, useHalfWidth: false)
 
     </div>
 </div>
