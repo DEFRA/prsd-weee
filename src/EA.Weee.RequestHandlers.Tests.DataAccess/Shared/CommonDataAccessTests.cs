@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Scheme;
     using FluentAssertions;
     using RequestHandlers.Shared;
     using System;
@@ -73,6 +74,61 @@
                 var result = await dataAccess.FetchCompetentAuthorityById(id);
 
                 result.Abbreviation.Should().Be(abbreviation);
+            }
+        }
+
+        [Theory]
+        [InlineData(Core.Shared.CompetentAuthority.England, "EA")]
+        [InlineData(Core.Shared.CompetentAuthority.Wales, "NRW")]
+        [InlineData(Core.Shared.CompetentAuthority.Scotland, "SEPA")]
+        [InlineData(Core.Shared.CompetentAuthority.NorthernIreland, "NIEA")]
+        public async Task FetchCompetentAuthorityApprovedSchemes_AuthorityShouldBeReturned(Core.Shared.CompetentAuthority authority, string abbreviation)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+
+                var dataAccess = new CommonDataAccess(database.WeeeContext);
+
+                var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(authority);
+
+                result.Abbreviation.Should().Be(abbreviation);
+            }
+        }
+
+        [Fact]
+        public async Task FetchCompetentAuthorityApprovedSchemes_OnlyApprovedSchemesReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var authorityId = Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
+
+                var dataAccess = new CommonDataAccess(database.WeeeContext);
+
+                await database.Model.SaveChangesAsync();
+
+                var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(Core.Shared.CompetentAuthority.England);
+
+                result.Schemes.Should().NotContain(x => x.SchemeStatus.Value == SchemeStatus.Rejected.Value);
+            }
+        }
+
+        [Fact]
+        public async Task FetchCompetentAuthorityApprovedSchemes_SchemesReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var helper = new ModelHelper(database.Model);
+                var authorityId = Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
+
+                var dataAccess = new CommonDataAccess(database.WeeeContext);
+
+                await database.Model.SaveChangesAsync();
+
+                var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(Core.Shared.CompetentAuthority.England);
+
+                result.Schemes.Should().Contain(x => x.SchemeStatus.Value == SchemeStatus.Approved.Value);
             }
         }
     }
