@@ -3,9 +3,7 @@
     using DataReturns;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.Globalization;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using Helpers;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -19,9 +17,6 @@
         public string StartOfValidationMessage { get; private set; }
 
         public bool DisplayCategory { get; private set; }
-
-        /* Regex to validate correct use of commas as thousands separator.  Must also consider presence of decimals*/
-        private readonly Regex validThousandRegex = new Regex(@"(^\d{1,3}(,\d{3})*\.\d+$)|(^\d{1,3}(,\d{3})*$)|(^(\d)*\.\d*$)|(^\d*$)");
 
         public TonnageValueAttribute(string category, string startOfValidationMessage, bool displayCategory)
         {
@@ -62,59 +57,37 @@
                 return ValidationResult.Success;
             }
 
-            if (Length(value) > MaxTonnageLength)
+            if (value.ToString().WeeeDecimalLength())
             {
                 return new ValidationResult(GenerateMessage($"numerical with {MaxTonnageLength} digits or less", (int)propertyValue));
             }
 
-            if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
+            if (!value.ToString().WeeeDecimal(out var decimalResult))
             {
                 return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
             }
-            else
+
+            if (value.ToString().WeeeNegativeDecimal(decimalResult))
             {
-                if (decimalResult < 0 || (value.ToString().Substring(0, 1) == "-"))
-                {
-                    return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
-                }
-
-                if (!decimal.TryParse(value.ToString(),
-                    NumberStyles.Number &
-                    ~NumberStyles.AllowLeadingWhite &
-                    ~NumberStyles.AllowTrailingWhite &
-                    ~NumberStyles.AllowLeadingSign &
-                    ~NumberStyles.AllowTrailingSign,
-                    CultureInfo.InvariantCulture,
-                    out decimalResult))
-                {
-                    return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
-                }
-
-                if (decimalResult.DecimalPlaces() > 3)
-                {
-                    return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
-                }
+                return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
             }
 
-            if (!validThousandRegex.IsMatch(value?.ToString()))
+            if (!value.ToString().WeeeDecimalWithWhiteSpace(decimalResult))
+            {
+                return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
+            }
+
+            if (decimalResult.WeeeDecimalThreePlaces())
+            {
+                return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
+            }
+
+            if (value.WeeeThousandSeparator())
             {
                 return new ValidationResult(GenerateMessage("entered in its correct format using only a comma as a thousand separator", (int)propertyValue));
             }
 
             return ValidationResult.Success;
-        }
-
-        private int Length(object value)
-        {
-            var decimalPlaces = value.ToString().DecimalPlaces();
-            var lengthTrimmed = value.ToString().Replace(",", string.Empty).Length;
-
-            if (decimalPlaces > 0)
-            {
-                return lengthTrimmed - (decimalPlaces + 1);
-            }
-
-            return lengthTrimmed;
         }
 
         private string GenerateMessage(string message, int categoryId)
