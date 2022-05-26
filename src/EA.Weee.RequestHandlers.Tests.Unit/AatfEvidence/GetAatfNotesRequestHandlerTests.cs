@@ -20,6 +20,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using WasteType = Core.AatfEvidence.WasteType;
@@ -30,11 +31,11 @@
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess noteDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IMapper mapper;
         private readonly GetAatfNotesRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
-        private readonly Guid recipientId;
         private readonly WasteType wasteType;
         private readonly NoteStatus noteStatus;
         private readonly DateTime startDate;
@@ -45,26 +46,31 @@
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
-            recipientId = fixture.Create<Guid>();
+            var recipientId = fixture.Create<Guid>();
             wasteType = fixture.Create<WasteType>();
             noteStatus = fixture.Create<NoteStatus>();
             startDate = DateTime.UtcNow;
             endDate = startDate.AddDays(2);
+            var systemSettings = A.Fake<SystemData>();
+            systemSettings.ToggleFixedCurrentDateUsage(false);
 
             A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemSettings);
 
             request = new GetAatfNotesRequest(organisation.Id,
                 aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), recipientId, wasteType, noteStatus, startDate, endDate);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
-                mapper);
+                mapper,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -73,7 +79,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest()));
@@ -87,7 +93,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest()));
