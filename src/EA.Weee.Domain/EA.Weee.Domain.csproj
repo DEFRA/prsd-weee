@@ -78,6 +78,7 @@
     <Compile Include="AatfReturn\WeeeSentOnAmount.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistory.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="Error\ObligationUploadErrorType.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
     <Compile Include="Evidence\EvidenceNoteFilter.cs" />
     <Compile Include="Evidence\Note.cs" />
@@ -125,6 +126,8 @@
     <Compile Include="Lookup\WeeeCategory.cs" />
     <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Obligation\ObligationTypeString.cs" />
+    <Compile Include="Obligation\ObligationUpload.cs" />
+    <Compile Include="Obligation\ObligationUploadError.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
