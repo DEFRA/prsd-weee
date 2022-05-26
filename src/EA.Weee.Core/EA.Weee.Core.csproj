@@ -133,8 +133,15 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Shared\CategoryValue.cs" />
-    <Compile Include="Shared\CsvReader.cs" />
+    <Compile Include="Shared\CsvReading\CsvValidationException.cs" />
+    <Compile Include="Shared\CsvReading\CsvReaderException.cs" />
+    <Compile Include="Shared\CsvReading\IWeeeCsvReader.cs" />
+    <Compile Include="Shared\CsvReading\ObligationUpload.cs" />
+    <Compile Include="Shared\CsvReading\ObligationUploadClassMap.cs" />
+    <Compile Include="Shared\CsvReading\WeeeCsvReader.cs" />
     <Compile Include="Shared\EntityType.cs" />
+    <Compile Include="Shared\FileHelper.cs" />
+    <Compile Include="Shared\IFileHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
     <Compile Include="AatfReturn\AatfSize.cs" />
