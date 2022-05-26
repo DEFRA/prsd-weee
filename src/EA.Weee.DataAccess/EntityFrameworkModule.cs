@@ -31,6 +31,7 @@
             builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GenericDataAccess, IGenericDataAccess>(environment);
             builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
+            builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
@@ -38,9 +39,6 @@
                 .InstancePerRequest();
 
             builder.RegisterTypeByEnvironment<QuarterWindowTemplateDataAccess, IQuarterWindowTemplateDataAccess>(environment);
-
-            builder.RegisterType<SystemDataDataAccess>().As<ISystemDataDataAccess>()
-                .InstancePerRequest();
 
             builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()
                 .InstancePerRequest();
