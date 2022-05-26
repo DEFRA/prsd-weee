@@ -109,7 +109,7 @@
                 var category = Model.CategoryValues[i];
 
                 <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                    <td class="govuk-table__cell govuk-!-text-align-left">
+                    <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1">
                         <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
                     </td>
                     <td class="govuk-table__cell govuk-!-text-align-right">
@@ -122,8 +122,8 @@
             }
 
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-text-align-left">
-                    <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1">
+                    <p class="govuk-body"><strong>Total</strong></p>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
                     <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
