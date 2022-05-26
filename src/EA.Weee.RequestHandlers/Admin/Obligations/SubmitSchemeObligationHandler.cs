@@ -1,25 +1,44 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
+    using System;
     using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
+    using Core.Shared;
+    using Core.Shared.CsvReading;
     using CsvHelper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
 
     internal class SubmitSchemeObligationHandler : IRequestHandler<SubmitSchemeObligation, object>
     {
+        private readonly IWeeeCsvReader csvReader;
+        private readonly IFileHelper fileHelper;
+
+        public SubmitSchemeObligationHandler(IWeeeCsvReader csvReader, IFileHelper fileHelper)
+        {
+            this.csvReader = csvReader;
+            this.fileHelper = fileHelper;
+        }
+
         public Task<object> HandleAsync(SubmitSchemeObligation message)
         {
-            var data = new byte[1];
-
-            using (var ms = new MemoryStream(data))
+            using (var reader = fileHelper.GetCsvReader(fileHelper.GetStreamReader(message.FileInfo.Data)))
             {
-                ms.Seek(0, SeekOrigin.Begin);
-                using (var reader = new StreamReader(ms))
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                csvReader.RegisterClassMap<ObligationUploadClassMap>();
+
+                try
                 {
-                    //var records = csv.GetRecords<Foo>();
+                    csvReader.ReadHeader();
+                    csvReader.ValidateHeader<ObligationUpload>();
+                }
+                catch (CsvValidationException)
+                {
+                    throw new Exception();
+                }
+                catch (CsvReaderException)
+                {
+                    throw new Exception();
                 }
             }
 
