@@ -9,6 +9,7 @@
     {
         Task<Scheme> GetSchemeOrDefault(Guid schemeId);
 
+        Task<Scheme> GetSchemeOrDefaultByApprovalNumber(string approvalNumber);
         Task<IList<int>> GetComplianceYearsWithSubmittedMemberUploads(Guid schemeId);
 
         Task<IList<int>> GetComplianceYearsWithSubmittedDataReturns(Guid schemeId);

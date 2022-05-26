@@ -17,17 +17,17 @@
         private const string FileFormatError =
             "The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.";
 
-        private readonly IFileHelper fileHelper;
         private readonly IObligationCsvReader obligationCsvReader;
+        private readonly IObligationUploadValidator obligationUploadValidator;
 
-        public SubmitSchemeObligationHandler(IFileHelper fileHelper, 
-            IObligationCsvReader obligationCsvReader)
+        public SubmitSchemeObligationHandler(IObligationCsvReader obligationCsvReader, 
+            IObligationUploadValidator obligationUploadValidator)
         {
-            this.fileHelper = fileHelper;
             this.obligationCsvReader = obligationCsvReader;
+            this.obligationUploadValidator = obligationUploadValidator;
         }
 
-        public Task<Guid> HandleAsync(SubmitSchemeObligation request)
+        public async Task<Guid> HandleAsync(SubmitSchemeObligation request)
         {
             var errors = new List<ObligationUploadError>();
             var obligations = new List<ObligationCsvUpload>();
@@ -45,7 +45,11 @@
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
             }
 
-            return Task.FromResult(Guid.NewGuid());
+            var dataErrors = await obligationUploadValidator.Validate(obligations);
+
+            errors.AddRange(dataErrors);
+            
+            return Guid.NewGuid();
         }
     }
 }

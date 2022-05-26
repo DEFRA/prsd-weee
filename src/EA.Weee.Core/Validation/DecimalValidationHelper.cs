@@ -20,9 +20,9 @@
             return decimal.TryParse(value, NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out decimalResult);
         }
 
-        public static bool WeeeDecimalWithWhiteSpace(this string value, decimal decimalResult)
+        public static bool WeeeDecimalWithWhiteSpace(this string value, out decimal decimalResult)
         {
-            return !decimal.TryParse(value.ToString(),
+            return !decimal.TryParse(value,
                 NumberStyles.Number &
                 ~NumberStyles.AllowLeadingWhite &
                 ~NumberStyles.AllowTrailingWhite &
