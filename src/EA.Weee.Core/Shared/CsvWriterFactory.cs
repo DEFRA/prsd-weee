@@ -14,7 +14,7 @@
             this.excelSanitizer = excelSanitizer;
         }
 
-        public CsvWriter<T> Create<T>()
+        public virtual CsvWriter<T> Create<T>()
         {
             return new CsvWriter<T>(excelSanitizer);
         }
