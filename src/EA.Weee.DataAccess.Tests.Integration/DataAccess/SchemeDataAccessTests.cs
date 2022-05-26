@@ -1,12 +1,60 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.DataAccess
 {
+    using System;
     using System.Linq;
+    using FluentAssertions;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;
 
     public class SchemeDataAccessTests
     {
+        [Fact]
+        public async void GetSchemeOrDefaultByApprovalNumber_GivenMatchApprovalNumberShouldReturnScheme()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(databaseWrapper.Model);
+                var approvalNumber = Guid.NewGuid().ToString().Substring(0, 16);
+                var schemeToBeFound = modelHelper.CreateScheme();
+                schemeToBeFound.ApprovalNumber = approvalNumber;
+
+                await databaseWrapper.Model.SaveChangesAsync();
+
+                // Act
+                var dataAccess = new SchemeDataAccess(databaseWrapper.WeeeContext);
+
+                var result = await dataAccess.GetSchemeOrDefaultByApprovalNumber(approvalNumber);
+
+                // Assert
+                result.Id.Should().Be(schemeToBeFound.Id);
+            }
+        }
+
+        [Fact]
+        public async void GetSchemeOrDefaultByApprovalNumber_GivenMatchNonApprovalNumberShouldReturnScheme()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                // Arrange
+                var modelHelper = new ModelHelper(databaseWrapper.Model);
+                var approvalNumber = Guid.NewGuid().ToString().Substring(0, 16);
+                var schemeToBeFound = modelHelper.CreateScheme();
+                schemeToBeFound.ApprovalNumber = approvalNumber;
+
+                await databaseWrapper.Model.SaveChangesAsync();
+
+                // Act
+                var dataAccess = new SchemeDataAccess(databaseWrapper.WeeeContext);
+
+                var result = await dataAccess.GetSchemeOrDefaultByApprovalNumber(approvalNumber.Substring(0, 5));
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
         [Fact]
         public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeHasNoMemberUploads_ReturnsNoYears()
         {
