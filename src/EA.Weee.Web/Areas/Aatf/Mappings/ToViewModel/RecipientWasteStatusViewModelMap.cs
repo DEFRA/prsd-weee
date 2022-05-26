@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings
 {
-    using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
     using EA.Prsd.Core;
