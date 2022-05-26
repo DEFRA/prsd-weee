@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Shared.CsvReading
 {
+    using System;
     using System.Globalization;
     using System.IO;
     using CsvHelper;
@@ -10,6 +11,7 @@
     {
         private readonly TextReader textReader;
         private readonly CsvReader csvReader;
+        private bool disposed = false;
 
         public WeeeCsvReader(TextReader streamReader)
         {
@@ -59,8 +61,26 @@
 
         public void Dispose()
         {
-            csvReader.Dispose();
-            textReader.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                csvReader.Dispose();
+                textReader.Dispose();
+            }
+
+            disposed = true;
+        }
+
+        ~WeeeCsvReader() => Dispose();
     }
 }
