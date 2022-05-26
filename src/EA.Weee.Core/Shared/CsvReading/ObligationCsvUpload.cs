@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.Shared.CsvReading
 {
-    public class ObligationUpload
+    public class ObligationCsvUpload
     {
         public string SchemeIdentifier { get; set; }
 
@@ -34,7 +34,7 @@
 
         public string Cat14 { get; set; }
         
-        public ObligationUpload()
+        public ObligationCsvUpload()
         {
         }
     }
