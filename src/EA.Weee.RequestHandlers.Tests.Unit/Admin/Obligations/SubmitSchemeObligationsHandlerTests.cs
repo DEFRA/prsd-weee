@@ -38,7 +38,17 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationCsvReader.ValidateHeader(request.FileInfo.Data)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationCsvReader.Read(request.FileInfo.Data)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenCsvReaderThrows_ValidateHeader()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => obligationCsvReader.Read(request.FileInfo.Data)).MustHaveHappenedOnceExactly();
         }
     }
 }
