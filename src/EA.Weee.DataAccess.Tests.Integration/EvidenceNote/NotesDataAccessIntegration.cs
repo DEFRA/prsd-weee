@@ -50,7 +50,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AatfId = aatf1.Id,
@@ -87,7 +87,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AatfId = aatf.Id,
@@ -125,7 +125,7 @@
                 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -166,7 +166,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted }
@@ -207,7 +207,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted }
@@ -254,7 +254,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation1.Id,
                     AatfId = aatf2.Id,
@@ -298,7 +298,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation.Id,
                     AatfId = aatf.Id,
@@ -341,7 +341,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     OrganisationId = organisation.Id,
                     AatfId = aatf.Id,
@@ -366,7 +366,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SearchRef = noteShouldBeFound.Reference.ToString(),
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status}
@@ -406,7 +406,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     WasteTypeId = (int?)WasteType.HouseHold,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
@@ -447,7 +447,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SchemeId = schemeToMatch.Id,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
@@ -487,7 +487,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     NoteStatusId = NoteStatus.Void.Value,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
@@ -502,8 +502,14 @@
             }
         }
 
-        [Fact]
-        public async Task GetAllNotes_GivenStartDateFilter_ShouldReturnSingleNote()
+        public static readonly object[][] StartDates =
+        {
+            new object[] { DateTime.Now },
+            new object[] { DateTime.Now.AddDays(-1) }
+        };
+
+        [Theory, MemberData(nameof(StartDates))]
+        public async Task GetAllNotes_GivenSubmittedStartDateFilter_ShouldReturnSingleNote(DateTime date)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -529,10 +535,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    StartDateSubmitted = DateTime.Now.AddHours(-1),
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
+                    StartDateSubmitted = date,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
+                    AatfId = aatf.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
@@ -544,7 +551,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_GivenStartDateFilterNoSubmitStatus_ShouldReturnZeroNote()
+        public async Task GetAllNotes_GivenStartDateFilterOutSideOfStartDate_ShouldReturnZeroNote()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -560,31 +567,69 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldNotBeFound1 = NoteCommon.CreateNote(database, organisation, null, aatf);
-                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 context.Notes.Add(noteShouldNotBeFound1);
-
-                var noteShouldNotBeFound2 = NoteCommon.CreateNote(database, organisation, null, aatf);
-                context.Notes.Add(noteShouldNotBeFound2);
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    StartDateSubmitted = DateTime.Now.AddHours(-1),
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
+                    StartDateSubmitted = DateTime.Now.AddDays(1),
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
+                    AatfId = aatf.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(0);
                 notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound2.Id));
             }
         }
 
         [Fact]
-        public async Task GetAllNotes_GivenEndDateFilter_ShouldReturnSingleNote()
+        public async Task GetAllNotes_GivenEndDateFilterOutSideOfEndDate_ShouldReturnZeroNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation);
+
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
+                context.Aatfs.Add(aatf);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var noteShouldNotBeFound1 = NoteCommon.CreateNote(database, organisation, null, aatf);
+                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                context.Notes.Add(noteShouldNotBeFound1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
+                {
+                    EndDateSubmitted = DateTime.Now.AddDays(-1),
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
+                    AatfId = aatf.Id
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(0);
+                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
+            }
+        }
+
+        public static readonly object[][] EndDates =
+        {
+            new object[] { DateTime.Now },
+            new object[] { DateTime.Now.AddDays(1) }
+        };
+
+        [Theory, MemberData(nameof(EndDates))]
+        public async Task GetAllNotes_GivenEndDateFilter_ShouldReturnSingleNote(DateTime date)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -610,10 +655,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    EndDateSubmitted = DateTime.Now.AddHours(1),
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
+                    EndDateSubmitted = date,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
+                    AatfId = aatf.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
@@ -625,7 +671,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_GivenStartAndEndDateFilter_ShouldReturnSingleNote()
+        public async Task GetAllNotes_GivenStartAndEndDateFilter_ShouldReturnNotes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -640,28 +686,36 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
-                context.Notes.Add(noteShouldBeFound);
+                var note1ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(note1ShouldBeFound);
+
+                var note2ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                context.Notes.Add(note2ShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
                 context.Notes.Add(noteShouldNotBeFound);
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    StartDateSubmitted = DateTime.Now.AddHours(-1),
-                    EndDateSubmitted = DateTime.Now.AddHours(1),
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
+                    StartDateSubmitted = DateTime.Now.AddDays(-1),
+                    EndDateSubmitted = DateTime.Now.AddDays(1),
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Rejected },
+                    AatfId = aatf.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Count.Should().Be(2);
+                notes.Count(n => n.Id == note2ShouldBeFound.Id).Should().Be(1);
+                notes.Count(n => n.Id == note1ShouldBeFound.Id).Should().Be(1);
                 notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
@@ -677,7 +731,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SearchRef = noteShouldBeFound.Reference.ToString(),
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
@@ -703,7 +757,7 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SearchRef = $"Z{noteShouldNotBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
@@ -727,7 +781,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database, noteType);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SearchRef = $"{noteType.DisplayName}{noteShouldBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
@@ -753,7 +807,7 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
 
-                var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
                     SearchRef = $"{NoteType.TransferNote.DisplayName}{noteShouldNotBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
