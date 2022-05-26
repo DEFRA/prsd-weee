@@ -4,6 +4,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Web.Mvc;
     using Helpers;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -72,12 +73,12 @@
                 return new ValidationResult(GenerateMessage("0 or greater", (int)propertyValue));
             }
 
-            if (!value.ToString().WeeeDecimalWithWhiteSpace(decimalResult))
+            if (!value.ToString().WeeeDecimalWithWhiteSpace(out var decimalResult2))
             {
                 return new ValidationResult(GenerateMessage("numerical", (int)propertyValue));
             }
 
-            if (decimalResult.WeeeDecimalThreePlaces())
+            if (decimalResult2.WeeeDecimalThreePlaces())
             {
                 return new ValidationResult(GenerateMessage("3 decimal places or less", (int)propertyValue));
             }

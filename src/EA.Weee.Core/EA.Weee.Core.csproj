@@ -138,6 +138,7 @@
     <Compile Include="Shared\CsvReading\IWeeeCsvReader.cs" />
     <Compile Include="Shared\CsvReading\ObligationCsvUpload.cs" />
     <Compile Include="Shared\CsvReading\ObligationUploadClassMap.cs" />
+    <Compile Include="Shared\CsvReading\WeeeCategoryAttribute.cs" />
     <Compile Include="Shared\CsvReading\WeeeCsvReader.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Shared\FileHelper.cs" />

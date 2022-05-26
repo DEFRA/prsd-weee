@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Shared;
@@ -12,27 +13,26 @@
 
     public class SubmitSchemeObligationsHandlerTests
     {
-        private SubmitSchemeObligationHandler handler;
-        private readonly IFileHelper fileHelper;
+        private readonly SubmitSchemeObligationHandler handler;
         private readonly IObligationCsvReader obligationCsvReader;
+        private readonly IObligationUploadValidator obligationUploadValidator;
         private readonly Fixture fixture;
         private readonly SubmitSchemeObligation request;
 
         public SubmitSchemeObligationsHandlerTests()
         {
-            fileHelper = A.Fake<IFileHelper>();
-            A.Fake<IWeeeCsvReader>();
             obligationCsvReader = A.Fake<IObligationCsvReader>();
+            obligationUploadValidator = A.Fake<IObligationUploadValidator>();
             fixture = new Fixture();
 
             var fileInfo = new FileInfo(fixture.Create<string>(), fixture.Create<byte[]>());
             request = new SubmitSchemeObligation(fileInfo);
 
-            handler = new SubmitSchemeObligationHandler(fileHelper, obligationCsvReader);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator);
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ValidateHeader()
+        public async Task HandleAsync_GivenRequest_CsvShouldBeRead()
         {
             //act
             await handler.HandleAsync(request);
@@ -42,13 +42,17 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenCsvReaderThrows_ValidateHeader()
+        public async Task HandleAsync_GivenRequest_CsvDataShouldBeValidated()
         {
+            //arrange
+            var obligationUploadData = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Returns(obligationUploadData);
+
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationCsvReader.Read(request.FileInfo.Data)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationUploadValidator.Validate(obligationUploadData)).MustHaveHappenedOnceExactly();
         }
     }
 }
