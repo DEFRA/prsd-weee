@@ -98,5 +98,31 @@
             result.AllowedStatuses.Should().BeEquivalentTo(allowedStatus);
             result.SearchRef.Should().Be(searchRef);
         }
+
+        [Fact]
+        public void GetAatfNotesRequest_Constructor_GivenApprovedStatusAllFiltersSet_AllowedStatusesShouldBeSet()
+        {
+            // act
+            var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var searchRef = fixture.Create<string>();
+            var recievedId = fixture.Create<Guid>();
+            var wasteType = fixture.Create<WasteType>();
+            var noteStatus = fixture.Create<NoteStatus>();
+            var startDate = fixture.Create<DateTime>();
+            var endDate = fixture.Create<DateTime>();
+
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, recievedId, wasteType, noteStatus, startDate, endDate);
+
+            // assert
+            result.OrganisationId.Should().Be(organisationId);
+            result.AatfId.Should().Be(aatfId);
+            result.AllowedStatuses.Should().BeEquivalentTo(allowedStatus);
+            result.SearchRef.Should().Be(searchRef);
+            result.RecipientId.Should().Be(recievedId);
+            result.WasteTypeId.Should().Be(wasteType);
+            result.NoteStatusFilter.Should().Be(noteStatus);
+            result.StartDateSubmitted.Should().Be(startDate);
+            result.EndDateSubmitted.Should().Be(endDate);
+        }
     }
 }
