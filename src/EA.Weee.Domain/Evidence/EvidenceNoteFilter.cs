@@ -68,7 +68,7 @@
             }
         }
 
-        public EvidenceNoteFilter(short complianceYear)
+        public EvidenceNoteFilter(int complianceYear)
         {
             ComplianceYear = complianceYear;
         }
