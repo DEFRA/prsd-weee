@@ -1,48 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
     using System;
-    using System.Globalization;
-    using System.IO;
     using System.Threading.Tasks;
     using Core.Shared;
     using Core.Shared.CsvReading;
-    using CsvHelper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
 
-    internal class SubmitSchemeObligationHandler : IRequestHandler<SubmitSchemeObligation, object>
+    internal class SubmitSchemeObligationHandler : IRequestHandler<SubmitSchemeObligation, Guid>
     {
-        private readonly IWeeeCsvReader csvReader;
         private readonly IFileHelper fileHelper;
+        private readonly IObligationCsvReader obligationCsvReader;
 
-        public SubmitSchemeObligationHandler(IWeeeCsvReader csvReader, IFileHelper fileHelper)
+        public SubmitSchemeObligationHandler(IFileHelper fileHelper, 
+            IObligationCsvReader obligationCsvReader)
         {
-            this.csvReader = csvReader;
             this.fileHelper = fileHelper;
+            this.obligationCsvReader = obligationCsvReader;
         }
 
-        public Task<object> HandleAsync(SubmitSchemeObligation message)
+        public Task<Guid> HandleAsync(SubmitSchemeObligation request)
         {
-            using (var reader = fileHelper.GetCsvReader(fileHelper.GetStreamReader(message.FileInfo.Data)))
-            {
-                csvReader.RegisterClassMap<ObligationUploadClassMap>();
+            obligationCsvReader.ValidateHeader(request.FileInfo.Data);
 
-                try
-                {
-                    csvReader.ReadHeader();
-                    csvReader.ValidateHeader<ObligationUpload>();
-                }
-                catch (CsvValidationException)
-                {
-                    throw new Exception();
-                }
-                catch (CsvReaderException)
-                {
-                    throw new Exception();
-                }
-            }
-
-            return null;
+            return Task.FromResult(Guid.NewGuid());
         }
     }
 }
