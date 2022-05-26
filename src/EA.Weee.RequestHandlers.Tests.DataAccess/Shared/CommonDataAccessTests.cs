@@ -86,8 +86,6 @@
         {
             using (var database = new DatabaseWrapper())
             {
-                var helper = new ModelHelper(database.Model);
-
                 var dataAccess = new CommonDataAccess(database.WeeeContext);
 
                 var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(authority);
@@ -104,12 +102,16 @@
                 var helper = new ModelHelper(database.Model);
                 var authorityId = Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
 
+                var organisation = helper.CreateOrganisation();
+                var notApprovedScheme = helper.CreateScheme(organisation, authorityId);
+
                 var dataAccess = new CommonDataAccess(database.WeeeContext);
 
                 await database.Model.SaveChangesAsync();
 
                 var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(Core.Shared.CompetentAuthority.England);
 
+                result.Schemes.Should().NotContain(x => x.Id == notApprovedScheme.Id);
                 result.Schemes.Should().NotContain(x => x.SchemeStatus.Value == SchemeStatus.Rejected.Value);
             }
         }
@@ -121,6 +123,9 @@
             {
                 var helper = new ModelHelper(database.Model);
                 var authorityId = Guid.Parse("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
+                var organisation = helper.CreateOrganisation();
+                var approvedScheme = helper.CreateScheme(organisation, authorityId);
+                approvedScheme.SchemeStatus = SchemeStatus.Approved.Value;
 
                 var dataAccess = new CommonDataAccess(database.WeeeContext);
 
@@ -129,6 +134,7 @@
                 var result = await dataAccess.FetchCompetentAuthorityApprovedSchemes(Core.Shared.CompetentAuthority.England);
 
                 result.Schemes.Should().Contain(x => x.SchemeStatus.Value == SchemeStatus.Approved.Value);
+                result.Schemes.Should().Contain(x => x.Id == approvedScheme.Id);
             }
         }
     }
