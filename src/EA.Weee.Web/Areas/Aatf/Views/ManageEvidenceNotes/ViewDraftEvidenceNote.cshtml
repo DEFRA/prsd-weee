@@ -1,13 +1,9 @@
-﻿
-@using EA.Weee.Core.AatfEvidence
-@using EA.Weee.Web.Areas.Aatf.Controllers
+﻿@using EA.Weee.Web.Areas.Aatf.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels;
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 @{
-    var title = Model.Status == NoteStatus.Draft ? "Draft evidence note" : "Submitted evidence note";
-    ViewBag.Title = title + " - GOV.UK";
+    ViewBag.Title = Model.TabName + " - GOV.UK";
 }
 
 @section full_main_content{
