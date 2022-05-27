@@ -136,5 +136,98 @@
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
+
+        [Fact]
+        public void Map_GivenApprovedEvidenceNoteData_MappedDataDisplayViewLinkShouldBeTrue()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>(1).ToList();
+            notes[0].ApprovedDate = DateTime.Now;
+            notes[0].Status = NoteStatus.Approved;
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                 fixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var model = new EditDraftReturnedNotesViewModel
+            {
+                EvidenceNotesDataList = returnedNotes
+            };
+
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList[0].DisplayViewLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSubmittedEvidenceNoteData_MappedDataDisplayViewLinkShouldBeTrue()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>(1).ToList();
+            notes[0].SubmittedDate = DateTime.Now;
+            notes[0].Status = NoteStatus.Submitted;
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                 fixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var model = new EditDraftReturnedNotesViewModel
+            {
+                EvidenceNotesDataList = returnedNotes
+            };
+
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList[0].DisplayViewLink.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenRejectedEvidenceNoteData_MappedDataDisplayViewLinkShouldBeTrue()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>(1).ToList();
+            notes[0].RejectedDate = DateTime.Now;
+            notes[0].Status = NoteStatus.Rejected;
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                 fixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var model = new EditDraftReturnedNotesViewModel
+            {
+                EvidenceNotesDataList = returnedNotes
+            };
+
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList[0].DisplayViewLink.Should().BeTrue();
+        }
     }
 }
