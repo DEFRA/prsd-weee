@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Shared;
     using Core.Shared.CsvReading;
     using FakeItEasy;
+    using Mappings;
     using RequestHandlers.Admin.Obligations;
     using Weee.Requests.Admin.Obligations;
     using Xunit;
@@ -52,7 +54,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationUploadValidator.Validate(obligationUploadData)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationUploadValidator.Validate(A<List<ObligationCsvUpload>>.That.Matches(o => o.SequenceEqual(obligationUploadData)))).MustHaveHappenedOnceExactly();
         }
     }
 }

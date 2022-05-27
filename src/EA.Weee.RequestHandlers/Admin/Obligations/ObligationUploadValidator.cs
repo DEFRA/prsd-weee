@@ -1,22 +1,24 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using Core.Shared.CsvReading; 
     using Core.Validation;
     using DataAccess.DataAccess;
     using Domain.Error;
-    using Domain.Lookup;
     using Domain.Obligation;
 
     public class ObligationUploadValidator : IObligationUploadValidator
     {
         private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly ITonnageValueValidator tonnageValueValidator;
 
-        public ObligationUploadValidator(ISchemeDataAccess schemeDataAccess)
+        public ObligationUploadValidator(ISchemeDataAccess schemeDataAccess, 
+            ITonnageValueValidator tonnageValueValidator)
         {
             this.schemeDataAccess = schemeDataAccess;
+            this.tonnageValueValidator = tonnageValueValidator;
         }
 
         public async Task<IList<ObligationUploadError>> Validate(IList<ObligationCsvUpload> obligations)
@@ -46,72 +48,40 @@
             var props = typeof(ObligationCsvUpload).GetProperties();
             foreach (var prop in props)
             {
-                var attrs = prop.GetCustomAttributes(true);
-                foreach (var attr in attrs)
+                var categoryAttributes = prop.GetCustomAttributes(true);
+                foreach (var categoryAttribute in categoryAttributes)
                 {
-                    if (attr is WeeeCategoryAttribute authAttr)
+                    if (categoryAttribute is WeeeCategoryAttribute weeeCategoryAttribute)
                     {
-                        var validationError = ValidateTonnage(prop.GetValue(obligationCsvUpload).ToString(), obligationCsvUpload.SchemeName,
-                            obligationCsvUpload.SchemeIdentifier, authAttr.Category);
+                        var result = tonnageValueValidator.Validate(prop.GetValue(obligationCsvUpload));
 
-                        if (validationError != null)
+                        if (result != TonnageValidationResult.Success)
                         {
-                            errors.Add(validationError);
+                            string message = string.Empty;
+                            switch (result.Type)
+                            {
+                                case TonnageValidationTypeEnum.MaximumDigits:
+                                    message = $"Category {(int)weeeCategoryAttribute.Category} is too long";
+                                    break;
+                                case TonnageValidationTypeEnum.NotNumerical:
+                                    message = $"Category {(int)weeeCategoryAttribute.Category} is wrong";
+                                    break;
+                                case TonnageValidationTypeEnum.LessThanZero:
+                                    message = $"Category {(int)weeeCategoryAttribute.Category} is a negative value";
+                                    break;
+                                case TonnageValidationTypeEnum.DecimalPlaces:
+                                    message = $"Category {(int)weeeCategoryAttribute.Category} exceeds decimal place limit";
+                                    break;
+                                case TonnageValidationTypeEnum.DecimalPlaceFormat:
+                                    message = $"Category {(int)weeeCategoryAttribute.Category} is wrong";
+                                    break;
+                            }
+
+                            errors.Add(new ObligationUploadError(ObligationUploadErrorType.Data, weeeCategoryAttribute.Category, obligationCsvUpload.SchemeName, obligationCsvUpload.SchemeIdentifier, message));
                         }
                     }
                 }
             }
-        }
-
-        private ObligationUploadError ValidateTonnage(string tonnage, 
-            string schemeName,
-            string schemeIdentifier,
-            WeeeCategory category)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(tonnage))
-                {
-                    return null;
-                }
-
-                if (tonnage.WeeeDecimalLength())
-                {
-                    throw new ValidationException($"Category {category} is too long");
-                }
-
-                if (!tonnage.WeeeDecimal(out var decimalResult))
-                {
-                    throw new ValidationException($"Category {category} is wrong");
-                }
-
-                if (tonnage.WeeeNegativeDecimal(decimalResult))
-                {
-                    throw new ValidationException($"Category {category} is a negative value");
-                }
-
-                if (!tonnage.WeeeDecimalWithWhiteSpace(out var decimalResult1))
-                {
-                    throw new ValidationException($"Category {category} is wrong");
-                }
-
-                if (decimalResult1.WeeeDecimalThreePlaces())
-                {
-                    throw new ValidationException($"Category {category} exceeds decimal place limit");
-                }
-
-                if (tonnage.WeeeThousandSeparator())
-                {
-                    throw new ValidationException($"Category {category} is wrong");
-                }
-            }
-            catch (ValidationException exception)
-            {
-                return new ObligationUploadError(ObligationUploadErrorType.Data, category, schemeIdentifier, schemeName,
-                    exception.Message);
-            }
-
-            return null;
         }
     }
 }
