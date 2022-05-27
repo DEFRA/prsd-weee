@@ -8,8 +8,11 @@
     using Core.Shared.CsvReading;
     using Domain.Error;
     using Domain.Obligation;
+    using Domain.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
+    using Security;
+    using Weee.Security;
     using ObligationCsvUpload = Core.Shared.CsvReading.ObligationCsvUpload;
 
     internal class SubmitSchemeObligationHandler : IRequestHandler<SubmitSchemeObligation, Guid>
@@ -19,16 +22,22 @@
 
         private readonly IObligationCsvReader obligationCsvReader;
         private readonly IObligationUploadValidator obligationUploadValidator;
+        private readonly IWeeeAuthorization authorization;
 
         public SubmitSchemeObligationHandler(IObligationCsvReader obligationCsvReader, 
-            IObligationUploadValidator obligationUploadValidator)
+            IObligationUploadValidator obligationUploadValidator, 
+            IWeeeAuthorization authorization)
         {
             this.obligationCsvReader = obligationCsvReader;
             this.obligationUploadValidator = obligationUploadValidator;
+            this.authorization = authorization;
         }
 
         public async Task<Guid> HandleAsync(SubmitSchemeObligation request)
         {
+            authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
+
             var errors = new List<ObligationUploadError>();
             var obligations = new List<ObligationCsvUpload>();
 
