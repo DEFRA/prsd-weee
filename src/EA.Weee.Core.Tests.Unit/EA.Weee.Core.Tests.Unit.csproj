@@ -211,13 +211,13 @@
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
-    <Compile Include="SpecimenBuilders\StringDecimalGenerator.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\TonnageCompareValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueAttributeTests.cs" />
+    <Compile Include="Validation\TonnageValueValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
