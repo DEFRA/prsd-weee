@@ -210,6 +210,7 @@
     <Compile Include="Shared\CsvWriterTests.cs" />
     <Compile Include="Shared\ErrorDataTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
+    <Compile Include="Shared\ObligationCsvUploadTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
