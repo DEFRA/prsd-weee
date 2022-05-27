@@ -13,7 +13,7 @@
 
         public string Description { get; private set; }
 
-        public WeeeCategory Category { get; private set; }
+        public WeeeCategory? Category { get; private set; }
 
         public ObligationUploadError(ObligationUploadErrorType error, string description)
         {
