@@ -7,13 +7,13 @@
     {
         public ObligationUploadErrorMapping()
         {
-            ToTable("ObligationUploadErrorMapping", "PCS");
+            ToTable("ObligationUploadError", "PCS");
             HasKey(o => o.Id);
             Property(o => o.ErrorType.Value).HasColumnName("ErrorType").IsRequired();
-            Property(o => o.SchemeIdentifier).IsRequired().HasColumnName("SchemeIdentifier").IsUnicode();
-            Property(o => o.SchemeName).IsRequired().HasColumnName("SchemeName").IsUnicode();
+            Property(o => o.SchemeIdentifier).IsOptional().HasColumnName("SchemeIdentifier").IsUnicode();
+            Property(o => o.SchemeName).IsOptional().HasColumnName("SchemeName").IsUnicode();
             Property(o => o.Description).IsRequired().HasColumnName("Description");
-            Property(o => o.Category).IsRequired().HasColumnName("Category");
+            Property(o => o.Category).IsOptional().HasColumnName("Category");
 
             HasRequired(o => o.ObligationUpload).WithMany(o => o.ObligationUploadErrors).HasForeignKey(o => o.ObligationUploadId);
         }

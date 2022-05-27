@@ -27,7 +27,7 @@
                 WEE / TE0095ST / SCH,Emily's PCS,,,,,,,,,,,,,,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
             };
 
             private readonly Because of = () =>
