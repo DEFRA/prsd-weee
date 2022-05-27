@@ -18,7 +18,7 @@
                 OrganisationId = source.OrganisationId,
                 AatfId = source.AatfId,
                 SchemeList = source.Schemes,
-                ProtocolList = new SelectList(EnumHelper.GetOrderedValues(typeof(Protocol)), "Key", "Value"),
+                ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value")
             };
 
