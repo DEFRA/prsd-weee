@@ -61,7 +61,7 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-page").Include(
                             "~/Content/flatpickr.css",
-                            "~/Content/themes/base/jquery-ui.css",
+                            "~/Content/themes/base/*.css",
                             "~/Content/auto-complete.css",
                             "~/Content/weee-page.css",
                             "~/Content/font-awesome.css"));
