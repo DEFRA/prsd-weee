@@ -27,6 +27,7 @@
                 .As<ITestUserEmailDomains>();
 
             builder.RegisterType<PasteProcessor>().As<IPasteProcessor>();
+            builder.RegisterType<FileHelper>().As<IFileHelper>();
         }
     }
 }
