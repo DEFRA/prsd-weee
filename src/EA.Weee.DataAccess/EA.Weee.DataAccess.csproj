@@ -101,6 +101,7 @@
     <Compile Include="DataAccess\GenericDataAccess.cs" />
     <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
+    <Compile Include="DataAccess\IObligationDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />

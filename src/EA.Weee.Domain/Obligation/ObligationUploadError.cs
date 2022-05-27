@@ -23,6 +23,10 @@
 
         public virtual WeeeCategory? Category { get; private set; }
 
+        public ObligationUploadError()
+        {
+        }
+
         public ObligationUploadError(ObligationUploadErrorType errorType, string description)
         {
             ErrorType = errorType;
