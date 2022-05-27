@@ -7,7 +7,7 @@
     using Domain.Obligation;
     using Prsd.Core.Domain;
 
-    public class ObligationDataAccess
+    public class ObligationDataAccess : IObligationDataAccess
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
@@ -30,11 +30,11 @@
             var obligationUpload = new ObligationUpload(ukCompetentAuthority,
                 userContext.UserId.ToString(), data, fileName, errors);
 
-            await genericDataAccess.Add(obligationUpload);
+            var updatedObligation = await genericDataAccess.Add(obligationUpload);
 
             await context.SaveChangesAsync();
 
-            return obligationUpload.Id;
+            return updatedObligation.Id;
         }
     }
 }
