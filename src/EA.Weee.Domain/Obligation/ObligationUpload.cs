@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
     using CuttingEdge.Conditions;
     using Prsd.Core;
     using Prsd.Core.Domain;
@@ -19,21 +21,34 @@
 
         public virtual User UploadedBy { get; set; }
 
+        [ForeignKey("CompetentAuthorityId")]
+        public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public virtual Guid CompetentAuthorityId { get; private set; }
+
         public virtual ICollection<ObligationUploadError> ObligationUploadErrors { get; protected set; }
 
-        public ObligationUpload(string uploadedById,
+        public ObligationUpload()
+        {
+        }
+
+        public ObligationUpload(UKCompetentAuthority competentAuthority,
+            string uploadedById,
             string data,
-            string fileName)
+            string fileName,
+            ICollection<ObligationUploadError> errors)
         {
             Condition.Requires(data).IsNotNullOrWhiteSpace();
             Condition.Requires(fileName).IsNotNullOrWhiteSpace();
             Condition.Requires(uploadedById).IsNotNullOrWhiteSpace();
+            Condition.Requires(competentAuthority).IsNotNull();
 
+            CompetentAuthority = competentAuthority;
             Data = data;
             FileName = fileName;
             UploadedById = uploadedById;
             UploadedDate = SystemTime.UtcNow;
-            ObligationUploadErrors = new List<ObligationUploadError>();
+            ObligationUploadErrors = errors;
         }
     }
 }

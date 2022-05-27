@@ -1,15 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Shared;
     using Core.Shared.CsvReading;
+    using Domain;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.Obligations;
     using RequestHandlers.Security;
+    using RequestHandlers.Shared;
     using Weee.Requests.Admin.Obligations;
     using Weee.Security;
     using Weee.Tests.Core;
@@ -22,6 +26,7 @@
         private readonly IObligationCsvReader obligationCsvReader;
         private readonly IObligationUploadValidator obligationUploadValidator;
         private readonly IWeeeAuthorization authorization;
+        private readonly ICommonDataAccess commonDataAccess;
         private readonly Fixture fixture;
         private readonly SubmitSchemeObligation request;
 
@@ -31,10 +36,12 @@
             obligationUploadValidator = A.Fake<IObligationUploadValidator>();
             fixture = new Fixture();
             authorization = A.Fake<IWeeeAuthorization>();
-            var fileInfo = new FileInfo(fixture.Create<string>(), fixture.Create<byte[]>());
-            request = new SubmitSchemeObligation(fileInfo);
+            commonDataAccess = A.Fake<ICommonDataAccess>();
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization);
+            var fileInfo = new FileInfo(fixture.Create<string>(), fixture.Create<byte[]>());
+            request = new SubmitSchemeObligation(fileInfo, fixture.Create<CompetentAuthority>());
+
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess);
         }
 
         [Fact]
@@ -42,7 +49,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess);
 
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
@@ -54,7 +61,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyAnyRole().Build();
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess);
 
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
@@ -79,6 +86,30 @@
 
             //arrange
             A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalAdmin)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_CompetentAuthorityShouldBeReceived()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.Authority)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndCompetentAuthorityNotFound_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._))
+                .Returns((UKCompetentAuthority)null);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
