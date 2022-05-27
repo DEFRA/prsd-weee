@@ -6,12 +6,14 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using Core.Shared.CsvReading;
+    using CuttingEdge.Conditions;
     using Domain.Error;
     using Domain.Obligation;
     using Domain.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
+    using Shared;
     using Weee.Security;
     using ObligationCsvUpload = Core.Shared.CsvReading.ObligationCsvUpload;
 
@@ -23,20 +25,26 @@
         private readonly IObligationCsvReader obligationCsvReader;
         private readonly IObligationUploadValidator obligationUploadValidator;
         private readonly IWeeeAuthorization authorization;
+        private readonly ICommonDataAccess commonDataAccess;
 
         public SubmitSchemeObligationHandler(IObligationCsvReader obligationCsvReader, 
             IObligationUploadValidator obligationUploadValidator, 
-            IWeeeAuthorization authorization)
+            IWeeeAuthorization authorization, 
+            ICommonDataAccess commonDataAccess)
         {
             this.obligationCsvReader = obligationCsvReader;
             this.obligationUploadValidator = obligationUploadValidator;
             this.authorization = authorization;
+            this.commonDataAccess = commonDataAccess;
         }
 
         public async Task<Guid> HandleAsync(SubmitSchemeObligation request)
         {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
+
+            var authority = await commonDataAccess.FetchCompetentAuthority(request.Authority);
+            Condition.Requires(authority).IsNotNull();
 
             var errors = new List<ObligationUploadError>();
             var obligations = new List<ObligationCsvUpload>();
