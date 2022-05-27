@@ -72,7 +72,7 @@
                                           r.Category == null &&
                                           r.Description.Equals(
                                               $"Scheme with identifier {uploads.ElementAt(0).SchemeIdentifier} not recognised") &&
-                                          r.Error == ObligationUploadErrorType.Scheme);
+                                          r.ErrorType == ObligationUploadErrorType.Scheme);
         }
 
         [Theory]
@@ -95,8 +95,12 @@
             //arrange
             var uploads = fixture.CreateMany<ObligationCsvUpload>().ToList();
             var property = typeof(ObligationCsvUpload).GetProperty(propertyName);
-            const string value = "MyValue";
-            property.SetValue(uploads.ElementAt(0), value);
+
+            for (var count = 0; count < uploads.Count; count++)
+            {
+                var value = $"MyValue {count}";
+                property.SetValue(uploads.ElementAt(count), value);
+            }
 
             //act
             await obligationUploadValidator.Validate(uploads);
@@ -104,7 +108,8 @@
             //assert
             foreach (var obligationCsvUpload in uploads)
             {
-                A.CallTo(() => tonnageValueValidator.Validate(value)).MustHaveHappenedOnceExactly();
+                var newValue = property.GetValue(obligationCsvUpload);
+                A.CallTo(() => tonnageValueValidator.Validate(newValue)).MustHaveHappenedOnceExactly();
             }
         }
 
@@ -145,7 +150,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is wrong") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -185,7 +190,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is too long") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -225,7 +230,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is wrong") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -265,7 +270,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is a negative value") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -305,7 +310,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} exceeds decimal place limit") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
     }
 }

@@ -1,38 +1,46 @@
 ﻿namespace EA.Weee.Domain.Obligation
 {
+    using System;
+    using System.ComponentModel.DataAnnotations.Schema;
     using Error;
     using Lookup;
+    using Prsd.Core.Domain;
 
-    public class ObligationUploadError
+    public partial class ObligationUploadError : Entity
     {
-        public ObligationUploadErrorType Error { get; private set; }
+        public virtual ObligationUploadErrorType ErrorType { get; private set; }
 
-        public string SchemeIdentifier { get; private set; }
+        [ForeignKey("ObligationUploadId")]
+        public virtual ObligationUpload ObligationUpload { get; private set; }
 
-        public string SchemeName { get; private set; }
+        public virtual Guid ObligationUploadId { get; private set; }
 
-        public string Description { get; private set; }
+        public virtual string SchemeIdentifier { get; private set; }
 
-        public WeeeCategory? Category { get; private set; }
+        public virtual string SchemeName { get; private set; }
 
-        public ObligationUploadError(ObligationUploadErrorType error, string description)
+        public virtual string Description { get; private set; }
+
+        public virtual WeeeCategory? Category { get; private set; }
+
+        public ObligationUploadError(ObligationUploadErrorType errorType, string description)
         {
-            Error = error;
+            ErrorType = errorType;
             Description = description;
         }
 
-        public ObligationUploadError(ObligationUploadErrorType error, string schemeName, string schemeIdentifier, string description)
+        public ObligationUploadError(ObligationUploadErrorType errorType, string schemeName, string schemeIdentifier, string description)
         {
-            Error = error;
+            ErrorType = errorType;
             SchemeName = schemeName;
             SchemeIdentifier = schemeIdentifier;
             Description = description;
         }
 
-        public ObligationUploadError(ObligationUploadErrorType error,
+        public ObligationUploadError(ObligationUploadErrorType errorType,
             WeeeCategory category, string schemeName, string schemeIdentifier, string description)
         {
-            Error = error;
+            ErrorType = errorType;
             Category = category;
             SchemeName = schemeName;
             SchemeIdentifier = schemeIdentifier;
