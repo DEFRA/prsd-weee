@@ -84,7 +84,10 @@
             {
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
             }
-
+            catch (Exception ex)
+            {
+                int i = 10;
+            }
             return obligations;
         }
     }
