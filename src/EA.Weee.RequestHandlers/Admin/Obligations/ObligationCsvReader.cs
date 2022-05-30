@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
-    using System.Threading.Tasks;
+    using System.Collections.Generic;
     using Core.Shared;
     using Core.Shared.CsvReading;
+    using ObligationCsvUpload = Core.Shared.CsvReading.ObligationCsvUpload;
 
     public class ObligationCsvReader : IObligationCsvReader
     {
@@ -13,14 +14,23 @@
             this.fileHelper = fileHelper;
         }
 
-        public void ValidateHeader(byte[] data)
+        public IList<ObligationCsvUpload> Read(byte[] data)
         {
+            var obligations = new List<ObligationCsvUpload>();
+
             using (var reader = fileHelper.GetCsvReader(fileHelper.GetStreamReader(data)))
             {
                 reader.RegisterClassMap<ObligationUploadClassMap>();
                 reader.ReadHeader();
-                reader.ValidateHeader<ObligationUpload>();
+                reader.ValidateHeader<ObligationCsvUpload>();
+
+                while (reader.Read())
+                {
+                    obligations.Add(reader.GetRecord<ObligationCsvUpload>());
+                }
             }
+
+            return obligations;
         }
     }
 }
