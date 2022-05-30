@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
     using System.ComponentModel;
+    using EA.Weee.Web.Areas.Aatf.Attributes;
     using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
     using Xunit;
@@ -21,6 +22,12 @@
 
             //assert
             model.TransferCategoryValues.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TransferEvidenceTonnageViewModel_TransferCategoryValues_ShouldHaveRequiredTonnageAttribute()
+        {
+            typeof(TransferEvidenceTonnageViewModel).GetProperty("TransferCategoryValues").Should().BeDecoratedWith<RequiredTonnageAttribute>();
         }
 
         [Fact]
