@@ -6,6 +6,7 @@
     using Core.Shared.CsvReading; 
     using Core.Validation;
     using DataAccess.DataAccess;
+    using Domain;
     using Domain.Error;
     using Domain.Obligation;
 
@@ -21,7 +22,7 @@
             this.tonnageValueValidator = tonnageValueValidator;
         }
 
-        public async Task<IList<ObligationUploadError>> Validate(IList<ObligationCsvUpload> obligations)
+        public async Task<IList<ObligationUploadError>> Validate(UKCompetentAuthority authority, IList<ObligationCsvUpload> obligations)
         {
             //TODO validate PCS belongs to AA
             var validationErrors = new List<ObligationUploadError>();
@@ -36,7 +37,10 @@
                 {
                     validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} not recognised"));
                 }
-
+                else if (findScheme.CompetentAuthorityId != authority.Id)
+                {
+                    validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} is not part of {authority.Name}"));
+                }
                 ValidateTonnages(obligationCsvUpload, validationErrors);
             }
 

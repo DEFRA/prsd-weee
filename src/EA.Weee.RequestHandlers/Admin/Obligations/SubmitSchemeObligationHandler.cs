@@ -57,7 +57,7 @@
 
             obligations = ReadCsv(request, errors);
 
-            var dataErrors = await obligationUploadValidator.Validate(obligations);
+            var dataErrors = await obligationUploadValidator.Validate(authority, obligations);
 
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
@@ -84,10 +84,7 @@
             {
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
             }
-            catch (Exception ex)
-            {
-                int i = 10;
-            }
+
             return obligations;
         }
     }

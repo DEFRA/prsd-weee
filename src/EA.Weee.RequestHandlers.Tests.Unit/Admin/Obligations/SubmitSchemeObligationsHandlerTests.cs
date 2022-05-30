@@ -133,12 +133,13 @@
             //arrange
             var obligationUploadData = fixture.CreateMany<ObligationCsvUpload>().ToList();
             A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Returns(obligationUploadData);
-
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationUploadValidator.Validate(A<List<ObligationCsvUpload>>.That.Matches(o => o.SequenceEqual(obligationUploadData)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>.That.Matches(a => a.Equals(authority)), A<List<ObligationCsvUpload>>.That.Matches(o => o.SequenceEqual(obligationUploadData)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -147,7 +148,7 @@
             //arrange
             var obligationErrors = new List<ObligationUploadError>();
             var authority = fixture.Create<UKCompetentAuthority>();
-            A.CallTo(() => obligationUploadValidator.Validate(A<List<ObligationCsvUpload>>._))
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
 
@@ -167,7 +168,7 @@
             var obligationErrors = fixture.CreateMany<ObligationUploadError>().ToList();
             var authority = fixture.Create<UKCompetentAuthority>();
             
-            A.CallTo(() => obligationUploadValidator.Validate(A<List<ObligationCsvUpload>>._))
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
 
