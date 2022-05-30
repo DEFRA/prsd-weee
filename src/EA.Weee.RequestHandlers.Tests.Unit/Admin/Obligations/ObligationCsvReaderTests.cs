@@ -30,7 +30,7 @@
         public void ValidateHeader_GivenData_GetStreamReaderShouldBeCalled()
         {
             //act
-            reader.ValidateHeader(data);
+            reader.Read(data);
 
             //assert
             A.CallTo(() => fileHelper.GetStreamReader(data)).MustHaveHappenedOnceExactly();
@@ -44,7 +44,7 @@
             A.CallTo(() => fileHelper.GetStreamReader(A<byte[]>._)).Returns(stream);
 
             //act
-            reader.ValidateHeader(data);
+            reader.Read(data);
 
             //assert
             A.CallTo(() => fileHelper.GetCsvReader(stream)).MustHaveHappenedOnceExactly();
@@ -57,7 +57,7 @@
             A.CallTo(() => fileHelper.GetCsvReader(A<StreamReader>._)).Returns(csvReader);
 
             //act
-            reader.ValidateHeader(data);
+            reader.Read(data);
 
             //assert
             A.CallTo(() => csvReader.RegisterClassMap<ObligationUploadClassMap>()).MustHaveHappenedOnceExactly();
@@ -70,7 +70,7 @@
             A.CallTo(() => fileHelper.GetCsvReader(A<StreamReader>._)).Returns(csvReader);
 
             //act
-            reader.ValidateHeader(data);
+            reader.Read(data);
 
             //assert
             A.CallTo(() => csvReader.ReadHeader()).MustHaveHappenedOnceExactly();
@@ -83,10 +83,15 @@
             A.CallTo(() => fileHelper.GetCsvReader(A<StreamReader>._)).Returns(csvReader);
 
             //act
-            reader.ValidateHeader(data);
+            reader.Read(data);
 
             //assert
-            A.CallTo(() => csvReader.ValidateHeader<ObligationUpload>()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => csvReader.ValidateHeader<ObligationCsvUpload>()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void ValidateHeader_GivenRegisterClassMapThrowsCsvValidationException_ErrorShouldBeReturned()
+        {
         }
     }
 }

@@ -1,18 +1,14 @@
-﻿namespace EA.Weee.Core.Tests.Unit.SpecimenBuilders
+﻿namespace EA.Weee.Tests.Core.SpecimenBuilders
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using AutoFixture.Kernel;
 
-    public class StringDecimalGenerator : ISpecimenBuilder
+    public class StringDecimalReceivedAndReusedGenerator : ISpecimenBuilder
     {
         private readonly Random random;
 
-        public StringDecimalGenerator()
+        public StringDecimalReceivedAndReusedGenerator()
         {
             random = new Random();
         }

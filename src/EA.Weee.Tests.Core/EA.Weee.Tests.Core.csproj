@@ -360,6 +360,8 @@
     <Compile Include="OrganisationUserHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuarterWindowTestHelper.cs" />
+    <Compile Include="SpecimenBuilders\StringDecimalObligationUploadGenerator.cs" />
+    <Compile Include="SpecimenBuilders\StringDecimalReceivedAndReusedGenerator.cs" />
     <Compile Include="TestDbAsyncEnumerable.cs" />
     <Compile Include="TestDbAsyncEnumerator.cs" />
     <Compile Include="TestDbAsyncQueryProvider.cs" />

@@ -3,6 +3,7 @@
     using Autofac;
     using Configuration;
     using Shared;
+    using Validation;
 
     public class CoreModule : Module
     {
@@ -28,6 +29,7 @@
 
             builder.RegisterType<PasteProcessor>().As<IPasteProcessor>();
             builder.RegisterType<FileHelper>().As<IFileHelper>();
+            builder.RegisterType<TonnageValueValidator>().As<ITonnageValueValidator>();
         }
     }
 }

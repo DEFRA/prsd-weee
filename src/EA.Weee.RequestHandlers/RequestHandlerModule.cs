@@ -90,6 +90,7 @@
             builder.RegisterType<GetPopulatedReturn>().As<IGetPopulatedReturn>();
             builder.RegisterType<WeeeCsvReader>().As<IWeeeCsvReader>();
             builder.RegisterType<ObligationCsvReader>().As<IObligationCsvReader>();
+            builder.RegisterType<ObligationUploadValidator>().As<IObligationUploadValidator>();
         }
     }
 }
