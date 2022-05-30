@@ -6,13 +6,13 @@
     using System.Reflection;
     using AutoFixture;
     using Core.AatfEvidence;
-    using EA.Weee.Core.Tests.Unit.SpecimenBuilders;
     using FluentAssertions;
     using Web.Areas.Aatf.Requests;
     using Web.Areas.Aatf.ViewModels;
     using Web.Extensions;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
+    using Weee.Tests.Core.SpecimenBuilders;
     using Xunit;
 
     public class EditEvidenceNoteRequestCreatorTests
@@ -23,7 +23,7 @@
         public EditEvidenceNoteRequestCreatorTests()
         {
             fixture = new Fixture();
-            fixture.Customizations.Add(new StringDecimalGenerator());
+            fixture.Customizations.Add(new StringDecimalReceivedAndReusedGenerator());
 
             requestCreator = new EditEvidenceNoteRequestCreator();
         }
