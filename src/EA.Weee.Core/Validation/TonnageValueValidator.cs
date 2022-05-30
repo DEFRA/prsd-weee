@@ -16,14 +16,14 @@
                 return TonnageValidationResult.Success;
             }
 
-            if (Length(value) > MaxTonnageLength)
-            {
-                return new TonnageValidationResult(TonnageValidationTypeEnum.MaximumDigits);
-            }
-
             if (!decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign, CultureInfo.InvariantCulture, out var decimalResult))
             {
                 return new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical);
+            }
+
+            if (Length(value) > MaxTonnageLength)
+            {
+                return new TonnageValidationResult(TonnageValidationTypeEnum.MaximumDigits);
             }
 
             if (decimalResult < 0 || (value.ToString().Substring(0, 1) == "-"))
