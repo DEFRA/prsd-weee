@@ -32,6 +32,7 @@
             builder.RegisterTypeByEnvironment<GenericDataAccess, IGenericDataAccess>(environment);
             builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
             builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<ObligationDataAccess, IObligationDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 

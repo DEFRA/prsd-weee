@@ -19,6 +19,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Weee.Security;
     using Xunit;
 
     public class GetPcsObligationsCsvHandlerTests
@@ -28,7 +29,6 @@
         private readonly GetPcsObligationsCsv request;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly ICommonDataAccess dataAccess;
 
@@ -42,14 +42,12 @@
 
             authority = CompetentAuthority.England;
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
-            context = A.Fake<WeeeContext>();
             dataAccess = A.Fake<ICommonDataAccess>();
             csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             request = new GetPcsObligationsCsv(authority);
 
             handler = new GetPcsObligationsCsvHandler(weeeAuthorization,
-                context,
                 csvWriterFactory,
                 dataAccess);
         }
@@ -61,7 +59,6 @@
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
             handler = new GetPcsObligationsCsvHandler(authorization,
-                context,
                 csvWriterFactory,
                 dataAccess);
 
@@ -81,6 +78,30 @@
             //assert
             A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_NotAnAdminUser_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder().DenyAnyRole().Build();
+
+            handler = new GetPcsObligationsCsvHandler(authorization,
+                csvWriterFactory,
+                dataAccess);
+
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            exception.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_UserInAdminRole_ShouldBeChecked()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //arrange
+            A.CallTo(() => weeeAuthorization.EnsureUserInRole(Roles.InternalAdmin)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
