@@ -2,9 +2,11 @@
 {
     using AatfReturn;
     using Admin;
+    using Admin.Obligations;
     using Autofac;
     using Charges.IssuePendingCharges;
     using Charges.IssuePendingCharges.Errors;
+    using Core.Shared.CsvReading;
     using Email;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
@@ -86,6 +88,8 @@
             builder.RegisterType<GetAdminUserDataAccess>().As<IGetAdminUserDataAccess>();
 
             builder.RegisterType<GetPopulatedReturn>().As<IGetPopulatedReturn>();
+            builder.RegisterType<WeeeCsvReader>().As<IWeeeCsvReader>();
+            builder.RegisterType<ObligationCsvReader>().As<IObligationCsvReader>();
         }
     }
 }

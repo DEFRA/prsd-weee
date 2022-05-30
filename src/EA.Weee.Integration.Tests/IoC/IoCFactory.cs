@@ -8,6 +8,7 @@
     using Api.Services;
     using Autofac;
     using Autofac.Core;
+    using Core;
     using DataAccess.DataAccess;
     using DataAccess.Identity;
     using EA.Weee.DataAccess;
@@ -84,6 +85,7 @@
             switch (environment.IocApplication)
             {
                 case IocApplication.RequestHandler:
+                    container.RegisterModule(new CoreModule());
                     container.RegisterModule(new RequestHandlerModule());
                     container.RegisterModule(new AuthorizationModule());
                     container.RegisterModule(new EventDispatcherModule());

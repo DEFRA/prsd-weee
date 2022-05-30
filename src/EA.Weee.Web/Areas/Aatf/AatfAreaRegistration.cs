@@ -14,6 +14,24 @@
             context.Routes.MapMvcAttributeRoutes();
 
             context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewApprovedEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-approved-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Approved },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewReturnedEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-returned-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Returned },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewRejectedEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-rejected-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Rejected },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.EditEvidenceRouteName,
                 url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/edit-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "EditEvidenceNote", controller = "ManageEvidenceNotes" },

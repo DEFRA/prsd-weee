@@ -195,6 +195,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\SubmitSchemeObligationHandlerTests.cs" />
     <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
     <Compile Include="Handlers\GetTransferEvidenceNoteForSchemeHandlerIntegrationTests.cs" />

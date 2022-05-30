@@ -70,7 +70,7 @@
 
                                         <td class="govuk-table__cell">@note.Status.ToString() </td>
                                         <td class="govuk-table__cell">
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.ViewDraftEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
                                             @Html.NavigationRouteLink("Edit", "Edit evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)
                                         </td>
                                     </tr>

@@ -48,6 +48,7 @@
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
+                ComplianceYear = source.EvidenceNoteData.ComplianceYear,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address2,
@@ -104,32 +105,29 @@
         {
             if (noteStatus != null)
             {
-                if (noteStatus is NoteStatus status)
+                if (noteStatus is NoteUpdatedStatusEnum status)
                 {
                     switch (status)
                     {
-                        case NoteStatus.Submitted:
+                        case NoteUpdatedStatusEnum.Submitted:
                             model.SuccessMessage = $"You have successfully submitted the evidence note with reference ID E{note.Reference}";
                             break;
-                        case NoteStatus.Draft:
+                        case NoteUpdatedStatusEnum.Draft:
                             model.SuccessMessage = $"You have successfully saved the evidence note with reference ID E{note.Reference} as a draft";
                             break;
-                        case NoteStatus.Approved:
+                        case NoteUpdatedStatusEnum.Approved:
                             model.SuccessMessage = $"You have approved the evidence note with reference ID E{note.Reference}";
                             break;
-                        case NoteStatus.Rejected:
+                        case NoteUpdatedStatusEnum.Rejected:
                             model.SuccessMessage = $"You have rejected the evidence note with reference ID E{note.Reference}";
                             break;
-                        case NoteStatus.Returned:
+                        case NoteUpdatedStatusEnum.Returned:
                             model.SuccessMessage = $"You have returned the evidence note with reference ID E{note.Reference}";
                             break;
+                        case NoteUpdatedStatusEnum.ReturnedSaved:
+                            model.SuccessMessage = $"You have successfully saved the returned evidence note with reference ID E{note.Reference}";
+                            break;
                     }
-
-                    model.Status = status;
-                }
-                else
-                {
-                    model.Status = NoteStatus.Draft;
                 }
             }
         }

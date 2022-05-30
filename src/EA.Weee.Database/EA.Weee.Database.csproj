@@ -330,6 +330,7 @@
     <Content Include="scripts\Update\Release 5\Sprint03\20220421-0959-constraint.sql" />
     <Content Include="scripts\Update\Release 5\Sprint04\20220427-1402-add-status-reason.sql" />
     <Content Include="scripts\Update\Release 5\Sprint04\20220503-1054-update-reason-field-width.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint05\20220525-1517-update-note-compliance-year.sql" />
     <Content Include="scripts\Update\Release 5\Sprint05\20220517-1555-note-compliance-year.sql" />
     <Content Include="scripts\Update\Release 5\Sprint05\20220516-1123-transfer-note-categories.sql" />
     <Content Include="scripts\Update\Release 5\Sprint05\20220512-1213-transfer-schema-updates.sql" />
