@@ -21,6 +21,11 @@
             return await context.Schemes.FindAsync(schemeId);
         }
 
+        public async Task<Scheme> GetSchemeOrDefaultByApprovalNumber(string approvalNumber)
+        {
+            return await context.Schemes.Where(s => s.ApprovalNumber == approvalNumber).FirstOrDefaultAsync();
+        }
+
         public async Task<Scheme> GetSchemeOrDefaultByOrganisationId(Guid organisationId)
         {
             return await context.Schemes.FirstOrDefaultAsync(s => s.OrganisationId == organisationId);
