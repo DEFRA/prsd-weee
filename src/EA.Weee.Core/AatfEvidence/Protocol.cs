@@ -6,7 +6,7 @@
     [Serializable]
     public enum Protocol
     {
-        [Display(Name = "Actual protocol")]
+        [Display(Name = "Actual")]
         Actual = 1,
         [Display(Name = "LDA protocol")]
         LdaProtocol = 2,
