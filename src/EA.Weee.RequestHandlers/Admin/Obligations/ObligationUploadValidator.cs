@@ -34,7 +34,7 @@
 
                 if (findScheme == null)
                 {
-                    validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName, obligationCsvUpload.SchemeIdentifier, $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} not recognised"));
+                    validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} not recognised"));
                 }
 
                 ValidateTonnages(obligationCsvUpload, validationErrors);
@@ -77,7 +77,7 @@
                                     break;
                             }
 
-                            errors.Add(new ObligationUploadError(ObligationUploadErrorType.Data, weeeCategoryAttribute.Category, obligationCsvUpload.SchemeName, obligationCsvUpload.SchemeIdentifier, message));
+                            errors.Add(new ObligationUploadError(ObligationUploadErrorType.Data, weeeCategoryAttribute.Category, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), message));
                         }
                     }
                 }

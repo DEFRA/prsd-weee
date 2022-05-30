@@ -179,6 +179,7 @@
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
+    <Compile Include="Builders\CompetentAuthorityUserDbSetup.cs" />
     <Compile Include="Builders\TransferEvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\EvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\OrganisationContactDbSetup.cs" />

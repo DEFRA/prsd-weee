@@ -36,7 +36,7 @@
                 csvReader.Read();
                 return csvReader.ReadHeader();
             }
-            catch (ReaderException re)
+            catch (Exception re) when (re is ReaderException || re is HeaderValidationException)  
             {
                 throw new CsvReaderException(re.Message);
             }
@@ -48,9 +48,9 @@
             {
                 csvReader.ValidateHeader<T>();
             }
-            catch (ValidationException vex)
+            catch (Exception ve) when (ve is ReaderException || ve is HeaderValidationException)
             {
-                throw new CsvValidationException(vex.Message);
+                throw new CsvValidationException(ve.Message);
             }
         }
 
