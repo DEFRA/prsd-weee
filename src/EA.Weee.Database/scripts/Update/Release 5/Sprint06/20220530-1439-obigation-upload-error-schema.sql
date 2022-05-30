@@ -13,6 +13,19 @@ CREATE TABLE [Pcs].[ObligationUpload](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY])
 GO
 
+ALTER TABLE [Pcs].[ObligationUpload]  WITH CHECK ADD  CONSTRAINT [FK_ObligationUpload_UploadedById_UserId] FOREIGN KEY([UploadedById])
+REFERENCES [Identity].[AspNetUsers] ([Id])
+GO
+
+ALTER TABLE [Pcs].[ObligationUpload]  CHECK CONSTRAINT [FK_ObligationUpload_UploadedById_UserId]
+GO
+
+CREATE NONCLUSTERED INDEX [IDX_ObligationUpload_UploadedById] ON [Pcs].[ObligationUpload]
+(
+	[UploadedById] ASC
+)
+GO
+
 ALTER TABLE [Pcs].[ObligationUpload]  WITH NOCHECK ADD  CONSTRAINT [FK_ObligationUpload_CompetentAuthorityId] FOREIGN KEY([CompetentAuthorityId])
 REFERENCES [Lookup].[CompetentAuthority] ([Id])
 GO
@@ -30,8 +43,8 @@ CREATE TABLE [Pcs].[ObligationUploadError](
 	[ObligationUploadId] [uniqueidentifier] NOT NULL,
 	[ErrorType] [int] NOT NULL,
 	[Description] [nvarchar](1000) NOT NULL,
-	[SchemeIdentifier] [nvarchar](16) NULL,
-	[SchemeName] [nvarchar](70) NULL,
+	[SchemeIdentifier] [nvarchar](max) NULL,
+	[SchemeName] [nvarchar] (max) NULL,
 	[Category] [int] NULL,
 	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_ObligationUploadError_Id] PRIMARY KEY CLUSTERED 
