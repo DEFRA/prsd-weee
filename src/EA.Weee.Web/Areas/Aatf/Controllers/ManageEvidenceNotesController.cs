@@ -141,7 +141,7 @@
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);
 
-                    TempData[ViewDataConstant.EvidenceNoteStatus] = request.Status;
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -215,7 +215,9 @@
                 {
                     var request = editRequestCreator.ViewModelToRequest(viewModel);
 
-                    TempData[ViewDataConstant.EvidenceNoteStatus] = viewModel.Action == ActionEnum.Save ? NoteStatus.Draft : NoteStatus.Submitted;
+                    var updateStatus = request.Status == NoteStatus.Returned && viewModel.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : (NoteUpdatedStatusEnum)request.Status;
+
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = updateStatus;
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 

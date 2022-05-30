@@ -129,9 +129,13 @@
         /// Creates a scheme and associates it to the specified organisation.
         /// </summary>
         /// <returns></returns>
-        public Scheme CreateScheme(Organisation organisation)
+        public Scheme CreateScheme(Organisation organisation, Guid? authorityId = null)
         {
             int schemeId = GetNextId();
+            if (authorityId == null)
+            {
+                authorityId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
+            }
             Scheme scheme = new Scheme
             {
                 Id = IntegerToGuid(schemeId),
@@ -139,7 +143,7 @@
                 OrganisationId = organisation.Id,
                 SchemeName = "test scheme name",
                 ApprovalNumber = schemeId.ToString(),
-                CompetentAuthorityId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26")
+                CompetentAuthorityId = authorityId
             };
             model.Schemes.Add(scheme);
 

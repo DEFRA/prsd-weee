@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfReturn;
+    using CuttingEdge.Conditions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -10,6 +11,8 @@
     {
         public ManageEvidenceNoteViewModel Map(ManageEvidenceNoteTransfer source)
         {
+            Condition.Requires(source).IsNotNull();
+
             var singleAatf = source.Aatfs.Where(a =>
                 a.FacilityType.Equals(FacilityType.Aatf) && ((int)a.ComplianceYear).Equals(SystemTime.Now.Year));
 

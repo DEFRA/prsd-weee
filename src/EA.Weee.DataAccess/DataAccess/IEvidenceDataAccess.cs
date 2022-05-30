@@ -31,11 +31,11 @@
             List<NoteTransferCategory> transferCategories,
             List<NoteTransferTonnage> transferTonnage,
             NoteStatus status,
-            short complianceYear,
+            int complianceYear,
             string userId);
 
         Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
 
-        Task<short> GetComplianceYearByNotes(List<Guid> evidenceNoteIds);
+        Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds);
     }
 }

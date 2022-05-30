@@ -11,6 +11,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
+    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
     using Xunit;
@@ -65,6 +66,7 @@
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
             result.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
+            result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
         }
 
         [Fact]
@@ -295,7 +297,7 @@
         public void Map_GivenNoteStatusDraftCreated_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             //act
             var result = map.Map(source);
@@ -310,7 +312,7 @@
         public void Map_GivenNoteStatusSubmitted_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
 
             //act
             var result = map.Map(source);
@@ -325,7 +327,7 @@
         public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
 
             //act
             var result = map.Map(source);
@@ -341,7 +343,7 @@
         public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
 
             //act
             var result = map.Map(source);
@@ -357,7 +359,7 @@
         public void Map_GivenNoteStatusReturned_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteStatus.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
 
             //act
             var result = map.Map(source);
@@ -366,6 +368,21 @@
             result.SuccessMessage.Should()
                 .Be(
                     $"You have returned the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenNoteStatusReturnedSaved_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully saved the returned evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
 

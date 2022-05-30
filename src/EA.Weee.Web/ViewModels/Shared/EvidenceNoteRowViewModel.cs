@@ -3,6 +3,7 @@
     using System;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Infrastructure;
 
     public class EvidenceNoteRowViewModel 
     {
@@ -35,5 +36,27 @@
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
 
         public string SubmittedDateDisplay => SubmittedDate.HasValue ? SubmittedDate.Value.ToShortDateString() : "-";
+
+        public string AatfViewRouteName
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case NoteStatus.Approved:
+                        return AatfEvidenceRedirect.ViewApprovedEvidenceRouteName;
+                    case NoteStatus.Rejected:
+                        return AatfEvidenceRedirect.ViewRejectedEvidenceRouteName;
+                    case NoteStatus.Draft:
+                        return AatfEvidenceRedirect.ViewDraftEvidenceRouteName;
+                    case NoteStatus.Returned:
+                        return AatfEvidenceRedirect.ViewReturnedEvidenceRouteName;
+                    case NoteStatus.Submitted:
+                        return AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                }
+
+                throw new InvalidOperationException("Invalid route name");
+            }
+        }
     }
 }

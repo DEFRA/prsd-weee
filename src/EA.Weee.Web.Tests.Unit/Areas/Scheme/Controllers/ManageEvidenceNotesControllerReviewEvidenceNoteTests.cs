@@ -367,17 +367,24 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<SetNoteStatus>.That.Matches(s => s.Status.Equals(model.SelectedEnumValue) && s.NoteId.Equals(model.ViewEvidenceNoteViewModel.Id) && s.Reason.Equals(model.Reason)))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ReviewEvidenceNotePost_GivenApiHasBeenCalled_TempViewDataShouldHaveNoteStatusAdded()
+        private const string ApproveEvidenceNote = "Approve evidence note";
+        private const string RejectEvidenceNote = "Reject evidence note";
+        private const string ReturnEvidenceNote = "Return evidence note";
+
+        [Theory]
+        [InlineData("Approve evidence note")]
+        [InlineData("Reject evidence note")]
+        [InlineData("Return evidence note")]
+        public async Task ReviewEvidenceNotePost_GivenApiHasBeenCalled_TempViewDataShouldHaveNoteStatusAdded(string status)
         {
             //arrange
             var model = GetValidModel();
-
+            model.SelectedValue = status;
             //act
             await ManageEvidenceController.ReviewEvidenceNote(model);
 
             //assert
-            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteStatus.Approved);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be((NoteUpdatedStatusEnum)model.SelectedEnumValue);
         }
 
         [Fact]
