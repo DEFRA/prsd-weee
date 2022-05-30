@@ -33,10 +33,10 @@
         public void IsValid_GivenRelatedPropertyDoesNotExist_ValidationExceptionExpected()
         {
             var tonnageValue = new TestTonnageValueNonRelatedProperty();
-            var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
+            var validationContextWithInvalidModel = new ValidationContext(tonnageValue);
             var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage, false);
 
-            Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
+            Action action = () => attribute.Validate(1, validationContextWithInvalidModel);
 
             action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} does not exist");
         }
@@ -45,10 +45,10 @@
         public void IsValid_GivenRelatedPropertyIsNotWeeeCategoryValue_ValidationExceptionExpected()
         {
             var tonnageValue = new TestTonnageValueRelatedPropertyNotOfCorrectType() { Category = 15 };
-            var validationContexWithInvalidModel = new ValidationContext(tonnageValue);
+            var validationContextWithInvalidModel = new ValidationContext(tonnageValue);
             var attribute = new TonnageValueAttribute(CategoryIdProperty, StartOfValidationMessage, false);
 
-            Action action = () => attribute.Validate(1, validationContexWithInvalidModel);
+            Action action = () => attribute.Validate(1, validationContextWithInvalidModel);
 
             action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} should be of type { typeof(WeeeCategory).Name }");
         }
@@ -157,7 +157,7 @@
         [InlineData("00000000000000.0")]
         [InlineData("00000000000000.00")]
         [InlineData("00000000000000.000")]
-        public void IsValid_GivenValuehasFourteenOrLessIntegerParts_ReturnsTrue(object input)
+        public void IsValid_GivenValueHasFourteenOrLessIntegerParts_ReturnsTrue(object input)
         {
             var result = Validate(input);
 
@@ -190,7 +190,7 @@
 
         [Theory]
         [InlineData("1,000,000,000.000")]
-        public void IsValid_GivenValueContainsCommasAndIsThanFourteenCharactors_ReturnsTrue(object input)
+        public void IsValid_GivenValueContainsCommasAndIsLessThanFourteenCharacters_ReturnsTrue(object input)
         {
             var result = Validate(input);
 

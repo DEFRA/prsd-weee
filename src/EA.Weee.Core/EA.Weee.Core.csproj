@@ -136,8 +136,9 @@
     <Compile Include="Shared\CsvReading\CsvValidationException.cs" />
     <Compile Include="Shared\CsvReading\CsvReaderException.cs" />
     <Compile Include="Shared\CsvReading\IWeeeCsvReader.cs" />
-    <Compile Include="Shared\CsvReading\ObligationUpload.cs" />
+    <Compile Include="Shared\CsvReading\ObligationCsvUpload.cs" />
     <Compile Include="Shared\CsvReading\ObligationUploadClassMap.cs" />
+    <Compile Include="Shared\CsvReading\WeeeCategoryAttribute.cs" />
     <Compile Include="Shared\CsvReading\WeeeCsvReader.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Shared\FileHelper.cs" />
@@ -340,8 +341,12 @@
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="Validation\ITonnageValueValidator.cs" />
     <Compile Include="Validation\MinimumElementAttribute.cs" />
     <Compile Include="Validation\TonnageCompareValueAttribute.cs" />
+    <Compile Include="Validation\TonnageValidationResult.cs" />
+    <Compile Include="Validation\TonnageValidationTypeEnum.cs" />
+    <Compile Include="Validation\TonnageValueValidator.cs" />
     <Compile Include="Validation\TonnageValueAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
