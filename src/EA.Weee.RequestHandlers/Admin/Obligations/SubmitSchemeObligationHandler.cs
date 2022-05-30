@@ -59,13 +59,13 @@
 
             var dataErrors = await obligationUploadValidator.Validate(authority, obligations);
 
+            errors.AddRange(dataErrors);
+
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
                 request.FileInfo.FileName,
                 errors);
 
-            errors.AddRange(dataErrors);
-            
             return obligationUpload;
         }
 
