@@ -16,6 +16,8 @@
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Mapper;
+    using Web.Areas.Admin.Mappings.ToViewModel;
     using Xunit;
 
     public class ObligationsControllerTests
@@ -24,6 +26,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient client;
         private readonly IWeeeCache cache;
+        private readonly IMapper mapper;
+        private readonly Fixture fixture;
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligationsController controller;
 
@@ -31,11 +35,14 @@
         {
             configuration = A.Fake<IAppConfiguration>();
             client = A.Fake<IWeeeClient>();
+            mapper = A.Fake<IMapper>();
             apiClient = () => client;
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            
-            controller = new ObligationsController(configuration, breadcrumb, cache, apiClient);
+
+            fixture = new Fixture();
+
+            controller = new ObligationsController(configuration, breadcrumb, cache, apiClient, mapper);
         }
 
         [Fact]
@@ -70,7 +77,7 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(false);
-            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -104,7 +111,7 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
-            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -138,7 +145,7 @@
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
             BreadcrumbService breadcrumb = new BreadcrumbService();
-            ObligationsController controller = new ObligationsController(configuration, breadcrumb, A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, breadcrumb, A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -170,7 +177,8 @@
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
+                                                                        () => A.Dummy<IWeeeClient>(),
+                                                                        mapper);
 
             // Act
             ActionResult result = controller.SelectAuthority();
@@ -194,7 +202,8 @@
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
+                                                                        () => A.Dummy<IWeeeClient>(),
+                                                                        mapper);
             controller.ModelState.AddModelError("key", "Some error");
 
             // Act - holding page until obligations page is implemented
@@ -222,7 +231,8 @@
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
+                                                                        () => A.Dummy<IWeeeClient>(),
+                                                                        mapper);
 
             // Act - holding page until obligations page is implemented
             ActionResult result = controller.SelectAuthority(new Fixture().Create<SelectAuthorityViewModel>());
@@ -265,21 +275,41 @@
             typeof(ObligationsController).GetMethod("DownloadTemplate", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
-        } 
+        }
 
         [Fact]
-        public void UploadObligationsGet_PopulatesModel()
+        public void UploadObligationsGet_ShouldCallModelMapper()
         {
             //arrange
-            var authority = CompetentAuthority.England;
-            var model = new UploadObligationsViewModel(authority);
+            var authority = fixture.Create<CompetentAuthority>();
+
+            //act
+            controller.UploadObligations(authority);
+
+            //assert
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void UploadObligationsGet_GivenMappedModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var model = fixture.Create<UploadObligationsViewModel>();
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = controller.UploadObligations(authority) as ViewResult;
 
             //assert
-            result.Model.Should().BeEquivalentTo(model);
+            result.Model.Should().Be(model);
         }
+
 
         [Fact]
         public void UploadObligationsPost_SetsTriggerDownload_ToTrue()

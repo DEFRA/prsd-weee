@@ -12,16 +12,20 @@
     using System.Web.Mvc;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
+    using Mappings.ToViewModel;
+    using Prsd.Core.Mapper;
 
     public class ObligationsController : ObligationsBaseController
     {
         private readonly IAppConfiguration configuration;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IMapper mapper;
 
-        public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
+        public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient, IMapper mapper) : base(breadcrumb, cache)
         {
             this.configuration = configuration;
             this.apiClient = apiClient;
+            this.mapper = mapper;
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -59,7 +63,10 @@
         [HttpGet]
         public ActionResult UploadObligations(CompetentAuthority authority)
         {
-            var model = new UploadObligationsViewModel(authority);
+            var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = authority
+            });
 
             return View(model);
         }
