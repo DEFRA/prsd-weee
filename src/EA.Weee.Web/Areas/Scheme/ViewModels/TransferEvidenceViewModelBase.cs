@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Shared;
     using Web.ViewModels.Shared;
 
     public abstract class TransferEvidenceViewModelBase
