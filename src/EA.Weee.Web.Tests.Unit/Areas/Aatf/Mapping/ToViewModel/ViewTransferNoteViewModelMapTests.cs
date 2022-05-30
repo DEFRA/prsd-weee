@@ -106,15 +106,36 @@
                 .Be($"You have successfully saved the transfer evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference} as a draft");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(false)]
-        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationIsFalse_SuccessMessageShouldBeEmpty(bool? display)
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsSubmitted_SuccessMessageShouldBeSet()
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
                 fixture.Build<TransferEvidenceNoteData>()
-                    .With(t2 => t2.Status, NoteStatus.Draft)
+                    .With(t => t.Status, NoteStatus.Submitted)
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                true);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should()
+                .Be($"You have successfully submitted the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Theory]
+        [InlineData(null, NoteStatus.Draft)]
+        [InlineData(false, NoteStatus.Draft)]
+        [InlineData(null, NoteStatus.Submitted)]
+        [InlineData(false, NoteStatus.Submitted)]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationIsFalse_SuccessMessageShouldBeEmpty(bool? display, NoteStatus status)
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(t2 => t2.Status, status)
                     .With(t1 => t1.Reference, 1).Create(),
                 display);
 
