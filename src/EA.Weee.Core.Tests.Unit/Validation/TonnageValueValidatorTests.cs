@@ -26,6 +26,9 @@
         [InlineData("+1")]
         [InlineData("1+")]
         [InlineData("+1.1")]
+        [InlineData("1-")]
+        [InlineData("1.1-")]
+        [InlineData("0 1 4")]
         public void Validate_ValueIsNotANumber_ReturnsTonnageValidationResultNotNumerical(string input)
         {
             var result = validator.Validate(input);
@@ -75,6 +78,10 @@
         [InlineData("00000000000000.0")]
         [InlineData("00000000000000.00")]
         [InlineData("00000000000000.000")]
+        [InlineData("0000000000000.000")]
+        [InlineData("0000000000000.00")]
+        [InlineData("0000000000000.0")]
+        [InlineData("0000000000000")]
         public void Validate_GivenValueHasFourteenOrLessIntegerParts_ReturnsTonnageValidationResultSuccess(object input)
         {
             var result = validator.Validate(input);
@@ -87,7 +94,7 @@
         [InlineData("000000000000000.00")]
         [InlineData("000000000000000.000")]
         [InlineData("000000000000000.0")]
-        public void Validate_GivenValueHasMoreThanFourteenIntegerParts_ReturnsTonnageValidationResultSuccess(object input)
+        public void Validate_GivenValueHasMoreThanFourteenIntegerParts_ReturnsTonnageValidationTypeEnumMaximumDigits(object input)
         {
             var result = validator.Validate(input);
 
