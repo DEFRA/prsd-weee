@@ -325,17 +325,17 @@
             {
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, 3, 2),
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10, 7),
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.LargeHouseholdAppliances, 100, 700)
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, 3, 2, null, null),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10, 7, null, null),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.LargeHouseholdAppliances, 100, 700, null, null)
                 }).Create(),
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, null, 4),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, null, 4, null, null),
                 }).Create(),
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 10),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 10, null, null),
                 }).Create()
             };
 
@@ -367,17 +367,17 @@
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
                         new List<EvidenceTonnageData>()
                         {
-                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1)
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1, null, null)
                         })
                     .With(e => e.AatfData, new AatfData() { Name = "Z" })
                     .With(e => e.Id, noteId2).Create(),
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
                         new List<EvidenceTonnageData>()
                         {
-                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1),
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.AutomaticDispensers, 2, 1, null, null),
                             new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
-                                null),
-                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4)
+                                null, null, null),
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.MedicalDevices, 12, 4, null, null)
                         }).With(e => e.AatfData, new AatfData() { Name = "A" })
                     .With(e => e.Id, noteId1).Create()
             };
