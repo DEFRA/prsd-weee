@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.Shared.CsvReading;
     using Core.Validation;
     using DataAccess.DataAccess;
+    using Domain;
     using Domain.Error;
     using Domain.Scheme;
     using FakeItEasy;
@@ -36,9 +38,10 @@
         {
             //arrange
             var uploads = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            var authority = fixture.Create<UKCompetentAuthority>();
 
             //act
-            await obligationUploadValidator.Validate(uploads);
+            await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._))
@@ -56,14 +59,23 @@
         {
             //arrange
             var uploads = fixture.CreateMany<ObligationCsvUpload>(3).ToList();
+            var authority = fixture.Create<UKCompetentAuthority>();
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._))
+                .Returns(matchingAuthorityIdScheme);
+
+            var notMatchingAuthorityIdScheme = A.Fake<Scheme>();
+            A.CallTo(() => notMatchingAuthorityIdScheme.CompetentAuthorityId).Returns(fixture.Create<Guid>());
+            A.CallTo(() => notMatchingAuthorityIdScheme.ApprovalNumber).Returns(uploads.ElementAt(0).SchemeIdentifier);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(uploads.ElementAt(0).SchemeIdentifier))
                 .Returns((Scheme)null);
 
             A.CallTo(() => tonnageValueValidator.Validate(A<object>._)).Returns(TonnageValidationResult.Success);
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -72,7 +84,40 @@
                                           r.Category == null &&
                                           r.Description.Equals(
                                               $"Scheme with identifier {uploads.ElementAt(0).SchemeIdentifier} not recognised") &&
-                                          r.Error == ObligationUploadErrorType.Scheme);
+                                          r.ErrorType == ObligationUploadErrorType.Scheme);
+        }
+
+        [Fact]
+        public async Task Validate_GivenObligationCsvUploadsWithSchemeNotBelongingToAuthorityError_ErrorsShouldContainRelevantError()
+        {
+            //arrange
+            var uploads = fixture.CreateMany<ObligationCsvUpload>(3).ToList();
+            var authority = fixture.Create<UKCompetentAuthority>();
+
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._))
+                .Returns(matchingAuthorityIdScheme);
+
+            var notMatchingAuthorityIdScheme = A.Fake<Scheme>();
+            A.CallTo(() => notMatchingAuthorityIdScheme.CompetentAuthorityId).Returns(fixture.Create<Guid>());
+            A.CallTo(() => notMatchingAuthorityIdScheme.ApprovalNumber).Returns(uploads.ElementAt(0).SchemeIdentifier);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(uploads.ElementAt(0).SchemeIdentifier))
+                .Returns(notMatchingAuthorityIdScheme);
+
+            A.CallTo(() => tonnageValueValidator.Validate(A<object>._)).Returns(TonnageValidationResult.Success);
+
+            //act
+            var results = await obligationUploadValidator.Validate(authority, uploads);
+
+            //assert
+            results.Count.Should().Be(1);
+            results.Should().Contain(r => r.SchemeIdentifier.Equals(uploads.ElementAt(0).SchemeIdentifier) &&
+                                          r.SchemeName.Equals(uploads.ElementAt(0).SchemeName) &&
+                                          r.Category == null &&
+                                          r.Description.Equals(
+                                              $"Scheme with identifier {uploads.ElementAt(0).SchemeIdentifier} is not part of {authority.Name}") &&
+                                          r.ErrorType == ObligationUploadErrorType.Scheme);
         }
 
         [Theory]
@@ -93,18 +138,29 @@
         public async Task Validate_GivenObligationCsvUploads_EachTonnageValueShouldBeValidated(string propertyName)
         {
             //arrange
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
+            
             var uploads = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            
             var property = typeof(ObligationCsvUpload).GetProperty(propertyName);
-            const string value = "MyValue";
-            property.SetValue(uploads.ElementAt(0), value);
+
+            for (var count = 0; count < uploads.Count; count++)
+            {
+                var value = $"MyValue {count}";
+                property.SetValue(uploads.ElementAt(count), value);
+            }
 
             //act
-            await obligationUploadValidator.Validate(uploads);
+            await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             foreach (var obligationCsvUpload in uploads)
             {
-                A.CallTo(() => tonnageValueValidator.Validate(value)).MustHaveHappenedOnceExactly();
+                var newValue = property.GetValue(obligationCsvUpload);
+                A.CallTo(() => tonnageValueValidator.Validate(newValue)).MustHaveHappenedOnceExactly();
             }
         }
 
@@ -133,11 +189,15 @@
             property.SetValue(uploads.ElementAt(0), errorValue);
             var elementToError = uploads.ElementAt(0);
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
             A.CallTo(() => tonnageValueValidator.Validate(A<string>._)).Returns(TonnageValidationResult.Success);
             A.CallTo(() => tonnageValueValidator.Validate(errorValue)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.DecimalPlaceFormat));
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -145,7 +205,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is wrong") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -173,11 +233,15 @@
             property.SetValue(uploads.ElementAt(0), errorValue);
             var elementToError = uploads.ElementAt(0);
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
             A.CallTo(() => tonnageValueValidator.Validate(A<string>._)).Returns(TonnageValidationResult.Success);
             A.CallTo(() => tonnageValueValidator.Validate(errorValue)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.MaximumDigits));
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -185,7 +249,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is too long") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -213,11 +277,15 @@
             property.SetValue(uploads.ElementAt(0), errorValue);
             var elementToError = uploads.ElementAt(0);
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
             A.CallTo(() => tonnageValueValidator.Validate(A<string>._)).Returns(TonnageValidationResult.Success);
             A.CallTo(() => tonnageValueValidator.Validate(errorValue)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -225,7 +293,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is wrong") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -253,11 +321,15 @@
             property.SetValue(uploads.ElementAt(0), errorValue);
             var elementToError = uploads.ElementAt(0);
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
             A.CallTo(() => tonnageValueValidator.Validate(A<string>._)).Returns(TonnageValidationResult.Success);
             A.CallTo(() => tonnageValueValidator.Validate(errorValue)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.LessThanZero));
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -265,7 +337,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} is a negative value") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
 
         [Theory]
@@ -293,11 +365,15 @@
             property.SetValue(uploads.ElementAt(0), errorValue);
             var elementToError = uploads.ElementAt(0);
 
+            var matchingAuthorityIdScheme = A.Fake<Scheme>();
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => matchingAuthorityIdScheme.CompetentAuthorityId).Returns(authority.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).Returns(matchingAuthorityIdScheme);
             A.CallTo(() => tonnageValueValidator.Validate(A<string>._)).Returns(TonnageValidationResult.Success);
             A.CallTo(() => tonnageValueValidator.Validate(errorValue)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.DecimalPlaces));
 
             //act
-            var results = await obligationUploadValidator.Validate(uploads);
+            var results = await obligationUploadValidator.Validate(authority, uploads);
 
             //assert
             results.Count.Should().Be(1);
@@ -305,7 +381,7 @@
                                           r.SchemeName.Equals(elementToError.SchemeName) &&
                                           r.Category == weeeCategory.Category &&
                                           r.Description.Equals($"Category {(int)weeeCategory.Category} exceeds decimal place limit") &&
-                                          r.Error == ObligationUploadErrorType.Data);
+                                          r.ErrorType == ObligationUploadErrorType.Data);
         }
     }
 }
