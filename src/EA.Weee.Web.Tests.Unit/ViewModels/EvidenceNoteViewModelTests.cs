@@ -92,7 +92,6 @@
             }
         }
         [Theory]
-        [InlineData(NoteStatus.Rejected)]
         [InlineData(NoteStatus.Returned)]
         [InlineData(NoteStatus.Draft)]
         public void RedirectTab_GivenStatusIsDraftReturnRejected_EditDraftAndReturnedNotesTabShouldBeReturned(NoteStatus status)
@@ -108,6 +107,7 @@
         [InlineData(NoteStatus.Void)]
         [InlineData(NoteStatus.Submitted)]
         [InlineData(NoteStatus.Approved)]
+        [InlineData(NoteStatus.Rejected)]
         public void RedirectTab_GivenStatusIsNotDraftReturnRejected_ViewAllOtherEvidenceNotesShouldBeReturned(NoteStatus status)
         {
             model.Status = status;
@@ -160,6 +160,25 @@
             };
 
             model.DisplayReturnedReason.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft, "Draft evidence note")]
+        [InlineData(NoteStatus.Rejected, "Rejected evidence note")]
+        [InlineData(NoteStatus.Approved, "Approved evidence note")]
+        [InlineData(NoteStatus.Returned, "Returned evidence note")]
+        [InlineData(NoteStatus.Submitted, "Submitted evidence note")]
+        [InlineData(NoteStatus.Void, "")]
+        public void TabName_GivenNoteStatus_ShouldHaveCorrectTabName(NoteStatus status, string expected)
+        {
+            //arrange
+            model.Status = status;
+
+            //act
+            var result = model.TabName;
+
+            //assert
+            result.Should().Be(expected);
         }
     }
 }

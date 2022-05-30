@@ -39,6 +39,8 @@
 
         public string RejectedReason { get; set; }
 
+        public int ComplianceYear { get; set; }
+
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
         public SchemeData SchemeData { get; set; }

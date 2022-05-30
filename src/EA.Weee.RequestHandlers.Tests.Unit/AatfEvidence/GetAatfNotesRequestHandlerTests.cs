@@ -20,6 +20,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using WasteType = Core.AatfEvidence.WasteType;
@@ -30,11 +31,11 @@
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess noteDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IMapper mapper;
         private readonly GetAatfNotesRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
-        private readonly Guid recipientId;
         private readonly WasteType wasteType;
         private readonly NoteStatus noteStatus;
         private readonly DateTime startDate;
@@ -45,26 +46,31 @@
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
-            recipientId = fixture.Create<Guid>();
+            var recipientId = fixture.Create<Guid>();
             wasteType = fixture.Create<WasteType>();
             noteStatus = fixture.Create<NoteStatus>();
             startDate = DateTime.UtcNow;
             endDate = startDate.AddDays(2);
+            var systemSettings = A.Fake<SystemData>();
+            systemSettings.ToggleFixedCurrentDateUsage(false);
 
             A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemSettings);
 
             request = new GetAatfNotesRequest(organisation.Id,
                 aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), recipientId, wasteType, noteStatus, startDate, endDate);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
-                mapper);
+                mapper,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -73,7 +79,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest()));
@@ -87,7 +93,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest()));
@@ -143,6 +149,152 @@
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SchemeId == null &&
                 e.SearchRef.Equals(searchRef)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithRecipientFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            Guid? recipientId = Guid.NewGuid();
+            var request = GetAatfNotesRequest(null, recipientId);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null &&
+                e.SchemeId.Equals(recipientId)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithWasteTypeFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            WasteType? wasteType = fixture.Create<WasteType?>();
+            var request = GetAatfNotesRequest(null, null, wasteType);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null && 
+                e.SchemeId == null && e.WasteTypeId.Equals((int?)wasteType)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            NoteStatus? noteStatus = fixture.Create<NoteStatus?>();
+            var request = GetAatfNotesRequest(null, null, null, noteStatus);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null &&
+                e.SchemeId == null && 
+                e.WasteTypeId == null && 
+                e.NoteStatusId.Equals((int?)noteStatus)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithStartDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            var startDate = fixture.Create<DateTime?>();
+            var request = GetAatfNotesRequest(null, null, null, null, startDate);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null &&
+                e.SchemeId == null &&
+                e.WasteTypeId == null &&
+                e.NoteStatusId == null &&
+                e.StartDateSubmitted.Equals(startDate)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithEndDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            var endDate = fixture.Create<DateTime?>();
+            var request = GetAatfNotesRequest(null, null, null, null, null, endDate);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null &&
+                e.SchemeId == null &&
+                e.WasteTypeId == null &&
+                e.NoteStatusId == null &&
+                e.StartDateSubmitted == null &&
+                e.EndDateSubmitted.Equals(endDate)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestAllFiltersSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            var searchRef = fixture.Create<string>();
+            var receivedId = Guid.NewGuid();
+            var request = GetAatfNotesRequest(searchRef, receivedId, wasteType, noteStatus, startDate, endDate);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef.Equals(searchRef) &&
+                e.SchemeId.Equals(receivedId) &&
+                e.WasteTypeId.Equals((int?)wasteType) &&
+                e.NoteStatusId.Equals((int?)noteStatus) &&
+                e.StartDateSubmitted.Equals(startDate) &&
+                e.EndDateSubmitted.Equals(endDate)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -211,12 +363,13 @@
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
-        private GetAatfNotesRequest GetAatfNotesRequest(string searchRef = null)
+        private GetAatfNotesRequest GetAatfNotesRequest(string searchRef = null, Guid? receivedId = null, WasteType? wasteType = null, NoteStatus? noteStatus = null,
+            DateTime? startDate = null, DateTime? endDate = null)
         {
             return new GetAatfNotesRequest(organisation.Id, 
                 aatf.Id, 
                 fixture.CreateMany<NoteStatus>().ToList(),
-                searchRef, null, null, null, null, null);
+                searchRef, receivedId, wasteType, noteStatus, startDate, endDate);
         }
     }
 }

@@ -44,7 +44,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<int>());
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -122,7 +122,8 @@
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
                                                               e.SchemeId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
-                                                              e.AatfId == null))).MustHaveHappenedOnceExactly();
+                                                              e.AatfId == null &&
+                                                              e.ComplianceYear == request.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -197,7 +198,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<int>());
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
         }
     }
 }

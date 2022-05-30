@@ -303,6 +303,9 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceNotesViewModelTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ManageEvidenceNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
@@ -310,6 +313,9 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />
+    <Compile Include="Areas\Aatf\ViewModels\SubmittedDatesFilterViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsControllerTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\SelectAuthorityViewModelTests.cs" />
