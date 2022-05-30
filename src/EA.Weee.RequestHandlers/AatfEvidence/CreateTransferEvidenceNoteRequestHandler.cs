@@ -60,9 +60,7 @@
                 Guid transferNoteId;
                 try
                 {
-                    //Validation will be put back in when only available tonnages are returned to the front end. 
-                    //currently this will restrict testing too much
-                    //await transferTonnagesValidator.Validate(request.TransferValues);
+                    await transferTonnagesValidator.Validate(request.TransferValues);
 
                     var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
                         t.FirstTonnage,
