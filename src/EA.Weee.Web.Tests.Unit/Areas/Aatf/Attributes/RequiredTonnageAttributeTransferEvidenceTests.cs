@@ -56,7 +56,7 @@
         }
 
         [Fact]
-        public void RequiredTonnageAttribute_GivenSubmitAndEmptyTonnageValues_ValidationSuccessShouldBeReturned()
+        public void RequiredTonnageAttribute_GivenSubmitAndEmptyTonnageValues_ValidationFailedShouldBeReturned()
         {
             //arrange
             var target = ValidViewModel(date, ActionEnum.Submit);
@@ -77,7 +77,7 @@
         [InlineData("120", "")]
         [InlineData("0.00011", null)]
         [InlineData("1000", "10000")]
-        public void RequiredTonnageAttribute_GivenSubmitAndEmptyTonnageValues2_ValidationFailedShouldBeReturned(string received, string reused)
+        public void RequiredTonnageAttribute_GivenSubmitAndValidTonnageValues_ValidationSuccessShouldBeReturned(string received, string reused)
         {
             //arrange
             var target = ValidViewModel(date, ActionEnum.Submit);
