@@ -10,7 +10,9 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            throw new System.NotImplementedException();
+            var model = new UploadObligationsViewModel(source.CompetentAuthority);
+
+            return model;
         }
     }
 }
