@@ -324,6 +324,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
+    <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMapTransfer.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />

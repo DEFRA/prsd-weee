@@ -278,13 +278,13 @@
         }
 
         [Fact]
-        public void UploadObligationsGet_ShouldCallModelMapper()
+        public async Task UploadObligationsGet_ShouldCallModelMapper()
         {
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
 
             //act
-            controller.UploadObligations(authority);
+            await controller.UploadObligations(authority, fixture.Create<Guid>());
 
             //assert
             A.CallTo(() =>
@@ -294,7 +294,7 @@
         }
 
         [Fact]
-        public void UploadObligationsGet_GivenMappedModel_ModelShouldBeReturned()
+        public async Task UploadObligationsGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
@@ -304,22 +304,21 @@
                         A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = controller.UploadObligations(authority) as ViewResult;
+            var result = await controller.UploadObligations(authority, fixture.Create<Guid>()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
         }
 
-
         [Fact]
-        public void UploadObligationsPost_SetsTriggerDownload_ToTrue()
+        public async Task UploadObligationsPost_SetsTriggerDownload_ToTrue()
         {
             //arrange
             var authority = CompetentAuthority.England;
             var model = new UploadObligationsViewModel(authority);
 
             //act
-            var result = controller.UploadObligations(model) as ViewResult;
+            var result = await controller.UploadObligations(model) as ViewResult;
 
             //assert
             bool triggerDownload = result.ViewBag.TriggerDownload;
