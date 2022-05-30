@@ -52,7 +52,7 @@
 
         public ObligationType? ObligationType { get; private set; }
 
-        public Guid? CompetentAuthorityId { get; private set; }
+        public virtual Guid? CompetentAuthorityId { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
