@@ -152,6 +152,7 @@
     <Compile Include="EvidenceNote\EvidenceDataAccessIntegration.cs" />
     <Compile Include="GenericIntegration.cs" />
     <Compile Include="ObligatedSentOnWeeeIntegration.cs" />
+    <Compile Include="DataAccess\ObligationDataAccessIntegration.cs" />
     <Compile Include="ReportOptionsIntegration.cs" />
     <Compile Include="SentOnAatfSiteIntegration.cs" />
     <Compile Include="Auditing\AuditingTests.cs" />

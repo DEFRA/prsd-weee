@@ -6,7 +6,7 @@
     {
         public static readonly ObligationUploadErrorType File = new ObligationUploadErrorType(1, "File");
         public static readonly ObligationUploadErrorType Scheme = new ObligationUploadErrorType(2, "Scheme");
-        public static readonly ObligationUploadErrorType Data = new ObligationUploadErrorType(2, "Data");
+        public static readonly ObligationUploadErrorType Data = new ObligationUploadErrorType(3, "Data");
 
         private ObligationUploadErrorType(int value, string displayName)
             : base(value, displayName)
