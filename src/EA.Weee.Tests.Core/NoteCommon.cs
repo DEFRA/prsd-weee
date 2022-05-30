@@ -18,7 +18,8 @@
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
             List<NoteTonnage> noteTonnages = null,
-            DateTime? startDate = null)
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
             if (organisation == null)
             {
@@ -33,6 +34,11 @@
             if (startDate == null)
             {
                 startDate = DateTime.Now;
+            }
+
+            if (endDate == null)
+            {
+                endDate = DateTime.Now;
             }
 
             if (aatf == null)
@@ -60,7 +66,7 @@
             return new Note(organisation,
                 scheme,
                 startDate.Value,
-                DateTime.Now,
+                endDate.Value,
                 wasteType,
                 protocol,
                 aatf,
