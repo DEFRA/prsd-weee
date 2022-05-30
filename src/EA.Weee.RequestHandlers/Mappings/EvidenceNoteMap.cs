@@ -38,7 +38,9 @@
                 Protocol = source.Protocol.HasValue ? (Protocol?)source.Protocol.Value : null,
                 WasteType = source.WasteType.HasValue ? (WasteType?)source.WasteType.Value : null,
                 EvidenceTonnageData = source.NoteTonnage.Select(t =>
-                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList(),
+                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused,
+                    t.NoteTransferTonnage != null ? t.NoteTransferTonnage.Where(ntt => ntt.TransferNote.Status.Value != Domain.Evidence.NoteStatus.Rejected.Value && ntt.TransferNote.Status.Value != Domain.Evidence.NoteStatus.Void.Value).Select(ntt => ntt.Received).Sum() : null,
+                    t.NoteTransferTonnage != null ? t.NoteTransferTonnage.Where(ntt => ntt.TransferNote.Status.Value != Domain.Evidence.NoteStatus.Rejected.Value && ntt.TransferNote.Status.Value != Domain.Evidence.NoteStatus.Void.Value).Select(ntt => ntt.Reused).Sum() : null)).ToList(),
                 SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
