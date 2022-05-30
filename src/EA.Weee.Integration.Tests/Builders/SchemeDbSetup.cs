@@ -20,7 +20,7 @@
             var newContact = DbContext.Contacts.First(c => c.Id.Equals(contact.Id));
 
             instance = new Scheme(organisation);
-            instance.UpdateScheme(Faker.Company.Name(), 
+            instance.UpdateScheme(Faker.Lorem.GetFirstWord(), 
                 $"WEE/TE{Faker.RandomNumber.Next(1000, 9999)}ST/SCH",
                 Faker.RandomNumber.Next(1, 100000000).ToString(),
                 ObligationType.B2B,
