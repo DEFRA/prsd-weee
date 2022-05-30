@@ -35,9 +35,15 @@
 
     <!--start global-cookie-message-->
     <div id="global-cookie-message" style="display:none;">
-        <p id="global-cookie-message-p1">Cookies on Waste Electrical and Electronic Equipment</p>
-        <p id="global-cookie-message-p2">We also use essential cookies to remember if you've accepted analytics cookies.</p>
-        <p id="global-cookie-message-p3">We'd like to use analystics cookies so we can understand how you use Waste Electrical and Electronic Equipment and make improvements.</p>
+        <p id="global-cookie-message-p1">
+            Cookies on Waste Electrical and Electronic Equipment (WEEE)
+        </p>
+        <p id="global-cookie-message-p2">
+            We use some essential cookies to make this service work.
+        </p>
+        <p id="global-cookie-message-p3">
+            In addition, we'd like to use analytics cookies so we can understand how you use the service and make improvements. We also use some essential cookies to remember your chosen settings for analytics cookies.
+        </p>
         <p id="#global-cookie-message-p4">
             <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button">
             <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button">
@@ -141,14 +147,14 @@
     }
 
     $("#acceptCookies").click(function () {
-        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 365 });
         self.startGoogleTracking();
         document.getElementById("global-cookie-message").style.display = "none";
         document.getElementById("global-cookie-accept-message").style.display = "block";
     });
 
     $("#rejectCookies").click(function () {
-        GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
         document.getElementById("global-cookie-message").style.display = "none";
         GOVUK.cookie('_ga', null);
         GOVUK.cookie('_gid', null);
@@ -191,13 +197,13 @@
     }
 
     function acceptCookies() {
-        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 28 });
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 365 });
         self.startGoogleTracking();
         document.getElementById("global-cookie-message").style.display = "none";
     }
 
     function rejectCookies() {
-        GOVUK.cookie('weee-cookie-consent', 'no', { days: 28 });
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
         document.getElementById("global-cookie-message").style.display = "none";
         GOVUK.cookie('_ga', null);
         GOVUK.cookie('_gid', null);
