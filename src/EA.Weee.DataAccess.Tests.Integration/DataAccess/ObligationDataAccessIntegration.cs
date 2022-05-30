@@ -26,6 +26,7 @@
         {
             using (var database = new DatabaseWrapper())
             {
+                //arrange
                 var context = database.WeeeContext;
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
@@ -39,12 +40,14 @@
                 var fileData = Faker.Lorem.Paragraph();
                 var fileName = Faker.Lorem.GetFirstWord();
 
+                //act
                 var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>());
                 
                 await context.SaveChangesAsync();
 
                 var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
 
+                //assert
                 obligation.Should().NotBeNull();
                 obligation.Data.Should().Be(fileData);
                 obligation.FileName.Should().Be(fileName);
@@ -60,6 +63,7 @@
         {
             using (var database = new DatabaseWrapper())
             {
+                //arrange
                 var context = database.WeeeContext;
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
@@ -90,10 +94,12 @@
 
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, description3));
 
+                //act
                 var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, errors);
 
                 var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
 
+                //assert
                 obligation.Should().NotBeNull();
                 obligation.Data.Should().Be(fileData);
                 obligation.FileName.Should().Be(fileName);

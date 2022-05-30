@@ -24,7 +24,6 @@
 
         public async Task<IList<ObligationUploadError>> Validate(UKCompetentAuthority authority, IList<ObligationCsvUpload> obligations)
         {
-            //TODO validate PCS belongs to AA
             var validationErrors = new List<ObligationUploadError>();
             
             foreach (var obligationCsvUpload in obligations)
@@ -41,6 +40,7 @@
                 {
                     validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} is not part of {authority.Name}"));
                 }
+                
                 ValidateTonnages(obligationCsvUpload, validationErrors);
             }
 

@@ -9,7 +9,6 @@
     using DataAccess.DataAccess;
     using Domain;
     using Domain.Error;
-    using Domain.Evidence;
     using Domain.Obligation;
     using FakeItEasy;
     using FluentAssertions;
@@ -39,7 +38,32 @@
         }
 
         [Fact]
-        public async Task AddObligationUpload_GivenUploadData_ObligationUploadShouldBeAddedToContext()
+        public async Task AddObligationUpload_GivenUploadDataWithNoErrors_ObligationUploadShouldBeAddedToContext()
+        {
+            //arrange
+            var date = new DateTime();
+            SystemTime.Freeze(date);
+
+            var authority = fixture.Create<UKCompetentAuthority>();
+            var data = fixture.Create<string>();
+            var fileName = fixture.Create<string>();
+
+            //act
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>());
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(userId.ToString()) &&
+                o.ObligationUploadErrors.Count.Equals(0)))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_GivenUploadDataWithErrors_ObligationUploadShouldBeAddedToContext()
         {
             //arrange
             var date = new DateTime();
@@ -63,7 +87,8 @@
                 o.FileName.Equals(fileName) &&
                 o.CompetentAuthority.Equals(authority) &&
                 o.UploadedDate == date &&
-                o.UploadedById.Equals(userId.ToString())))).MustHaveHappenedOnceExactly();
+                o.UploadedById.Equals(userId.ToString()) &&
+                o.ObligationUploadErrors.Count.Equals(3)))).MustHaveHappenedOnceExactly();
 
             foreach (var error in errors)
             {
