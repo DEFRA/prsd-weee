@@ -75,8 +75,8 @@
             source.ExistingModel = null;
             source.NoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, null),
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 1, 2)
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, null, null, null),
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 1, 2, null, null)
             };
 
             //act
