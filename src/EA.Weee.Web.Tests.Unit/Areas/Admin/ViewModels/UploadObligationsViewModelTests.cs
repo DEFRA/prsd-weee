@@ -21,5 +21,31 @@
             typeof(UploadObligationsViewModel).GetProperty("File").Should()
                 .BeDecoratedWith<RequiredAttribute>(d => d.ErrorMessage.Equals("You must select a file before the system can check for errors"));
         }
+
+        [Theory]
+        [InlineData(false, false, false, false)]
+        [InlineData(true, false, false, true)]
+        [InlineData(false, true, false, true)]
+        [InlineData(false, false, true, true)]
+        [InlineData(true, false, true, true)]
+        [InlineData(true, true, false, true)]
+        [InlineData(false, true, true, true)]
+        [InlineData(true, true, true, true)]
+        public void AnyError_GivenErrors_AnyErrorShouldBeSet(bool displayDataError, bool displayFormatError,
+            bool displaySelectFileError, bool expected)
+        {
+            //arrange
+            var model = new UploadObligationsViewModel()
+            {
+                DisplayDataError = displayDataError, DisplayFormatError = displayFormatError,
+                DisplaySelectFileError = displaySelectFileError
+            };
+
+            //act
+            var result = model.AnyError;
+
+            //assert
+            result.Should().Be(expected);
+        }
     }
 }

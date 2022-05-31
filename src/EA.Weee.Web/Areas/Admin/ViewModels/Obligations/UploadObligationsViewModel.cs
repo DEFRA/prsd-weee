@@ -2,7 +2,6 @@
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Net.Configuration;
     using System.Web;
     using EA.Weee.Core.Shared;
 
@@ -31,12 +30,6 @@
 
         public bool DisplaySelectFileError { get; set; }
 
-        public bool AnyError
-        {
-            get
-            {
-                return DisplayDataError || DisplayFormatError || DisplaySelectFileError;
-            }
-        }
+        public bool AnyError => DisplayDataError || DisplayFormatError || DisplaySelectFileError;
     }
 }
