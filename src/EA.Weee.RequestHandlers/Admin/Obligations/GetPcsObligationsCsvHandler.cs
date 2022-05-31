@@ -12,21 +12,19 @@
     using EA.Weee.Requests.Admin.Obligations;
     using System;
     using System.Threading.Tasks;
+    using Weee.Security;
 
     public class GetPcsObligationsCsvHandler : IRequestHandler<GetPcsObligationsCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly ICommonDataAccess dataAccess;
 
         public GetPcsObligationsCsvHandler(IWeeeAuthorization authorization,
-            WeeeContext context,
             CsvWriterFactory csvWriterFactory,
             ICommonDataAccess dataAccess)
         {
             this.authorization = authorization;
-            this.context = context;
             this.csvWriterFactory = csvWriterFactory;
             this.dataAccess = dataAccess;
         }
@@ -34,6 +32,7 @@
         public async Task<CSVFileData> HandleAsync(GetPcsObligationsCsv message)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthorityApprovedSchemes(message.Authority);
 
