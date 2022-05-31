@@ -110,6 +110,7 @@
         }
 
         [Component]
+        [Ignore("Re-instate when available tonnages is returned to the creation screen")]
         public class WhenICreateADraftTransferEvidenceNoteAgainstNotesWithTonnageTransfer : CreateTransferEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
@@ -208,6 +209,7 @@
         }
 
         [Component]
+        [Ignore("Re-instate when available tonnages is returned to the creation screen")]
         public class WhenICreateADraftTransferEvidenceNoteWhereThereIsNoAvailableTonnage : CreateTransferEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
