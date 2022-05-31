@@ -212,7 +212,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");  // the holding page name in the Obligations folder
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");  
             Assert.True(viewResult.Model.Equals(model));
         }
 
