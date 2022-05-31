@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
+    using System.Collections.Generic;
+    using Core.Shared.CsvReading;
+
     public interface IObligationCsvReader
     {
-        void ValidateHeader(byte[] data);
+        IList<ObligationCsvUpload> Read(byte[] data);
     }
 }
