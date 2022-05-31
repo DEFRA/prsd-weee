@@ -20,14 +20,19 @@
         [Component]
         public class WhenIGetASchemeUploadObligation : GetSchemeUploadObligationHandlerIntegrationTestBase
         {
+            private const string FileError = "file error";
+            private const string DataError = "data error";
+            private const string SchemeName = "scheme name";
+            private const string SchemeId = "scheme id";
+
             private readonly Establish context = () =>
             {
                 LocalSetup();
 
                 var errors = new List<ObligationUploadError>()
                 {
-                    new ObligationUploadError(ObligationUploadErrorType.File, "file error"),
-                    new ObligationUploadError(ObligationUploadErrorType.Data, "scheme name", "scheme id", "data error")
+                    new ObligationUploadError(ObligationUploadErrorType.File, FileError),
+                    new ObligationUploadError(ObligationUploadErrorType.Data, SchemeName, SchemeId, DataError)
                 };
                 obligationUpload = ObligationUploadDbSetup.Init().WithErrors(errors).Create();
                 
@@ -49,10 +54,10 @@
             private readonly It shouldHaveReturnedObligationDataWithErrors = () =>
             {
                 result.ErrorData.Should().Contain(e =>
-                    e.ErrorType == SchemeObligationUploadErrorType.File && e.Description.Equals("file error"));
+                    e.ErrorType == SchemeObligationUploadErrorType.File && e.Description.Equals(FileError));
 
                 result.ErrorData.Should().Contain(e =>
-                    e.ErrorType == SchemeObligationUploadErrorType.Data && e.Description.Equals("data error") && e.Scheme.Equals("scheme name") && e.SchemeIdentifier.Equals("scheme id"));
+                    e.ErrorType == SchemeObligationUploadErrorType.Data && e.Description.Equals(DataError) && e.Scheme.Equals(SchemeName) && e.SchemeIdentifier.Equals(SchemeId));
             };
         }
 
@@ -70,6 +75,15 @@
                     .WithIoC()
                     .WithTestData()
                     .WithInternalAdminUserAccess();
+
+                var authority = Query.GetEaCompetentAuthority();
+                var role = Query.GetAdminRole();
+
+                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
+                {
+                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
+                        .Create();
+                }
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>>();
