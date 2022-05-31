@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
+    using AutoFixture;
     using Base;
     using Builders;
     using Core.Helpers;
@@ -153,7 +154,7 @@
                     t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
                 }).WithTonnages(newTransferNoteTonnage2).Create();
 
-                // create another transfer from note 1 but not is not approved so wont be included
+                // create another transfer from note 1 but is rejected so wont be included
                 var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
                 {
                     new NoteTransferTonnage(transferTonnage1.Id, 1002, null)
@@ -161,7 +162,7 @@
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                 {
-                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                 }).WithTonnages(newTransferNoteTonnage3).Create();
 
                 // now to call the request to take the last 1 tonne
