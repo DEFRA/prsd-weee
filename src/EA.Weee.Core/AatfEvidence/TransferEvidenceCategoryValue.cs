@@ -26,6 +26,10 @@
         {
         }
 
+        public TransferEvidenceCategoryValue(WeeeCategory category) : base(category)
+        {
+        }
+
         public TransferEvidenceCategoryValue(WeeeCategory category,
             Guid transferTonnageId,
             decimal? availableReceived, 

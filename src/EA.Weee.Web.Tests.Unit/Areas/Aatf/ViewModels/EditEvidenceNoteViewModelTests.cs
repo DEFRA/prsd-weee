@@ -130,6 +130,12 @@
         }
 
         [Fact]
+        public void EvidenceNoteViewModel_EvidenceCategoryValues_ShouldHaveRequiredTonnageAttribute()
+        {
+            typeof(EditEvidenceNoteViewModel).GetProperty("CategoryValues").Should().BeDecoratedWith<RequiredTonnageAttribute>();
+        }
+
+        [Fact]
         public void EvidenceNoteViewModel_ReceivedTotal_ShouldCallCalculator()
         {
             model.CategoryValues.Add(new EvidenceCategoryValue(WeeeCategory.ConsumerEquipment) { Received = "1"});

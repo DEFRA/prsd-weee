@@ -33,6 +33,10 @@
                 {
                     switch (note.Status)
                     {
+                        case NoteStatus.Submitted:
+                            model.SuccessMessage =
+                            $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            break;
                         case NoteStatus.Draft:
                             model.SuccessMessage =
                                 $"You have successfully saved the transfer evidence note with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
