@@ -27,11 +27,11 @@
                         var selectedOption = Model.TransferAllTonnage ? "checked" : "";
                     }
                     <input class="govuk-checkboxes__input" id="TransferAllTonnage" name="TransferAllTonnage" type="checkbox" value="true" @selectedOption>
-                    @Html.LabelFor(m => m.TransferAllTonnage, new { @class="govuk-label govuk-checkboxes__label"})
+                    @Html.LabelFor(m => m.TransferAllTonnage, new { @class = "govuk-label govuk-checkboxes__label" })
                 </div>
             </div>
         </fieldset>
-        
+
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
                 <noscript>
@@ -54,6 +54,11 @@
         for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
         {
             var note = Model.EvidenceNotesDataList.ElementAt(i);
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
+                <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" class="govuk-visually-hidden" />
+                @Html.Gds().ValidationMessageFor(m => m.TransferCategoryValues)
+            </div>
 
             if (note.DisplayAatfName)
             {
@@ -88,8 +93,8 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        
-                        
+
+
                         @for (var j = 0; j < Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Count; j++)
                         {
 
