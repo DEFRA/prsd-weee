@@ -6,6 +6,7 @@
     using System.Linq;
     using Core.Admin.Obligation;
     using ViewModels.Obligations;
+    using WebGrease.Css.Ast.Selectors;
 
     public class UploadObligationsViewModelMap : IMap<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>
     {
@@ -24,11 +25,13 @@
                 displayDataError = source.UploadData.ErrorData.Any(r => dataErrorTypes.Contains(r.ErrorType));
                 displayFileError =
                     source.UploadData.ErrorData.Any(r => r.ErrorType == SchemeObligationUploadErrorType.File);
+                model.NumberOfDataErrors = source.UploadData.ErrorData.Count(r => dataErrorTypes.Contains(r.ErrorType));
+                model.DisplaySuccessMessage = displayDataError == false && displayFileError == false;
             }
 
             model.DisplayFormatError = displayFileError;
             model.DisplayDataError = displayFileError != true && displayDataError;
-            
+
             return model;
         }
     }

@@ -31,5 +31,7 @@
         public bool DisplaySelectFileError { get; set; }
 
         public bool AnyError => DisplayDataError || DisplayFormatError || DisplaySelectFileError;
+
+        public bool DisplaySuccessMessage { get; set; }
     }
 }
