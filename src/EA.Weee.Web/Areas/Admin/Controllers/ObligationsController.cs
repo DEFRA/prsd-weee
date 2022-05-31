@@ -57,10 +57,8 @@
             {
                 return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value});
             }
-            else
-            {
-                return View("SelectAuthority", model);
-            }
+            
+            return View("SelectAuthority", model);
         }
 
         [HttpGet]
