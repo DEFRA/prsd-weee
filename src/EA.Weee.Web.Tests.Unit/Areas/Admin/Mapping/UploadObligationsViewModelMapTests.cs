@@ -7,7 +7,6 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Xunit;
 
     public class UploadObligationsViewModelMapTests
@@ -80,7 +79,11 @@
             //arrange
             var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
                 .With(s => s.ErrorData, 
-                    fixture.CreateMany<SchemeObligationUploadErrorData>(2).ToList())
+                    new List<SchemeObligationUploadErrorData>()
+                    {
+                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null),
+                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null)
+                    })
                 .Create();
 
             var source = new UploadObligationsViewModelMapTransfer()
