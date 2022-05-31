@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.FromViewModel
 {
     using Core.Shared;
+    using CuttingEdge.Conditions;
     using Prsd.Core.Mapper;
     using Services;
     using ViewModels.Obligations;
@@ -17,6 +18,8 @@
 
         public SubmitSchemeObligation Map(UploadObligationsViewModel source)
         {
+            Condition.Requires(source).IsNotNull();
+
             return new SubmitSchemeObligation(new FileInfo(source.File.FileName, fileConverter.ConvertCsv(source.File)),
                 source.Authority);
         }
