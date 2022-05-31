@@ -1,34 +1,25 @@
-﻿
-@using EA.Weee.Core.DataStandards
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
 
 <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-0 govuk-!-padding-bottom-1">
-    <span class = "govuk-label--s" aria-labelledby="filter-to-label">
+    <span class="govuk-label--s" aria-labelledby="filter-to-label">
         Filter by
     </span>
 </div>
 
 <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-0">
-    
+
     <div class="govuk-grid-row ">
-        
+
         <div class="govuk-grid-column-two-thirds">
-            <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0">                
-                
+            <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0">
                 <div class="govuk-form-group govuk-!-padding-top-20 @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
                     @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
-
-                    @if (Model.SubmittedDatesFilterViewModel.StartDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class= "weee-date-filter-width" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false, "{0:yyyy-MM-dd}")
-                    }
+                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
-
             </div>
 
             <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7 govuk-body govuk-!-padding-left-0" style="text-align: left; width: 3%;">
@@ -36,23 +27,14 @@
                     to
                 </span>
             </div>
-            
+
             <div class="govuk-grid-column-one-third govuk-!-padding-left-2">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
                     @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)
-                    @if (Model.SubmittedDatesFilterViewModel.EndDate.Equals(default(DateTime)))
-                    {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false)
-                    }
-                    else
-                    {
-                        @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @type = "Date", @class = "weee-date-filter-width" }, false, "{0:yyyy-MM-dd}")
-                    }
-
+                    @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
                 </div>
             </div>
         </div>
     </div>
 </div>
-    
