@@ -53,6 +53,40 @@
                     .MustHaveHappenedOnceExactly();
             }
         }
+        
+        [Fact]
+        public async Task Validate_GivenObligationCsvUploadsWithNoData_ErrorsShouldContainRelevantError()
+        {
+            //arrange
+            var uploads = fixture.CreateMany<ObligationCsvUpload>(0).ToList();
+            var authority = fixture.Create<UKCompetentAuthority>();
+
+            //act
+            var results = await obligationUploadValidator.Validate(authority, uploads);
+
+            //assert
+            results.Count.Should().Be(1);
+            results.Should().Contain(r => r.SchemeIdentifier == null &&
+                                          r.SchemeName == null &&
+                                          r.Category == null &&
+                                          r.Description.Equals("File contains no data") &&
+                                          r.ErrorType == ObligationUploadErrorType.File);
+        }
+
+        [Fact]
+        public async Task Validate_GivenObligationCsvUploadsWithNoData_NoOtherFileProcessingShouldHappen()
+        {
+            //arrange
+            var uploads = fixture.CreateMany<ObligationCsvUpload>(0).ToList();
+            var authority = fixture.Create<UKCompetentAuthority>();
+
+            //act
+            var results = await obligationUploadValidator.Validate(authority, uploads);
+
+            //assert
+            A.CallTo(() => tonnageValueValidator.Validate(A<object>._)).MustNotHaveHappened();
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(A<string>._)).MustNotHaveHappened();
+        }
 
         [Fact]
         public async Task Validate_GivenObligationCsvUploadsWithSchemeError_ErrorsShouldContainRelevantError()
