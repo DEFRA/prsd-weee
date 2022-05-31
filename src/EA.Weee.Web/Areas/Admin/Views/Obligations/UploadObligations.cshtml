@@ -12,7 +12,7 @@
     
     @if (Model.AnyError)
     {
-        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+        <div class="error-summary govuk-error-summary" id="error_explanation" aria-labelledby="error-summary-title" role="alert" aria-atomic="true" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
                 There is a problem
             </h2>
@@ -21,21 +21,21 @@
                     @if (Model.DisplaySelectFileError)
                     {
                         <li>
-                            <a href="#file">You have not selected a file</a>
+                            <a href="#File">You have not selected a file</a>
                             <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:") You must select a file before the system can check for errors</p>
                         </li>
                     }
                     @if (Model.DisplayDataError)
                     {
                         <li>
-                            <a href="#file">Your file contains 1 data error</a>
+                            <a href="#File">Your file contains 1 data error</a>
                             <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:") There may be a problem with the data in the file, which prevents our system from validating it. You should rectify any errors before we can continue our validation process.</p>
                         </li>
                     }
                     @if (Model.DisplayFormatError)
                     {
                         <li>
-                            <a href="#file">Your file is in the wrong format</a>
+                            <a href="#File">Your file is in the wrong format</a>
                             <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:")The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.</p>
                         </li>
                     }
