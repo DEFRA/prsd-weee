@@ -27,11 +27,11 @@
                         var selectedOption = Model.TransferAllTonnage ? "checked" : "";
                     }
                     <input class="govuk-checkboxes__input" id="TransferAllTonnage" name="TransferAllTonnage" type="checkbox" value="true" @selectedOption>
-                    @Html.LabelFor(m => m.TransferAllTonnage, new { @class="govuk-label govuk-checkboxes__label"})
+                    @Html.LabelFor(m => m.TransferAllTonnage, new { @class = "govuk-label govuk-checkboxes__label" })
                 </div>
             </div>
         </fieldset>
-        
+
         <div class="govuk-!-margin-top-3">
             <div class="govuk-button-group">
                 <noscript>
@@ -54,6 +54,11 @@
         for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
         {
             var note = Model.EvidenceNotesDataList.ElementAt(i);
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
+                <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="TransferCategoryValues" class="govuk-visually-hidden" />
+                @Html.Gds().ValidationMessageFor(m => m.TransferCategoryValues)
+            </div>
 
             if (note.DisplayAatfName)
             {
@@ -88,8 +93,8 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        
-                        
+
+
                         @for (var j = 0; j < Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.Count; j++)
                         {
 
@@ -118,7 +123,7 @@
                                         <span class="govuk-visually-hidden" id="category-received-@category.CategoryId-@i.ToString()">Transfer received (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Received)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Received,
-                                            new { @id = @elementCount + "Received" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { @class = "govuk-input tonnage-entry", data_received_category=@category.CategoryId, aria_labelledby = "category-received-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell govuk-!-text-align-right">
@@ -126,7 +131,7 @@
                                         <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId-@i.ToString()">Transfer reused (tonnes) for @note.SubmittedBy and @category.CategoryDisplay</span>
                                         @Html.Gds().ValidationMessageFor(m => Model.TransferCategoryValues[elementCount].Reused)
                                         @Html.TextBoxFor(m => Model.TransferCategoryValues[elementCount].Reused,
-                                            new { id = @elementCount + "Reused" + @category.CategoryId, @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                            new { @class = "govuk-input tonnage-entry", data_reused_category = @category.CategoryId, aria_labelledby = "category-reused-" + @category.CategoryId + "-" + @i.ToString(), autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                     </div>
                                 </td>
                             </tr>
