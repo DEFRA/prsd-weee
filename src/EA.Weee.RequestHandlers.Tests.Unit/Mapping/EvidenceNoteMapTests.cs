@@ -783,7 +783,7 @@
             result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
             result.EvidenceTonnageData.Should().BeEquivalentTo(
                 tonnages.Select(t =>
-                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused)).ToList());
+                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, null, null)).ToList());
         }
     }
 }
