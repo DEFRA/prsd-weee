@@ -11,7 +11,6 @@
     using Core.Tests.Unit.Helpers;
     using DataAccess;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
     using Domain.Scheme;
@@ -19,8 +18,6 @@
     using FluentAssertions;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
@@ -185,7 +182,6 @@
         }
 
         [Fact(Skip = "Re-instate when available tonnages is returned to the creation screen")]
-        //TODO: Re-instate when available tonnages is returned to the creation screen
         public async Task HandleAsync_GivenRequest_TransferValuesShouldBeValidated()
         {
             //act
@@ -275,7 +271,7 @@
                 .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
         }
 
-        [Fact(Skip = "Re-instate when available tonnages is returned to the creation screen")]
+        [Fact]
         public async Task HandleAsync_GivenErrorDuringValidation_TransactionShouldBeRolledBack()
         {
             //arrange
