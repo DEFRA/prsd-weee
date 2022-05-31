@@ -65,6 +65,49 @@
         }
 
         [Fact]
+        public async Task GetAllNotes_GivenSchemeQuery_ShouldOnlyRetrieveEvidenceNotes()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                context.Organisations.Add(organisation1);
+                
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1);
+
+                context.Aatfs.Add(aatf1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1 = NoteCommon.CreateNote(database, organisation1, scheme, aatf1);
+                
+                context.Notes.Add(note1);
+
+                var transferNote = NoteCommon.CreateTransferNote(database, organisation1, scheme);
+
+                context.Notes.Add(transferNote);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new EvidenceNoteFilter(DateTime.Now.Year)
+                {
+                    OrganisationId = organisation1.Id,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
+                    SchemeId = scheme.Id
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(note1.Id);
+            }
+        }
+
+        [Fact]
         public async Task GetAllNotes_ShouldMatchOnComplianceYear()
         {
             using (var database = new DatabaseWrapper())
@@ -769,21 +812,20 @@
             }
         }
 
-        [Theory]
-        [ClassData(typeof(NoteTypeData))]
-        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote(NoteType noteType)
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote()
         {
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
-                var noteShouldBeFound = await SetupSingleNote(context, database, noteType);
+                var noteShouldBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    SearchRef = $"{noteType.DisplayName}{noteShouldBeFound.Reference}",
+                    SearchRef = $"{NoteType.EvidenceNote.DisplayName}{noteShouldBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
                     OrganisationId = noteShouldBeFound.OrganisationId,
                     AatfId = noteShouldBeFound.AatfId
