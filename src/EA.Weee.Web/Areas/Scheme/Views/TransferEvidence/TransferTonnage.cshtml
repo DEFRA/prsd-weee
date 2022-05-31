@@ -56,7 +56,7 @@
             var note = Model.EvidenceNotesDataList.ElementAt(i);
 
             <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
-                <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" class="govuk-visually-hidden" />
+                <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="TransferCategoryValues" class="govuk-visually-hidden" />
                 @Html.Gds().ValidationMessageFor(m => m.TransferCategoryValues)
             </div>
 
