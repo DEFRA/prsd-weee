@@ -177,9 +177,10 @@
         /// <returns></returns>
         [Theory]
         [ClassData(typeof(NoteStatusData))]
-        public async Task Validate_GivenRequestedTonnageIsAvailableAsNoteIsNoteTransferIsNotApproved_NoExceptionExpected(NoteStatus status)
+        public async Task Validate_GivenRequestedTonnageIsAvailableAsNoteIsNoteTransferIsNotExcludedStatus_NoExceptionExpected(NoteStatus status)
         {
-            if (status.Equals(NoteStatus.Approved))
+            var excludedStatuses = new List<NoteStatus>() { NoteStatus.Rejected, NoteStatus.Void };
+            if (!excludedStatuses.Contains(status))
             {
                 return;
             }
