@@ -14,6 +14,7 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
+    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
