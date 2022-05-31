@@ -181,8 +181,8 @@
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1),
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1, null, null),
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
             };
 
             A.CallTo(() =>
@@ -232,7 +232,7 @@
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
             };
 
             A.CallTo(() =>
@@ -262,10 +262,10 @@
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, 1, 5),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.GasDischargeLampsAndLedLightSources, 3, 20),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ITAndTelecommsEquipment, null, 50)
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, 1, 5, null, null),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.GasDischargeLampsAndLedLightSources, 3, 20, null, null),
+                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ITAndTelecommsEquipment, null, 50, null, null)
             };
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns("1");
@@ -538,8 +538,8 @@
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1),
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null)
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1, null, null),
+                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
             };
 
             A.CallTo(() =>
