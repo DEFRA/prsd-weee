@@ -22,6 +22,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Domain.Evidence;
+    using Domain.Obligation;
 
     public class WeeeContext : DbContext
     {
@@ -188,6 +189,10 @@
         public virtual DbSet<NoteTransferTonnage> NoteTransferTonnage { get; set; }
 
         public virtual DbSet<NoteTransferCategory> NoteTransferCategories { get; set; }
+
+        public virtual DbSet<ObligationUpload> ObligationUploads { get; set; }
+
+        public virtual DbSet<ObligationUploadError> ObligationUploadErrors { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
