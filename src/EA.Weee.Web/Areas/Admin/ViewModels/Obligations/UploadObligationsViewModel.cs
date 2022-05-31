@@ -35,7 +35,7 @@
         {
             get
             {
-                return DisplayDataError || DisplayFormatError || DisplaySelectFileError
+                return DisplayDataError || DisplayFormatError || DisplaySelectFileError;
             }
         }
     }
