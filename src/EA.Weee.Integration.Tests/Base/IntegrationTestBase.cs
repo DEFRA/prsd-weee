@@ -102,6 +102,19 @@
                 return this;
             }
 
+            public IntegrationTestSetupBuilder WithInternalAdminUserAccess()
+            {
+                if (Principal == null)
+                {
+                    throw new InvalidOperationException("Principal must have been set to login as particular user type");
+                }
+
+                var userContext = new TestUserContext(Guid.Parse(User.Id), false, true);
+                InitIocWithUser(userContext);
+
+                return this;
+            }
+
             public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
             {
                 return WithIoC(true)

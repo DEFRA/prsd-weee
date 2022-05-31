@@ -17,6 +17,8 @@
 
         public virtual Role Role { get; private set; }
 
+        public virtual Guid RoleId { get; private set; }
+
         public virtual User User { get; private set; }
 
         protected CompetentAuthorityUser()
@@ -72,6 +74,19 @@
         public void UpdateRole(Role role)
         {
             Role = role;
+        }
+
+        /// <summary>
+        /// To be used by integration tests
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="authorityId"></param>
+        /// <param name="roleId"></param>
+        public void UpdateUser(string userId, Guid authorityId, Guid roleId)
+        {
+            UserId = userId;
+            CompetentAuthorityId = authorityId;
+            RoleId = roleId;
         }
     }
 }
