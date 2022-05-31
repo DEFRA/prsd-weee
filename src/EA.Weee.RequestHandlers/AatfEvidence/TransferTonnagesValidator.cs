@@ -33,7 +33,7 @@
 
                 var totalReceivedAvailable = 
                     noteTonnage.Received.Value - (noteTonnage.NoteTransferTonnage != null && noteTonnage.NoteTransferTonnage.Any() ? 
-                                                 noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && nt.TransferNote.Status.Value.Equals(NoteStatus.Approved.Value)).Sum(nt => nt.Received.Value) : 0);
+                                                 noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && !nt.TransferNote.Status.Value.Equals(NoteStatus.Rejected.Value) && !nt.TransferNote.Status.Value.Equals(NoteStatus.Void.Value)).Sum(nt => nt.Received.Value) : 0);
                 var requestedTonnage =
                     transferValues.First(t => t.TransferTonnageId.Equals(noteTonnage.Id));
 
