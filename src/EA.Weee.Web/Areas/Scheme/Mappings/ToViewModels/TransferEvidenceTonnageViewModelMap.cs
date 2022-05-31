@@ -86,8 +86,8 @@
 
                         var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
                             evidenceTonnageData.Id,
-                            evidenceTonnageData.Received,
-                            evidenceTonnageData.Reused,
+                            evidenceTonnageData.AvailableReceived,
+                            evidenceTonnageData.AvailableReused,
                             receivedTonnage,
                             reusedTonnage);
 
