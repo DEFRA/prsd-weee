@@ -15,7 +15,7 @@
 
         <div class="govuk-grid-column-two-thirds">
             <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0">
-                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
+                <div class="govuk-form-group govuk-!-padding-top-20 @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
                     @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
                     @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
