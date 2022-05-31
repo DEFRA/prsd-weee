@@ -180,6 +180,7 @@
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
     <Compile Include="Builders\CompetentAuthorityUserDbSetup.cs" />
+    <Compile Include="Builders\ObligationUploadDbSetup.cs" />
     <Compile Include="Builders\TransferEvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\EvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\OrganisationContactDbSetup.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\GetSchemeObligationUploadHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\SubmitSchemeObligationHandlerTests.cs" />
     <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
