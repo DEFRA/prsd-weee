@@ -100,6 +100,19 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequestAndObligationUploadNotFound_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => genericDataAccess.GetById<ObligationUpload>(A<Guid>._)).Returns((ObligationUpload)null);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequestAndObligationUpload_ReturnedDataShouldBeMapped()
         {
             //arrange
