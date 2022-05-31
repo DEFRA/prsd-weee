@@ -769,21 +769,20 @@
             }
         }
 
-        [Theory]
-        [ClassData(typeof(NoteTypeData))]
-        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote(NoteType noteType)
+        [Fact]
+        public async Task GetAllNotes_GivenSearchRefWithNoteTypeAlongWithOrganisationAndAatfShouldReturnSingleNote()
         {
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
-                var noteShouldBeFound = await SetupSingleNote(context, database, noteType);
+                var noteShouldBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
                 var filter = new EvidenceNoteFilter(DateTime.Now.Year)
                 {
-                    SearchRef = $"{noteType.DisplayName}{noteShouldBeFound.Reference}",
+                    SearchRef = $"{NoteType.EvidenceNote.DisplayName}{noteShouldBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
                     OrganisationId = noteShouldBeFound.OrganisationId,
                     AatfId = noteShouldBeFound.AatfId
