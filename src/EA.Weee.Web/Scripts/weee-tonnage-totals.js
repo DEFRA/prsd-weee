@@ -24,7 +24,6 @@ var countDecimals = function (value) {
     return 0;
 };
 
-
 function numberWithoutCommas(x) {
     return x.replace(/(\d+),(?=\d{3}(\D|$))/g, "$1");
 }
@@ -32,7 +31,6 @@ function numberWithoutCommas(x) {
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-
 
 function TonnageTotals(controlId) {
   
@@ -51,31 +49,57 @@ function TonnageTotals(controlId) {
             });
         element.addEventListener('custom-event',
             function (e) {
-                var totalId = e.detail.controlId + 'Total';
-                var tonnageTotal = document.querySelector('#' + totalId);
-                var totalTonnage = 0.00;
-                for (var elementCount = 0; elementCount < e.detail.tonnageElements.length; elementCount++) {
-                    var element = e.detail.tonnageElements[elementCount];
-                    var value = numberWithoutCommas(element.value).trim();
-
-                    if (!isNaN(value) && value && value.indexOf("+") === -1) {
-                        var convertedValue = parseFloat(value);
-                        if (convertedValue > 0 && countDecimals(value) <= 3) {
-                            totalTonnage += parseFloat(convertedValue);
-                        }
-                    }
-                    tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3));
-                }
+                TotalFunction(e);
             });
     }
 }
 
+function TransferTonnageTotals(categoryId, type) {
+
+    var tonnageElements = document.querySelectorAll('[data-' + type + '-category="' + categoryId + '"]');
+    var totalElement = type + categoryId;
+    for (var elementCount = 0; elementCount < tonnageElements.length; elementCount++) {
+        var element = tonnageElements[elementCount];
+        element.addEventListener('blur',
+            function (e) {
+                var event = new CustomEvent("custom-event", {
+                    'detail': {
+                        controlId: totalElement,
+                        tonnageElements: tonnageElements
+                    }
+                });
+                this.dispatchEvent(event);
+            });
+        element.addEventListener('custom-event',
+            function (e) {
+                TotalFunction(e);
+            });
+    }
+}
+
+function TotalFunction(e) {
+    var totalId = e.detail.controlId + 'Total';
+    var tonnageTotal = document.querySelector('#' + totalId);
+    var totalTonnage = 0.00;
+    for (var elementCount = 0; elementCount < e.detail.tonnageElements.length; elementCount++) {
+        var element = e.detail.tonnageElements[elementCount];
+        var value = numberWithoutCommas(element.value).trim();
+
+        if (!isNaN(value) && value && value.indexOf("+") === -1) {
+            var convertedValue = parseFloat(value);
+            if (convertedValue > 0 && countDecimals(value) <= 3) {
+                totalTonnage += parseFloat(convertedValue);
+            }
+        }
+        tonnageTotal.innerText = numberWithCommas(totalTonnage.toFixed(3));
+    }
+}
 
 function initialiseTransferCategoryTotals() {
     var categoryToCalc = document.querySelectorAll('input[id^=categoryid_to_calculate]');
     for (var elementCount = 0; elementCount < categoryToCalc.length; elementCount++) {
         var element = categoryToCalc[elementCount];
-        TonnageTotals('Received' + element.value);
-        TonnageTotals('Reused' + element.value);
+        TransferTonnageTotals(element.value, 'Received');
+        TransferTonnageTotals(element.value, 'Reused');
     }
 }
