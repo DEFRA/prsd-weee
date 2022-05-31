@@ -4,15 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Helpers;
-    using Core.Shared;
     using Core.Shared.CsvReading;
     using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
-    using Domain;
     using Domain.Error;
     using Domain.Obligation;
-    using Domain.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
