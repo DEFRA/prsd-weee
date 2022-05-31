@@ -76,6 +76,15 @@
                     .WithTestData()
                     .WithInternalAdminUserAccess();
 
+                var authority = Query.GetEaCompetentAuthority();
+                var role = Query.GetAdminRole();
+
+                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
+                {
+                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
+                        .Create();
+                }
+
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>>();
 
