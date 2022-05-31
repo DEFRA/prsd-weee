@@ -731,8 +731,6 @@
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\SelectAuthority.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferredEvidence.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchBySubmittedDatesPartial.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchByRecipientWasteStatusPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\SubmittedDatesFilterViewModel.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\RecipientWasteStatusFilterViewModel.cshtml" />
