@@ -101,12 +101,14 @@
     <Compile Include="DataAccess\GenericDataAccess.cs" />
     <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
+    <Compile Include="DataAccess\IObligationDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\IOrganisationDataAccess.cs" />
     <Compile Include="DataAccess\ISchemeDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
+    <Compile Include="DataAccess\ObligationDataAccess.cs" />
     <Compile Include="DataAccess\ProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
@@ -120,6 +122,9 @@
     <Compile Include="Mappings\AatfContactMapping.cs" />
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
+    <Compile Include="Mappings\ObligationUploadErrorTypeMapping.cs" />
+    <Compile Include="Mappings\ObligationUploadErrorMapping.cs" />
+    <Compile Include="Mappings\ObligationUploadMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTransferCategoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTransferMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteStatusHistoryMapping.cs" />
