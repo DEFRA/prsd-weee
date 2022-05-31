@@ -23,7 +23,7 @@
             Guard.ArgumentNotNull(() => model, model, "RequiredTonnageAttribute Model is null");
             Guard.ArgumentNotNull(() => value, value, "RequiredTonnageAttribute Tonnage Values are null");
 
-            var list = value as IList<EvidenceCategoryValue>;
+            var list = (value as IList).Cast<EvidenceCategoryValue>();
 
             if (model.Action.Equals(ActionEnum.Submit))
             {
