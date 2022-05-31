@@ -32,14 +32,6 @@
 
                 var scheme1 = SchemeDbSetup.Init().Create();
                 var scheme2 = SchemeDbSetup.Init().Create();
-                authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
                 
                 var csvHeader =
                     $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
@@ -75,18 +67,10 @@
 
                 var scheme1 = SchemeDbSetup.Init().Create();
                 var scheme2 = SchemeDbSetup.Init().Create();
-                authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
 
                 schemes.Add(scheme1);
                 schemes.Add(scheme2);
                 
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
-
                 var csvHeader =
                     $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},Invalid,2,3,4,5,6,7,8,9,10,11,12,13,14
@@ -127,14 +111,6 @@
 
                 var scheme1 = SchemeDbSetup.Init().Create();
                 var scheme2 = SchemeDbSetup.Init().Create();
-                authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
 
                 //header incorrect
                 var csvHeader =
@@ -172,14 +148,6 @@
                 LocalSetup();
 
                 var scheme1 = SchemeDbSetup.Init().Create();
-                authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
 
                 //header incorrect
                 var csvHeader =
@@ -224,6 +192,15 @@
                     .WithIoC()
                     .WithTestData()
                     .WithInternalAdminUserAccess();
+
+                authority = Query.GetEaCompetentAuthority();
+                var role = Query.GetAdminRole();
+
+                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
+                {
+                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
+                        .Create();
+                }
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<SubmitSchemeObligation, Guid>>();

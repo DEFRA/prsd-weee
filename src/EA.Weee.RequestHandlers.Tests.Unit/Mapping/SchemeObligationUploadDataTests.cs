@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
+    using System;
     using System.Collections.Generic;
     using AutoFixture;
     using Core.Admin.Obligation;
@@ -18,6 +19,16 @@
         public SchemeObligationUploadDataTests()
         {
             map = new SchemeObligationUploadDataMap();
+        }
+
+        [Fact]
+        public void Map_GivenNullSource_ArgumentNullExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() => map.Map(null));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
