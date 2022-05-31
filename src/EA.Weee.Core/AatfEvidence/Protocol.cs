@@ -15,6 +15,8 @@
         [Display(Name = "Site specific protocol")]
         SiteSpecificProtocol = 4,
         [Display(Name = "Reuse network PWP")]
-        ReuseNetworkPwp = 5
+        ReuseNetworkPwp = 5,
+        [Display(Name = "Light iron protocol")]
+        LightIronProtocol = 6
     }
 }

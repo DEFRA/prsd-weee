@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttributeTransferEvidenceTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
