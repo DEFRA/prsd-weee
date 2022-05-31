@@ -47,6 +47,7 @@
             model.DisplayDataError.Should().BeFalse();
             model.DisplayFormatError.Should().BeFalse();
             model.DisplaySelectFileError.Should().BeFalse();
+            model.DisplaySuccessMessage.Should().BeFalse();
         }
 
         [Theory]
@@ -70,6 +71,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayDataError.Should().BeTrue();
+            model.DisplaySuccessMessage.Should().BeFalse();
         }
 
         [Fact]
@@ -94,6 +96,7 @@
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayDataError.Should().BeTrue();
             model.NumberOfDataErrors.Should().Be(2);
+            model.DisplaySuccessMessage.Should().BeFalse();
         }
 
         [Fact]
@@ -116,6 +119,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeTrue();
+            model.DisplaySuccessMessage.Should().BeFalse();
         }
 
         [Fact]
@@ -144,6 +148,32 @@
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeTrue();
             model.DisplayDataError.Should().BeFalse();
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Fact]
+        public void
+            Map_GivenSourceWithUploadWithNoError_UploadObligationsViewModelShouldBeReturnedWithDisplaySuccessMessageAsTrue()
+        {
+            //arrange
+            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
+                .With(s => s.ErrorData, 
+                    new List<SchemeObligationUploadErrorData>())
+                .Create();
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = fixture.Create<CompetentAuthority>(),
+                UploadData = schemeUploadObligationData
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayFormatError.Should().BeFalse();
+            model.DisplayDataError.Should().BeFalse();
+            model.DisplaySuccessMessage.Should().BeTrue();
         }
     }
 }
