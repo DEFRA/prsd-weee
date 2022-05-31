@@ -181,7 +181,7 @@
             result.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact(Skip = "Re-instate when available tonnages is returned to the creation screen")]
+        [Fact]
         public async Task HandleAsync_GivenRequest_TransferValuesShouldBeValidated()
         {
             //act
