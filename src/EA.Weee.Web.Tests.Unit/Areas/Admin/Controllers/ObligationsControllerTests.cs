@@ -397,11 +397,88 @@
             result.Model.Should().Be(model);
         }
 
+        [Fact]
+        public async Task UploadObligations_GivenModelFilePropertyHasError_ModelDisplaySelectFileErrorShouldBeTrue()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("File", new Exception());
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            ((UploadObligationsViewModel)result.Model).DisplaySelectFileError.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModel_RequestShouldBeMapped()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModelAndSubmitObligationRequest_ApiShouldBeCalled()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+            var request = fixture.Create<SubmitSchemeObligation>();
+
+            A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model)).Returns(request);
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModel_ShouldRedirectToUploadObligationsGet()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+            var obligationUploadId = fixture.Create<Guid>();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<SubmitSchemeObligation>._)).Returns(obligationUploadId);
+
+            //act
+            var result = await controller.UploadObligations(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("UploadObligations");
+            result.RouteValues["authority"].Should().Be(model.Authority);
+            result.RouteValues["id"].Should().Be(obligationUploadId);
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenModelFilePropertyDoesNotHaveError_ModelDisplaySelectFileErrorShouldBeFalse()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("NotFile", new Exception());
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            ((UploadObligationsViewModel)result.Model).DisplaySelectFileError.Should().BeFalse();
+        }
+
         private UploadObligationsViewModel ValidUploadObligationsViewModel()
         {
             var model = new UploadObligationsViewModel()
             {
-                File = A.Fake<HttpPostedFileBase>()
+                File = A.Fake<HttpPostedFileBase>(),
+                Authority = fixture.Create<CompetentAuthority>()
             };
             return model;
         }
