@@ -23,18 +23,18 @@
     <p>
         The WEEE service puts small files (known as ‘cookies’) onto your computer, tablet or phone to collect information about how you browse the site. Find out more about the cookies we use, what they’re for and when they expire.
     </p>
-    
+
     <header class="hgroup">
         <h1 class="govuk-heading-m">Strictly necessary cookies</h1>
     </header>
     <p>
         These are essential cookies which always need to be on.
     </p>
+
     <h2 class="govuk-heading-m">Session cookies</h2>
-
-    <p>We use cookies to record your session activity.</p>
-
-
+    <p>
+        We use cookies to record your session activity.
+    </p>
     <table id="tbSessionCookies" summary='Session cookies' role='presentation' class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -57,11 +57,33 @@
         </tbody>
     </table>
 
+    <h2 class="govuk-heading-m">IPL cookies</h2>
+    <table id="tbSessionCookies" summary='Session cookies' role='presentation' class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">Name</th>
+                <th class="govuk-table__header">Purpose</th>
+                <th class="govuk-table__header">Expires</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">ARRAffinity</td>
+                <td class="govuk-table__cell">This cookie is set by websites run on the Windows Azure cloud platform. It is used for load balancing to make sure the visitor page requests are routed to the same server in any browsing session.</td>
+                <td class="govuk-table__cell">When your session ends</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">ARRAffinitySameSite</td>
+                <td class="govuk-table__cell">This cookie is set by websites run on the Windows Azure cloud platform. It is used for load balancing to make sure the visitor page requests are routed to the same server in any browsing session.</td>
+                <td class="govuk-table__cell">When your session ends</td>
+            </tr>
+        </tbody>
+    </table>
+
     <h2 class="govuk-heading-m">Cookies message</h2>
     <p>
         You may see a banner when you visit WEEE inviting you to accept additional cookies or review your settings. We’ll set cookies so that your device knows you’ve seen it and not to show it again, and also to store your settings.
     </p>
-
     <table id="tbIntroductoryCookies" summary='Introductory message cookie' role='presentation' class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -85,7 +107,6 @@
     </table>
 
     <h2 class="govuk-heading-m">Cookies that measure website use (optional)</h2>
-
     <p>
         With your permission, we use Google Analytics to collect information about how you use the WEEE service. We do this to help make sure the site is meeting the needs of its users and to help us make improvements.
     </p>
@@ -100,7 +121,9 @@
         <li>what you click on while you’re visiting the site</li>
     </ul>
     <p>
-        We don’t allow Google to use or share our analytics data. <br />
+        We don’t allow Google to use or share our analytics data.
+    </p>
+    <p>
         We use the following Google Analytics  cookies on WEEE:
     </p>
     <table id="tbGoogleAnalytics" summary='Google analytics cookie collection' role='presentation' class="govuk-table">
@@ -139,7 +162,6 @@
         <h2 class="govuk-heading-m">Do you want to accept analytics cookies?</h2>
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset inline">
-
                 <div class="govuk-radios__item">
                     <input name="cookieChoices" type="hidden" value="True">
                     <input id="cookieChoiceYes" name="cookieChoices" class="govuk-radios__input" type="radio" value="True">
@@ -150,10 +172,10 @@
                     <input id="cookieChoiceNo" name="cookieChoices" class="govuk-radios__input" type="radio" value="False">
                     <label class="govuk-label govuk-radios__label" for="no">No</label>
                 </div>
-
             </fieldset>
         </div>
     </div>
+
     <div class="govuk-form-group">
         <input id="saveCookieChoice" type="submit" value="Save cookie settings" class="govuk-button" onclick="setCookieChoice();">
     </div>
