@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Core.Admin.Obligation;
+    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Obligation;
     using Prsd.Core.Mapper;
@@ -11,7 +12,7 @@
     using Security;
     using Weee.Security;
 
-    internal class GetSchemeObligationUploadHandler : IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>
+    public class GetSchemeObligationUploadHandler : IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -30,6 +31,8 @@
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var obligationUpload = await genericDataAccess.GetById<ObligationUpload>(request.ObligationUploadId);
+
+            Condition.Requires(obligationUpload).IsNotNull($"Obligation Upload with Id {request.ObligationUploadId} not found");
 
             return mapper.Map<ObligationUpload, SchemeObligationUploadData>(obligationUpload);
         }
