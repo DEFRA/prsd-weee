@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using AutoFixture;
     using Core.Admin.Obligation;
     using Core.DataReturns;
-    using Core.Helpers;
     using Domain.Error;
     using Domain.Obligation;
     using FakeItEasy;
