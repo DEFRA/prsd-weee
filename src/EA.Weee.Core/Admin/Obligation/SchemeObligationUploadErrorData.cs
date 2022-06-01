@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.Admin.Obligation
 {
-    using Domain.Lookup;
+    using EA.Weee.Core.DataReturns;
 
     public class SchemeObligationUploadErrorData
     {

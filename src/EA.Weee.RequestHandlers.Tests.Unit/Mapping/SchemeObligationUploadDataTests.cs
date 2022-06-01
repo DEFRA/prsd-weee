@@ -2,10 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using AutoFixture;
     using Core.Admin.Obligation;
+    using Core.DataReturns;
     using Domain.Error;
-    using Domain.Lookup;
     using Domain.Obligation;
     using FakeItEasy;
     using FluentAssertions;
@@ -40,7 +39,7 @@
                 new ObligationUploadError(ObligationUploadErrorType.Scheme, "scheme 1", "scheme 1 identifier",
                     "error 1"),
                 new ObligationUploadError(ObligationUploadErrorType.File, "error 2"),
-                new ObligationUploadError(ObligationUploadErrorType.Data, WeeeCategory.ConsumerEquipment, "scheme 2",
+                new ObligationUploadError(ObligationUploadErrorType.Data, EA.Weee.Domain.Lookup.WeeeCategory.ConsumerEquipment, "scheme 2",
                     "scheme 2 identifier", "error 3")
             };
 

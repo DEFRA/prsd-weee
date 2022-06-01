@@ -15,7 +15,11 @@
     using System;
     using System.Reflection;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
+    using Core.Admin.Obligation;
+    using Prsd.Core.Mapper;
+    using Web.Areas.Admin.Mappings.ToViewModel;
     using Xunit;
 
     public class ObligationsControllerTests
@@ -24,6 +28,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient client;
         private readonly IWeeeCache cache;
+        private readonly IMapper mapper;
+        private readonly Fixture fixture;
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligationsController controller;
 
@@ -31,11 +37,14 @@
         {
             configuration = A.Fake<IAppConfiguration>();
             client = A.Fake<IWeeeClient>();
+            mapper = A.Fake<IMapper>();
             apiClient = () => client;
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            
-            controller = new ObligationsController(configuration, breadcrumb, cache, apiClient);
+
+            fixture = new Fixture();
+
+            controller = new ObligationsController(configuration, breadcrumb, cache, apiClient, mapper);
         }
 
         [Fact]
@@ -70,7 +79,7 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(false);
-            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -104,7 +113,7 @@
             // Arrange
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
-            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, A.Dummy<BreadcrumbService>(), A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -138,7 +147,7 @@
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
             BreadcrumbService breadcrumb = new BreadcrumbService();
-            ObligationsController controller = new ObligationsController(configuration, breadcrumb, A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>());
+            ObligationsController controller = new ObligationsController(configuration, breadcrumb, A.Dummy<IWeeeCache>(), () => A.Dummy<IWeeeClient>(), mapper);
             MethodInfo onActionExecutingMethod = typeof(ObligationsController).GetMethod(
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -170,7 +179,8 @@
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
+                                                                        () => A.Dummy<IWeeeClient>(),
+                                                                        mapper);
 
             // Act
             ActionResult result = controller.SelectAuthority();
@@ -182,63 +192,47 @@
             Assert.NotNull(viewResult.Model as SelectAuthorityViewModel);
         }
 
-        /// <summary>
-        /// This test ensures that the POST "SelectAuthority" action will return the
-        /// "SelectAuthority" view a view model if the view model provided is invalid.
-        /// </summary>
         [Fact]
-        public void PostSelectAuthority_WithInvalidModel_ReturnsSelectAuthorityViewWithViewModel()
+        public void PostSelectAuthority_WithInvalidModel_SelectAuthorityViewWithViewModel()
         {
             // Arrange
+            
             ObligationsController controller = new ObligationsController(
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
                                                                         A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
-            controller.ModelState.AddModelError("key", "Some error");
+                                                                        () => A.Dummy<IWeeeClient>(),
+                                                                        mapper);
+            var model = fixture.Create<SelectAuthorityViewModel>();
+            controller.ModelState.AddModelError("error", new Exception());
 
             // Act - holding page until obligations page is implemented
-            ActionResult result = controller.SelectAuthority(A.Dummy<SelectAuthorityViewModel>());
+            ActionResult result = controller.SelectAuthority(model);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");
-
-            SelectAuthorityViewModel viewModel = viewResult.Model as SelectAuthorityViewModel;
-            Assert.NotNull(viewModel);
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");  
+            Assert.True(viewResult.Model.Equals(model));
         }
 
-        /// <summary>
-        /// This test ensures that the POST "Holding" action will return the
-        /// Holding page "Index" view and view model if the view model provided is invalid.
-        /// </summary>
         [Fact]
-        public void PostSelectAuthority_WithInvalidModel_ReturnsHoldingViewWithViewModel()
+        public void PostSelectAuthority_WithValidModel_RedirectsToUploadObligationsAction()
         {
             // Arrange
-            ObligationsController controller = new ObligationsController(
-                                                                        A.Dummy<IAppConfiguration>(),
-                                                                        A.Dummy<BreadcrumbService>(),
-                                                                        A.Dummy<IWeeeCache>(), 
-                                                                        () => A.Dummy<IWeeeClient>());
+            var model = fixture.Create<SelectAuthorityViewModel>();
 
-            // Act - holding page until obligations page is implemented
-            ActionResult result = controller.SelectAuthority(new Fixture().Create<SelectAuthorityViewModel>());
+            var result = controller.SelectAuthority(model) as RedirectToRouteResult;
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "UploadObligations");  // the holding page name in the Obligations folder
-            UploadObligationsViewModel viewModel = viewResult.Model as UploadObligationsViewModel;
-            Assert.NotNull(viewModel);
+            result.RouteValues["action"].Should().Be("UploadObligations");
+            result.RouteValues["authority"].Should().Be(model.SelectedAuthority.Value);
         }
 
         [Fact]
         public void UploadObligationsGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -265,36 +259,100 @@
             typeof(ObligationsController).GetMethod("DownloadTemplate", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
-        } 
-
-        [Fact]
-        public void UploadObligationsGet_PopulatesModel()
-        {
-            //arrange
-            var authority = CompetentAuthority.England;
-            var model = new UploadObligationsViewModel(authority);
-
-            //act
-            var result = controller.UploadObligations(authority) as ViewResult;
-
-            //assert
-            result.Model.Should().BeEquivalentTo(model);
         }
 
         [Fact]
-        public void UploadObligationsPost_SetsTriggerDownload_ToTrue()
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
         {
             //arrange
-            var authority = CompetentAuthority.England;
-            var model = new UploadObligationsViewModel(authority);
+            var authority = fixture.Create<CompetentAuthority>();
 
             //act
-            var result = controller.UploadObligations(model) as ViewResult;
+            await controller.UploadObligations(authority, fixture.Create<Guid>());
 
             //assert
-            bool triggerDownload = result.ViewBag.TriggerDownload;
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority)))
+                .MustHaveHappenedOnceExactly();
+        }
 
-            triggerDownload.Should().BeTrue();
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_SchemeUploadObligationShouldBeRetrieved()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var obligationId = fixture.Create<Guid>();
+
+            //act
+            await controller.UploadObligations(authority, obligationId);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                    A<GetSchemeObligationUpload>.That.Matches(s => s.ObligationUploadId == obligationId)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var obligationId = fixture.Create<Guid>();
+            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
+
+            //act
+            await controller.UploadObligations(authority, obligationId);
+
+            //assert
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.UploadData == schemeUploadObligationData)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeReturned()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var obligationId = fixture.Create<Guid>();
+            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+            var model = ValidUploadObligationsViewModel();
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
+
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var viewResult = await controller.UploadObligations(authority, obligationId) as ViewResult;
+
+            //assert
+            viewResult.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeReturned()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var model = ValidUploadObligationsViewModel();
+
+            A.CallTo(() =>
+                    mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                        A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await controller.UploadObligations(authority, fixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
         }
 
         [Fact]
@@ -309,6 +367,120 @@
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._, A<GetPcsObligationsCsv>.That.Matches(c => c.Authority.Equals(authority)))).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenInvalidViewModel_DefaultViewShouldBeReturned()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("error", new Exception());
+            
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenInvalidViewModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("error", new Exception());
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenModelFilePropertyHasError_ModelDisplaySelectFileErrorShouldBeTrue()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("File", new Exception());
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            ((UploadObligationsViewModel)result.Model).DisplaySelectFileError.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModel_RequestShouldBeMapped()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModelAndSubmitObligationRequest_ApiShouldBeCalled()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+            var request = fixture.Create<SubmitSchemeObligation>();
+
+            A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model)).Returns(request);
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenValidModel_ShouldRedirectToUploadObligationsGet()
+        {
+            //arrange
+            var model = ValidUploadObligationsViewModel();
+            var obligationUploadId = fixture.Create<Guid>();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<SubmitSchemeObligation>._)).Returns(obligationUploadId);
+
+            //act
+            var result = await controller.UploadObligations(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("UploadObligations");
+            result.RouteValues["authority"].Should().Be(model.Authority);
+            result.RouteValues["id"].Should().Be(obligationUploadId);
+        }
+
+        [Fact]
+        public async Task UploadObligations_GivenModelFilePropertyDoesNotHaveError_ModelDisplaySelectFileErrorShouldBeFalse()
+        {
+            //arrange
+            var model = new UploadObligationsViewModel();
+            controller.ModelState.AddModelError("NotFile", new Exception());
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            ((UploadObligationsViewModel)result.Model).DisplaySelectFileError.Should().BeFalse();
+        }
+
+        private UploadObligationsViewModel ValidUploadObligationsViewModel()
+        {
+            var model = new UploadObligationsViewModel()
+            {
+                File = A.Fake<HttpPostedFileBase>(),
+                Authority = fixture.Create<CompetentAuthority>()
+            };
+            return model;
         }
     }
 }
