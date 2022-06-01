@@ -12,11 +12,11 @@
             if (!string.IsNullOrWhiteSpace(eventCategory))
             {
                 return new MvcHtmlString(
-                    $@"<details class=""govuk-details"" data-module=""govuk-details"" aria-live=""polite"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}""><summary class=""govuk-details__summary""><span class=""govuk-details__summary-text"">{linkText}<span class=""govuk-visually-hidden"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""govuk-details__text"" id=""details-content"" aria-hidden=""true""><div class=""govuk-body govuk-details__text"">{hiddenContent}</div></div></details>");
+                    $@"<details class=""govuk-details"" data-module=""govuk-details"" aria-live=""polite"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}""><summary class=""govuk-details__summary""><span class=""govuk-details__summary-text"">{linkText}<span class=""govuk-visually-hidden"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""govuk-body govuk-details__text"">{hiddenContent}</div></details>");
             }
 
             return new MvcHtmlString(
-                $@"<details class=""govuk-details"" data-module=""govuk-details"" aria-live=""polite""><summary class=""govuk-details__summary""><span class=""govuk-details__summary-text"">{linkText}<span class=""govuk-visually-hidden"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""govuk-details__text"" id=""details-content"" aria-hidden=""true""><div class=""govuk-body govuk-details__text"">{hiddenContent}</div></div></details>");
+                $@"<details class=""govuk-details"" data-module=""govuk-details"" aria-live=""polite""><summary class=""govuk-details__summary""><span class=""govuk-details__summary-text"">{linkText}<span class=""govuk-visually-hidden"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""govuk-body govuk-details__text"">{hiddenContent}</div></details>");
         }
 
         public MvcHtmlString CreateButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
