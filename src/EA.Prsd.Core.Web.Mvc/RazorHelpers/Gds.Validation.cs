@@ -132,7 +132,7 @@
 
         private string GetJavascriptDisabledErrorSummary(IEnumerable<ModelErrorWithFieldId> modelErrors)
         {
-            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' aria-labelledby='error-summary-title' role='alert' aria-atomic='true'>";
+            var startErrorRegion = @"<div class='error-summary govuk-error-summary' id='error_explanation' data-module='govuk-error-summary' aria-labelledby='error-summary-title'  role='alert' aria-atomic='true'>";
 
             var errorTitle = GetErrorSummaryHeading(modelErrors);
 

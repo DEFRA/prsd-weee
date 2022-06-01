@@ -1,27 +1,34 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using EA.Weee.Api.Client;
+    using Api.Client;
+    using Base;
+    using Core.Shared;
     using EA.Weee.Requests.Admin.Obligations;
-    using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using Infrastructure;
+    using Mappings.ToViewModel;
+    using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using System;
-    using EA.Weee.Web.Infrastructure;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
+    using Core.Admin.Obligation;
+    using Extensions;
+    using ViewModels.Obligations;
 
     public class ObligationsController : ObligationsBaseController
     {
         private readonly IAppConfiguration configuration;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IMapper mapper;
 
-        public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
+        public ObligationsController(IAppConfiguration configuration, BreadcrumbService breadcrumb, IWeeeCache cache, Func<IWeeeClient> apiClient, IMapper mapper) : base(breadcrumb, cache)
         {
             this.configuration = configuration;
             this.apiClient = apiClient;
+            this.mapper = mapper;
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -48,27 +55,53 @@
         {
             if (ModelState.IsValid)
             {
-                return View("UploadObligations", new UploadObligationsViewModel(model.SelectedAuthority.Value));
+                return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value});
             }
-            else
-            {
-                return View("SelectAuthority", model);
-            }
+            
+            return View("SelectAuthority", model);
         }
 
         [HttpGet]
-        public ActionResult UploadObligations(CompetentAuthority authority)
+        public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id)
         {
-            var model = new UploadObligationsViewModel(authority);
+            using (var client = apiClient())
+            {
+                SchemeObligationUploadData data = null;
+                if (id.HasValue)
+                {
+                    data = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligationUpload(id.Value));
+                }
 
-            return View(model);
+                var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
+                {
+                    CompetentAuthority = authority,
+                    UploadData = data
+                });
+
+                return View(model);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UploadObligations(UploadObligationsViewModel model)
+        public async Task<ActionResult> UploadObligations(UploadObligationsViewModel model)
         {
-            ViewBag.TriggerDownload = ModelState.IsValid;
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    var request = mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model);
+
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("UploadObligations", new { authority = model.Authority, id = result });
+                }
+            }
+
+            if (ModelState.HasErrorForProperty<UploadObligationsViewModel, HttpPostedFileBase>(m => m.File))
+            {
+                model.DisplaySelectFileError = true;
+            }
 
             return View(model);
         }
@@ -78,7 +111,7 @@
         {
             using (var client = apiClient())
             {
-                var fileData = await client.SendAsync(this.User.GetAccessToken(), new GetPcsObligationsCsv(authority));
+                var fileData = await client.SendAsync(User.GetAccessToken(), new GetPcsObligationsCsv(authority));
 
                 var data = new UTF8Encoding().GetBytes(fileData.FileContent);
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));

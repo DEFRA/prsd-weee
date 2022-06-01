@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared.CsvReading; 
     using Core.Validation;
@@ -25,25 +26,32 @@
         public async Task<IList<ObligationUploadError>> Validate(UKCompetentAuthority authority, IList<ObligationCsvUpload> obligations)
         {
             var validationErrors = new List<ObligationUploadError>();
-            
-            foreach (var obligationCsvUpload in obligations)
+
+            if (!obligations.Any())
             {
-                var findScheme =
-                    await schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(
-                        obligationCsvUpload.SchemeIdentifier.Trim());
-
-                if (findScheme == null)
-                {
-                    validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} not recognised"));
-                }
-                else if (findScheme.CompetentAuthorityId != authority.Id)
-                {
-                    validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} is not part of {authority.Name}"));
-                }
-                
-                ValidateTonnages(obligationCsvUpload, validationErrors);
+                validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.File, "File contains no data"));
             }
+            else
+            {
+                foreach (var obligationCsvUpload in obligations)
+                {
+                    var findScheme =
+                        await schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(
+                            obligationCsvUpload.SchemeIdentifier.Trim());
 
+                    if (findScheme == null)
+                    {
+                        validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} not recognised"));
+                    }
+                    else if (findScheme.CompetentAuthorityId != authority.Id)
+                    {
+                        validationErrors.Add(new ObligationUploadError(ObligationUploadErrorType.Scheme, obligationCsvUpload.SchemeName.Trim(), obligationCsvUpload.SchemeIdentifier.Trim(), $"Scheme with identifier {obligationCsvUpload.SchemeIdentifier} is not part of {authority.Name}"));
+                    }
+
+                    ValidateTonnages(obligationCsvUpload, validationErrors);
+                }
+            }
+            
             return validationErrors;
         }
 
