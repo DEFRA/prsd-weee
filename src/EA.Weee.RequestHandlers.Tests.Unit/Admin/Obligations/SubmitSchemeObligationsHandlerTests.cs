@@ -210,5 +210,21 @@
                 A<string>._,
                 A<List<ObligationUploadError>>.That.Matches(o => o.Exists(oe => oe.ErrorType == ObligationUploadErrorType.File && oe.Description.Equals("The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process."))))).MustHaveHappenedOnceExactly();
         }
+
+        [Theory]
+        [MemberData(nameof(CsvExceptions))]
+        public async Task HandleAsync_GivenRequestWithCsvReaderExceptionError_RestOfFileShouldNotBeValidated(Exception exception)
+        {
+            //arrange
+            var authority = fixture.Create<UKCompetentAuthority>();
+            A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Throws(exception);
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<IList<ObligationCsvUpload>>._)).MustNotHaveHappened();
+        }
     }
 }
