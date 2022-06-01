@@ -302,7 +302,7 @@
         }
 
         [Fact]
-        public void Map_GivenCategoriesAndEvidenceNoteTonnageAndTransferAllTonnageIsSelected_TotalsShouldBeInitialised()
+        public void Map_GivenCategoriesAndEvidenceNoteTonnageAndTransferAllTonnageIsSelected_TotalsShouldBeInitialisedAndCalculated()
         {
             //arrange
             var source = SetupTotals();
@@ -312,10 +312,10 @@
             var result = map.Map(source);
 
             //assert
-            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("3.000");
-            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("6.000");
-            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("15.000");
-            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("17.000");
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("1.000"); // 3.000 - 2.000
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("3.000"); // 6.000 - 3.000
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("15.000"); // 15.000 - 0
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("17.000"); // 17.000 - 0
             result.CategoryValues.Count.Should().Be(2);
         }
 
@@ -325,17 +325,17 @@
             {
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, 3, 2, null, null),
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10, 7, null, null),
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.LargeHouseholdAppliances, 100, 700, null, null)
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, 3, 2, 2, 0),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 10, 7, 0, 0),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.LargeHouseholdAppliances, 100, 700, 0, 0)
                 }).Create(),
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, null, 4, null, null),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ITAndTelecommsEquipment, null, 4, 0, 3),
                 }).Create(),
                 fixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
                 {
-                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 10, null, null),
+                    new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 10, 0, 0),
                 }).Create()
             };
 

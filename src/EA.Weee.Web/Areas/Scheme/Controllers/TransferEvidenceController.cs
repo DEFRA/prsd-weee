@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Constant;
-    using Core.Helpers;
     using Core.Scheme;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -18,7 +17,6 @@
     using Services;
     using Services.Caching;
     using ViewModels;
-    using Web.Requests.Base;
     using Weee.Requests.AatfEvidence;
 
     public class TransferEvidenceController : SchemeEvidenceBaseController
