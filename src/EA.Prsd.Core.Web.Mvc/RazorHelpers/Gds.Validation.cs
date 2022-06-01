@@ -163,6 +163,13 @@
                     fieldName = fieldName.Replace(".", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
                     fieldName = fieldName.Replace("[", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
                     fieldName = fieldName.Replace("]", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
+
+                    if (fieldName.Length > 0
+                        && fieldName.Contains(System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement)
+                        && char.IsLower(fieldName.ElementAt(0)))
+                    {
+                        fieldName = fieldName[0].ToString().ToUpper() + fieldName.Substring(1);
+                    }
                 }
                 
                 errorListBuilder.AppendLine("<li>");

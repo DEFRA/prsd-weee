@@ -47,10 +47,10 @@
                 if (source.TransferAllTonnage)
                 {
                     category.TotalReceived = source.Notes.SelectMany(n => n.EvidenceTonnageData)
-                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.Received)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReceived)
                         .ToTonnageDisplay();
                     category.TotalReused = source.Notes.SelectMany(n => n.EvidenceTonnageData)
-                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.Reused)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReused)
                         .ToTonnageDisplay();
                 }
                 else
@@ -76,11 +76,11 @@
                         string reusedTonnage = null;
                         if (source.TransferAllTonnage)
                         {
-                            receivedTonnage = evidenceTonnageData.Received.HasValue
-                                ? evidenceTonnageData.Received.ToTonnageDisplay()
+                            receivedTonnage = evidenceTonnageData.AvailableReceived.HasValue
+                                ? evidenceTonnageData.AvailableReceived.ToTonnageDisplay()
                                 : null;
-                            reusedTonnage = evidenceTonnageData.Reused.HasValue
-                                ? evidenceTonnageData.Reused.ToTonnageDisplay()
+                            reusedTonnage = evidenceTonnageData.AvailableReused.HasValue
+                                ? evidenceTonnageData.AvailableReused.ToTonnageDisplay()
                                 : null;
                         }
 

@@ -166,6 +166,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EvidenceCategoryValuesTests.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValueTests.cs" />
+    <Compile Include="AatfEvidence\EvidenceTonnageDataTests.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValueTests.cs" />
     <Compile Include="AatfEvidence\WasteTypeEnumTests.cs" />
     <Compile Include="AatfEvidence\ProtocolEnumTests.cs" />
