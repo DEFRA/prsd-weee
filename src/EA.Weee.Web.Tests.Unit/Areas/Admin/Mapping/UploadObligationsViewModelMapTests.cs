@@ -103,8 +103,7 @@
         }
 
         [Fact]
-        public void
-            Map_GivenSourceWithObligationUploadFileErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsTrue()
+        public void Map_GivenSourceWithObligationUploadFileErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsTrue()
         {
             //arrange
             var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
