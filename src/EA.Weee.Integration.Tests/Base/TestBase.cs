@@ -20,7 +20,7 @@
         {
             if (Exception != null)
             {
-                Console.WriteLine(Exception);
+                //Console.WriteLine(Exception);
             }
                 
             Exception.Should().BeNull(because);
@@ -35,7 +35,7 @@
         {
             if (Exception != null)
             {
-                Console.WriteLine(Exception);
+                //Console.WriteLine(Exception);
             }
                 
             Exception.Should().NotBeNull(because);
@@ -50,7 +50,7 @@
         {
             if (Exception != null)
             {
-                Console.WriteLine(Exception);
+                //Console.WriteLine(Exception);
             }
                 
             Exception.Should().NotBeNull(because);
@@ -67,7 +67,7 @@
             catch (Exception ex)
             {
                 Exception = ex;
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
 
             return Exception;
@@ -84,7 +84,7 @@
             {
                 Exception = ex.InnerExceptions.ElementAt(0);
 
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
         }
 
