@@ -10,7 +10,7 @@
         {
             get 
             {
-                var availble = (Received - TransferredReceived);
+                var availble = (Received - (TransferredReceived.HasValue ? TransferredReceived : 0));
                 return availble < 0 ? 0 : availble; 
             }
             protected set 
@@ -23,7 +23,7 @@
         { 
             get 
             {
-                var availble = (Reused - TransferredReused);
+                var availble = (Reused - (TransferredReused.HasValue ? TransferredReused : 0));
                 return availble < 0 ? 0 : availble;
             }
             protected set 
