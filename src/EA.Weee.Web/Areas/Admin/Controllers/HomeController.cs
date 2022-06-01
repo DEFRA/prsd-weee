@@ -13,7 +13,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Home;
-    using Web.ViewModels.Shared;
     using Weee.Requests.Admin;
 
     public class HomeController : AdminController
@@ -54,14 +53,14 @@
         [HttpGet]
         public ActionResult ChooseActivity()
         {
-            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
             PopulateViewModelPossibleValues(viewModel);
             return View("ChooseActivity", viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChooseActivity(RadioButtonStringCollectionViewModel viewModel)
+        public ActionResult ChooseActivity(ChooseActivityViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -125,7 +124,7 @@
             }
         }
 
-        private void PopulateViewModelPossibleValues(RadioButtonStringCollectionViewModel viewModel)
+        private void PopulateViewModelPossibleValues(ChooseActivityViewModel viewModel)
         {
             var isAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
 
