@@ -13,6 +13,8 @@
         private const string RejectEvidenceNote = "Reject evidence note";
         private const string ReturnEvidenceNote = "Return evidence note";
 
+        public Guid OrganisationId { get; set; }
+
         public ViewEvidenceNoteViewModel ViewEvidenceNoteViewModel { get; set; }
 
         [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note")]
