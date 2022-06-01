@@ -154,9 +154,9 @@
                 try
                 {
                     // check if DB exists before anything
-                    RunSql($"USE master; SELECT * FROM sys.databases WHERE name = '{ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]}'");
+                    //RunSql($"USE master; SELECT * FROM sys.databases WHERE name = '{ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]}'");
 
-                    if (hardReset)
+                    if (hardReset || !TestingStatus.IsDbBuilt)
                     {
                         new DatabaseSeeder().RebuildDatabase();
                     }
@@ -230,6 +230,7 @@
                 }
 
                 TestingStatus.IsDbReseeded = true;
+                TestingStatus.IsDbBuilt = true;
             }
 
             protected static IContainer InitIoC(bool resetIoC = false, bool installIoC = true)

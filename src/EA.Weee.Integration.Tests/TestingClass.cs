@@ -6,5 +6,6 @@
     {
         public static volatile bool IsDbReseeded = false;
         public static volatile bool IsDbSeedingFaulted = false;
+        public static volatile bool IsDbBuilt = false;
     }
 }
