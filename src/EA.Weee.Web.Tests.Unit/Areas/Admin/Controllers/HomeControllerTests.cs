@@ -148,7 +148,7 @@
             A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = controller.ChooseActivity(A.Dummy<RadioButtonStringCollectionViewModel>());
+            var result = controller.ChooseActivity(A.Dummy<ChooseActivityViewModel>());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
@@ -171,7 +171,7 @@
             A.CallTo(() => configuration.EnablePCSObligations).Returns(true);
             A.CallTo(() => configuration.EnableInvoicing).Returns(true);
             A.CallTo(() => configuration.EnableDataReturns).Returns(true);
-            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
             viewModel.SelectedValue = selection;
             HomeController controller = new HomeController(() => apiClient, configuration);
 
@@ -216,7 +216,7 @@
 
             HomeController controller = new HomeController(() => apiClient, configuration);
 
-            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
             viewModel.SelectedValue = InternalUserActivity.ManagePcsCharges.ToString();
 
             // Act
@@ -235,7 +235,7 @@
         {
             // Arrange
             HomeController controller = new HomeController(() => apiClient, A.Fake<IAppConfiguration>());
-            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
 
             // Act
             Func<ActionResult> testCode = () => controller.ChooseActivity(viewModel);
@@ -265,7 +265,7 @@
 
             HomeController controller = new HomeController(() => apiClient, configuration);
 
-            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
             viewModel.SelectedValue = InternalUserActivity.SubmissionsHistory;
 
             // Act
