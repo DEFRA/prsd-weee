@@ -5,6 +5,7 @@
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using Domain.Obligation;
+    using EA.Weee.Core.DataReturns;
     using Prsd.Core.Mapper;
 
     public class SchemeObligationUploadDataMap : IMap<ObligationUpload, SchemeObligationUploadData>
@@ -20,7 +21,7 @@
                     oe.Description,
                     oe.SchemeIdentifier,
                     oe.SchemeName,
-                    oe.Category)).ToList()
+                    (WeeeCategory?)oe.Category)).ToList()
             };
         }
     }
