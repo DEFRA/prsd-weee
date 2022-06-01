@@ -324,6 +324,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
@@ -777,13 +778,10 @@
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Scripts\jquery-ui-date-picker.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
-    <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\AatfReports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeDetails.cshtml" />
     <Content Include="Areas\Aatf\Views\ContactDetails\Index.cshtml" />
@@ -1117,7 +1115,6 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\Index.cshtml" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -1145,13 +1142,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
-    <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
-    <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\AatfAeDetails.cshtml" />
-    <Content Include="Areas\Aatf\Views\ContactDetails\Index.cshtml" />
     <Content Include="Content\weee\images\icon-search-2x.png" />
     <Content Include="Content\weee\images\icon-search.png" />
     <Content Include="Content\weee\images\sorted-ascending.png" />
