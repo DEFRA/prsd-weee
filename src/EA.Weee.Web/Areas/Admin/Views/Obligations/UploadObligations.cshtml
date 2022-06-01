@@ -22,21 +22,21 @@
                     {
                         <li>
                             <a href="#File">You have not selected a file</a>
-                            <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:") You must select a file before the system can check for errors</p>
+                            <p class="govuk-error-message govuk-!-font-weight-regular">@Html.Gds().VisuallyHidden("Error:") You must select a file before the system can check for errors</p>
                         </li>
                     }
                     @if (Model.DisplayDataError)
                     {
                         <li>
-                            <a href="#File">Your file contains @Model.NumberOfDataErrors data error</a>
-                            <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:") There may be a problem with the data in the file, which prevents our system from validating it. You should rectify any errors before we can continue our validation process.</p>
+                            <a href="#File">Your file contains @Model.NumberOfDataErrors data error@(Model.NumberOfDataErrors == 1 ? "" : "s")</a>
+                            <p class="govuk-error-message govuk-!-font-weight-regular">@Html.Gds().VisuallyHidden("Error:") There may be a problem with the data in the file, which prevents our system from validating it. You should rectify any errors before we can continue our validation process.</p>
                         </li>
                     }
                     @if (Model.DisplayFormatError)
                     {
                         <li>
                             <a href="#File">Your file is in the wrong format</a>
-                            <p class="govuk-error-message">@Html.Gds().VisuallyHidden("Error:")The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.</p>
+                            <p class="govuk-error-message govuk-!-font-weight-regular">@Html.Gds().VisuallyHidden("Error:")The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.</p>
                         </li>
                     }
                 </ul>
