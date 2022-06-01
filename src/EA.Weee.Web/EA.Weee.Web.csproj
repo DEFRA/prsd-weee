@@ -740,7 +740,7 @@
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\RecipientWasteStatusFilterViewModel.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
-    <EmbeddedResource Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <None Include="Content\auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
