@@ -81,6 +81,13 @@
     </div>
 
     <div class="govuk-grid-column-full govuk-!-padding-top-3">
+        <div class="govuk-!-padding-top-4">
+            @this.WeeeGds().CreateProgressiveDisclosure("What are the different types of protocol?",
+           @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_PDProtocolTypesPartial.cshtml").ToString(),
+           "Hidden content",
+           "Progressive disclosure",
+           "Protocol Types")
+        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues)">
             <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
@@ -96,46 +103,46 @@
             <label for="CategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" class="govuk-visually-hidden" />
             @Html.Gds().ValidationMessageFor(m => m.CategoryValues)
         </div>
-            <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
-                <thead class="govuk-table__head">
-                    <tr>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>
+            <thead class="govuk-table__head">
+                <tr>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Total received (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Reused as whole appliances (tonnes)</th>
+                </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+
+                @for (var i = 0; i < Model.CategoryValues.Count; i++)
+                {
+                    var category = Model.CategoryValues[i];
+
+                    <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                        <td class="govuk-table__cell">
+                            @(@category.CategoryId). @category.CategoryDisplay
+                            @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
+                            @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
+                            @Html.HiddenFor(m => m.CategoryValues[i].Id)
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
+                                <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
+                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
+                                @Html.TextBoxFor(m => m.CategoryValues[i].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
+                                <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
+                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
+                                @Html.TextBoxFor(m => m.CategoryValues[i].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                            </div>
+                        </td>
                     </tr>
-                </thead>
 
-                <tbody class="govuk-table__body">
-
-                    @for (var i = 0; i < Model.CategoryValues.Count; i++)
-                    {
-                        var category = Model.CategoryValues[i];
-
-                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                            <td class="govuk-table__cell">
-                                @(@category.CategoryId). @category.CategoryDisplay
-                                @Html.HiddenFor(m => m.CategoryValues[i].CategoryId)
-                                @Html.HiddenFor(m => m.CategoryValues[i].CategoryDisplay)
-                                @Html.HiddenFor(m => m.CategoryValues[i].Id)
-                            </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Received)">
-                                    <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Total received in tonnes for @category.CategoryDisplay</span>
-                                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Received)
-                                    @Html.TextBoxFor(m => m.CategoryValues[i].Received, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                                </div>
-                            </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[i], m => m.CategoryValues[i].Reused)">
-                                    <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Total reused in tonnes for @category.CategoryDisplay</span>
-                                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[i].Reused)
-                                    @Html.TextBoxFor(m => m.CategoryValues[i].Reused, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                                </div>
-                            </td>
-                        </tr>
-
-                    }
+                }
 
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
@@ -149,18 +156,18 @@
                     </td>
                 </tr>
 
-                </tbody>
-            </table>
+            </tbody>
+        </table>
 
-            <div class="govuk-!-margin-top-3">
+        <div class="govuk-!-margin-top-3">
 
-                <div class="govuk-button-group">
-                    @* This is a hidden button to force the default action to be save rather than submit*@
-                    @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-                    @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
-                </div>
-
+            <div class="govuk-button-group">
+                @* This is a hidden button to force the default action to be save rather than submit*@
+                @this.WeeeGds().Button("Submit evidence note", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "save-note", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
             </div>
+
         </div>
+    </div>
 
 </div>
