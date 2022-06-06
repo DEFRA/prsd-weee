@@ -11,11 +11,9 @@
 <section id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-
-            <p>
-                @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link" })
-            </p>
-
+  
+            @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link weee-back-link" })
+            
             @Html.Gds().ValidationSummary()
 
             <header class="hgroup">

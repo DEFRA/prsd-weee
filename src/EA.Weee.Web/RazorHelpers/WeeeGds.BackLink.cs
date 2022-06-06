@@ -8,7 +8,7 @@
         {
             var tagBuilder = new TagBuilder("a");
             tagBuilder.Attributes.Add("href", url);
-            tagBuilder.Attributes.Add("class", "govuk-back-link");
+            tagBuilder.Attributes.Add("class", "govuk-back-link weee-back-link");
             if (!string.IsNullOrWhiteSpace(alternativeDescription))
             {
                 tagBuilder.SetInnerText(alternativeDescription);
