@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared.CsvReading;
+    using CsvHelper;
     using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Error;
@@ -75,11 +76,7 @@
             {
                 obligations = obligationCsvReader.Read(request.FileInfo.Data).ToList();
             }
-            catch (CsvValidationException)
-            {
-                errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
-            }
-            catch (CsvReaderException)
+            catch (Exception ex) when (ex is CsvValidationException || ex is CsvReaderException)
             {
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
             }
