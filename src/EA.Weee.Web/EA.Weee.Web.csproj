@@ -1769,9 +1769,6 @@
     <CreateItem Include="Content\remove-site.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
-    <CreateItem Include="Content\auto-complete.css">
-      <Output ItemName="Content" TaskParameter="Include" />
-    </CreateItem>
   </Target>
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.6.2.0\build\StyleCop.MSBuild.targets')" />
