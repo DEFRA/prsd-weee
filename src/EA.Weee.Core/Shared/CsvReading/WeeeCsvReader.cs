@@ -1,22 +1,21 @@
 ﻿namespace EA.Weee.Core.Shared.CsvReading
 {
     using System;
-    using System.Globalization;
     using System.IO;
+    using System.Linq;
     using CsvHelper;
     using CsvHelper.Configuration;
-    using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
     public class WeeeCsvReader : IWeeeCsvReader
     {
         private readonly TextReader textReader;
         private readonly CsvReader csvReader;
-        private bool disposed = false;
+        private bool disposed;
 
-        public WeeeCsvReader(TextReader streamReader)
+        public WeeeCsvReader(TextReader streamReader, CsvConfiguration config)
         {
             textReader = streamReader;
-            csvReader = new CsvReader(textReader, CultureInfo.InvariantCulture);
+            csvReader = new CsvReader(textReader, config);
         }
 
         public void RegisterClassMap<T>() where T : ClassMap
@@ -26,7 +25,14 @@
 
         public bool Read()
         {
-            return csvReader.Read();
+            try
+            {
+                return csvReader.Read();
+            }
+            catch (BadDataException ex)
+            {
+                throw new CsvReaderException(ex.Message);
+            }
         }
 
         public bool ReadHeader()
@@ -42,11 +48,21 @@
             }
         }
 
-        public void ValidateHeader<T>()
+        public void ValidateHeader<T>(int expectedColumnCount, string[] expectedOrder)
         {
             try
             {
                 csvReader.ValidateHeader<T>();
+
+                if (csvReader.HeaderRecord.Length != expectedColumnCount)
+                {
+                    throw new ReaderException(csvReader.Context, "Unexpected number of CSV columns");
+                }
+
+                if (!csvReader.HeaderRecord.SequenceEqual(expectedOrder))
+                {
+                    throw new ReaderException(csvReader.Context, "Unexpected CSV column order");
+                }
             }
             catch (Exception ve) when (ve is ReaderException || ve is HeaderValidationException)
             {
