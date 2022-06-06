@@ -785,5 +785,41 @@
                 tonnages.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, null, null)).ToList());
         }
+
+        [Theory]
+        [InlineData("7.00", "6.00", "6.00", "5.00", "1.00", "1.00")]
+        [InlineData("5.00", "5.00", "5.00", "5.00", "0.00", "0.00")]
+        [InlineData("5.00", "5.00", "0.00", "0.00", "5.00", "5.00")]
+        [InlineData("5.00", "5.00", "6.00", "6.00", "0.00", "0.00")]
+        public void Map_GivenNoteTransferTonnage_ShouldSumCorrectly(decimal totalReceive, decimal totalReuse, decimal transferReceive, decimal transferReused, decimal expectedAvailableReceive, decimal expectedAvailableReuse)
+        {
+            //Arrange
+            var note = A.Fake<Note>();
+
+            var rejectTransferNote = A.Fake<Note>();
+            var approvedTransferNote = A.Fake<Note>();
+
+            var transferTonnages = new List<NoteTransferTonnage>()
+            {
+                new NoteTransferTonnage(fixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = rejectTransferNote}, // Should not be included
+                new NoteTransferTonnage(fixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = approvedTransferNote} // Sums should only be counted from this
+            };
+
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, totalReceive, totalReuse) { NoteTransferTonnage = transferTonnages },
+            };
+
+            A.CallTo(() => rejectTransferNote.Status).Returns(NoteStatus.Rejected);
+            A.CallTo(() => approvedTransferNote.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            //Act
+            var result = map.Map(note);
+
+            //Assert
+            result.EvidenceTonnageData[0].AvailableReceived.Should().Be(expectedAvailableReceive);
+            result.EvidenceTonnageData[0].AvailableReused.Should().Be(expectedAvailableReuse);
+        }
     }
 }
