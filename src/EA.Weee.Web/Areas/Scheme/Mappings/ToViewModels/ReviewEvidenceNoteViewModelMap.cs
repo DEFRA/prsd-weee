@@ -21,7 +21,8 @@
 
             var model = new ReviewEvidenceNoteViewModel()
             {
-                ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source)
+                ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(source),
+                OrganisationId = source.SchemeId
             };
 
             model.ViewEvidenceNoteViewModel.DisplayH2Title = true;

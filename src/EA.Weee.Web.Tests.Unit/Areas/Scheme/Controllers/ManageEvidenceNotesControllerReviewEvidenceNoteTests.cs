@@ -298,7 +298,7 @@
         {
             // arrange 
             var model = Fixture.Create<ReviewEvidenceNoteViewModel>();
-            var organisationId = model.ViewEvidenceNoteViewModel.OrganisationId;
+            var organisationId = model.OrganisationId;
             var organisationName = Faker.Company.Name();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
             EvidenceNoteData note = Fixture.Create<EvidenceNoteData>();
@@ -322,7 +322,7 @@
             var evidenceNoteId = Fixture.Create<Guid>();
             var complianceYear = Fixture.Create<int>();
             var model = GetValidModel();
-            model.ViewEvidenceNoteViewModel.OrganisationId = organisationId;
+            model.OrganisationId = organisationId;
             model.ViewEvidenceNoteViewModel.Id = evidenceNoteId;
             model.ViewEvidenceNoteViewModel.SelectedComplianceYear = complianceYear;
 
@@ -331,7 +331,7 @@
 
             // assert
             result.RouteValues["action"].Should().Be("DownloadEvidenceNote");
-            result.RouteValues["organisationId"].Should().Be(model.ViewEvidenceNoteViewModel.OrganisationId);
+            result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             result.RouteValues["evidenceNoteId"].Should().Be(model.ViewEvidenceNoteViewModel.Id);
             result.RouteValues["selectedComplianceYear"].Should().Be(model.ViewEvidenceNoteViewModel.SelectedComplianceYear);
         }

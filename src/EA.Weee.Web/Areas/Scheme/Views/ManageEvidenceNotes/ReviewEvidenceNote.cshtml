@@ -19,6 +19,7 @@
     {
         @Html.AntiForgeryToken()
 
+        @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SelectedComplianceYear)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)

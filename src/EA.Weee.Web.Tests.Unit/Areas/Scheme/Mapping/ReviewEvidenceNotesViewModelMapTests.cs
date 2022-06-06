@@ -41,15 +41,18 @@
         [Fact]
         public void GivenValidModel_MapperReturnsViewModel()
         {
+            //arrange
+            var schemeId = fixture.Create<Guid>();
             // act
             ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status)
             {
-                SchemeId = note.RecipientId
+                SchemeId = schemeId
             });
 
             // asset
             modelCreated.Should().NotBeNull();
             modelCreated.ViewEvidenceNoteViewModel.Should().NotBeNull();
+            modelCreated.OrganisationId.Should().Be(schemeId);
         }
 
         [Fact]
