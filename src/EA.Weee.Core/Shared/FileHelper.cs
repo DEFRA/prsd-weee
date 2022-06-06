@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Shared
 {
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using CsvReading;
@@ -13,7 +14,12 @@
 
         public IWeeeCsvReader GetCsvReader(StreamReader streamReader)
         {
-            return new WeeeCsvReader(streamReader);
+            var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                DetectColumnCountChanges = true
+            };
+
+            return new WeeeCsvReader(streamReader, config);
         }
     }
 }
