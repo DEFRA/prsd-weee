@@ -13,10 +13,6 @@
                 var availble = (Received - (TransferredReceived.HasValue ? TransferredReceived : 0));
                 return availble < 0 ? 0 : availble; 
             }
-            protected set 
-            {
-                AvailableReceived = value; 
-            }
         }
 
         public decimal? AvailableReused
@@ -25,10 +21,6 @@
             {
                 var availble = (Reused - (TransferredReused.HasValue ? TransferredReused : 0));
                 return availble < 0 ? 0 : availble;
-            }
-            protected set 
-            {
-                AvailableReused = value; 
             }
         }
 
