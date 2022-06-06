@@ -141,6 +141,117 @@
         }
 
         [Component]
+        public class WhenISubmitSchemeObligationWithIncorrectNumberOfColumns : SubmitSchemeObligationHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var scheme1 = SchemeDbSetup.Init().Create();
+                var scheme2 = SchemeDbSetup.Init().Create();
+
+                //header incorrect
+                var csvHeader =
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),additional
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
+
+                var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                obligationUpload = Query.GetObligationUploadById(result);
+            };
+
+            private readonly It shouldHaveCreatedUpload = () =>
+            {
+                MapStandardProperties();
+                obligationUpload.ObligationUploadErrors.Count.Should().Be(1);
+                obligationUpload.ObligationUploadErrors.ElementAt(0).ErrorType.Should()
+                    .Be(ObligationUploadErrorType.File);
+            };
+
+            private readonly Cleanup cleanup = LocalCleanup;
+        }
+
+        [Component]
+        public class WhenISubmitSchemeObligationWithIncorrectNumberOfDataColumns : SubmitSchemeObligationHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var scheme1 = SchemeDbSetup.Init().Create();
+                var scheme2 = SchemeDbSetup.Init().Create();
+
+                //header incorrect
+                var csvHeader =
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,additional";
+
+                var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                obligationUpload = Query.GetObligationUploadById(result);
+            };
+
+            private readonly It shouldHaveCreatedUpload = () =>
+            {
+                MapStandardProperties();
+                obligationUpload.ObligationUploadErrors.Count.Should().Be(1);
+                obligationUpload.ObligationUploadErrors.ElementAt(0).ErrorType.Should()
+                    .Be(ObligationUploadErrorType.File);
+            };
+
+            private readonly Cleanup cleanup = LocalCleanup;
+        }
+        
+        [Component]
+        public class WhenISubmitSchemeObligationWithIncorrectColumnsOrder : SubmitSchemeObligationHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var scheme1 = SchemeDbSetup.Init().Create();
+                var scheme2 = SchemeDbSetup.Init().Create();
+
+                //header incorrect
+                var csvHeader =
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat14 (t),Cat13 (t)
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
+
+                var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                obligationUpload = Query.GetObligationUploadById(result);
+            };
+
+            private readonly It shouldHaveCreatedUpload = () =>
+            {
+                MapStandardProperties();
+                obligationUpload.ObligationUploadErrors.Count.Should().Be(1);
+                obligationUpload.ObligationUploadErrors.ElementAt(0).ErrorType.Should()
+                    .Be(ObligationUploadErrorType.File);
+            };
+
+            private readonly Cleanup cleanup = LocalCleanup;
+        }
+
+        [Component]
         public class WhenISubmitSchemeObligationWithSchemeErrors : SubmitSchemeObligationHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
@@ -151,7 +262,7 @@
 
                 //header incorrect
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
                 {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
