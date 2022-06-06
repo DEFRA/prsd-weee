@@ -8,7 +8,7 @@
         void RegisterClassMap<T>() where T : ClassMap;
         bool Read();
         bool ReadHeader();
-        void ValidateHeader<T>();
+        void ValidateHeader<T>(int expectedColumnCount, string[] expectedOrder);
         T GetRecord<T>();
     }
 }

@@ -8,6 +8,7 @@
     using AutoFixture;
     using Core.Shared;
     using Core.Shared.CsvReading;
+    using CsvHelper;
     using DataAccess.DataAccess;
     using Domain;
     using Domain.Error;
@@ -185,7 +186,7 @@
             new List<object[]>
             {
                 new object[] { new CsvValidationException() },
-                new object[] { new CsvReaderException() },
+                new object[] { new CsvReaderException() }
             };
 
         [Theory]
