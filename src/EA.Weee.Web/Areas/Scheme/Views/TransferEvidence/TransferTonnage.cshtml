@@ -47,8 +47,6 @@
 
         @Html.HiddenFor(m => m.PcsId)
 
-        <div class="govuk-!-padding-bottom-5"></div>
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
             <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="TransferCategoryValues" class="govuk-visually-hidden" />
             @Html.Gds().ValidationMessageFor(m => m.TransferCategoryValues)
@@ -143,8 +141,9 @@
             </div>
         }
 
-        <h2 class="govuk-heading-m">Summary of total evidence to transfer</h2>
+        <div class="govuk-!-padding-top-5"></div>
 
+        <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Summary of total evidence to transfer</h2>
         <table id="transfer-tonnage-summary" class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence to transfer</caption>
             <thead class="govuk-table__head">
