@@ -22,6 +22,8 @@
         $(".ui-datepicker-trigger").attr("aria-describedby", id);
 
         dayTripper();
+
+        $("#ui-datepicker-div").detach().appendTo("main");
     });
 
 
