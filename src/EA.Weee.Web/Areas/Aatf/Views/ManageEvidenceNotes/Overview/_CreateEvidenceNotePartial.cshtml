@@ -8,16 +8,15 @@
     ViewBag.Title = title + " - GOV.UK";
 
 }
-<p>
-    @if (Model.SingleAatf)
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
-    }
-    else
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ChooseSiteController>(a => a.Index(Model.OrganisationId))))
-    }
-</p>
+
+@if (Model.SingleAatf)
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+}
+else
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ChooseSiteController>(a => a.Index(Model.OrganisationId))))
+}
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
