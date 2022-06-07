@@ -216,17 +216,22 @@
 });
 
 function initReviewEvidenceNote() {
-    document.getElementById("reason-text").style = "display: none;";
+    if ($("#ReasonDiv").hasClass("error")) {
+        document.getElementById("ReasonDiv").style = "display: block;";
+    }
+    else {
+        document.getElementById("ReasonDiv").style = "display: none;";
+    }
     document.getElementById("conditional-SelectedValue-0").style = "display: block;";
     document.getElementById("conditional-SelectedValue-1").style = "display: block;";
     document.getElementById("conditional-SelectedValue-2").style = "display: block;";
 
     function showReasonText(event) {
-        document.getElementById("reason-text").style = "display: block;";
+        document.getElementById("ReasonDiv").style = "display: block;";
     }
 
     function hideReasonText(event) {
-        document.getElementById("reason-text").style = "display: none;";
+        document.getElementById("ReasonDiv").style = "display: none;";
     }
 
     document.getElementById("SelectedValue-0").addEventListener("click", hideReasonText);
