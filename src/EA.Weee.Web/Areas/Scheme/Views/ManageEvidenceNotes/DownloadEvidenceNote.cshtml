@@ -35,8 +35,8 @@
     @if (Model.DisplayMessage)
     {
     @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
+            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+            "Manage evidence notes")
             )
     @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
