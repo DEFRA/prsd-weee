@@ -103,7 +103,7 @@
 
             //assert
             model.SuccessMessage.Should()
-                .Be($"You have successfully saved the transfer evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference} as a draft");
+                .Be($"You have successfully saved the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference} as a draft");
         }
 
         [Fact]
