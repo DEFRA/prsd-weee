@@ -15,8 +15,6 @@
 
         public int Reference { get; set; }
 
-        public Guid RecipientId { get; set; }
-
         public DateTime? SubmittedDate { get; set; }
 
         public DateTime? ApprovedDate { get; set; }
@@ -25,9 +23,9 @@
 
         public List<TransferEvidenceNoteTonnageData> TransferEvidenceNoteTonnageData { get; set; }
 
-        public SchemeData SchemeData { get; set; }
+        public SchemeData RecipientSchemeData { get; set; }
 
-        public OrganisationData OrganisationData { get; set; }
+        public OrganisationData TransferredOrganisation { get; set; }
 
         public OrganisationData RecipientOrganisationData { get; set; }
 
