@@ -352,6 +352,7 @@
     <Compile Include="Validation\TonnageValidationTypeEnum.cs" />
     <Compile Include="Validation\TonnageValueValidator.cs" />
     <Compile Include="Validation\TonnageValueAttribute.cs" />
+    <Compile Include="Validation\WeeeCategoryEnumDisplay.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
   <ItemGroup>
