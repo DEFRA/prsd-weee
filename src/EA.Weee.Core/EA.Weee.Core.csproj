@@ -344,6 +344,7 @@
     <Compile Include="Validation\DecimalPlaceHelper.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
+    <Compile Include="AatfEvidence\IEvidenceCategoryValue.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\ITonnageValueValidator.cs" />
     <Compile Include="Validation\MinimumElementAttribute.cs" />
