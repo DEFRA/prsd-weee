@@ -41,15 +41,14 @@
                 WasteType = source.WasteType.HasValue ? (WasteType?)source.WasteType.Value : null,
                 EvidenceTonnageData = source.NoteTonnage.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused,
-                    t.NoteTransferTonnage != null ? t.NoteTransferTonnage.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Received).Sum() : null,
-                    t.NoteTransferTonnage != null ? t.NoteTransferTonnage.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Reused).Sum() : null)).ToList(),
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Received).Sum(),
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Reused).Sum())).ToList(),
                 SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
                 OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
                 AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
                 RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
                 RecipientId = source.Recipient.Id,
                 ComplianceYear = source.ComplianceYear,
-                
                 ReturnedReason = source.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned) ? (source.NoteStatusHistory
                         .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
                         .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
