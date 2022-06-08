@@ -171,7 +171,6 @@
     <Compile Include="Mappings\ListOfEvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\ListOfNotesMap.cs" />
     <Compile Include="Mappings\AatfSummaryTotalsMap.cs" />
-    <Compile Include="Mappings\TransferEvidenceNoteTonnageDataMap.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Scheme\AddSchemeHandler.cs" />
