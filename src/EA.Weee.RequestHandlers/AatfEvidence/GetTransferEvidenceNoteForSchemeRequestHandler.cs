@@ -32,7 +32,9 @@
 
             authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
-            return mapper.Map<Note, TransferEvidenceNoteData>(evidenceNote);
+            var transferNote = mapper.Map<Note, TransferEvidenceNoteData>(evidenceNote);
+
+            return transferNote;
         }
     }
 }
