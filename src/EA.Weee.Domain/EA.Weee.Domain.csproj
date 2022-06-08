@@ -126,6 +126,7 @@
     <Compile Include="Lookup\WeeeCategory.cs" />
     <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Obligation\ObligationTypeString.cs" />
+    <Compile Include="Obligation\ObligationScheme.cs" />
     <Compile Include="Obligation\ObligationUpload.cs" />
     <Compile Include="Obligation\ObligationUploadError.cs" />
     <Compile Include="Organisation\Address.cs" />

@@ -15,12 +15,14 @@
     using Prsd.Core.Domain;
     using Weee.DataAccess;
     using Weee.DataAccess.DataAccess;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class EvidenceDataAccessUnitTests
     {
         private readonly EvidenceDataAccess evidenceDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly DbContextHelper dbContextHelper;
         private readonly WeeeContext context;
         private Guid userId;
         private readonly Organisation organisation;
@@ -37,6 +39,7 @@
             userId = Guid.NewGuid();
             var fixture = new Fixture();
 
+            dbContextHelper = new DbContextHelper();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             tonnages = new List<NoteTransferTonnage>()
@@ -181,28 +184,13 @@
         public async Task GetNoteById_GivenNoNoteFound_ArgumentExceptionExpected()
         {
             //arrange
-            A.CallTo(() => genericDataAccess.GetById<Note>(A<Guid>._)).Returns((Note)null);
+            A.CallTo(() => context.Notes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Note>()));
 
             //act
             var exception = await Record.ExceptionAsync(() => evidenceDataAccess.GetNoteById(Guid.NewGuid()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task GetNoteById_GivenNotFound_NoteShouldBeReturned()
-        {
-            //arrange
-            var note = A.Fake<Note>();
-            var id = Guid.NewGuid();
-            A.CallTo(() => genericDataAccess.GetById<Note>(id)).Returns(note);
-
-            //act
-            var result = await evidenceDataAccess.GetNoteById(id);
-
-            //assert
-            result.Should().Be(note);
         }
     }
 }
