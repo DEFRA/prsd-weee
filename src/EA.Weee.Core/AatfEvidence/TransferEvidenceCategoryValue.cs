@@ -2,10 +2,11 @@
 {
     using System;
     using DataReturns;
+    using Shared;
     using Validation;
 
     [Serializable]
-    public class TransferEvidenceCategoryValue : EvidenceCategoryValue
+    public class TransferEvidenceCategoryValue : CategoryValue, IEvidenceCategoryValue
     {
         public decimal? AvailableReceived { get; set; }
 
@@ -15,12 +16,12 @@
 
         [TonnageValue(nameof(CategoryId), "The transfer received in tonnes", true)]
         [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived), ErrorMessage = "The transfer received in tonnes must be equivalent or lower than the total received available")]
-        public sealed override string Received { get; set; }
+        public string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The transfer reused in tonnes", true)]
         [TonnageCompareValue(nameof(CategoryId), nameof(Received), ErrorMessage = "The transfer reused in tonnes must be equivalent or lower than the transfer received for this category")]
         [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReused), ErrorMessage = "The transfer reused in tonnes must be equivalent or lower than the total reused available")]
-        public sealed override string Reused { get; set; }
+        public string Reused { get; set; }
 
         public TransferEvidenceCategoryValue()
         {
