@@ -75,7 +75,7 @@
         }
         private string GenerateMessage(string message, int categoryId)
         {
-            var category = DisplayCategory ? $"{((WeeeCategory)categoryId).ToDisplayString().ToLower()} " : string.Empty;
+            var category = DisplayCategory ? $"{((WeeeCategory)categoryId).ToCustomDisplayString()} " : string.Empty;
 
             var additionalMessage = TypeMessage == null ? string.Empty : $"{TypeMessage} ";
 
