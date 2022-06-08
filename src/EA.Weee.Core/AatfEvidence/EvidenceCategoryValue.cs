@@ -6,7 +6,7 @@
     using Validation;
 
     [Serializable]
-    public class EvidenceCategoryValue : CategoryValue
+    public class EvidenceCategoryValue : CategoryValue, IEvidenceCategoryValue
     {
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
         public virtual string Received { get; set; }

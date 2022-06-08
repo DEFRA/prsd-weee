@@ -4,6 +4,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Core.Shared;
     using Core.Validation;
     using DataReturns;
     using FluentAssertions;
@@ -47,7 +48,7 @@
         [Fact]
         public void TransferEvidenceCategoryValue_ShouldInheritFrom_CategoryValue()
         {
-            typeof(TransferEvidenceCategoryValue).Should().BeDerivedFrom<EvidenceCategoryValue>();
+            typeof(TransferEvidenceCategoryValue).Should().BeDerivedFrom<CategoryValue>();
         }
 
         [Fact]
