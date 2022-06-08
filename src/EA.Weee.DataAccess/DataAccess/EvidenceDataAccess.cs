@@ -29,7 +29,14 @@
 
         public async Task<Note> GetNoteById(Guid id)
         {
-            var note = await genericDataAccess.GetById<Note>(id);
+            var note = await context.Notes
+                .Include(n => n.NoteTonnage)
+                .Include(n => n.NoteTransferTonnage)
+                .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage))
+                .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage.Note))
+                .Include(n => n.NoteTransferCategories)
+                .Include(n => n.NoteStatusHistory)
+                .FirstOrDefaultAsync(n => n.Id == id);
 
             Condition.Requires(note).IsNotNull($"Evidence note {id} not found");
 
