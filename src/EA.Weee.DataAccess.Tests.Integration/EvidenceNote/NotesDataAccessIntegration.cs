@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Base;
-    using Core.Tests.Unit.Helpers;
     using Domain.Evidence;
     using FakeItEasy;
     using FluentAssertions;
@@ -20,6 +19,47 @@
 
     public class NotesDataAccessIntegration : EvidenceNoteBaseDataAccess
     {
+        [Fact]
+        public async Task GetNoteById_ShouldRetrieveMatchingNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var note1 = NoteCommon.CreateNote(database);
+                
+                context.Notes.Add(note1);
+                
+                await database.WeeeContext.SaveChangesAsync();
+                
+                var note = await dataAccess.GetNoteById(note1.Id);
+
+                note.Should().NotBeNull();
+                note.Id.Should().Be(note1.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetNoteById_ShouldNotRetrieveNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var note1 = NoteCommon.CreateNote(database);
+
+                context.Notes.Add(note1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var exception = await Record.ExceptionAsync(async () => await dataAccess.GetNoteById(Guid.NewGuid()));
+
+                exception.Should().BeOfType<ArgumentNullException>();
+            }
+        }
+
         [Fact]
         public async Task GetAllNotes_ShouldMatchOnOrganisationId()
         {
