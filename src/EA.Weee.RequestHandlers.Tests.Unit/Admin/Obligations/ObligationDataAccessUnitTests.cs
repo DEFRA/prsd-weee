@@ -20,19 +20,16 @@
     {
         private readonly ObligationDataAccess obligationDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IUserContext userContext;
         private readonly WeeeContext context;
         private readonly Fixture fixture;
-        private Guid userId;
 
         public ObligationDataAccessUnitTests()
         {
             genericDataAccess = A.Fake<IGenericDataAccess>();
             context = A.Fake<WeeeContext>();
-            var userContext = A.Fake<IUserContext>();
-            userId = Guid.NewGuid();
+            userContext = A.Fake<IUserContext>();
             fixture = new Fixture();
-
-            A.CallTo(() => userContext.UserId).Returns(userId);
 
             obligationDataAccess = new ObligationDataAccess(context, userContext, genericDataAccess);
         }
@@ -47,17 +44,23 @@
             var authority = fixture.Create<UKCompetentAuthority>();
             var data = fixture.Create<string>();
             var fileName = fixture.Create<string>();
+            var user = fixture.Create<Guid>();
+            var obligationScheme = fixture.CreateMany<ObligationScheme>().ToList();
+
+            A.CallTo(() => userContext.UserId).Returns(user);
 
             //act
-            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>());
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(),
+                obligationScheme);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
                 o.FileName.Equals(fileName) &&
                 o.CompetentAuthority.Equals(authority) &&
                 o.UploadedDate == date &&
-                o.UploadedById.Equals(userId.ToString()) &&
-                o.ObligationUploadErrors.Count.Equals(0)))).MustHaveHappenedOnceExactly();
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 0 &&
+                o.ObligationSchemes.SequenceEqual(obligationScheme)))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
         }
@@ -78,23 +81,21 @@
                 new ObligationUploadError(ObligationUploadErrorType.Data, "desc"),
                 new ObligationUploadError(ObligationUploadErrorType.File, "desc")
             };
+            var user = fixture.Create<Guid>();
+            A.CallTo(() => userContext.UserId).Returns(user);
 
             //act
-            await obligationDataAccess.AddObligationUpload(authority, data, fileName, errors);
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, errors, new List<ObligationScheme>());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
                 o.FileName.Equals(fileName) &&
                 o.CompetentAuthority.Equals(authority) &&
                 o.UploadedDate == date &&
-                o.UploadedById.Equals(userId.ToString()) &&
-                o.ObligationUploadErrors.Count.Equals(3)))).MustHaveHappenedOnceExactly();
-
-            foreach (var error in errors)
-            {
-                A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.ObligationUploadErrors.FirstOrDefault(c =>
-                    c.ErrorType.Equals(error.ErrorType)) != null))).MustHaveHappenedOnceExactly();
-            }
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 3 &&
+                o.ObligationSchemes.Count == 0 &&
+                o.ObligationUploadErrors.SequenceEqual(errors)))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
         }
@@ -110,22 +111,10 @@
 
             //act
             var result = await obligationDataAccess.AddObligationUpload(fixture.Create<UKCompetentAuthority>(), 
-                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList());
+                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList(), fixture.CreateMany<ObligationScheme>().ToList());
 
             //assert
             result.Should().Be(id);
-        }
-
-        [Fact]
-        public async Task AddObligationUpload_GivenAddedObligationUpload_ObligationUploadShouldBeAddedAndSaveChangesCalled()
-        {
-            //act
-            var result = await obligationDataAccess.AddObligationUpload(fixture.Create<UKCompetentAuthority>(),
-                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList());
-
-            //assert
-            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>._)).MustHaveHappenedOnceExactly().Then(
-                A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly());
         }
     }
 }

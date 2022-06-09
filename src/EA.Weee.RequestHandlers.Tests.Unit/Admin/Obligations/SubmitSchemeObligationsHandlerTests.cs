@@ -8,7 +8,6 @@
     using AutoFixture;
     using Core.Shared;
     using Core.Shared.CsvReading;
-    using CsvHelper;
     using DataAccess.DataAccess;
     using Domain;
     using Domain.Error;
@@ -32,6 +31,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly ICommonDataAccess commonDataAccess;
         private readonly IObligationDataAccess obligationDataAccess;
+        private readonly ISchemeObligationsDataProcessor schemeObligationsDataProcessor;
         private readonly Fixture fixture;
         private readonly SubmitSchemeObligation request;
 
@@ -43,11 +43,12 @@
             authorization = A.Fake<IWeeeAuthorization>();
             commonDataAccess = A.Fake<ICommonDataAccess>();
             obligationDataAccess = A.Fake<IObligationDataAccess>();
+            schemeObligationsDataProcessor = A.Fake<ISchemeObligationsDataProcessor>();
 
             var fileInfo = new FileInfo(fixture.Create<string>(), fixture.Create<byte[]>());
-            request = new SubmitSchemeObligation(fileInfo, fixture.Create<CompetentAuthority>());
+            request = new SubmitSchemeObligation(fileInfo, fixture.Create<CompetentAuthority>(), 2022);
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess, schemeObligationsDataProcessor);
         }
 
         [Fact]
@@ -55,7 +56,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess, schemeObligationsDataProcessor);
 
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
@@ -67,7 +68,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyAnyRole().Build();
 
-            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess);
+            handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess, schemeObligationsDataProcessor);
 
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
@@ -149,9 +150,13 @@
             //arrange
             var obligationErrors = new List<ObligationUploadError>();
             var authority = fixture.Create<UKCompetentAuthority>();
+            var obligationSchemes = fixture.CreateMany<ObligationScheme>().ToList();
+
             A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, 2022))
+                .Returns(obligationSchemes);
 
             //act
             await handler.HandleAsync(request);
@@ -159,7 +164,9 @@
             //assert
             A.CallTo(() => obligationDataAccess.AddObligationUpload(A<UKCompetentAuthority>.That.Matches(a => a.Equals(authority)),
                 A<string>.That.Matches(s => s.Equals(System.Text.Encoding.UTF8.GetString(request.FileInfo.Data))),
-                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), A<List<ObligationUploadError>>.That.Matches(o => o.SequenceEqual(obligationErrors)))).MustHaveHappenedOnceExactly();
+                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), 
+                A<List<ObligationUploadError>>.That.Matches(o => o.SequenceEqual(obligationErrors)),
+                A<List<ObligationScheme>>.That.IsSameSequenceAs(obligationSchemes))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -179,7 +186,9 @@
             //assert
             A.CallTo(() => obligationDataAccess.AddObligationUpload(A<UKCompetentAuthority>.That.Matches(a => a.Equals(authority)),
                 A<string>.That.Matches(s => s.Equals(System.Text.Encoding.UTF8.GetString(request.FileInfo.Data))),
-                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), A<List<ObligationUploadError>>.That.Matches(o => o.SequenceEqual(obligationErrors)))).MustHaveHappenedOnceExactly();
+                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), 
+                A<List<ObligationUploadError>>.That.Matches(o => o.SequenceEqual(obligationErrors)),
+                A<List<ObligationScheme>>._)).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object[]> CsvExceptions =>
@@ -204,12 +213,15 @@
             //assert
             A.CallTo(() => obligationDataAccess.AddObligationUpload(A<UKCompetentAuthority>.That.Matches(a => a.Equals(authority)),
                 A<string>.That.Matches(s => s.Equals(System.Text.Encoding.UTF8.GetString(request.FileInfo.Data))),
-                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), A<List<ObligationUploadError>>._)).MustHaveHappenedOnceExactly();
+                A<string>.That.Matches(s => s.Equals(request.FileInfo.FileName)), 
+                A<List<ObligationUploadError>>._,
+                A<List<ObligationScheme>>._)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() => obligationDataAccess.AddObligationUpload(A<UKCompetentAuthority>._,
                 A<string>._,
                 A<string>._,
-                A<List<ObligationUploadError>>.That.Matches(o => o.Exists(oe => oe.ErrorType == ObligationUploadErrorType.File && oe.Description.Equals("The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process."))))).MustHaveHappenedOnceExactly();
+                A<List<ObligationUploadError>>.That.Matches(o => o.Exists(oe => oe.ErrorType == ObligationUploadErrorType.File && oe.Description.Equals("The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process."))),
+                A<List<ObligationScheme>>._)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -226,6 +238,53 @@
 
             //assert
             A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<IList<ObligationCsvUpload>>._)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [MemberData(nameof(CsvExceptions))]
+        public async Task HandleAsync_GivenRequestWithCsvReaderExceptionError_ObligationSchemeDataShouldNotBeProcessed(Exception exception)
+        {
+            //arrange
+            A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Throws(exception);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithValidationErrors_ObligationSchemeDataShouldNotBeProcessed()
+        {
+            //arrange
+            A.CallTo(() =>
+                    obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<IList<ObligationCsvUpload>>._))
+                .Returns(fixture.CreateMany<ObligationUploadError>().ToList());
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithNoErrors_ObligationSchemeDataShouldNotBeProcessed()
+        {
+            //arrange
+            var obligationErrors = new List<ObligationUploadError>();
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
+                .Returns(obligationErrors);
+            var obligationUploadData = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Returns(obligationUploadData);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>.That.IsSameSequenceAs(obligationUploadData), 2022))
+                .MustHaveHappenedOnceExactly();
         }
     }
 }
