@@ -41,7 +41,7 @@
                 var fileName = Faker.Lorem.GetFirstWord();
 
                 //act
-                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>());
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>(), new List<ObligationScheme>());
                 
                 await context.SaveChangesAsync();
 
@@ -95,7 +95,7 @@
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, description3));
 
                 //act
-                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, errors);
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, errors, new List<ObligationScheme>());
 
                 var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
 

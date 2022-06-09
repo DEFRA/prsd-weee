@@ -21,7 +21,7 @@
             Condition.Requires(source).IsNotNull();
 
             return new SubmitSchemeObligation(new FileInfo(source.File.FileName, fileConverter.ConvertCsv(source.File)),
-                source.Authority);
+                source.Authority, 2022);
         }
     }
 }
