@@ -27,18 +27,21 @@
         private readonly IWeeeAuthorization authorization;
         private readonly ICommonDataAccess commonDataAccess;
         private readonly IObligationDataAccess obligationDataAccess;
+        private readonly ISchemeObligationsDataProcessor schemeObligationsDataProcessor;
 
         public SubmitSchemeObligationHandler(IObligationCsvReader obligationCsvReader, 
             IObligationUploadValidator obligationUploadValidator, 
             IWeeeAuthorization authorization, 
             ICommonDataAccess commonDataAccess, 
-            IObligationDataAccess obligationDataAccess)
+            IObligationDataAccess obligationDataAccess, 
+            ISchemeObligationsDataProcessor schemeObligationsDataProcessor)
         {
             this.obligationCsvReader = obligationCsvReader;
             this.obligationUploadValidator = obligationUploadValidator;
             this.authorization = authorization;
             this.commonDataAccess = commonDataAccess;
             this.obligationDataAccess = obligationDataAccess;
+            this.schemeObligationsDataProcessor = schemeObligationsDataProcessor;
         }
 
         public async Task<Guid> HandleAsync(SubmitSchemeObligation request)
@@ -50,21 +53,27 @@
             Condition.Requires(authority).IsNotNull();
 
             var errors = new List<ObligationUploadError>();
-            var obligations = new List<ObligationCsvUpload>();
 
-            obligations = ReadCsv(request, errors);
+            var csvObligations = ReadCsv(request, errors);
+            var obligations = new List<ObligationScheme>();
 
             if (!errors.Any())
             {
-                var dataErrors = await obligationUploadValidator.Validate(authority, obligations);
+                var dataErrors = await obligationUploadValidator.Validate(authority, csvObligations);
 
                 errors.AddRange(dataErrors);
+            }
+
+            if (!errors.Any())
+            {
+                obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
             }
 
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
                 request.FileInfo.FileName,
-                errors);
+                errors,
+                obligations);
 
             return obligationUpload;
         }

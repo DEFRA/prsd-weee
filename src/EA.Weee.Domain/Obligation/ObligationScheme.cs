@@ -2,7 +2,9 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
+    using CuttingEdge.Conditions;
     using Lookup;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
 
@@ -26,8 +28,21 @@
 
         public virtual decimal? Obligation { get; private set; }
 
-        public ObligationScheme()
+        public ObligationScheme(WeeeCategory categoryId, Scheme scheme, decimal? obligation, int complianceYear)
         {
+            Condition.Requires(scheme).IsNotNull();
+            Condition.Requires(complianceYear).IsGreaterThan(0);
+
+            CategoryId = categoryId;
+            Scheme = scheme;
+            Obligation = obligation;
+            ComplianceYear = complianceYear;
+        }
+
+        public virtual void SetUpdatedDate(DateTime date, decimal? value)
+        {
+            //only update the updated date if the value is different to the current value.
+            UpdatedDate = date;
         }
     }
 }
