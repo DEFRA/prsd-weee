@@ -9,7 +9,6 @@
     using DataAccess.DataAccess;
     using Domain.Lookup;
     using Domain.Obligation;
-    using Prsd.Core.Helpers;
 
     public class SchemeObligationsDataProcessor : ISchemeObligationsDataProcessor
     {

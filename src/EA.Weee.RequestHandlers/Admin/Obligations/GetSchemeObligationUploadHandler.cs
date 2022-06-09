@@ -18,7 +18,9 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
 
-        public GetSchemeObligationUploadHandler(IWeeeAuthorization authorization, IGenericDataAccess genericDataAccess, IMapper mapper)
+        public GetSchemeObligationUploadHandler(IWeeeAuthorization authorization, 
+            IGenericDataAccess genericDataAccess, 
+            IMapper mapper)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
