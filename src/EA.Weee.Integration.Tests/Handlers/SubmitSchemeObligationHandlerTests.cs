@@ -39,7 +39,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -77,7 +77,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,190000000000000,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -119,7 +119,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -156,7 +156,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -193,7 +193,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,additional";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -230,7 +230,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>
@@ -266,7 +266,7 @@
                 {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
             };
 
             private readonly Because of = () =>

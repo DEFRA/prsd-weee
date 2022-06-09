@@ -1,10 +1,19 @@
 ﻿namespace EA.Weee.Core.Shared.CsvReading
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using Domain.Lookup;
 
     public class ObligationCsvUpload
     {
-        public string SchemeIdentifier { get; set; }
+        private string schemeIdentifier;
+
+        public string SchemeIdentifier
+        {
+            get => schemeIdentifier.Trim();
+            set => schemeIdentifier = value;
+        }
 
         public string SchemeName { get; set; }
 
@@ -49,9 +58,48 @@
 
         [WeeeCategory(WeeeCategory.PhotovoltaicPanels)]
         public string Cat14 { get; set; }
-        
+
         public ObligationCsvUpload()
         {
+        }
+
+        private static readonly Dictionary<WeeeCategory, PropertyInfo> WeeeCategoryProperties;
+
+        static ObligationCsvUpload()
+        {
+            WeeeCategoryProperties = new Dictionary<WeeeCategory, PropertyInfo>();
+
+            var obligationCsvProperties = typeof(ObligationCsvUpload).GetProperties();
+            foreach (var prop in obligationCsvProperties)
+            {
+                var weeeCategoryAttributes = prop.GetCustomAttributes(typeof(WeeeCategoryAttribute), true);
+                if (weeeCategoryAttributes.Any())
+                {
+                    if (weeeCategoryAttributes[0] is WeeeCategoryAttribute weeeCategoryAttribute)
+                    {
+                        WeeeCategoryProperties.Add(weeeCategoryAttribute.Category, prop);
+                    }
+                }
+            }
+        }
+
+        public decimal? GetValue(WeeeCategory category)
+        {
+            WeeeCategoryProperties.TryGetValue(category, out var propertyInfoValue);
+
+            if (propertyInfoValue != null)
+            {
+                var propertyValue = propertyInfoValue.GetValue(this).ToString();
+
+                if (string.IsNullOrWhiteSpace(propertyValue))
+                {
+                    return null;
+                }
+
+                return decimal.Parse(propertyValue);
+            }
+
+            return null;
         }
     }
 }
