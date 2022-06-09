@@ -15,6 +15,7 @@
     using Prsd.Core.Domain;
     using RequestHandlers.Shared;
     using Weee.DataAccess.DataAccess;
+    using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
@@ -22,7 +23,7 @@
     public class ObligationDataAccessIntegration
     {
         [Fact]
-        public async Task AddObligationUpload_WithNoErrors_ShouldAddObligationUpload()
+        public async Task AddObligationUpload_WithNoErrorsAndObligationSchemeData_ShouldAddObligationUpload()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -40,8 +41,24 @@
                 var fileData = Faker.Lorem.Paragraph();
                 var fileName = Faker.Lorem.GetFirstWord();
 
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var complianceYear = 2022;
+                var obligatedScheme1 = new ObligationScheme(WeeeCategory.ITAndTelecommsEquipment, scheme1, 1, complianceYear);
+                var obligatedScheme2 = new ObligationScheme(WeeeCategory.PhotovoltaicPanels, scheme2, null, complianceYear);
+                var obligatedScheme3 = new ObligationScheme(WeeeCategory.MedicalDevices, scheme3, 2.1M, complianceYear);
+
+                var obligationScheme = new List<ObligationScheme>()
+                {
+                    obligatedScheme1,
+                    obligatedScheme2,
+                    obligatedScheme3
+                };
+
                 //act
-                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>(), new List<ObligationScheme>());
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>(), obligationScheme);
                 
                 await context.SaveChangesAsync();
 
@@ -55,6 +72,24 @@
                 obligation.UploadedById.Should().Be(context.GetCurrentUser());
                 obligation.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
                 obligation.ObligationUploadErrors.Should().BeEmpty();
+
+                var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.CategoryId.Should().Be(WeeeCategory.ITAndTelecommsEquipment);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.Obligation.Should().Be(1);
+
+                schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.CategoryId.Should().Be(WeeeCategory.PhotovoltaicPanels);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.Obligation.Should().BeNull();
+
+                schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme3.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.CategoryId.Should().Be(WeeeCategory.MedicalDevices);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.Obligation.Should().Be(2.1M);
             }
         }
 

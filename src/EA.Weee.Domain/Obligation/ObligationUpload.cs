@@ -49,6 +49,8 @@
             FileName = fileName;
             UploadedById = uploadedById;
             UploadedDate = SystemTime.UtcNow;
+            ObligationSchemes = new List<ObligationScheme>();
+            ObligationUploadErrors = new List<ObligationUploadError>();
         }
 
         public void SetErrors(ICollection<ObligationUploadError> errors)
