@@ -49,7 +49,7 @@
             var fileName = fixture.Create<string>();
 
             //act
-            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>());
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(), new List<ObligationScheme>());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
@@ -80,7 +80,7 @@
             };
 
             //act
-            await obligationDataAccess.AddObligationUpload(authority, data, fileName, errors);
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, errors, new List<ObligationScheme>());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
@@ -110,7 +110,7 @@
 
             //act
             var result = await obligationDataAccess.AddObligationUpload(fixture.Create<UKCompetentAuthority>(), 
-                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList());
+                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList(), fixture.CreateMany<ObligationScheme>().ToList());
 
             //assert
             result.Should().Be(id);
@@ -121,7 +121,8 @@
         {
             //act
             var result = await obligationDataAccess.AddObligationUpload(fixture.Create<UKCompetentAuthority>(),
-                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList());
+                fixture.Create<string>(), fixture.Create<string>(), fixture.CreateMany<ObligationUploadError>().ToList(),
+                fixture.CreateMany<ObligationScheme>().ToList());
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>._)).MustHaveHappenedOnceExactly().Then(

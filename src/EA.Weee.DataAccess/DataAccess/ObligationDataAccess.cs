@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain;
     using Domain.Obligation;
@@ -25,15 +26,22 @@
         public async Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
             string data, 
             string fileName,
-            IList<ObligationUploadError> errors)
+            IList<ObligationUploadError> errors,
+            IList<ObligationScheme> obligations)
         {
-            var obligationUpload = new ObligationUpload(ukCompetentAuthority,
-                userContext.UserId.ToString(), data, fileName, errors);
+            var obligationUpload = new ObligationUpload(ukCompetentAuthority, userContext.UserId.ToString(), data, fileName);
 
+            if (!errors.Any())
+            {
+                obligationUpload.SetObligations(obligations);
+            }
+            else
+            {
+                obligationUpload.SetErrors(errors);
+            }
+            
             var updatedObligation = await genericDataAccess.Add(obligationUpload);
-
-            await context.SaveChangesAsync();
-
+            
             return updatedObligation.Id;
         }
     }

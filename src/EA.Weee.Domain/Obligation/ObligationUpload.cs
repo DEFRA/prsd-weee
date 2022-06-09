@@ -28,6 +28,8 @@
 
         public virtual ICollection<ObligationUploadError> ObligationUploadErrors { get; protected set; }
 
+        public virtual ICollection<ObligationScheme> ObligationSchemes { get; protected set; }
+
         public ObligationUpload()
         {
         }
@@ -35,8 +37,7 @@
         public ObligationUpload(UKCompetentAuthority competentAuthority,
             string uploadedById,
             string data,
-            string fileName,
-            ICollection<ObligationUploadError> errors)
+            string fileName)
         {
             Condition.Requires(data).IsNotNullOrWhiteSpace();
             Condition.Requires(fileName).IsNotNullOrWhiteSpace();
@@ -48,7 +49,22 @@
             FileName = fileName;
             UploadedById = uploadedById;
             UploadedDate = SystemTime.UtcNow;
+        }
+
+        public void SetErrors(ICollection<ObligationUploadError> errors)
+        {
+            Condition.Requires(errors).IsNotNull();
+            Condition.Requires(errors).IsNotEmpty();
+
             ObligationUploadErrors = errors;
+        }
+
+        public void SetObligations(ICollection<ObligationScheme> obligations)
+        {
+            Condition.Requires(obligations).IsNotNull();
+            Condition.Requires(obligations).IsNotEmpty();
+
+            ObligationSchemes = obligations;
         }
     }
 }
