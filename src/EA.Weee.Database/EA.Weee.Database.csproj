@@ -336,7 +336,8 @@
     <Content Include="scripts\Update\Release 5\Sprint05\20220512-1213-transfer-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint05\20220511-1004-transfer-tonnage-schema.sql" />
     <Content Include="scripts\Update\Release 5\Sprint06\20220530-1439-obigation-upload-error-schema.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint7\20220608-1346-obigation-upload-schema.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obligation-upload-schema-updates.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obigation-upload-schema.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

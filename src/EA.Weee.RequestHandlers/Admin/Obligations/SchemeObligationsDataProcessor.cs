@@ -27,18 +27,20 @@
 
             foreach (var obligationCsvUpload in obligationCsvUploads)
             {
+                var scheme = await schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(obligationCsvUpload.SchemeIdentifier);
+
+                Condition.Requires(scheme).IsNotNull($"SchemeObligationsBuilder scheme with identifier{obligationCsvUpload.SchemeIdentifier} not found");
+
+                var obligationScheme = new ObligationScheme(scheme, complianceYear);
+
                 foreach (var weeeCategory in weeeCategories)
                 {
                     var value = obligationCsvUpload.GetValue(weeeCategory);
 
-                    var scheme = await schemeDataAccess.GetSchemeOrDefaultByApprovalNumber(obligationCsvUpload.SchemeIdentifier);
-
-                    Condition.Requires(scheme).IsNotNull($"SchemeObligationsBuilder scheme with identifier{obligationCsvUpload.SchemeIdentifier} not found");
-
-                    var obligationScheme = new ObligationScheme(weeeCategory, scheme, value, complianceYear);
-
-                    obligationSchemes.Add(obligationScheme);
+                    obligationScheme.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(weeeCategory, value));
                 }
+
+                obligationSchemes.Add(obligationScheme);
             }
 
             return obligationSchemes;
