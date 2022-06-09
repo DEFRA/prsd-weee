@@ -58,149 +58,98 @@
 
             private readonly It shouldHaveCreatedObligationSchemes = () =>
             {
-                var schemeObligations = obligationUpload.ObligationSchemes.Where(s => s.Scheme.Id == schemes.ElementAt(0).Id);
-                var schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
-                schemeCategoryObligation.Obligation.Should().Be(1);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.SmallHouseholdAppliances);
-                schemeCategoryObligation.Obligation.Should().Be(2);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ITAndTelecommsEquipment);
-                schemeCategoryObligation.Obligation.Should().Be(3);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ConsumerEquipment);
-                schemeCategoryObligation.Obligation.Should().Be(4);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.LightingEquipment);
-                schemeCategoryObligation.Obligation.Should().Be(5);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ElectricalAndElectronicTools);
-                schemeCategoryObligation.Obligation.Should().Be(6);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ToysLeisureAndSports);
-                schemeCategoryObligation.Obligation.Should().Be(7);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.MedicalDevices);
-                schemeCategoryObligation.Obligation.Should().Be(8);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.MonitoringAndControlInstruments);
-                schemeCategoryObligation.Obligation.Should().Be(9);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.AutomaticDispensers);
-                schemeCategoryObligation.Obligation.Should().Be(10);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.DisplayEquipment);
-                schemeCategoryObligation.Obligation.Should().Be(11);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.CoolingApplicancesContainingRefrigerants);
-                schemeCategoryObligation.Obligation.Should().Be(12);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources);
-                schemeCategoryObligation.Obligation.Should().Be(13);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
-                schemeCategoryObligation.Obligation.Should().BeNull();
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
+                schemeObligation.ComplianceYear.Should().Be(2022);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
 
-                schemeObligations = obligationUpload.ObligationSchemes.Where(s => s.Scheme.Id == schemes.ElementAt(1).Id);
+                var schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
+                schemeCategoryObligation.Obligation.Should().Be(1);
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.SmallHouseholdAppliances);
+                schemeCategoryObligation.Obligation.Should().Be(2);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ITAndTelecommsEquipment);
+                schemeCategoryObligation.Obligation.Should().Be(3);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ConsumerEquipment);
+                schemeCategoryObligation.Obligation.Should().Be(4);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LightingEquipment);
+                schemeCategoryObligation.Obligation.Should().Be(5);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ElectricalAndElectronicTools);
+                schemeCategoryObligation.Obligation.Should().Be(6);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ToysLeisureAndSports);
+                schemeCategoryObligation.Obligation.Should().Be(7);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.MedicalDevices);
+                schemeCategoryObligation.Obligation.Should().Be(8);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.MonitoringAndControlInstruments);
+                schemeCategoryObligation.Obligation.Should().Be(9);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.AutomaticDispensers);
+                schemeCategoryObligation.Obligation.Should().Be(10);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.DisplayEquipment);
+                schemeCategoryObligation.Obligation.Should().Be(11);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.CoolingApplicancesContainingRefrigerants);
+                schemeCategoryObligation.Obligation.Should().Be(12);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources);
+                schemeCategoryObligation.Obligation.Should().Be(13);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().BeNull();
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+
+                schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
+                schemeObligation.ComplianceYear.Should().Be(2022);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.SmallHouseholdAppliances);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
+                schemeCategoryObligation.Obligation.Should().BeNull();
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.SmallHouseholdAppliances);
                 schemeCategoryObligation.Obligation.Should().Be(15);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ITAndTelecommsEquipment);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ITAndTelecommsEquipment);
                 schemeCategoryObligation.Obligation.Should().Be(16);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ConsumerEquipment);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ConsumerEquipment);
                 schemeCategoryObligation.Obligation.Should().Be(17);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.LightingEquipment);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LightingEquipment);
                 schemeCategoryObligation.Obligation.Should().Be(18);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ElectricalAndElectronicTools);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ElectricalAndElectronicTools);
                 schemeCategoryObligation.Obligation.Should().Be(19);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.ToysLeisureAndSports);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ToysLeisureAndSports);
                 schemeCategoryObligation.Obligation.Should().Be(20);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.MedicalDevices);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.MedicalDevices);
                 schemeCategoryObligation.Obligation.Should().Be(21);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.MonitoringAndControlInstruments);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.MonitoringAndControlInstruments);
                 schemeCategoryObligation.Obligation.Should().Be(22);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.AutomaticDispensers);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.AutomaticDispensers);
                 schemeCategoryObligation.Obligation.Should().Be(23);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.DisplayEquipment);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.DisplayEquipment);
                 schemeCategoryObligation.Obligation.Should().Be(24);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.CoolingApplicancesContainingRefrigerants);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.CoolingApplicancesContainingRefrigerants);
                 schemeCategoryObligation.Obligation.Should().Be(25);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources);
                 schemeCategoryObligation.Obligation.Should().Be(26);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
-                    schemeObligations.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().Be(27);
-                schemeCategoryObligation.ComplianceYear.Should().Be(2022);
-                schemeCategoryObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
             };
 
             private readonly Cleanup cleanup = LocalCleanup;
