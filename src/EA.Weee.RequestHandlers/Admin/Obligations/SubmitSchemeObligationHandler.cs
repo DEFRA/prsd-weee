@@ -69,9 +69,6 @@
                 obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
             }
 
-            // map from list ObligationCsvUpload to ObligationSchemes
-            // pass the list to the addobligationUpload method, do an add or update on the scheme obligations
-
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
                 request.FileInfo.FileName,
