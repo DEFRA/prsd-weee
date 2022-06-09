@@ -266,7 +266,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).MustHaveHappened();
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).MustNotHaveHappened();
         }
 
         [Fact]

@@ -37,7 +37,12 @@
             Scheme = scheme;
             Obligation = obligation;
             ComplianceYear = complianceYear;
-            UpdatedDate = SystemTime.UtcNow;
+        }
+
+        public virtual void SetUpdatedDate(DateTime date, decimal? value)
+        {
+            //only update the updated date if the value is different to the current value.
+            UpdatedDate = date;
         }
     }
 }
