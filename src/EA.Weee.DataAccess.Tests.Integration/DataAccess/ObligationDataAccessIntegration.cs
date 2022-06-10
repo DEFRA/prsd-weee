@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Validation;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Error;
@@ -32,7 +30,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
@@ -100,6 +98,182 @@
         }
 
         [Fact]
+        public async Task AddObligationUpload_WithNoErrorsAndUpdateOfObligationSchemeData_ShouldAddObligationUploadAndUpdateSchemeObligation()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                //arrange
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+
+                var fileData = Faker.Lorem.Paragraph();
+                var fileName = Faker.Lorem.GetFirstWord();
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var complianceYear = 2022;
+
+                var obligatedUpload =
+                    new ObligationUpload(authority, context.GetCurrentUser().ToString(), "data", "filename");
+
+                var obligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                obligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1));
+                obligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, 5));
+                obligatedScheme1.UpdateObligationUpload(obligatedUpload);
+
+                var obligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, null));
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, 3));
+                obligatedScheme2.UpdateObligationUpload(obligatedUpload);
+
+                context.ObligationSchemes.Add(obligatedScheme1);
+                context.ObligationSchemes.Add(obligatedScheme2);
+
+                await context.SaveChangesAsync();
+
+                var updateObligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                updateObligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 2));
+
+                var updateObligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
+                updateObligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, null));
+
+                var obligationScheme = new List<ObligationScheme>()
+                {
+                    updateObligatedScheme1,
+                    updateObligatedScheme2
+                };
+
+                //act
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>(), obligationScheme);
+
+                await context.SaveChangesAsync();
+
+                var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
+
+                //assert
+                obligation.Should().NotBeNull();
+                obligation.Data.Should().Be(fileData);
+                obligation.FileName.Should().Be(fileName);
+                obligation.CompetentAuthority.Should().Be(authority);
+                obligation.UploadedById.Should().Be(context.GetCurrentUser());
+                obligation.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                obligation.ObligationUploadErrors.Should().BeEmpty();
+
+                var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ObligationUploadId.Should().Be(id);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.ITAndTelecommsEquipment).Obligation.Should().Be(2);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.CoolingApplicancesContainingRefrigerants).Obligation.Should().Be(5);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(2);
+                schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ObligationUploadId.Should().Be(id);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.ToysLeisureAndSports).Obligation.Should().BeNull();
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources).Obligation.Should().BeNull();
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(2);
+            }
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_WithNoErrorsWithUpdateAndAdditionOfObligationSchemeData_ShouldAddObligationUploadAndUpdateSchemeObligation()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                //arrange
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+
+                var fileData = Faker.Lorem.Paragraph();
+                var fileName = Faker.Lorem.GetFirstWord();
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var complianceYear = 2022;
+
+                var obligatedUpload =
+                    new ObligationUpload(authority, context.GetCurrentUser().ToString(), "data", "filename");
+
+                var obligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                obligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, null));
+                obligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, 10));
+                obligatedScheme1.UpdateObligationUpload(obligatedUpload);
+
+                context.ObligationSchemes.Add(obligatedScheme1);
+
+                await context.SaveChangesAsync();
+
+                var updateObligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                updateObligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, 2));
+                updateObligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, 11));
+
+                var newObligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
+                newObligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 20));
+
+                var obligationScheme = new List<ObligationScheme>()
+                {
+                    updateObligatedScheme1,
+                    newObligatedScheme2
+                };
+
+                //act
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName, new List<ObligationUploadError>(), obligationScheme);
+
+                await context.SaveChangesAsync();
+
+                var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
+
+                //assert
+                obligation.Should().NotBeNull();
+                obligation.Data.Should().Be(fileData);
+                obligation.FileName.Should().Be(fileName);
+                obligation.CompetentAuthority.Should().Be(authority);
+                obligation.UploadedById.Should().Be(context.GetCurrentUser());
+                obligation.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                obligation.ObligationUploadErrors.Should().BeEmpty();
+
+                var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ObligationUploadId.Should().Be(id);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.DisplayEquipment).Obligation.Should().Be(2);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.ToysLeisureAndSports).Obligation.Should().Be(11);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(2);
+
+                schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ObligationUploadId.Should().Be(id);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.PhotovoltaicPanels).Obligation.Should().Be(20);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(1);
+            }
+        }
+
+        [Fact]
         public async Task AddObligationUpload_WithErrors_ShouldAddObligationUpload()
         {
             using (var database = new DatabaseWrapper())
@@ -109,7 +283,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
