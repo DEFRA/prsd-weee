@@ -14,7 +14,7 @@
             Property(o => o.UpdatedDate).IsRequired().HasColumnName("UpdatedDate");
             Property(o => o.SchemeId).IsRequired().HasColumnName("SchemeId");
             
-            HasRequired(o => o.Scheme);
+            HasRequired(o => o.Scheme).WithMany(o => o.ObligationSchemes).HasForeignKey(o => o.SchemeId);
             HasRequired(o => o.ObligationUpload).WithMany(o => o.ObligationSchemes).HasForeignKey(o => o.ObligationUploadId);
         }
     }
