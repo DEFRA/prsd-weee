@@ -2,11 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
-    using CuttingEdge.Conditions;
     using Lookup;
-    using Prsd.Core;
     using Prsd.Core.Domain;
-    using Scheme;
 
     public partial class ObligationSchemeAmount : Entity
     {
@@ -27,6 +24,30 @@
         {
             CategoryId = categoryId;
             Obligation = obligation;
+        }
+
+        public virtual bool UpdateObligation(decimal? updatedAmount)
+        {
+            var changed = false;
+            if (!updatedAmount.HasValue && Obligation.HasValue)
+            {
+                changed = true;
+            }
+            else if (!Obligation.HasValue && updatedAmount.HasValue)
+            {
+                changed = true;
+            }
+            else if (decimal.Compare(updatedAmount.GetValueOrDefault(), Obligation.GetValueOrDefault()) != 0)
+            {
+                changed = true;
+            }
+
+            if (changed)
+            {
+                Obligation = updatedAmount;
+            }
+
+            return changed;
         }
     }
 }
