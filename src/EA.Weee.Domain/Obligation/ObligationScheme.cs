@@ -27,6 +27,18 @@
 
         public virtual ICollection<ObligationSchemeAmount> ObligationSchemeAmounts { get; private set; }
 
+        //Only use the following method for integration tests
+        public void UpdateScheme(Guid schemeId)
+        {
+            SchemeId = schemeId;
+            Scheme = null;
+        }
+
+        public void SetAmounts(List<ObligationSchemeAmount> amounts)
+        {
+            ObligationSchemeAmounts = amounts;
+        }
+
         protected ObligationScheme()
         {
             ObligationSchemeAmounts = new List<ObligationSchemeAmount>();
@@ -44,6 +56,12 @@
             UpdatedDate = SystemTime.UtcNow;
         }
 
+        public virtual void UpdateObligationUpload(Guid obligationUploadId)
+        {
+            ObligationUploadId = obligationUploadId;
+            ObligationUpload = null;
+        }
+
         public virtual void UpdateObligationUpload(ObligationUpload obligationUpload)
         {
             Condition.Requires(obligationUpload).IsNotNull();
@@ -56,18 +74,16 @@
             bool obligationChanged = false;
             foreach (var updatedObligationSchemeAmount in updatedObligationSchemeAmounts)
             {
-                var currentAmount =
-                    this.ObligationSchemeAmounts.First(o => o.CategoryId == updatedObligationSchemeAmount.CategoryId);
+                var currentAmount = ObligationSchemeAmounts.FirstOrDefault(o => o.CategoryId == updatedObligationSchemeAmount.CategoryId);
 
-                Condition.Requires(currentAmount)
-                    .IsNotNull(
-                        $"UpdateObligationSchemeAmounts failed to update {updatedObligationSchemeAmount.CategoryId} as not found in data set");
-
-                var changed = currentAmount.UpdateObligation(updatedObligationSchemeAmount.Obligation);
-
-                if (changed)
+                if (currentAmount != null)
                 {
-                    obligationChanged = true;
+                    var changed = currentAmount.UpdateObligation(updatedObligationSchemeAmount.Obligation);
+
+                    if (changed)
+                    {
+                        obligationChanged = true;
+                    }
                 }
             }
 
