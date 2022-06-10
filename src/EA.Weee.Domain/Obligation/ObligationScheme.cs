@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Obligation
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using CuttingEdge.Conditions;
     using Lookup;
@@ -24,22 +25,24 @@
 
         public virtual Guid SchemeId { get; private set; }
 
-        public virtual WeeeCategory CategoryId { get; private set; }
+        public virtual ICollection<ObligationSchemeAmount> ObligationSchemeAmounts { get; private set; }
 
-        public virtual decimal? Obligation { get; private set; }
+        public ObligationScheme()
+        {
+        }
 
-        public ObligationScheme(WeeeCategory categoryId, Scheme scheme, decimal? obligation, int complianceYear)
+        public ObligationScheme(Scheme scheme, int complianceYear)
         {
             Condition.Requires(scheme).IsNotNull();
             Condition.Requires(complianceYear).IsGreaterThan(0);
 
-            CategoryId = categoryId;
             Scheme = scheme;
-            Obligation = obligation;
             ComplianceYear = complianceYear;
+            ObligationSchemeAmounts = new List<ObligationSchemeAmount>();
+            UpdatedDate = SystemTime.UtcNow;
         }
 
-        public virtual void SetUpdatedDate(DateTime date, decimal? value)
+        public virtual void SetUpdatedDate(DateTime date)
         {
             //only update the updated date if the value is different to the current value.
             UpdatedDate = date;

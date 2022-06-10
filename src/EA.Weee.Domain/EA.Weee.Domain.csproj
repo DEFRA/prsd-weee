@@ -124,6 +124,7 @@
     <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Lookup\WeeeCategory.cs" />
+    <Compile Include="Obligation\ObligationSchemeAmount.cs" />
     <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Obligation\ObligationTypeString.cs" />
     <Compile Include="Obligation\ObligationScheme.cs" />
