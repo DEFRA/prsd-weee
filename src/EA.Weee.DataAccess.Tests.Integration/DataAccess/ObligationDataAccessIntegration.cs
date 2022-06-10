@@ -46,9 +46,15 @@
                 var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
                 var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
                 var complianceYear = 2022;
-                var obligatedScheme1 = new ObligationScheme(WeeeCategory.ITAndTelecommsEquipment, scheme1, 1, complianceYear);
-                var obligatedScheme2 = new ObligationScheme(WeeeCategory.PhotovoltaicPanels, scheme2, null, complianceYear);
-                var obligatedScheme3 = new ObligationScheme(WeeeCategory.MedicalDevices, scheme3, 2.1M, complianceYear);
+
+                var obligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                obligatedScheme1.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1));
+
+                var obligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, null));
+
+                var obligatedScheme3 = new ObligationScheme(scheme3, complianceYear);
+                obligatedScheme3.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.MedicalDevices, 2.1M));
 
                 var obligationScheme = new List<ObligationScheme>()
                 {
@@ -75,21 +81,21 @@
 
                 var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.CategoryId.Should().Be(WeeeCategory.ITAndTelecommsEquipment);
                 schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeObligation.Obligation.Should().Be(1);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).CategoryId.Should().Be(WeeeCategory.ITAndTelecommsEquipment);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().Be(1);
 
                 schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.CategoryId.Should().Be(WeeeCategory.PhotovoltaicPanels);
                 schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeObligation.Obligation.Should().BeNull();
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).CategoryId.Should().Be(WeeeCategory.PhotovoltaicPanels);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().BeNull();
 
                 schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme3.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.CategoryId.Should().Be(WeeeCategory.MedicalDevices);
                 schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                schemeObligation.Obligation.Should().Be(2.1M);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().Be(2.1M);
             }
         }
 

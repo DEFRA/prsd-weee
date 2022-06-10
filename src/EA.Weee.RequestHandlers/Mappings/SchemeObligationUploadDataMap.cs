@@ -14,15 +14,24 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return new SchemeObligationUploadData()
+            var returnData = new SchemeObligationUploadData()
             {
                 ErrorData = source.ObligationUploadErrors.Select(oe => new SchemeObligationUploadErrorData(
                     oe.ErrorType.ToCoreEnumeration<SchemeObligationUploadErrorType>(),
                     oe.Description,
                     oe.SchemeIdentifier,
                     oe.SchemeName,
-                    (WeeeCategory?)oe.Category)).ToList()
+                    (WeeeCategory?)oe.Category)).ToList(),
             };
+
+            foreach (var sourceObligationScheme in source.ObligationSchemes)
+            {
+                returnData.ObligationData.Add(new SchemeObligationData(sourceObligationScheme.Scheme.SchemeName,
+                    sourceObligationScheme.UpdatedDate,
+                    sourceObligationScheme.ObligationSchemeAmounts.Select(os => new SchemeObligationAmountData((WeeeCategory)os.CategoryId, os.Obligation)).ToList()));
+            }
+
+            return returnData;
         }
     }
 }

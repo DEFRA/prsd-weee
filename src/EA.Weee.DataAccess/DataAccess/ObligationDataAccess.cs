@@ -32,10 +32,10 @@
         {
             var obligationUpload = new ObligationUpload(ukCompetentAuthority, userContext.UserId.ToString(), data, fileName);
 
-            foreach (var obligationScheme in obligations)
-            {
-                obligationScheme.SetUpdatedDate(SystemTime.UtcNow, obligationScheme.Obligation);
-            }
+            //foreach (var obligationScheme in obligations)
+            //{
+            //    obligationScheme.SetUpdatedDate(SystemTime.UtcNow, obligationScheme.Obligation);
+            //}
 
             if (!errors.Any())
             {

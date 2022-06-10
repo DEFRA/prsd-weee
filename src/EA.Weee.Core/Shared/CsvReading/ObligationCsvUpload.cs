@@ -89,14 +89,14 @@
 
             if (propertyInfoValue != null)
             {
-                var propertyValue = propertyInfoValue.GetValue(this).ToString();
+                var propertyValue = propertyInfoValue.GetValue(this);
 
-                if (string.IsNullOrWhiteSpace(propertyValue))
+                if (propertyValue == null || string.IsNullOrWhiteSpace(propertyValue.ToString()))
                 {
                     return null;
                 }
 
-                return decimal.Parse(propertyValue);
+                return decimal.Parse(propertyValue.ToString());
             }
 
             return null;
