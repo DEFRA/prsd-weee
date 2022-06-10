@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
@@ -11,15 +12,12 @@
 
     public class ObligationDataAccess : IObligationDataAccess
     {
-        private readonly WeeeContext context;
         private readonly IUserContext userContext;
         private readonly IGenericDataAccess genericDataAccess;
 
-        public ObligationDataAccess(WeeeContext context, 
-            IUserContext userContext, 
+        public ObligationDataAccess(IUserContext userContext, 
             IGenericDataAccess genericDataAccess)
         {
-            this.context = context;
             this.userContext = userContext;
             this.genericDataAccess = genericDataAccess;
         }
@@ -31,27 +29,40 @@
             IList<ObligationScheme> obligations)
         {
             var obligationUpload = new ObligationUpload(ukCompetentAuthority, userContext.UserId.ToString(), data, fileName);
-
-            //foreach (var obligationScheme in obligations)
-            //{
-            //    obligationScheme.SetUpdatedDate(SystemTime.UtcNow, obligationScheme.Obligation);
-            //}
+            var obligationsToAdd = new List<ObligationScheme>();
 
             if (!errors.Any())
             {
-                obligationUpload.SetObligations(obligations);
+                foreach (var obligationScheme in obligations)
+                {
+                    // if there is no existing scheme obligation for the compliance year then it gets added
+                    // otherwise the existing record is updated
+                    var existingObligationScheme = obligationScheme.Scheme.ObligationSchemes.FirstOrDefault(o => o.ComplianceYear == obligationScheme.ComplianceYear);
+
+                    if (existingObligationScheme == null)
+                    {
+                        obligationsToAdd.Add(obligationScheme);
+                    }
+                    else
+                    {
+                        existingObligationScheme.UpdateObligationUpload(obligationUpload);
+                        existingObligationScheme.UpdateObligationSchemeAmounts(obligationScheme.ObligationSchemeAmounts.ToList());
+                    }
+                }
+
+                if (obligationsToAdd.Any())
+                {
+                    obligationUpload.SetObligations(obligationsToAdd);
+                }
             }
             else
             {
                 obligationUpload.SetErrors(errors);
             }
 
-            //retrieve the current list of obligation scheme values 
-            //if none exist then create new values
-            //other wise update the existing values by adding them to the current obligation upload?
-            var updatedObligation = await genericDataAccess.Add(obligationUpload);
-            
-            return updatedObligation.Id;
+            var updatedObligationUpload = await genericDataAccess.Add(obligationUpload);
+
+            return updatedObligationUpload.Id;
         }
     }
 }
