@@ -10,6 +10,7 @@
     using Services;
     using Services.Caching;
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
@@ -66,16 +67,20 @@
         {
             using (var client = apiClient())
             {
-                SchemeObligationUploadData data = null;
+                List<SchemeObligationUploadErrorData> errorData = null;
                 if (id.HasValue)
                 {
-                    data = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligationUpload(id.Value));
+                    errorData = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligationUpload(id.Value));
                 }
+
+                var schemeObligationData =
+                    await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, 2022));
 
                 var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
                 {
                     CompetentAuthority = authority,
-                    UploadData = data
+                    ErrorData = errorData,
+                    ObligationData = schemeObligationData
                 });
 
                 return View(model);
