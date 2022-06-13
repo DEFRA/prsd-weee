@@ -328,6 +328,8 @@
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />

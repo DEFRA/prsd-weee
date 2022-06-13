@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Obligation;
+    using Domain.Scheme;
 
     public interface IObligationDataAccess
     {
@@ -13,5 +14,7 @@
             string fileName,
             IList<ObligationUploadError> errors,
             IList<ObligationScheme> obligations);
+
+        Task<List<Scheme>> GetObligationScheme(UKCompetentAuthority authority, int complianceYear);
     }
 }
