@@ -48,7 +48,7 @@
                 currentDate = systemSettings.FixedCurrentDate;
             }
             
-            var filter = new EvidenceNoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
             {
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,
