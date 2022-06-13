@@ -22,6 +22,7 @@
     using Domain.Scheme;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
 
     public class GetEvidenceNotesByOrganisationRequestHandlerTests
     {
@@ -44,7 +45,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -198,7 +199,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence);
         }
     }
 }
