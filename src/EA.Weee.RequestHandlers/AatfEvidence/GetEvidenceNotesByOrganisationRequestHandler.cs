@@ -44,12 +44,11 @@
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var filter = new EvidenceNoteFilter((short)DateTime.Now.Year)
+            var filter = new EvidenceNoteFilter((short)DateTime.Now.Year, (int)request.NoteTypeFilter)
             {
                 SchemeId = scheme.Id,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear,
-                NoteTypeFilter = (int?)request.NoteTypeFilter
+                ComplianceYear = request.ComplianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
