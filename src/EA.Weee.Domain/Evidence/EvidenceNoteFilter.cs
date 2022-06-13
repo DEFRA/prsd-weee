@@ -28,6 +28,8 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
+        public int NoteTypeFilter { get; set; }
+
         public string FormattedSearchRef
         {
             get
@@ -68,9 +70,10 @@
             }
         }
 
-        public EvidenceNoteFilter(int complianceYear)
+        public EvidenceNoteFilter(int complianceYear, int noteTypeFilter)
         {
             ComplianceYear = complianceYear;
+            NoteTypeFilter = noteTypeFilter;
         }
     }
 }
