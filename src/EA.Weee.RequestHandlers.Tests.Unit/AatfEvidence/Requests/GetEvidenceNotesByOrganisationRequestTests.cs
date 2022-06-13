@@ -29,7 +29,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022, NoteType.Evidence));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -40,7 +40,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, 2022));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, 2022, NoteType.Evidence));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -51,7 +51,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022, NoteType.Evidence));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -64,7 +64,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -79,7 +79,7 @@
             var complianceYear = fixture.Create<short>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, NoteType.Evidence);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
