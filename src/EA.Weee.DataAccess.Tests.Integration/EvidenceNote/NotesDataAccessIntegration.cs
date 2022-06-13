@@ -185,6 +185,44 @@
         }
 
         [Fact]
+        public async Task GetAllNotes_ShouldMatchOnNoteType()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                context.Organisations.Add(organisation1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1Excluded = NoteCommon.CreateNote(database, organisation1, aatf: aatf, startDate: DateTime.Now.AddYears(1));
+                var note2Included = NoteCommon.CreateTransferNote(database, organisation1, scheme);
+
+                context.Notes.Add(note1Excluded);
+                context.Notes.Add(note2Included);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new NoteFilter(DateTime.Now.Year, NoteType.TransferNote.Value)
+                {
+                    OrganisationId = organisation1.Id,
+                    AatfId = aatf.Id,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(1);
+                notes.ElementAt(0).Id.Should().Be(note2Included.Id);
+            }
+        }
+
+        [Fact]
         public async Task GetAllNotes_ShouldMatchOnRequiredDraftStatus()
         {
             using (var database = new DatabaseWrapper())
