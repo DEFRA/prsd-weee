@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text.RegularExpressions;
     using Prsd.Core.Domain;
 
-    public class EvidenceNoteFilter
+    public class NoteFilter
     {
         public int ComplianceYear { get; set; }
 
@@ -70,7 +69,7 @@
             }
         }
 
-        public EvidenceNoteFilter(int complianceYear, int noteTypeFilter)
+        public NoteFilter(int complianceYear, int noteTypeFilter)
         {
             ComplianceYear = complianceYear;
             NoteTypeFilter = noteTypeFilter;
