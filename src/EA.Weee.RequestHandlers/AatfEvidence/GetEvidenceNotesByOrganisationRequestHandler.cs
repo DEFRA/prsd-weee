@@ -44,7 +44,7 @@
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var filter = new EvidenceNoteFilter((short)DateTime.Now.Year, (int)request.NoteTypeFilter)
+            var filter = new NoteFilter((short)DateTime.Now.Year, (int)request.NoteTypeFilter)
             {
                 SchemeId = scheme.Id,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),

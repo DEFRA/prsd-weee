@@ -122,7 +122,7 @@
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
                 e.OrganisationId.Equals(request.OrganisationId) && 
                 e.AatfId.Equals(request.AatfId) && 
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -143,7 +143,7 @@
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -165,7 +165,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -187,7 +187,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -209,7 +209,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -233,7 +233,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -258,7 +258,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -285,7 +285,7 @@
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e =>
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
@@ -319,7 +319,7 @@
                 note3
             };
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -331,7 +331,7 @@
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
                 a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -348,7 +348,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -359,7 +359,7 @@
             result.Should().BeOfType<List<EvidenceNoteData>>();
             result.Count().Should().Be(evidenceNoteDatas.Count);
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
