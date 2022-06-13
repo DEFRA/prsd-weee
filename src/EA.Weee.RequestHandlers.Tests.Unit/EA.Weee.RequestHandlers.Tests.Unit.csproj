@@ -217,6 +217,7 @@
     <Compile Include="Admin\Helpers\ReportHelperTests.cs" />
     <Compile Include="Admin\Obligations\GetObligationSchemeTests.cs" />
     <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandlerTests.cs" />
+    <Compile Include="Admin\Obligations\GetSchemeObligationHandlerUnitTests.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandlerUnitTests.cs" />
     <Compile Include="Admin\Obligations\ObligationCsvReaderTests.cs" />
     <Compile Include="Admin\Obligations\ObligationDataAccessUnitTests.cs" />
