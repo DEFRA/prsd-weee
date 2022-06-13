@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Prsd.Core;
+    using NoteType = Domain.Evidence.NoteType;
 
     public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
     {
@@ -47,7 +48,7 @@
                 currentDate = systemSettings.FixedCurrentDate;
             }
             
-            var filter = new EvidenceNoteFilter(currentDate.Year)
+            var filter = new EvidenceNoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
             {
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,
