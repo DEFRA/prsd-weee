@@ -80,7 +80,7 @@
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Error\ObligationUploadErrorType.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
-    <Compile Include="Evidence\EvidenceNoteFilter.cs" />
+    <Compile Include="Evidence\NoteFilter.cs" />
     <Compile Include="Evidence\Note.cs" />
     <Compile Include="Evidence\NoteStatusHistory.cs" />
     <Compile Include="Evidence\NoteTransferCategory.cs" />
