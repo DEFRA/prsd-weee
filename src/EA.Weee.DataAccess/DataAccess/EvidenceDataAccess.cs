@@ -75,8 +75,8 @@
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
 
             var notes = await context.Notes
-               .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear) && 
-                           (!filter.NoteTypeFilter.HasValue || p.NoteType.Value == filter.NoteTypeFilter.Value) 
+               .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear)
+                            && p.NoteType.Value == filter.NoteTypeFilter
                             && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                             && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                             && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
