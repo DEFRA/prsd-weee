@@ -63,6 +63,11 @@
             return dbContext.UKCompetentAuthorities.First(c => c.Name.Equals("Environment Agency"));
         }
 
+        public UKCompetentAuthority GetCompetentAuthorityByName(string name)
+        {
+            return dbContext.UKCompetentAuthorities.First(c => c.Name.Equals(name));
+        }
+
         public Role GetAdminRole()
         {
             return dbContext.Roles.First(c => c.Description.Equals("Administrator"));
