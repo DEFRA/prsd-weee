@@ -30,7 +30,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
@@ -107,7 +107,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
@@ -198,7 +198,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
@@ -283,7 +283,7 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
-                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
                 var genericDataAccess = new GenericDataAccess(database.WeeeContext);
 
