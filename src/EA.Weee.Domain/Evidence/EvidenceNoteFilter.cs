@@ -28,6 +28,8 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
+        public int? NoteTypeFilter { get; set; }
+
         public string FormattedSearchRef
         {
             get
