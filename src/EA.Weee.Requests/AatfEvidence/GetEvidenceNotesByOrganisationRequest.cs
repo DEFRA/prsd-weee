@@ -10,16 +10,18 @@
     {
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
-            int complianceYear)
+            int complianceYear, NoteType noteTypeFilter)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
+            Condition.Requires(noteTypeFilter);
 
             OrganisationId = organisationId;
             AllowedStatuses = allowedStatuses;
             ComplianceYear = complianceYear;
+            NoteTypeFilter = noteTypeFilter;
         }
     }
 }

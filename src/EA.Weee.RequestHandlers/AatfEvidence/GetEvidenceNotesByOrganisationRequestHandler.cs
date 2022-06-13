@@ -48,7 +48,8 @@
             {
                 SchemeId = scheme.Id,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear
+                ComplianceYear = request.ComplianceYear,
+                NoteTypeFilter = (int?)request.NoteTypeFilter
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
