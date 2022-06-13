@@ -32,7 +32,7 @@
             userContext = A.Fake<IUserContext>();
             fixture = new Fixture();
 
-            obligationDataAccess = new ObligationDataAccess(userContext, genericDataAccess);
+            obligationDataAccess = new ObligationDataAccess(userContext, genericDataAccess, context);
         }
 
         [Fact]
