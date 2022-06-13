@@ -18,7 +18,7 @@
 
         public virtual int ComplianceYear { get; private set; }
 
-        public virtual DateTime UpdatedDate { get; private set; }
+        public virtual DateTime? UpdatedDate { get; private set; }
 
         [ForeignKey("SchemeId")]
         public virtual Scheme Scheme { get; private set; }
@@ -71,7 +71,7 @@
 
         public virtual void UpdateObligationSchemeAmounts(List<ObligationSchemeAmount> updatedObligationSchemeAmounts)
         {
-            bool obligationChanged = false;
+            var obligationChanged = false;
             foreach (var updatedObligationSchemeAmount in updatedObligationSchemeAmounts)
             {
                 var currentAmount = ObligationSchemeAmounts.FirstOrDefault(o => o.CategoryId == updatedObligationSchemeAmount.CategoryId);
