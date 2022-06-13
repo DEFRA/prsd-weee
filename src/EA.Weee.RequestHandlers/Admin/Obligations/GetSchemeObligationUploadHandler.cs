@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin.Obligation;
     using DataAccess.DataAccess;
-    using Domain.Obligation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
-    using Scheme;
     using Security;
     using Shared;
     using Weee.Security;
