@@ -67,7 +67,7 @@
 
             return note;
         }
-        public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
+        public async Task<List<Note>> GetAllNotes(NoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
 
