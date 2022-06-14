@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using EA.Weee.Core.Tests.Unit.Helpers;
     using Evidence;
     using FluentAssertions;
@@ -12,10 +13,10 @@
         public void EvidenceNoteFilter_GivenComplianceYear_ComplianceYearShouldBeSet()
         {
             //arrange
-            var complianceYear = (short)DateTime.Now.Year;
+            var complianceYear = DateTime.Now.Year;
 
             //act
-            var filter = new NoteFilter(complianceYear, NoteType.EvidenceNote.Value);
+            var filter = new NoteFilter(complianceYear);
 
             //assert
             filter.ComplianceYear.Should().Be(complianceYear);
@@ -26,7 +27,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoteType_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $"{noteType.DisplayName}1"
             };
@@ -43,7 +44,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoteTypeAndIsLowerCase_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $"{noteType.DisplayName.ToLower()}1"
             };
@@ -74,7 +75,7 @@
         public void FormattedSearchRef_GivenSearchRefWithUnknownNoteType_ShouldNotReturnFormattedReference(string noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $"{noteType}1"
             };
@@ -91,7 +92,7 @@
         public void FormattedSearchRef_GivenSearchRefWithWhiteSpaceAndNoteType_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $" {noteType.DisplayName}1 "
             };
@@ -107,7 +108,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoNoteType_ShouldReturnFormattedReference()
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = "1"
             };
@@ -126,7 +127,7 @@
         public void FormattedNoteType_GivenEmptySearchRef_ShouldReturnMinusOne(string searchRef)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = searchRef
             };
@@ -143,7 +144,7 @@
         public void FormattedNoteType_GivenSearchRefWithNoteType_ShouldReturnNoteTypeValue(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $"{noteType.DisplayName}1"
             };
@@ -174,7 +175,7 @@
         public void FormattedNoteType_GivenSearchRefWithUnknownNoteType_ShouldReturnZero(string noteType)
         {
             //arrange
-            var filter = new NoteFilter((short)DateTime.Now.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(DateTime.Now.Year)
             {
                 SearchRef = $"{noteType}1"
             };
