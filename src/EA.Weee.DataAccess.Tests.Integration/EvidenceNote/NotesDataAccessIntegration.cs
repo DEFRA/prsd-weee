@@ -90,8 +90,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -133,8 +134,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
                     SchemeId = scheme.Id
@@ -170,8 +172,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -208,8 +211,9 @@
                 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
                 };
@@ -249,8 +253,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted }
                 };
@@ -290,8 +295,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted }
                 };
@@ -337,8 +343,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf2.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -381,8 +388,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation.Id,
                     AatfId = aatf.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -424,8 +432,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation.Id,
                     AatfId = aatf.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
@@ -449,8 +458,9 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = noteShouldBeFound.Reference.ToString(),
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status}
                 };
@@ -489,8 +499,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     WasteTypeId = (int?)WasteType.HouseHold,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
                 };
@@ -530,8 +541,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SchemeId = schemeToMatch.Id,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
                 };
@@ -570,8 +582,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     NoteStatusId = NoteStatus.Void.Value,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected }
                 };
@@ -618,8 +631,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = date,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
                     AatfId = aatf.Id
@@ -655,8 +669,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = DateTime.Now.AddDays(1),
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
                     AatfId = aatf.Id
@@ -691,8 +706,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = DateTime.Now.AddDays(-1),
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
                     AatfId = aatf.Id
@@ -738,8 +754,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = date,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
                     AatfId = aatf.Id
@@ -786,8 +803,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = DateTime.Now.AddDays(-1),
                     EndDateSubmitted = DateTime.Now.AddDays(1),
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Rejected },
@@ -814,8 +832,9 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = noteShouldBeFound.Reference.ToString(),
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
                     OrganisationId = noteShouldBeFound.OrganisationId,
@@ -840,8 +859,9 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"Z{noteShouldNotBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
                 };
@@ -863,8 +883,9 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"{NoteType.EvidenceNote.DisplayName}{noteShouldBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
                     OrganisationId = noteShouldBeFound.OrganisationId,
@@ -889,8 +910,9 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"{NoteType.TransferNote.DisplayName}{noteShouldNotBeFound.Reference}",
                     AllowedStatuses = new List<NoteStatus>() { noteShouldNotBeFound.Status },
                     OrganisationId = noteShouldNotBeFound.OrganisationId,

@@ -56,6 +56,7 @@
             var filter = new NoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
             {
                 AatfId = message.AatfId,
+                NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                 OrganisationId = message.OrganisationId,
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
                 SearchRef = message.SearchRef,
