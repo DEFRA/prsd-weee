@@ -1,0 +1,68 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Extensions
+
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.TransferredOutEvidenceNotesSchemeViewModel
+
+@section full_main_content
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+
+            <section class="govuk-tabs__panel" id="pcsDetails">
+                <h2 class="govuk-heading-m">
+                    View evidence that has been transferred to another PCS
+                </h2>
+              
+                <table id="transferred-out-notes-table" class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">View evidence that has been transferred to another PCS</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">
+                            Reference ID
+                        </th>
+                        <th class="govuk-table__header">
+                            Date submitted
+                        </th>
+                        <th class="govuk-table__header">
+                            Recipient
+                        </th>
+                        <th class="govuk-table__header">
+                            Status
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    @if (Model.EvidenceNotesDataList.Any())
+                    {
+                        foreach (var note in Model.EvidenceNotesDataList)
+                        {
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                                <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                <td class="govuk-table__cell">@note.Status</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <p>There have not been any evidence note transfers </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p> Showing 0 - 0 of 0 </p>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+}
