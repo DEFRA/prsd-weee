@@ -12,7 +12,7 @@
         public void SubmitSchemeObligation_GivenNullFileInfo_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new SubmitSchemeObligation(null, CompetentAuthority.England));
+            var exception = Record.Exception(() => new SubmitSchemeObligation(null, CompetentAuthority.England, 2022));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -26,7 +26,7 @@
             var authority = CompetentAuthority.England;
 
             //act
-            var result = new SubmitSchemeObligation(fileInfo, authority);
+            var result = new SubmitSchemeObligation(fileInfo, authority, 2022);
 
             //assert
             result.FileInfo.Should().Be(fileInfo);

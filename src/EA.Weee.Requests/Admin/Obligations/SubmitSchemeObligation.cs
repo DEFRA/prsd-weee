@@ -10,12 +10,15 @@
         public FileInfo FileInfo { get; private set; }
         public CompetentAuthority Authority { get; private set; }
 
-        public SubmitSchemeObligation(FileInfo fileInfo, CompetentAuthority authority)
+        public int ComplianceYear { get; private set; }
+
+        public SubmitSchemeObligation(FileInfo fileInfo, CompetentAuthority authority, int complianceYear)
         {
             Condition.Requires(fileInfo).IsNotNull();
 
             FileInfo = fileInfo;
             Authority = authority;
+            ComplianceYear = complianceYear;
         }
     }
 }

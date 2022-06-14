@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using Prsd.Core.Domain;
 
@@ -20,6 +21,9 @@
         }
 
         public virtual Guid NoteTonnageId { get; private set; }
+
+        [ForeignKey("NoteTonnageId")]
+        public virtual NoteTonnage NoteTonnage { get; private set; }
 
         [ForeignKey("TransferNoteId")]
         public virtual Note TransferNote { get; set; }

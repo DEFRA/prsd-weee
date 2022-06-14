@@ -129,7 +129,9 @@
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
+    <Compile Include="Admin\Obligation\SchemeObligationAmountData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadData.cs" />
+    <Compile Include="Admin\Obligation\SchemeObligationData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadErrorData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadErrorType.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
