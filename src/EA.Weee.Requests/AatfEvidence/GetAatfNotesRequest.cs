@@ -21,11 +21,15 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
+        public int? SelectedComplianceYear { get; set; }
+
+        public DateTime? CurrentDate { get; set; }
+
         public GetAatfNotesRequest(Guid organisationId, 
             Guid aatfId, 
             List<NoteStatus> allowedStatuses,
             string searchRef, Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
-            DateTime? startDateSubmitted, DateTime? endDateSubmitted)
+            DateTime? startDateSubmitted, DateTime? endDateSubmitted, int? selectedComplianceYear, DateTime? currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
@@ -41,6 +45,8 @@
             NoteStatusFilter = noteStatusFilter;
             StartDateSubmitted = startDateSubmitted;
             EndDateSubmitted = endDateSubmitted;
+            SelectedComplianceYear = selectedComplianceYear;
+            CurrentDate = currentDate;
         }
     }
 }

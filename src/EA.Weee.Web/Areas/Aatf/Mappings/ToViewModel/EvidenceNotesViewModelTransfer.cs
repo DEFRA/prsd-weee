@@ -13,7 +13,9 @@
 
         public List<EvidenceNoteData> Notes { get; protected set; }
 
-        public EvidenceNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes)
+        public DateTime CurrentDate { get; protected set; }
+
+        public EvidenceNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes, DateTime currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => notes, notes);
@@ -22,6 +24,7 @@
             OrganisationId = organisationId;
             AatfId = aatfId;
             Notes = notes;
+            CurrentDate = currentDate;
         }
     }
 }

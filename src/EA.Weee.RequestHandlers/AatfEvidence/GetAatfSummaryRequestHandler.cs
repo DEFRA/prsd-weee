@@ -35,7 +35,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureAatfHasOrganisationAccess(message.AatfId);
             
-            var summaryData = await evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(message.AatfId, 1);
+            var summaryData = await evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(message.AatfId, (short)message.ComplianceYear);
 
             var approvedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, message.AatfId);
             var submittedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, message.AatfId);

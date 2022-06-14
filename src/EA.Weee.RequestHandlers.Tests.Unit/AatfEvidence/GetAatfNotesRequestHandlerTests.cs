@@ -56,6 +56,7 @@
             noteStatus = fixture.Create<NoteStatus>();
             startDate = DateTime.UtcNow;
             endDate = startDate.AddDays(2);
+            var currentDate = DateTime.UtcNow;
             var systemSettings = A.Fake<SystemData>();
             systemSettings.ToggleFixedCurrentDateUsage(false);
 
@@ -65,7 +66,7 @@
             A.CallTo(() => systemDataDataAccess.Get()).Returns(systemSettings);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), recipientId, wasteType, noteStatus, startDate, endDate);
+                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), recipientId, wasteType, noteStatus, startDate, endDate, 2022, currentDate);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -364,12 +365,12 @@
         }
 
         private GetAatfNotesRequest GetAatfNotesRequest(string searchRef = null, Guid? receivedId = null, WasteType? wasteType = null, NoteStatus? noteStatus = null,
-            DateTime? startDate = null, DateTime? endDate = null)
+            DateTime? startDate = null, DateTime? endDate = null, int? selectedComplianceYear = null, DateTime? currentDate = null)
         {
             return new GetAatfNotesRequest(organisation.Id, 
                 aatf.Id, 
                 fixture.CreateMany<NoteStatus>().ToList(),
-                searchRef, receivedId, wasteType, noteStatus, startDate, endDate);
+                searchRef, receivedId, wasteType, noteStatus, startDate, endDate, selectedComplianceYear, currentDate);
         }
     }
 }

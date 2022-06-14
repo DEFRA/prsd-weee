@@ -39,14 +39,20 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             //TODO: this only temporary until the compliance filter is added to aatf screens
-            var currentDate = SystemTime.Now;
+            var currentDate = message.CurrentDate.GetValueOrDefault(DateTime.UtcNow);
             var systemSettings = await systemDataDataAccess.Get();
 
             if (systemSettings.UseFixedCurrentDate)
             {
                 currentDate = systemSettings.FixedCurrentDate;
             }
-            
+
+            var complianceYear = message.SelectedComplianceYear.GetValueOrDefault(DateTime.UtcNow.Year);
+            if (complianceYear == 0)
+            {
+                complianceYear = DateTime.UtcNow.Year;
+            }
+
             var filter = new EvidenceNoteFilter(currentDate.Year)
             {
                 AatfId = message.AatfId,
@@ -57,7 +63,8 @@
                 WasteTypeId = (int?)message.WasteTypeId,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
-                EndDateSubmitted = message.EndDateSubmitted
+                EndDateSubmitted = message.EndDateSubmitted, 
+                ComplianceYear = complianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
