@@ -9,12 +9,14 @@
     public class GetAatfSummaryRequest : IRequest<AatfEvidenceSummaryData>
     {
         public Guid AatfId { get; private set; }
-        
-        public GetAatfSummaryRequest(Guid aatfId)
+        public int ComplianceYear { get; private set; }
+
+        public GetAatfSummaryRequest(Guid aatfId, int complianceYear)
         {
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
 
             AatfId = aatfId;
+            ComplianceYear = complianceYear;
         }
     }
 }

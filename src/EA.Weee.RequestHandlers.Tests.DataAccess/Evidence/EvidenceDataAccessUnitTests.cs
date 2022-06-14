@@ -195,6 +195,7 @@
         {
             //arrange
             var note = A.Fake<Note>();
+            note.ComplianceYear = 2022;
             var id = Guid.NewGuid();
             A.CallTo(() => genericDataAccess.GetById<Note>(id)).Returns(note);
 

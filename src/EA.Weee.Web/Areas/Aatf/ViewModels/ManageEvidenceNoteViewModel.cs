@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
+    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

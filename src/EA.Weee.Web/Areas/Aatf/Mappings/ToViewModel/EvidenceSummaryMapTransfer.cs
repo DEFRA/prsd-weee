@@ -11,8 +11,9 @@
         public Guid AatfId { get; private set; }
 
         public AatfEvidenceSummaryData AatfEvidenceSummaryData { get; private set; }
+        public DateTime CurrentDate { get; protected set; }
 
-        public EvidenceSummaryMapTransfer(Guid organisationId, Guid aatfId, AatfEvidenceSummaryData summaryData)
+        public EvidenceSummaryMapTransfer(Guid organisationId, Guid aatfId, AatfEvidenceSummaryData summaryData, DateTime currentDate)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(aatfId).IsNotEqualTo(Guid.Empty);
@@ -21,6 +22,7 @@
             OrganisationId = organisationId;
             AatfId = aatfId;
             AatfEvidenceSummaryData = summaryData;
+            CurrentDate = currentDate;
         }
     }
 }

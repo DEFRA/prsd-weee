@@ -69,7 +69,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totals);
@@ -105,7 +105,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 totals.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Received.Should().Be(0);
@@ -162,7 +162,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totals);
@@ -202,8 +202,8 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totalsAatf1 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
-                var totalsAatf2 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf2.Id, 1);
+                var totalsAatf1 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
+                var totalsAatf2 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf2.Id, (short)DateTime.UtcNow.Year);
 
                 totalsAatf2.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totalsAatf2);
@@ -253,7 +253,7 @@
 
                 var watch = new Stopwatch();
                 watch.Start();
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, 1);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
                 watch.Stop();
 
                 watch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(10));
