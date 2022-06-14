@@ -59,8 +59,8 @@
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
                         return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                    case ManageEvidenceNotesDisplayOptions.TransferredOut:
-                        return await CreateAndPopulateTransferredOutEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
+                    case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     default:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                 }
@@ -116,7 +116,7 @@
             }
         }
 
-        private async Task<ActionResult> CreateAndPopulateTransferredOutEvidenceViewModel(Guid pcsId,
+        private async Task<ActionResult> CreateAndPopulateOutgoingTransfersEvidenceViewModel(Guid pcsId,
             string schemeName,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
@@ -137,7 +137,7 @@
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new TransferredOutEvidenceNotesViewModelMap(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
 
-                return View("TransferredOut", model);
+                return View("OutgoingTransfers", model);
             }
         }
         
