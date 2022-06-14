@@ -328,6 +328,11 @@
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
@@ -741,6 +746,7 @@
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\TransferredOut.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

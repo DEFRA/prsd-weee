@@ -13,6 +13,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web;
@@ -299,7 +300,7 @@
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
             var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
@@ -310,7 +311,7 @@
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.UploadData == schemeUploadObligationData)))
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.ErrorData == schemeUploadObligationData)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -320,7 +321,7 @@
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
             var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() => client.SendAsync(A<string>._,

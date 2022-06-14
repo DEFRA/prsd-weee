@@ -220,6 +220,7 @@
     <Compile Include="Admin\Obligations\ObligationCsvReaderTests.cs" />
     <Compile Include="Admin\Obligations\ObligationDataAccessUnitTests.cs" />
     <Compile Include="Admin\Obligations\ObligationUploadValidatorTests.cs" />
+    <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />

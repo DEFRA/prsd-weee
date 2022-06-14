@@ -154,6 +154,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
+    <Compile Include="Admin\ObligationSchemeAmountTests.cs" />
+    <Compile Include="Admin\ObligationSchemeTests.cs" />
     <Compile Include="Charges\InvoiceRunTests.cs" />
     <Compile Include="CountryTests.cs" />
     <Compile Include="DataReturns\DataReturnTests.cs" />
