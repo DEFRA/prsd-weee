@@ -111,7 +111,7 @@
             {
                 ShouldMapToNote();
                 result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Submitted);
-                result.SubmittedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate);
+                result.SubmittedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate.ToShortDateString());
             };
         }
 

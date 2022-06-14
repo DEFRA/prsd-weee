@@ -80,7 +80,7 @@
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Error\ObligationUploadErrorType.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
-    <Compile Include="Evidence\EvidenceNoteFilter.cs" />
+    <Compile Include="Evidence\NoteFilter.cs" />
     <Compile Include="Evidence\Note.cs" />
     <Compile Include="Evidence\NoteStatusHistory.cs" />
     <Compile Include="Evidence\NoteTransferCategory.cs" />
@@ -124,8 +124,10 @@
     <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Lookup\WeeeCategory.cs" />
+    <Compile Include="Obligation\ObligationSchemeAmount.cs" />
     <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Obligation\ObligationTypeString.cs" />
+    <Compile Include="Obligation\ObligationScheme.cs" />
     <Compile Include="Obligation\ObligationUpload.cs" />
     <Compile Include="Obligation\ObligationUploadError.cs" />
     <Compile Include="Organisation\Address.cs" />
