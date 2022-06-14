@@ -62,20 +62,29 @@
             var dependentPropertyValue = dependentProperty.GetValue(instance, null);
 
             if ((decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
-                    CultureInfo.InvariantCulture, out var decimalResult) && (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))))
+                    CultureInfo.InvariantCulture, out var decimalResult)))
             {
-                return new ValidationResult(GenerateMessage());
-            }
-
-            if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
-                    CultureInfo.InvariantCulture, out var decimalDependentResult)))
-            {
-                if (decimalResult > decimalDependentResult)
+                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
                 {
-                    return new ValidationResult(GenerateMessage());
+                    if (decimalResult != 0)
+                    {
+                        return new ValidationResult(GenerateMessage());
+                    }
+                }
+
+                if (dependentPropertyValue != null)
+                {
+                    if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
+                            CultureInfo.InvariantCulture, out var decimalDependentResult)))
+                    {
+                        if (decimalResult > decimalDependentResult)
+                        {
+                            return new ValidationResult(GenerateMessage());
+                        }
+                    }
                 }
             }
-            
+
             return ValidationResult.Success;
         }
 
