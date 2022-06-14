@@ -53,20 +53,20 @@
 
             private readonly It shouldHaveReturnedObligationDataWithErrors = () =>
             {
-                result.ErrorData.Should().Contain(e =>
+                result.Should().Contain(e =>
                     e.ErrorType == SchemeObligationUploadErrorType.File && e.Description.Equals(FileError));
 
-                result.ErrorData.Should().Contain(e =>
+                result.Should().Contain(e =>
                     e.ErrorType == SchemeObligationUploadErrorType.Data && e.Description.Equals(DataError) && e.Scheme.Equals(SchemeName) && e.SchemeIdentifier.Equals(SchemeId));
             };
         }
 
         public class GetSchemeUploadObligationHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData> handler;
+            protected static IRequestHandler<GetSchemeObligationUpload, List<SchemeObligationUploadErrorData>> handler;
             protected static GetSchemeObligationUpload request;
             protected static Fixture fixture;
-            protected static SchemeObligationUploadData result;
+            protected static List<SchemeObligationUploadErrorData> result;
             protected static ObligationUpload obligationUpload;
 
             public static IntegrationTestSetupBuilder LocalSetup()
@@ -86,7 +86,7 @@
                 }
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>>();
+                handler = Container.Resolve<IRequestHandler<GetSchemeObligationUpload, List<SchemeObligationUploadErrorData>>>();
 
                 return setup;
             }

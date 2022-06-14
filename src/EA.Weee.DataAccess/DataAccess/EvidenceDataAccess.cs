@@ -68,7 +68,7 @@
 
             return note;
         }
-        public async Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter)
+        public async Task<List<Note>> GetAllNotes(NoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
 
@@ -76,9 +76,9 @@
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
 
             var notes = await context.Notes
-               .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear) && 
-                           p.NoteType.Value == NoteType.EvidenceNote.Value &&
-                           ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
+               .Where(p => p.ComplianceYear.Equals((short)filter.ComplianceYear)
+                            && p.NoteType.Value == filter.NoteTypeFilter
+                            && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
                             && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                             && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                             && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
