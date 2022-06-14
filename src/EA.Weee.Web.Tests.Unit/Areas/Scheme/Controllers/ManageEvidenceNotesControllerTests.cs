@@ -464,6 +464,97 @@
         }
 
         [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTab_EvidenceNoteDataShouldBeRetrieved()
+        {
+            // Arrange
+            var statuses = GetOutgoingTransfersAllowedStatuses();
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     statuses.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(currentDate.Year)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved()
+        {
+            // Arrange
+            var status = new List<NoteStatus>() { NoteStatus.Submitted };
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+            var complianceYear = Fixture.Create<short>();
+
+            var model = Fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt()
+        {
+            // Arrange
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+
+            //asset
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
+                A<TransferredOutEvidenceNotesViewModelMap>.That.Matches(
+                    a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenTransferredOutEvidenceNotesSchemeViewModel_TransferredOutEvidenceNotesViewModelMapShouldBeReturned()
+        {
+            //arrange
+            var model = Fixture.Create<TransferredOutEvidenceNotesSchemeViewModel>();
+
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMap>._)).Returns(model);
+
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;
+
+            //asset
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
         public void TransferPost_PageRedirectsToTransferPage()
         {
             var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
@@ -471,6 +562,19 @@
             result.RouteValues["action"].Should().Be("TransferEvidenceNote");
             result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["pcsId"].Should().Be(OrganisationId);
+        }
+
+        private List<NoteStatus> GetOutgoingTransfersAllowedStatuses()
+        {
+            return new List<NoteStatus>
+            {
+                        NoteStatus.Draft,
+                        NoteStatus.Approved,
+                        NoteStatus.Rejected,
+                        NoteStatus.Submitted,
+                        NoteStatus.Void,
+                        NoteStatus.Returned
+            };
         }
     }
 }
