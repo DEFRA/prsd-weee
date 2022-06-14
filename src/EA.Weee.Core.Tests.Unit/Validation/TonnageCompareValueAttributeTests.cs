@@ -112,6 +112,18 @@
             });
         }
 
+        [Theory]
+        [InlineData("0", "")]
+        [InlineData("0", " ")]
+        [InlineData("0", null)]
+        public void Validate_GivenTonnageIsZeroAndCompareValueIsEmpty_TrueShouldBeReturned(object tonnage,
+            object compareTonnage)
+        {
+            var result = Validate(tonnage, compareTonnage);
+
+            result.Should().BeTrue();
+        }
+
         [Fact]
         public void Validate_GivenTonnageTonnageIsGreaterThanCompareTonnage_FalseShouldBeReturned()
         {
