@@ -188,7 +188,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_ShouldMatchOnNoteType()
+        public async Task GetAllNotes_ShouldMatchOnTransferNoteType()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -267,7 +267,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_ShouldNotMatchNoteType_ShouldReturnAllNotes()
+        public async Task GetAllNotes_ShouldMatchEvidenceNoteType_ShouldReturnAllNotes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -282,9 +282,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var note1Included = NoteCommon.CreateNote(database, organisation1, scheme);
-                var note2Included = NoteCommon.CreateNote(database, organisation1, scheme);
-                var note3Included = NoteCommon.CreateNote(database, organisation1, scheme);
+                var note1Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf);
+                var note2Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf);
+                var note3Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf);
 
                 context.Notes.Add(note1Included);
                 context.Notes.Add(note2Included);
@@ -303,9 +303,9 @@
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(3);
-                notes.ElementAt(0).Id.Should().Be(note1Included.Id);
-                notes.ElementAt(1).Id.Should().Be(note2Included.Id);
-                notes.ElementAt(2).Id.Should().Be(note3Included.Id);
+                notes.Should().Contain(n => n.Id == note1Included.Id);
+                notes.Should().Contain(n => n.Id == note2Included.Id);
+                notes.Should().Contain(n => n.Id == note3Included.Id);
             }
         }
 
