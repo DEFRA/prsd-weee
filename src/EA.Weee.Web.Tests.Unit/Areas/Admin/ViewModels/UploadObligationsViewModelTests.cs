@@ -2,11 +2,14 @@
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using AutoFixture;
+    using Core.Shared;
     using FluentAssertions;
     using Web.Areas.Admin.ViewModels.Obligations;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class UploadObligationsViewModelTests
+    public class UploadObligationsViewModelTests : SimpleUnitTestBase
     {
         [Fact]
         public void File_ShouldHaveDisplayAttribute()
@@ -46,6 +49,47 @@
 
             //assert
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void UploadObligationsViewModel_ConstructorWithAuthority_PropertiesShouldBeInitialised()
+        {
+            //act
+            var model = new UploadObligationsViewModel(TestFixture.Create<CompetentAuthority>());
+
+            //assert
+            model.SchemeObligations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void UploadObligationsViewModel_ConstructorWithoutAuthority_PropertiesShouldBeInitialised()
+        {
+            //act
+            var model = new UploadObligationsViewModel();
+
+            //assert
+            model.SchemeObligations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AnyObligation_GivenNoObligations_ShouldReturnFalse()
+        {
+            //act
+            var model = new UploadObligationsViewModel();
+
+            //assert
+            model.AnyObligation.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AnyObligation_GivenObligations_ShouldReturnTrue()
+        {
+            //act
+            var model = new UploadObligationsViewModel();
+            model.SchemeObligations.Add(new SchemeObligationViewModel());
+
+            //assert
+            model.AnyObligation.Should().BeTrue();
         }
     }
 }
