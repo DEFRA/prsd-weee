@@ -341,6 +341,7 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
+    <Compile Include="ViewModels\EvidenceNoteRowViewModelMapTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />
     <Compile Include="ViewModels\ListOfNotesMapTests.cs" />
