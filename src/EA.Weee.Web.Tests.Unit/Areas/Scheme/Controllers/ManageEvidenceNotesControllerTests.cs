@@ -170,7 +170,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) && 
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -200,7 +201,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(complianceYear) &&
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -371,7 +373,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.TransferredOut == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

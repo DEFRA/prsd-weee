@@ -70,8 +70,10 @@
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
 
-        [Fact]
-        public void GetEvidenceNotesByOrganisationRequest_GivenValues_PropertiesShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void GetEvidenceNotesByOrganisationRequest_GivenValues_PropertiesShouldBeSet(bool transferredOut)
         {
             //arrange
             var organisationId = fixture.Create<Guid>();
@@ -79,12 +81,13 @@
             var complianceYear = fixture.Create<short>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, NoteType.Evidence, false);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, NoteType.Evidence, transferredOut);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
             result.AllowedStatuses.Should().BeEquivalentTo(statusList);
             result.ComplianceYear.Should().Be(complianceYear);
+            result.TransferredOut.Should().Be(transferredOut);
         }
     }
 }
