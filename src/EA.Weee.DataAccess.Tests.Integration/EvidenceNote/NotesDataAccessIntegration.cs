@@ -211,10 +211,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.TransferNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType> { NoteType.TransferNote },
                     OrganisationId = organisation1.Id,
-                    AatfId = aatf.Id,
+                    AatfId = null,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
                 };
 
@@ -251,8 +252,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
@@ -290,8 +292,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                var filter = new NoteFilter(DateTime.Now.Year)
                 {
+                    NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
