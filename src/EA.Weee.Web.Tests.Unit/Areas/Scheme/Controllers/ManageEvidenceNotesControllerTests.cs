@@ -449,6 +449,20 @@
             result.Model.Should().Be(model);
         }
 
+        [Theory]
+        [InlineData("view-and-transfer-evidence", "ViewAndTransferEvidence")]
+        [InlineData("review-submitted-evidence", "ReviewSubmittedEvidence")]
+        [InlineData("evidence-summary", "ReviewSubmittedEvidence")]
+        [InlineData("outgoing-transfers", "OutgoingTransfers")]
+        public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
+        {
+            var pcs = Guid.NewGuid();
+
+            var result = await ManageEvidenceController.Index(pcs, tab) as ViewResult;
+
+            result.ViewName.Should().Be(view);
+        }
+
         [Fact]
         public void TransferPost_PageRedirectsToTransferPage()
         {
