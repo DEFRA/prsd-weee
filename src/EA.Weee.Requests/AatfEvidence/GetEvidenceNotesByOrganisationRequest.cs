@@ -8,9 +8,13 @@
 
     public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
+        public bool TransferredOut { get; private set; }
+
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
-            int complianceYear, NoteType noteTypeFilter)
+            int complianceYear, 
+            NoteType noteTypeFilter,
+            bool transferredOut)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
@@ -22,6 +26,7 @@
             AllowedStatuses = allowedStatuses;
             ComplianceYear = complianceYear;
             NoteTypeFilter = noteTypeFilter;
+            TransferredOut = transferredOut;
         }
     }
 }
