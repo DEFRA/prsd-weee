@@ -374,7 +374,7 @@
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals((short)currentDate.Year) &&
-                     g.TransferredOut == true))).MustHaveHappenedOnceExactly();
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
