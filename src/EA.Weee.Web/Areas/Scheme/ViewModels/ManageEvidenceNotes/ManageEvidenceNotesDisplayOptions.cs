@@ -10,7 +10,7 @@
         ReviewSubmittedEvidence = 1,
         [Display(Name = "view-and-transfer-evidence")]
         ViewAndTransferEvidence = 2,
-        [Display(Name = "transferred-out")]
-        TransferredOut = 3,
+        [Display(Name = "outgoing-transfers")]
+        OutgoingTransfers = 3,
     }
 }
