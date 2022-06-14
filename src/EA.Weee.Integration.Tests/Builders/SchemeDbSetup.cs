@@ -21,7 +21,7 @@
             var name = Faker.Company.Name();
 
             instance = new Scheme(organisation);
-            instance.UpdateScheme(name.Substring(0, name.Length - 1), 
+            instance.UpdateScheme(name.Substring(0, name.Length - 1).Replace(",", string.Empty), 
                 $"WEE/TE{Faker.RandomNumber.Next(1000, 9999)}ST/SCH",
                 Faker.RandomNumber.Next(1, 100000000).ToString(),
                 ObligationType.B2B,
