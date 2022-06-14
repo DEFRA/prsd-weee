@@ -14,6 +14,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using NoteType = Domain.Evidence.NoteType;
 
     public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
     {
@@ -44,9 +45,20 @@
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
-            var filter = new NoteFilter((short)DateTime.Now.Year, (int)request.NoteTypeFilter)
+            Guid? organisationId = null;
+            Guid? schemeId = scheme.Id;
+
+            if (request.TransferredOut)
             {
-                SchemeId = scheme.Id,
+                organisationId = request.OrganisationId;
+                schemeId = null;
+            }
+            
+            var filter = new NoteFilter(DateTime.Now.Year)
+            {
+                NoteTypeFilter = new List<NoteType>() { request.NoteTypeFilter.ToDomainEnumeration<NoteType>() },
+                SchemeId = schemeId,
+                OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
                 ComplianceYear = request.ComplianceYear
             };
