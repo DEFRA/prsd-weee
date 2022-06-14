@@ -29,7 +29,6 @@
 
         public async Task<Note> GetNoteById(Guid id)
         {
-            //GC: find bug in this call
             var note = await context.Notes
                 .Include(n => n.NoteTonnage)
                 .Include(n => n.NoteTransferTonnage)

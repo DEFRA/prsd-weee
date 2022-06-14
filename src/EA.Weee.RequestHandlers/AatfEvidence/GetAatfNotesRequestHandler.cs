@@ -53,8 +53,6 @@
                 complianceYear = DateTime.UtcNow.Year;
             }
 
-            var filter = new EvidenceNoteFilter(currentDate.Year)
-            
             var filter = new NoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
             {
                 AatfId = message.AatfId,
