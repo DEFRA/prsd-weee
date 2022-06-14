@@ -5,7 +5,6 @@
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;
-    using Extensions;
     using ViewModels.Obligations;
 
     public class UploadObligationsViewModelMap : IMap<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>
@@ -18,6 +17,13 @@
             
             SetErrors(source, model);
 
+            SetSchemeObligations(source, model);
+
+            return model;
+        }
+
+        private void SetSchemeObligations(UploadObligationsViewModelMapTransfer source, UploadObligationsViewModel model)
+        {
             foreach (var schemeObligationData in source.ObligationData.OrderBy(o => o.SchemeName))
             {
                 model.SchemeObligations.Add(new SchemeObligationViewModel()
@@ -26,8 +32,6 @@
                     UpdateDate = schemeObligationData.UpdatedDate != null ? schemeObligationData.UpdatedDate.ToString() : "-"
                 });
             }
-
-            return model;
         }
 
         private void SetErrors(UploadObligationsViewModelMapTransfer source, UploadObligationsViewModel model)
