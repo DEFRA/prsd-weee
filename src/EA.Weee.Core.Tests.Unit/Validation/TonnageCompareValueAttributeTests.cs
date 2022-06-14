@@ -174,7 +174,7 @@
 
         public class TestTonnageValueNonRelatedProperty
         {
-            [TonnageCompareValue(CategoryIdProperty, "CompareTonnageNotMatching", ErrorMessage = Error)]
+            [TonnageCompareValue(CategoryIdProperty, "CompareTonnageNotMatching", Error)]
             public object Tonnage { get; set; }
 
             public object CompareTonnage { get; set; }
@@ -184,7 +184,7 @@
 
         public class TestTonnageValueNonCategoryProperty
         {
-            [TonnageCompareValue("NonMatchingCategory", TonnageCompareValueAttributeTests.CompareTonnage, ErrorMessage = Error)]
+            [TonnageCompareValue("NonMatchingCategory", TonnageCompareValueAttributeTests.CompareTonnage, Error)]
             public object Tonnage { get; set; }
 
             public object CompareTonnage { get; set; }
@@ -194,7 +194,7 @@
 
         public class TestTonnageValueRelatedPropertyNotOfCorrectType
         {
-            [TonnageCompareValue(CategoryIdProperty, CompareTonnage, ErrorMessage = Error)]
+            [TonnageCompareValue(CategoryIdProperty, CompareTonnage, Error)]
             public object Tonnage { get; set; }
 
             public int Category { get; set; }
@@ -202,7 +202,7 @@
 
         public class TestTonnageValue
         {
-            [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage, ErrorMessage = Error)]
+            [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage, Error)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }
