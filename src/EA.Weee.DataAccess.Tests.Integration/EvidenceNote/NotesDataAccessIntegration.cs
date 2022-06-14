@@ -223,7 +223,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_ShouldMatchOnNoteType_ShouldReturnZeroNotes()
+        public async Task GetAllNotes_ShouldNotMatchOnNoteType_ShouldReturnZeroNotes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -258,6 +258,48 @@
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_ShouldNotMatchNoteType_ShouldReturnAllNotes()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                context.Organisations.Add(organisation1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1Included = NoteCommon.CreateNote(database, organisation1, scheme);
+                var note2Included = NoteCommon.CreateNote(database, organisation1, scheme);
+                var note3Included = NoteCommon.CreateNote(database, organisation1, scheme);
+
+                context.Notes.Add(note1Included);
+                context.Notes.Add(note2Included);
+                context.Notes.Add(note3Included);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new NoteFilter(DateTime.Now.Year, NoteType.EvidenceNote.Value)
+                {
+                    OrganisationId = organisation1.Id,
+                    AatfId = aatf.Id,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(3);
+                notes.ElementAt(0).Id.Should().Be(note1Included.Id);
+                notes.ElementAt(1).Id.Should().Be(note2Included.Id);
+                notes.ElementAt(2).Id.Should().Be(note3Included.Id);
             }
         }
 
