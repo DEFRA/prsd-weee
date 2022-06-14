@@ -86,7 +86,7 @@
                     n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                 }).Create();
 
-                request = new GetAatfSummaryRequest(aatf.Id);
+                request = new GetAatfSummaryRequest(aatf.Id, 2022);
             };
 
             private static List<NoteTonnage> NoteTonnages()
@@ -152,7 +152,7 @@
                 //draft note
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id);
 
-                request = new GetAatfSummaryRequest(aatf.Id);
+                request = new GetAatfSummaryRequest(aatf.Id, 2022);  //TODO: check this
             };
 
             private readonly Because of = () =>

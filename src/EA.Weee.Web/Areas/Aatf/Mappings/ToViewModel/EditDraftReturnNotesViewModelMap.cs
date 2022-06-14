@@ -18,8 +18,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            //TODO: place holder map values until the compliance year is put in for AATF
-            return Map(source.Notes, new DateTime(), null);
+            return Map(source.Notes, source.CurrentDate, null);
         }
     }
 }

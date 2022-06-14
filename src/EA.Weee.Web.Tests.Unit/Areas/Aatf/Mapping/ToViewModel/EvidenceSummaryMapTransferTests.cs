@@ -20,8 +20,7 @@
         public void EvidenceSummaryMapTransfer_GivenEmptyOrganisationId_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(Guid.Empty, fixture.Create<Guid>(),
-                fixture.Create<AatfEvidenceSummaryData>()));
+            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(Guid.Empty, fixture.Create<Guid>(), fixture.Create<AatfEvidenceSummaryData>(), DateTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -31,8 +30,7 @@
         public void EvidenceSummaryMapTransfer_GivenEmptyAatfId_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), Guid.Empty, 
-                fixture.Create<AatfEvidenceSummaryData>()));
+            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), Guid.Empty, fixture.Create<AatfEvidenceSummaryData>(), DateTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,8 +40,7 @@
         public void EvidenceSummaryMapTransfer_GivenNullSummaryData_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), fixture.Create<Guid>(),
-                null));
+            var exception = Record.Exception(() => new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), fixture.Create<Guid>(), null, DateTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
