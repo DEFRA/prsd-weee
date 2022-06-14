@@ -22,6 +22,7 @@
     using Domain.Scheme;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
 
     public class GetEvidenceNotesByOrganisationRequestHandlerTests
     {
@@ -44,7 +45,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence, false);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -119,7 +120,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>.That.Matches(e => 
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
                                                               e.SchemeId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
@@ -158,7 +159,7 @@
                 note3
             };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -185,7 +186,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<EvidenceNoteFilter>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -198,7 +199,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>());
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence, false);
         }
     }
 }

@@ -108,7 +108,7 @@
             {
                 ShouldMapToNote();
                 result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Submitted);
-                result.SubmittedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate);
+                result.SubmittedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Submitted)).ChangedDate.ToShortDateString());
             };
         }
 
@@ -157,7 +157,7 @@
                 ShouldMapToNote();
                 result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Returned);
                 result.ReturnedReason.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).Reason);
-                result.ReturnedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).ChangedDate);
+                result.ReturnedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Returned)).ChangedDate.ToShortDateString());
             };
         }
 
@@ -206,7 +206,7 @@
                 ShouldMapToNote();
                 result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Rejected);
                 result.RejectedReason.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).Reason);
-                result.RejectedDate.Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).ChangedDate);
+                result.RejectedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Rejected)).ChangedDate.ToShortDateString());
             };
         }
 

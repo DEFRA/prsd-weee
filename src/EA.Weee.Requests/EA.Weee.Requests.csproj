@@ -139,6 +139,7 @@
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsv.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsv.cs" />
     <Compile Include="Admin\Obligations\GetPcsObligationsCsv.cs" />
+    <Compile Include="Admin\Obligations\GetSchemeObligation.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUpload.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligation.cs" />
     <Compile Include="Admin\Reports\GetMissingProducerDataCsv.cs" />

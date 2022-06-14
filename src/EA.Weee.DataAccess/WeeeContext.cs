@@ -194,6 +194,10 @@
 
         public virtual DbSet<ObligationUploadError> ObligationUploadErrors { get; set; }
 
+        public virtual DbSet<ObligationScheme> ObligationSchemes { get; set; }
+
+        public virtual DbSet<ObligationSchemeAmount> ObligationSchemeAmounts { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }

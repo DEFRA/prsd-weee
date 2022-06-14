@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Obligations
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web;
     using EA.Weee.Core.Shared;
 
@@ -16,10 +18,12 @@
         public UploadObligationsViewModel(CompetentAuthority authority)
         {
             Authority = authority;
+            SchemeObligations = new List<SchemeObligationViewModel>();
         }
 
         public UploadObligationsViewModel()
         {
+            SchemeObligations = new List<SchemeObligationViewModel>();
         }
 
         public bool DisplayDataError { get; set; }
@@ -33,5 +37,9 @@
         public bool AnyError => DisplayDataError || DisplayFormatError || DisplaySelectFileError;
 
         public bool DisplaySuccessMessage { get; set; }
+
+        public List<SchemeObligationViewModel> SchemeObligations { get; set; }
+
+        public bool AnyObligation => SchemeObligations.Any();
     }
 }
