@@ -42,6 +42,11 @@
             return dbContext.Schemes.FirstOrDefault(n => n.Id.Equals(id));
         }
 
+        public Scheme GetSchemeByOrganisationId(Guid id)
+        {
+            return dbContext.Schemes.FirstOrDefault(n => n.OrganisationId.Equals(id));
+        }
+
         public Note GetEvidenceNoteByReference(int reference)
         {
             return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);
