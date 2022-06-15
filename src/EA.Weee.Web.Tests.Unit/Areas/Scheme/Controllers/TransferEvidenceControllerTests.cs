@@ -21,8 +21,10 @@
     using System.Web;
     using System.Web.Mvc;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
+    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
@@ -392,7 +394,7 @@
         }
 
         [Fact]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull_ArgumentNulLExceptionExpected()
+        public async Task TransferFromGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull_ShouldRedirectToManageEvidenceNotes()
         {
             //arrange
             A.CallTo(() =>
@@ -400,10 +402,14 @@
                     SessionKeyConstant.TransferNoteKey)).Returns(null);
 
             // act
-            var result = await Record.ExceptionAsync(async () => await transferEvidenceController.TransferFrom(organisationId));
+            var result = await transferEvidenceController.TransferFrom(organisationId) as RedirectToRouteResult;
 
             // assert
-            result.Should().BeOfType<ArgumentNullException>();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["area"].Should().Be("Scheme");
         }
 
         [Fact]
@@ -622,7 +628,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task TransferTonnageGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull_ArgumentNulLExceptionExpected(bool transferAllTonnage)
+        public async Task TransferTonnageGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull_ShouldRedirectToManageEvidenceNotes(bool transferAllTonnage)
         {
             //arrange
             A.CallTo(() =>
@@ -630,10 +636,14 @@
                     SessionKeyConstant.TransferNoteKey)).Returns(null);
 
             // act
-            var result = await Record.ExceptionAsync(async () => await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage));
+            var result = await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage) as RedirectToRouteResult;
 
             // assert
-            result.Should().BeOfType<ArgumentNullException>();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["area"].Should().Be("Scheme");
         }
 
         [Theory]
