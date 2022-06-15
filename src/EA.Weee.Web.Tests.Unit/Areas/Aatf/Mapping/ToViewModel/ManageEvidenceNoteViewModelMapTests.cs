@@ -68,7 +68,7 @@
             aatfDataList.Add(aatfDataInvalid1);
             aatfDataList.Add(aatfDataInvalid2);
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -90,7 +90,7 @@
             var aatfData = fixture.Create<AatfData>();
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
            
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -109,7 +109,7 @@
             var aatfData = fixture.Create<AatfData>();
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -128,7 +128,7 @@
             var aatfData = fixture.Create<AatfData>();
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -148,7 +148,7 @@
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var filterModel = fixture.Create<FilterViewModel>();
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, filterModel, null, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, filterModel, null, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -167,7 +167,7 @@
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var recipientWasteStatusModel = fixture.Create<RecipientWasteStatusFilterViewModel>();
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, recipientWasteStatusModel, null, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, recipientWasteStatusModel, null, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);
@@ -186,7 +186,7 @@
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var submittedDateModel = fixture.Create<SubmittedDatesFilterViewModel>();
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, submittedDateModel, 2022, DateTime.Now);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, submittedDateModel, SystemTime.UtcNow.Year);
 
             //act
             var model = map.Map(source);

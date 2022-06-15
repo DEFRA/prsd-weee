@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
+    using EA.Prsd.Core;
     using System;
     using System.Runtime.Caching;
     using System.Threading.Tasks;
@@ -20,7 +21,7 @@
                 string fullKey = GetFullKey(cache, key);
 
                 CacheItemPolicy policy = new CacheItemPolicy();
-                policy.AbsoluteExpiration = DateTime.UtcNow + duration;
+                policy.AbsoluteExpiration = SystemTime.UtcNow + duration;
 
                 memoryCache.Add(fullKey, value, policy);
             }

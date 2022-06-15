@@ -28,7 +28,7 @@
 
         public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs,
             FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
-            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int selectedComplianceYear, DateTime currentDate)
+            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int selectedComplianceYear)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => aatfData, aatfData);
@@ -42,7 +42,7 @@
             FilterViewModel = filterViewModel;
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
             SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
-            ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate);
+            ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(SystemTime.UtcNow);
             SelectedComplianceYear = selectedComplianceYear;
         }
     }

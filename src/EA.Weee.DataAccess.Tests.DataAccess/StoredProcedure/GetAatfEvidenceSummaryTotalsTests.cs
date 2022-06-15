@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Timers;
     using AutoFixture;
     using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Prsd.Core;
     using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -69,7 +69,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totals);
@@ -105,7 +105,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 totals.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Received.Should().Be(0);
@@ -162,7 +162,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totals);
@@ -202,8 +202,8 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totalsAatf1 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
-                var totalsAatf2 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf2.Id, (short)DateTime.UtcNow.Year);
+                var totalsAatf1 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
+                var totalsAatf2 = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf2.Id, (short)SystemTime.UtcNow.Year);
 
                 totalsAatf2.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totalsAatf2);
@@ -253,7 +253,7 @@
 
                 var watch = new Stopwatch();
                 watch.Start();
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)DateTime.UtcNow.Year);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
                 watch.Stop();
 
                 watch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(10));
@@ -269,6 +269,72 @@
                 }
 
                 totals.Count.Should().Be(14);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_GivenCreateNoteWithStartDateOutsideComplianceYear_NotNullNoteShouldBeReturned()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = db.WeeeContext;
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation1);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation1);
+                context.Aatfs.Add(aatf1);
+                await db.WeeeContext.SaveChangesAsync();
+
+                // Act
+                Note note = NoteCommon.CreateNote(db, organisation1, null, aatf1, startDate: new DateTime(2020, 1, 1), complianceYear: 2022);
+
+                // Assert
+                note.Should().NotBeNull();
+                note.ComplianceYear.Should().Be(2022);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_GivenCreateNoteWithStartDateAndNullComplianceYear_NotNullNoteShouldBeReturned()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = db.WeeeContext;
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation1);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation1);
+                context.Aatfs.Add(aatf1);
+                await db.WeeeContext.SaveChangesAsync();
+
+                // Act
+                Note note = NoteCommon.CreateNote(db, organisation1, null, aatf1, startDate: new DateTime(2020, 1, 1), complianceYear: null);
+
+                // Assert
+                note.Should().NotBeNull();
+                note.ComplianceYear.Should().Be(2020);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_GivenCreateNoteWithStartDateInsideComplianceYear_OneNoteShouldBeReturned()
+        {
+            using (var db = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = db.WeeeContext;
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisation1);
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation1);
+                context.Aatfs.Add(aatf1);
+                await db.WeeeContext.SaveChangesAsync();
+
+                // Act
+                Note note = NoteCommon.CreateNote(db, organisation1, null, aatf1, startDate: new DateTime(2025, 1, 1), complianceYear: 2025);
+
+                // Assert
+                note.Should().NotBeNull();
+                note.ComplianceYear.Should().Be(2025);
             }
         }
 

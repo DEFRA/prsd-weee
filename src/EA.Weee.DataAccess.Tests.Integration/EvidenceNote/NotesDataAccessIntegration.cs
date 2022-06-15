@@ -165,8 +165,15 @@
                 var note1Excluded = NoteCommon.CreateNote(database, organisation1, aatf: aatf, startDate: DateTime.Now.AddYears(1));
                 var note2Included = NoteCommon.CreateNote(database, organisation1, aatf: aatf);
 
-                context.Notes.Add(note1Excluded);
-                context.Notes.Add(note2Included);
+                if (note1Excluded != null) 
+                { 
+                    context.Notes.Add(note1Excluded); 
+                }
+
+                if (note2Included != null) 
+                { 
+                    context.Notes.Add(note2Included); 
+                }
 
                 await database.WeeeContext.SaveChangesAsync();
 

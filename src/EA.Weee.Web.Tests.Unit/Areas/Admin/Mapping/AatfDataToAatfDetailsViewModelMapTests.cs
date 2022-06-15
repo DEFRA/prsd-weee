@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using Core.Admin.AatfReports;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
@@ -198,7 +199,7 @@
         public void Map_GivenValidSource_WithCurrentDate_PropertiesShouldBeMapped()
         {
             AatfData aatfData = CreateAatfData();
-            var date = DateTime.UtcNow;
+            var date = SystemTime.UtcNow;
 
             var transfer = new AatfDataToAatfDetailsViewModelMapTransfer(aatfData)
             {
