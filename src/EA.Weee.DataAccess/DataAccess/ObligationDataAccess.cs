@@ -45,21 +45,25 @@
 
             if (!errors.Any())
             {
-                foreach (var obligationScheme in obligations.Where(o => o.HasObligationSchemeAmount()))
+                foreach (var obligationScheme in obligations)
                 {
                     // if there is no existing scheme obligation for the compliance year then it gets added
                     // otherwise the existing record is updated
                     var existingObligationScheme = obligationScheme.Scheme.ObligationSchemes.FirstOrDefault(o => o.ComplianceYear == obligationScheme.ComplianceYear);
 
-                    if (existingObligationScheme == null)
+                    if (obligationScheme.HasObligationSchemeAmount())
                     {
-                        obligationsToAdd.Add(obligationScheme);
+                        if (existingObligationScheme == null)
+                        {
+                            obligationsToAdd.Add(obligationScheme);
+                        }
+                        else
+                        {
+                            existingObligationScheme.UpdateObligationSchemeAmounts(obligationScheme.ObligationSchemeAmounts.ToList());
+                        }
                     }
-                    else
-                    {
-                        existingObligationScheme.UpdateObligationUpload(obligationUpload);
-                        existingObligationScheme.UpdateObligationSchemeAmounts(obligationScheme.ObligationSchemeAmounts.ToList());
-                    }
+
+                    existingObligationScheme?.UpdateObligationUpload(obligationUpload);
                 }
 
                 if (obligationsToAdd.Any())

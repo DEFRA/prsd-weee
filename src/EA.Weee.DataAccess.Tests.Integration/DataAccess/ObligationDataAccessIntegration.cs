@@ -18,7 +18,6 @@
     using Weee.Tests.Core.Model;
     using Xunit;
     using CompetentAuthority = Core.Shared.CompetentAuthority;
-    using Scheme = Weee.Tests.Core.Model.Scheme;
 
     public class ObligationDataAccessIntegration
     {
@@ -113,8 +112,76 @@
         }
 
         [Fact]
-        public async Task
-            AddObligationUpload_WithNoErrorsAndUpdateOfObligationSchemeData_ShouldAddObligationUploadAndUpdateSchemeObligation()
+        public async Task AddObligationUpload_WithNoErrorsAndObligationSchemeDataWithNullObligationAmounts_ShouldAddObligationUploadWithNoObligationScheme()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                //arrange
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess =
+                    new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+
+                var fileData = Faker.Lorem.Paragraph();
+                var fileName = Faker.Lorem.GetFirstWord();
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                
+                var complianceYear = 2022;
+
+                var obligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                obligatedScheme1.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1));
+
+                var obligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels,
+                    null));
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants,
+                    null));
+
+                var obligationScheme = new List<ObligationScheme>()
+                {
+                    obligatedScheme1,
+                    obligatedScheme2,
+                };
+
+                //act
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName,
+                    new List<ObligationUploadError>(), obligationScheme);
+
+                await context.SaveChangesAsync();
+
+                var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
+
+                //assert
+                obligation.Should().NotBeNull();
+                obligation.Data.Should().Be(fileData);
+                obligation.FileName.Should().Be(fileName);
+                obligation.CompetentAuthority.Should().Be(authority);
+                obligation.UploadedById.Should().Be(context.GetCurrentUser());
+                obligation.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                obligation.ObligationUploadErrors.Should().BeEmpty();
+
+                obligation.ObligationSchemes.Count.Should().Be(1);
+                var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).CategoryId.Should()
+                    .Be(WeeeCategory.ITAndTelecommsEquipment);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_WithNoErrorsAndUpdateOfObligationSchemeData_ShouldAddObligationUploadAndUpdateSchemeObligation()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -218,6 +285,83 @@
                     .First(o => o.CategoryId == WeeeCategory.ElectricalAndElectronicTools).Obligation.Should()
                     .Be(1);
                 schemeObligation.ObligationSchemeAmounts.Count.Should().Be(3);
+            }
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_WithNoErrorsAndUpdateOfObligationSchemeDataWithAllObligationAmountsAsNull_ShouldAddObligationUploadAndNotUpdateSchemeObligation()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                //arrange
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess =
+                    new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var genericDataAccess = new GenericDataAccess(database.WeeeContext);
+
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+
+                var fileData = Faker.Lorem.Paragraph();
+                var fileName = Faker.Lorem.GetFirstWord();
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                
+                var complianceYear = 2022;
+                var date = DateTime.Now;
+
+                var obligatedUpload =
+                    new ObligationUpload(authority, context.GetCurrentUser(), "data", "filename");
+
+                var obligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                obligatedScheme1.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1));
+                obligatedScheme1.UpdateObligationUpload(obligatedUpload);
+                ObjectInstantiator<ObligationScheme>.SetProperty(os => os.UpdatedDate, date, obligatedScheme1);
+
+                context.ObligationSchemes.Add(obligatedScheme1);
+
+                await context.SaveChangesAsync();
+
+                var updateObligatedScheme1 = new ObligationScheme(scheme1, complianceYear);
+                updateObligatedScheme1.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, null));
+                updateObligatedScheme1.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, null));
+
+                var obligationScheme = new List<ObligationScheme>()
+                {
+                    updateObligatedScheme1,
+                };
+
+                //act
+                var id = await dataAccess.AddObligationUpload(authority, fileData, fileName,
+                    new List<ObligationUploadError>(), obligationScheme);
+
+                await context.SaveChangesAsync();
+
+                var obligation = await genericDataAccess.GetById<ObligationUpload>(id);
+
+                //assert
+                obligation.Should().NotBeNull();
+                obligation.Data.Should().Be(fileData);
+                obligation.FileName.Should().Be(fileName);
+                obligation.CompetentAuthority.Should().Be(authority);
+                obligation.UploadedById.Should().Be(context.GetCurrentUser());
+                obligation.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                obligation.ObligationUploadErrors.Should().BeEmpty();
+
+                var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
+                schemeObligation.ComplianceYear.Should().Be(complianceYear);
+                schemeObligation.UpdatedDate.Should().BeSameDateAs(date);
+                schemeObligation.ObligationUploadId.Should().Be(id);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.ITAndTelecommsEquipment).Obligation.Should().Be(1);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(1);
             }
         }
 
