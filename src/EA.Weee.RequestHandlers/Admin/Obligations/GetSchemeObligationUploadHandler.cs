@@ -2,48 +2,42 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin.Obligation;
+    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Obligation;
-    using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
-    using Scheme;
     using Security;
-    using Shared;
     using Weee.Security;
 
-    public class GetSchemeObligationHandler : IRequestHandler<GetSchemeObligation, List<SchemeObligationData>>
+    public class GetSchemeObligationUploadHandler : IRequestHandler<GetSchemeObligationUpload, List<SchemeObligationUploadErrorData>>
     {
         private readonly IWeeeAuthorization authorization;
+        private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
-        private readonly IObligationDataAccess obligationDataAccess;
-        private readonly ICommonDataAccess commonDataAccess;
 
-        public GetSchemeObligationHandler(IWeeeAuthorization authorization,
-            IMapper mapper, 
-            IObligationDataAccess obligationDataAccess, 
-            ICommonDataAccess commonDataAccess)
+        public GetSchemeObligationUploadHandler(IWeeeAuthorization authorization,
+            IGenericDataAccess genericDataAccess,
+            IMapper mapper)
         {
             this.authorization = authorization;
+            this.genericDataAccess = genericDataAccess;
             this.mapper = mapper;
-            this.obligationDataAccess = obligationDataAccess;
-            this.commonDataAccess = commonDataAccess;
         }
 
-        public async Task<List<SchemeObligationData>> HandleAsync(GetSchemeObligation request)
+        public async Task<List<SchemeObligationUploadErrorData>> HandleAsync(GetSchemeObligationUpload request)
         {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var authority = await commonDataAccess.FetchCompetentAuthority(request.Authority);
+            var obligationUpload = await genericDataAccess.GetById<ObligationUpload>(request.ObligationUploadId);
 
-            var obligationData = await obligationDataAccess.GetObligationScheme(authority, request.ComplianceYear);
+            Condition.Requires(obligationUpload).IsNotNull($"Obligation Upload with Id {request.ObligationUploadId} not found");
 
-            return mapper.Map<List<Scheme>, List<SchemeObligationData>>(obligationData);
+            return mapper.Map<ObligationUpload, List<SchemeObligationUploadErrorData>>(obligationUpload);
         }
     }
 }

@@ -5,7 +5,7 @@
     public class TransferredOutEvidenceNotesSchemeViewModel : ManageEvidenceNoteSchemeViewModel
     {
         public TransferredOutEvidenceNotesSchemeViewModel()
-            : base(ManageEvidenceNotesDisplayOptions.TransferredOut)
+            : base(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
         {
         }
     }

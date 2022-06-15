@@ -18,9 +18,10 @@
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var newAddress = DbContext.Addresses.First(a => a.Id.Equals(address.Id));
             var newContact = DbContext.Contacts.First(c => c.Id.Equals(contact.Id));
+            var name = Faker.Company.Name();
 
             instance = new Scheme(organisation);
-            instance.UpdateScheme(Faker.Lorem.GetFirstWord(), 
+            instance.UpdateScheme(name.Substring(0, name.Length - 1).Replace(",", string.Empty), 
                 $"WEE/TE{Faker.RandomNumber.Next(1000, 9999)}ST/SCH",
                 Faker.RandomNumber.Next(1, 100000000).ToString(),
                 ObligationType.B2B,
@@ -41,6 +42,13 @@
         }
 
         public SchemeDbSetup WithOrganisation(Guid id)
+        {
+            instance.UpdateOrganisation(id);
+
+            return this;
+        }
+
+        public SchemeDbSetup WithAuthority(Guid id)
         {
             instance.UpdateOrganisation(id);
 
