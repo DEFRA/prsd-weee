@@ -92,5 +92,10 @@
                 UpdatedDate = SystemTime.UtcNow;
             }
         }
+
+        public bool HasObligationSchemeAmount()
+        {
+            return ObligationSchemeAmounts != null && ObligationSchemeAmounts.Any(s => s.Obligation.HasValue);
+        }
     }
 }
