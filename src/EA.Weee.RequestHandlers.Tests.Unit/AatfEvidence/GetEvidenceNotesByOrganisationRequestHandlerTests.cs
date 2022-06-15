@@ -124,7 +124,38 @@
                                                               e.SchemeId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
-                                                              e.ComplianceYear == request.ComplianceYear))).MustHaveHappenedOnceExactly();
+                                                              e.ComplianceYear == request.ComplianceYear &&
+                                                              e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
+                                                              e.NoteTypeFilter.Count == 1 && 
+                                                              e.OrganisationId == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            var scheme = A.Fake<Scheme>();
+            var schemeId = fixture.Create<Guid>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Transfer, true);
+
+            A.CallTo(() => scheme.Id).Returns(schemeId);
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+
+            // act
+            await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                e.SchemeId == null &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.AatfId == null &&
+                e.ComplianceYear == request.ComplianceYear &&
+                e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.TransferNote) &&
+                e.NoteTypeFilter.Count == 1 &&
+                e.OrganisationId == request.OrganisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -14,7 +14,7 @@
             ManageEvidenceNotesDisplayOptions.Summary.ToDisplayString().Should().Be("evidence-summary");
             ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString().Should().Be("review-submitted-evidence");
             ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString().Should().Be("view-and-transfer-evidence");
-            ManageEvidenceNotesDisplayOptions.TransferredOut.ToDisplayString().Should().Be("transferred-out");
+            ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString().Should().Be("outgoing-transfers");
         }
     }
 }

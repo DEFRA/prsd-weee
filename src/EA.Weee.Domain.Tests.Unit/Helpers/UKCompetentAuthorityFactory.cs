@@ -2,6 +2,7 @@
 {
     using Domain;
     using System;
+    using Weee.Tests.Core;
 
     public class UKCompetentAuthorityFactory
     {
