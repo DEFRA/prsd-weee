@@ -34,6 +34,7 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 var noteTonnages1 = new List<NoteTonnage>()
                 {
@@ -110,6 +111,7 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 var noteTonnages = new List<NoteTonnage>()
                 {
@@ -240,6 +242,12 @@
                 ((int)result.Type).Should().Be(note.NoteType.Value);
                 result.Id.Should().Be(note.Id);
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+                result.RecipientSchemeData.Id.Should().Be(note.RecipientId);
+                result.TransferredOrganisationData.Id.Should().Be(note.OrganisationId);
+
+                var recipientScheme = Query.GetSchemeByOrganisationId(note.OrganisationId);
+                result.TransferredSchemeData.Id.Should().Be(recipientScheme.Id);
             }
         }
     }
