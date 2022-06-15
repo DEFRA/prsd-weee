@@ -54,6 +54,8 @@
 
                 var obligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
                 obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels,
+                    2));
+                obligatedScheme2.ObligationSchemeAmounts.Add(new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants,
                     null));
 
                 var obligatedScheme3 = new ObligationScheme(scheme3, complianceYear);
@@ -96,7 +98,10 @@
                 schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeObligation.ObligationSchemeAmounts.ElementAt(0).CategoryId.Should()
                     .Be(WeeeCategory.PhotovoltaicPanels);
-                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().BeNull();
+                schemeObligation.ObligationSchemeAmounts.ElementAt(0).Obligation.Should().Be(2);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(1).CategoryId.Should()
+                    .Be(WeeeCategory.CoolingApplicancesContainingRefrigerants);
+                schemeObligation.ObligationSchemeAmounts.ElementAt(1).Obligation.Should().BeNull();
 
                 schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme3.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
@@ -148,6 +153,8 @@
                     new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, null));
                 obligatedScheme2.ObligationSchemeAmounts.Add(
                     new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, 3));
+                obligatedScheme2.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.ElectricalAndElectronicTools, null));
                 obligatedScheme2.UpdateObligationUpload(obligatedUpload);
 
                 context.ObligationSchemes.Add(obligatedScheme1);
@@ -162,6 +169,8 @@
                 var updateObligatedScheme2 = new ObligationScheme(scheme2, complianceYear);
                 updateObligatedScheme2.ObligationSchemeAmounts.Add(
                     new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, null));
+                updateObligatedScheme2.ObligationSchemeAmounts.Add(
+                    new ObligationSchemeAmount(WeeeCategory.ElectricalAndElectronicTools, 1));
 
                 var obligationScheme = new List<ObligationScheme>()
                 {
@@ -205,7 +214,10 @@
                 schemeObligation.ObligationSchemeAmounts
                     .First(o => o.CategoryId == WeeeCategory.GasDischargeLampsAndLedLightSources).Obligation.Should()
                     .BeNull();
-                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(2);
+                schemeObligation.ObligationSchemeAmounts
+                    .First(o => o.CategoryId == WeeeCategory.ElectricalAndElectronicTools).Obligation.Should()
+                    .Be(1);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(3);
             }
         }
 

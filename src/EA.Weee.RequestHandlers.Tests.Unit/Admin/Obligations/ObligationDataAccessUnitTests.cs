@@ -9,12 +9,14 @@
     using DataAccess.DataAccess;
     using Domain;
     using Domain.Error;
+    using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ObligationDataAccessUnitTests
@@ -46,7 +48,14 @@
             var data = fixture.Create<string>();
             var fileName = fixture.Create<string>();
             var user = fixture.Create<Guid>();
-            var obligationScheme = fixture.CreateMany<ObligationScheme>().ToList();
+            var obligationScheme1 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts, 
+                    new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 1) }, obligationScheme1);
+            var obligationScheme2 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts, new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 2) }, obligationScheme2);
+            var obligationScheme = new List<ObligationScheme>() { obligationScheme1, obligationScheme2 };
 
             A.CallTo(() => userContext.UserId).Returns(user);
 
@@ -116,9 +125,10 @@
             A.CallTo(() => innerObligationSchemeInComplianceYear.ComplianceYear).Returns(complianceYear);
             A.CallTo(() => scheme.ObligationSchemes).Returns(innerObligationSchemes);
             A.CallTo(() => obligationScheme.Scheme).Returns(scheme);
+
             var obligationSchemes = new List<ObligationScheme>() { obligationScheme };
             A.CallTo(() => userContext.UserId).Returns(user);
-            var updatedObligationAmounts = fixture.CreateMany<ObligationSchemeAmount>().ToList();
+            var updatedObligationAmounts = new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 2) };
             A.CallTo(() => obligationScheme.ObligationSchemeAmounts).Returns(updatedObligationAmounts);
 
             //act
