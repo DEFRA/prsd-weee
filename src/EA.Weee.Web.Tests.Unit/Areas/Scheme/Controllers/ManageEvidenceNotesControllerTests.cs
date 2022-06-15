@@ -533,7 +533,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                A<TransferredOutEvidenceNotesViewModelMap>.That.Matches(
+                A<TransferredOutEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(schemeName) &&
                          a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
@@ -545,7 +545,7 @@
             //arrange
             var model = Fixture.Create<TransferredOutEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMap>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;
