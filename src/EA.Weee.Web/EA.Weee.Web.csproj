@@ -747,7 +747,7 @@
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\TransferredOut.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\OutgoingTransfers.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

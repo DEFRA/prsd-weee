@@ -24,6 +24,7 @@
     using System.Threading.Tasks;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
     using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetAatfNotesRequestHandlerTests
@@ -194,7 +195,9 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null && 
-                e.SchemeId == null && e.WasteTypeId.Equals((int?)wasteType)))).MustHaveHappenedOnceExactly();
+                e.SchemeId == null && e.WasteTypeId.Equals((int?)wasteType) &&
+                e.NoteTypeFilter.Contains(NoteType.EvidenceNote) &&
+                e.NoteTypeFilter.Count == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
