@@ -326,6 +326,7 @@
     <Compile Include="Areas\Admin\ViewModels\SelectAuthorityViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\UploadObligationsViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\EditTransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceTonnageViewModelMapTests.cs" />

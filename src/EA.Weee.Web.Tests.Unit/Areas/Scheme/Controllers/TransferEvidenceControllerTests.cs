@@ -27,9 +27,10 @@
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class TransferEvidenceControllerTests
+    public class TransferEvidenceControllerTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient weeeClient;
         private readonly IMapper mapper;
@@ -37,14 +38,11 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly Guid organisationId;
-        private readonly Fixture fixture;
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
         
         public TransferEvidenceControllerTests()
         {
-            fixture = new Fixture();
-
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
@@ -68,7 +66,7 @@
         }
 
         [Fact]
-        public void TransferTonnage_ShouldHaveHttpGetAttribute()
+        public void TransferTonnageGet_ShouldHaveHttpGetAttribute()
         {
             typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
@@ -122,13 +120,13 @@
             typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(TransferEvidenceTonnageViewModel) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
-        
+
         [Fact]
         public async Task TransferEvidenceNoteGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var organisationId = fixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
@@ -177,8 +175,8 @@
             // arrange
             var schemeData = new List<SchemeData>()
             {
-                fixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                fixture.Create<SchemeData>(),
+                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Create<SchemeData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
 
@@ -246,8 +244,8 @@
             };
             var schemeData = new List<SchemeData>()
             {
-                fixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                fixture.Create<SchemeData>(),
+                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Create<SchemeData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
             AddModelError();
@@ -369,7 +367,7 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var organisationId = fixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
 
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
@@ -438,7 +436,7 @@
         {
             //arrange
             var request = GetRequest();
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -462,7 +460,7 @@
         public async Task TransferFromGet_GivenMappedViewModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
 
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
@@ -488,7 +486,7 @@
         public async Task TransferFromPost_GivenModelIsNotValid_BreadCrumbShouldBeSet()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             var organisationName = "OrganisationName";
             AddModelError();
 
@@ -506,7 +504,7 @@
         public async Task TransferFromPost_GivenModelIsNotValid_TransferFromViewShouldBeReturned()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             AddModelError();
 
             // act
@@ -520,7 +518,7 @@
         public async Task TransferFromPost_GivenModelIsNotValid_ModelShouldBeReturned()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             AddModelError();
 
             // act
@@ -534,7 +532,7 @@
         public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeRetrieved()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
 
             // act
             await transferEvidenceController.TransferFrom(model);
@@ -549,7 +547,7 @@
         public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeUpdatedWithSelectedNotes()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             model.SelectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>>()
             {
                 new GenericControlPair<Guid, bool>(Guid.NewGuid(), true),
@@ -580,7 +578,7 @@
         public async Task TransferFromPost_GivenModelIsValid_ShouldRedirectToTransferTonnage()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
           
             // act
             var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
@@ -676,7 +674,7 @@
         {
             //arrange
             var request = GetRequest();
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -702,7 +700,7 @@
         public async Task TransferTonnageGet_GivenMappedViewModel_ModelShouldBeReturned(bool transferAllTonnage)
         {
             //arrange
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
 
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
@@ -730,7 +728,7 @@
         public async Task TransferTonnagePost_GivenModelIsNotValid_BreadCrumbShouldBeSet()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             var organisationName = "OrganisationName";
             AddModelError();
 
@@ -748,7 +746,7 @@
         public async Task TransferTonnagePost_GivenModelIsNotValid_TransferFromViewShouldBeReturned()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             AddModelError();
 
             // act
@@ -762,7 +760,7 @@
         public async Task TransferTonnagePost_GivenModelIsNotValid_ModelShouldBeReturned()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             AddModelError();
 
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
@@ -779,7 +777,7 @@
         public async Task TransferTonnagePost_GivenModelIsNotValid_SessionTransferNoteObjectShouldBeRetrieved()
         {
             // arrange 
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             AddModelError();
 
             // act
@@ -796,7 +794,7 @@
         {
             //arrange
             var request = GetRequest();
-            var model = fixture.Create<TransferEvidenceTonnageViewModel>();
+            var model = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
@@ -819,9 +817,9 @@
         {
             //arrange
             var request = GetRequest();
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>()
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.TransferAllTonnage, false).Create();
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
             AddModelError();
 
             A.CallTo(() =>
@@ -846,7 +844,7 @@
         public async Task TransferTonnagePost_GivenModelIsNotValid_MappedViewModelShouldBeReturned()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>()
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.TransferAllTonnage, false).Create();
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
@@ -863,7 +861,7 @@
         public async Task TransferTonnagePost_ModelIsNotValid_TransferFromViewShouldBeReturned()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
             AddModelError();
@@ -879,7 +877,7 @@
         public async Task TransferTonnagePost_GivenValidModel_SessionTransferNoteObjectShouldBeRetrieved()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
 
             //act
             await transferEvidenceController.TransferTonnage(model);
@@ -893,8 +891,8 @@
         public async Task TransferTonnagePost_GivenValidModel_RequestShouldBeCreated()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
-            var request = fixture.Create<TransferEvidenceNoteRequest>();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 transferEvidenceController.Session,
@@ -912,7 +910,7 @@
         public async Task TransferTonnagePost_GivenValidModel_TempDataDisplayNotificationShouldBeSet()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
 
             //act
             await transferEvidenceController.TransferTonnage(model);
@@ -926,8 +924,8 @@
         public async Task TransferTonnagePost_GivenValidModel_ApiShouldBeCalledWithRequest()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
-            var request = fixture.Create<TransferEvidenceNoteRequest>();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             A.CallTo(() => transferNoteRequestCreator.SelectTonnageToRequest(A<TransferEvidenceNoteRequest>._, A<TransferEvidenceTonnageViewModel>._)).Returns(request);
 
             //act
@@ -941,8 +939,8 @@
         public async Task TransferTonnagePost_GivenValidModel_ShouldRedirectToViewTransferEvidenceNote()
         {
             //arrange
-            var model = fixture.Build<TransferEvidenceTonnageViewModel>().Create();
-            var id = fixture.Create<Guid>();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var id = TestFixture.Create<Guid>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<TransferEvidenceNoteRequest>._)).Returns(id);
 
             //act
@@ -959,10 +957,10 @@
         public async Task TransferredEvidenceGet_GivenEvidenceNote_TransferNoteDataShouldBeRetrieved()
         {
             //arrange
-            var id = fixture.Create<Guid>();
+            var id = TestFixture.Create<Guid>();
 
             //act
-            await transferEvidenceController.TransferredEvidence(fixture.Create<Guid>(), id);
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId.Equals(id)))).MustHaveHappenedOnceExactly();
@@ -977,7 +975,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, fixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -988,12 +986,12 @@
         public async Task TransferredEvidenceGet_GivenNoteData_ModelMapperShouldBeCalled()
         {
             // arrange 
-            var noteData = fixture.Create<TransferEvidenceNoteData>();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(noteData);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, fixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -1007,12 +1005,12 @@
         public async Task TransferredEvidenceGet_GivenMappedViewModel_ModelShouldBeReturned()
         {
             // arrange 
-            var viewModel = fixture.Create<ViewTransferNoteViewModel>();
+            var viewModel = TestFixture.Create<ViewTransferNoteViewModel>();
 
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, fixture.Create<Guid>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>()) as ViewResult;
 
             // assert
             result.Model.Should().Be(viewModel);
@@ -1022,12 +1020,12 @@
         public async Task TransferredEvidenceGet_GivenMappedViewModel_ViewShouldBeReturned()
         {
             // arrange 
-            var viewModel = fixture.Create<ViewTransferNoteViewModel>();
+            var viewModel = TestFixture.Create<ViewTransferNoteViewModel>();
 
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, fixture.Create<Guid>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>()) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferredEvidence");
@@ -1039,14 +1037,14 @@
         public async Task TransferredEvidenceGet_GivenNoteDataAndDisplayNotification_ModelMapperShouldBeCalled(bool displayNotification)
         {
             // arrange 
-            var noteData = fixture.Create<TransferEvidenceNoteData>();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(noteData);
             transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] =
                 displayNotification;
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, fixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -1055,6 +1053,7 @@
                          t.DisplayNotification.Equals(displayNotification))))
                 .MustHaveHappenedOnceExactly();
         }
+
         private void AddModelError()
         {
             transferEvidenceController.ModelState.AddModelError("error", "error");
@@ -1067,8 +1066,8 @@
 
         private TransferEvidenceNoteRequest GetRequest()
         {
-            var categoryIds = fixture.CreateMany<int>().ToList();
-            var evidenceNoteIds = fixture.CreateMany<Guid>().ToList();
+            var categoryIds = TestFixture.CreateMany<int>().ToList();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
 
             return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
             {

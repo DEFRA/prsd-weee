@@ -177,6 +177,19 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> EditTransferTonnage(Guid pcsId, Guid evidenceNoteId)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = this.apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                return this.View("EditTransferTonnage");
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
