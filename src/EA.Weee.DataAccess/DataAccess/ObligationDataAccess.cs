@@ -45,7 +45,7 @@
 
             if (!errors.Any())
             {
-                foreach (var obligationScheme in obligations)
+                foreach (var obligationScheme in obligations.Where(o => o.HasObligationSchemeAmount()))
                 {
                     // if there is no existing scheme obligation for the compliance year then it gets added
                     // otherwise the existing record is updated
