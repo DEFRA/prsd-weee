@@ -29,7 +29,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022, NoteType.Evidence));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -40,7 +40,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, 2022, NoteType.Evidence));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, 2022, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -51,7 +51,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022, NoteType.Evidence));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -64,14 +64,16 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
 
-        [Fact]
-        public void GetEvidenceNotesByOrganisationRequest_GivenValues_PropertiesShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void GetEvidenceNotesByOrganisationRequest_GivenValues_PropertiesShouldBeSet(bool transferredOut)
         {
             //arrange
             var organisationId = fixture.Create<Guid>();
@@ -79,12 +81,13 @@
             var complianceYear = fixture.Create<short>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, NoteType.Evidence);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, NoteType.Evidence, transferredOut);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
             result.AllowedStatuses.Should().BeEquivalentTo(statusList);
             result.ComplianceYear.Should().Be(complianceYear);
+            result.TransferredOut.Should().Be(transferredOut);
         }
     }
 }

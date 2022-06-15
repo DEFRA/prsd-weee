@@ -27,7 +27,7 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
-        public int NoteTypeFilter { get; set; }
+        public List<NoteType> NoteTypeFilter { get; set; }
 
         public string FormattedSearchRef
         {
@@ -69,10 +69,9 @@
             }
         }
 
-        public NoteFilter(int complianceYear, int noteTypeFilter)
+        public NoteFilter(int complianceYear)
         {
             ComplianceYear = complianceYear;
-            NoteTypeFilter = noteTypeFilter;
         }
     }
 }

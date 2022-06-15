@@ -6,7 +6,6 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Admin.Obligations;
@@ -17,6 +16,8 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Security;
@@ -25,12 +26,11 @@
     public class GetPcsObligationsCsvHandlerTests
     {
         private GetPcsObligationsCsvHandler handler;
-        private readonly CompetentAuthority authority;
         private readonly GetPcsObligationsCsv request;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly CsvWriterFactory csvWriterFactory;
+        private readonly ICsvWriter<Scheme> csvWriter;
         private readonly ICommonDataAccess dataAccess;
+        private readonly Fixture fixture;
 
         public GetPcsObligationsCsvHandlerTests()
         {
@@ -40,15 +40,14 @@
                     typeof(IExcelSanitizer),
                     typeof(NoFormulaeExcelSanitizer)));
 
-            authority = CompetentAuthority.England;
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             dataAccess = A.Fake<ICommonDataAccess>();
-            csvWriterFactory = A.Fake<CsvWriterFactory>();
+            csvWriter = A.Fake<ICsvWriter<Scheme>>();
 
-            request = new GetPcsObligationsCsv(authority);
+            request = new GetPcsObligationsCsv(fixture.Create<CompetentAuthority>());
 
             handler = new GetPcsObligationsCsvHandler(weeeAuthorization,
-                csvWriterFactory,
+                csvWriter,
                 dataAccess);
         }
 
@@ -59,7 +58,7 @@
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
             handler = new GetPcsObligationsCsvHandler(authorization,
-                csvWriterFactory,
+                csvWriter,
                 dataAccess);
 
             //act
@@ -86,7 +85,7 @@
             var authorization = new AuthorizationBuilder().DenyAnyRole().Build();
 
             handler = new GetPcsObligationsCsvHandler(authorization,
-                csvWriterFactory,
+                csvWriter,
                 dataAccess);
 
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -115,48 +114,64 @@
         }
 
         [Fact]
-        public async Task HandleAsync_CreatesCsvWriter()
+        public async Task HandleAsync_CsvWriter_DefinesCorrectColumns()
         {
-            //arrange
-            var csvWriter = fixture.Create<CsvWriter<Scheme>>();
-
-            A.CallTo(() => csvWriterFactory.Create<Scheme>()).Returns(csvWriter);
-
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => csvWriterFactory.Create<Scheme>()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.SchemeIdentifierColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened()
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.SchemeNameColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened()).Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat1ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat2ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat3ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat4ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat5ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat6ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat7ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat8ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat9ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat10ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat11ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat12ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat13ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened());
         }
 
         [Fact]
-        public async Task HandleAsync_CsvWriter_DefinesCorrectCollumns()
+        public async Task HandleAsync_GivenSchemes_CsvWriterShouldBeCalled()
         {
             //arrange
-            var csvWriter = fixture.Create<CsvWriter<Scheme>>();
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            var scheme1 = A.Fake<Scheme>();
+            A.CallTo(() => scheme1.SchemeName).Returns("Z");
+            var scheme2 = A.Fake<Scheme>();
+            A.CallTo(() => scheme2.SchemeName).Returns("A");
+            var scheme3 = A.Fake<Scheme>();
+            A.CallTo(() => scheme3.SchemeName).Returns("B");
+            var schemes = new List<Scheme>() { scheme1, scheme2, scheme3 };
+            A.CallTo(() => competentAuthority.Schemes).Returns(schemes);
 
-            A.CallTo(() => csvWriterFactory.Create<Scheme>()).Returns(csvWriter);
+            A.CallTo(() => dataAccess.FetchCompetentAuthorityApprovedSchemes(A<CompetentAuthority>._)).Returns(competentAuthority);
 
             //act
-            await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
 
             //assert
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.SchemeIdentifierColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.SchemeNameColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat1ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat2ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat3ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat4ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat5ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat6ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat7ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat8ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat9ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat10ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat11ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat12ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat13ColumnName);
-            csvWriter.ColumnTitles.Should().Contain(ObligationCsvConstants.Cat14ColumnName);
+            A.CallTo(() => csvWriter.Write(A<IEnumerable<Scheme>>.That.Matches(s => s.SequenceEqual(schemes.OrderBy(s1 => s1.SchemeName))))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenSchemesCsv_FileContentShouldBeReturned()
+        {
+            //arrange
+            var content = fixture.Create<string>();
+            A.CallTo(() => csvWriter.Write(A<IEnumerable<Scheme>>._)).Returns(content);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.FileContent.Should().Be(content);
         }
 
         [Fact]
@@ -165,12 +180,9 @@
             //arrange
             SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
             var date = DateTime.Now;
-            var csvWriter = fixture.Create<CsvWriter<Scheme>>();
 
             var competentAuthority = new UKCompetentAuthority(A.Dummy<Guid>(), "Test Auth", "AA", A.Dummy<Country>(), A.Dummy<string>(), null);
             A.CallTo(() => dataAccess.FetchCompetentAuthorityApprovedSchemes(request.Authority)).Returns(competentAuthority);
-
-            A.CallTo(() => csvWriterFactory.Create<Scheme>()).Returns(csvWriter);
 
             //act
             var result = await handler.HandleAsync(request);

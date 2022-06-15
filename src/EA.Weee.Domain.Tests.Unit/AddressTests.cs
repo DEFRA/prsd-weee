@@ -2,6 +2,7 @@
 {
     using Helpers;
     using System;
+    using Weee.Tests.Core;
     using Xunit;
     using Address = Domain.Organisation.Address;
 
