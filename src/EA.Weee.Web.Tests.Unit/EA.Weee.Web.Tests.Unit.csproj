@@ -330,6 +330,7 @@
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceTonnageViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreatorTests.cs" />
