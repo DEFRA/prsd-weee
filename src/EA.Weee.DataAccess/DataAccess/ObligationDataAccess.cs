@@ -8,7 +8,6 @@
     using Domain;
     using Domain.Obligation;
     using Domain.Scheme;
-    using Prsd.Core;
     using Prsd.Core.Domain;
     using Z.EntityFramework.Plus;
 
@@ -52,15 +51,19 @@
                     // otherwise the existing record is updated
                     var existingObligationScheme = obligationScheme.Scheme.ObligationSchemes.FirstOrDefault(o => o.ComplianceYear == obligationScheme.ComplianceYear);
 
-                    if (existingObligationScheme == null)
+                    if (obligationScheme.HasObligationSchemeAmount())
                     {
-                        obligationsToAdd.Add(obligationScheme);
+                        if (existingObligationScheme == null)
+                        {
+                            obligationsToAdd.Add(obligationScheme);
+                        }
+                        else
+                        {
+                            existingObligationScheme.UpdateObligationSchemeAmounts(obligationScheme.ObligationSchemeAmounts.ToList());
+                        }
                     }
-                    else
-                    {
-                        existingObligationScheme.UpdateObligationUpload(obligationUpload);
-                        existingObligationScheme.UpdateObligationSchemeAmounts(obligationScheme.ObligationSchemeAmounts.ToList());
-                    }
+
+                    existingObligationScheme?.UpdateObligationUpload(obligationUpload);
                 }
 
                 if (obligationsToAdd.Any())

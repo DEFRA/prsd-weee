@@ -3,6 +3,7 @@
     using Domain.Organisation;
     using EA.Weee.Domain.Tests.Unit.Helpers;
     using System;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class OrganisationAddressTests
