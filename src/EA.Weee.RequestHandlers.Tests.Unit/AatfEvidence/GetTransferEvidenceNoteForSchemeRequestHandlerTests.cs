@@ -7,8 +7,10 @@
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using Domain.Evidence;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
@@ -22,9 +24,11 @@
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
+        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly IMapper mapper;
         private readonly GetTransferEvidenceNoteForSchemeRequest request;
         private readonly Note note;
+        private readonly Scheme scheme;
         private readonly Guid evidenceNoteId;
         private readonly Guid organisationId;
 
@@ -33,8 +37,11 @@
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
+            schemeDataAccess = A.Fake<ISchemeDataAccess>();
+
             mapper = A.Fake<IMapper>();
             note = A.Fake<Note>();
+            scheme = A.Fake<Scheme>();
             fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
             organisationId = fixture.Create<Guid>();
@@ -43,7 +50,7 @@
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
@@ -54,7 +61,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -69,7 +76,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -100,13 +107,47 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
+        public async Task HandleAsync_GivenTransferNote_SchemeShouldBeRetrieved()
         {
+            //arrange
+            var organisationId = fixture.Create<Guid>();
+            A.CallTo(() => note.OrganisationId).Returns(organisationId);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<Note, TransferEvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenTransferNoteAndSchemeIsNull_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns((Scheme)null);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
+        {
+            //arrange
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>.That.Matches(t => 
+                t.Note.Equals(note) && t.Scheme.Equals(scheme)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -115,7 +156,7 @@
             //arrange
             var evidenceNote = fixture.Create<TransferEvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, TransferEvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

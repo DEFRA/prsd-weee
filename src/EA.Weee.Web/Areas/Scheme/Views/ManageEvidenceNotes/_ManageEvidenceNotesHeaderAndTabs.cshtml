@@ -31,10 +31,10 @@
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
-    @this.WeeeGds().Tab("Transferred Out",
+    @this.WeeeGds().Tab("Outgoing transfers",
       Url.Action("Index", "ManageEvidenceNotes",
-          new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.TransferredOut.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.TransferredOut)
+          new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
 </ul>
 
 

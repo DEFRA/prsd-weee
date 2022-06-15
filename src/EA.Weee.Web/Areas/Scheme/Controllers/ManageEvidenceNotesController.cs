@@ -59,8 +59,8 @@
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
                         return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                    case ManageEvidenceNotesDisplayOptions.TransferredOut:
-                        return await CreateAndPopulateTransferredOutEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
+                    case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                     default:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
                 }
@@ -84,7 +84,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted }, 
-                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence));
+                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -107,7 +107,7 @@
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -116,7 +116,7 @@
             }
         }
 
-        private async Task<ActionResult> CreateAndPopulateTransferredOutEvidenceViewModel(Guid pcsId,
+        private async Task<ActionResult> CreateAndPopulateOutgoingTransfersEvidenceViewModel(Guid pcsId,
             string schemeName,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
@@ -132,12 +132,12 @@
                         NoteStatus.Submitted,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Transfer));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Transfer, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new TransferredOutEvidenceNotesViewModelMap(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
 
-                return View("TransferredOut", model);
+                return View("OutgoingTransfers", model);
             }
         }
         
