@@ -351,6 +351,7 @@
     <Compile Include="Mapping\AatfMapTests.cs" />
     <Compile Include="Mapping\ReturnMapTests.cs" />
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
+    <Compile Include="Mapping\TransferNoteMapTransferTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
