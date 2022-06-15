@@ -10,6 +10,7 @@
     using Builders;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
@@ -36,7 +37,7 @@
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, null, null, null, null, null, null, null, null)));
+                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null)));
             };
 
             private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
@@ -83,7 +84,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, null, null, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -157,7 +158,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, null, null, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
             };
 
             private readonly It shouldReturnNoData = () =>
@@ -229,7 +230,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, null, null, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
             };
 
             private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
@@ -253,6 +254,119 @@
             };
         }
 
+        [Component]
+        public class WhenIGetApprovedEvidencesBasedOnComplianceYear : GetAatfNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init()
+               .Create();
+
+                aatf = AatfDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .Create();
+
+                OrganisationUserDbSetup.Init()
+                .WithUserIdAndOrganisationId(UserId, organisation.Id)
+                .WithStatus(UserStatus.Active)
+                .Create();
+
+                var evidence1 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .Create();
+
+                var evidence2 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .Create();
+
+                var evidence3 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .Create();
+
+                var evidence4 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .Create();
+
+                var evidence5 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.AddYears(-1).Year)
+                .Create();
+
+                var evidence6 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(SystemTime.UtcNow.AddYears(-1).Year)
+                .Create();
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
+            };
+
+            private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCount = () =>
+            {
+                notesSet.Where(n => n.ComplianceYear == SystemTime.UtcNow.Year).ToList().Count.Equals(4);
+                notesSet.Where(n => n.ComplianceYear == SystemTime.UtcNow.AddYears(-1).Year).ToList().Count.Equals(2);
+            };
+
+            private readonly It shouldHaveExpectedAllowedStatuses = () =>
+            {
+                var allowedStatusesToArray = allowedStatuses.ToArray();
+
+                foreach (var note in evidenceNoteData)
+                {
+                    note.Status.Should().BeOneOf(allowedStatusesToArray);
+                }
+            };
+        }
+
         public class GetAatfNotesRequestHandlerTestBase : WeeeContextSpecification
         {
             protected static List<EvidenceNoteData> evidenceNoteData;
@@ -271,7 +385,7 @@
                     .WithExternalUserAccess();
 
                 notesSet = new List<Note>();
-                allowedStatuses = new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Submitted };
+                allowedStatuses = new List<NoteStatus> { NoteStatus.Approved };
                 handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>>();
             }
         }

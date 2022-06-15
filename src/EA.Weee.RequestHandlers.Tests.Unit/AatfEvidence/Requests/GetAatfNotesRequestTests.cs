@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence.Requests
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using FluentAssertions;
@@ -29,7 +30,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, 
                 aatfId, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null, null, null, null, null, null, null, null));
+                null, SystemTime.UtcNow.Year, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -42,7 +43,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, 
                 Guid.Empty, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null, null, null, null, null, null, null, null));
+                null, SystemTime.UtcNow.Year, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -52,7 +53,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAllowedStatusArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null, null, null, null, null, null, null, null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null, SystemTime.UtcNow.Year, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -62,7 +63,7 @@
         public void GetAatfNotesRequest_ConstructorListOfAllowedStatusIsNull_ArgumentNullExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null, null, null, null, null, null, null, null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null, SystemTime.UtcNow.Year, null, null, null, null, null));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -75,7 +76,7 @@
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
 
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null, null, null, null, null, null, null, null);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -90,7 +91,7 @@
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
             var searchRef = fixture.Create<string>();
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, null, null, null, null, null, null, null);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, SystemTime.UtcNow.Year, null, null, null, null, null);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -111,9 +112,8 @@
             var startDate = fixture.Create<DateTime>();
             var endDate = fixture.Create<DateTime>();
             var selectedComplianceYear = fixture.Create<int>();
-            var currentDate = DateTime.UtcNow;
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, recievedId, wasteType, noteStatus, startDate, endDate, selectedComplianceYear, currentDate);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);

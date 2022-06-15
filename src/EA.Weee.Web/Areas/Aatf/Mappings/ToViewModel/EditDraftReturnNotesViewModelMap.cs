@@ -18,7 +18,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return Map(source.Notes, source.CurrentDate, null);
+            return Map(source.Notes, SystemTime.UtcNow, null);
         }
     }
 }

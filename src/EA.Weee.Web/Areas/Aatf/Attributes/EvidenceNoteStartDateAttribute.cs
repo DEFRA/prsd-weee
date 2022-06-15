@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using EA.Prsd.Core;
     using Filters;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -27,7 +28,7 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (thisDate > new DateTime(currentDate.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day))
+            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
             }

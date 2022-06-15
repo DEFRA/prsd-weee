@@ -1,20 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using AutoFixture;
+    using Core.AatfEvidence;
     using DataAccess.DataAccess;
+    using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.RequestHandlers.AatfEvidence;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfEvidence;
     using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.AatfEvidence;
-    using DataAccess.StoredProcedure;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
@@ -37,7 +38,7 @@
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
 
-            request = new GetAatfSummaryRequest(fixture.Create<Guid>(), 2022);  //TODO: check this
+            request = new GetAatfSummaryRequest(fixture.Create<Guid>(), SystemTime.Now.Year);
 
             handler = new GetAatfSummaryRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -105,7 +106,7 @@
         public async Task HandleAsync_GivenRequest_SummaryTotalsShouldBeRetrieved()
         {
             //arrange
-            short currentYear = (short)DateTime.Now.Year;
+            short currentYear = (short)SystemTime.Now.Year;
 
             //act
             await handler.HandleAsync(request);
@@ -153,7 +154,7 @@
         {
             //arrange
             var totalsData = fixture.CreateMany<AatfEvidenceSummaryTotalsData>().ToList();
-            short currentYear = (short)DateTime.Now.Year;
+            short currentYear = (short)SystemTime.Now.Year;
 
             A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, currentYear))
                 .Returns(totalsData);

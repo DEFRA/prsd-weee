@@ -60,7 +60,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
  
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
             map.Map(transfer);
@@ -78,7 +78,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
             map.Map(transfer);
@@ -96,7 +96,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
             var result = map.Map(transfer);
@@ -126,7 +126,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -158,7 +158,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -189,7 +189,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -220,7 +220,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, DateTime.Now);  //TODO: check this
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
