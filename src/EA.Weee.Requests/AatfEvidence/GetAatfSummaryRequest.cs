@@ -2,6 +2,7 @@
 {
     using System;
     using Core.AatfEvidence;
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using Prsd.Core.Mediator;
 
@@ -14,6 +15,7 @@
         public GetAatfSummaryRequest(Guid aatfId, int complianceYear)
         {
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+            Condition.Requires(complianceYear).IsGreaterThan(0);
 
             AatfId = aatfId;
             ComplianceYear = complianceYear;

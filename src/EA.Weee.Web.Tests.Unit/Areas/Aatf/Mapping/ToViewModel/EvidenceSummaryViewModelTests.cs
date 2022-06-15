@@ -72,7 +72,7 @@
                 fixture.Create<int>(), fixture.Create<int>());
 
             var source =
-                new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), fixture.Create<Guid>(), aatfSummaryData, DateTime.Now);
+                new EvidenceSummaryMapTransfer(fixture.Create<Guid>(), fixture.Create<Guid>(), aatfSummaryData);
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(1)).Returns("1");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(2)).Returns("2");

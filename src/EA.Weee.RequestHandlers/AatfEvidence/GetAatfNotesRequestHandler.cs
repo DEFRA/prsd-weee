@@ -13,7 +13,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Prsd.Core;
     using NoteType = Domain.Evidence.NoteType;
 
     public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
@@ -39,21 +38,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var currentDate = message.CurrentDate.GetValueOrDefault(DateTime.UtcNow);
-            var systemSettings = await systemDataDataAccess.Get();
-
-            if (systemSettings.UseFixedCurrentDate)
-            {
-                currentDate = systemSettings.FixedCurrentDate;
-            }
-
-            var complianceYear = message.SelectedComplianceYear.GetValueOrDefault(DateTime.UtcNow.Year);
-            if (complianceYear == 0)
-            {
-                complianceYear = DateTime.UtcNow.Year;
-            }
-
-            var filter = new NoteFilter(currentDate.Year, NoteType.EvidenceNote.Value)
+            var filter = new NoteFilter(message.SelectedComplianceYear, NoteType.EvidenceNote.Value)
             {
                 AatfId = message.AatfId,
                 OrganisationId = message.OrganisationId,
@@ -64,7 +49,7 @@
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
                 EndDateSubmitted = message.EndDateSubmitted, 
-                ComplianceYear = complianceYear
+                ComplianceYear = message.SelectedComplianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);

@@ -11,6 +11,7 @@
     using Core.AatfEvidence;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Prsd.Core;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
@@ -152,7 +153,7 @@
                 //draft note
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id);
 
-                request = new GetAatfSummaryRequest(aatf.Id, 2022);  //TODO: check this
+                request = new GetAatfSummaryRequest(aatf.Id, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
