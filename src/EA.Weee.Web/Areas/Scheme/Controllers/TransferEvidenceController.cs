@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Constant;
+    using Core.Helpers;
     using Core.Scheme;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -17,6 +18,7 @@
     using Services;
     using Services.Caching;
     using ViewModels;
+    using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
 
     public class TransferEvidenceController : SchemeEvidenceBaseController
@@ -87,7 +89,10 @@
                 var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                     SessionKeyConstant.TransferNoteKey);
 
-                Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+                if (transferRequest == null)
+                {
+                    return RedirectToManageEvidence(pcsId);
+                }
 
                 var result = await client.SendAsync(User.GetAccessToken(),
                     new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
@@ -133,6 +138,11 @@
             using (var client = this.apiClient())
             {
                 var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, client);
+
+                if (model == null)
+                {
+                    return RedirectToManageEvidence(pcsId);
+                }
 
                 return this.View("TransferTonnage", model);
             }
@@ -190,7 +200,10 @@
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                 SessionKeyConstant.TransferNoteKey);
 
-            Condition.Requires(transferRequest).IsNotNull("Transfer categories not found");
+            if (transferRequest == null)
+            {
+                return null;
+            }
 
             var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
@@ -232,6 +245,12 @@
 
                 return schemes;
             }
+        }
+
+        private ActionResult RedirectToManageEvidence(Guid pcsId)
+        {
+            return RedirectToAction("Index", "ManageEvidenceNotes",
+                new { pcsId, area = "Scheme", tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString() });
         }
     }
 }
