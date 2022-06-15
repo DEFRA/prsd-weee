@@ -491,7 +491,7 @@
         public async Task IndexGet_GivenOutgoingTransfersTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
-            var status = new List<NoteStatus>() { NoteStatus.Submitted };
+            var statuses = GetOutgoingTransfersAllowedStatuses();
             var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
@@ -511,7 +511,7 @@
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
-                     status.SequenceEqual(g.AllowedStatuses) &&
+                     statuses.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
         }
 
