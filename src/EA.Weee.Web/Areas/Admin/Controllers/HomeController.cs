@@ -85,6 +85,9 @@
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");
 
+                case InternalUserActivity.ManageEvidenceNotes:
+                    return RedirectToAction("Index", "Holding");
+
                 case InternalUserActivity.SubmissionsHistory:
                     if (configuration.EnableDataReturns)
                     {
@@ -133,10 +136,13 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
+            viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
+
             if (configuration.EnablePCSObligations && isAdmin)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
             }
+           
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
