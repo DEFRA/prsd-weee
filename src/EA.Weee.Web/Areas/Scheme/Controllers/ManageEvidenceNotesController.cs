@@ -135,7 +135,7 @@
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Transfer, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                      new TransferredOutEvidenceNotesViewModelMap(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
+                      new TransferredOutEvidenceNotesViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
 
                 return View("OutgoingTransfers", model);
             }
