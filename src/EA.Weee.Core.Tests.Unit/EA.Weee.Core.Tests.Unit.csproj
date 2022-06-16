@@ -170,6 +170,7 @@
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValueTests.cs" />
     <Compile Include="AatfEvidence\WasteTypeEnumTests.cs" />
     <Compile Include="AatfEvidence\ProtocolEnumTests.cs" />
+    <Compile Include="AatfEvidence\WeeeCategoryEnumDisplayTests.cs" />
     <Compile Include="AatfReturn\AatfAddressTests.cs" />
     <Compile Include="AatfReturn\AatfContactDataTests.cs" />
     <Compile Include="AatfReturn\AatfDataListTests.cs" />
