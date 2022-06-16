@@ -452,6 +452,125 @@
             result.Model.Should().Be(model);
         }
 
+        [Theory]
+        [InlineData("view-and-transfer-evidence", "ViewAndTransferEvidence")]
+        [InlineData("review-submitted-evidence", "ReviewSubmittedEvidence")]
+        [InlineData("evidence-summary", "ReviewSubmittedEvidence")]
+        [InlineData("outgoing-transfers", "OutgoingTransfers")]
+        public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
+        {
+            var pcs = Guid.NewGuid();
+
+            var result = await ManageEvidenceController.Index(pcs, tab) as ViewResult;
+
+            result.ViewName.Should().Be(view);
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTab_EvidenceNoteDataShouldBeRetrieved()
+        {
+            // Arrange
+            var statuses = GetOutgoingTransfersAllowedStatuses();
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     statuses.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.TransferredOut == true &&
+                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved()
+        {
+            // Arrange
+            var statuses = GetOutgoingTransfersAllowedStatuses();
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+            var complianceYear = Fixture.Create<short>();
+
+            var model = Fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     statuses.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(complianceYear) &&
+                     g.TransferredOut == true &&
+                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
+        }
+
+        public static IEnumerable<object[]> ManageEvidenceModelData =>
+            new List<object[]>
+            {
+                new object[] { null },
+                new object[] { new ManageEvidenceNoteViewModel() },
+            };
+
+        [Theory]
+        [MemberData(nameof(ManageEvidenceModelData))]
+
+        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
+        {
+            // Arrange
+            var schemeName = Faker.Company.Name();
+            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var currentDate = Fixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+
+            //asset
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
+                A<TransferredOutEvidenceNotesViewModelMapTransfer>.That.Matches(
+                    a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
+                         a.SchemeName.Equals(schemeName) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenTransferredOutEvidenceNotesSchemeViewModel_TransferredOutEvidenceNotesViewModelMapShouldBeReturned()
+        {
+            //arrange
+            var model = Fixture.Create<TransferredOutEvidenceNotesSchemeViewModel>();
+
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;
+
+            //asset
+            result.Model.Should().Be(model);
+        }
+
         [Fact]
         public void TransferPost_PageRedirectsToTransferPage()
         {
@@ -460,6 +579,19 @@
             result.RouteValues["action"].Should().Be("TransferEvidenceNote");
             result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["pcsId"].Should().Be(OrganisationId);
+        }
+
+        private List<NoteStatus> GetOutgoingTransfersAllowedStatuses()
+        {
+            return new List<NoteStatus>
+            {
+                        NoteStatus.Draft,
+                        NoteStatus.Approved,
+                        NoteStatus.Rejected,
+                        NoteStatus.Submitted,
+                        NoteStatus.Void,
+                        NoteStatus.Returned
+            };
         }
     }
 }
