@@ -109,5 +109,10 @@
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = true;
             }
         }
+
+        private TransferEvidenceMapBaseTransfer CreateTransferEvidenceBaseTransferObject()
+        {
+            return null; // TO DO - Create Object and return and switch over TransferEvidenceMapBase to use this type
+        }
     }
 }

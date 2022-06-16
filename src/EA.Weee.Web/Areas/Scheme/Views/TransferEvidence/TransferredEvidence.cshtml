@@ -23,6 +23,7 @@
     <h1 class="govuk-heading-l">
     </h1>
 
+    @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
 
     @using (Html.BeginForm(actionName: "TransferredEvidence", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
