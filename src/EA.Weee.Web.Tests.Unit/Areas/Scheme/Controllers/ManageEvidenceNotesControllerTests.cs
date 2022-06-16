@@ -484,7 +484,9 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      statuses.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.TransferredOut == true &&
+                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -512,11 +514,22 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      statuses.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(complianceYear) &&
+                     g.TransferredOut == true &&
+                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt()
+        public static IEnumerable<object[]> ManageEvidenceModelData =>
+            new List<object[]>
+            {
+                new object[] { null },
+                new object[] { new ManageEvidenceNoteViewModel() },
+            };
+
+        [Theory]
+        [MemberData(nameof(ManageEvidenceModelData))]
+
+        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
         {
             // Arrange
             var schemeName = Faker.Company.Name();
@@ -529,14 +542,15 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
 
             //asset
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                 A<TransferredOutEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(schemeName) &&
-                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
