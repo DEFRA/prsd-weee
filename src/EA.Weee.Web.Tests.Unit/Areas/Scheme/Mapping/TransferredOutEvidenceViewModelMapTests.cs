@@ -80,6 +80,27 @@
         }
 
         [Fact]
+        public void Map_GivenSchemeNameAndOrganisationId_PropertiesShouldBeSet()
+        {
+            //arrange
+            var organisationId = fixture.Create<Guid>();
+            var schemeName = fixture.Create<string>();
+
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                fixture.CreateMany<EvidenceNoteData>().ToList(),
+                schemeName,
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.OrganisationId.Should().Be(organisationId);
+            result.SchemeName.Should().Be(schemeName);
+        }
+
+        [Fact]
         public void Map_GivenListOfEvidenceNotes_MapperShouldBeCalled()
         {
             //arrange
