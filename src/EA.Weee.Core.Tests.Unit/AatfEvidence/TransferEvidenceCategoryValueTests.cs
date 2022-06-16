@@ -4,6 +4,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Core.Shared;
     using Core.Validation;
     using DataReturns;
     using FluentAssertions;
@@ -47,7 +48,7 @@
         [Fact]
         public void TransferEvidenceCategoryValue_ShouldInheritFrom_CategoryValue()
         {
-            typeof(TransferEvidenceCategoryValue).Should().BeDerivedFrom<EvidenceCategoryValue>();
+            typeof(TransferEvidenceCategoryValue).Should().BeDerivedFrom<CategoryValue>();
         }
 
         [Fact]
@@ -78,7 +79,8 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("Received") &&
-                    t.ErrorMessage.Equals("The transfer reused in tonnes must be equivalent or lower than the transfer received for this category"));
+                    t.ErrorMessage.Equals("The transfer reused in tonnes for category {0} must be equivalent or lower than the transfer received") &&
+                    t.DisplayCategory.Equals(true));
         }
 
         [Fact]
@@ -89,7 +91,8 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("AvailableReused") &&
-                    t.ErrorMessage.Equals("The transfer reused in tonnes must be equivalent or lower than the total reused available"));
+                    t.ErrorMessage.Equals("The transfer reused in tonnes for category {0} must be equivalent or lower than the total reused available") &&
+                    t.DisplayCategory.Equals(true));
         }
 
         [Fact]
@@ -100,7 +103,8 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("AvailableReceived") &&
-                    t.ErrorMessage.Equals("The transfer received in tonnes must be equivalent or lower than the total received available"));
+                    t.ErrorMessage.Equals("The transfer received in tonnes for category {0} must be equivalent or lower than the total received available") &&
+                    t.DisplayCategory.Equals(true));
         }
     }
 }

@@ -177,7 +177,6 @@
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
-    <Compile Include="Helpers\ObjectInstantiator.cs" />
     <Compile Include="Organisation\AddressTests.cs" />
     <Compile Include="Organisation\ContactTests.cs" />
     <Compile Include="Scheme\SchemeContactPersonTests.cs" />
@@ -222,6 +221,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

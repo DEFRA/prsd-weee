@@ -25,7 +25,9 @@
 
         public SchemeData RecipientSchemeData { get; set; }
 
-        public OrganisationData TransferredOrganisation { get; set; }
+        public OrganisationData TransferredOrganisationData { get; set; }
+
+        public SchemeData TransferredSchemeData { get; set; }
 
         public OrganisationData RecipientOrganisationData { get; set; }
 
