@@ -28,9 +28,9 @@
                 ? source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress
                 : source.TransferEvidenceNoteData.RecipientOrganisationData.NotificationAddress;
 
-            var transfer = source.TransferEvidenceNoteData.TransferredOrganisation.HasBusinessAddress
-                ? source.TransferEvidenceNoteData.TransferredOrganisation.BusinessAddress
-                : source.TransferEvidenceNoteData.TransferredOrganisation.NotificationAddress;
+            //var transfer = source.TransferEvidenceNoteData.TransferredOrganisation.HasBusinessAddress
+            //    ? source.TransferEvidenceNoteData.TransferredOrganisation.BusinessAddress
+            //    : source.TransferEvidenceNoteData.TransferredOrganisation.NotificationAddress;
 
             var model = new ViewTransferNoteViewModel
             {
@@ -54,14 +54,14 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
-                TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredOrganisation.Name,
-                    source.TransferEvidenceNoteData.TransferredOrganisation.Name,
-                    transfer.Address1,
-                    transfer.Address2,
-                    transfer.TownOrCity,
-                    transfer.CountyOrRegion,
-                    transfer.Postcode,
-                    null),
+                //TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredOrganisation.Name,
+                //    source.TransferEvidenceNoteData.TransferredOrganisation.Name,
+                //    transfer.Address1,
+                //    transfer.Address2,
+                //    transfer.TownOrCity,
+                //    transfer.CountyOrRegion,
+                //    transfer.Postcode,
+                //    null),
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
