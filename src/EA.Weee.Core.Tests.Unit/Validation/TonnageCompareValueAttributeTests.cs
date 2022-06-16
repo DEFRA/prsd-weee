@@ -10,8 +10,7 @@
 
     public class TonnageCompareValueAttributeTests
     {
-        private const string Error = "Tonnage Error Message";
-        private const string ErrorWithCategory = "Tonnage Error Message {0}";
+        private const string Error = "Tonnage Error Message {0}";
         private const string AssertErrorWithCategoryString = "Tonnage Error Message 10 automatic dispensers";
         private const string CategoryIdProperty = "Category";
         private const string CompareTonnage = "CompareTonnage";
@@ -150,23 +149,6 @@
         {
             var result = Validate(tonnage, compareTonnage);
 
-            result.ValidationResult.ErrorMessage.Should().Be(Error);
-
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(tonnage)).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData("1", "")]
-        [InlineData("1", " ")]
-        [InlineData("1", null)]
-        [InlineData(2, "")]
-        [InlineData(2, " ")]
-        [InlineData(2, null)]
-        public void Validate_GivenTonnageIsNotEmptyAndCompareValueIsEmpty_ShouldHaveValidationMessageAndErrorShouldContainCategory(object tonnage,
-            object compareTonnage)
-        {
-            var result = ValidateWithCategoryError(tonnage, compareTonnage);
-
             result.ValidationResult.ErrorMessage.Should().Be(AssertErrorWithCategoryString);
 
             A.CallTo(() => tonnageTonnageValueValidator.Validate(tonnage)).MustHaveHappenedOnceExactly();
@@ -187,21 +169,11 @@
         }
 
         [Fact]
-        public void Validate_GivenTonnageTonnageIsGreaterThanCompareTonnage_ShouldHaveValidationMessageAndErrorShouldContainCategory()
-        {
-            var result = ValidateWithCategoryError(2, 1);
-
-            result.ValidationResult.ErrorMessage.Should().Be(AssertErrorWithCategoryString);
-
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(2)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public void Validate_GivenTonnageTonnageIsGreaterThanCompareTonnage_ShouldHaveValidationMessage()
         {
             var result = Validate(2, 1);
 
-            result.ValidationResult.ErrorMessage.Should().Be(Error);
+            result.ValidationResult.ErrorMessage.Should().Be(AssertErrorWithCategoryString);
 
             A.CallTo(() => tonnageTonnageValueValidator.Validate(2)).MustHaveHappenedOnceExactly();
         }
@@ -251,31 +223,6 @@
             throw new Exception("Unknown error testing tonnage compare attribute");
         }
 
-        private ValidationException ValidateWithCategoryError(object input, object compare)
-        {
-            var tonnageValueModel = TonnageValueWithCategoryErrorModel(input, compare);
-            var validationContext = new ValidationContext(tonnageValueModel);
-
-            attribute = new TonnageCompareValueAttribute(CategoryIdProperty, CompareTonnage, ErrorWithCategory, true)
-            {
-                TonnageValueValidator = tonnageTonnageValueValidator
-            };
-
-            var result = Record.Exception(() => attribute.Validate(tonnageValueModel.Tonnage, validationContext));
-
-            if (result == null)
-            {
-                return null;
-            }
-
-            if (result is ValidationException exception)
-            {
-                return exception;
-            }
-
-            throw new Exception("Unknown error testing tonnage compare attribute");
-        }
-
         private TestTonnageValue TonnageValueModel(object tonnage, object compare)
         {
             var tonnageValueModel = new TestTonnageValue()
@@ -287,19 +234,6 @@
 
             return tonnageValueModel;
         }
-
-        private TestTonnageValueWithCategoryError TonnageValueWithCategoryErrorModel(object tonnage, object compare)
-        {
-            var tonnageValueModel = new TestTonnageValueWithCategoryError()
-            {
-                Category = Category,
-                Tonnage = tonnage,
-                CompareTonnage = compare
-            };
-
-            return tonnageValueModel;
-        }
-
         public class TestTonnageValueNonRelatedProperty
         {
             [TonnageCompareValue(CategoryIdProperty, "CompareTonnageNotMatching", Error)]
@@ -331,16 +265,6 @@
         public class TestTonnageValue
         {
             [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage, Error)]
-            public object Tonnage { get; set; }
-
-            public WeeeCategory Category { get; set; }
-
-            public object CompareTonnage { get; set; }
-        }
-
-        public class TestTonnageValueWithCategoryError
-        {
-            [TonnageCompareValue(CategoryIdProperty, TonnageCompareValueAttributeTests.CompareTonnage, ErrorWithCategory, true)]
             public object Tonnage { get; set; }
 
             public WeeeCategory Category { get; set; }

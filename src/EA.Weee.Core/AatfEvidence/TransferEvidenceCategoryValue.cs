@@ -15,12 +15,12 @@
         public Guid TransferTonnageId { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The transfer received in tonnes", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived), "The transfer received in tonnes for category {0} must be equivalent or lower than the total received available", true)]
+        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived), "The transfer received in tonnes for category {0} must be equivalent or lower than the total received available")]
         public string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The transfer reused in tonnes", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(Received), "The transfer reused in tonnes for category {0} must be equivalent or lower than the transfer received", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReused), "The transfer reused in tonnes for category {0} must be equivalent or lower than the total reused available", true)]
+        [TonnageCompareValue(nameof(CategoryId), nameof(Received), "The transfer reused in tonnes for category {0} must be equivalent or lower than the transfer received")]
+        [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReused), "The transfer reused in tonnes for category {0} must be equivalent or lower than the total reused available")]
         public string Reused { get; set; }
 
         public TransferEvidenceCategoryValue()
