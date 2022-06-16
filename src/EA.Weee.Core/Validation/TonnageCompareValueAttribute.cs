@@ -14,8 +14,6 @@
 
         public string CategoryProperty { get; private set; }
 
-        public bool DisplayCategory { get; private set; }
-
         private ITonnageValueValidator tonnageValueValidator;
         public ITonnageValueValidator TonnageValueValidator
         {
@@ -23,12 +21,11 @@
             set => tonnageValueValidator = value;
         }
 
-        public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage, bool displayCategory = false)
+        public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage)
         {
             CategoryProperty = category;
             ComparePropertyName = compareProperty;
             ErrorMessage = errorMessage;
-            DisplayCategory = displayCategory;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -109,14 +106,9 @@
 
         private string GenerateMessage(int categoryId)
         {
-            if (DisplayCategory)
-            {
-                var category = $"{categoryId} {((WeeeCategory)categoryId).ToCustomDisplayString()}";
+            var category = $"{categoryId} {((WeeeCategory)categoryId).ToCustomDisplayString()}";
 
-                return string.Format(ErrorMessage, category);
-            }
-
-            return ErrorMessage;
+            return string.Format(ErrorMessage, category);
         }
     }
 }
