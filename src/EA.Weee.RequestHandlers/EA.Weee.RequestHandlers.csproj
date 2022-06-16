@@ -125,6 +125,7 @@
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
     <Compile Include="Admin\Obligations\IObligationCsvReader.cs" />
     <Compile Include="Admin\Obligations\IObligationUploadValidator.cs" />
@@ -132,7 +133,9 @@
     <Compile Include="Admin\Obligations\ObligationCsvReader.cs" />
     <Compile Include="Admin\Obligations\ObligationUploadValidator.cs" />
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessor.cs" />
+    <Compile Include="Admin\Obligations\SchemeToObligationSchemeDataTransfer.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationHandler.cs" />
+    <Compile Include="Mappings\SchemeObligationDataMap.cs" />
     <Compile Include="Mappings\SchemeObligationUploadDataMap.cs" />
     <Compile Include="Mappings\TransferEvidenceNoteMap.cs" />
     <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandler.cs" />
@@ -173,6 +176,7 @@
     <Compile Include="Mappings\ListOfEvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\ListOfNotesMap.cs" />
     <Compile Include="Mappings\AatfSummaryTotalsMap.cs" />
+    <Compile Include="Mappings\TransferNoteMapTransfer.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Scheme\AddSchemeHandler.cs" />

@@ -7,17 +7,16 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class UploadObligationsViewModelMapTests
+    public class UploadObligationsViewModelMapTests : SimpleUnitTestBase
     {
         private readonly UploadObligationsViewModelMap map;
-        private readonly Fixture fixture;
         
         public UploadObligationsViewModelMapTests()
         {
-            fixture = new Fixture();
-
             map = new UploadObligationsViewModelMap();
         }
 
@@ -35,7 +34,7 @@
         public void Map_GivenSourceWithAuthorityAndNoUploadData_UploadObligationsViewModelShouldBeReturned()
         {
             //arrange
-            var source = new UploadObligationsViewModelMapTransfer() { CompetentAuthority = fixture.Create<CompetentAuthority>() };
+            var source = new UploadObligationsViewModelMapTransfer() { CompetentAuthority = TestFixture.Create<CompetentAuthority>() };
 
             //act
             var model = map.Map(source);
@@ -55,13 +54,12 @@
         public void Map_GivenSourceWithObligationUploadDataErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayDataErrorAsTrue(SchemeObligationUploadErrorType errorType)
         {
             //arrange
-            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
-                .With(s => s.ErrorData, new List<SchemeObligationUploadErrorData>() { new SchemeObligationUploadErrorData(errorType, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null) })
-                .Create();
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>() { new SchemeObligationUploadErrorData(errorType, TestFixture.Create<string>(), TestFixture.Create<string>(), TestFixture.Create<string>(), null) };
+
             var source = new UploadObligationsViewModelMapTransfer()
             { 
-                CompetentAuthority = fixture.Create<CompetentAuthority>(),
-                UploadData = schemeUploadObligationData
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData
             };
             
             //act
@@ -77,19 +75,18 @@
         public void Map_GivenSourceWithObligationUploadDataErrors_UploadObligationsViewModelShouldBeReturnedWithNumberOfDataErrorsSet()
         {
             //arrange
-            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
-                .With(s => s.ErrorData, 
-                    new List<SchemeObligationUploadErrorData>()
-                    {
-                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null),
-                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null)
-                    })
-                .Create();
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null),
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
 
             var source = new UploadObligationsViewModelMapTransfer()
             {
-                CompetentAuthority = fixture.Create<CompetentAuthority>(),
-                UploadData = schemeUploadObligationData
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData
             };
 
             //act
@@ -106,13 +103,16 @@
         public void Map_GivenSourceWithObligationUploadFileErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsTrue()
         {
             //arrange
-            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
-                .With(s => s.ErrorData, new List<SchemeObligationUploadErrorData>() { new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null) })
-                .Create();
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
+
             var source = new UploadObligationsViewModelMapTransfer()
             {
-                CompetentAuthority = fixture.Create<CompetentAuthority>(),
-                UploadData = schemeUploadObligationData
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData
             };
 
             //act
@@ -125,22 +125,21 @@
         }
 
         [Fact]
-        public void
-            Map_GivenSourceWithDifferentErrorTypes_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsTrueAndDisplayFormatErrorAsFalse()
+        public void Map_GivenSourceWithDifferentErrorTypes_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsTrueAndDisplayFormatErrorAsFalse()
         {
             //arrange
-            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
-                .With(s => s.ErrorData, 
-                    new List<SchemeObligationUploadErrorData>()
-                    {
-                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null),
-                        new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, fixture.Create<string>(), fixture.Create<string>(), fixture.Create<string>(), null)
-                    })
-                .Create();
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null),
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
+
             var source = new UploadObligationsViewModelMapTransfer()
             {
-                CompetentAuthority = fixture.Create<CompetentAuthority>(),
-                UploadData = schemeUploadObligationData
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData
             };
 
             //act
@@ -154,18 +153,15 @@
         }
 
         [Fact]
-        public void
-            Map_GivenSourceWithUploadWithNoError_UploadObligationsViewModelShouldBeReturnedWithDisplaySuccessMessageAsTrue()
+        public void Map_GivenSourceWithUploadWithNoError_UploadObligationsViewModelShouldBeReturnedWithDisplaySuccessMessageAsTrue()
         {
             //arrange
-            var schemeUploadObligationData = fixture.Build<SchemeObligationUploadData>()
-                .With(s => s.ErrorData, 
-                    new List<SchemeObligationUploadErrorData>())
-                .Create();
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>();
+                
             var source = new UploadObligationsViewModelMapTransfer()
             {
-                CompetentAuthority = fixture.Create<CompetentAuthority>(),
-                UploadData = schemeUploadObligationData
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData
             };
 
             //act
@@ -176,6 +172,103 @@
             model.DisplayFormatError.Should().BeFalse();
             model.DisplayDataError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSchemeObligations_UploadObligationsViewModelShouldBeReturnedWithSchemeObligations()
+        {
+            //arrange
+            var schemeObligationData = new List<SchemeObligationData>()
+            {
+                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ObligationData = schemeObligationData
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SchemeObligations.Should().Contain(s =>
+                s.SchemeName == schemeObligationData.ElementAt(0).SchemeName &&
+                s.UpdateDate == schemeObligationData.ElementAt(0).UpdatedDate.ToString());
+            model.SchemeObligations.Should().Contain(s =>
+                s.SchemeName.Equals(schemeObligationData.ElementAt(1).SchemeName) &&
+                s.UpdateDate == schemeObligationData.ElementAt(1).UpdatedDate.ToString());
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoSchemeObligations_UploadObligationsViewModelShouldBeReturnedWithEmptySchemeObligations()
+        {
+            //arrange
+            var schemeObligationData = new List<SchemeObligationData>();
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ObligationData = schemeObligationData
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SchemeObligations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSchemeObligations_UploadObligationsShouldBeOrderedBySchemeName()
+        {
+            //arrange
+            var schemeObligationData = new List<SchemeObligationData>()
+            {
+                new SchemeObligationData("Z", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("R", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("A", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("C", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("B", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ObligationData = schemeObligationData
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SchemeObligations.Should().BeInAscendingOrder(s => s.SchemeName);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSchemeObligationsWithNoUpdatedDate_ShouldFormatUpdatedDateCorrectly()
+        {
+            //arrange
+            var schemeObligationData = new List<SchemeObligationData>()
+            {
+                new SchemeObligationData(TestFixture.Create<string>(), null, TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ObligationData = schemeObligationData
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SchemeObligations.Should().Contain(s =>
+                s.SchemeName.Equals(schemeObligationData.ElementAt(0).SchemeName) &&
+                s.UpdateDate.Equals("-"));
         }
     }
 }

@@ -24,13 +24,17 @@
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",
-        Url.Action("Index", "ManageEvidenceNotes", 
-            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear=Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
     @this.WeeeGds().Tab("View and transfer evidence",
-        Url.Action("Index", "ManageEvidenceNotes", 
-            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear=Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
+    @this.WeeeGds().Tab("Outgoing transfers",
+      Url.Action("Index", "ManageEvidenceNotes",
+          new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
 </ul>
 
 

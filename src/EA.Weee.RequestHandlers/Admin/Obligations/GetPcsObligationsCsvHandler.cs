@@ -11,21 +11,22 @@
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin.Obligations;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Weee.Security;
 
     public class GetPcsObligationsCsvHandler : IRequestHandler<GetPcsObligationsCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly CsvWriterFactory csvWriterFactory;
+        private readonly ICsvWriter<Scheme> csvWriter;
         private readonly ICommonDataAccess dataAccess;
 
         public GetPcsObligationsCsvHandler(IWeeeAuthorization authorization,
-            CsvWriterFactory csvWriterFactory,
+            ICsvWriter<Scheme> csvWriter,
             ICommonDataAccess dataAccess)
         {
             this.authorization = authorization;
-            this.csvWriterFactory = csvWriterFactory;
+            this.csvWriter = csvWriter;
             this.dataAccess = dataAccess;
         }
 
@@ -36,7 +37,6 @@
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthorityApprovedSchemes(message.Authority);
 
-            var csvWriter = csvWriterFactory.Create<Scheme>();
             csvWriter.DefineColumn(ObligationCsvConstants.SchemeIdentifierColumnName, x => x.ApprovalNumber);
             csvWriter.DefineColumn(ObligationCsvConstants.SchemeNameColumnName, x => x.SchemeName);
             csvWriter.DefineColumn(ObligationCsvConstants.Cat1ColumnName, x => string.Empty);
@@ -54,7 +54,7 @@
             csvWriter.DefineColumn(ObligationCsvConstants.Cat13ColumnName, x => string.Empty);
             csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, x => string.Empty);
 
-            var fileContent = csvWriter.Write(authority.Schemes);
+            var fileContent = csvWriter.Write(authority.Schemes.OrderBy(s => s.SchemeName));
             var timestamp = DateTime.Now;
             var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv";
 

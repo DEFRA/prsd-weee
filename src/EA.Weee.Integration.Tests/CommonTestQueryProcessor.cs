@@ -42,6 +42,11 @@
             return dbContext.Schemes.FirstOrDefault(n => n.Id.Equals(id));
         }
 
+        public Scheme GetSchemeByOrganisationId(Guid id)
+        {
+            return dbContext.Schemes.FirstOrDefault(n => n.OrganisationId.Equals(id));
+        }
+
         public Note GetEvidenceNoteByReference(int reference)
         {
             return dbContext.Notes.FirstOrDefault(n => n.Reference == reference);
@@ -61,6 +66,11 @@
         public UKCompetentAuthority GetEaCompetentAuthority()
         {
             return dbContext.UKCompetentAuthorities.First(c => c.Name.Equals("Environment Agency"));
+        }
+
+        public UKCompetentAuthority GetCompetentAuthorityByName(string name)
+        {
+            return dbContext.UKCompetentAuthorities.First(c => c.Name.Equals(name));
         }
 
         public Role GetAdminRole()

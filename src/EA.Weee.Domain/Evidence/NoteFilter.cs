@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text.RegularExpressions;
     using Prsd.Core.Domain;
 
-    public class EvidenceNoteFilter
+    public class NoteFilter
     {
         public int ComplianceYear { get; set; }
 
@@ -27,6 +26,8 @@
         public DateTime? StartDateSubmitted { get; set; }
 
         public DateTime? EndDateSubmitted { get; set; }
+
+        public List<NoteType> NoteTypeFilter { get; set; }
 
         public string FormattedSearchRef
         {
@@ -68,7 +69,7 @@
             }
         }
 
-        public EvidenceNoteFilter(int complianceYear)
+        public NoteFilter(int complianceYear)
         {
             ComplianceYear = complianceYear;
         }

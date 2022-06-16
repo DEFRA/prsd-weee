@@ -9,11 +9,14 @@
     using DataAccess.DataAccess;
     using Domain;
     using Domain.Error;
+    using Domain.Lookup;
     using Domain.Obligation;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ObligationDataAccessUnitTests
@@ -21,17 +24,54 @@
         private readonly ObligationDataAccess obligationDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IUserContext userContext;
-        private readonly WeeeContext context;
         private readonly Fixture fixture;
 
         public ObligationDataAccessUnitTests()
         {
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            context = A.Fake<WeeeContext>();
+            var context = A.Fake<WeeeContext>();
             userContext = A.Fake<IUserContext>();
             fixture = new Fixture();
 
-            obligationDataAccess = new ObligationDataAccess(context, userContext, genericDataAccess);
+            obligationDataAccess = new ObligationDataAccess(userContext, genericDataAccess, context);
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_GivenUploadDataWithNoErrorsAndNullObligations_ObligationSchemeShouldNotBeAddedToContext()
+        {
+            //arrange
+            var date = new DateTime();
+            SystemTime.Freeze(date);
+
+            var authority = fixture.Create<UKCompetentAuthority>();
+            var data = fixture.Create<string>();
+            var fileName = fixture.Create<string>();
+            var user = fixture.Create<Guid>();
+            var obligationScheme1 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts,
+                    new List<ObligationSchemeAmount>(), obligationScheme1);
+            var obligationScheme2 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts, new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), null) }, obligationScheme2);
+            var obligationScheme = new List<ObligationScheme>() { obligationScheme1, obligationScheme2 };
+
+            A.CallTo(() => userContext.UserId).Returns(user);
+
+            //act
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(),
+                obligationScheme);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 0 &&
+                o.ObligationSchemes.Count == 0))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -45,7 +85,14 @@
             var data = fixture.Create<string>();
             var fileName = fixture.Create<string>();
             var user = fixture.Create<Guid>();
-            var obligationScheme = fixture.CreateMany<ObligationScheme>().ToList();
+            var obligationScheme1 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts, 
+                    new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 1) }, obligationScheme1);
+            var obligationScheme2 = fixture.Create<ObligationScheme>();
+            ObjectInstantiator<ObligationScheme>
+                .SetProperty(os => os.ObligationSchemeAmounts, new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 2) }, obligationScheme2);
+            var obligationScheme = new List<ObligationScheme>() { obligationScheme1, obligationScheme2 };
 
             A.CallTo(() => userContext.UserId).Returns(user);
 
@@ -61,6 +108,138 @@
                 o.UploadedById.Equals(user.ToString()) &&
                 o.ObligationUploadErrors.Count == 0 &&
                 o.ObligationSchemes.SequenceEqual(obligationScheme)))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_GivenUploadDataWithNoData_ObligationUploadShouldBeAddedToContext()
+        {
+            //arrange
+            var date = new DateTime();
+            SystemTime.Freeze(date);
+
+            var authority = fixture.Create<UKCompetentAuthority>();
+            var data = fixture.Create<string>();
+            var fileName = fixture.Create<string>();
+            var user = fixture.Create<Guid>();
+
+            A.CallTo(() => userContext.UserId).Returns(user);
+
+            //act
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(),
+                new List<ObligationScheme>());
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 0 &&
+                o.ObligationSchemes.Count == 0))).MustHaveHappenedOnceExactly();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_GivenUploadDataWithObligationSchemeUpdatesNoErrors_ObligationSchemeShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime();
+            SystemTime.Freeze(date);
+
+            var authority = fixture.Create<UKCompetentAuthority>();
+            var data = fixture.Create<string>();
+            var fileName = fixture.Create<string>();
+            var user = fixture.Create<Guid>();
+            var complianceYear = 2022;
+            var obligationScheme = A.Fake<ObligationScheme>();
+            A.CallTo(() => obligationScheme.ComplianceYear).Returns(complianceYear);
+            var scheme = A.Fake<Scheme>();
+            var innerObligationSchemeInComplianceYear = A.Fake<ObligationScheme>();
+            var innerObligationSchemes = new List<ObligationScheme>() { innerObligationSchemeInComplianceYear };
+            A.CallTo(() => innerObligationSchemeInComplianceYear.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => scheme.ObligationSchemes).Returns(innerObligationSchemes);
+            A.CallTo(() => obligationScheme.Scheme).Returns(scheme);
+
+            var obligationSchemes = new List<ObligationScheme>() { obligationScheme };
+            A.CallTo(() => userContext.UserId).Returns(user);
+            var updatedObligationAmounts = new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), 2) };
+            A.CallTo(() => obligationScheme.ObligationSchemeAmounts).Returns(updatedObligationAmounts);
+
+            //act
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(),
+                obligationSchemes);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 0 &&
+                !o.ObligationSchemes.Contains(obligationScheme)))).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() => innerObligationSchemeInComplianceYear.UpdateObligationUpload(A<ObligationUpload>.That.Matches(o =>
+                o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString())))).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() => innerObligationSchemeInComplianceYear.UpdateObligationSchemeAmounts(A<List<ObligationSchemeAmount>>.That.Matches(o => o.SequenceEqual(updatedObligationAmounts)))).MustHaveHappened();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task AddObligationUpload_GivenUploadDataWithObligationSchemeUpdatesNoErrorsAndThatHaveNullValues_ObligationSchemeShouldNotBeUpdated()
+        {
+            //arrange
+            var date = new DateTime();
+            SystemTime.Freeze(date);
+
+            var authority = fixture.Create<UKCompetentAuthority>();
+            var data = fixture.Create<string>();
+            var fileName = fixture.Create<string>();
+            var user = fixture.Create<Guid>();
+            var complianceYear = 2022;
+            var obligationScheme = A.Fake<ObligationScheme>();
+            A.CallTo(() => obligationScheme.ComplianceYear).Returns(complianceYear);
+            var scheme = A.Fake<Scheme>();
+            var innerObligationSchemeInComplianceYear = A.Fake<ObligationScheme>();
+            var innerObligationSchemes = new List<ObligationScheme>() { innerObligationSchemeInComplianceYear };
+            A.CallTo(() => innerObligationSchemeInComplianceYear.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => scheme.ObligationSchemes).Returns(innerObligationSchemes);
+            A.CallTo(() => obligationScheme.Scheme).Returns(scheme);
+
+            var obligationSchemes = new List<ObligationScheme>() { obligationScheme };
+            A.CallTo(() => userContext.UserId).Returns(user);
+            var updatedObligationAmounts = new List<ObligationSchemeAmount>() { new ObligationSchemeAmount(fixture.Create<WeeeCategory>(), null) };
+            A.CallTo(() => obligationScheme.ObligationSchemeAmounts).Returns(updatedObligationAmounts);
+
+            //act
+            await obligationDataAccess.AddObligationUpload(authority, data, fileName, new List<ObligationUploadError>(),
+                obligationSchemes);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<ObligationUpload>.That.Matches(o => o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString()) &&
+                o.ObligationUploadErrors.Count == 0 &&
+                o.ObligationSchemes.Contains(obligationScheme)))).MustNotHaveHappened();
+
+            A.CallTo(() => innerObligationSchemeInComplianceYear.UpdateObligationUpload(A<ObligationUpload>.That.Matches(o =>
+                o.Data.Equals(data) &&
+                o.FileName.Equals(fileName) &&
+                o.CompetentAuthority.Equals(authority) &&
+                o.UploadedDate == date &&
+                o.UploadedById.Equals(user.ToString())))).MustHaveHappened();
+
+            A.CallTo(() => innerObligationSchemeInComplianceYear.UpdateObligationSchemeAmounts(A<List<ObligationSchemeAmount>>.That.Matches(o => o.SequenceEqual(updatedObligationAmounts)))).MustNotHaveHappened();
 
             SystemTime.Unfreeze();
         }
