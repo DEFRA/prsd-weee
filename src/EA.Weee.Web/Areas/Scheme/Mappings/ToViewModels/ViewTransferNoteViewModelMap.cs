@@ -6,14 +6,15 @@
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
+    using System.Collections.Generic;
     using System.Linq;
     using ViewModels;
 
-    public class ViewTransferNoteViewModelMap : TransferEvidenceMapBase<ViewTransferNoteViewModel>, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>
+    public class ViewTransferNoteViewModelMap : IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
 
-        public ViewTransferNoteViewModelMap(IMapper mapper, IWeeeCache cache, IAddressUtilities addressUtilities) : base(mapper, cache)
+        public ViewTransferNoteViewModelMap(IAddressUtilities addressUtilities)
         {
             this.addressUtilities = addressUtilities;
         }
@@ -21,8 +22,6 @@
         public ViewTransferNoteViewModel Map(ViewTransferNoteViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
-
-            //var test = MapBaseProperties(null);
 
             var organisationAddress = source.TransferEvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
                 ? source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress
@@ -39,7 +38,7 @@
                 Status = source.TransferEvidenceNoteData.Status,
                 SchemeId = source.SchemeId,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
-                CategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
+                TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
                     new TotalCategoryValue(n.First().EvidenceTonnageData.CategoryId)
                     {
@@ -54,6 +53,7 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
+                EvidenceNotes = GenerateNotesModel(source),
                 //TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredOrganisation.Name,
                 //    source.TransferEvidenceNoteData.TransferredOrganisation.Name,
                 //    transfer.Address1,
@@ -88,6 +88,33 @@
                     }
                 }
             }
+        }
+
+        private IList<ViewTransferEvidenceNoteTonnageDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
+        {
+            var sortedSource = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.EvidenceTonnageData.CategoryId).ToList(); // TO DO change this to Order by Reference + AATF + Category ID
+            var modelList = new List<ViewTransferEvidenceNoteTonnageDataViewModel>();
+
+            for (var i = 0; i < sortedSource.Count; i++)
+            {
+                modelList.Add(new ViewTransferEvidenceNoteTonnageDataViewModel()
+                {
+                    AatfApprovalNumber = sortedSource[i].OriginalAatf.ApprovalNumber,
+                    AatfName = sortedSource[i].OriginalAatf.Name,
+                    ReferenceId = sortedSource[i].Reference,
+                    Type = sortedSource[i].Type,
+                    CategoryValue = new EvidenceCategoryValue()
+                    {
+                        CategoryId = ((int)sortedSource[i].EvidenceTonnageData.CategoryId),
+                        Received = sortedSource[i].EvidenceTonnageData.Received.ToString(),
+                        Reused = sortedSource[i].EvidenceTonnageData.Reused.ToString()
+                    },
+                    DisplayAatfName = (i == 0 || sortedSource[i].OriginalAatf.Name != sortedSource[i - 1].OriginalAatf.Name),
+                    DisplayReferenceCell = (i == 0 || sortedSource[i].Reference != sortedSource[i - 1].Reference),
+                });
+            }
+
+            return modelList;
         }
     }
 }
