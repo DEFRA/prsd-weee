@@ -7,7 +7,7 @@
     using Core.Helpers;
     using ManageEvidenceNotes;
 
-    public class ViewTransferNoteViewModel : TransferEvidenceViewModelBase
+    public class ViewTransferNoteViewModel
     {
         public Guid SchemeId { get; set; }
 
@@ -32,6 +32,10 @@
         public string RecipientAddress { get; set; }
 
         public string TransferredByAddress { get; set; }
+
+        public IList<TotalCategoryValue> TotalCategoryValues { get; set; }
+
+        public IList<ViewTransferEvidenceNoteTonnageDataViewModel> EvidenceNotes { get; set; }
 
         public string RedirectTab
         {

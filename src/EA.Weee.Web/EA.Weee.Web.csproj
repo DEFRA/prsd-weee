@@ -334,6 +334,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
