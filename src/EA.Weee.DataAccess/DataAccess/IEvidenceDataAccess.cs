@@ -20,7 +20,7 @@
             IList<NoteTonnage> tonnages,
             NoteStatus status);
 
-        Task<List<Note>> GetAllNotes(EvidenceNoteFilter filter);
+        Task<List<Note>> GetAllNotes(NoteFilter filter);
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId);
 

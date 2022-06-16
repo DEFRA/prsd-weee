@@ -9,7 +9,11 @@
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(Url.UrlFor<ObligationsController>(a => a.SelectAuthority())))
-
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">Manage PCS obligations</h1>
+        </div>
+    </header>
     @if (Model.AnyError)
     {
         <div class="error-summary govuk-error-summary" id="error_explanation" aria-labelledby="error-summary-title" role="alert" aria-atomic="true" data-module="govuk-error-summary">
@@ -48,12 +52,6 @@
         @(this.WeeeGds().Panel("You have successfully uploaded the obligations for the compliance year 2022"))
     }
 
-    <header class="hgroup">
-        <div>
-            <h1 class="govuk-heading-l">Manage PCS obligations</h1>
-        </div>
-    </header>
-
     @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Post, new
     {
         enctype = "multipart/form-data",
@@ -80,20 +78,39 @@
             <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header">
+                    <th scope="col" class="govuk-table__header" style="width: 76%;">
                         PCS
                     </th>
-                    <th class="govuk-table__header govuk-!-text-align-right">
+                    <th scope="col" class="govuk-table__header govuk-!-padding-left-0 govuk-!-text-align-right">
                         Obligation updated (GMT)
                     </th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-                <tr>
-                    <td colspan="2">
-                        <p>There are currently no PCS obligations uploaded</p>
-                    </td>
-                </tr>
+                @if (!Model.AnyObligation)
+                {
+                    <tr class="govuk-table__row">
+                        <td colspan="2">
+                            <p>There are currently no PCS obligations uploaded</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    for (var schemeCount = 0; schemeCount < Model.SchemeObligations.Count; schemeCount++)
+                    {
+                        @Html.HiddenFor(m => m.SchemeObligations[schemeCount].SchemeName)
+                        @Html.HiddenFor(m => m.SchemeObligations[schemeCount].UpdateDate)
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @Model.SchemeObligations.ElementAt(schemeCount).SchemeName
+                            </td>
+                            <td class="govuk-table__cell govuk-!-padding-left-2 govuk-!-text-left-right">
+                                @Model.SchemeObligations.ElementAt(schemeCount).UpdateDate
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     }

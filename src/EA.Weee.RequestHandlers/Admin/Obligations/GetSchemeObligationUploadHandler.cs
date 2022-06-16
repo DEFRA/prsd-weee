@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Admin.Obligation;
     using CuttingEdge.Conditions;
@@ -12,14 +13,14 @@
     using Security;
     using Weee.Security;
 
-    public class GetSchemeObligationUploadHandler : IRequestHandler<GetSchemeObligationUpload, SchemeObligationUploadData>
+    public class GetSchemeObligationUploadHandler : IRequestHandler<GetSchemeObligationUpload, List<SchemeObligationUploadErrorData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
 
-        public GetSchemeObligationUploadHandler(IWeeeAuthorization authorization, 
-            IGenericDataAccess genericDataAccess, 
+        public GetSchemeObligationUploadHandler(IWeeeAuthorization authorization,
+            IGenericDataAccess genericDataAccess,
             IMapper mapper)
         {
             this.authorization = authorization;
@@ -27,7 +28,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<SchemeObligationUploadData> HandleAsync(GetSchemeObligationUpload request)
+        public async Task<List<SchemeObligationUploadErrorData>> HandleAsync(GetSchemeObligationUpload request)
         {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
@@ -36,7 +37,7 @@
 
             Condition.Requires(obligationUpload).IsNotNull($"Obligation Upload with Id {request.ObligationUploadId} not found");
 
-            return mapper.Map<ObligationUpload, SchemeObligationUploadData>(obligationUpload);
+            return mapper.Map<ObligationUpload, List<SchemeObligationUploadErrorData>>(obligationUpload);
         }
     }
 }

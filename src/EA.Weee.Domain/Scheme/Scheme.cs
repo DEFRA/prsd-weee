@@ -5,6 +5,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using System;
+    using System.Collections.Generic;
 
     public partial class Scheme : Entity
     {
@@ -13,6 +14,7 @@
             OrganisationId = organisationId;
             SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
+            ObligationSchemes = new List<ObligationScheme>();
         }
 
         public Scheme(Guid organisationId, Guid addressId, Guid contactId)
@@ -22,6 +24,7 @@
             ContactId = contactId;
             SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
+            ObligationSchemes = new List<ObligationScheme>();
         }
 
         public Scheme(Organisation organisation)
@@ -32,10 +35,12 @@
             OrganisationId = organisation.Id;
             SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
+            ObligationSchemes = new List<ObligationScheme>();
         }
 
         protected Scheme()
         {
+            ObligationSchemes = new List<ObligationScheme>();
         }
 
         public virtual Guid OrganisationId { get; private set; }
@@ -65,6 +70,8 @@
         public virtual Guid? AddressId { get; private set; }
 
         public bool HasAddress => Address != null;
+
+        public virtual ICollection<ObligationScheme> ObligationSchemes { get; private set; }
 
         public void UpdateScheme(
             string schemeName,

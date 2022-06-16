@@ -180,6 +180,7 @@
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
     <Compile Include="Builders\CompetentAuthorityUserDbSetup.cs" />
+    <Compile Include="Builders\ObligationSchemeDbSetup.cs" />
     <Compile Include="Builders\ObligationUploadDbSetup.cs" />
     <Compile Include="Builders\TransferEvidenceNoteDbSetup.cs" />
     <Compile Include="Builders\EvidenceNoteDbSetup.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\GetSchemeObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationUploadHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\SubmitSchemeObligationHandlerTests.cs" />
     <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
@@ -237,6 +239,10 @@
       <Project>{f7f7e99c-659a-427f-ac04-52e0c1760480}</Project>
       <Name>EA.Weee.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj">
+      <Project>{10930e82-4985-4f92-8c5a-65d15f0176be}</Project>
+      <Name>EA.Weee.Core.Tests.Unit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
       <Name>EA.Weee.Core</Name>
@@ -260,6 +266,10 @@
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-A123-4823-BC63-E9AFC9C0A25C}</Project>
       <Name>EA.Weee.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Base;
-    using Core.Helpers;
     using Domain.Obligation;
 
     public class ObligationUploadDbSetup : DbTestDataBuilder<ObligationUpload, ObligationUploadDbSetup>
@@ -19,7 +18,7 @@
 
         public ObligationUploadDbSetup WithErrors(List<ObligationUploadError> obligationUploadErrors)
         {
-            Instantiate().SetErrors(obligationUploadErrors);
+            instance.SetErrors(obligationUploadErrors);
 
             return this;
         }
