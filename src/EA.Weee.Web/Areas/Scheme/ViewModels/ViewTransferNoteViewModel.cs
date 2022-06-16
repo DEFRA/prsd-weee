@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using ManageEvidenceNotes;
 
-    public class ViewTransferNoteViewModel
+    public class ViewTransferNoteViewModel : TransferEvidenceViewModelBase
     {
         public Guid SchemeId { get; set; }
 
@@ -22,6 +23,15 @@
         public string SuccessMessage { get; set; }
 
         public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
+
+        [DisplayName("Compliance year")]
+        public string ComplianceYearDisplay => ComplianceYear.ToString();
+
+        public int ComplianceYear { get; set; }
+
+        public string RecipientAddress { get; set; }
+
+        public string TransferredByAddress { get; set; }
 
         public string RedirectTab
         {
