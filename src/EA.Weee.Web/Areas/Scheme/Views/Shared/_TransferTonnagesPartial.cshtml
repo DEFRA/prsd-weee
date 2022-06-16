@@ -3,6 +3,13 @@
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
+@{
+    var hideButton = false;
+    if (ViewData["hideButton"] != null)
+    {
+        hideButton = (bool)ViewData["hideButton"];
+    }
+}
 
 @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Post))
 {
@@ -146,13 +153,17 @@
             }
         </tbody>
     </table>
+    if (!hideButton)
+    {
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
 
-    <div class="govuk-!-margin-top-3">
-        <div class="govuk-button-group">
-            @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-            @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+                @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
+                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+                
+            </div>
         </div>
-    </div>
+    }
 }
 @Scripts.Render("~/bundles/weee_tonnage_totals")
 <script type="text/javascript">
