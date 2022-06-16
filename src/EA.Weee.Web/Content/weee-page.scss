@@ -1231,7 +1231,7 @@ details summary::-ms-details-marker {
     -moz-osx-font-smoothing: grayscale;
     text-decoration: underline;
     font-size: 18px !important;
-    color: #00703c !important;
+    color: #005ea5 !important;
 }
 
 #tbSessionCookies th, #tbSessionCookies td,
@@ -1239,4 +1239,16 @@ details summary::-ms-details-marker {
 #tbIntroductoryCookies th, #tbIntroductoryCookies td{
     line-height: 1.31579 !important;
     font-size: 16px !important;
+}
+
+.cookietbColumnWidth1 {
+    width: 25% !important;
+}
+
+.cookietbColumnWidth2 {
+    width: 55% !important;
+}
+
+.cookietbColumnWidth3 {
+    width: 20% !important;
 }
