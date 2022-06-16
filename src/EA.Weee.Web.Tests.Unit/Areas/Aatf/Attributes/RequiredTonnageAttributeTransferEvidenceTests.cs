@@ -14,7 +14,7 @@
     using Xunit;
     using WeeeCategory = Core.DataReturns.WeeeCategory;
 
-    public class RequiredTonnageAttributeTransferEvidenceTests
+    public class RequiredTonnageAttributeTransferEvidenceTests : IDisposable
     {
         private readonly List<ValidationResult> validationResults;
         private readonly Fixture fixture;
@@ -127,7 +127,6 @@
         public void Dispose()
         {
             SystemTime.Unfreeze();
-            this.Dispose();
         }
 
         private void ShouldBeInvalid(bool result)
