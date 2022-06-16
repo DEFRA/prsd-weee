@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
+    using System.Web.Mvc;
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TonnageCompareValueAttribute : ValidationAttribute
@@ -14,6 +15,13 @@
         public string CategoryProperty { get; private set; }
 
         public bool DisplayCategory { get; private set; }
+
+        private ITonnageValueValidator tonnageValueValidator;
+        public ITonnageValueValidator TonnageValueValidator
+        {
+            get => tonnageValueValidator ?? DependencyResolver.Current.GetService<ITonnageValueValidator>();
+            set => tonnageValueValidator = value;
+        }
 
         public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage, bool displayCategory = false)
         {
@@ -25,7 +33,14 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(value?.ToString()) || (!value.ToString().Any(char.IsDigit)))
+            if (string.IsNullOrWhiteSpace(value?.ToString()))
+            {
+                return ValidationResult.Success;
+            }
+
+            var valid = TonnageValueValidator.Validate(value);
+            // if the actual entered tonnage is not valid leave it to the tonnage attribute validation to catch
+            if (valid != TonnageValidationResult.Success)
             {
                 return ValidationResult.Success;
             }
