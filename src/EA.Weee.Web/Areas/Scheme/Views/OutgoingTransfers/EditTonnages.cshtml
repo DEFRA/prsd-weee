@@ -1,0 +1,34 @@
+﻿
+@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Scheme.ViewModels
+@using EA.Weee.Web.ViewModels.Shared
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
+@{
+    ViewBag.Title = "Edit transfer tonnage - GOV.UK";
+}
+
+@section full_main_content
+{
+    @Html.Gds().ValidationSummary()
+    <h1 class="govuk-heading-l">
+        Edit tonnages to transfer to @Model.RecipientName
+    </h1>
+
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ViewTransferNoteViewModel.ReferenceDisplay, Model.ViewTransferNoteViewModel.ReferenceDisplay, "govuk-grid-column-one-quarter")
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ViewTransferNoteViewModel.ComplianceYearDisplay, Model.ViewTransferNoteViewModel.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        @Html.Gds().DisplayFor(m => m.ViewTransferNoteViewModel.Status, Model.ViewTransferNoteViewModel.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
+    </div>
+
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("hideButton", true) }); }
+}
+
