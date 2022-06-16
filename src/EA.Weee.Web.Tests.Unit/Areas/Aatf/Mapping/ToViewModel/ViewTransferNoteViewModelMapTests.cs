@@ -5,19 +5,29 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Xunit;
 
     public class ViewTransferNoteViewModelMapTests
     {
+        private readonly IWeeeCache cache;
+        private readonly IMapper mapper;
+        private readonly IAddressUtilities addressUtility;
         private readonly Fixture fixture;
         private readonly ViewTransferNoteViewModelMap map;
 
         public ViewTransferNoteViewModelMapTests()
         {
+            cache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMapper>();
+            addressUtility = A.Fake<IAddressUtilities>();
             fixture = new Fixture();
-            map = new ViewTransferNoteViewModelMap();
+            map = new ViewTransferNoteViewModelMap(mapper, cache, addressUtility);
         }
 
         [Fact]
