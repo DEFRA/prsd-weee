@@ -16,7 +16,7 @@
 
     public class EditDraftReturnNotesViewModelMapTests
     {
-        private readonly EditDraftReturnNotesViewModelMap map;
+        private readonly EditDraftReturnNotesViewModelMap editDraftReturnNotesViewModelMap;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
@@ -24,7 +24,7 @@
         {
             mapper = A.Fake<IMapper>();
 
-            map = new EditDraftReturnNotesViewModelMap(mapper);
+            editDraftReturnNotesViewModelMap = new EditDraftReturnNotesViewModelMap(mapper);
 
             fixture = new Fixture();
         }
@@ -40,7 +40,7 @@
         public void Map_GivenNullSource_ArgumentNulLExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => map.Map(null));
+            var exception = Record.Exception(() => editDraftReturnNotesViewModelMap.Map(null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -63,7 +63,7 @@
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            map.Map(transfer);
+            editDraftReturnNotesViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
@@ -81,7 +81,7 @@
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            map.Map(transfer);
+            editDraftReturnNotesViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
@@ -99,7 +99,7 @@
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
 
             //act
-            var result = map.Map(transfer);
+            var result = editDraftReturnNotesViewModelMap.Map(transfer);
 
             // assert 
             result.EvidenceNotesDataList.Should().BeNullOrEmpty();
@@ -130,11 +130,80 @@
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
-            var result = map.Map(transfer);
+            var result = editDraftReturnNotesViewModelMap.Map(transfer);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var model = fixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2022, 1, 1);
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
+        }
+
+        [Theory]
+        [InlineData(2021)]
+        [InlineData(2020)]
+        [InlineData(2022)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(year, 1, 1);
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(notes, date, null);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2021).Create();
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
     }
 }

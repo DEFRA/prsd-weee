@@ -3,7 +3,6 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -18,7 +17,7 @@
 
     public class ReviewSubmittedEvidenceNotesViewModelMapTests
     {
-        public readonly ReviewSubmittedEvidenceNotesViewModelMap Map;
+        private readonly ReviewSubmittedEvidenceNotesViewModelMap reviewSubmittedEvidenceNotesViewModelMap;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
@@ -26,7 +25,7 @@
         {
             mapper = A.Fake<IMapper>();
 
-            Map = new ReviewSubmittedEvidenceNotesViewModelMap(mapper);
+            reviewSubmittedEvidenceNotesViewModelMap = new ReviewSubmittedEvidenceNotesViewModelMap(mapper);
 
             fixture = new Fixture();
         }
@@ -88,7 +87,7 @@
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            Map.Map(transfer);
+            reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
@@ -109,7 +108,7 @@
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            Map.Map(transfer);
+            reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
@@ -130,7 +129,7 @@
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            var result = Map.Map(transfer);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
 
             // assert 
             result.EvidenceNotesDataList.Should().BeNullOrEmpty();
@@ -160,11 +159,80 @@
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
             
             //act
-            var result = Map.Map(transfer);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var model = fixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2022, 1, 1);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
+        }
+
+        [Theory]
+        [InlineData(2021)]
+        [InlineData(2020)]
+        [InlineData(2022)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(year, 1, 1);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(notes, date, null);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2022, 1, 1);
+            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2021).Create();
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(notes, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
     }
 }
