@@ -78,10 +78,10 @@
             <caption class="govuk-table__caption govuk-visually-hidden">PCS obligation</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">
+                    <th scope="col" class="govuk-table__header" style="width: 76%;">
                         PCS
                     </th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-right">
+                    <th scope="col" class="govuk-table__header govuk-!-padding-left-0 govuk-!-text-align-right">
                         Obligation updated (GMT)
                     </th>
                 </tr>
@@ -102,10 +102,10 @@
                         @Html.HiddenFor(m => m.SchemeObligations[schemeCount].SchemeName)
                         @Html.HiddenFor(m => m.SchemeObligations[schemeCount].UpdateDate)
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell govuk-!-width-three-quarters">
+                            <td class="govuk-table__cell">
                                 @Model.SchemeObligations.ElementAt(schemeCount).SchemeName
                             </td>
-                            <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2">
+                            <td class="govuk-table__cell govuk-!-padding-left-2 govuk-!-text-left-right">
                                 @Model.SchemeObligations.ElementAt(schemeCount).UpdateDate
                             </td>
                         </tr>

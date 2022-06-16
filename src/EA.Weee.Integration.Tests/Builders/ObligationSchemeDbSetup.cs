@@ -5,6 +5,7 @@
     using System.Linq;
     using Base;
     using Domain.Obligation;
+    using Weee.Tests.Core;
 
     public class ObligationSchemeDbSetup : DbTestDataBuilder<ObligationScheme, ObligationSchemeDbSetup>
     {
@@ -35,6 +36,13 @@
         public ObligationSchemeDbSetup WithObligationUpload(Guid obligationUploadId)
         {
             instance.UpdateObligationUpload(obligationUploadId);
+
+            return this;
+        }
+
+        public ObligationSchemeDbSetup WithComplianceYear(int year)
+        {
+            ObjectInstantiator<ObligationScheme>.SetProperty(o => o.ComplianceYear, year, instance);
 
             return this;
         }
