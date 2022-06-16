@@ -15,5 +15,7 @@
         public string SearchRef { get; protected set; }
 
         public int ComplianceYear { get; protected set; }
+
+        public NoteType NoteTypeFilter { get; protected set; }
     }
 }

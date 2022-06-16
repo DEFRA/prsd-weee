@@ -6,13 +6,13 @@
     using Validation;
 
     [Serializable]
-    public class EvidenceCategoryValue : CategoryValue
+    public class EvidenceCategoryValue : CategoryValue, IEvidenceCategoryValue
     {
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
         public virtual string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
-        [TonnageCompareValue(nameof(CategoryId), nameof(Received), ErrorMessage = "The reused tonnage must be equivalent or lower than the received tonnage")]
+        [TonnageCompareValue(nameof(CategoryId), nameof(Received), "The reused tonnage must be equivalent or lower than the received tonnage")]
         public virtual string Reused { get; set; }
 
         public EvidenceCategoryValue()

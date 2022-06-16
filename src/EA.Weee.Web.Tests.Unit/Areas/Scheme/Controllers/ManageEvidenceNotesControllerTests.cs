@@ -97,7 +97,7 @@
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
-        [InlineData("transferred-out")]
+        [InlineData("outgoing-transfers")]
         public async Task IndexGet_BreadcrumbShouldBeSet(string tab)
         {
             //arrange
@@ -122,7 +122,7 @@
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
-        [InlineData("transferred-out")]
+        [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
             //act
@@ -137,7 +137,7 @@
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
-        [InlineData("transferred-out")]
+        [InlineData("outgoing-transfers")]
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
             //act
@@ -170,7 +170,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) && 
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -200,7 +201,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(complianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(complianceYear) &&
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -371,7 +373,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

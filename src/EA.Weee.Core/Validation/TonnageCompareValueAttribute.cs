@@ -9,16 +9,18 @@
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TonnageCompareValueAttribute : ValidationAttribute
     {
-        private string categoryPropertyErrorMessage;
-
-        public string ComparePropertyName { get; set; }
+        public string ComparePropertyName { get; private set; }
 
         public string CategoryProperty { get; private set; }
 
-        public TonnageCompareValueAttribute(string category, string compareProperty)
+        public bool DisplayCategory { get; private set; }
+
+        public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage, bool displayCategory = false)
         {
             CategoryProperty = category;
             ComparePropertyName = compareProperty;
+            ErrorMessage = errorMessage;
+            DisplayCategory = displayCategory;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -40,7 +42,7 @@
             var categoryId = Enum.GetValues(typeof(WeeeCategory)).Cast<int>().ToList();
             var categoryPropertyValue = (int)categoryProperty.GetValue(validationContext.ObjectInstance, null) as int?;
 
-            categoryPropertyErrorMessage = $"Property {CategoryProperty} should be of type {nameof(WeeeCategory)}";
+            var categoryPropertyErrorMessage = $"Property {CategoryProperty} should be of type {nameof(WeeeCategory)}";
 
             if (categoryPropertyValue == null)
             {
@@ -62,27 +64,43 @@
             var dependentPropertyValue = dependentProperty.GetValue(instance, null);
 
             if ((decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
-                    CultureInfo.InvariantCulture, out var decimalResult) && (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))))
+                    CultureInfo.InvariantCulture, out var decimalResult)))
             {
-                return new ValidationResult(GenerateMessage());
-            }
-
-            if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
-                    CultureInfo.InvariantCulture, out var decimalDependentResult)))
-            {
-                if (decimalResult > decimalDependentResult)
+                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
                 {
-                    return new ValidationResult(GenerateMessage());
+                    if (decimalResult != 0)
+                    {
+                        return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
+                    }
+                }
+
+                if (dependentPropertyValue != null)
+                {
+                    if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
+                            CultureInfo.InvariantCulture, out var decimalDependentResult)))
+                    {
+                        if (decimalResult > decimalDependentResult)
+                        {
+                            return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
+                        }
+                    }
                 }
             }
-            
+
             return ValidationResult.Success;
         }
 
         public override object TypeId => this;
 
-        private string GenerateMessage()
+        private string GenerateMessage(int categoryId)
         {
+            if (DisplayCategory)
+            {
+                var category = $"{categoryId} {((WeeeCategory)categoryId).ToCustomDisplayString()}";
+
+                return string.Format(ErrorMessage, category);
+            }
+
             return ErrorMessage;
         }
     }

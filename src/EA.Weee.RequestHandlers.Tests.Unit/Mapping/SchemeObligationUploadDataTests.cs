@@ -50,20 +50,20 @@
             var result = map.Map(obligationUpload);
 
             //assert
-            result.ErrorData.Count.Should().Be(3);
-            result.ErrorData.Should().Contain(e =>
+            result.Count.Should().Be(3);
+            result.Should().Contain(e =>
                 e.Scheme == "scheme 1" && 
                 e.SchemeIdentifier == "scheme 1 identifier" &&
                 e.ErrorType == SchemeObligationUploadErrorType.Scheme &&
                 e.Category == null &&
                 e.Description == "error 1");
-            result.ErrorData.Should().Contain(e =>
+            result.Should().Contain(e =>
                 e.Scheme == "scheme 2" && 
                 e.SchemeIdentifier == "scheme 2 identifier" &&
                 e.ErrorType == SchemeObligationUploadErrorType.Data &&
                 e.Category == WeeeCategory.ConsumerEquipment &&
                 e.Description == "error 3");
-            result.ErrorData.Should().Contain(e =>
+            result.Should().Contain(e =>
                 e.Scheme == null &&
                 e.SchemeIdentifier == null &&
                 e.ErrorType == SchemeObligationUploadErrorType.File &&

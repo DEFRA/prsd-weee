@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
@@ -123,7 +125,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<ObligationUpload, SchemeObligationUploadData>(obligationUpload))
+            A.CallTo(() => mapper.Map<ObligationUpload, List<SchemeObligationUploadErrorData>>(obligationUpload))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -131,15 +133,15 @@
         public async Task HandleAsync_GivenMappedReturnedData_MappedReturnedDataShouldBeReturned()
         {
             //arrange
-            var returnData = fixture.Create<SchemeObligationUploadData>();
-            A.CallTo(() => mapper.Map<ObligationUpload, SchemeObligationUploadData>(A<ObligationUpload>._))
+            var returnData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            A.CallTo(() => mapper.Map<ObligationUpload, List<SchemeObligationUploadErrorData>>(A<ObligationUpload>._))
                 .Returns(returnData);
 
             //act
             var result = await handler.HandleAsync(request);
 
             //assert
-            result.Should().Be(returnData);
+            result.Should().BeEquivalentTo(returnData);
         }
     }
 }

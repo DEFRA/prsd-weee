@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
     using CuttingEdge.Conditions;
-    using Lookup;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
@@ -18,7 +18,7 @@
 
         public virtual int ComplianceYear { get; private set; }
 
-        public virtual DateTime UpdatedDate { get; private set; }
+        public virtual DateTime? UpdatedDate { get; private set; }
 
         [ForeignKey("SchemeId")]
         public virtual Scheme Scheme { get; private set; }
@@ -27,8 +27,21 @@
 
         public virtual ICollection<ObligationSchemeAmount> ObligationSchemeAmounts { get; private set; }
 
-        public ObligationScheme()
+        //Only use the following method for integration tests
+        public void UpdateScheme(Guid schemeId)
         {
+            SchemeId = schemeId;
+            Scheme = null;
+        }
+
+        public void SetAmounts(List<ObligationSchemeAmount> amounts)
+        {
+            ObligationSchemeAmounts = amounts;
+        }
+
+        protected ObligationScheme()
+        {
+            ObligationSchemeAmounts = new List<ObligationSchemeAmount>();
         }
 
         public ObligationScheme(Scheme scheme, int complianceYear)
@@ -37,15 +50,52 @@
             Condition.Requires(complianceYear).IsGreaterThan(0);
 
             Scheme = scheme;
+            SchemeId = scheme.Id;
             ComplianceYear = complianceYear;
             ObligationSchemeAmounts = new List<ObligationSchemeAmount>();
             UpdatedDate = SystemTime.UtcNow;
         }
 
-        public virtual void SetUpdatedDate(DateTime date)
+        public virtual void UpdateObligationUpload(Guid obligationUploadId)
         {
-            //only update the updated date if the value is different to the current value.
-            UpdatedDate = date;
+            ObligationUploadId = obligationUploadId;
+            ObligationUpload = null;
+        }
+
+        public virtual void UpdateObligationUpload(ObligationUpload obligationUpload)
+        {
+            Condition.Requires(obligationUpload).IsNotNull();
+
+            ObligationUpload = obligationUpload;
+        }
+
+        public virtual void UpdateObligationSchemeAmounts(List<ObligationSchemeAmount> updatedObligationSchemeAmounts)
+        {
+            var obligationChanged = false;
+            foreach (var updatedObligationSchemeAmount in updatedObligationSchemeAmounts)
+            {
+                var currentAmount = ObligationSchemeAmounts.FirstOrDefault(o => o.CategoryId == updatedObligationSchemeAmount.CategoryId);
+
+                if (currentAmount != null)
+                {
+                    var changed = currentAmount.UpdateObligation(updatedObligationSchemeAmount.Obligation);
+
+                    if (changed)
+                    {
+                        obligationChanged = true;
+                    }
+                }
+            }
+
+            if (obligationChanged)
+            {
+                UpdatedDate = SystemTime.UtcNow;
+            }
+        }
+
+        public bool HasObligationSchemeAmount()
+        {
+            return ObligationSchemeAmounts != null && ObligationSchemeAmounts.Any(s => s.Obligation.HasValue);
         }
     }
 }

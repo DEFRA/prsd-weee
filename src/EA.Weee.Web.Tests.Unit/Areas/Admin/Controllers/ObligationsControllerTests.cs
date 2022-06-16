@@ -13,6 +13,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web;
@@ -262,19 +263,39 @@
         }
 
         [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
+        public async Task UploadObligationsGet_GivenSelectedAuthority_AuthoritySchemeObligationsShouldBeRetrieved()
         {
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
 
             //act
-            await controller.UploadObligations(authority, fixture.Create<Guid>());
+            await controller.UploadObligations(authority, null);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                    A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == 2022 &&
+                                                             s.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
+        {
+            //arrange
+            var authority = fixture.Create<CompetentAuthority>();
+            var obligationData = fixture.CreateMany<SchemeObligationData>().ToList();
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligation>._)).Returns(obligationData);
+
+            //act
+            await controller.UploadObligations(authority, null);
 
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority)))
-                .MustHaveHappenedOnceExactly();
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority &&
+                            u.ObligationData.SequenceEqual(obligationData) &&
+                            u.ErrorData == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -299,7 +320,7 @@
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
             var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
@@ -310,7 +331,7 @@
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.UploadData == schemeUploadObligationData)))
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.ErrorData == schemeUploadObligationData)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -320,7 +341,7 @@
             //arrange
             var authority = fixture.Create<CompetentAuthority>();
             var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.Create<SchemeObligationUploadData>();
+            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -370,7 +391,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenInvalidViewModel_DefaultViewShouldBeReturned()
+        public async Task UploadObligationsPost_GivenInvalidViewModel_DefaultViewShouldBeReturned()
         {
             //arrange
             var model = new UploadObligationsViewModel();
@@ -384,7 +405,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenInvalidViewModel_ModelShouldBeReturned()
+        public async Task UploadObligationsPost_GivenInvalidViewModel_ModelShouldBeReturned()
         {
             //arrange
             var model = new UploadObligationsViewModel();
@@ -398,7 +419,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenModelFilePropertyHasError_ModelDisplaySelectFileErrorShouldBeTrue()
+        public async Task UploadObligationsPost_GivenModelFilePropertyHasError_ModelDisplaySelectFileErrorShouldBeTrue()
         {
             //arrange
             var model = new UploadObligationsViewModel();
@@ -412,7 +433,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenValidModel_RequestShouldBeMapped()
+        public async Task UploadObligationsPost_GivenValidModel_RequestShouldBeMapped()
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
@@ -426,7 +447,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenValidModelAndSubmitObligationRequest_ApiShouldBeCalled()
+        public async Task UploadObligationsPost_GivenValidModelAndSubmitObligationRequest_ApiShouldBeCalled()
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
@@ -442,7 +463,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenValidModel_ShouldRedirectToUploadObligationsGet()
+        public async Task UploadObligationsPost_GivenValidModel_ShouldRedirectToUploadObligationsGet()
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
@@ -460,7 +481,7 @@
         }
 
         [Fact]
-        public async Task UploadObligations_GivenModelFilePropertyDoesNotHaveError_ModelDisplaySelectFileErrorShouldBeFalse()
+        public async Task UploadObligationsPost_GivenModelFilePropertyDoesNotHaveError_ModelDisplaySelectFileErrorShouldBeFalse()
         {
             //arrange
             var model = new UploadObligationsViewModel();

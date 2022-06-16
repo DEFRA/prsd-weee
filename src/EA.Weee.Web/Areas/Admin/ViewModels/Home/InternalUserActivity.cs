@@ -12,5 +12,6 @@
         public const string ManagePcsCharges = "Manage PCS charges";
         public const string ManagePcsObligations = "Manage PCS obligations";
         public const string CreateOrganisation = "Add new organisation";
+        public const string ManageEvidenceNotes = "Manage evidence notes";
     }
 }
