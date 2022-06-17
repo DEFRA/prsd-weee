@@ -78,16 +78,16 @@
             if ((decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                     CultureInfo.InvariantCulture, out var decimalResult)))
             {
-                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
-                {
-                    if (decimalResult != 0)
-                    {
-                        return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
-                    }
-                }
-
                 if (dependentPropertyValue != null)
                 {
+                    var dependentPropertyValueValid = TonnageValueValidator.Validate(dependentPropertyValue);
+
+                    //if dependent property value is not valid just return success to allow it to be captured by the tonnage validation attribute
+                    if (dependentPropertyValueValid != TonnageValidationResult.Success)
+                    {
+                        return ValidationResult.Success;
+                    }
+
                     if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                             CultureInfo.InvariantCulture, out var decimalDependentResult)))
                     {
@@ -95,6 +95,14 @@
                         {
                             return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
                         }
+                    }
+                }
+
+                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
+                {
+                    if (decimalResult != 0)
+                    {
+                        return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
                     }
                 }
             }
