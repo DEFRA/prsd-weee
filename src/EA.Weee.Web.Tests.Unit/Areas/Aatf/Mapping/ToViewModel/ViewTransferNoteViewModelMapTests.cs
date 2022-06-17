@@ -5,8 +5,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
@@ -16,14 +15,16 @@
     public class ViewTransferNoteViewModelMapTests
     {
         private readonly IAddressUtilities addressUtility;
+        private readonly ITonnageUtilities tonnageUtilities;
         private readonly Fixture fixture;
         private readonly ViewTransferNoteViewModelMap map;
 
         public ViewTransferNoteViewModelMapTests()
         {
             addressUtility = A.Fake<IAddressUtilities>();
+            tonnageUtilities = A.Fake<ITonnageUtilities>();
             fixture = new Fixture();
-            map = new ViewTransferNoteViewModelMap(addressUtility);
+            map = new ViewTransferNoteViewModelMap(addressUtility, tonnageUtilities);
         }
 
         [Fact]
