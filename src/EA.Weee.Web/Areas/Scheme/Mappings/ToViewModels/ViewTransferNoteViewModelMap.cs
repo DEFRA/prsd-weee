@@ -3,7 +3,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using CuttingEdge.Conditions;
-    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
@@ -13,10 +13,12 @@
     public class ViewTransferNoteViewModelMap : IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>
     {
         private readonly IAddressUtilities addressUtilities;
+        private readonly ITonnageUtilities tonnageUtilities;
 
-        public ViewTransferNoteViewModelMap(IAddressUtilities addressUtilities)
+        public ViewTransferNoteViewModelMap(IAddressUtilities addressUtilities, ITonnageUtilities tonnageUtilities)
         {
             this.addressUtilities = addressUtilities;
+            this.tonnageUtilities = tonnageUtilities;
         }
 
         public ViewTransferNoteViewModel Map(ViewTransferNoteViewModelMapTransfer source)
@@ -100,11 +102,10 @@
                 {
                     ReferenceId = nt.First().Reference,
                     Type = nt.First().Type,
-                    CategoryValues = nt.Select(ntt => new EvidenceCategoryValue()
+                    CategoryValues = nt.Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {
-                        CategoryId = (int)ntt.EvidenceTonnageData.CategoryId,
-                        Received = ntt.EvidenceTonnageData.Received.ToString(),
-                        Reused = ntt.EvidenceTonnageData.Reused.ToString()
+                        Received = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReceived),
+                        Reused = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReused)
                     }).ToList()
                 }).ToList()
             }).ToList();
