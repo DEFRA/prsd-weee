@@ -33,14 +33,14 @@
         }
 
         [Theory]
-        [InlineData("1", "A")]
-        [InlineData("1", "0.0000000000000000")]
-        [InlineData("1", "-1")]
-        [InlineData("1", "0")]
-        [InlineData("1", null)]
-        [InlineData(2, "")]
-        [InlineData(2, " ")]
-        [InlineData(2, null)]
+        [InlineData("A", "1")]
+        [InlineData("0.0000000000000000", "0.0000000000000000")]
+        [InlineData("-1", "1")]
+        [InlineData("0", "1")]
+        [InlineData(null, "1")]
+        [InlineData("", 2)]
+        [InlineData(" ", 2)]
+        [InlineData(null, 2)]
         public void Validate_GivenTonnageValueIsNotValid_ShouldBeValid(object tonnage,
             object compareTonnage)
         {
@@ -48,6 +48,29 @@
             var validationContext = new ValidationContext(tonnageValueModel);
 
             A.CallTo(() => tonnageTonnageValueValidator.Validate(A<object>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
+
+            attribute = new TonnageCompareValueAttribute(CategoryIdProperty, CompareTonnage, Error)
+            {
+                TonnageValueValidator = tonnageTonnageValueValidator
+            };
+
+            var result = Record.Exception(() => attribute.Validate(tonnageValueModel.Tonnage, validationContext));
+
+            result.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData("0", "-4")]
+        [InlineData("0", "-1.000000000000000000")]
+        [InlineData("1", "A")]
+        [InlineData("2", "0.000000000000000000")]
+        public void Validate_GivenDependentTonnageValueIsNotValid_ShouldBeValid(object tonnage,
+            object compareTonnage)
+        {
+            var tonnageValueModel = TonnageValueModel(tonnage, compareTonnage);
+            var validationContext = new ValidationContext(tonnageValueModel);
+
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<object>._)).ReturnsNextFromSequence(TonnageValidationResult.Success, new TonnageValidationResult(TonnageValidationTypeEnum.MaximumDigits));
 
             attribute = new TonnageCompareValueAttribute(CategoryIdProperty, CompareTonnage, Error)
             {
@@ -185,7 +208,7 @@
 
             result.Should().BeNull();
 
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(1)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(1)).MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
