@@ -46,10 +46,6 @@
 
                 var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
 
-                //var model =
-                //    mapper.Map<OutgoingTransferEditTonnageViewModelTransfer, TransferEvidenceTonnageViewModel>(
-                //        new OutgoingTransferEditTonnageViewModelTransfer(pcsId, noteData));
-
                 return this.View("EditTonnages", model);
             }
         }
