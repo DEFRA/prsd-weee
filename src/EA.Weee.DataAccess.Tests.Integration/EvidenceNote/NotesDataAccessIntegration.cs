@@ -167,15 +167,8 @@
                 var note1Excluded = NoteCommon.CreateNote(database, organisation1, aatf: aatf, startDate: DateTime.Now.AddYears(1));
                 var note2Included = NoteCommon.CreateNote(database, organisation1, aatf: aatf);
 
-                if (note1Excluded != null) 
-                { 
-                    context.Notes.Add(note1Excluded); 
-                }
-
-                if (note2Included != null) 
-                { 
-                    context.Notes.Add(note2Included); 
-                }
+                context.Notes.Add(note1Excluded); 
+                context.Notes.Add(note2Included); 
 
                 await database.WeeeContext.SaveChangesAsync();
 
@@ -888,7 +881,8 @@
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = date,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
-                    AatfId = aatf.Id
+                    AatfId = aatf.Id, 
+                    ComplianceYear = DateTime.Now.Year
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);

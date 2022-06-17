@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
@@ -60,7 +61,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
  
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
 
             //act
             map.Map(transfer);
@@ -78,7 +79,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
 
             //act
             map.Map(transfer);
@@ -96,7 +97,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
 
             //act
             var result = map.Map(transfer);
@@ -126,7 +127,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
