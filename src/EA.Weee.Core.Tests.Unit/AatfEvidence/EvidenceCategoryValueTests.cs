@@ -65,7 +65,7 @@
                 .BeDecoratedWith<TonnageCompareValueAttribute>(t =>
                     t.CategoryProperty.Equals("CategoryId") &&
                     t.ComparePropertyName.Equals("Received") &&
-                    t.ErrorMessage.Equals("The reused tonnage must be equivalent or lower than the received tonnage"));
+                    t.ErrorMessage.Equals("The reused tonnage for category {0} must be equivalent or lower than the received tonnage"));
         }
     }
 }

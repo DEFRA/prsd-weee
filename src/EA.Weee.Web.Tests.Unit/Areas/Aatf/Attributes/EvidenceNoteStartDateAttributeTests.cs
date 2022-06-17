@@ -18,7 +18,7 @@
         {
             cache = A.Fake<IWeeeCache>();
 
-            attribute = new EvidenceNoteStartDateAttribute("EndDate")
+            attribute = new EvidenceNoteStartDateAttribute("EndDate", true)
             {
                 Cache = cache
             };
@@ -168,7 +168,7 @@
 
         private class ValidationTarget
         {
-            [EvidenceNoteStartDate(nameof(EndDate))]
+            [EvidenceNoteStartDate(nameof(EndDate), true)]
             public DateTime? StartDate { get; set; }
 
             public DateTime? EndDate { get; set; }

@@ -15,35 +15,35 @@
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
-    public class ViewAndTransferEvidenceViewModelMapTests
+    public class TransferredOutEvidenceViewModelMapTests 
     {
-        private readonly ViewAndTransferEvidenceViewModelMap viewAndTransferEvidenceViewModelMap;
+        private readonly TransferredOutEvidenceViewModelMap transferredOutEvidenceViewModelMap;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
 
-        public ViewAndTransferEvidenceViewModelMapTests()
+        public TransferredOutEvidenceViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
 
-            viewAndTransferEvidenceViewModelMap = new ViewAndTransferEvidenceViewModelMap(mapper);
+            transferredOutEvidenceViewModelMap = new TransferredOutEvidenceViewModelMap(mapper);
 
             fixture = new Fixture();
         }
 
         [Fact]
-        public void ViewAndTransferEvidenceViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
+        public void TransferredOutEvidenceViewModelMap_ShouldBeDerivedFromListOfNotesViewModelBase()
         {
-            typeof(ViewAndTransferEvidenceViewModelMap).Should()
-                .BeDerivedFrom<ListOfNotesViewModelBase<SchemeViewAndTransferManageEvidenceSchemeViewModel>>();
+            typeof(TransferredOutEvidenceViewModelMap).Should()
+                .BeDerivedFrom<ListOfNotesViewModelBase<TransferredOutEvidenceNotesSchemeViewModel>>();
         }
 
         [Fact]
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), 
-                null, 
-                "Test", 
+            var exception = Record.Exception(() => new TransferredOutEvidenceNotesViewModelMapTransfer(Guid.NewGuid(),
+                null,
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>()));
 
@@ -55,9 +55,9 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.Empty, 
-                fixture.CreateMany<EvidenceNoteData>().ToList(), 
-                "Test", 
+            var exception = Record.Exception(() => new TransferredOutEvidenceNotesViewModelMapTransfer(Guid.Empty,
+                fixture.CreateMany<EvidenceNoteData>().ToList(),
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>()));
 
@@ -69,13 +69,35 @@
         public void Map_GivenSchemeNameIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), 
-                null, 
+            var exception = Record.Exception(() => new TransferredOutEvidenceNotesViewModelMapTransfer(Guid.NewGuid(),
+                fixture.CreateMany<EvidenceNoteData>().ToList(),
+                null,
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_GivenSchemeNameAndOrganisationId_PropertiesShouldBeSet()
+        {
+            //arrange
+            var organisationId = fixture.Create<Guid>();
+            var schemeName = fixture.Create<string>();
+
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                fixture.CreateMany<EvidenceNoteData>().ToList(),
+                schemeName,
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.OrganisationId.Should().Be(organisationId);
+            result.SchemeName.Should().Be(schemeName);
         }
 
         [Fact]
@@ -91,38 +113,17 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            viewAndTransferEvidenceViewModelMap.Map(transfer);
+            transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public void Map_GivenSchemeNameAndOrganisationId_PropertiesShouldBeSet()
-        {
-            //arrange
-            var organisationId = fixture.Create<Guid>();
-            var schemeName = fixture.Create<string>();
-
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId,
-                fixture.CreateMany<EvidenceNoteData>().ToList(),
-                schemeName,
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
-
-            //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
-
-            //assert
-            result.OrganisationId.Should().Be(organisationId);
-            result.SchemeName.Should().Be(schemeName);
         }
 
         [Fact]
@@ -133,14 +134,14 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            viewAndTransferEvidenceViewModelMap.Map(transfer);
+            transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert 
             A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(A<EvidenceNoteRowViewModel>._)).MustHaveHappened(0, Times.Exactly);
@@ -154,14 +155,14 @@
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert 
             result.EvidenceNotesDataList.Should().BeNullOrEmpty();
@@ -180,70 +181,27 @@
                  fixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var model = new SchemeViewAndTransferManageEvidenceSchemeViewModel
+            var model = new TransferredOutEvidenceNotesSchemeViewModel
             {
                 EvidenceNotesDataList = returnedNotes
             };
 
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ViewAndTransferEvidenceViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
-        }
-
-        [Fact]
-        public void Map_GivenNoApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
-        {
-            //arrange
-            var notes = new List<EvidenceNoteData>
-            {
-                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).Create(),
-                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).Create(),
-                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).Create(),
-                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).Create()
-            };
-
-            //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
-                notes,
-                fixture.Create<string>(), 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>()));
-
-            //assert
-            result.DisplayTransferButton.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Map_GivenApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
-        {
-            //arrange
-            var notes = new List<EvidenceNoteData>
-            {
-                fixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
-            };
-
-            //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(fixture.Create<Guid>(),
-                notes, 
-                fixture.Create<string>(), 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>()));
-
-            //assert
-            result.DisplayTransferButton.Should().BeTrue();
         }
 
         [Fact]
@@ -255,7 +213,7 @@
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -275,7 +233,7 @@
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(notes, date, null);
+            var result = transferredOutEvidenceViewModelMap.Map(notes, date, null);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -293,7 +251,7 @@
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -309,7 +267,7 @@
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = viewAndTransferEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
