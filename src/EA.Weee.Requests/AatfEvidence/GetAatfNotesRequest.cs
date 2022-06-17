@@ -21,7 +21,7 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        //public int ComplianceYear { get; set; }
 
         public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses, string searchRef, int selectedComplianceYear, 
             Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
@@ -42,7 +42,7 @@
             NoteStatusFilter = noteStatusFilter;
             StartDateSubmitted = startDateSubmitted;
             EndDateSubmitted = endDateSubmitted;
-            SelectedComplianceYear = selectedComplianceYear;
+            ComplianceYear = selectedComplianceYear;
         }
     }
 }

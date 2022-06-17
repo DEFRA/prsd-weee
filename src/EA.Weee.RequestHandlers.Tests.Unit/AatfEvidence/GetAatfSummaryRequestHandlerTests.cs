@@ -38,7 +38,7 @@
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
 
-            request = new GetAatfSummaryRequest(fixture.Create<Guid>(), SystemTime.Now.Year);
+            request = new GetAatfSummaryRequest(fixture.Create<Guid>(), fixture.Create<int>());
 
             handler = new GetAatfSummaryRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -106,13 +106,12 @@
         public async Task HandleAsync_GivenRequest_SummaryTotalsShouldBeRetrieved()
         {
             //arrange
-            short currentYear = (short)SystemTime.Now.Year;
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, currentYear))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -154,9 +153,8 @@
         {
             //arrange
             var totalsData = fixture.CreateMany<AatfEvidenceSummaryTotalsData>().ToList();
-            short currentYear = (short)SystemTime.Now.Year;
 
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, currentYear))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
                 .Returns(totalsData);
 
             //act

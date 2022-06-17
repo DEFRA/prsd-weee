@@ -6,6 +6,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Autofac;
+    using AutoFixture;
     using Base;
     using Builders;
     using Domain.Organisation;
@@ -271,7 +272,7 @@
                 OrganisationUserDbSetup.Init()
                 .WithUserIdAndOrganisationId(UserId, organisation.Id)
                 .WithStatus(UserStatus.Active)
-                .Create();
+                .Create();                
 
                 var evidence1 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
@@ -281,7 +282,7 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidence2 = EvidenceNoteDbSetup.Init()
@@ -292,7 +293,7 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidence3 = EvidenceNoteDbSetup.Init()
@@ -303,7 +304,7 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidence4 = EvidenceNoteDbSetup.Init()
@@ -314,7 +315,7 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.Year)
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidence5 = EvidenceNoteDbSetup.Init()
@@ -325,7 +326,7 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.AddYears(-1).Year)
+                .WithComplianceYear(complianceYear - 1)
                 .Create();
 
                 var evidence6 = EvidenceNoteDbSetup.Init()
@@ -336,24 +337,26 @@
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
                 })
-                .WithComplianceYear(SystemTime.UtcNow.AddYears(-1).Year)
+                .WithComplianceYear(complianceYear - 1)
                 .Create();
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null))).Result;
             };
 
             private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
             {
                 evidenceNoteData.Should().NotBeNull();
+                evidenceNoteData.Count.Should().Be(4);
+                notesSet.ToList().Count.Equals(6);
             };
 
             private readonly It shouldHaveExpectedResultsCount = () =>
             {
-                notesSet.Where(n => n.ComplianceYear == SystemTime.UtcNow.Year).ToList().Count.Equals(4);
-                notesSet.Where(n => n.ComplianceYear == SystemTime.UtcNow.AddYears(-1).Year).ToList().Count.Equals(2);
+                notesSet.Where(n => n.ComplianceYear == complianceYear).ToList().Count.Equals(4);
+                notesSet.Where(n => n.ComplianceYear == complianceYear - 1).ToList().Count.Equals(2);
             };
 
             private readonly It shouldHaveExpectedAllowedStatuses = () =>
@@ -377,6 +380,8 @@
             protected static Scheme scheme;
             protected static Aatf aatf;
             protected static Note note;
+            protected static Fixture fixture;
+            protected static int complianceYear;
 
             public static void LocalSetup()
             {
@@ -384,6 +389,8 @@
                     .WithDefaultSettings(resetDb: true)
                     .WithExternalUserAccess();
 
+                fixture = new Fixture();
+                complianceYear = fixture.Create<int>();
                 notesSet = new List<Note>();
                 allowedStatuses = new List<NoteStatus> { NoteStatus.Approved };
                 handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>>();
