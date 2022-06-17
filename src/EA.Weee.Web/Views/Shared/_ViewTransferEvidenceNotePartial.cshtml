@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
 
-<h1 class="govuk-heading-l">Evidence note</h1>
+<h1 class="govuk-heading-l">Evidence note (transfer)</h1>
 
 <div class="govuk-width-container govuk-!-margin-top-3">
 
@@ -79,10 +79,10 @@
         <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 25%;">
-                    Reference
+                <th class="govuk-table__header govuk-!-text-align-left" style="width: 10%;">
+                    Reference ID
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
+                <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
                     Category
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
@@ -99,16 +99,25 @@
                 var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
 
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-text-align-right" rowspan="@note.CategoryValues.Count">
+                <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
                     @note.ReferenceDisplay
                 </td>
-                @for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
-                {
-                    <td class="govuk-table__cell govuk-!-text-align-right">
-                        @note.ReferenceDisplay
-                    </td>
-                }
             </tr>
+                    for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
+                    {
+                        var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-text-align-left">
+                            @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right">
+                            @category.Received
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right">
+                            @category.Reused
+                        </td>
+                    </tr>
+                        }
                 }
                 </tbody>
     </table>
