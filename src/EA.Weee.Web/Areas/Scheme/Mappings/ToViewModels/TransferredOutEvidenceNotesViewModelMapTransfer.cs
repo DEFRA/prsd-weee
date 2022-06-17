@@ -5,9 +5,9 @@
     using System.Collections.Generic;
     using Aatf.ViewModels;
 
-    public class TransferredOutEvidenceNotesViewModelMap : BaseEvidenceNotesViewModelMapTransfer
+    public class TransferredOutEvidenceNotesViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
-        public TransferredOutEvidenceNotesViewModelMap(Guid organisationId,
+        public TransferredOutEvidenceNotesViewModelMapTransfer(Guid organisationId,
             List<EvidenceNoteData> notes,
             string schemeName,
             DateTime currentDate,
