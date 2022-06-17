@@ -91,12 +91,13 @@
                             aatfId, 
                             aatf, 
                             models,
+                            currentDate,
                             selectedComplianceYear,
                             manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, selectedComplianceYear, manageEvidenceNoteViewModel);
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, models, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel);
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
@@ -261,7 +262,7 @@
         }
         
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
-            SelectYourAatfViewModel models, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel)
+            SelectYourAatfViewModel models, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
             var resultAllNotes = new List<EvidenceNoteData>();
 
@@ -277,7 +278,7 @@
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
             }
 
-            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes));
+            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate));
 
             var schemeData = resultAllNotes.Select(x => x.SchemeData)
                                            .Distinct(new SchemeDataComparer())
@@ -325,6 +326,7 @@
             Guid aatfId, 
             AatfData aatf, 
             SelectYourAatfViewModel models,
+            DateTime currentDate,
             int selectedComplianceYear,
             ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
@@ -332,7 +334,7 @@
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
                 manageEvidenceViewModel?.FilterViewModel.SearchRef, selectedComplianceYear, null, null, null, null, null));
 
-            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result));
+            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, models.AatfList.ToList(), manageEvidenceViewModel?.FilterViewModel, null, null, selectedComplianceYear));
