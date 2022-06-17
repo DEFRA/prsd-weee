@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
+    using System.Web.Mvc;
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TonnageCompareValueAttribute : ValidationAttribute
@@ -13,19 +14,30 @@
 
         public string CategoryProperty { get; private set; }
 
-        public bool DisplayCategory { get; private set; }
+        private ITonnageValueValidator tonnageValueValidator;
+        public ITonnageValueValidator TonnageValueValidator
+        {
+            get => tonnageValueValidator ?? DependencyResolver.Current.GetService<ITonnageValueValidator>();
+            set => tonnageValueValidator = value;
+        }
 
-        public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage, bool displayCategory = false)
+        public TonnageCompareValueAttribute(string category, string compareProperty, string errorMessage)
         {
             CategoryProperty = category;
             ComparePropertyName = compareProperty;
             ErrorMessage = errorMessage;
-            DisplayCategory = displayCategory;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(value?.ToString()) || (!value.ToString().Any(char.IsDigit)))
+            if (string.IsNullOrWhiteSpace(value?.ToString()))
+            {
+                return ValidationResult.Success;
+            }
+
+            var valid = TonnageValueValidator.Validate(value);
+            // if the actual entered tonnage is not valid leave it to the tonnage attribute validation to catch
+            if (valid != TonnageValidationResult.Success)
             {
                 return ValidationResult.Success;
             }
@@ -66,16 +78,16 @@
             if ((decimal.TryParse(value.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                     CultureInfo.InvariantCulture, out var decimalResult)))
             {
-                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
-                {
-                    if (decimalResult != 0)
-                    {
-                        return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
-                    }
-                }
-
                 if (dependentPropertyValue != null)
                 {
+                    var dependentPropertyValueValid = TonnageValueValidator.Validate(dependentPropertyValue);
+
+                    //if dependent property value is not valid just return success to allow it to be captured by the tonnage validation attribute
+                    if (dependentPropertyValueValid != TonnageValidationResult.Success)
+                    {
+                        return ValidationResult.Success;
+                    }
+
                     if ((decimal.TryParse(dependentPropertyValue.ToString(), NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                             CultureInfo.InvariantCulture, out var decimalDependentResult)))
                     {
@@ -83,6 +95,14 @@
                         {
                             return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
                         }
+                    }
+                }
+
+                if (dependentPropertyValue == null || string.IsNullOrWhiteSpace(dependentPropertyValue.ToString()))
+                {
+                    if (decimalResult != 0)
+                    {
+                        return new ValidationResult(GenerateMessage(categoryPropertyValue.Value));
                     }
                 }
             }
@@ -94,14 +114,9 @@
 
         private string GenerateMessage(int categoryId)
         {
-            if (DisplayCategory)
-            {
-                var category = $"{categoryId} {((WeeeCategory)categoryId).ToCustomDisplayString()}";
+            var category = $"{categoryId} {((WeeeCategory)categoryId).ToCustomDisplayString()}";
 
-                return string.Format(ErrorMessage, category);
-            }
-
-            return ErrorMessage;
+            return string.Format(ErrorMessage, category);
         }
     }
 }
