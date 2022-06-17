@@ -23,13 +23,13 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var organisationAddress = source.TransferEvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
+            var recipientOrganisationAddress = source.TransferEvidenceNoteData.RecipientOrganisationData.HasBusinessAddress
                 ? source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress
                 : source.TransferEvidenceNoteData.RecipientOrganisationData.NotificationAddress;
 
-            //var transfer = source.TransferEvidenceNoteData.TransferredOrganisation.HasBusinessAddress
-            //    ? source.TransferEvidenceNoteData.TransferredOrganisation.BusinessAddress
-            //    : source.TransferEvidenceNoteData.TransferredOrganisation.NotificationAddress;
+            var transferOrganisationAddress = source.TransferEvidenceNoteData.TransferredOrganisationData.HasBusinessAddress
+                ? source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress
+                : source.TransferEvidenceNoteData.TransferredOrganisationData.NotificationAddress;
 
             var model = new ViewTransferNoteViewModel
             {
@@ -44,24 +44,24 @@
                     {
                         TotalReceived = n.Sum(e => e.EvidenceTonnageData.TransferredReceived).ToString(),
                         TotalReused = n.Sum(e => e.EvidenceTonnageData.TransferredReused).ToString(),
-                    }).ToList(),
+                    }).OrderBy(n => n.CategoryId).ToList(),
                 RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
                     source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName,
-                    organisationAddress.Address1,
-                    organisationAddress.Address2,
-                    organisationAddress.TownOrCity,
-                    organisationAddress.CountyOrRegion,
-                    organisationAddress.Postcode,
+                    recipientOrganisationAddress.Address1,
+                    recipientOrganisationAddress.Address2,
+                    recipientOrganisationAddress.TownOrCity,
+                    recipientOrganisationAddress.CountyOrRegion,
+                    recipientOrganisationAddress.Postcode,
                     null),
-                EvidenceNotes = GenerateNotesModel(source),
-                //TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredOrganisation.Name,
-                //    source.TransferEvidenceNoteData.TransferredOrganisation.Name,
-                //    transfer.Address1,
-                //    transfer.Address2,
-                //    transfer.TownOrCity,
-                //    transfer.CountyOrRegion,
-                //    transfer.Postcode,
-                //    null),
+                TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
+                    source.TransferEvidenceNoteData.TransferredOrganisationData.Name,
+                    transferOrganisationAddress.Address1,
+                    transferOrganisationAddress.Address2,
+                    transferOrganisationAddress.TownOrCity,
+                    transferOrganisationAddress.CountyOrRegion,
+                    transferOrganisationAddress.Postcode,
+                    null),
+                Summary = GenerateNotesModel(source)
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -90,31 +90,24 @@
             }
         }
 
-        private IList<ViewTransferEvidenceNoteTonnageDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
+        private IList<ViewTransferEvidenceAatfDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
         {
-            var sortedSource = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.EvidenceTonnageData.CategoryId).ToList(); // TO DO change this to Order by Reference + AATF + Category ID
-            var modelList = new List<ViewTransferEvidenceNoteTonnageDataViewModel>();
-
-            for (var i = 0; i < sortedSource.Count; i++)
+            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.Reference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
             {
-                modelList.Add(new ViewTransferEvidenceNoteTonnageDataViewModel()
+                AatfName = n.First().OriginalAatf.Name,
+                AatfApprovalNumber = n.First().OriginalAatf.ApprovalNumber,
+                Notes = n.GroupBy(nt => nt.Reference).Select(nt => new ViewTransferEvidenceNoteTonnageDataViewModel()
                 {
-                    AatfApprovalNumber = sortedSource[i].OriginalAatf.ApprovalNumber,
-                    AatfName = sortedSource[i].OriginalAatf.Name,
-                    ReferenceId = sortedSource[i].Reference,
-                    Type = sortedSource[i].Type,
-                    CategoryValue = new EvidenceCategoryValue()
+                    ReferenceId = nt.First().Reference,
+                    Type = nt.First().Type,
+                    CategoryValues = nt.Select(ntt => new EvidenceCategoryValue()
                     {
-                        CategoryId = ((int)sortedSource[i].EvidenceTonnageData.CategoryId),
-                        Received = sortedSource[i].EvidenceTonnageData.Received.ToString(),
-                        Reused = sortedSource[i].EvidenceTonnageData.Reused.ToString()
-                    },
-                    DisplayAatfName = (i == 0 || sortedSource[i].OriginalAatf.Name != sortedSource[i - 1].OriginalAatf.Name),
-                    DisplayReferenceCell = (i == 0 || sortedSource[i].Reference != sortedSource[i - 1].Reference),
-                });
-            }
-
-            return modelList;
+                        CategoryId = (int)ntt.EvidenceTonnageData.CategoryId,
+                        Received = ntt.EvidenceTonnageData.Received.ToString(),
+                        Reused = ntt.EvidenceTonnageData.Reused.ToString()
+                    }).ToList()
+                }).ToList()
+            }).ToList();
         }
     }
 }
