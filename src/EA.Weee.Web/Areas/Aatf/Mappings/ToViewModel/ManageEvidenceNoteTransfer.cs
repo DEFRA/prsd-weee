@@ -7,6 +7,7 @@
     using Prsd.Core;
     using ViewModels;
 
+    [Serializable]
     public class ManageEvidenceNoteTransfer
     {
         public Guid OrganisationId { get; protected set; }
