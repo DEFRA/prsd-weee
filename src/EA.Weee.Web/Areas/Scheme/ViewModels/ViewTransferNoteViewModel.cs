@@ -37,6 +37,8 @@
 
         public IList<ViewTransferEvidenceNoteTonnageDataViewModel> EvidenceNotes { get; set; }
 
+        public int SelectedComplianceYear { get; set; }
+
         public string RedirectTab
         {
             get

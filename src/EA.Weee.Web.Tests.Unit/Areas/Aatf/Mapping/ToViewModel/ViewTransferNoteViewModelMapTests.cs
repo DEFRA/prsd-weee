@@ -27,7 +27,7 @@
             mapper = A.Fake<IMapper>();
             addressUtility = A.Fake<IAddressUtilities>();
             fixture = new Fixture();
-            map = new ViewTransferNoteViewModelMap(mapper, cache, addressUtility);
+            map = new ViewTransferNoteViewModelMap(addressUtility);
         }
 
         [Fact]
@@ -64,6 +64,7 @@
 
             //assert
             model.SchemeId.Should().Be(source.SchemeId);
+            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
         }
 
         [Fact]
