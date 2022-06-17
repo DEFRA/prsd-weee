@@ -61,6 +61,7 @@
 
             //assert
             model.SchemeId.Should().Be(source.SchemeId);
+            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
         }
 
         [Fact]
