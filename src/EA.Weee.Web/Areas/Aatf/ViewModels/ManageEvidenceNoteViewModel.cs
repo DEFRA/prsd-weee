@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
+    [Serializable]
     public class ManageEvidenceNoteViewModel 
     {
         public string AatfName { get; set; }
