@@ -10,8 +10,8 @@
         {
             get 
             {
-                var availble = (Received - (TransferredReceived.HasValue ? TransferredReceived : 0));
-                return availble < 0 ? 0 : availble; 
+                var available = (Received - (TransferredReceived ?? 0));
+                return available < 0 ? 0 : available; 
             }
         }
 
@@ -19,14 +19,16 @@
         { 
             get 
             {
-                var availble = (Reused - (TransferredReused.HasValue ? TransferredReused : 0));
-                return availble < 0 ? 0 : availble;
+                var available = (Reused - (TransferredReused ?? 0));
+                return available < 0 ? 0 : available;
             }
         }
 
         public decimal? TransferredReceived { get; protected set; }
 
         public decimal? TransferredReused { get; protected set; }
+
+        public Guid OriginatingNoteTonnageId { get; set; }
 
         public EvidenceTonnageData(Guid id, WeeeCategory categoryId, decimal? received, decimal? reused, decimal? transferredReceived, decimal? transferredReused)
         {

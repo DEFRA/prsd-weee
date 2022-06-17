@@ -28,7 +28,8 @@
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ViewTransferNoteViewModel.Status, Model.ViewTransferNoteViewModel.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
-
+    
+    <p class="govuk-body govuk-!-padding-top-2">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</p>
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("hideButton", true) }); }
 }
 
