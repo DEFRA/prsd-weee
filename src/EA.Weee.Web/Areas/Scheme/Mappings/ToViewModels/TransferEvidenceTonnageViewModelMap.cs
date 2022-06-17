@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
@@ -12,8 +13,11 @@
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
-        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache) : base(mapper, cache)
+        private readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper;
+
+        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper) : base(mapper, cache)
         {
+            this.transferNoteMapper = transferNoteMapper;
         }
 
         public TransferEvidenceTonnageViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
@@ -21,6 +25,13 @@
             Condition.Requires(source).IsNotNull();
             
             var model = MapBaseProperties(source);
+
+            if (source.TransferEvidenceNoteData != null)
+            {
+                model.ViewTransferNoteViewModel = transferNoteMapper.Map(
+                    new ViewTransferNoteViewModelMapTransfer(source.OrganisationId, source.TransferEvidenceNoteData, null));
+            }
+
             model.TransferAllTonnage = source.TransferAllTonnage;
 
             model.EvidenceNotesDataList =
@@ -74,6 +85,8 @@
                     {
                         string receivedTonnage = null;
                         string reusedTonnage = null;
+                        var id = evidenceTonnageData.Id;
+
                         if (source.TransferAllTonnage)
                         {
                             receivedTonnage = evidenceTonnageData.AvailableReceived.HasValue
@@ -84,8 +97,23 @@
                                 : null;
                         }
 
+                        var transferTonnageData  = source.TransferEvidenceNoteData?.TransferEvidenceNoteTonnageData.FirstOrDefault(t1 => t1.EvidenceTonnageData.OriginatingNoteTonnageId == evidenceTonnageData.Id);
+
+                        if (transferTonnageData != null)
+                        {
+                            receivedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReceived.HasValue
+                                ? transferTonnageData.EvidenceTonnageData.TransferredReceived.ToTonnageDisplay()
+                                : string.Empty;
+
+                            reusedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReused.HasValue
+                                ? transferTonnageData.EvidenceTonnageData.TransferredReused.ToTonnageDisplay()
+                                : string.Empty;
+
+                            id = transferTonnageData.EvidenceTonnageData.Id;
+                        }
+                        
                         var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
-                            evidenceTonnageData.Id,
+                            id,
                             evidenceTonnageData.AvailableReceived,
                             evidenceTonnageData.AvailableReused,
                             receivedTonnage,
