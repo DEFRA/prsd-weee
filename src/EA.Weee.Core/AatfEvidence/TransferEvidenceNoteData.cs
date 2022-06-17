@@ -3,6 +3,7 @@
     using Scheme;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Organisations;
 
     public class TransferEvidenceNoteData
@@ -23,6 +24,19 @@
 
         public List<TransferEvidenceNoteTonnageData> TransferEvidenceNoteTonnageData { get; set; }
 
+        public List<int> CategoryIds
+        {
+            get
+            {
+                if (TransferEvidenceNoteTonnageData != null)
+                {
+                    return TransferEvidenceNoteTonnageData.Select(t => t.EvidenceTonnageData.CategoryId).Cast<int>()
+                        .ToList();
+                }
+
+                return new List<int>();
+            }
+        }
         public SchemeData RecipientSchemeData { get; set; }
 
         public OrganisationData TransferredOrganisationData { get; set; }
