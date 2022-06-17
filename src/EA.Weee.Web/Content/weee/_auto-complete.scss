@@ -5,6 +5,7 @@
 .autocomplete__wrapper {
     position: relative;
     z-index: 0;
+    background-color: govuk-colour("white");
 }
 
 .autocomplete__hint, .autocomplete__input {
@@ -19,9 +20,9 @@
 }
 
 .autocomplete__input {
-    background-color: #fff;
     position: relative;
     @extend .govuk-input;
+    background-color: transparent;
 }
 
 .autocomplete__hint {
