@@ -37,7 +37,7 @@
 
         public IList<ViewTransferEvidenceAatfDataViewModel> Summary { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public int? SelectedComplianceYear { get; set; }
 
         public string RedirectTab
         {
@@ -45,11 +45,33 @@
             {
                 if (Status.Equals(NoteStatus.Draft))
                 {
-                    return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+                    return ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
                 }
 
                 //TODO: this will get updated when viewing and editing of transfer notes is added
                 return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+            }
+        }
+
+        public string TabName
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case NoteStatus.Draft:
+                        return "Draft evidence note";
+                    case NoteStatus.Rejected:
+                        return "Rejected evidence note";
+                    case NoteStatus.Approved:
+                        return "Approved evidence note";
+                    case NoteStatus.Returned:
+                        return "Returned evidence note";
+                    case NoteStatus.Submitted:
+                        return "Submitted evidence note";
+                    default:
+                        return string.Empty;
+                }
             }
         }
     }
