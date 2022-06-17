@@ -35,7 +35,7 @@
 
         public IList<TotalCategoryValue> TotalCategoryValues { get; set; }
 
-        public IList<ViewTransferEvidenceNoteTonnageDataViewModel> EvidenceNotes { get; set; }
+        public IList<ViewTransferEvidenceAatfDataViewModel> Summary { get; set; }
 
         public int SelectedComplianceYear { get; set; }
 
