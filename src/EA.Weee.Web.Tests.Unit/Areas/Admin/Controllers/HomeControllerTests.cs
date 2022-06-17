@@ -191,6 +191,11 @@
                 Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
             }
 
+            if (selection == InternalUserActivity.ManageEvidenceNotes)
+            {
+                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+            }
+
             if (selection == InternalUserActivity.ManageAatfs)
             {
                 Assert.Equal(FacilityType.Aatf, redirectToRouteResult.RouteValues["facilityType"]);
