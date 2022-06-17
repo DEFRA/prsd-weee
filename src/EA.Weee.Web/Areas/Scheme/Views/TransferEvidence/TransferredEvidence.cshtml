@@ -4,7 +4,14 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
 @{
-    ViewBag.Title = "Transferred evidence - GOV.UK";
+    var tab = "Evidence note (transfer)";
+    if (Model.DisplayMessage)
+    {
+        tab = "Transferred evidence";
+    }
+}
+@{
+    ViewBag.Title = @tab + " - GOV.UK";
 }
 
 @section full_main_content
@@ -24,14 +31,5 @@
     </h1>
 
     @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
-
-    @using (Html.BeginForm(actionName: "TransferredEvidence", controllerName: "TransferEvidence", method: FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-
-        @Html.HiddenFor(m => m.SchemeId)
-
-
-    }
 }
 
