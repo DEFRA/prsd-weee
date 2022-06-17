@@ -33,6 +33,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
