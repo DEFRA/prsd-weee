@@ -13,12 +13,12 @@
     [Serializable]
     public class SubmittedDatesFilterViewModel
     {
-        [Display(Name = "Submitted Date")]
+        [Display(Name = "Submitted date")]
         [DataType(DataType.Date)]
         [EvidenceNoteStartDate(nameof(EndDate), false)]
         public DateTime? StartDate { get; set; }
 
-        [Display(Name = "Submitted Date")]
+        [Display(Name = "Submitted date")]
         [DataType(DataType.Date)]
         [EvidenceNoteEndDate(nameof(StartDate))]
         public DateTime? EndDate { get; set; }
