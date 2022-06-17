@@ -10,9 +10,12 @@
     {
         public string CompareDatePropertyName { get; set; }
 
-        public EvidenceNoteStartDateAttribute(string compareDatePropertyName)
+        public bool CheckComplianceYear { get; set; }
+
+        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, bool checkComplianceYear)
         {
             CompareDatePropertyName = compareDatePropertyName;
+            CheckComplianceYear = checkComplianceYear;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)

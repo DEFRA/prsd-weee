@@ -5,19 +5,26 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Xunit;
 
     public class ViewTransferNoteViewModelMapTests
     {
+        private readonly IAddressUtilities addressUtility;
+        private readonly ITonnageUtilities tonnageUtilities;
         private readonly Fixture fixture;
         private readonly ViewTransferNoteViewModelMap map;
 
         public ViewTransferNoteViewModelMapTests()
         {
+            addressUtility = A.Fake<IAddressUtilities>();
+            tonnageUtilities = A.Fake<ITonnageUtilities>();
             fixture = new Fixture();
-            map = new ViewTransferNoteViewModelMap();
+            map = new ViewTransferNoteViewModelMap(addressUtility, tonnageUtilities);
         }
 
         [Fact]
@@ -54,6 +61,7 @@
 
             //assert
             model.SchemeId.Should().Be(source.SchemeId);
+            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
         }
 
         [Fact]
