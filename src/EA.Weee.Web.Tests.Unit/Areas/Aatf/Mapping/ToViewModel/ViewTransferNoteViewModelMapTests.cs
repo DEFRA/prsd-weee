@@ -15,19 +15,15 @@
 
     public class ViewTransferNoteViewModelMapTests
     {
-        private readonly IWeeeCache cache;
-        private readonly IMapper mapper;
         private readonly IAddressUtilities addressUtility;
         private readonly Fixture fixture;
         private readonly ViewTransferNoteViewModelMap map;
 
         public ViewTransferNoteViewModelMapTests()
         {
-            cache = A.Fake<IWeeeCache>();
-            mapper = A.Fake<IMapper>();
             addressUtility = A.Fake<IAddressUtilities>();
             fixture = new Fixture();
-            map = new ViewTransferNoteViewModelMap(mapper, cache, addressUtility);
+            map = new ViewTransferNoteViewModelMap(addressUtility);
         }
 
         [Fact]
