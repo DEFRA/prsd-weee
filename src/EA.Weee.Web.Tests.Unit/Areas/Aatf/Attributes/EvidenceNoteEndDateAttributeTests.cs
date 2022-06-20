@@ -129,7 +129,7 @@
         {
             public DateTime? StartDate { get; set; }
 
-            [EvidenceNoteEndDate(nameof(StartDate))]
+            [EvidenceNoteEndDate(nameof(StartDate), true)]
             public DateTime? EndDate { get; set; }
         }
     }
