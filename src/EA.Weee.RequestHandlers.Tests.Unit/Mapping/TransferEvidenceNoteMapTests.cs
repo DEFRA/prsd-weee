@@ -166,27 +166,32 @@
         {
             //arrange
             var note = A.Fake<Note>();
-            
+
             var noteTonnage1 = A.Fake<NoteTonnage>();
+            var originatingNoteTonnage1 = Guid.NewGuid();
             A.CallTo(() => noteTonnage1.CategoryId).Returns(WeeeCategory.AutomaticDispensers);
             A.CallTo(() => noteTonnage1.Received).Returns(1);
             A.CallTo(() => noteTonnage1.Reused).Returns(2);
-            
+            A.CallTo(() => noteTonnage1.Id).Returns(originatingNoteTonnage1);
+
             var noteTonnage2 = A.Fake<NoteTonnage>();
+            var originatingNoteTonnage2 = Guid.NewGuid();
             A.CallTo(() => noteTonnage2.CategoryId).Returns(WeeeCategory.CoolingApplicancesContainingRefrigerants);
             A.CallTo(() => noteTonnage2.Received).Returns(3);
             A.CallTo(() => noteTonnage2.Reused).Returns(4);
-            
+            A.CallTo(() => noteTonnage2.Id).Returns(originatingNoteTonnage2);
+
             var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
-            var noteTonnage1Id = Guid.NewGuid();
-            A.CallTo(() => noteTransferTonnage1.Id).Returns(noteTonnage1Id);
+            var noteTransferTonnage1Id = Guid.NewGuid();
+            
+            A.CallTo(() => noteTransferTonnage1.Id).Returns(noteTransferTonnage1Id);
             A.CallTo(() => noteTransferTonnage1.NoteTonnage).Returns(noteTonnage1);
             A.CallTo(() => noteTransferTonnage1.Received).Returns(5);
             A.CallTo(() => noteTransferTonnage1.Reused).Returns(6);
 
             var noteTransferTonnage2 = A.Fake<NoteTransferTonnage>();
-            var noteTonnage2Id = Guid.NewGuid();
-            A.CallTo(() => noteTransferTonnage2.Id).Returns(noteTonnage2Id);
+            var noteTransferTonnage2Id = Guid.NewGuid();
+            A.CallTo(() => noteTransferTonnage2.Id).Returns(noteTransferTonnage2Id);
             A.CallTo(() => noteTransferTonnage2.Received).Returns(7);
             A.CallTo(() => noteTransferTonnage2.Reused).Returns(8);
             A.CallTo(() => noteTransferTonnage2.NoteTonnage).Returns(noteTonnage2);
@@ -202,18 +207,20 @@
             var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
 
             //assert
-            result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.Id.Should().Be(noteTonnage1Id);
+            result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.Id.Should().Be(noteTransferTonnage1Id);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.CategoryId.Should().Be(Core.DataReturns.WeeeCategory.AutomaticDispensers);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.Received.Should().Be(1);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.Reused.Should().Be(2);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.TransferredReceived.Should().Be(5);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.TransferredReused.Should().Be(6);
-            result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.Id.Should().Be(noteTonnage2Id);
+            result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.OriginatingNoteTonnageId.Should().Be(originatingNoteTonnage1);
+            result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.Id.Should().Be(noteTransferTonnage2Id);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.CategoryId.Should().Be(Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.Received.Should().Be(3);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.Reused.Should().Be(4);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.TransferredReceived.Should().Be(7);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.TransferredReused.Should().Be(8);
+            result.TransferEvidenceNoteTonnageData.ElementAt(1).EvidenceTonnageData.OriginatingNoteTonnageId.Should().Be(originatingNoteTonnage2);
         }
 
         [Fact]
@@ -292,12 +299,16 @@
 
             var noteTonnage1 = A.Fake<NoteTonnage>();
             var noteTonnageNote1 = A.Fake<Note>();
+            var note1Id = fixture.Create<Guid>();
+            A.CallTo(() => noteTonnageNote1.Id).Returns(note1Id);
             A.CallTo(() => noteTonnageNote1.NoteType).Returns(NoteType.TransferNote);
             A.CallTo(() => noteTonnageNote1.Reference).Returns(1);
             A.CallTo(() => noteTonnage1.Note).Returns(noteTonnageNote1);
 
             var noteTonnage2 = A.Fake<NoteTonnage>();
             var noteTonnageNote2 = A.Fake<Note>();
+            var note2Id = fixture.Create<Guid>();
+            A.CallTo(() => noteTonnageNote2.Id).Returns(note2Id);
             A.CallTo(() => noteTonnageNote2.NoteType).Returns(NoteType.TransferNote);
             A.CallTo(() => noteTonnageNote2.Reference).Returns(2);
             A.CallTo(() => noteTonnage2.Note).Returns(noteTonnageNote2);
@@ -320,10 +331,12 @@
             var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
 
             //assert
-            result.TransferEvidenceNoteTonnageData.ElementAt(0).Reference.Should().Be(1);
+            result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalReference.Should().Be(1);
+            result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalNoteId.Should().Be(note1Id);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
-            result.TransferEvidenceNoteTonnageData.ElementAt(1).Reference.Should().Be(2);
+            result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalReference.Should().Be(2);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
+            result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalNoteId.Should().Be(note2Id);
         }
     }
 }
