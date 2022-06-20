@@ -49,5 +49,17 @@
                 return this.View("EditTonnages", model);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = apiClient())
+            {
+               
+                return this.View("EditTonnages", model);
+            }
+        }
     }
 }
