@@ -3,6 +3,8 @@
     using System.Linq;
     using Core.AatfReturn;
     using CuttingEdge.Conditions;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
@@ -14,7 +16,8 @@
             Condition.Requires(source).IsNotNull();
 
             var singleAatf = source.Aatfs.Where(a =>
-                a.FacilityType.Equals(FacilityType.Aatf) && ((int)a.ComplianceYear).Equals(SystemTime.Now.Year));
+                a.FacilityType.Equals(FacilityType.Aatf) && 
+                ((int)a.ComplianceYear).Equals(source.ComplianceYear));
 
             var model = new ManageEvidenceNoteViewModel()
             {
@@ -38,6 +41,9 @@
             {
                 model.SubmittedDatesFilterViewModel = source.SubmittedDatesFilterViewModel;
             }
+
+            model.ComplianceYearList = source.ComplianceYearList;
+            model.ComplianceYear = source.ComplianceYear;
 
             return model;
         }

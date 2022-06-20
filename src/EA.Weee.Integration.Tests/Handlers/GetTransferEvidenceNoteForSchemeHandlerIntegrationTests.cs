@@ -88,16 +88,18 @@
                 foreach (var transferredNote in transferredNotes)
                 {
                     var transferTonnage =
-                        result.TransferEvidenceNoteTonnageData.First(t => t.Reference == transferredNote.Item1.Reference);
+                        result.TransferEvidenceNoteTonnageData.First(t => t.OriginalReference == transferredNote.Item1.Reference);
 
                     transferTonnage.Should().NotBeNull();
                     transferTonnage.OriginalAatf.Id.Should().Be(transferredNote.Item1.Aatf.Id);
                     transferTonnage.Type.Should().Be(NoteType.Evidence);
-                    transferTonnage.Reference.Should().Be(transferredNote.Item1.Reference);
+                    transferTonnage.OriginalReference.Should().Be(transferredNote.Item1.Reference);
+                    transferTonnage.OriginalNoteId.Should().Be(transferredNote.Item1.Id);
                     transferTonnage.EvidenceTonnageData.TransferredReceived.Should().Be(transferredNote.Item2.Received);
                     transferTonnage.EvidenceTonnageData.TransferredReused.Should().Be(transferredNote.Item2.Reused);
                     transferTonnage.EvidenceTonnageData.Received.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Received);
                     transferTonnage.EvidenceTonnageData.Reused.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Reused);
+                    transferTonnage.EvidenceTonnageData.OriginatingNoteTonnageId.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Id);
                 }
             };
         }
@@ -160,16 +162,18 @@
                 foreach (var transferredNote in transferredNotes)
                 {
                     var transferTonnage =
-                        result.TransferEvidenceNoteTonnageData.First(t => t.Reference == transferredNote.Item1.Reference);
+                        result.TransferEvidenceNoteTonnageData.First(t => t.OriginalReference == transferredNote.Item1.Reference);
 
                     transferTonnage.Should().NotBeNull();
                     transferTonnage.OriginalAatf.Id.Should().Be(transferredNote.Item1.Aatf.Id);
                     transferTonnage.Type.Should().Be(NoteType.Evidence);
-                    transferTonnage.Reference.Should().Be(transferredNote.Item1.Reference);
+                    transferTonnage.OriginalReference.Should().Be(transferredNote.Item1.Reference);
+                    transferTonnage.OriginalNoteId.Should().Be(transferredNote.Item1.Id);
                     transferTonnage.EvidenceTonnageData.TransferredReceived.Should().Be(transferredNote.Item2.Received);
                     transferTonnage.EvidenceTonnageData.TransferredReused.Should().Be(transferredNote.Item2.Reused);
                     transferTonnage.EvidenceTonnageData.Received.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Received);
                     transferTonnage.EvidenceTonnageData.Reused.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Reused);
+                    transferTonnage.EvidenceTonnageData.OriginatingNoteTonnageId.Should().Be(transferredNote.Item1.NoteTonnage.ElementAt(0).Id);
                 }
             };
         }

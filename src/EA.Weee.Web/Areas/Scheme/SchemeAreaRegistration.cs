@@ -17,10 +17,22 @@
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapLowercaseDashedRoute(
-                name: "Scheme_view_Transfer",
+                name: "Scheme_view_transfer",
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "Scheme_edit_transfer_tonnages",
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-tonnages/{evidenceNoteId}",
+                defaults: new { action = "EditTonnages", controller = "OutgoingTransfers", area = "Scheme" },
+                namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "Scheme_edit_transfer",
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-draft-transfer/{evidenceNoteId}",
+                defaults: new { action = "EditDraftTransfer", controller = "OutgoingTransfers", area = "Scheme" },
+                namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "Scheme_evidence_default",

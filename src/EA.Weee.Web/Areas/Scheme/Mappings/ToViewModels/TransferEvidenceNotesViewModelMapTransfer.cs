@@ -8,13 +8,28 @@
 
     public class TransferEvidenceNotesViewModelMapTransfer
     {
-        public IList<EvidenceNoteData> Notes { get; private set; }
+        public IList<EvidenceNoteData> Notes { get; }
 
-        public TransferEvidenceNoteRequest Request { get; private set; }
+        public TransferEvidenceNoteRequest Request { get; }
 
-        public Guid OrganisationId { get; private set; }
+        public TransferEvidenceNoteData TransferEvidenceNoteData { get; }
+
+        public Guid OrganisationId { get; }
 
         public bool TransferAllTonnage { get; set; }
+
+        public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
+            TransferEvidenceNoteData transferNoteData,
+            Guid organisationId)
+        {
+            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(transferNoteData).IsNotNull();
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+
+            Notes = notes;
+            TransferEvidenceNoteData = transferNoteData;
+            OrganisationId = organisationId;
+        }
 
         public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
