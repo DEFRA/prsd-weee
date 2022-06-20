@@ -59,7 +59,7 @@
                     recipientOrganisationAddress.Postcode,
                     null),
                 TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
-                    source.TransferEvidenceNoteData.TransferredOrganisationData.Name,
+                    source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
                     transferOrganisationAddress.Address1,
                     transferOrganisationAddress.Address2,
                     transferOrganisationAddress.TownOrCity,
@@ -97,7 +97,7 @@
 
         private IList<ViewTransferEvidenceAatfDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
         {
-            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.OriginalReference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
+            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenByDescending(n => n.OriginalReference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
             {
                 AatfName = n.First().OriginalAatf.Name,
                 AatfApprovalNumber = n.First().OriginalAatf.ApprovalNumber,
@@ -105,7 +105,7 @@
                 {
                     ReferenceId = nt.First().OriginalReference,
                     Type = nt.First().Type,
-                    CategoryValues = nt.Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
+                    CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId).Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {
                         Received = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReceived),
                         Reused = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReused)
