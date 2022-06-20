@@ -18,7 +18,7 @@
         {
             cache = A.Fake<IWeeeCache>();
 
-            attribute = new EvidenceNoteEndDateAttribute("StartDate")
+            attribute = new EvidenceNoteEndDateAttribute("StartDate", true)
             {
                 Cache = cache
             };
