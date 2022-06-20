@@ -53,6 +53,8 @@
             }
         }
 
+        public bool EditMode { get; set; }
+
         public string TabName
         {
             get

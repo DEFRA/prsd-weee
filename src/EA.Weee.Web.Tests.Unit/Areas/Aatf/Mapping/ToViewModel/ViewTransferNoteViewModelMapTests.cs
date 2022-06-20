@@ -50,11 +50,13 @@
             model.Should().NotBeNull();
         }
 
-        [Fact]
-        public void ViewTransferNoteViewModelMap_GivenSource_PropertiesShouldBeSet()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ViewTransferNoteViewModelMap_GivenSource_PropertiesShouldBeSet(bool editMode)
         {
             //arrange
-            var source = fixture.Create<ViewTransferNoteViewModelMapTransfer>();
+            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.Edit, editMode).Create();
 
             //act
             var model = map.Map(source);
@@ -62,6 +64,7 @@
             //assert
             model.SchemeId.Should().Be(source.SchemeId);
             model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
+            model.EditMode.Should().Be(editMode);
         }
 
         [Fact]
