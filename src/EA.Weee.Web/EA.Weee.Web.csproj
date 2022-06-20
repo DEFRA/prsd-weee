@@ -1473,7 +1473,7 @@
     <Content Include="Views\Shared\_DisplayReturnedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayRejectedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
-    <Content Include="Views\Shared\_ViewTransferEvidenceNotePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\_ViewTransferEvidenceNotePartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
