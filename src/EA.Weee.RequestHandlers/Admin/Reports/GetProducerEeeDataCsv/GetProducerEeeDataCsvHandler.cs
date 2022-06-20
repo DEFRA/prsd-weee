@@ -3,6 +3,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
@@ -49,7 +50,7 @@
                 fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
                     request.ComplianceYear,
                     obligationType,
-                    DateTime.UtcNow);
+                    SystemTime.UtcNow);
             }
             else
             {
@@ -59,7 +60,7 @@
                     request.ComplianceYear,
                     scheme.ApprovalNumber.Replace("/", string.Empty),
                     obligationType,
-                    DateTime.UtcNow);
+                    SystemTime.UtcNow);
             }
 
             return new CSVFileData

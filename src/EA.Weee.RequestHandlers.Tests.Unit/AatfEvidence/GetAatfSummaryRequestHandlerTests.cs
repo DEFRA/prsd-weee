@@ -1,20 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using AutoFixture;
+    using Core.AatfEvidence;
     using DataAccess.DataAccess;
+    using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.RequestHandlers.AatfEvidence;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfEvidence;
     using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.AatfEvidence;
-    using DataAccess.StoredProcedure;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
@@ -37,7 +38,7 @@
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
 
-            request = new GetAatfSummaryRequest(fixture.Create<Guid>());
+            request = new GetAatfSummaryRequest(fixture.Create<Guid>(), fixture.Create<int>());
 
             handler = new GetAatfSummaryRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -104,11 +105,13 @@
         [Fact]
         public async Task HandleAsync_GivenRequest_SummaryTotalsShouldBeRetrieved()
         {
+            //arrange
+
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, 1))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -151,7 +154,7 @@
             //arrange
             var totalsData = fixture.CreateMany<AatfEvidenceSummaryTotalsData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, 1))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
                 .Returns(totalsData);
 
             //act
