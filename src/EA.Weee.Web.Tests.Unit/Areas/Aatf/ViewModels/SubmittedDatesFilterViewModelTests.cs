@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Web.Areas.Aatf.Attributes;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
