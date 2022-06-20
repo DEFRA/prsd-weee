@@ -23,6 +23,7 @@
     {
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
+        private readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper;
         private readonly Fixture fixture;
         private List<EvidenceNoteData> notes;
         private readonly TransferEvidenceTonnageViewModelMap map;
@@ -31,9 +32,11 @@
         {
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
+            transferNoteMapper = A.Fake<IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>>();
+
             fixture = new Fixture();
 
-            map = new TransferEvidenceTonnageViewModelMap(mapper, cache);
+            map = new TransferEvidenceTonnageViewModelMap(mapper, cache, transferNoteMapper);
         }
 
         [Fact]
@@ -382,7 +385,9 @@
                     .With(e => e.Id, noteId1).Create()
             };
 
-            var request = fixture.Build<TransferEvidenceNoteRequest>().With(t => t.CategoryIds, new List<int>()).Create();
+            var request = fixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.CategoryIds, new List<int>())
+                .Create();
             var organisationId = fixture.Create<Guid>();
 
             var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
