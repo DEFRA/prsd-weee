@@ -13,12 +13,18 @@
     {
         private readonly IWeeeCache cache;
         private readonly EvidenceNoteEndDateAttribute attribute;
+        private readonly EvidenceNoteEndDateAttribute attributeWithNoComplianceYearCheck;
 
         public EvidenceNoteEndDateAttributeTests()
         {
             cache = A.Fake<IWeeeCache>();
 
             attribute = new EvidenceNoteEndDateAttribute("StartDate", true)
+            {
+                Cache = cache
+            };
+
+            attributeWithNoComplianceYearCheck = new EvidenceNoteEndDateAttribute("StartDate", false)
             {
                 Cache = cache
             };
@@ -67,7 +73,28 @@
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_ValidationExceptionShouldBeThrown()
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_ValidationExceptionShouldNotBeThrown()
+        {
+            //arrange
+            var currentDate = DateTime.Now;
+            SystemTime.Freeze(currentDate);
+            var outOfComplianceYear = new DateTime(SystemTime.Now.Year + 1, 1, 1);
+
+            var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+
+            //act
+            var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldBeThrown()
         {
             //arrange
             var currentDate = DateTime.Now;
