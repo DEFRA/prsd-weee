@@ -313,6 +313,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
+    <Compile Include="App_Start\CustomDateBinder.cs" />
+    <Compile Include="App_Start\CustomModelBindersConfig.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
@@ -335,6 +337,8 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />

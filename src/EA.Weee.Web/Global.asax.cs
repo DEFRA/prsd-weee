@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web
 {
+    using EA.Weee.Web.App_Start;
     using Elmah;
     using Logging;
     using System;
@@ -7,6 +8,11 @@
 
     public class Global : HttpApplication
     {
+        protected void Application_Start()
+        {
+            CustomModelBindersConfig.RegisterCustomModelBinders();
+        }
+
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
         {
             HttpContext.Current.Response.Headers.Remove("Server");
