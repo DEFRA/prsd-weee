@@ -17,7 +17,7 @@
 
             var singleAatf = source.Aatfs.Where(a =>
                 a.FacilityType.Equals(FacilityType.Aatf) && 
-                ((int)a.ComplianceYear).Equals(source.SelectedComplianceYear));
+                ((int)a.ComplianceYear).Equals(source.ComplianceYear));
 
             var model = new ManageEvidenceNoteViewModel()
             {
@@ -43,7 +43,7 @@
             }
 
             model.ComplianceYearList = source.ComplianceYearList;
-            model.SelectedComplianceYear = source.SelectedComplianceYear;
+            model.ComplianceYear = source.ComplianceYear;
 
             return model;
         }
