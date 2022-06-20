@@ -3,6 +3,7 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 
 @model ManageManageEvidenceNoteOverviewViewModel
 
@@ -14,12 +15,18 @@
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Evidence summary",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EvidenceSummary.ToDisplayString(), null)),
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.EvidenceSummary.ToDisplayString(), @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")
+
     @this.WeeeGds().Tab("Edit draft and returned notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString(), null)),
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString(), @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")
+
     @this.WeeeGds().Tab("View all other evidence notes",
-        Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), null)),
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")
+
 </ul>
