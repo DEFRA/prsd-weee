@@ -120,13 +120,13 @@
         [Fact]
         public void EvidenceNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EditEvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>();
+            typeof(EditEvidenceNoteViewModel).GetProperty("StartDate").Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>().Which.CheckComplianceYear.Should().BeTrue();
         }
 
         [Fact]
         public void EvidenceNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EditEvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>();
+            typeof(EditEvidenceNoteViewModel).GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>().Which.CheckComplianceYear.Should().BeTrue();
         }
 
         [Fact]
