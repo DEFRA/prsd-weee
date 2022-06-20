@@ -14,6 +14,8 @@
 
         public int? SelectedComplianceYear { get; set; }
 
+        public bool Edit { get; set; }
+
         public ViewTransferNoteViewModelMapTransfer(Guid schemeId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
         {
             Condition.Requires(transferEvidenceNoteData).IsNotNull();
