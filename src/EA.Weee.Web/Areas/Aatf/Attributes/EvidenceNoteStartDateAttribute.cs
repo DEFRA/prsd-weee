@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using EA.Prsd.Core;
     using Filters;
 
     [AttributeUsage(AttributeTargets.Property)]

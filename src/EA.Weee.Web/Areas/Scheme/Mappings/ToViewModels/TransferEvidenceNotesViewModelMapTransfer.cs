@@ -8,13 +8,13 @@
 
     public class TransferEvidenceNotesViewModelMapTransfer
     {
-        public IList<EvidenceNoteData> Notes { get; private set; }
+        public IList<EvidenceNoteData> Notes { get; }
 
-        public TransferEvidenceNoteRequest Request { get; private set; }
+        public TransferEvidenceNoteRequest Request { get; }
 
-        public TransferEvidenceNoteData TransferEvidenceNoteData { get; private set; }
+        public TransferEvidenceNoteData TransferEvidenceNoteData { get; }
 
-        public Guid OrganisationId { get; private set; }
+        public Guid OrganisationId { get; }
 
         public bool TransferAllTonnage { get; set; }
 

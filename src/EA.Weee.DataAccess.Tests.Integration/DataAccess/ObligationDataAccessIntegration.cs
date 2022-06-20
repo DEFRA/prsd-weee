@@ -264,7 +264,7 @@
 
                 var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeObligation.ObligationUploadId.Should().Be(id);
                 schemeObligation.ObligationSchemeAmounts
                     .First(o => o.CategoryId == WeeeCategory.ITAndTelecommsEquipment).Obligation.Should().Be(2);
@@ -274,7 +274,7 @@
                 schemeObligation.ObligationSchemeAmounts.Count.Should().Be(2);
                 schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeObligation.ObligationUploadId.Should().Be(id);
                 schemeObligation.ObligationSchemeAmounts
                     .First(o => o.CategoryId == WeeeCategory.ToysLeisureAndSports).Obligation.Should().BeNull();
@@ -440,7 +440,7 @@
 
                 var schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme1.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeObligation.ObligationUploadId.Should().Be(id);
                 schemeObligation.ObligationSchemeAmounts
                     .First(o => o.CategoryId == WeeeCategory.DisplayEquipment).Obligation.Should().Be(2);
@@ -450,7 +450,7 @@
 
                 schemeObligation = obligation.ObligationSchemes.First(s => s.Scheme.Id == scheme2.Id);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeObligation.ObligationUploadId.Should().Be(id);
                 schemeObligation.ObligationSchemeAmounts
                     .First(o => o.CategoryId == WeeeCategory.PhotovoltaicPanels).Obligation.Should().Be(20);

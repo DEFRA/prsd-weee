@@ -136,6 +136,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
+      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
+      <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
       <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
       <Name>EA.Weee.Ibis</Name>

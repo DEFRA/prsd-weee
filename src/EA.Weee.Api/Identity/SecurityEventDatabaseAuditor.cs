@@ -78,7 +78,7 @@
                                ,@EventName
                                ,@UserId
                                ,@Data)";
-                    cm.Parameters.AddWithValue("@EventDate", DateTime.UtcNow);
+                    cm.Parameters.AddWithValue("@EventDate", SystemTime.UtcNow);
                     cm.Parameters.AddWithValue("@Scope", "Security");
                     cm.Parameters.AddWithValue("@EventId", eventId);
                     cm.Parameters.AddWithValue("@EventName", eventName);
