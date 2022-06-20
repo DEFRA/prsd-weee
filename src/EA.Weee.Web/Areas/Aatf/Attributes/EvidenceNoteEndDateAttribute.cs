@@ -9,9 +9,12 @@
     {
         public string CompareDatePropertyName { get; set; }
 
-        public EvidenceNoteEndDateAttribute(string compareDatePropertyName)
+        public bool CheckComplianceYear { get; set; }
+
+        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, bool checkComplianceYear)
         {
             CompareDatePropertyName = compareDatePropertyName;
+            CheckComplianceYear = checkComplianceYear;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -27,11 +30,14 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (thisDate.Year != currentDate.Year)
+            if (CheckComplianceYear)
             {
-                return new ValidationResult("The end date must be within the current compliance year");
+                if (thisDate.Year != currentDate.Year)
+                {
+                    return new ValidationResult("The end date must be within the current compliance year");
+                }
             }
-
+           
             if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
             {
                 if (thisDate < otherDate)
