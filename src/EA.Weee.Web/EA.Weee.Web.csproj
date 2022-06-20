@@ -330,6 +330,7 @@
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceMapBaseTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
@@ -751,7 +752,12 @@
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\OutgoingTransfers.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\EditTransferTonnage.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
+    <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

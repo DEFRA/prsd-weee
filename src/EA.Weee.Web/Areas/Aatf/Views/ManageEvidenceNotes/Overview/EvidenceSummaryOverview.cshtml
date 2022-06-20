@@ -7,15 +7,14 @@
 <section id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_CreateEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
-
             <div class="govuk-tabs">
+
                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
 
                 <section class="govuk-tabs__panel" id="evidence-summary-panel">
-                    
+
                     <h2 class="govuk-heading-m">
-                        Evidence summary for 2022
+                        Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
                     </h2>
 
                     <p class="govuk-body">
@@ -56,18 +55,18 @@
                                     </td>
                                 </tr>
                             }
-                            
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                <p class="govuk-body"><strong>Total</strong></p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.TotalReceivedEvidence</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.TotalReuseEvidence</p>
-                            </td>
-                        </tr>
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">
+                                    <p class="govuk-body"><strong>Total</strong></p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.TotalReceivedEvidence</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.TotalReuseEvidence</p>
+                                </td>
+                            </tr>
 
                         </tbody>
                     </table>

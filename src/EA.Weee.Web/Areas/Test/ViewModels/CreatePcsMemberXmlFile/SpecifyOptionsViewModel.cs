@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile
 {
     using Core.Scheme;
+    using EA.Prsd.Core;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -48,7 +49,7 @@
             SchemaVersion = (MemberRegistrationSchemaVersion)schemaVersions.GetValue(schemaVersions.Length - 1);
 
             // If acceptable, default to the current year.
-            int year = DateTime.UtcNow.Year;
+            int year = SystemTime.UtcNow.Year;
 
             if (year < 2016)
             {

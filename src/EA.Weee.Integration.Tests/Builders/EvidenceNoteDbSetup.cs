@@ -1,18 +1,14 @@
 ﻿namespace EA.Weee.Integration.Tests.Builders
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Api.Identity;
     using Autofac;
     using AutoFixture;
     using Base;
     using Core.Helpers;
-    using Domain;
-    using Domain.AatfReturn;
     using Domain.Evidence;
-    using Domain.Organisation;
     using Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class EvidenceNoteDbSetup : DbTestDataBuilder<Note, EvidenceNoteDbSetup>
     {
@@ -68,6 +64,12 @@
         {
             instance.NoteTonnage.Clear();
             instance.NoteTonnage.AddRange(tonnages);
+            return this;
+        }
+
+        public EvidenceNoteDbSetup WithComplianceYear(int complianceYear)
+        {
+            instance.ComplianceYear = complianceYear;
             return this;
         }
     }

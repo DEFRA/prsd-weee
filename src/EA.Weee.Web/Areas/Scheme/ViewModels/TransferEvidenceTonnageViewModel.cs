@@ -9,6 +9,8 @@
 
     public class TransferEvidenceTonnageViewModel : TransferEvidenceViewModelBase, IActionModel
     {
+        public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
+
         [DisplayName("Transfer all available tonnage from all notes that you have selected")]
         public bool TransferAllTonnage { get; set; }
 
