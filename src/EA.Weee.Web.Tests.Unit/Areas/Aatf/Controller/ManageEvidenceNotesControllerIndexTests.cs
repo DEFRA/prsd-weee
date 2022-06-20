@@ -344,13 +344,17 @@
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         public async void IndexGetWithDefaultTab_GivenRequiredData_NotesShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
+            //arrange
+            int complianceYear = 2018;
+            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { ComplianceYear = complianceYear };
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), vm);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
                 g.AatfId.Equals(AatfId) &&
                 g.OrganisationId.Equals(OrganisationId) &&
+                g.ComplianceYear.Equals(complianceYear) && 
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
                 g.SearchRef == null))).MustHaveHappenedOnceExactly();
         }
@@ -835,12 +839,14 @@
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
+            var complianceYear = 2000;
+            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { ComplianceYear = complianceYear };
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), vm);
 
             A.CallTo(() =>
                     WeeeClient.SendAsync(A<string>._,
-                        A<GetAatfSummaryRequest>.That.Matches(g => g.AatfId.Equals(aatfId))))
+                        A<GetAatfSummaryRequest>.That.Matches(g => g.AatfId.Equals(aatfId) && g.ComplianceYear.Equals(complianceYear))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -851,7 +857,7 @@
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var summary = Fixture.Create<AatfEvidenceSummaryData>();
+            AatfEvidenceSummaryData summary = Fixture.Create<AatfEvidenceSummaryData>();
 
             A.CallTo(() =>
                 WeeeClient.SendAsync(A<string>._,
