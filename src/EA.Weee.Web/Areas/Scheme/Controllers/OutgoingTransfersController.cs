@@ -51,14 +51,23 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
             using (var client = apiClient())
             {
-               
-                return this.View("EditTonnages", model);
+                var noteData = await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
+                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                {
+                    SelectedComplianceYear = selectedComplianceYear,
+                    Edit = true
+                });
+
+                return this.View("EditDraftTransfer", model);
             }
         }
     }
