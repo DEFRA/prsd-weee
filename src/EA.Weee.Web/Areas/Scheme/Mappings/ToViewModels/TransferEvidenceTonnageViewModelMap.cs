@@ -64,6 +64,15 @@
                         .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReused)
                         .ToTonnageDisplay();
                 }
+                else if (source.TransferEvidenceNoteData != null)     
+                {
+                    category.TotalReceived = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Select(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.TransferredReceived)
+                        .ToTonnageDisplay();
+                    category.TotalReused = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Select(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.TransferredReused)
+                        .ToTonnageDisplay();
+                }
                 else
                 {
                     category.TotalReceived = 0m.ToTonnageDisplay();
@@ -136,11 +145,6 @@
             {
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = true;
             }
-        }
-
-        private TransferEvidenceMapBaseTransfer CreateTransferEvidenceBaseTransferObject()
-        {
-            return null; // TO DO - Create Object and return and switch over TransferEvidenceMapBase to use this type
         }
     }
 }
