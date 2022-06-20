@@ -185,7 +185,7 @@
             var model = map.Map(source);
 
             // assert 
-            model.ComplianceYear.Should().Be(source.ComplianceYear);
+            model.SelectedComplianceYear.Should().Be(source.ComplianceYear);
         }
     }
 }

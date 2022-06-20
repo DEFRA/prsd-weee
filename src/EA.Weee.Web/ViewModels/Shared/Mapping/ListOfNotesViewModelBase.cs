@@ -29,7 +29,7 @@
                 ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
                 {
                     ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
-                    ComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.ComplianceYear > 0 ? manageEvidenceNoteViewModel.ComplianceYear : currentDate.Year
+                    SelectedComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year
                 }
             };
 

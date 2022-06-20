@@ -11,6 +11,8 @@
     {
         public Guid SchemeId { get; set; }
 
+        public Guid EvidenceNoteId { get; set; }
+
         public int Reference { get; set; }
 
         public NoteType Type { get; set; }
@@ -52,6 +54,8 @@
                 return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
             }
         }
+
+        public bool EditMode { get; set; }
 
         public string TabName
         {

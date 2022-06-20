@@ -26,8 +26,6 @@
         @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null))))
     }
 
-    @Html.Gds().ValidationSummary()
-
-    @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
+    @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
 }
 
