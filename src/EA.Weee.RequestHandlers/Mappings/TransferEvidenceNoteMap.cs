@@ -46,10 +46,14 @@
                         nt.NoteTonnage.Received,
                         nt.NoteTonnage.Reused,
                         nt.Received,
-                        nt.Reused),
+                        nt.Reused)
+                    {
+                        OriginatingNoteTonnageId = nt.NoteTonnage.Id
+                    },
                     OriginalAatf = mapper.Map<Aatf, AatfData>(nt.NoteTonnage.Note.Aatf),
                     Type = (NoteType)nt.NoteTonnage.Note.NoteType.Value,
-                    Reference = nt.NoteTonnage.Note.Reference
+                    OriginalReference = nt.NoteTonnage.Note.Reference,
+                    OriginalNoteId = nt.NoteTonnage.Note.Id
                 }).ToList()
             };
         }
