@@ -2,8 +2,6 @@
 @using EA.Weee.Core.Shared
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Extensions
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
@@ -14,9 +12,8 @@
 <section id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_CreateEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
-
             <div class="govuk-tabs">
+
                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
 
                 <section class="govuk-tabs__panel" id="editDraftReturnedNotes">
