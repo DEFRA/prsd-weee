@@ -12,9 +12,24 @@
 
         public TransferEvidenceNoteRequest Request { get; private set; }
 
+        public TransferEvidenceNoteData TransferEvidenceNoteData { get; private set; }
+
         public Guid OrganisationId { get; private set; }
 
         public bool TransferAllTonnage { get; set; }
+
+        public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
+            TransferEvidenceNoteData transferNoteData,
+            Guid organisationId)
+        {
+            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(transferNoteData).IsNotNull();
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+
+            Notes = notes;
+            TransferEvidenceNoteData = transferNoteData;
+            OrganisationId = organisationId;
+        }
 
         public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,

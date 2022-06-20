@@ -21,9 +21,7 @@
 
         public DateTime? EndDateSubmitted { get; set; }
 
-        //public int ComplianceYear { get; set; }
-
-        public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses, string searchRef, int selectedComplianceYear, 
+        public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses, string searchRef, int complianceYear, 
             Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
             DateTime? startDateSubmitted, DateTime? endDateSubmitted)
         {
@@ -31,7 +29,7 @@
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
-            Condition.Requires(selectedComplianceYear).IsGreaterThan(0);
+            Condition.Requires(complianceYear).IsGreaterThan(0);
 
             OrganisationId = organisationId;
             AatfId = aatfId;
@@ -42,7 +40,7 @@
             NoteStatusFilter = noteStatusFilter;
             StartDateSubmitted = startDateSubmitted;
             EndDateSubmitted = endDateSubmitted;
-            ComplianceYear = selectedComplianceYear;
+            ComplianceYear = complianceYear;
         }
     }
 }

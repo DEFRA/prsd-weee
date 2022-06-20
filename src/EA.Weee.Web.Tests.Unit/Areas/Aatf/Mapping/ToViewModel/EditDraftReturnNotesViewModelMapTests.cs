@@ -20,6 +20,7 @@
         private readonly EditDraftReturnNotesViewModelMap editDraftReturnNotesViewModelMap;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
+        private readonly DateTime currentDate;
 
         public EditDraftReturnNotesViewModelMapTests()
         {
@@ -28,6 +29,8 @@
             editDraftReturnNotesViewModelMap = new EditDraftReturnNotesViewModelMap(mapper);
 
             fixture = new Fixture();
+
+            currentDate = fixture.Create<DateTime>();
         }
 
         [Fact]
@@ -61,7 +64,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
  
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             editDraftReturnNotesViewModelMap.Map(transfer);
@@ -79,7 +82,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             editDraftReturnNotesViewModelMap.Map(transfer);
@@ -97,7 +100,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             var result = editDraftReturnNotesViewModelMap.Map(transfer);
@@ -127,7 +130,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -170,7 +173,7 @@
             var result = editDraftReturnNotesViewModelMap.Map(notes, date, null);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(year);
         }
 
         [Theory]
@@ -180,15 +183,14 @@
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var date = new DateTime(2022, 1, 1);
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+                .With(m => m.ComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = editDraftReturnNotesViewModelMap.Map(notes, date, model);
+            var result = editDraftReturnNotesViewModelMap.Map(notes, currentDate, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(currentDate.Year);
         }
 
         [Fact]
@@ -196,15 +198,14 @@
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var date = new DateTime(2022, 1, 1);
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, 2021).Create();
+                .With(m => m.ComplianceYear, currentDate.Year - 1).Create();
 
             //act
-            var result = editDraftReturnNotesViewModelMap.Map(notes, date, model);
+            var result = editDraftReturnNotesViewModelMap.Map(notes, currentDate, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(currentDate.Year - 1);
         }
     }
 }

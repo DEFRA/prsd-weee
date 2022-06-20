@@ -25,7 +25,7 @@
         public IEnumerable<int> ComplianceYearList { get; set; }
 
         [DisplayName("Compliance year")]
-        public int SelectedComplianceYear { get; set; }
+        public int ComplianceYear { get; set; }
 
         public ManageEvidenceNoteViewModel()
         {

@@ -95,13 +95,13 @@
 
         private IList<ViewTransferEvidenceAatfDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
         {
-            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.Reference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
+            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenBy(n => n.OriginalReference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
             {
                 AatfName = n.First().OriginalAatf.Name,
                 AatfApprovalNumber = n.First().OriginalAatf.ApprovalNumber,
-                Notes = n.GroupBy(nt => nt.Reference).Select(nt => new ViewTransferEvidenceNoteTonnageDataViewModel()
+                Notes = n.GroupBy(nt => nt.OriginalReference).Select(nt => new ViewTransferEvidenceNoteTonnageDataViewModel()
                 {
-                    ReferenceId = nt.First().Reference,
+                    ReferenceId = nt.First().OriginalReference,
                     Type = nt.First().Type,
                     CategoryValues = nt.Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {
