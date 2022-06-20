@@ -14,7 +14,7 @@
 
         public bool IncludeAllCategories { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public int ComplianceYear { get; set; }
 
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus)
         {
@@ -23,6 +23,7 @@
             EvidenceNoteData = evidenceNoteData;
             NoteStatus = noteStatus;
             IncludeAllCategories = true;
+            ComplianceYear = evidenceNoteData.ComplianceYear;
         }
     }
 }
