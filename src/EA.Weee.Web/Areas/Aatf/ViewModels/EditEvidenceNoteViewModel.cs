@@ -15,7 +15,7 @@
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [EvidenceNoteStartDate(nameof(EndDate))]
+        [EvidenceNoteStartDate(nameof(EndDate), false)]
         [DataType(DataType.Date)]
         public override DateTime? StartDate { get; set; }
 
