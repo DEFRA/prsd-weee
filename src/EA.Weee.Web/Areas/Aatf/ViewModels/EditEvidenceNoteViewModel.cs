@@ -15,14 +15,14 @@
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [EvidenceNoteStartDate(nameof(EndDate), false)]
+        [EvidenceNoteStartDate(nameof(EndDate), true)]
         [DataType(DataType.Date)]
         public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
-        [EvidenceNoteEndDate(nameof(StartDate))]
+        [EvidenceNoteEndDate(nameof(StartDate), true)]
         public override DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Select a recipient")]
