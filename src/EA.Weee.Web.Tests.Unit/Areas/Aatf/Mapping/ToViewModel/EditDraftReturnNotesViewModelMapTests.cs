@@ -173,7 +173,7 @@
             var result = editDraftReturnNotesViewModelMap.Map(notes, date, null);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(year);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
         }
 
         [Theory]
@@ -184,13 +184,13 @@
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.ComplianceYear, selectedComplianceYear).Create();
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
             var result = editDraftReturnNotesViewModelMap.Map(notes, currentDate, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(currentDate.Year);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year);
         }
 
         [Fact]
@@ -199,13 +199,13 @@
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.ComplianceYear, currentDate.Year - 1).Create();
+                .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
 
             //act
             var result = editDraftReturnNotesViewModelMap.Map(notes, currentDate, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(currentDate.Year - 1);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
         }
     }
 }

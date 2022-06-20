@@ -130,7 +130,7 @@
             var result = testClass.Map(notes, date, null);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(year);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
         }
 
         [Theory]
@@ -142,13 +142,13 @@
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
             var date = new DateTime(2022, 1, 1);
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.ComplianceYear, selectedComplianceYear).Create();
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
             var result = testClass.Map(notes, date, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
         }
 
         [Fact]
@@ -158,13 +158,13 @@
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
             var date = new DateTime(2022, 1, 1);
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.ComplianceYear, 2021).Create();
+                .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
             var result = testClass.Map(notes, date, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
     }
 }
