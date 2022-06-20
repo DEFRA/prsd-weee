@@ -188,7 +188,7 @@
             var complianceYear = Fixture.Create<short>();
 
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(e => e.ComplianceYear, complianceYear).Create();
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
@@ -392,7 +392,7 @@
             };
             var complianceYear = Fixture.Create<short>();
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(e => e.ComplianceYear, complianceYear).Create();
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -404,7 +404,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)model.ComplianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals((short)model.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -504,7 +504,7 @@
             var complianceYear = Fixture.Create<short>();
 
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(e => e.ComplianceYear, complianceYear).Create();
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
