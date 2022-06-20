@@ -96,7 +96,7 @@
 
         private IList<ViewTransferEvidenceAatfDataViewModel> GenerateNotesModel(ViewTransferNoteViewModelMapTransfer source)
         {
-            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenByDescending(n => n.Reference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
+            return source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.OrderBy(n => n.OriginalAatf.Name).ThenByDescending(n => n.OriginalReference).GroupBy(n => n.OriginalAatf.Name).Select(n => new ViewTransferEvidenceAatfDataViewModel()
             {
                 AatfName = n.First().OriginalAatf.Name,
                 AatfApprovalNumber = n.First().OriginalAatf.ApprovalNumber,
