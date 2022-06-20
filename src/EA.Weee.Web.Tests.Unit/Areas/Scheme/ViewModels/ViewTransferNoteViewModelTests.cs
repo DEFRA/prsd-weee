@@ -80,13 +80,18 @@
             var result = model.RedirectTab;
 
             //assert
-            result.Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.Should().Be(ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString());
         }
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
         public void RedirectTab_GivenNoteStatusIsNotDraft_TabShouldBeViewAndTransferEvidence(NoteStatus status)
         {
+            if (status == NoteStatus.Draft)
+            {
+                return;
+            }
+
             //arrange
             var model = new ViewTransferNoteViewModel()
             {
