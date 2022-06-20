@@ -58,7 +58,7 @@
             var result = new EvidenceSummaryMapTransfer(organisationId, aatfId, summaryData);
 
             //assert
-            result.Should().NotBeNull().Should().Be(summaryData);
+            result.AatfEvidenceSummaryData.Should().Be(summaryData);
             result.AatfId.Should().Be(aatfId);
             result.OrganisationId.Should().Be(organisationId);
         }
