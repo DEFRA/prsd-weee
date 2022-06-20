@@ -41,6 +41,7 @@
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
                 SchemeId = source.SchemeId,
+                EvidenceNoteId = source.TransferEvidenceNoteData.Id,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
