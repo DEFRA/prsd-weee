@@ -960,7 +960,7 @@
             var id = TestFixture.Create<Guid>();
 
             //act
-            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id);
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id, null);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId.Equals(id)))).MustHaveHappenedOnceExactly();
@@ -975,15 +975,17 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null);
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
         }
 
-        [Fact]
-        public async Task TransferredEvidenceGet_GivenNoteData_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task TransferredEvidenceGet_GivenNoteData_ModelMapperShouldBeCalled(int? complianceYear)
         {
             // arrange 
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
@@ -991,13 +993,14 @@
                 .Returns(noteData);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), complianceYear);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
                     t => t.SchemeId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
-                         t.DisplayNotification == null)))
+                         t.DisplayNotification == null &&
+                         t.SelectedComplianceYear == complianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1010,7 +1013,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
 
             // assert
             result.Model.Should().Be(viewModel);
@@ -1025,7 +1028,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferredEvidence");
@@ -1044,7 +1047,7 @@
                 displayNotification;
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(

@@ -177,30 +177,20 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditTransferTonnage(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-            using (var client = this.apiClient())
-            {
-                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
-
-                return this.View("EditTransferTonnage");
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId)
-        {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-
-            using (var client = this.apiClient())
+            using (var client = apiClient())
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(),
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
-                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                {
+                    SelectedComplianceYear = selectedComplianceYear
+                });
 
                 return this.View("TransferredEvidence", model);
             }
