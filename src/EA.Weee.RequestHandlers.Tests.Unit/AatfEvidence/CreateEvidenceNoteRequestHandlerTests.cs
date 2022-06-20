@@ -184,7 +184,7 @@
         public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
         {
             //act
-            var date = DateTime.UtcNow;
+            var date = SystemTime.UtcNow;
             SystemTime.Freeze(date);
 
             //arrange
@@ -290,14 +290,14 @@
         public async Task HandleAsync_GivenRequestWithNullWasteAndProtocol_NoteShouldBeAddedToContext()
         {
             //act
-            var date = DateTime.UtcNow;
+            var date = SystemTime.UtcNow;
             SystemTime.Freeze(date);
 
             var newRequest = new CreateEvidenceNoteRequest(organisation.Id,
                 aatf.Id,
                 scheme.Id,
-                DateTime.Now,
-                DateTime.Now.AddDays(1),
+                SystemTime.Now,
+                SystemTime.Now.AddDays(1),
                 null,
                 null,
                 new List<TonnageValues>(),

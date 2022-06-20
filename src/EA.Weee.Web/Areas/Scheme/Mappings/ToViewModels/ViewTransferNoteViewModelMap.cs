@@ -35,6 +35,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
@@ -99,9 +100,9 @@
             {
                 AatfName = n.First().OriginalAatf.Name,
                 AatfApprovalNumber = n.First().OriginalAatf.ApprovalNumber,
-                Notes = n.GroupBy(nt => nt.Reference).Select(nt => new ViewTransferEvidenceNoteTonnageDataViewModel()
+                Notes = n.GroupBy(nt => nt.OriginalReference).Select(nt => new ViewTransferEvidenceNoteTonnageDataViewModel()
                 {
-                    ReferenceId = nt.First().Reference,
+                    ReferenceId = nt.First().OriginalReference,
                     Type = nt.First().Type,
                     CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId).Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {

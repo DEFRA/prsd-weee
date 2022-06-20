@@ -219,7 +219,7 @@
         [Fact]
         public void Note_Constructor_GivenDraftTransferEvidenceNoteValues_PropertiesShouldBeSet()
         {
-            var date = DateTime.UtcNow;
+            var date = SystemTime.UtcNow;
 
             SystemTime.Freeze(date);
 

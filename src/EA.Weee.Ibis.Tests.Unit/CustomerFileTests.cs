@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Ibis.Tests.Unit
 {
+    using EA.Prsd.Core;
     using System;
     using Xunit;
 
@@ -20,7 +21,7 @@
             string result = file.Write();
 
             // Assert
-            string expectedDate = DateTime.UtcNow.Date.ToString("dd-MMM-yyyy").ToUpperInvariant();
+            string expectedDate = SystemTime.UtcNow.Date.ToString("dd-MMM-yyyy").ToUpperInvariant();
             string expectedOutput =
                 "\"H\",\"0000000\",\"WEE\",\"H\",\"C\",\"00000\",\"" + expectedDate + "\"" + Environment.NewLine +
                 "\"D\",\"0000001\",\"WEE0001\",\"Test customer\",\"1 High Street\",\"Flat 123\",\"Business Park\",\"Newtown\",\"Nr Oldtown\",\"Testshire\",\"AA1 1AA\"" + Environment.NewLine +

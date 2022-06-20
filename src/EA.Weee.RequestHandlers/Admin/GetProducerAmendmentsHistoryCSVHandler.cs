@@ -4,6 +4,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -138,7 +139,7 @@
 
             var fileName = string.Format("{0}_registrationdetailsandchanges_{1:ddMMyyyy_HHmm}.csv",
                 request.PRN,
-                DateTime.UtcNow);
+                SystemTime.UtcNow);
 
             return new CSVFileData
             {

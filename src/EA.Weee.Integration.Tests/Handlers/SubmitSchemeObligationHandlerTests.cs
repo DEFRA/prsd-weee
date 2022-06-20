@@ -60,7 +60,7 @@
             {
                 var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
                 schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
 
                 var schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
@@ -107,7 +107,7 @@
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
                 schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
                 schemeCategoryObligation.Obligation.Should().BeNull();
@@ -260,7 +260,7 @@
             {
                 var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
                 schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
 
                 var schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
@@ -307,7 +307,7 @@
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
                 schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
                 schemeCategoryObligation.Obligation.Should().BeNull();
