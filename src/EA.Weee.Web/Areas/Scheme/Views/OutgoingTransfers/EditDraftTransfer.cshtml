@@ -1,0 +1,19 @@
+﻿
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
+
+@{
+    ViewBag.Title = "Evidence note(transfer) - GOV.UK";
+}
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null))))
+
+    @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
+}
+
+

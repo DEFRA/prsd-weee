@@ -757,6 +757,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\EditTransferTonnage.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
+    <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1478,7 +1479,7 @@
     <Content Include="Views\Shared\_DisplayReturnedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayRejectedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
-    <Content Include="Views\Shared\_ViewTransferEvidenceNotePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\_ViewTransferEvidenceNotePartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

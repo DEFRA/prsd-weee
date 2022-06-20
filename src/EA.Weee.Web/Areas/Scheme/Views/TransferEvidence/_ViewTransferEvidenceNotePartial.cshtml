@@ -1,4 +1,6 @@
 ﻿@using EA.Weee.Core.Helpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
 
 <h1 class="govuk-heading-l">Evidence note (transfer)</h1>
@@ -17,9 +19,15 @@
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
 </div>
-<div class="govuk-width-container govuk-!-padding-top-7 govuk-!-padding-left-0">
+
+@if (Model.EditMode)
+{
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+}
+
+<div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
-        <span id="site" class="govuk-label--s">Site</span><br />
+        <span id="site" class="govuk-label--s">Transferred by</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
     </div>
     <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
@@ -29,6 +37,7 @@
 </div>
 <div class="ui-helper-clearfix"></div>
 <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Total transferred (tonnes)</h2>
+
 <table id="transfer-note-tonnage-summary" class="govuk-table">
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
@@ -37,10 +46,10 @@
                 Category
             </th>
             <th class="govuk-table__header govuk-!-text-align-right">
-                Total transferred(tonnes)
+                Total transferred (tonnes)
             </th>
             <th class="govuk-table__header govuk-!-text-align-right govuk-!-padding-right-2">
-                Total reused transferred(tonnes)
+                Total reuse transferred (tonnes)
             </th>
         </tr>
     </thead>
@@ -50,25 +59,38 @@
         {
             var item = categoryCount;
 
-            @Html.Hidden("categoryid_to_calculate" + categoryCount, Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId)
-            @Html.HiddenFor(m => m.TotalCategoryValues[item].CategoryDisplay)
-            var receivedId = "Received" + Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId + "Total";
-            var reusedId = "Reused" + Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId + "Total";
-
             <tr class="govuk-table__row govuk-panel-grey-background">
                 <td class="govuk-table__cell govuk-!-padding-left-2">
-
                     @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
                 </td>
-
-                <td class="govuk-table__cell govuk-!-text-align-right" id="@receivedId">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2" id="@reusedId">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
+                <td class="govuk-table__cell govuk-!-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
+                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
             </tr>
 
         }
     </tbody>
 </table>
-<h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Breakdown of evidence transferred</h2>
+
+@if (Model.EditMode)
+{
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+}
+
+<div class="govuk-table govuk-!-margin-bottom-0">
+    <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-2"><h2 class="govuk-heading-m" style="text-align:left; padding-left:0; margin-left:0;">Breakdown of evidence transferred</h2></div>
+
+    @if (Model.EditMode)
+    {
+        <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+            @Html.NavigationRouteLink("Edit Tonnages", "Edit Tonnages for transfer note" + Model.Reference, "Scheme_edit_transfer_tonnages", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+        </div>
+    }
+    else
+    {
+        <div class="govuk-grid-column-one-half">&nbsp;</div>
+    }
+</div>
+
 @for (var aatfCount = 0; aatfCount < Model.Summary.Count; aatfCount++)
 {
     var aatf = Model.Summary.ElementAt(aatfCount);
@@ -79,10 +101,10 @@
         <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 10%;">
+                <th class="govuk-table__header govuk-!-text-align-left" style="width: 15%;">
                     Reference ID
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
+                <th class="govuk-table__header govuk-!-text-align-left" style="width: 35%;">
                     Category
                 </th>
                 <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
@@ -98,14 +120,14 @@
             {
                 var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
 
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
-                    @note.ReferenceDisplay
-                </td>
-            </tr>
-                    for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
-                    {
-                        var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
+                        @note.ReferenceDisplay
+                    </td>
+                </tr>
+                for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
+                {
+                    var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-text-align-left">
                             @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
@@ -117,9 +139,9 @@
                             @category.Reused
                         </td>
                     </tr>
-                        }
                 }
-                </tbody>
+            }
+        </tbody>
     </table>
 }
-        
+

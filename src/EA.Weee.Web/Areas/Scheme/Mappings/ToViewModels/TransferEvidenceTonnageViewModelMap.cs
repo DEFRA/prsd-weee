@@ -55,7 +55,7 @@
         {
             foreach (var category in model.CategoryValues)
             {
-                if (source.TransferAllTonnage)
+                if (source.Request != null && source.TransferAllTonnage)
                 {
                     category.TotalReceived = source.Notes.SelectMany(n => n.EvidenceTonnageData)
                         .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReceived)
