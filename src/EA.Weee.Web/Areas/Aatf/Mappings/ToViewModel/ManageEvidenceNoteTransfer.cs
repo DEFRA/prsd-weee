@@ -25,11 +25,11 @@
 
         public IEnumerable<int> ComplianceYearList { get; protected set; }
 
-        public int SelectedComplianceYear { get; protected set; }
+        public int ComplianceYear { get; protected set; }
 
         public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs,
             FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
-            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int selectedComplianceYear)
+            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int complianceYear)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => aatfData, aatfData);
@@ -44,7 +44,7 @@
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
             SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
             ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(SystemTime.UtcNow);
-            SelectedComplianceYear = selectedComplianceYear;
+            ComplianceYear = complianceYear;
         }
     }
 }
