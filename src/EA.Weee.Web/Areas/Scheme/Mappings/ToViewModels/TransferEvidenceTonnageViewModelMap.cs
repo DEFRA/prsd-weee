@@ -64,6 +64,15 @@
                         .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReused)
                         .ToTonnageDisplay();
                 }
+                else if (source.TransferEvidenceNoteData != null)     
+                {
+                    category.TotalReceived = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Select(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.TransferredReceived)
+                        .ToTonnageDisplay();
+                    category.TotalReused = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Select(n => n.EvidenceTonnageData)
+                        .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.TransferredReused)
+                        .ToTonnageDisplay();
+                }
                 else
                 {
                     category.TotalReceived = 0m.ToTonnageDisplay();
