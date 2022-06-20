@@ -16,7 +16,6 @@
     using System.Web.Mvc;
     using Core.AatfEvidence;
     using Web.Areas.Scheme.Mappings.ToViewModels;
-    using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
@@ -66,6 +65,13 @@
         }
 
         [Fact]
+        public void EditDraftTransfer_ShouldHaveHttpGetAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer", new[] { typeof(Guid), typeof(Guid), typeof(int?) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task EditTonnagesGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
         {
             // arrange 
@@ -75,6 +81,22 @@
 
             // act
             await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+        }
+
+        [Fact]
+        public async Task EditDraftTransfer_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null);
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -163,6 +185,74 @@
 
             //assert
             result.ViewName.Should().Be("EditTonnages");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task EditDraftTransferGet_GivenEvidenceNoteId_ShouldRetrieveTransferNote(int? complianceYear)
+        {
+            //arrange
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, evidenceNoteId, complianceYear);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task EditDraftTransferGet_GivenTransferNote_ModelMapperShouldBeCalled(int? complianceYear)
+        {
+            //arrange
+            var transferNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferNoteData);
+
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear);
+
+            //assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
+                    v => v.Edit == true && 
+                         v.DisplayNotification == null && 
+                         v.TransferEvidenceNoteData == transferNoteData && 
+                         v.SchemeId == organisationId && v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task EditDraftTransferGet_GivenMappedModel_ModelShouldBeReturned(int? complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Create<ViewTransferNoteViewModel>();
+
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task EditDraftTransferGet_ShouldReturnView(int? complianceYear)
+        {
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("EditDraftTransfer");
         }
     }
 }
