@@ -49,5 +49,26 @@
                 return this.View("EditTonnages", model);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
+                    noteData, null)
+                {
+                    SelectedComplianceYear = selectedComplianceYear,
+                    Edit = true
+                });
+
+                return this.View("EditDraftTransfer", model);
+            }
+        }
     }
 }
