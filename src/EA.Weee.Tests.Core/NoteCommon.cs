@@ -5,6 +5,7 @@
     using System.Linq;
     using Domain.AatfReturn;
     using Domain.Evidence;
+    using EA.Prsd.Core;
     using Model;
     using Organisation = Domain.Organisation.Organisation;
     using Scheme = Domain.Scheme.Scheme;
@@ -19,7 +20,8 @@
             Protocol protocol = Protocol.Actual,
             List<NoteTonnage> noteTonnages = null,
             DateTime? startDate = null,
-            DateTime? endDate = null)
+            DateTime? endDate = null, 
+            int? complianceYear = null)
         {
             if (organisation == null)
             {
@@ -63,7 +65,7 @@
                 noteTonnages = new List<NoteTonnage>();
             }
 
-            return new Note(organisation,
+            Note n = new Note(organisation,
                 scheme,
                 startDate.Value,
                 endDate.Value,
@@ -72,6 +74,10 @@
                 aatf,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages);
+
+            n.ComplianceYear = complianceYear.HasValue ? complianceYear.Value : startDate.HasValue ? startDate.Value.Year : SystemTime.UtcNow.Year;
+
+            return n;
         }
 
         public static Note CreateTransferNote(DatabaseWrapper database,

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
@@ -11,6 +12,7 @@
     using Core.AatfEvidence;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Prsd.Core;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
@@ -30,29 +32,30 @@
                 var organisation = OrganisationDbSetup.Init().Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create(); 
                 var aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                var complianceYear = fixture.Create<int>();
 
                 //draft note
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
                 //submitted notes
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     }).Create();
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     }).Create();
 
                 //approved notes
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                         n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
                     }).Create();
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
@@ -60,33 +63,33 @@
                     }).Create();
 
                 //rejected notes
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                 .With(n =>
                 {
                     n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                 }).Create();
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                     }).Create();
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                     }).Create();
                 //voided note
-                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id)
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                 .With(n =>
                 {
                     n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                 }).Create();
 
-                request = new GetAatfSummaryRequest(aatf.Id);
+                request = new GetAatfSummaryRequest(aatf.Id, complianceYear);
             };
 
             private static List<NoteTonnage> NoteTonnages()
@@ -152,7 +155,7 @@
                 //draft note
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id);
 
-                request = new GetAatfSummaryRequest(aatf.Id);
+                request = new GetAatfSummaryRequest(aatf.Id, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
