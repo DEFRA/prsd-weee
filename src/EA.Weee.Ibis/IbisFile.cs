@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Ibis
 {
+    using EA.Prsd.Core;
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -68,7 +69,7 @@
             FileSource = fileSource;
             FileID = fileID;
             RegionIdentifier = Region.NationalScheme;
-            CreatedDate = DateTime.UtcNow.Date;
+            CreatedDate = SystemTime.UtcNow.Date;
             Formatter = new DefaultFormatter();
         }
 

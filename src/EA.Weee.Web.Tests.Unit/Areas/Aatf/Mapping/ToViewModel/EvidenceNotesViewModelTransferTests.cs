@@ -4,6 +4,7 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using EA.Prsd.Core;
     using FluentAssertions;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Xunit;
@@ -21,7 +22,7 @@
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.NewGuid(), null));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.NewGuid(), null, SystemTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -31,7 +32,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList()));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -41,7 +42,7 @@
         public void Map_GivenEvidenceNoteIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList()));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
