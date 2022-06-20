@@ -31,14 +31,17 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
+            if (CheckComplianceYear)
+            {
+                if (thisDate.Year != currentDate.Year)
+                {
+                    return new ValidationResult("The start date must be within the current compliance year");
+                }
+            }
+          
+            if (thisDate > new DateTime(currentDate.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day))
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
-            }
-
-            if (thisDate.Year != currentDate.Year)
-            {
-                return new ValidationResult("The start date must be within the current compliance year");
             }
 
             if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))

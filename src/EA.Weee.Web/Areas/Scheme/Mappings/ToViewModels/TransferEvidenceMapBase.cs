@@ -23,10 +23,12 @@
         {
             Condition.Requires(source).IsNotNull();
 
+            var recipientId = source.Request?.SchemeId ?? source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+
             var model = new T()
             {
                 PcsId = source.OrganisationId,
-                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(source.Request.SchemeId))
+                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId))
             };
 
             foreach (var evidenceNoteData in source.Notes)
@@ -38,7 +40,11 @@
                     }));
             }
 
-            foreach (var requestCategoryId in source.Request.CategoryIds)
+            var categoryValues = source.Request != null
+                ? source.Request.CategoryIds
+                : source.TransferEvidenceNoteData.CategoryIds;
+
+            foreach (var requestCategoryId in categoryValues)
             {
                 model.CategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }
