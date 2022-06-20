@@ -177,7 +177,8 @@
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AatfId = aatf.Id,
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft }
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
+                    ComplianceYear = note2Included.ComplianceYear
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);

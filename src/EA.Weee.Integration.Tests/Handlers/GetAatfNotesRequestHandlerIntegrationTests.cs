@@ -350,22 +350,21 @@
             {
                 evidenceNoteData.Should().NotBeNull();
                 evidenceNoteData.Count.Should().Be(4);
-                notesSet.ToList().Count.Equals(6);
             };
 
             private readonly It shouldHaveExpectedResultsCount = () =>
             {
-                notesSet.Where(n => n.ComplianceYear == complianceYear).ToList().Count.Equals(4);
-                notesSet.Where(n => n.ComplianceYear == complianceYear - 1).ToList().Count.Equals(2);
+                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear).Should().Be(4);
+                evidenceNoteData.Count(n => n.ComplianceYear == SystemTime.UtcNow.AddYears(-1).Year).Should().Be(0);
             };
 
             private readonly It shouldHaveExpectedAllowedStatuses = () =>
             {
                 var allowedStatusesToArray = allowedStatuses.ToArray();
 
-                foreach (var note in evidenceNoteData)
+                foreach (var evidenceNote in evidenceNoteData)
                 {
-                    note.Status.Should().BeOneOf(allowedStatusesToArray);
+                    evidenceNote.Status.Should().BeOneOf(allowedStatusesToArray);
                 }
             };
         }
