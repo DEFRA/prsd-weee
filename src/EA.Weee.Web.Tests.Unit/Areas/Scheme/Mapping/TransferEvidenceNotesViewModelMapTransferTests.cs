@@ -35,7 +35,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(fixture.CreateMany<EvidenceNoteData>().ToList(), null,
+                new TransferEvidenceNotesViewModelMapTransfer(fixture.CreateMany<EvidenceNoteData>().ToList(), (TransferEvidenceNoteRequest)null,
                     fixture.Create<Guid>()));
 
             //assert

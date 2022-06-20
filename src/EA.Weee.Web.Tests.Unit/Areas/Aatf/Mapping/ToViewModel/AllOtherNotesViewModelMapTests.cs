@@ -20,6 +20,7 @@
         private readonly AllOtherNotesViewModelMap allOtherNotesViewModelMap;
         private readonly Fixture fixture;
         private readonly IMapper mapper;
+        private readonly DateTime currentDate;
 
         public AllOtherNotesViewModelMapTests()
         {
@@ -28,6 +29,8 @@
             allOtherNotesViewModelMap = new AllOtherNotesViewModelMap(mapper);
 
             fixture = new Fixture();
+
+            currentDate = fixture.Create<DateTime>();
         }
 
         [Fact]
@@ -60,8 +63,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
- 
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             allOtherNotesViewModelMap.Map(transfer);
@@ -78,8 +80,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             allOtherNotesViewModelMap.Map(transfer);
@@ -96,8 +97,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -126,8 +126,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -158,8 +157,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -189,8 +187,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -220,8 +217,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, SystemTime.Now);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, notes, currentDate);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
@@ -263,7 +259,7 @@
             var result = allOtherNotesViewModelMap.Map(notes, date, null);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(year);
         }
 
         [Theory]
@@ -273,15 +269,13 @@
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var date = new DateTime(2022, 1, 1);
-            var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+            var model = fixture.Build<ManageEvidenceNoteViewModel>().With(m => m.ComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = allOtherNotesViewModelMap.Map(notes, date, model);
+            var result = allOtherNotesViewModelMap.Map(notes, currentDate, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(currentDate.Year);
         }
 
         [Fact]
@@ -291,13 +285,13 @@
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
             var date = new DateTime(2022, 1, 1);
             var model = fixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, 2021).Create();
+                .With(m => m.ComplianceYear, 2021).Create();
 
             //act
             var result = allOtherNotesViewModelMap.Map(notes, date, model);
 
             //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYear.Should().Be(2021);
         }
     }
 }
