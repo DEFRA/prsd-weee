@@ -272,5 +272,45 @@
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
+
+        [Fact]
+        public void Map_GivenListOfEvidenceNoteRowViewModel_DisplayViewLinkPropertyShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Draft).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Approved).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Rejected).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Returned).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Submitted).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Void).Create()
+            };
+
+            var organisationId = Guid.NewGuid();
+
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            // assert
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status == NoteStatus.Draft))
+            {
+                evidenceNoteRowViewModel.DisplayViewLink.Should().BeTrue();
+            }
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status != NoteStatus.Draft))
+            {
+                evidenceNoteRowViewModel.DisplayViewLink.Should().BeFalse();
+            }
+        }
     }
 }

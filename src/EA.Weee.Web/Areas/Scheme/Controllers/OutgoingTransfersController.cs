@@ -61,7 +61,7 @@
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
-                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                    noteData, null)
                 {
                     SelectedComplianceYear = selectedComplianceYear,
                     Edit = true
