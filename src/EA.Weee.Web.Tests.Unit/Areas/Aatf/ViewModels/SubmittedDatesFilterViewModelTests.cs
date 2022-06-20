@@ -30,7 +30,7 @@
         [Fact]
         public void SubmittedDatesFilterViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EditEvidenceNoteViewModel).GetProperty("StartDate")
+            typeof(SubmittedDatesFilterViewModel).GetProperty("StartDate")
                 .Should().BeDecoratedWith<EvidenceNoteStartDateAttribute>(e => e.CheckComplianceYear == false
                 && e.CompareDatePropertyName.Equals("EndDate"));
         }
@@ -38,8 +38,9 @@
         [Fact]
         public void SubmittedDatesFilterViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
-            typeof(EditEvidenceNoteViewModel)
-                .GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>(e => e.CompareDatePropertyName.Equals("StartDate"));
+            typeof(SubmittedDatesFilterViewModel)
+                .GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteEndDateAttribute>(e => e.CompareDatePropertyName.Equals("StartDate"))
+                .Which.CheckComplianceYear.Should().BeFalse();
         }
     }
 }
