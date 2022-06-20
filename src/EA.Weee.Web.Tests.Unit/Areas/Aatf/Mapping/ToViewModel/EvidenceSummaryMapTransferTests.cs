@@ -45,5 +45,22 @@
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
         }
+
+        [Fact]
+        public void EvidenceSummaryMapTransfer_GivenValues_PropertiesShouldBeSet()
+        {
+            //arrange
+            var summaryData = fixture.Create<AatfEvidenceSummaryData>();
+            var organisationId = fixture.Create<Guid>();
+            var aatfId = fixture.Create<Guid>();
+
+            //act
+            var result = new EvidenceSummaryMapTransfer(organisationId, aatfId, summaryData);
+
+            //assert
+            result.Should().NotBeNull().Should().Be(summaryData);
+            result.AatfId.Should().Be(aatfId);
+            result.OrganisationId.Should().Be(organisationId);
+        }
     }
 }
