@@ -63,6 +63,7 @@
 
             //assert
             model.SchemeId.Should().Be(source.SchemeId);
+            model.EvidenceNoteId.Should().Be(source.TransferEvidenceNoteData.Id);
             model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.EditMode.Should().Be(editMode);
         }
