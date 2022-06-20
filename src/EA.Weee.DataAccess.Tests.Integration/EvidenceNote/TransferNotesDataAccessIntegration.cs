@@ -9,6 +9,7 @@
     using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Prsd.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Domain;
@@ -274,8 +275,8 @@
 
                 refreshedTransferNote.Aatf.Should().BeNull();
                 refreshedTransferNote.CreatedById.Should().Be(context.GetCurrentUser());
-                refreshedTransferNote.StartDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-                refreshedTransferNote.EndDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+                refreshedTransferNote.StartDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                refreshedTransferNote.EndDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 refreshedTransferNote.NoteType.Should().Be(NoteType.TransferNote);
                 refreshedTransferNote.Organisation.Should().Be(transferOrganisation);
                 refreshedTransferNote.NoteStatusHistory.Count.Should().Be(0);

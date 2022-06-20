@@ -3,6 +3,7 @@
     using Core.Admin;
     using Core.Shared;
     using DataAccess.StoredProcedure;
+    using EA.Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
@@ -39,7 +40,7 @@
 
             string fileName = string.Format("{0}_pcsobligationdata_{1:ddMMyyyy_HHmm}.csv",
                     request.ComplianceYear,
-                    DateTime.UtcNow);
+                    SystemTime.UtcNow);
 
             return new CSVFileData
             {

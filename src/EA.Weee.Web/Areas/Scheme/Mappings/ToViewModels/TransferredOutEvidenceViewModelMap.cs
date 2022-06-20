@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -18,6 +19,11 @@
             var model = Map(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
+
+            foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
+            {
+                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Draft);
+            }
 
             return model;
         }

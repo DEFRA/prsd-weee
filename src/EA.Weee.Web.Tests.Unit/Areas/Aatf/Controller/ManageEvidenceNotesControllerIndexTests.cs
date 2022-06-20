@@ -13,7 +13,9 @@
     using Core.Helpers;
     using Core.Scheme;
     using Core.Tests.Unit.Helpers;
+    using EA.Prsd.Core;
     using EA.Weee.Requests.Aatf;
+    using EA.Weee.Requests.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -76,6 +78,7 @@
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(SystemTime.UtcNow);
 
             await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
 

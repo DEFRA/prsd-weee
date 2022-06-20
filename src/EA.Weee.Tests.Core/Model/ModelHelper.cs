@@ -3,6 +3,7 @@
     using Domain.Error;
     using Domain.Lookup;
     using Domain.Obligation;
+    using EA.Prsd.Core;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -226,7 +227,7 @@
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
                 CreatedById = GetOrCreateUser("Testuser").Id,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = SystemTime.UtcNow,
                 ProcessTime = new TimeSpan(0),
                 ComplianceYear = 2016,
                 HasAnnualCharge = false
@@ -250,7 +251,7 @@
             var memberUpload = CreateMemberUpload(scheme);
 
             memberUpload.IsSubmitted = true;
-            memberUpload.SubmittedDate = DateTime.UtcNow;
+            memberUpload.SubmittedDate = SystemTime.UtcNow;
             memberUpload.TotalCharges = 30;
 
             if (invoiceRun != null)
@@ -597,7 +598,7 @@
                 SchemeId = scheme.Id,
                 Scheme = scheme,
                 Data = string.Format("<SchemeReturn{0} />", dataReturnUploadId),
-                Date = DateTime.UtcNow,
+                Date = SystemTime.UtcNow,
                 ProcessTime = TimeSpan.Zero
             };
 
@@ -686,12 +687,12 @@
                 Id = dataReturnVersionId,
                 DataReturn = dataReturn,
                 DataReturnId = dataReturn.Id,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = SystemTime.UtcNow
             };
 
             if (isSubmitted)
             {
-                dataReturnVersion.SubmittedDate = DateTime.UtcNow;
+                dataReturnVersion.SubmittedDate = SystemTime.UtcNow;
                 dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
                 dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
                 dataReturn.CurrentDataReturnVersion = dataReturnVersion;
@@ -783,7 +784,7 @@
             var invoiceRun = new InvoiceRun
             {
                 Id = IntegerToGuid(GetNextId()),
-                IssuedDate = DateTime.UtcNow,
+                IssuedDate = SystemTime.UtcNow,
                 IssuedByUserId = user.Id,
                 CompetentAuthority = compenentAuthority,
                 CompetentAuthorityId = compenentAuthority.Id,

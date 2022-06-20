@@ -13,7 +13,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Prsd.Core;
     using NoteType = Domain.Evidence.NoteType;
 
     public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
@@ -39,16 +38,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            //TODO: this only temporary until the compliance filter is added to aatf screens
-            var currentDate = SystemTime.Now;
-            var systemSettings = await systemDataDataAccess.Get();
-
-            if (systemSettings.UseFixedCurrentDate)
-            {
-                currentDate = systemSettings.FixedCurrentDate;
-            }
-            
-            var filter = new NoteFilter(currentDate.Year)
+            var filter = new NoteFilter(message.ComplianceYear)
             {
                 AatfId = message.AatfId,
                 NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
@@ -59,7 +49,8 @@
                 WasteTypeId = (int?)message.WasteTypeId,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
-                EndDateSubmitted = message.EndDateSubmitted
+                EndDateSubmitted = message.EndDateSubmitted, 
+                ComplianceYear = message.ComplianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
