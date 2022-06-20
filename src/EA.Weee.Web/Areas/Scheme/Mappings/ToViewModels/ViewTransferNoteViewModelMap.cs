@@ -57,7 +57,7 @@
                     recipientOrganisationAddress.Postcode,
                     null),
                 TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
-                    source.TransferEvidenceNoteData.TransferredOrganisationData.Name,
+                    source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
                     transferOrganisationAddress.Address1,
                     transferOrganisationAddress.Address2,
                     transferOrganisationAddress.TownOrCity,
