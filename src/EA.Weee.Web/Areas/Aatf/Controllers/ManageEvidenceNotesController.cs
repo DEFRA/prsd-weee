@@ -318,7 +318,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.ComplianceYear > 0 ? manageEvidenceNoteViewModel.ComplianceYear : currentDate.Year;
         }
 
         private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, 

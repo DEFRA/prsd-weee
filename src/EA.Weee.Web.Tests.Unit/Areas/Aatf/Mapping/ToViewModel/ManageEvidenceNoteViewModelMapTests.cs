@@ -194,5 +194,28 @@
             // assert 
             model.SubmittedDatesFilterViewModel.Should().Be(source.SubmittedDatesFilterViewModel);
         }
+
+        [Fact]
+        public void Map_GivenSourceToMapper_ComplianceYearShouldBeMapped()
+        {
+            //arrange
+            //var organisationId = Guid.NewGuid();
+            //var aatfId = Guid.NewGuid();
+            var expectedComplianceYear = fixture.Create<int>();
+            //var aatfData = fixture.Create<AatfData>();
+            //var aatfDataValid = fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, expectedComplianceYear).Create();
+            var aatfDataList = new List<AatfData>
+            {
+                fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, expectedComplianceYear).Create()
+            };
+            //aatfDataList.Add(aatfDataValid);
+            var source = new ManageEvidenceNoteTransfer(Guid.NewGuid(), Guid.NewGuid(), fixture.Create<AatfData>(), aatfDataList, null, null, null, expectedComplianceYear);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.ComplianceYear.Should().Be(source.ComplianceYear);
+        }
     }
 }
