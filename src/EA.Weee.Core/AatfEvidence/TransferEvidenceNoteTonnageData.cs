@@ -10,8 +10,10 @@
 
         public NoteType Type { get; set; }
 
-        public int Reference { get; set; }
+        public int OriginalReference { get; set; }
 
         public EvidenceTonnageData EvidenceTonnageData { get; set; }
+
+        public Guid OriginalNoteId { get; set; }
     }
 }

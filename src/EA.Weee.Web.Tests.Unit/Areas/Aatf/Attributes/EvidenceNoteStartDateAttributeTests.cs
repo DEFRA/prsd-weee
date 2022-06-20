@@ -13,12 +13,18 @@
     {
         private readonly IWeeeCache cache;
         private readonly EvidenceNoteStartDateAttribute attribute;
+        private readonly EvidenceNoteStartDateAttribute attributeWithNoComplianceYearCheck;
 
         public EvidenceNoteStartDateAttributeTests()
         {
             cache = A.Fake<IWeeeCache>();
 
             attribute = new EvidenceNoteStartDateAttribute("EndDate", true)
+            {
+                Cache = cache
+            };
+
+            attributeWithNoComplianceYearCheck = new EvidenceNoteStartDateAttribute("EndDate", false)
             {
                 Cache = cache
             };
@@ -86,6 +92,27 @@
             result.ValidationResult.ErrorMessage.Should()
                 .Be("The start date must be within the current compliance year");
 
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldNotBeThrown()
+        {
+            //arrange
+            var currentDate = DateTime.Now;
+            SystemTime.Freeze(currentDate);
+            var outOfComplianceYear = new DateTime(SystemTime.Now.Year, 1, 1).AddMilliseconds(-1);
+            var target = new ValidationTarget() { StartDate = outOfComplianceYear, EndDate = currentDate };
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+
+            //act
+            var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+           
             SystemTime.Unfreeze();
         }
 
