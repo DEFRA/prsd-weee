@@ -1,4 +1,8 @@
 ﻿@using EA.Weee.Core.Helpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
 
 <h1 class="govuk-heading-l">Evidence note (transfer)</h1>
@@ -29,7 +33,8 @@
 </div>
 <div class="ui-helper-clearfix"></div>
 <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Total transferred (tonnes)</h2>
-<table id="transfer-note-tonnage-summary" class="govuk-table">
+
+<table id="transfer-note-tonnage-summary" class="govuk-table" style="width:88%">
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -68,58 +73,78 @@
         }
     </tbody>
 </table>
-<h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Breakdown of evidence transferred</h2>
-@for (var aatfCount = 0; aatfCount < Model.Summary.Count; aatfCount++)
-{
-    var aatf = Model.Summary.ElementAt(aatfCount);
 
-    <h3 class="govuk-heading-m">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    <table id="transfer-notes-tonnage-@aatfCount.ToString()" class="govuk-table">
-        <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 10%;">
-                    Reference ID
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
-                    Category
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
-                    Total transferred (tonnes)
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
-                    Total reuse transferred (tonnes)
-                </th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
-            {
-                var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
+<div class="govuk-table govuk-!-margin-bottom-0">
+    <div class="govuk-grid-column-one-half">&nbsp;</div>
+    <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
 
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
-                    @note.ReferenceDisplay
-                </td>
-            </tr>
+        @(this.WeeeGds().ActionLinkWithEventTracking("Edit tonnages",
+                "Edit tonnages",
+                "",
+                "Scheme note",
+                "Edit tonnages",
+                "Edit tonnages"
+                ))
+    </div>
+    </div>
+
+    <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Breakdown of evidence transferred</h2>
+    <br />
+
+    @for (var aatfCount = 0; aatfCount < Model.Summary.Count; aatfCount++)
+    {
+        var aatf = Model.Summary.ElementAt(aatfCount);
+
+        <h3 class="govuk-heading-m" style="text-align:left;">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
+
+        <table id="transfer-notes-tonnage-@aatfCount.ToString()" class="govuk-table">
+            <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-text-align-left" style="width: 10%;">
+                        Reference ID
+                    </th>
+                    <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
+                        Category
+                    </th>
+                    <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
+                        Total transferred (tonnes)
+                    </th>
+                    <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
+                        Total reuse transferred (tonnes)
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
+                {
+                    var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
+                            @note.ReferenceDisplay
+                        </td>
+                    </tr>
                     for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
                     {
                         var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-text-align-left">
-                            @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right">
-                            @category.Received
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right">
-                            @category.Reused
-                        </td>
-                    </tr>
-                        }
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-text-align-left">
+                                @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                @category.Received
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right">
+                                @category.Reused
+                            </td>
+                        </tr>
+                    }
                 }
-                </tbody>
-    </table>
+            </tbody>
+        </table>
 }
-        
+
+
