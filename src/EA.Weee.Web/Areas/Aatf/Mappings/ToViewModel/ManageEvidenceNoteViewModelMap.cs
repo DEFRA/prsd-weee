@@ -43,7 +43,7 @@
             }
 
             model.ComplianceYearList = source.ComplianceYearList;
-            model.SelectedComplianceYear = source.ComplianceYear;
+            model.ComplianceYear = source.ComplianceYear;
 
             return model;
         }

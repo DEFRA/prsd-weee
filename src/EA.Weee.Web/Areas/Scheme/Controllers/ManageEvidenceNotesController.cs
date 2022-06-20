@@ -142,14 +142,14 @@
         }
         
         [HttpGet]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, int complianceYear)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note schemeName request from note's Guid
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client, selectedComplianceYear);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client, complianceYear);
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
@@ -173,19 +173,19 @@
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     return RedirectToAction("DownloadEvidenceNote", 
-                        new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.SelectedComplianceYear });
+                        new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, complianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
                 await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client, model.ViewEvidenceNoteViewModel.SelectedComplianceYear);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client, model.ViewEvidenceNoteViewModel.ComplianceYear);
 
                 return View("ReviewEvidenceNote", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int complianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -198,7 +198,7 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
                 {
                     SchemeId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear
+                    ComplianceYear = complianceYear
                 });
 
                 return View(model);
@@ -207,10 +207,10 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.ComplianceYear > 0 ? manageEvidenceNoteViewModel.ComplianceYear : currentDate.Year;
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int selectedComplianceYear)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -219,7 +219,7 @@
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
             {
                 SchemeId = pcsId,
-                SelectedComplianceYear = selectedComplianceYear
+                ComplianceYear = complianceYear
             });
 
             return model;
