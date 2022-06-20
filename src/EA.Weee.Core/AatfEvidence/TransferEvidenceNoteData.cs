@@ -30,7 +30,7 @@
             {
                 if (TransferEvidenceNoteTonnageData != null)
                 {
-                    return TransferEvidenceNoteTonnageData.Select(t => t.EvidenceTonnageData.CategoryId).Cast<int>()
+                    return TransferEvidenceNoteTonnageData.Select(t => t.EvidenceTonnageData.CategoryId).Distinct().Cast<int>()
                         .ToList();
                 }
 
