@@ -42,7 +42,7 @@
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header govuk-!-text-align-left  govuk-!-padding-left-2">
+            <th class="govuk-table__header govuk-!-text-align-left">
                 Category
             </th>
             <th class="govuk-table__header govuk-!-text-align-right">
@@ -91,6 +91,8 @@
     }
 </div>
 
+<div class="ui-helper-clearfix"></div>
+
 @for (var aatfCount = 0; aatfCount < Model.Summary.Count; aatfCount++)
 {
     var aatf = Model.Summary.ElementAt(aatfCount);
@@ -108,13 +110,13 @@
                 <th class="govuk-table__header govuk-!-text-align-left" style="width: 15%;">
                     Reference ID
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 35%;">
+                <th class="govuk-table__header govuk-!-text-align-left" style="width: 45%;">
                     Category
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
+                <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
                     Total transferred (tonnes)
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-right" style="width: 25%;">
+                <th class="govuk-table__header govuk-!-text-align-right" style="width: 20%;">
                     Total reuse transferred (tonnes)
                 </th>
             </tr>
