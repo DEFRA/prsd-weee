@@ -130,7 +130,6 @@
         [Fact]
         public void DisplayEditButton_GivenNoteStatusIsDraft_ShouldBeTrue()
         {
-
             //arrange
             var model = new ViewTransferNoteViewModel()
             {
