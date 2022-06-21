@@ -120,7 +120,7 @@
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) && 
-                                                                 v.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -240,7 +240,7 @@
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
-                                                                 v.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -321,10 +321,13 @@
             var organisationId = Fixture.Create<Guid>();
             var evidenceNoteId = Fixture.Create<Guid>();
             var complianceYear = Fixture.Create<int>();
+            var selectedComplianceYear = Fixture.Create<int>();
+
             var model = GetValidModel();
             model.OrganisationId = organisationId;
             model.ViewEvidenceNoteViewModel.Id = evidenceNoteId;
             model.ViewEvidenceNoteViewModel.ComplianceYear = complianceYear;
+            model.ViewEvidenceNoteViewModel.SelectedComplianceYear = selectedComplianceYear;
 
             //act
             var result = await ManageEvidenceController.ReviewEvidenceNote(model) as RedirectToRouteResult;
@@ -333,7 +336,7 @@
             result.RouteValues["action"].Should().Be("DownloadEvidenceNote");
             result.RouteValues["organisationId"].Should().Be(model.OrganisationId);
             result.RouteValues["evidenceNoteId"].Should().Be(model.ViewEvidenceNoteViewModel.Id);
-            result.RouteValues["complianceYear"].Should().Be(model.ViewEvidenceNoteViewModel.ComplianceYear);
+            result.RouteValues["selectedComplianceYear"].Should().Be(model.ViewEvidenceNoteViewModel.ComplianceYear);
         }
 
         [Fact]
@@ -423,9 +426,7 @@
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
-                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
-                                                                 v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId) &&
-                                                                 v.ComplianceYear.Equals(model.ViewEvidenceNoteViewModel.ComplianceYear)))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId) && v.SelectedComplianceYear.Equals(model.ViewEvidenceNoteViewModel.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
