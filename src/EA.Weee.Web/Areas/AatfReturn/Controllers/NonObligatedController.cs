@@ -71,6 +71,44 @@
             {
                 if (ModelState.IsValid)
                 {
+                    var returnId = viewModel.ReturnId;
+
+                    var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                    var model = mapper.Map(new ReturnToNonObligatedValuesViewModelMapTransfer()
+                    {
+                        ReturnId = returnId,
+                        Dcf = !viewModel.Dcf,
+                        ReturnData = @return,
+                        OrganisationId = @return.OrganisationData.Id,
+                        PastedData = TempData["pastedValues"] as String
+                    });
+                    await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+                    TempData["currentQuarter"] = @return.Quarter;
+                    TempData["currentQuarterWindow"] = @return.QuarterWindow;
+
+                    var error = false;
+                    foreach (var categoryValue in viewModel.CategoryValues)
+                    {
+                        var inputTonnage = Convert.ToDecimal(string.IsNullOrEmpty(categoryValue.Tonnage) ? "0" : categoryValue.Tonnage);
+                        var existingNotDcfTonnage = Convert.ToDecimal(string.IsNullOrEmpty(model.CategoryValues[categoryValue.CategoryId - 1].Tonnage) ? "0" : model.CategoryValues[categoryValue.CategoryId - 1].Tonnage);
+
+                        if (viewModel.Dcf && inputTonnage > existingNotDcfTonnage)
+                        {
+                            ModelState.AddModelError($"CategoryValues[{categoryValue.CategoryId - 1}].Tonnage", $"Catagory {categoryValue.CategoryId} tonnage must be less than or equal to {existingNotDcfTonnage} tonnes");
+                            error = true;
+                        }
+                        else if (!viewModel.Dcf && inputTonnage < existingNotDcfTonnage)
+                        {
+                            ModelState.AddModelError(string.Empty, $"Catagory {categoryValue.CategoryId} tonnage must be more than or equal to {existingNotDcfTonnage} tonnes");
+                            error = true;
+                        }
+                    }
+                    if (error)
+                    {
+                        return View(viewModel);
+                    }
+
                     var request = requestCreator.ViewModelToRequest(viewModel);
 
                     await client.SendAsync(User.GetAccessToken(), request);
