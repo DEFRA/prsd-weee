@@ -1,5 +1,4 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
+﻿@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
@@ -27,5 +26,11 @@
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
-}
 
+    @if (Model.DisplayEditButton)
+    {
+        <div class="govuk-!-margin-top-3">
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true }, new { @class = "govuk-button" })
+        </div>
+    }
+}
