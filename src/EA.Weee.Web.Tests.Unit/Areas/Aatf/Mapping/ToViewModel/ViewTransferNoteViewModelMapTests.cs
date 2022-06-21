@@ -66,10 +66,7 @@
             model.ReturnToView.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(false)]
-
+        [Fact]
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsTrue_ShouldSetReturnToView()
         {
             //arrange
