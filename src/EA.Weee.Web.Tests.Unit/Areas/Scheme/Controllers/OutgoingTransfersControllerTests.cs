@@ -67,7 +67,7 @@
         [Fact]
         public void EditDraftTransfer_ShouldHaveHttpGetAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer", new[] { typeof(Guid), typeof(Guid), typeof(int?) }).Should()
+            typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer", new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
