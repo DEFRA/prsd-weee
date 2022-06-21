@@ -71,7 +71,8 @@
                     organisationAddress.Postcode,
                     null),
                 SchemeId = source.SchemeId,
-                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber
+                AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
+                SelectedComplianceYear = source.SelectedComplianceYear
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
