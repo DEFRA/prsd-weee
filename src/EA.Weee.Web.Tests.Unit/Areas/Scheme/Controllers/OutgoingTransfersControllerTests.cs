@@ -96,7 +96,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null);
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null, null);
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -196,7 +196,7 @@
             var evidenceNoteId = TestFixture.Create<Guid>();
 
             //act
-            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, evidenceNoteId, complianceYear);
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, evidenceNoteId, complianceYear, null);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -216,7 +216,7 @@
                     A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferNoteData);
 
             //act
-            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear);
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear, null);
 
             //assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -224,6 +224,29 @@
                          v.DisplayNotification == null && 
                          v.TransferEvidenceNoteData == transferNoteData && 
                          v.SchemeId == organisationId && v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task EditDraftTransferGet_GivenTransferNoteAndReturnToView_ModelMapperShouldBeCalled(bool? returnToView)
+        {
+            //arrange
+            var transferNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferNoteData);
+
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null, returnToView);
+
+            //assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
+                v => v.Edit == true &&
+                     v.DisplayNotification == null &&
+                     v.TransferEvidenceNoteData == transferNoteData &&
+                     v.SchemeId == organisationId && v.ReturnToView == returnToView))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -237,7 +260,25 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear) as ViewResult;
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear, null) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task EditDraftTransferGet_GivenMappedModelAndReturnToView_ModelShouldBeReturned(bool? returnToView)
+        {
+            //arrange
+            var model = TestFixture.Create<ViewTransferNoteViewModel>();
+
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null, returnToView) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -249,7 +290,20 @@
         public async Task EditDraftTransferGet_ShouldReturnView(int? complianceYear)
         {
             //act
-            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear) as ViewResult;
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), complianceYear, null) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("EditDraftTransfer");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task EditDraftTransferGet_GivenReturnToView_ShouldReturnView(bool? returnToView)
+        {
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null, returnToView) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("EditDraftTransfer");

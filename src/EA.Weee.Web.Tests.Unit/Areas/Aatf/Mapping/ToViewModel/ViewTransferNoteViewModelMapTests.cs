@@ -51,6 +51,38 @@
         }
 
         [Theory]
+        [InlineData(null)]
+        [InlineData(false)]
+        
+        public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool returnToView)
+        {
+            //arrange
+            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, returnToView).Create();
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.ReturnToView.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsTrue_ShouldSetReturnToView()
+        {
+            //arrange
+            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, true).Create();
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.ReturnToView.Should().BeTrue();
+        }
+
+        [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public void ViewTransferNoteViewModelMap_GivenSource_PropertiesShouldBeSet(bool editMode)
