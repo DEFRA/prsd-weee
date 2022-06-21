@@ -78,5 +78,9 @@
                 }
             }
         }
+
+        public bool DisplayEditButton => Status == NoteStatus.Draft;
+
+        public bool ReturnToView { get; set; }
     }
 }

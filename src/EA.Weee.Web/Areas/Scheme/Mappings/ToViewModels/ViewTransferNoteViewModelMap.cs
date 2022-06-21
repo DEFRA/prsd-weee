@@ -35,6 +35,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                ReturnToView = source.ReturnToView ?? false,
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
