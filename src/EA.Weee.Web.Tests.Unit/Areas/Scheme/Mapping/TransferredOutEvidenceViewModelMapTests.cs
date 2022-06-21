@@ -213,7 +213,7 @@
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -233,7 +233,7 @@
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = transferredOutEvidenceViewModelMap.Map(notes, date, null);
+            var result = transferredOutEvidenceViewModelMap.MapBase(notes, date, null);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -251,7 +251,7 @@
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -267,7 +267,7 @@
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = transferredOutEvidenceViewModelMap.Map(notes, date, model);
+            var result = transferredOutEvidenceViewModelMap.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);

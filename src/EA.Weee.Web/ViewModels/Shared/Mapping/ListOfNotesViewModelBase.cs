@@ -17,7 +17,7 @@
             this.Mapper = mapper;
         }
 
-        public T Map(List<EvidenceNoteData> notes, 
+        public T MapBase(List<EvidenceNoteData> notes, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {

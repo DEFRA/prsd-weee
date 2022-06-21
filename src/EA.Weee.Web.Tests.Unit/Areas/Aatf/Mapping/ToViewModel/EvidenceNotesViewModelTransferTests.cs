@@ -22,7 +22,7 @@
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.NewGuid(), null, SystemTime.Now));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.NewGuid(), null, SystemTime.Now, null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -32,7 +32,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
         public void Map_GivenEvidenceNoteIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();

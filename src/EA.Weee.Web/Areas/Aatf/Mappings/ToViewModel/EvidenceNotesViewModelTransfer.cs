@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Core.AatfEvidence;
     using Prsd.Core;
+    using ViewModels;
 
     public class EvidenceNotesViewModelTransfer
     {
@@ -15,7 +16,12 @@
 
         public DateTime CurrentDate { get; protected set; }
 
-        public EvidenceNotesViewModelTransfer(Guid organisationId, Guid aatfId, List<EvidenceNoteData> notes, DateTime currentDate)
+        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; private set; }
+
+        public EvidenceNotesViewModelTransfer(Guid organisationId, 
+            Guid aatfId, List<EvidenceNoteData> notes, 
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => notes, notes);
@@ -25,6 +31,7 @@
             AatfId = aatfId;
             Notes = notes;
             CurrentDate = currentDate;
+            ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
         }
     }
 }

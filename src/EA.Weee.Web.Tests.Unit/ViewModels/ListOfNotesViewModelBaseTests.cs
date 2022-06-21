@@ -51,7 +51,7 @@
         public void Map_GivenNullSource_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => testClass.Map(null, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => testClass.MapBase(null, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -69,7 +69,7 @@
             };
 
             //act
-            testClass.Map(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
+            testClass.MapBase(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
@@ -91,7 +91,7 @@
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
 
             //act
-            var result = testClass.Map(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
+            var result = testClass.MapBase(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
@@ -107,7 +107,7 @@
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = testClass.Map(notes, date, model);
+            var result = testClass.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -127,7 +127,7 @@
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = testClass.Map(notes, date, null);
+            var result = testClass.MapBase(notes, date, null);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -145,7 +145,7 @@
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = testClass.Map(notes, date, model);
+            var result = testClass.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -161,7 +161,7 @@
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = testClass.Map(notes, date, model);
+            var result = testClass.MapBase(notes, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
