@@ -346,7 +346,7 @@
         {
             //arrange
             int complianceYear = 2018;
-            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { ComplianceYear = complianceYear };
+            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), vm);
 
@@ -840,7 +840,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var complianceYear = 2000;
-            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { ComplianceYear = complianceYear };
+            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
 
             await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), vm);
 
