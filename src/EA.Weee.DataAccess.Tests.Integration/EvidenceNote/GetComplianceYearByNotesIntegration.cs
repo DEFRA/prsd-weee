@@ -40,7 +40,7 @@
 
                 var year = await dataAccess.GetComplianceYearByNotes(new List<Guid>() { note1.Id, note2.Id, note3.Id });
 
-                year.Should().Be((short)SystemTime.Now.Year);
+                year.Should().Be(SystemTime.Now.Year);
             }
         }
 
@@ -68,7 +68,7 @@
 
                 var year = await dataAccess.GetComplianceYearByNotes(new List<Guid>() { note2.Id, note3.Id });
 
-                year.Should().Be((short)SystemTime.Now.AddYears(1).Year);
+                year.Should().Be(SystemTime.Now.AddYears(1).Year);
             }
         }
     }

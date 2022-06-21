@@ -170,7 +170,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) && 
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
@@ -373,7 +373,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)currentDate.Year) &&
+                     g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == false))).MustHaveHappenedOnceExactly();
         }
 
@@ -404,7 +404,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals((short)model.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(model.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

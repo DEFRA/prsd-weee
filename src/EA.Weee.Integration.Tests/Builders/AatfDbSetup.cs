@@ -31,7 +31,7 @@
                 DateTime.Now,
                 newContact,
                 FacilityType.Aatf,
-                (short)DateTime.Now.Year,
+                DateTime.Now.Year,
                 localArea,
                 panArea);
 

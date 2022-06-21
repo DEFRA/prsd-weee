@@ -229,7 +229,7 @@
                     .ToListAsync();
         }
 
-        public async Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, short complianceYear)
+        public async Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, int complianceYear)
         {
             var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.AatfId == aatfId && p.ComplianceYear == complianceYear);
 

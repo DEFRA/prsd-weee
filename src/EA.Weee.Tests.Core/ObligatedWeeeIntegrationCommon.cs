@@ -37,7 +37,7 @@
             return new Return(organisation, new Quarter(year, quarter), createdById, facilityType);
         }
 
-        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, short year = 2019, bool hasLocalArea = true, bool hasPanArea = true, string name = null)
+        public static Aatf CreateAatf(DatabaseWrapper database, Organisation organisation, int year = 2019, bool hasLocalArea = true, bool hasPanArea = true, string name = null)
         {
             LocalArea localArea = null;
             if (hasLocalArea)

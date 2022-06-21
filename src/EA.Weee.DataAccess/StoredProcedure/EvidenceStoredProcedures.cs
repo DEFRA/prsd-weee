@@ -14,11 +14,11 @@
             this.context = context;
         }
 
-        public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, short complianceYear)
+        public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear)
         {
             string queryString = "[Evidence].[getAatfEvidenceSummaryTotals] @AatfId, @ComplianceYear";
             SqlParameter aatfIdParameter = new SqlParameter("@AatfId", aatfId);
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
 
             return await context.Database.SqlQuery<AatfEvidenceSummaryTotalsData>(queryString, aatfIdParameter, complianceYearParameter).ToListAsync();
         }

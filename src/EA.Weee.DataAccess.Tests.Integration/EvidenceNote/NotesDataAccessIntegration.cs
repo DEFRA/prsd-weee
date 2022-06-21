@@ -158,7 +158,7 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, DateTime.Now.Year);
 
                 context.Organisations.Add(organisation1);
 
@@ -197,7 +197,7 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, DateTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
                 context.Organisations.Add(organisation1);
@@ -236,7 +236,7 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, DateTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
                 context.Organisations.Add(organisation1);
@@ -276,7 +276,7 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, (short)DateTime.Now.Year);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, DateTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
                 context.Organisations.Add(organisation1);
@@ -1059,7 +1059,7 @@
             {
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
-
+                var complianceYear = 2022;
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
                 context.Organisations.Add(organisation);
@@ -1155,11 +1155,11 @@
                 notesAatf1.Should().Be(11);
                 notesAatf2.Should().Be(5);
 
-                var approvedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf1.Id);
-                var submittedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf1.Id);
-                var draftNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf1.Id);
-                var voidNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf1.Id);
-                var rejectedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf1.Id);
+                var approvedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf1.Id, complianceYear);
+                var submittedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf1.Id, complianceYear);
+                var draftNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf1.Id, complianceYear);
+                var voidNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf1.Id, complianceYear);
+                var rejectedNotesAatf1 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf1.Id, complianceYear);
 
                 approvedNotesAatf1.Should().Be(1);
                 submittedNotesAatf1.Should().Be(2);
@@ -1167,11 +1167,11 @@
                 voidNotesAatf1.Should().Be(1);
                 rejectedNotesAatf1.Should().Be(4);
 
-                var approvedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf2.Id);
-                var submittedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf2.Id);
-                var draftNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf2.Id);
-                var voidNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf2.Id);
-                var rejectedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf2.Id);
+                var approvedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, aatf2.Id, complianceYear);
+                var submittedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, aatf2.Id, complianceYear);
+                var draftNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, aatf2.Id, complianceYear);
+                var voidNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Void, aatf2.Id, complianceYear);
+                var rejectedNotesAatf2 = await dataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Rejected, aatf2.Id, complianceYear);
 
                 approvedNotesAatf2.Should().Be(1);
                 submittedNotesAatf2.Should().Be(1);
