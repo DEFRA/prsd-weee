@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Linq;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;
@@ -44,7 +46,7 @@
                 ? source.Request.CategoryIds
                 : source.TransferEvidenceNoteData.CategoryIds;
 
-            foreach (var requestCategoryId in categoryValues)
+            foreach (var requestCategoryId in categoryValues.OrderBy(c => c.ToInt()))
             {
                 model.CategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }

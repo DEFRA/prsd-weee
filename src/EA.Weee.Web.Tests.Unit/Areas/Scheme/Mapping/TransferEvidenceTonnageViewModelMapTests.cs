@@ -176,6 +176,7 @@
 
             //assert
             result.CategoryValues.Should().NotBeEmpty();
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
             source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData
                 .ForEach(c => result.CategoryValues.Should()
                     .Contain(cv => cv.CategoryId.Equals(c.EvidenceTonnageData.CategoryId.ToInt())));
@@ -535,6 +536,7 @@
             var result = map.Map(source);
 
             //assert
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
             result.CategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
             result.CategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
         }
@@ -589,12 +591,13 @@
             var result = map.Map(source);
 
             //assert
-            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("45.000");
-            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("10.000");
-            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("100.000");
-            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("0.000");
-            result.CategoryValues.ElementAt(2).TotalReceived.Should().Be("33.000");
-            result.CategoryValues.ElementAt(2).TotalReused.Should().Be("22.000");
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("33.000");
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("22.000");
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("45.000");
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
+            result.CategoryValues.ElementAt(2).TotalReceived.Should().Be("100.000");
+            result.CategoryValues.ElementAt(2).TotalReused.Should().Be("0.000");
         }
 
         [Fact]
