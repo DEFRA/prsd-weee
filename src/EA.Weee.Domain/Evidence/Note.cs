@@ -47,7 +47,7 @@
             NoteType = NoteType.EvidenceNote;
             CreatedDate = SystemTime.UtcNow;
             Status = NoteStatus.Draft;
-            ComplianceYear = (short)startDate.Year;
+            ComplianceYear = startDate.Year;
             NoteTonnage = tonnages;
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = new List<NoteTransferTonnage>();

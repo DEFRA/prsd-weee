@@ -123,9 +123,9 @@
 
             return notes;
         }
-        public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId)
+        public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)
         {
-            return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value))
+            return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value) && n.ComplianceYear.Equals(complianceYear))
                 .CountAsync();
         }
 

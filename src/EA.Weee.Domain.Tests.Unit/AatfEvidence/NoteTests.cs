@@ -472,7 +472,7 @@
             result.CreatedById.Should().Be(createdBy);
             result.NoteType.Should().Be(NoteType.EvidenceNote);
             result.Status.Should().Be(status);
-            result.ComplianceYear.Should().Be((short)startDate.Year);
+            result.ComplianceYear.Should().Be(startDate.Year);
         }
 
         private void TransferNoteShouldBeEqualTo(Note result, DateTime date)

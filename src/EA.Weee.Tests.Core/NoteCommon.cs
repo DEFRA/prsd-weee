@@ -55,7 +55,7 @@
                     startDate.Value,
                     ObligatedWeeeIntegrationCommon.CreateDefaultContact(database.WeeeContext.Countries.First()), 
                     FacilityType.Aatf, 
-                    (short)startDate.Value.Year,
+                    startDate.Value.Year,
                     database.WeeeContext.LocalAreas.First(),
                     database.WeeeContext.PanAreas.First());
             }
@@ -111,7 +111,7 @@
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
                 noteTransferCategories,
-                (short)DateTime.Now.Year);
+                DateTime.Now.Year);
         }
     }
 }
