@@ -51,7 +51,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
@@ -64,7 +64,8 @@
                     noteData, null)
                 {
                     SelectedComplianceYear = selectedComplianceYear,
-                    Edit = true
+                    Edit = true,
+                    ReturnToView = returnToView
                 });
 
                 return this.View("EditDraftTransfer", model);

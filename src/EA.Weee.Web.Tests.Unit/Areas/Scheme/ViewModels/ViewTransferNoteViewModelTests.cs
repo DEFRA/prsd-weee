@@ -104,5 +104,44 @@
             //assert
             result.Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
         }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void DisplayEditButton_GivenNoteStatusIsNotDraft_ShouldBeFalse(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft)
+            {
+                return;
+            }
+
+            //arrange
+            var model = new ViewTransferNoteViewModel()
+            {
+                Status = status
+            };
+
+            //act
+            var result = model.DisplayEditButton;
+
+            //assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void DisplayEditButton_GivenNoteStatusIsDraft_ShouldBeTrue()
+        {
+
+            //arrange
+            var model = new ViewTransferNoteViewModel()
+            {
+                Status = NoteStatus.Draft
+            };
+
+            //act
+            var result = model.DisplayEditButton;
+
+            //assert
+            result.Should().BeTrue();
+        }
     }
 }
