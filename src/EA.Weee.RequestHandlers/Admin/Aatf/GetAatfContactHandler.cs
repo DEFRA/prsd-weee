@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using AatfReturn.Internal;
     using Core.AatfReturn;
     using Domain.AatfReturn;
     using Prsd.Core.Mapper;
@@ -8,6 +7,7 @@
     using Requests.Admin.Aatf;
     using Security;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Weee.Security;
 
     public class GetAatfContactHandler : IRequestHandler<GetAatfContact, AatfContactData>

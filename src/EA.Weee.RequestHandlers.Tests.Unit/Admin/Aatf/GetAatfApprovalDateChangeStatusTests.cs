@@ -8,12 +8,12 @@
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfApprovalDateChangeStatusTests

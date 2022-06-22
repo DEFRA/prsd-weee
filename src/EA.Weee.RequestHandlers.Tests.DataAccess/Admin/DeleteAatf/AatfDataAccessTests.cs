@@ -6,11 +6,11 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using RequestHandlers.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
