@@ -1,19 +1,18 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Aatf
 {
-    using DataAccess;
-    using Domain;
-    using Domain.DataReturns;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Evidence;
-    using Factories;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.RequestHandlers.Factories;
 
     public class AatfDataAccess : IAatfDataAccess
     {
@@ -28,6 +27,11 @@
             this.context = context;
             this.genericDataAccess = genericDataAccess;
             this.quarterWindowFactory = quarterWindowFactory;
+        }
+
+        public async Task<List<Aatf>> GetAatfsForOrganisation(Guid organisationId)
+        {
+            return await context.Aatfs.Where(a => a.Organisation.Id == organisationId).ToListAsync();
         }
 
         public async Task<Aatf> GetDetails(Guid id)
