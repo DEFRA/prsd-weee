@@ -111,7 +111,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -122,7 +122,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, request.AatfId))
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, request.AatfId, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -133,7 +133,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, request.AatfId))
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, request.AatfId, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -144,7 +144,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, request.AatfId))
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, request.AatfId, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -154,7 +154,7 @@
             //arrange
             var totalsData = fixture.CreateMany<AatfEvidenceSummaryTotalsData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, (short)request.ComplianceYear))
+            A.CallTo(() => evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, request.ComplianceYear))
                 .Returns(totalsData);
 
             //act
@@ -177,7 +177,7 @@
                 mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>(
                     A<List<AatfEvidenceSummaryTotalsData>>._)).Returns(tonnageData);
 
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(A<NoteStatus>._, A<Guid>._)).ReturnsNextFromSequence(approvedNotes, submittedNotes, draftNotes);
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(A<NoteStatus>._, A<Guid>._, A<int>._)).ReturnsNextFromSequence(approvedNotes, submittedNotes, draftNotes);
 
             //act
             var result = await handler.HandleAsync(request);
