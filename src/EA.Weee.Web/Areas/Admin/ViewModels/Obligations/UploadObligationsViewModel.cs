@@ -12,7 +12,7 @@
         public CompetentAuthority Authority { get; set; }
 
         [DisplayName("Choose file")]
-        [Required(ErrorMessage = "You must select a file before the system can check for errors")]
+        [Required(ErrorMessage = "You must select a file before you can upload it")]
         public HttpPostedFileBase File { get; set; }
 
         public UploadObligationsViewModel(CompetentAuthority authority)
