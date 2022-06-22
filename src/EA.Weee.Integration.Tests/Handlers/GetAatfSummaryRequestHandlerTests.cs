@@ -34,9 +34,10 @@
                 var aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 var complianceYear = fixture.Create<int>();
 
-                //draft note
+                // 1 draft note
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
-                //submitted notes
+                
+                // 2 submitted notes
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
@@ -48,7 +49,7 @@
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                     }).Create();
 
-                //approved notes
+                // 2 approved notes
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                     .With(n =>
                     {
@@ -62,7 +63,7 @@
                         n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
                     }).Create();
 
-                //rejected notes
+                // 3 rejected notes
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                 .With(n =>
                 {
@@ -81,7 +82,8 @@
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
                     }).Create();
-                //voided note
+                
+                // 1 voided note
                 EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithTonnages(NoteTonnages()).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
                 .With(n =>
                 {
@@ -139,6 +141,101 @@
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources)).Reused.Should().Be(0);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.PhotovoltaicPanels)).Received.Should().Be(null);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.PhotovoltaicPanels)).Reused.Should().Be(null);
+            };
+        }
+
+        [Component]
+        public class WhenIGetAnAatfsSummaryDataIGetCorrectSummaryNotesCount : GetAatfSummaryRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                var complianceYear = fixture.Create<int>();
+
+                // 10 draft note
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear).Create();
+
+                // 6 approved notes
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                }).Create();
+
+                // 3 submitted notes
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                }).Create();
+                EvidenceNoteDbSetup.Init().WithAatf(aatf.Id).WithOrganisation(organisation.Id).WithComplianceYear(complianceYear)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                }).Create();
+
+                request = new GetAatfSummaryRequest(aatf.Id, complianceYear);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldHaveReturnedExpectedTonnages = () =>
+            {
+                result.NumberOfDraftNotes.Should().Be(10);
+                result.NumberOfApprovedNotes.Should().Be(6);
+                result.NumberOfSubmittedNotes.Should().Be(3);
             };
         }
 
