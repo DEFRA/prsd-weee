@@ -248,13 +248,13 @@
                 false);
             const string siteAddress = "siteAddress";
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Address1,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Address2,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.TownOrCity,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.CountyOrRegion,
-                source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Postcode,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Address1),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Address2),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.TownOrCity),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.CountyOrRegion),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.RecipientOrganisationData.BusinessAddress.Postcode),
                 null)).Returns(siteAddress);
 
             //act
@@ -275,13 +275,13 @@
                 false);
             const string siteAddress = "siteAddress";
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Address1,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Address2,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.TownOrCity,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.CountyOrRegion,
-                source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Postcode,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Address1),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Address2),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.TownOrCity),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.CountyOrRegion),
+                A<string>.That.Matches(x => x == source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress.Postcode),
                 null)).Returns(siteAddress);
 
             //act
@@ -345,7 +345,7 @@
 
             //assert
             //Two times per TransferEvidenceNoteTonnageData
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(A<decimal?>._)).MustHaveHappened(18, Times.Exactly);
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(A<decimal?>._)).MustHaveHappened(20, Times.Exactly);
         }
 
         private OrganisationData CreateOrganisationData()
@@ -482,7 +482,17 @@
                 EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 20, 20, 10, 10)
             };
 
-            return new List<TransferEvidenceNoteTonnageData>() { noteCat1, noteCat2, noteCat3, note2Cat1, note2Cat2, note2Cat3, note3Cat1, note3Cat2, note3Cat3 };
+            // Note 3 - Cat4
+            var note3Cat4 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf2,
+                OriginalNoteId = note3Id,
+                OriginalReference = 1002,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, null, null, null, null)
+            };
+
+            return new List<TransferEvidenceNoteTonnageData>() { noteCat1, noteCat2, noteCat3, note2Cat1, note2Cat2, note2Cat3, note3Cat1, note3Cat2, note3Cat3, note3Cat4 };
         }
     }
 }
