@@ -15,7 +15,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return Map(source.Notes, source.CurrentDate, null);
+            return MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
         }
     }
 }

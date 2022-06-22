@@ -43,7 +43,6 @@
             FilterViewModel = filterViewModel;
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
             SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
-            ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(SystemTime.UtcNow);
             ComplianceYear = complianceYear;
         }
     }
