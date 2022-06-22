@@ -35,11 +35,11 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureAatfHasOrganisationAccess(message.AatfId);
             
-            var summaryData = await evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(message.AatfId, (short)message.ComplianceYear);
+            var summaryData = await evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(message.AatfId, message.ComplianceYear);
 
-            var approvedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, message.AatfId);
-            var submittedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, message.AatfId);
-            var draftNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, message.AatfId);
+            var approvedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, message.AatfId, message.ComplianceYear);
+            var submittedNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Submitted, message.AatfId, message.ComplianceYear);
+            var draftNotes = await evidenceDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Draft, message.AatfId, message.ComplianceYear);
 
             var result = new AatfEvidenceSummaryData(
                 mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>(summaryData),
