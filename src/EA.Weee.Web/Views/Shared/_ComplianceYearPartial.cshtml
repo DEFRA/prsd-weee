@@ -11,7 +11,7 @@
 {
     @Html.Hidden("tab", selectedTab)
     <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
-    <span class="text-margin">
+    <span class="text-margin govuk-!-padding-right-3">
         @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
             new SelectList(Model.ComplianceYearList),
             new { autocomplete = "false", style="min-width: " + width }, false, false)
