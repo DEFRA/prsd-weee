@@ -16,7 +16,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = Map(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
 
