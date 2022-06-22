@@ -17,8 +17,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            //TODO: place holder map values until the compliance year is put in for AATF
-            var model = Map(source.Notes, new DateTime(), null);
+            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
