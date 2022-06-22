@@ -24,7 +24,8 @@
                 OrganisationId = source.OrganisationId, 
                 AatfId = source.AatfId, 
                 AatfName = source.AatfData.Name, 
-                SingleAatf = singleAatf.Count().Equals(1)
+                SingleAatf = singleAatf.Count().Equals(1),
+                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate)
             };
 
             if (source.FilterViewModel != null)
@@ -42,7 +43,6 @@
                 model.SubmittedDatesFilterViewModel = source.SubmittedDatesFilterViewModel;
             }
 
-            model.ComplianceYearList = source.ComplianceYearList;
             model.SelectedComplianceYear = source.ComplianceYear;
 
             return model;
