@@ -18,9 +18,11 @@
     using Constant;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
+    using Weee.Requests.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ChooseSiteControllerTests
+    public class ChooseSiteControllerTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient weeeClient;
         private readonly ChooseSiteController controller;
@@ -93,6 +95,16 @@
             var result = await controller.Index(organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async void IndexGet_CurrentDateApiShouldBeCalled()
+        {
+            //act
+            await controller.Index(TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
