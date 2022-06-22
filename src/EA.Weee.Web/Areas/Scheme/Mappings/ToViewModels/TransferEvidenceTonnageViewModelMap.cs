@@ -94,37 +94,53 @@
                     {
                         string receivedTonnage = null;
                         string reusedTonnage = null;
+                        var availableReceived = evidenceTonnageData.AvailableReceived;
+                        var availableReused = evidenceTonnageData.AvailableReused;
+
                         var id = evidenceTonnageData.Id;
 
                         if (source.TransferAllTonnage)
                         {
-                            receivedTonnage = evidenceTonnageData.AvailableReceived.HasValue
-                                ? evidenceTonnageData.AvailableReceived.ToTonnageDisplay()
+                            receivedTonnage = availableReceived.HasValue
+                                ? availableReceived.ToTonnageDisplay()
                                 : null;
-                            reusedTonnage = evidenceTonnageData.AvailableReused.HasValue
-                                ? evidenceTonnageData.AvailableReused.ToTonnageDisplay()
+                            reusedTonnage = availableReused.HasValue
+                                ? availableReused.ToTonnageDisplay()
                                 : null;
                         }
-
-                        var transferTonnageData  = source.TransferEvidenceNoteData?.TransferEvidenceNoteTonnageData.FirstOrDefault(t1 => t1.EvidenceTonnageData.OriginatingNoteTonnageId == evidenceTonnageData.Id);
-
-                        if (transferTonnageData != null)
+                        else
                         {
-                            receivedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReceived.HasValue
-                                ? transferTonnageData.EvidenceTonnageData.TransferredReceived.ToTonnageDisplay()
-                                : string.Empty;
+                            var transferTonnageData = source.TransferEvidenceNoteData?.TransferEvidenceNoteTonnageData.FirstOrDefault(t1 => t1.EvidenceTonnageData.OriginatingNoteTonnageId == evidenceTonnageData.Id);
 
-                            reusedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReused.HasValue
-                                ? transferTonnageData.EvidenceTonnageData.TransferredReused.ToTonnageDisplay()
-                                : string.Empty;
+                            if (transferTonnageData != null)
+                            {
+                                if (transferTonnageData.EvidenceTonnageData.TransferredReceived.HasValue)
+                                {
+                                    availableReceived += transferTonnageData.EvidenceTonnageData.TransferredReceived
+                                        .Value;
+                                }
+                                if (transferTonnageData.EvidenceTonnageData.TransferredReused.HasValue)
+                                {
+                                    availableReused += transferTonnageData.EvidenceTonnageData.TransferredReused
+                                        .Value;
+                                }
 
-                            id = transferTonnageData.EvidenceTonnageData.Id;
+                                receivedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReceived.HasValue
+                                    ? transferTonnageData.EvidenceTonnageData.TransferredReceived.ToTonnageDisplay()
+                                    : string.Empty;
+
+                                reusedTonnage = transferTonnageData.EvidenceTonnageData.TransferredReused.HasValue
+                                    ? transferTonnageData.EvidenceTonnageData.TransferredReused.ToTonnageDisplay()
+                                    : string.Empty;
+
+                                id = transferTonnageData.EvidenceTonnageData.Id;
+                            }
                         }
-                        
+
                         var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
                             id,
-                            evidenceTonnageData.AvailableReceived,
-                            evidenceTonnageData.AvailableReused,
+                            availableReceived,
+                            availableReused,
                             receivedTonnage,
                             reusedTonnage);
 
