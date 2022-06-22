@@ -25,9 +25,8 @@
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var validationResults = new List<ValidationResult>();
-            var instance = validationContext.ObjectInstance as SelectYourAatfViewModel;
 
-            if (instance != null)
+            if (validationContext.ObjectInstance is SelectYourAatfViewModel instance)
             {
                 if (!instance.SelectedId.HasValue)
                 {
