@@ -14,8 +14,8 @@
     using FluentAssertions;
     using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
+    using RequestHandlers.Aatf;
     using RequestHandlers.AatfEvidence;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;

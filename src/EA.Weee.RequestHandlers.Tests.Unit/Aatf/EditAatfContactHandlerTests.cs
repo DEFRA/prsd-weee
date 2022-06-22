@@ -13,7 +13,6 @@
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Aatf;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Security;

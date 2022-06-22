@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using AatfReturn.Internal;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;

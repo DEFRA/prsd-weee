@@ -5,13 +5,13 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using RequestHandlers.Factories;
     using Requests.Admin.Aatf;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
