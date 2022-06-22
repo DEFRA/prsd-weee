@@ -30,11 +30,15 @@
     {
         public ManageEvidenceNotesControllerIndexTests()
         {
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(Fixture.CreateMany<AatfData>().ToList());
+
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
                 .Returns(new ManageEvidenceNoteViewModel());
 
             A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
                 .Returns(new SelectYourAatfViewModel() { AatfList = new List<AatfData>() });
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(SystemTime.UtcNow);
         }
 
         [Theory]
@@ -107,6 +111,30 @@
                 A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(
                     a => a.AatfList.Equals(aatfs) && a.FacilityType.Equals(FacilityType.Aatf) &&
                          a.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        [InlineData(null)]
+        public async void IndexGet_GivenEditDraftAndReturnedNotes_ComplianceYearListShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var date = new DateTime(2019, 1, 1);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(date);
+
+            var summaryViewModel = Fixture.Create<ManageEvidenceSummaryViewModel>();
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._))
+                .Returns(summaryViewModel);
+
+            //act
+            var result = await ManageEvidenceController.Index(organisationId, Guid.NewGuid(), selectedTab.ToDisplayString()) as ViewResult;
+
+            //assert
+            var manageEvidenceSummaryViewModel = result.Model as ManageEvidenceSummaryViewModel;
+            manageEvidenceSummaryViewModel.ManageEvidenceNoteViewModel.ComplianceYearList.Should()
+                .BeEquivalentTo(new List<int> { 2019, 2018, 2017 });
         }
 
         [Theory]
@@ -420,11 +448,11 @@
         {
             //arrange
             var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
-            var recivedId = Fixture.Create<Guid>();
+            var recieved = Fixture.Create<Guid>();
             var wasteType = Fixture.Create<WasteType?>();
             var statusFilter = Fixture.Create<NoteStatus?>();
             var recipientWasteStatusFilter = Fixture.Build<RecipientWasteStatusFilterViewModel>()
-                .With(r => r.ReceivedId, recivedId)
+                .With(r => r.ReceivedId, recieved)
                 .With(r => r.WasteTypeValue, wasteType)
                 .With(r => r.NoteStatusValue, statusFilter)
                 .Create();
@@ -506,7 +534,8 @@
         {
             //arrange
             var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
-
+            var date = new DateTime(2019, 1, 1);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(date);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
 
             //act
@@ -515,8 +544,33 @@
             //assert
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
-                    e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
-                         e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
+                    e => e.AatfId.Equals(AatfId) 
+                         && e.OrganisationId.Equals(OrganisationId) &&
+                         e.Notes.SequenceEqual(notes) &&
+                         e.CurrentDate == date))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredDataAndExistingModel_NoteViewModelShouldBeBuilt()
+        {
+            //arrange
+            var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
+            var date = new DateTime(2019, 1, 1);
+            var existingModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(date);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), existingModel);
+
+            //assert
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
+                A<EvidenceNotesViewModelTransfer>.That.Matches(
+                    e => e.AatfId.Equals(AatfId)
+                         && e.OrganisationId.Equals(OrganisationId) &&
+                         e.Notes.SequenceEqual(notes) &&
+                         e.CurrentDate == date &&
+                         e.ManageEvidenceNoteViewModel == existingModel))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -536,6 +590,26 @@
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.Notes.SequenceEqual(notes)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenRequiredDataAndExistingModel_NoteViewModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var notes = Fixture.CreateMany<EvidenceNoteData>().ToList();
+            var existingModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), existingModel);
+
+            //assert
+            A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
+                A<EvidenceNotesViewModelTransfer>.That.Matches(
+                    e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
+                         e.Notes.SequenceEqual(notes) &&
+                         e.ManageEvidenceNoteViewModel == existingModel))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -563,11 +637,11 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredData_SchemeDataListNameMustBeAlphabeticallyOrdered()
         {
             //arrange
-            var recivedId = Fixture.Create<Guid?>();
+            var recieved = Fixture.Create<Guid?>();
             var wasteType = Fixture.Create<WasteType?>();
             var noteStatus = Fixture.Create<NoteStatus?>();
             var recipientFilter = Fixture.Build<RecipientWasteStatusFilterViewModel>()
-                .With(r => r.ReceivedId, recivedId)
+                .With(r => r.ReceivedId, recieved)
                 .With(r => r.WasteTypeValue, wasteType)
                 .With(r => r.NoteStatusValue, noteStatus)
                 .Create();
@@ -610,7 +684,7 @@
             A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(
                 A<RecipientWasteStatusFilterBase>.That.Matches(e => e.SchemeList.SequenceEqual(schemeDataListOrdered) &&
                 e.NoteStatus.ToInt().Equals(noteStatus.ToInt()) &&
-                e.ReceivedId.Value.Equals(recivedId.Value) &&
+                e.ReceivedId.Value.Equals(recieved.Value) &&
                 e.WasteType.ToInt().Equals(wasteType.ToInt())))).MustHaveHappenedOnceExactly();
         }
 
