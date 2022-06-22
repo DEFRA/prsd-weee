@@ -53,7 +53,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var @return = CreateSubmittedReturn(db, organisation);
-                var aatf = new Aatf("aatfName", db.WeeeContext.UKCompetentAuthorities.First(), "WEE/AA1111AA/ATF", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(db), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()), FacilityType.Aatf, (short)year, null, null);
+                var aatf = new Aatf("aatfName", db.WeeeContext.UKCompetentAuthorities.First(), "WEE/AA1111AA/ATF", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(db), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()), FacilityType.Aatf, year, null, null);
 
                 var weeeReceived = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme1, aatf, @return);
                 var weeeReceivedAmounts = new List<WeeeReceivedAmount>()
@@ -97,7 +97,7 @@
                 scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
 
                 var @return = CreateSubmittedReturn(db, organisation);
-                var aatf = new Aatf("aatfName", authority, "WEE/AA1111AA/ATF", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(db), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()), FacilityType.Aatf, (short)year, null, null);
+                var aatf = new Aatf("aatfName", authority, "WEE/AA1111AA/ATF", AatfStatus.Approved, organisation, AddressHelper.GetAatfAddress(db), AatfSize.Large, DateTime.Now, ObligatedWeeeIntegrationCommon.CreateDefaultContact(db.WeeeContext.Countries.First()), FacilityType.Aatf, year, null, null);
 
                 var weeeReceived = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme1, aatf, @return);
                 var weeeReceivedAmounts = new List<WeeeReceivedAmount>()

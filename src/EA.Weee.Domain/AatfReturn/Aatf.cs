@@ -79,7 +79,7 @@
            DateTime approvalDate,
            AatfContact contact,
            FacilityType facilityType,
-           Int16 complianceYear,
+           int complianceYear,
            LocalArea localArea,
            PanArea panArea,
            Guid? aatfId = null)
@@ -104,7 +104,7 @@
             ApprovalDate = approvalDate;
             Contact = contact;
             FacilityType = facilityType;
-            ComplianceYear = complianceYear;
+            ComplianceYear = (short)complianceYear;
             LocalArea = localArea;
             PanArea = panArea;
             AatfId = aatfId == null ? Guid.NewGuid() : aatfId.Value;

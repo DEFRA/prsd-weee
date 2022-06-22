@@ -6,6 +6,6 @@
 
     public interface IEvidenceStoredProcedures
     {
-        Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, short complianceYear);
+        Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear);
     }
 }

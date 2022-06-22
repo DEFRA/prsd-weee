@@ -69,7 +69,7 @@
 
                 await db.WeeeContext.SaveChangesAsync();
 
-                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, (short)SystemTime.UtcNow.Year);
+                var totals = await db.EvidenceStoredProcedures.GetAatfEvidenceSummaryTotals(aatf1.Id, SystemTime.UtcNow.Year);
 
                 totals.Count.Should().Be(14);
                 ShouldHaveEmptyTotals(totals);
