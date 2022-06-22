@@ -27,9 +27,11 @@
 
         public int ComplianceYear { get; protected set; }
 
+        public DateTime CurrentDate { get; protected set; }
+
         public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs,
             FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
-            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int complianceYear)
+            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int complianceYear, DateTime currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => aatfData, aatfData);
@@ -44,6 +46,7 @@
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
             SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
             ComplianceYear = complianceYear;
+            CurrentDate = currentDate;
         }
     }
 }

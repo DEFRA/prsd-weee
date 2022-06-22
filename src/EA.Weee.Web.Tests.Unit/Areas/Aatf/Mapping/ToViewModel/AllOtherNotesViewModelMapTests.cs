@@ -261,7 +261,7 @@
         {
             //arrange
             var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var model = fixture.Build<ManageEvidenceNoteViewModel>().With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+            var model = fixture.Build<ManageEvidenceNoteViewModel>().With(m => m.SelectedComplianceYear, complianceYear).Create();
             var source = new EvidenceNotesViewModelTransfer(fixture.Create<Guid>(), fixture.Create<Guid>(),
                 notes, currentDate, model);
 

@@ -17,7 +17,6 @@
     {
         private readonly ManageEvidenceNoteViewModelMap map;
         private readonly Fixture fixture;
-        private readonly IMapper mapper;
         private readonly Guid organisationId;
         private readonly Guid aatfId;
         private readonly AatfData aatfData;
@@ -25,7 +24,6 @@
 
         public ManageEvidenceNotesViewModelMapTests()
         {
-            mapper = A.Fake<IMapper>();
             map = new ManageEvidenceNoteViewModelMap();
             fixture = new Fixture();
             organisationId = Guid.NewGuid();
@@ -70,7 +68,7 @@
             aatfDataList.Add(aatfDataInvalid1);
             aatfDataList.Add(aatfDataInvalid2);
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -87,7 +85,7 @@
         public void Map_GivenSourceWithNullFilterModel_MapperShouldBeCalled()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -101,7 +99,7 @@
         public void Map_GivenSourceWithNullRecipientWasteStatusModel_MapperShouldBeCalled()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -115,7 +113,7 @@
         public void Map_GivenSourceWithNullSubmittedDatesModel_MapperShouldBeCalled()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -131,7 +129,7 @@
             //arrange
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var filterModel = fixture.Create<FilterViewModel>();
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, filterModel, null, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, filterModel, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -146,7 +144,7 @@
             //arrange
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var recipientWasteStatusModel = fixture.Create<RecipientWasteStatusFilterViewModel>();
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, recipientWasteStatusModel, null, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, recipientWasteStatusModel, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -161,7 +159,7 @@
             //arrange
             var aatfDataList = fixture.CreateMany<AatfData>().ToList();
             var submittedDateModel = fixture.Create<SubmittedDatesFilterViewModel>();
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, submittedDateModel, SystemTime.UtcNow.Year);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, submittedDateModel, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -179,13 +177,27 @@
             {
                 fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, expectedComplianceYear).Create()
             };
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, expectedComplianceYear);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, expectedComplianceYear, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
 
             // assert 
             model.SelectedComplianceYear.Should().Be(source.ComplianceYear);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithCurrentDate_ComplianceYearListShouldBeMapped()
+        {
+            //arrange
+            var currentDate = new DateTime(2019, 1, 1);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, fixture.CreateMany<AatfData>().ToList(), null, null, null, fixture.Create<int>(), currentDate);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.ComplianceYearList.Should().BeEquivalentTo(new List<int>() { 2019, 2018, 2017 });
         }
     }
 }
