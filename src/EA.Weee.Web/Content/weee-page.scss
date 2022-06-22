@@ -196,7 +196,11 @@ input[type="file"].form-control {
 }
 
 .full-width {
-    width: 100%
+    width: 100%;
+}
+
+.full-width-important {
+    width: 100% !important;
 }
 
 .grid-view:last-child {
