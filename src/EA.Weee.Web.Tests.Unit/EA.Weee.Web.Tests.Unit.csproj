@@ -297,6 +297,7 @@
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerCreateEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToSelectYourAatfViewModelMapTests.cs" />
+    <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfEvidenceSelectYourAatfViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AllOtherNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditDraftReturnNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EditNoteMapTransferTests.cs" />

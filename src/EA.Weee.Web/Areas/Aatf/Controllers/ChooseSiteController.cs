@@ -15,6 +15,7 @@
     using Services.Caching;
     using ViewModels;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.Shared;
 
     public class ChooseSiteController : AatfEvidenceBaseController
     {
@@ -35,7 +36,7 @@
         public virtual async Task<ActionResult> Index(Guid organisationId)
         {
             var model = await GenerateSelectYourAatfViewModel(organisationId);
-
+            
             if (model.AatfList.Count == 1)
             {
                 return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.AatfList[0].Id });
@@ -73,9 +74,14 @@
         {
             using (var client = apiClient())
             {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiDate());
+
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                return mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
+                return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
+                {
+                    AatfList = allAatfsAndAes, OrganisationId = organisationId, CurrentDate = currentDate
+                });
             }
         }
     }
