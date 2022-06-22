@@ -5,6 +5,7 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Weee.Requests.AatfEvidence;
     using Xunit;

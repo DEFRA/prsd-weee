@@ -3,6 +3,7 @@
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

@@ -1,9 +1,7 @@
-﻿namespace EA.Weee.Core.AatfEvidence
+﻿namespace EA.Weee.Core.Shared
 {
     using System;
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core.Domain;
 
     [Serializable]
     public enum NoteType

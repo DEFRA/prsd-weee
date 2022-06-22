@@ -3,6 +3,7 @@
     using System;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using EA.Weee.Core.Shared;
     using Infrastructure;
 
     public class EvidenceNoteRowViewModel 

@@ -2,6 +2,7 @@
 {
     using System;
     using AatfReturn;
+    using EA.Weee.Core.Shared;
 
     [Serializable]
     public class TransferEvidenceNoteTonnageData

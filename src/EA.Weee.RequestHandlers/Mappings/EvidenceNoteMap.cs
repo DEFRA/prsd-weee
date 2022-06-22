@@ -12,7 +12,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Organisation;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
+    using NoteType = Core.Shared.NoteType;
     using Protocol = Core.AatfEvidence.Protocol;
     using Scheme = Domain.Scheme.Scheme;
     using WasteType = Core.AatfEvidence.WasteType;

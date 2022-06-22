@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
 
     [Serializable]

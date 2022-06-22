@@ -10,8 +10,8 @@
     using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class TransferEvidenceNoteMap : IMap<TransferNoteMapTransfer, TransferEvidenceNoteData>

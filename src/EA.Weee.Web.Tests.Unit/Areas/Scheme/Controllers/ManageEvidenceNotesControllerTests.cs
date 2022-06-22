@@ -1,12 +1,20 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -15,16 +23,9 @@
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Core.Helpers;
-    using Web.Areas.Aatf.ViewModels;
-    using Weee.Requests.Shared;
     using Xunit;
 
     public class ManageEvidenceNotesControllerTests

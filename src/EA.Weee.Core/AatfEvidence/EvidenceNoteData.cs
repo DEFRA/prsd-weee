@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Core.AatfEvidence
 {
-    using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
     using AatfReturn;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using Organisations;
     using Prsd.Core;
 

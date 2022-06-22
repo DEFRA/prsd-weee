@@ -72,7 +72,7 @@
             //arrange
             result.Id.Should().Be(id);
             result.Reference.Should().Be(reference);
-            result.Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
+            result.Type.Should().Be(Core.Shared.NoteType.Transfer);
             result.SubmittedDate.Should().BeNull();
             result.ApprovedDate.Should().BeNull();
             result.ComplianceYear.Should().Be(complianceYear);
@@ -333,9 +333,9 @@
             //assert
             result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalReference.Should().Be(1);
             result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalNoteId.Should().Be(note1Id);
-            result.TransferEvidenceNoteTonnageData.ElementAt(0).Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
+            result.TransferEvidenceNoteTonnageData.ElementAt(0).Type.Should().Be(Core.Shared.NoteType.Transfer);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalReference.Should().Be(2);
-            result.TransferEvidenceNoteTonnageData.ElementAt(1).Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
+            result.TransferEvidenceNoteTonnageData.ElementAt(1).Type.Should().Be(Core.Shared.NoteType.Transfer);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalNoteId.Should().Be(note2Id);
         }
     }

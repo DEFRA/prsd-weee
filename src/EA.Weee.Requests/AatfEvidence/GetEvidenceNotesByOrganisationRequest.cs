@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Requests.AatfEvidence
 {
-    using EA.Prsd.Core;
-    using EA.Weee.Core.AatfEvidence;
     using System;
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
+    using EA.Prsd.Core;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
 
     public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {

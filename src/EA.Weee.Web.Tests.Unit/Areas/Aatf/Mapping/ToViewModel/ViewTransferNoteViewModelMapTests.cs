@@ -5,6 +5,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
@@ -102,7 +103,7 @@
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                    fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, NoteType.Transfer).Create(),
+                    fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, Core.Shared.NoteType.Transfer).Create(),
                     null);
 
             //act

@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Core.AatfEvidence
 {
-    using Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using EA.Weee.Core.Shared;
     using Organisations;
+    using Scheme;
 
     public class TransferEvidenceNoteData
     {

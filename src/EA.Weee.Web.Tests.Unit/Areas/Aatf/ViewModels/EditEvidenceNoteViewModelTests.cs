@@ -8,6 +8,7 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Helpers;

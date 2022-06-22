@@ -4,6 +4,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;

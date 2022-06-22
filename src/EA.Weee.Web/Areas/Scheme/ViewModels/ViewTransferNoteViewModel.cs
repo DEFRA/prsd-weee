@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using EA.Weee.Core.Shared;
     using ManageEvidenceNotes;
 
     public class ViewTransferNoteViewModel

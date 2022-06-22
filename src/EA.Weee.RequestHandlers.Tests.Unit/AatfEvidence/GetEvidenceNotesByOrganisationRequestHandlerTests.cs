@@ -22,7 +22,7 @@
     using Domain.Scheme;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
+    using NoteType = Core.Shared.NoteType;
 
     public class GetEvidenceNotesByOrganisationRequestHandlerTests
     {

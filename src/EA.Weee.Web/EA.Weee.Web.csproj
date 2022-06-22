@@ -326,6 +326,9 @@
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
+    <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
@@ -374,6 +377,7 @@
     <Compile Include="Services\SessionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\IManageEvidenceViewModel.cs" />
+    <Compile Include="ViewModels\Shared\ManageEvidenceNoteViewModel.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EditNoteMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditNoteViewModelMap.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ListOfNotesMap.cs" />
@@ -461,7 +465,6 @@
     <Compile Include="ViewModels\Shared\ActionEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ContactDetailsViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOption.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteOverviewViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModel.cs" />

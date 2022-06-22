@@ -6,6 +6,7 @@
     using Core.AatfReturn;
     using Core.Organisations;
     using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;

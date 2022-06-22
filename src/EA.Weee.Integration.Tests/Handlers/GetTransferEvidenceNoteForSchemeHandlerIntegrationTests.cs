@@ -21,7 +21,7 @@
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using NoteStatus = Domain.Evidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
+    using NoteType = Core.Shared.NoteType;
 
     public class GetTransferEvidenceNoteForSchemeHandlerIntegrationTests : IntegrationTestBase
     {

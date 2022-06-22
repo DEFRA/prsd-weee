@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using Aatf.ViewModels;
     using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
