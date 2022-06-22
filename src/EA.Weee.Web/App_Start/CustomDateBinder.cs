@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
     using System;
+    using System.Linq;
     using System.Web.Mvc;
 
     public class UKDateTimeModelBinder : IModelBinder
@@ -32,7 +33,7 @@
             }
             catch (Exception)
             {
-                bindingContext.ModelState.AddModelError(bindingContext.ModelName, string.Format("\"{0}\" is invalid.", bindingContext.ModelName));
+                bindingContext.ModelState.AddModelError(bindingContext.ModelName, $"{bindingContext.ModelMetadata.DisplayName} is invalid");
                 return null;
             }
         }
