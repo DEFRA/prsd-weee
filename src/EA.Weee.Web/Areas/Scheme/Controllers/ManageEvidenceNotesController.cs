@@ -173,7 +173,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     return RedirectToAction("DownloadEvidenceNote", 
-                        new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.SelectedComplianceYear });
+                        new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
                 await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
@@ -210,7 +210,7 @@
             return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int selectedComplianceYear)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
         {
             var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -219,7 +219,7 @@
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
             {
                 SchemeId = pcsId,
-                SelectedComplianceYear = selectedComplianceYear
+                SelectedComplianceYear = complianceYear
             });
 
             return model;

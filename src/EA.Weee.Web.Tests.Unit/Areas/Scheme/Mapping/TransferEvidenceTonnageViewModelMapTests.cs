@@ -82,7 +82,7 @@
             var source = GetTransferNoteDataTransferObject();
 
             //act
-            var result = map.Map(source);
+            map.Map(source);
 
             //assert
             A.CallTo(() => transferNoteMapper.Map(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v =>
@@ -316,7 +316,7 @@
         }
 
         [Fact]
-        public void Map_GivenSourceEvidenceListsWithExistingTonnageTransferValues_TransferTonnageCategoriesShouldBeSet()
+        public void Map_GivenSourceEvidenceListsWithExistingTonnageTransferValuesAvailableTonnageShouldBeCorrect_TransferTonnageCategoriesShouldBeSet()
         {
             //arrange
             var noteId1 = TestFixture.Create<Guid>();
@@ -403,34 +403,26 @@
             result.TransferCategoryValues.ElementAt(0).Received.Should().Be("6.000");
             result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId4);
-            result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Received);
-            result.TransferCategoryValues.ElementAt(0).AvailableReused.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Reused);
+            result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should().Be(18M);
+            result.TransferCategoryValues.ElementAt(0).AvailableReused.Should().Be(6M);
             result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(1).Received.Should().Be("3.000");
             result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId2);
-            result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Received);
-            result.TransferCategoryValues.ElementAt(1).AvailableReused.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Reused);
+            result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should().Be(7M);
+            result.TransferCategoryValues.ElementAt(1).AvailableReused.Should().Be(4M);
             result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
             result.TransferCategoryValues.ElementAt(2).Received.Should().Be("5.000");
             result.TransferCategoryValues.ElementAt(2).Reused.Should().Be(string.Empty);
             result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId3);
-            result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Received);
-            result.TransferCategoryValues.ElementAt(2).AvailableReused.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Reused);
+            result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should().Be(15M);
+            result.TransferCategoryValues.ElementAt(2).AvailableReused.Should().BeNull();
             result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(3).Received.Should().Be("1.000");
             result.TransferCategoryValues.ElementAt(3).Reused.Should().Be("0.000");
             result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId1);
-            result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should()
-                .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Received);
-            result.TransferCategoryValues.ElementAt(3).AvailableReused.Should()
-                .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Reused);
+            result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should().Be(3M);
+            result.TransferCategoryValues.ElementAt(3).AvailableReused.Should().Be(1M);
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }

@@ -743,7 +743,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
@@ -754,12 +754,13 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(aatf.ComplianceYear)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = date,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
-                    AatfId = aatf.Id
+                    AatfId = aatf.Id, 
+                    ComplianceYear = aatf.ComplianceYear
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
@@ -868,8 +869,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
-                noteShouldBeFound.ComplianceYear = aatf.ComplianceYear;
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
                 noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
