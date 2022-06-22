@@ -28,6 +28,8 @@
 
     public class ManageEvidenceNotesControllerIndexTests : ManageEvidenceNotesControllerTestsBase
     {
+        private readonly DateTime currentDate;
+
         public ManageEvidenceNotesControllerIndexTests()
         {
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(Fixture.CreateMany<AatfData>().ToList());
@@ -38,7 +40,8 @@
             A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
                 .Returns(new SelectYourAatfViewModel() { AatfList = new List<AatfData>() });
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(SystemTime.UtcNow);
+            currentDate = new DateTime(2019, 1, 1);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
         }
 
         [Theory]
@@ -165,7 +168,9 @@
                 m => m.AatfId.Equals(aatfId) 
                      && m.AatfData.Equals(aatfData) 
                      && m.OrganisationId.Equals(organisationId)
-                     && m.FilterViewModel == null))).MustHaveHappenedOnceExactly();
+                     && m.FilterViewModel == null 
+                     && m.CurrentDate == currentDate
+                     ))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
@@ -201,7 +206,8 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
-                     && m.FilterViewModel == null))).MustHaveHappenedOnceExactly();
+                     && m.FilterViewModel == null 
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
@@ -238,7 +244,8 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId) 
-                     && m.FilterViewModel.Equals(filter.FilterViewModel)))).MustHaveHappenedOnceExactly();
+                     && m.FilterViewModel.Equals(filter.FilterViewModel) 
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
@@ -280,7 +287,8 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
-                     && m.RecipientWasteStatusFilterViewModel.Equals(recipientFilter)))).MustHaveHappenedOnceExactly();
+                     && m.RecipientWasteStatusFilterViewModel.Equals(recipientFilter)
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
@@ -322,7 +330,8 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
-                     && m.SubmittedDatesFilterViewModel.Equals(submittedDateFilter)))).MustHaveHappenedOnceExactly();
+                     && m.SubmittedDatesFilterViewModel.Equals(submittedDateFilter)
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
@@ -359,7 +368,8 @@
                 m => m.AatfId.Equals(aatfId)
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
-                     && m.FilterViewModel.Equals(filter.FilterViewModel)))).MustHaveHappenedOnceExactly();
+                     && m.FilterViewModel.Equals(filter.FilterViewModel)
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
