@@ -21,6 +21,7 @@
     {
         private const string FileFormatError =
             "The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.";
+        private const string FileExtension = ".csv";
 
         private readonly IObligationCsvReader obligationCsvReader;
         private readonly IObligationUploadValidator obligationUploadValidator;
@@ -54,19 +55,28 @@
 
             var errors = new List<ObligationUploadError>();
 
-            var csvObligations = ReadCsv(request, errors);
+            if (!request.FileInfo.FileName.ToLower().EndsWith(FileExtension))
+            {
+                errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
+            }
+
             var obligations = new List<ObligationScheme>();
 
             if (!errors.Any())
             {
-                var dataErrors = await obligationUploadValidator.Validate(authority, csvObligations);
+                var csvObligations = ReadCsv(request, errors);
 
-                errors.AddRange(dataErrors);
-            }
+                if (!errors.Any())
+                {
+                    var dataErrors = await obligationUploadValidator.Validate(authority, csvObligations);
 
-            if (!errors.Any())
-            {
-                obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
+                    errors.AddRange(dataErrors);
+                }
+
+                if (!errors.Any())
+                {
+                    obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
+                }
             }
 
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
