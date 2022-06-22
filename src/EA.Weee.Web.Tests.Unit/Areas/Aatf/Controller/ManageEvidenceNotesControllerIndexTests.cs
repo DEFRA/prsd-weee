@@ -117,30 +117,6 @@
         }
 
         [Theory]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        [InlineData(null)]
-        public async void IndexGet_GivenEditDraftAndReturnedNotes_ComplianceYearListShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
-        {
-            //arrange
-            var organisationId = Guid.NewGuid();
-            var date = new DateTime(2019, 1, 1);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(date);
-
-            var summaryViewModel = Fixture.Create<ManageEvidenceSummaryViewModel>();
-
-            A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._))
-                .Returns(summaryViewModel);
-
-            //act
-            var result = await ManageEvidenceController.Index(organisationId, Guid.NewGuid(), selectedTab.ToDisplayString()) as ViewResult;
-
-            //assert
-            var manageEvidenceSummaryViewModel = result.Model as ManageEvidenceSummaryViewModel;
-            manageEvidenceSummaryViewModel.ManageEvidenceNoteViewModel.ComplianceYearList.Should()
-                .BeEquivalentTo(new List<int> { 2019, 2018, 2017 });
-        }
-
-        [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
@@ -169,8 +145,7 @@
                      && m.AatfData.Equals(aatfData) 
                      && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel == null 
-                     && m.CurrentDate == currentDate
-                     ))).MustHaveHappenedOnceExactly();
+                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
 
             foreach (var aatf in selectYourAatfViewModel.AatfList)
             {
