@@ -49,13 +49,7 @@
             Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an organisation with Id {message.OrganisationId}");
             Guard.ArgumentNotNull(() => scheme, scheme, $"Could not find an scheme with Id {message.RecipientId}");
 
-            var currentDate = SystemTime.UtcNow;
-            var systemData = await systemDataAccess.Get();
-
-            if (systemData.UseFixedCurrentDate)
-            {
-                currentDate = systemData.FixedCurrentDate;
-            }
+            var currentDate = await systemDataAccess.GetSystemDateTime();
 
             var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
@@ -88,7 +82,7 @@
 
             if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
             {
-                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), currentDate);
             }
 
             var newNote = await genericDataAccess.Add(evidenceNote);

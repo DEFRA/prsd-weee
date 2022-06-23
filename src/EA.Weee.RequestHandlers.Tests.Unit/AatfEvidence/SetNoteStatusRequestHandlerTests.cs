@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using DataAccess;
+    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
@@ -20,24 +21,22 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class SetNoteStatusRequestHandlerTests
+    public class SetNoteStatusRequestHandlerTests : SimpleUnitTestBase
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
         private readonly IWeeeAuthorization authorization;
-        private readonly Fixture fixture;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly Note note;
         private Guid recipientId;
 
         public SetNoteStatusRequestHandlerTests()
         {
-            fixture = new Fixture();
             context = A.Fake<WeeeContext>();
             userContext = A.Fake<IUserContext>();
             authorization = A.Fake<IWeeeAuthorization>();
-            fixture.Create<Guid>();
-            fixture.Create<Scheme>();
-            recipientId = fixture.Create<Guid>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            recipientId = TestFixture.Create<Guid>();
             note = A.Fake<Note>();
         }
 
@@ -50,7 +49,7 @@
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
             var message = new SetNoteStatus(noteId, Core.AatfEvidence.NoteStatus.Submitted);
 
@@ -61,30 +60,18 @@
             exception.Should().BeOfType<SecurityException>();
         }
 
-        [Theory]
-        [InlineData(Core.AatfEvidence.NoteStatus.Approved)]
-        [InlineData(Core.AatfEvidence.NoteStatus.Rejected)]
-        [InlineData(Core.AatfEvidence.NoteStatus.Returned)]
-        public async Task HandleAsync_ExternalUser_CanSetStatus(Core.AatfEvidence.NoteStatus status)
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldGetSystemDateTime()
         {
-            // Arrange
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var message = new SetNoteStatus(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
 
-            var note = new Note(A.Fake<Organisation>(), A.Fake<Scheme>(), DateTime.Now, DateTime.Now,
-                WasteType.HouseHold, Protocol.Actual, A.Fake<Aatf>(), "created", new List<NoteTonnage>());
-
-            note.UpdateStatus(NoteStatus.Submitted, "updatedBy");
-
-            var message = new SetNoteStatus(noteId, status);
-            A.CallTo(() => context.Notes.FindAsync(noteId)).Returns(note);
-
-            // Act
+            //act
             await handler.HandleAsync(message);
 
-            // Assert: which of these three 
-            note.Status.Should().Be(status.ToDomainEnumeration<NoteStatus>());
+            //assert
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -92,8 +79,8 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var request = new SetNoteStatus(fixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
             
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -106,8 +93,8 @@
         public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var request = new SetNoteStatus(fixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             //act
             await handler.HandleAsync(request);
@@ -120,12 +107,12 @@
         public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
             //arrange
-            recipientId = fixture.Create<Guid>();
+            recipientId = TestFixture.Create<Guid>();
             A.CallTo(() => note.Recipient.Id).Returns(recipientId);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var request = new SetNoteStatus(fixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             //act
             await handler.HandleAsync(request);
@@ -140,11 +127,11 @@
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
 
-            var message = new SetNoteStatus(fixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var message = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             // Act
             var exception = await Record.ExceptionAsync(() => handler.HandleAsync(message));
@@ -158,8 +145,8 @@
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var id = fixture.Create<Guid>();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
             var message = new SetNoteStatus(id, Core.AatfEvidence.NoteStatus.Approved);
@@ -175,22 +162,25 @@
         [InlineData(Core.AatfEvidence.NoteStatus.Approved)]
         [InlineData(Core.AatfEvidence.NoteStatus.Rejected)]
         [InlineData(Core.AatfEvidence.NoteStatus.Returned)]
-        public async Task HandleAsync_ExternalUser_WithStatusNoteUpdate_SaveChangesAsyncShouldBeCalled(Core.AatfEvidence.NoteStatus status)
+        public async Task HandleAsync_ExternalUser_WithStatusNoteUpdate_UpdateStatusAndSaveChangesShouldBeCalled(Core.AatfEvidence.NoteStatus status)
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var userId = fixture.Create<Guid>();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var userId = TestFixture.Create<Guid>();
 
             var message = new SetNoteStatus(note.Id, status);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
 
+            var currentDate = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
             // Act
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), null))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, null))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
@@ -204,18 +194,21 @@
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization);
-            var userId = fixture.Create<Guid>();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var userId = TestFixture.Create<Guid>();
 
             var message = new SetNoteStatus(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
 
+            var currentDate = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
             // Act
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), "reason passed as parameter"))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, "reason passed as parameter"))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());

@@ -11,9 +11,10 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class NoteTests
+    public class NoteTests : SimpleUnitTestBase
     {
         private Organisation organisation;
         private Scheme scheme;
@@ -28,24 +29,22 @@
         private readonly IEnumerable<NoteTransferCategory> transferCategories;
         private NoteStatus status;
         private readonly short complianceYear;
-        private readonly Fixture fixture;
 
         public NoteTests()
         {
-            fixture = new Fixture();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             startDate = DateTime.Now.AddDays(1);
             endDate = DateTime.Now.AddDays(2);
-            wasteType = fixture.Create<WasteType>();
-            protocol = fixture.Create<Protocol>();
+            wasteType = TestFixture.Create<WasteType>();
+            protocol = TestFixture.Create<Protocol>();
             aatf = A.Fake<Aatf>();
-            createdBy = fixture.Create<string>();
-            tonnages = fixture.CreateMany<NoteTonnage>();
-            transferTonnages = fixture.CreateMany<NoteTransferTonnage>();
-            transferCategories = fixture.CreateMany<NoteTransferCategory>();
+            createdBy = TestFixture.Create<string>();
+            tonnages = TestFixture.CreateMany<NoteTonnage>();
+            transferTonnages = TestFixture.CreateMany<NoteTransferTonnage>();
+            transferCategories = TestFixture.CreateMany<NoteTransferCategory>();
             status = NoteStatus.Draft;
-            complianceYear = fixture.Create<short>();
+            complianceYear = TestFixture.Create<short>();
         }
 
         [Fact]
@@ -204,15 +203,12 @@
         public void Note_Constructor_GivenDraftEvidenceNoteValues_PropertiesShouldBeSet()
         {
             var date = DateTime.Now;
-
             SystemTime.Freeze(date);
-
             status = NoteStatus.Draft;
 
             var result = CreateNote();
 
             ShouldBeEqualTo(result, date);
-
             SystemTime.Unfreeze();
         }
 
@@ -221,13 +217,9 @@
         {
             var date = SystemTime.UtcNow;
 
-            SystemTime.Freeze(date);
-
             var result = CreateTransferNote();
 
             TransferNoteShouldBeEqualTo(result, date);
-
-            SystemTime.Unfreeze();
         }
         
         [Fact]
@@ -235,17 +227,14 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
 
             var note = CreateNote();
             
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
 
             //asset
             note.Status.Should().Be(NoteStatus.Submitted);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -253,18 +242,14 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
-
             var note = CreateNote();
 
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
-            note.UpdateStatus(NoteStatus.Returned, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
 
             //asset
             note.Status.Should().Be(NoteStatus.Returned);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -272,20 +257,16 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
-
             var note = CreateNote();
 
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
-            note.UpdateStatus(NoteStatus.Approved, "user");
-            note.UpdateStatus(NoteStatus.Returned, "user");
-            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Approved, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
 
             //asset
             note.Status.Should().Be(NoteStatus.Submitted);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -293,11 +274,10 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
             var note = CreateNote();
 
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
 
             //asset
             note.NoteStatusHistory.Count.Should().Be(1);
@@ -305,8 +285,6 @@
             note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
             note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
             note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -314,13 +292,12 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
             var note = CreateNote();
 
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
-            note.UpdateStatus(NoteStatus.Returned, "user");
-            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
 
             //asset
             note.NoteStatusHistory.Count.Should().Be(3);
@@ -328,8 +305,6 @@
             note.NoteStatusHistory.ElementAt(2).FromStatus.Should().Be(NoteStatus.Returned);
             note.NoteStatusHistory.ElementAt(2).ToStatus.Should().Be(NoteStatus.Submitted);
             note.NoteStatusHistory.ElementAt(2).ChangedDate.Should().Be(date);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -337,12 +312,11 @@
         {
             //arrange
             var date = new DateTime(2022, 4, 1);
-            SystemTime.Freeze(date);
             var note = CreateNote();
 
             //act
-            note.UpdateStatus(NoteStatus.Submitted, "user");
-            note.UpdateStatus(NoteStatus.Returned, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
 
             //asset
             note.NoteStatusHistory.Count.Should().Be(2);
@@ -350,8 +324,6 @@
             note.NoteStatusHistory.ElementAt(1).FromStatus.Should().Be(NoteStatus.Submitted);
             note.NoteStatusHistory.ElementAt(1).ToStatus.Should().Be(NoteStatus.Returned);
             note.NoteStatusHistory.ElementAt(1).ChangedDate.Should().Be(date);
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -361,7 +333,7 @@
             var note = CreateNote();
 
             //act
-            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Draft, "user"));
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Draft, "user", TestFixture.Create<DateTime>()));
 
             //asset
             result.Should().BeOfType<InvalidOperationException>();
@@ -372,10 +344,10 @@
         {
             //arrange
             var note = CreateNote();
-            note.UpdateStatus(NoteStatus.Submitted, "user");
+            note.UpdateStatus(NoteStatus.Submitted, "user", TestFixture.Create<DateTime>());
 
             //act
-            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Submitted, "user"));
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Submitted, "user", TestFixture.Create<DateTime>()));
 
             //asset
             result.Should().BeOfType<InvalidOperationException>();
@@ -434,8 +406,8 @@
             wasteType = WasteType.HouseHold;
             protocol = Protocol.LdaProtocol;
             aatf = A.Fake<Aatf>();
-            createdBy = fixture.Create<string>();
-            tonnages = fixture.CreateMany<NoteTonnage>();
+            createdBy = TestFixture.Create<string>();
+            tonnages = TestFixture.CreateMany<NoteTonnage>();
             status = NoteStatus.Draft;
 
             var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());

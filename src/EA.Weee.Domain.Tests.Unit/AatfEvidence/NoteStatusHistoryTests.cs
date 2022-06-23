@@ -4,17 +4,12 @@
     using AutoFixture;
     using Evidence;
     using FluentAssertions;
+    using Prsd.Core;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class NoteStatusHistoryTests
+    public class NoteStatusHistoryTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
-        public NoteStatusHistoryTests()
-        {
-            fixture = new Fixture();
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
@@ -22,7 +17,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new NoteStatusHistory(changedBy, NoteStatus.Approved, NoteStatus.Submitted));
+                new NoteStatusHistory(changedBy, NoteStatus.Approved, NoteStatus.Submitted, SystemTime.UtcNow));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -33,7 +28,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new NoteStatusHistory(null, NoteStatus.Approved, NoteStatus.Submitted));
+                new NoteStatusHistory(null, NoteStatus.Approved, NoteStatus.Submitted, SystemTime.UtcNow));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -44,7 +39,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new NoteStatusHistory(fixture.Create<string>(), null, NoteStatus.Submitted));
+                new NoteStatusHistory(TestFixture.Create<string>(), null, NoteStatus.Submitted, SystemTime.UtcNow));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -55,7 +50,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new NoteStatusHistory(fixture.Create<string>(), NoteStatus.Approved, null));
+                new NoteStatusHistory(TestFixture.Create<string>(), NoteStatus.Approved, null, SystemTime.UtcNow));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -65,36 +60,40 @@
         public void NoteStatusHistory_GivenValues_NoteStatusHistoryPropertiesShouldBeSet()
         {
             //act
-            var changedBy = fixture.Create<string>();
+            var changedBy = TestFixture.Create<string>();
             var fromStatus = NoteStatus.Submitted;
             var toStatus = NoteStatus.Approved;
+            var date = TestFixture.Create<DateTime>();
 
             //arrange
-            var result = new NoteStatusHistory(changedBy, fromStatus, toStatus);
+            var result = new NoteStatusHistory(changedBy, fromStatus, toStatus, date);
 
             //assert
             result.ChangedById.Should().Be(changedBy);
             result.FromStatus.Should().Be(fromStatus);
             result.ToStatus.Should().Be(toStatus);
+            result.ChangedDate.Should().Be(date);
         }
 
         [Fact]
         public void NoteStatusHistory_GivenValuesWithReason_NoteStatusHistoryPropertiesShouldBeSet()
         {
             //act
-            var changedBy = fixture.Create<string>();
+            var changedBy = TestFixture.Create<string>();
             var fromStatus = NoteStatus.Submitted;
             var toStatus = NoteStatus.Approved;
-            var reason = fixture.Create<string>();
+            var reason = TestFixture.Create<string>();
+            var date = TestFixture.Create<DateTime>();
 
             //arrange
-            var result = new NoteStatusHistory(changedBy, fromStatus, toStatus, reason);
+            var result = new NoteStatusHistory(changedBy, fromStatus, toStatus, date, reason);
 
             //assert
             result.ChangedById.Should().Be(changedBy);
             result.FromStatus.Should().Be(fromStatus);
             result.ToStatus.Should().Be(toStatus);
             result.Reason.Should().Be(reason);
+            result.ChangedDate.Should().Be(date);
         }
     }
 }
