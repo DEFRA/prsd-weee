@@ -53,14 +53,15 @@
                 organisationId = request.OrganisationId;
                 schemeId = null;
             }
-            
+
             var filter = new NoteFilter(DateTime.Now.Year)
             {
                 NoteTypeFilter = new List<NoteType>() { request.NoteTypeFilter.ToDomainEnumeration<NoteType>() },
                 SchemeId = schemeId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear
+                ComplianceYear = request.ComplianceYear,
+                WasteTypeId = (request.HouseholdOnly.HasValue && request.HouseholdOnly.Value) ? (int?)Domain.Evidence.WasteType.HouseHold : null
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
