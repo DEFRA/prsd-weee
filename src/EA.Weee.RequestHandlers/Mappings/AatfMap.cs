@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using System.Linq;
     using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
@@ -66,14 +67,17 @@
 
             var localArea = localAreaMap.Map(source.LocalArea);
 
-            return new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), panArea, localArea)
+            var aatf = new AatfData(source.Id, source.Name, source.ApprovalNumber, source.ComplianceYear, competentAuthority, aatfStatus, address, aatfSize, source.ApprovalDate.GetValueOrDefault(), panArea, localArea)
             {
                 Contact = contact,
                 Organisation = organisation,
                 FacilityType = facilityType,
                 AatfId = source.AatfId,
-                AatfStatusDisplay = aatfStatus.ToDisplayString()
+                AatfStatusDisplay = aatfStatus.ToDisplayString(),
+                HasEvidenceNotes = source.Notes?.Any() ?? false
             };
+
+            return aatf;
         }
     }
 }

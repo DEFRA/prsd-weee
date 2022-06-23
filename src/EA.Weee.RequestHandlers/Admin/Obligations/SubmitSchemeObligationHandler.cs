@@ -54,31 +54,22 @@
             Condition.Requires(authority).IsNotNull();
 
             var errors = new List<ObligationUploadError>();
-
-            if (!request.FileInfo.FileName.ToLower().EndsWith(FileExtension))
-            {
-                errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
-            }
-
             var obligations = new List<ObligationScheme>();
+
+            var csvObligations = ReadCsv(request, errors);
 
             if (!errors.Any())
             {
-                var csvObligations = ReadCsv(request, errors);
+                var dataErrors = await obligationUploadValidator.Validate(authority, csvObligations);
 
-                if (!errors.Any())
-                {
-                    var dataErrors = await obligationUploadValidator.Validate(authority, csvObligations);
-
-                    errors.AddRange(dataErrors);
-                }
-
-                if (!errors.Any())
-                {
-                    obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
-                }
+                errors.AddRange(dataErrors);
             }
 
+            if (!errors.Any())
+            {
+                obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
+            }
+            
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
                 request.FileInfo.FileName,
@@ -91,13 +82,21 @@
         private List<ObligationCsvUpload> ReadCsv(SubmitSchemeObligation request, ICollection<ObligationUploadError> errors)
         {
             var obligations = new List<ObligationCsvUpload>();
-            try
-            {
-                obligations = obligationCsvReader.Read(request.FileInfo.Data).ToList();
-            }
-            catch (Exception ex) when (ex is CsvValidationException || ex is CsvReaderException)
+
+            if (!request.FileInfo.FileName.ToLower().EndsWith(FileExtension))
             {
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
+            }
+            else
+            {
+                try
+                {
+                    obligations = obligationCsvReader.Read(request.FileInfo.Data).ToList();
+                }
+                catch (Exception ex) when (ex is CsvValidationException || ex is CsvReaderException)
+                {
+                    errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
+                }
             }
 
             return obligations;

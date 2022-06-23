@@ -1,12 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.AatfReturn.Internal
+﻿namespace EA.Weee.RequestHandlers.Aatf
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.AatfReturn;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain;
-    using EA.Weee.Domain.Evidence;
+    using EA.Weee.Domain.AatfReturn;
 
     public interface IAatfDataAccess
     {
@@ -33,5 +32,7 @@
         Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, int complianceYear);
 
         Task<bool> IsLatestAatf(Guid id, Guid aatfId);
+
+        Task<List<Aatf>> GetAatfsForOrganisation(Guid organisationId);
     }
 }
