@@ -23,13 +23,15 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
+        private readonly ConfigurationService configurationService;
 
-        public ChooseSiteController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper)
+        public ChooseSiteController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper, ConfigurationService configurationService)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.configurationService = configurationService;
         }
 
         [HttpGet]
@@ -80,7 +82,10 @@
 
                 return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
                 {
-                    AatfList = allAatfsAndAes, OrganisationId = organisationId, CurrentDate = currentDate
+                    AatfList = allAatfsAndAes, 
+                    OrganisationId = organisationId, 
+                    CurrentDate = currentDate,
+                    EvidenceSiteSelectionStartDateFrom = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom
                 });
             }
         }

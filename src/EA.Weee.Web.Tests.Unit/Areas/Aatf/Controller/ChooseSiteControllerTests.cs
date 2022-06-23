@@ -28,8 +28,8 @@
         private readonly IWeeeClient weeeClient;
         private readonly ChooseSiteController controller;
         private readonly BreadcrumbService breadcrumb;
+        private readonly ConfigurationService configuration;
         private readonly IWeeeCache cache;
-        private readonly Fixture fixture;
         private readonly IMapper mapper;
 
         public ChooseSiteControllerTests()
@@ -37,10 +37,10 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            fixture = new Fixture();
             mapper = A.Fake<IMapper>();
+            configuration = A.Fake<ConfigurationService>();
 
-            controller = new ChooseSiteController(cache, breadcrumb, () => weeeClient, mapper);
+            controller = new ChooseSiteController(cache, breadcrumb, () => weeeClient, mapper, configuration);
 
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(TestFixture.Create<SelectYourAatfViewModel>());
         }
@@ -146,12 +146,15 @@
         public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeBuiltAsync()
         {
             //arrange
-            var organisationId = this.fixture.Create<Guid>();
-            var currentDate = fixture.Create<DateTime>();
-            var aatfs = fixture.CreateMany<AatfData>().ToList();
+            var organisationId = TestFixture.Create<Guid>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var evidenceNoteStartDate = TestFixture.Create<DateTime>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => configuration.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
 
             //act
             var result = await controller.Index(organisationId) as ViewResult;
@@ -161,7 +164,8 @@
                 A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
                     v => v.CurrentDate == currentDate &&
                          v.AatfList == aatfs &&
-                         v.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+                         v.OrganisationId == organisationId &&
+                         v.EvidenceSiteSelectionStartDateFrom == evidenceNoteStartDate))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -205,8 +209,8 @@
         {
             var model = new SelectYourAatfViewModel()
             {
-                OrganisationId = fixture.Create<Guid>(),
-                SelectedId = fixture.Create<Guid>(),
+                OrganisationId = TestFixture.Create<Guid>(),
+                SelectedId = TestFixture.Create<Guid>(),
             };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
@@ -234,8 +238,8 @@
             var organisationId = TestFixture.Create<Guid>();
             var existingModel = TestFixture.Build<SelectYourAatfViewModel>()
                 .With(v => v.OrganisationId, organisationId).Create();
-            var currentDate = fixture.Create<DateTime>();
-            var aatfs = fixture.CreateMany<AatfData>().ToList();
+            var currentDate = TestFixture.Create<DateTime>();
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
