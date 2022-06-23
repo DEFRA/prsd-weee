@@ -333,7 +333,6 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
-    <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceMapBaseTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
