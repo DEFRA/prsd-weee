@@ -22,7 +22,7 @@
         public void File_ShouldHaveRequiredAttribute()
         {
             typeof(UploadObligationsViewModel).GetProperty("File").Should()
-                .BeDecoratedWith<RequiredAttribute>(d => d.ErrorMessage.Equals("You must select a file before the system can check for errors"));
+                .BeDecoratedWith<RequiredAttribute>(d => d.ErrorMessage.Equals("You must select a file before you can upload it"));
         }
 
         [Theory]

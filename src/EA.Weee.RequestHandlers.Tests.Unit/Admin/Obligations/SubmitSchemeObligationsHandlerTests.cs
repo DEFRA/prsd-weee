@@ -45,7 +45,7 @@
             obligationDataAccess = A.Fake<IObligationDataAccess>();
             schemeObligationsDataProcessor = A.Fake<ISchemeObligationsDataProcessor>();
 
-            var fileInfo = new FileInfo(fixture.Create<string>(), fixture.Create<byte[]>());
+            var fileInfo = new FileInfo("test.csv", fixture.Create<byte[]>());
             request = new SubmitSchemeObligation(fileInfo, fixture.Create<CompetentAuthority>(), 2022);
 
             handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess, schemeObligationsDataProcessor);
@@ -285,6 +285,28 @@
             //assert
             A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>.That.IsSameSequenceAs(obligationUploadData), 2022))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNonCsvFile_ShouldGiveFileFormatException_AndMethodsNotCalled()
+        {
+            //arrange
+            var badFileInfo = new FileInfo("Bad.xlsl", fixture.Create<byte[]>());
+            var badRequest = new SubmitSchemeObligation(badFileInfo, fixture.Create<CompetentAuthority>(), 2022);
+
+            var error = new ObligationUploadError(ObligationUploadErrorType.File, "The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.");
+
+            //act
+            await handler.HandleAsync(badRequest);
+
+            //assert
+            A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<IList<ObligationCsvUpload>>._)).MustNotHaveHappened();
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).MustNotHaveHappened();
+            A.CallTo(() => obligationDataAccess.AddObligationUpload(A<UKCompetentAuthority>._,
+                A<string>._,
+                A<string>.That.Matches(x => x == badFileInfo.FileName),
+                A<IList<ObligationUploadError>>.That.Matches(x => x.First().Category == error.Category && x.First().Description == error.Description),
+                A<IList<ObligationScheme>>._)).MustHaveHappenedOnceExactly();
         }
     }
 }

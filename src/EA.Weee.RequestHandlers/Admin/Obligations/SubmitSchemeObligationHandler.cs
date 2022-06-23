@@ -21,6 +21,7 @@
     {
         private const string FileFormatError =
             "The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.";
+        private const string FileExtension = ".csv";
 
         private readonly IObligationCsvReader obligationCsvReader;
         private readonly IObligationUploadValidator obligationUploadValidator;
@@ -53,9 +54,9 @@
             Condition.Requires(authority).IsNotNull();
 
             var errors = new List<ObligationUploadError>();
+            var obligations = new List<ObligationScheme>();
 
             var csvObligations = ReadCsv(request, errors);
-            var obligations = new List<ObligationScheme>();
 
             if (!errors.Any())
             {
@@ -68,7 +69,7 @@
             {
                 obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
             }
-
+            
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,
                 System.Text.Encoding.UTF8.GetString(request.FileInfo.Data),
                 request.FileInfo.FileName,
@@ -81,13 +82,21 @@
         private List<ObligationCsvUpload> ReadCsv(SubmitSchemeObligation request, ICollection<ObligationUploadError> errors)
         {
             var obligations = new List<ObligationCsvUpload>();
-            try
-            {
-                obligations = obligationCsvReader.Read(request.FileInfo.Data).ToList();
-            }
-            catch (Exception ex) when (ex is CsvValidationException || ex is CsvReaderException)
+
+            if (!request.FileInfo.FileName.ToLower().EndsWith(FileExtension))
             {
                 errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
+            }
+            else
+            {
+                try
+                {
+                    obligations = obligationCsvReader.Read(request.FileInfo.Data).ToList();
+                }
+                catch (Exception ex) when (ex is CsvValidationException || ex is CsvReaderException)
+                {
+                    errors.Add(new ObligationUploadError(ObligationUploadErrorType.File, FileFormatError));
+                }
             }
 
             return obligations;

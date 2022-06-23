@@ -142,5 +142,34 @@
             //assert
             result.Should().BeTrue();
         }
+
+        [Fact]
+        public void ComplianceYearDisplay_Has_Correct_Attribute()
+        {
+            typeof(ViewTransferNoteViewModel).GetProperty("ComplianceYearDisplay").Should()
+                .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals("Compliance year"));
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft, "Draft evidence note")]
+        [InlineData(NoteStatus.Void, "")]
+        [InlineData(NoteStatus.Rejected, "Rejected evidence note")]
+        [InlineData(NoteStatus.Returned, "Returned evidence note")]
+        [InlineData(NoteStatus.Submitted, "Submitted evidence note")]
+        [InlineData(NoteStatus.Approved, "Approved evidence note")]
+        public void TabName_CorrectlyReturnsTabName_GivenStatus(NoteStatus status, string expectedTabName)
+        {
+            //arrange
+            var model = new ViewTransferNoteViewModel()
+            {
+                Status = status
+            };
+
+            //act
+            var result = model.TabName;
+
+            //assert
+            result.Should().Be(expectedTabName);
+        }
     }
 }
