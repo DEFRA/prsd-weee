@@ -215,5 +215,45 @@
             result.AatfList.Should().Contain(a => a.ComplianceYear == 2020 && a.AatfId == aatfId2);
             result.AatfList.Should().Contain(a => a.ComplianceYear == 2019 && a.AatfId == aatfId1);
         }
+
+        [Fact]
+        public void Map_GivenSourceWithAatfs_ShouldHaveDisplayNameSet()
+        {
+            //arrange
+            var aatfName1 = TestFixture.Create<string>();
+            var aatfApprovalNumber1 = TestFixture.Create<string>();
+            var aatfName2 = TestFixture.Create<string>();
+            var aatfApprovalNumber2 = TestFixture.Create<string>();
+
+            var aatfList = new List<AatfData>()
+            {
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.Name, aatfName1)
+                    .With(a => a.ApprovalNumber, aatfApprovalNumber1)
+                    .Create(),
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.Name, aatfName2)
+                    .With(a => a.ApprovalNumber, aatfApprovalNumber2)
+                    .Create()
+            };
+
+            var currentDate = new DateTime(2020, 1, 1);
+
+            var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
+                .With(s => s.AatfList, aatfList)
+                .With(s => s.CurrentDate, currentDate)
+                .With(s => s.EvidenceSiteSelectionStartDateFrom, currentDate)
+                .Create();
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.AatfList.Count.Should().Be(2);
+            result.AatfList.Should().Contain(a => a.Name == $"{aatfName1} ({aatfApprovalNumber1})");
+            result.AatfList.Should().Contain(a => a.Name == $"{aatfName2} ({aatfApprovalNumber2})");
+        }
     }
 }
