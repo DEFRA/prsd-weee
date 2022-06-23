@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using System;
     using System.ComponentModel;
 
     public class AppConfiguration : IAppConfiguration
@@ -82,5 +83,8 @@
 
         [DefaultValue(false)]
         public bool MaintenanceMode { get; set; }
+
+        [DefaultValue("01/01/2023")]
+        public DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
     }
 }
