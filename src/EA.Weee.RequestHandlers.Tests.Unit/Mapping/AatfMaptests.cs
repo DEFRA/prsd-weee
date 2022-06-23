@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Mapping
 {
     using System;
-
-    using AutoFixture;
-
+    using System.Collections.Generic;
     using Domain.AatfReturn;
-
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
-
     using FakeItEasy;
-
     using FluentAssertions;
-
     using Mappings;
-
     using Xunit;
 
     public class AatfMapTests
@@ -85,6 +79,54 @@
             result.Contact.Id.Should().Be(contact.Id);
             result.Organisation.Id.Should().Be(organisation.Id);
             result.AatfStatusDisplay.Should().Be(Core.AatfReturn.AatfStatus.Approved.ToDisplayString());
+        }
+
+        [Fact]
+        public void Map_GivenSourceHasNullEvidenceNotes_HasEvidenceNotePropertyShouldBeFalse()
+        {
+            //arrange
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
+            A.CallTo(() => aatf.Size).Returns(AatfSize.Large);
+            A.CallTo(() => aatf.Notes).Returns(null);
+
+            //act
+            var result = this.map.Map(aatf);
+
+            //assert
+            result.HasEvidenceNotes.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceHasEmptyEvidenceNotes_HasEvidenceNotePropertyShouldBeFalse()
+        {
+            //arrange
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
+            A.CallTo(() => aatf.Size).Returns(AatfSize.Large);
+            A.CallTo(() => aatf.Notes).Returns(new List<Note>());
+
+            //act
+            var result = this.map.Map(aatf);
+
+            //assert
+            result.HasEvidenceNotes.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceHasEvidenceNotes_HasEvidenceNotePropertyShouldBeFalse()
+        {
+            //arrange
+            var aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
+            A.CallTo(() => aatf.Size).Returns(AatfSize.Large);
+            A.CallTo(() => aatf.Notes).Returns(new List<Note>() { new Note() });
+
+            //act
+            var result = this.map.Map(aatf);
+
+            //assert
+            result.HasEvidenceNotes.Should().BeTrue();
         }
     }
 }

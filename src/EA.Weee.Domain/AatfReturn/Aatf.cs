@@ -5,6 +5,8 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using System;
+    using System.Collections.Generic;
+    using Evidence;
 
     public class Aatf : Entity
     {
@@ -44,8 +46,11 @@
 
         public virtual Guid AatfId { get; private set; }
 
+        public virtual ICollection<Note> Notes { get; private set; }
+
         public Aatf()
         {
+            Notes = new List<Note>();
         }
 
         public virtual void UpdateDetails(string name, UKCompetentAuthority competentAuthority, string approvalNumber, AatfStatus aatfStatus, Organisation organisation, AatfSize aatfSize, DateTime? approvalDate, LocalArea localArea, PanArea panArea)
@@ -107,7 +112,8 @@
             ComplianceYear = (short)complianceYear;
             LocalArea = localArea;
             PanArea = panArea;
-            AatfId = aatfId == null ? Guid.NewGuid() : aatfId.Value;
+            AatfId = aatfId ?? Guid.NewGuid();
+            Notes = new List<Note>();
         }
 
         /// <summary>
