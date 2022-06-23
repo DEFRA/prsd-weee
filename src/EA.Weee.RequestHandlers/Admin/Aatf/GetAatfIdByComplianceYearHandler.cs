@@ -23,7 +23,9 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            return await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(message.AatfId, message.ComplianceYear);
+            var aatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(message.AatfId, message.ComplianceYear);
+
+            return aatf.Id;
         }
     }
 }

@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Aatf;
+    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -22,16 +23,19 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IUserContext userContext;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public CreateEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IAatfDataAccess aatfDataAccess, 
-            IUserContext userContext)
+            IUserContext userContext,
+            ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.aatfDataAccess = aatfDataAccess;
             this.userContext = userContext;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<Guid> HandleAsync(CreateEvidenceNoteRequest message)
@@ -45,16 +49,22 @@
             Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an organisation with Id {message.OrganisationId}");
             Guard.ArgumentNotNull(() => scheme, scheme, $"Could not find an scheme with Id {message.RecipientId}");
 
-            var aatf = await aatfDataAccess.GetDetails(message.AatfId);
+            var currentDate = SystemTime.UtcNow;
+            var systemData = await systemDataAccess.Get();
 
-            if (aatf.ComplianceYear != SystemTime.Now.Year)
+            if (systemData.UseFixedCurrentDate)
             {
-                //TODO://put this back in when business rule validation is in place
-                // This rule will need to be implemented. The AATF selected for the evidence note should always be in the current compliance year.
-                //throw new InvalidOperationException(
-                //    $"Aatf with Id {message.AatfId} is not valid for the current compliance year");
+                currentDate = systemData.FixedCurrentDate;
             }
 
+            var aatf = await aatfDataAccess.GetDetails(message.AatfId);
+
+            var complianceYearAatf =
+                await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, message.StartDate.Year);
+
+            Condition.Requires(complianceYearAatf)
+                .IsNotNull($"Aatf not found for compliance year {message.StartDate.Year} and aatf {message.AatfId}");
+            
             if (aatf.Organisation.Id != message.OrganisationId)
             {
                 throw new InvalidOperationException(
@@ -72,7 +82,7 @@
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
-                aatf,
+                complianceYearAatf,
                 userContext.UserId.ToString(),
                 tonnageValues.ToList());
 
