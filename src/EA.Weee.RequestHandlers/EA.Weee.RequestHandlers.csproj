@@ -196,11 +196,11 @@
     <Compile Include="AatfReturn\GetPopulatedReturn.cs" />
     <Compile Include="AatfReturn\CopyReturnHandler.cs" />
     <Compile Include="AatfReturn\GetReturnStatusHandler.cs" />
-    <Compile Include="AatfReturn\Internal\AatfDataAccess.cs" />
+    <Compile Include="Aatf\AatfDataAccess.cs" />
     <Compile Include="Admin\Aatf\EditAatfDetailsRequestHandler.cs" />
     <Compile Include="Aatf\EditAatfContactHandler.cs" />
     <Compile Include="Admin\Aatf\GetAatfContactHandler.cs" />
-    <Compile Include="AatfReturn\Internal\IAatfDataAccess.cs" />
+    <Compile Include="Aatf\IAatfDataAccess.cs" />
     <Compile Include="Admin\AddAatfRequestHandler.cs" />
     <Compile Include="AatfReturn\Specification\WeeeSentOnAmountByWeeeSentOnIdSpecification.cs" />
     <Compile Include="AatfReturn\Specification\WeeeReceivedAmountByWeeeReceivedIdSpecification.cs" />

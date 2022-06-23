@@ -70,5 +70,7 @@
         public virtual Guid? PanAreaDataId { get; set; }
 
         public virtual Guid? LocalAreaDataId { get; set; }
+
+        public bool HasEvidenceNotes { get; set; }
     }
 }
