@@ -40,7 +40,7 @@
                 {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -59,8 +59,8 @@
             private readonly It shouldHaveCreatedObligationSchemes = () =>
             {
                 var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
-                schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(15));
 
                 var schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
@@ -107,7 +107,7 @@
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
                 schemeObligation.ComplianceYear.Should().Be(2022);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(15));
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
                 schemeCategoryObligation.Obligation.Should().BeNull();
@@ -374,7 +374,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,190000000000000,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -387,10 +387,13 @@
             private readonly It shouldHaveCreatedUpload = () =>
             {
                 MapStandardProperties();
+
                 obligationUpload.ObligationUploadErrors.Count.Should().Be(2);
+
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(0).ApprovalNumber)
-                        && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) && 
-                        e.ErrorType.Equals(ObligationUploadErrorType.Data));
+                                                                              && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) && 
+                                                                              e.ErrorType.Equals(ObligationUploadErrorType.Data));
+
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(1).ApprovalNumber)
                                                                               && e.SchemeName.Equals(schemes.ElementAt(1).SchemeName) &&
                                                                               e.ErrorType.Equals(ObligationUploadErrorType.Data));
@@ -416,7 +419,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -453,7 +456,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -490,7 +493,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,additional";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -527,7 +530,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -563,7 +566,7 @@
                 {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
 
                 var fileInfo = new FileInfo("file name", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -628,7 +631,7 @@
                 obligationUpload.FileName.Should().Be(request.FileInfo.FileName);
                 obligationUpload.UploadedById.Should().Be(UserId.ToString());
                 obligationUpload.CompetentAuthorityId.Should().Be(authority.Id);
-                obligationUpload.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+                obligationUpload.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(1000));
             }
         }
     }
