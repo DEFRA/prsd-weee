@@ -4,13 +4,13 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Admin.Aatf;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfComplianceYearsByAatfIdHandlerTests
