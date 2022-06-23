@@ -7,7 +7,6 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Events;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Aatf;

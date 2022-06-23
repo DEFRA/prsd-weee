@@ -6,10 +6,10 @@
     using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using System;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfDeletionStatusTests

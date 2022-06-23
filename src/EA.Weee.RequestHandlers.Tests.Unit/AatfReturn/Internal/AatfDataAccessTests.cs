@@ -9,12 +9,12 @@
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
+    using RequestHandlers.Aatf;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;

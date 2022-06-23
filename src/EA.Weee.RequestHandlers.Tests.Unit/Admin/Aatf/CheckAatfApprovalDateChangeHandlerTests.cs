@@ -5,12 +5,12 @@
     using Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using Requests.Admin.Aatf;
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;
