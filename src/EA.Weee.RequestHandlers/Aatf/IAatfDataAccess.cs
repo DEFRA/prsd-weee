@@ -29,7 +29,7 @@
 
         Task<List<short>> GetComplianceYearsForAatfByAatfId(Guid aatfId);
 
-        Task<Guid> GetAatfByAatfIdAndComplianceYear(Guid aatfId, int complianceYear);
+        Task<Aatf> GetAatfByAatfIdAndComplianceYear(Guid aatfId, int complianceYear);
 
         Task<bool> IsLatestAatf(Guid id, Guid aatfId);
 

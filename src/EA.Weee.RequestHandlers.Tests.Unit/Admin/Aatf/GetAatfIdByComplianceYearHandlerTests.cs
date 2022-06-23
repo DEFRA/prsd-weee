@@ -3,6 +3,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Admin.Aatf;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Aatf;
@@ -49,9 +50,11 @@
         [Fact]
         public async Task HandleAsync_GivenAatfId_ComplianceYear_AatfIdMustBeReturned()
         {
-            var aatfId = A.Dummy<Guid>();
+            var aatf = A.Fake<Aatf>();
+            var aatfId = Guid.NewGuid();
+            A.CallTo(() => aatf.Id).Returns(aatfId);
 
-            A.CallTo(() => dataAccess.GetAatfByAatfIdAndComplianceYear(A.Dummy<Guid>(), A.Dummy<short>())).Returns(aatfId);
+            A.CallTo(() => dataAccess.GetAatfByAatfIdAndComplianceYear(A.Dummy<Guid>(), A.Dummy<short>())).Returns(aatf);
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfIdByComplianceYear>());
 

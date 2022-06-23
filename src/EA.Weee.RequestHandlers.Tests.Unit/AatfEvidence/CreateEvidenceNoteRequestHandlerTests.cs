@@ -36,6 +36,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IUserContext userContext;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly CreateEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
@@ -49,6 +50,7 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             userContext = A.Fake<IUserContext>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
@@ -77,7 +79,8 @@
             handler = new CreateEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
@@ -93,7 +96,8 @@
 
             handler = new CreateEvidenceNoteRequestHandler(authorization, genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -110,7 +114,8 @@
 
             handler = new CreateEvidenceNoteRequestHandler(authorization, genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
