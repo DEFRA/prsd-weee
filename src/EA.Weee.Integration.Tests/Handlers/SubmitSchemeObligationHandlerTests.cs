@@ -229,7 +229,7 @@
                 {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -251,7 +251,7 @@
                 {
                     var scheme = Query.GetSchemeById(obligationScheme.SchemeId);
 
-                    scheme.ObligationSchemes.First(os => os.ComplianceYear == 2022).ObligationUploadId.Should()
+                    scheme.ObligationSchemes.First(os => os.ComplianceYear == SystemTime.UtcNow.Year).ObligationUploadId.Should()
                         .Be(obligationUpload.Id);
                 }
             };
@@ -259,7 +259,7 @@
             private readonly It shouldHaveUpdatedObligationSchemes = () =>
             {
                 var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
-                schemeObligation.ComplianceYear.Should().Be(2022);
+                schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
 
                 var schemeCategoryObligation =
@@ -306,7 +306,7 @@
                 schemeCategoryObligation.Obligation.Should().BeNull();
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
-                schemeObligation.ComplianceYear.Should().Be(2022);
+                schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);
@@ -374,7 +374,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,190000000000000,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -419,7 +419,7 @@
                 {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -457,7 +457,7 @@
                 {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
 
                 var fileInfo = new FileInfo("File.txt", Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -494,7 +494,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -531,7 +531,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,additional";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -568,7 +568,7 @@
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -604,7 +604,7 @@
                 {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
-                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, 2022);
+                request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
@@ -670,7 +670,7 @@
                 obligationUpload.FileName.Should().Be(request.FileInfo.FileName);
                 obligationUpload.UploadedById.Should().Be(UserId.ToString());
                 obligationUpload.CompetentAuthorityId.Should().Be(authority.Id);
-                obligationUpload.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(1000));
+                obligationUpload.UploadedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(20));
             }
         }
     }
