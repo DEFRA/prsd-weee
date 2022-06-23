@@ -3,7 +3,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Security;
     using EA.Weee.Tests.Core;
@@ -14,6 +13,7 @@
     using System;
     using System.Security;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfContactHandlerTests
