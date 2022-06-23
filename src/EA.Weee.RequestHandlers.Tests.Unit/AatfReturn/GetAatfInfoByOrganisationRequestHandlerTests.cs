@@ -8,29 +8,28 @@
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Specification;
     using Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
+    using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfInfoByOrganisationRequestHandlerTests
     {
         private GetAatfInfoByOrganisationRequestHandler handler;
         private readonly IMap<Aatf, AatfData> mapper;
-        private readonly IGenericDataAccess dataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly IWeeeAuthorization authorization;
 
         public GetAatfInfoByOrganisationRequestHandlerTests()
         {
             mapper = A.Fake<IMap<Aatf, AatfData>>();
-            dataAccess = A.Fake<IGenericDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
-            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, dataAccess, authorization);
+            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, aatfDataAccess, authorization);
         }
 
         [Fact]
@@ -38,7 +37,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
 
-            handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<Aatf, AatfData>>(), A.Fake<IGenericDataAccess>(), authorization);
+            handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<Aatf, AatfData>>(), A.Fake<IAatfDataAccess>(), authorization);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
 
@@ -52,7 +51,7 @@
 
             await handler.HandleAsync(new GetAatfByOrganisation(id));
 
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationSpecification>.That.Matches(c => c.OrganisationId == id))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(id)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -60,7 +59,7 @@
         {
             var aatfs = Aatfs();
 
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationSpecification>._)).Returns(aatfs);
+            A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(A<Guid>._)).Returns(aatfs);
 
             await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
 
@@ -79,7 +78,7 @@
                 A.Fake<AatfData>()
             }.ToArray();
 
-            A.CallTo(() => dataAccess.GetManyByExpression(A<AatfsByOrganisationSpecification>._)).Returns(Aatfs());
+            A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(A<Guid>._)).Returns(Aatfs());
             A.CallTo(() => mapper.Map(A<Aatf>._)).ReturnsNextFromSequence(aatfDatas);
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());

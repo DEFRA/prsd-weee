@@ -152,6 +152,7 @@
     <Compile Include="AatfReturn\CheckYourReturn\FetchNonObligatedWeeeForReturnDataAccessTests.cs" />
     <Compile Include="AatfReturn\CopyReturnHandlerTests.cs" />
     <Compile Include="AatfReturn\ReturnSchemeDataAccessTests.cs" />
+    <Compile Include="Aatf\GetAatfByOrganisationDataAccessTests.cs" />
     <Compile Include="Admin\Aatf\AddAatfHandlerTests.cs" />
     <Compile Include="Admin\DeleteAatf\AatfDataAccessTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
@@ -161,7 +162,6 @@
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetAatfsDataAccessTests.cs" />
     <Compile Include="AatfReturn\GetSchemesExternalDataAccessTests.cs" />
-    <Compile Include="AatfReturn\Internal\AatfIntegrationDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReceived\AddObligatedReceivedDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AatfSiteDataAccessTests.cs" />
     <Compile Include="AatfReturn\ObligatedReused\AddObligatedReusedDataAccessTests.cs" />

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -8,6 +7,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
 
     public class GetAatfApprovalDateChangeStatus : IGetAatfApprovalDateChangeStatus
     {

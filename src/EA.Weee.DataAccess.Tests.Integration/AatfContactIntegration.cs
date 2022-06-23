@@ -2,7 +2,6 @@
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.Internal;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
@@ -11,6 +10,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;

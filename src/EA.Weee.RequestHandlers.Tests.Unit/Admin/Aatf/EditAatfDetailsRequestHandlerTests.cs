@@ -14,7 +14,6 @@
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfReturn;
-    using RequestHandlers.AatfReturn.Internal;
     using RequestHandlers.Admin.Aatf;
     using RequestHandlers.Factories;
     using RequestHandlers.Organisations;
@@ -27,6 +26,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
+    using RequestHandlers.Aatf;
     using Weee.Security;
     using Weee.Tests.Core;
     using Xunit;

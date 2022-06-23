@@ -10,18 +10,21 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Aatf;
     using DataAccess.DataAccess;
 
     public class GetAatfInfoByOrganisationRequestHandler : IRequestHandler<GetAatfByOrganisation, List<AatfData>>
     {
-        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly IMap<Aatf, AatfData> mapper;
         private readonly IWeeeAuthorization authorization;
 
-        public GetAatfInfoByOrganisationRequestHandler(IMap<Aatf, AatfData> mapper, IGenericDataAccess genericDataAccess, IWeeeAuthorization authorization)
+        public GetAatfInfoByOrganisationRequestHandler(IMap<Aatf, AatfData> mapper, 
+            IAatfDataAccess aatfDataAccess, 
+            IWeeeAuthorization authorization)
         {
             this.mapper = mapper;
-            this.genericDataAccess = genericDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
             this.authorization = authorization;
         }
 
@@ -29,7 +32,7 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(message.OrganisationId);
 
-            var aatfs = await genericDataAccess.GetManyByExpression(new AatfsByOrganisationSpecification(message.OrganisationId));
+            var aatfs = await aatfDataAccess.GetAatfsForOrganisation(message.OrganisationId);
 
             return aatfs.Select(a => mapper.Map(a)).ToList();
         }

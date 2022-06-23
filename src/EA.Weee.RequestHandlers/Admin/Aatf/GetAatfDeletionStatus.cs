@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using AatfReturn.Internal;
     using Core.Admin;
     using Domain.AatfReturn;
     using System;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
 
     public class GetAatfDeletionStatus : IGetAatfDeletionStatus
     {

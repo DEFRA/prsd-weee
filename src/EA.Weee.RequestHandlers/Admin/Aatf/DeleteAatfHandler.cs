@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Aatf
 {
-    using AatfReturn.Internal;
     using Core.Admin;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -9,6 +8,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using RequestHandlers.Aatf;
     using Weee.Security;
 
     public class DeleteAatfHandler : IRequestHandler<DeleteAnAatf, bool>
