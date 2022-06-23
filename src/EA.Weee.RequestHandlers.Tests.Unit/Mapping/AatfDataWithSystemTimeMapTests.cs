@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using Weee.Tests.Core;
     using Xunit;
+    using FacilityType = Core.AatfReturn.FacilityType;
 
     public class AatfDataWithSystemTimeMapTests : SimpleUnitTestBase
     {
@@ -81,6 +82,7 @@
             //arrange
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, (DateTime?)null)
                 .Create();
 
@@ -101,6 +103,7 @@
             var approvalDate = new DateTime(2021, 2, 1);
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
@@ -121,6 +124,7 @@
             var approvalDate = new DateTime(2020, 2, 1);
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
@@ -148,6 +152,28 @@
             //arrange
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.ApprovalDate, approvalDate)
+                .Create();
+
+            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+            //act
+            var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
+
+            //assert
+            result.EvidenceSiteDisplay.Should().BeTrue();
+        }
+
+        [Theory]
+        [MemberData(nameof(Dates))]
+
+        public void Map_GivenMappedAatfDataHasNoEvidenceNotesAndApprovalDateIsValidButFacilityTypeIsAe_EvidenceSiteDisplayShouldBeFalse(DateTime currentDate, DateTime approvalDate)
+        {
+            //arrange
+            var aatfData = TestFixture.Build<AatfData>()
+                .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Ae)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
