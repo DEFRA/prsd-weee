@@ -9,6 +9,7 @@
     using Domain.Evidence;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
@@ -327,7 +328,7 @@
                 var draftNote = NoteCommon.CreateNote(database, organisation1, null, null);
                 var submittedNote = NoteCommon.CreateNote(database, organisation1, null, null);
 
-                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 
                 context.Notes.Add(draftNote);
                 context.Notes.Add(submittedNote);
@@ -369,7 +370,7 @@
                 var draftNote = NoteCommon.CreateNote(database, organisation1, null, null);
                 var submittedNote = NoteCommon.CreateNote(database, organisation1, null, null);
 
-                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
 
                 context.Notes.Add(draftNote);
                 context.Notes.Add(submittedNote);
@@ -411,7 +412,7 @@
                 var draftNote = NoteCommon.CreateNote(database, organisation1, null, null);
                 var submittedNote = NoteCommon.CreateNote(database, organisation1, null, null);
 
-                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submittedNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
 
                 context.Notes.Add(draftNote);
                 context.Notes.Add(submittedNote);
@@ -545,7 +546,7 @@
 
                 var note1 = NoteCommon.CreateNote(database, organisation, null, aatf);
                 var note2 = NoteCommon.CreateNote(database, organisation, null, aatf);
-                note2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                note2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
 
                 var note3 = NoteCommon.CreateNote(database, organisation, null, aatf);
 
@@ -697,7 +698,7 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
+                noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
@@ -744,9 +745,9 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
@@ -788,7 +789,7 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldNotBeFound1 = NoteCommon.CreateNote(database, organisation, null, aatf);
-                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldNotBeFound1);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -826,7 +827,7 @@
 
                 var noteShouldNotBeFound1 = NoteCommon.CreateNote(database, organisation, null, aatf);
                 noteShouldNotBeFound1.ComplianceYear = aatf.ComplianceYear;
-                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                noteShouldNotBeFound1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldNotBeFound1);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -870,9 +871,9 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
@@ -914,15 +915,15 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var note1ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
-                note1ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                note1ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                note1ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
+                note1ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note1ShouldBeFound);
 
                 var note2ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
-                note2ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                note2ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
-                note2ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
+                note2ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note2ShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
@@ -1073,27 +1074,27 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var approved1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                approved1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                approved1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                approved1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                approved1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(approved1);
 
                 //diff aatf not counted
                 var approved2 = NoteCommon.CreateNote(database, organisation, null, aatf2);
-                approved2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                approved2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser());
+                approved2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                approved2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(approved2);
 
                 var submitted1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                submitted1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submitted1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(submitted1);
 
                 var submitted2 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                submitted2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submitted2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(submitted2);
 
                 //diff aatf not counted
                 var submitted3 = NoteCommon.CreateNote(database, organisation, null, aatf2);
-                submitted3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
+                submitted3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(submitted3);
 
                 var draft1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
@@ -1110,40 +1111,40 @@
                 context.Notes.Add(draft4);
 
                 var rejected1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                rejected1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                rejected1.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                rejected1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                rejected1.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(rejected1);
 
                 var rejected2 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                rejected2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                rejected2.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                rejected2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                rejected2.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(rejected2);
 
                 var rejected3 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                rejected3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                rejected3.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                rejected3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                rejected3.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(rejected3);
 
                 var rejected4 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                rejected4.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                rejected4.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                rejected4.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                rejected4.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(rejected4);
 
                 //diff aatf not counted
                 var rejected5 = NoteCommon.CreateNote(database, organisation, null, aatf2);
-                rejected5.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                rejected5.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser());
+                rejected5.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                rejected5.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(rejected5);
 
                 var voided1 = NoteCommon.CreateNote(database, organisation, null, aatf1);
-                voided1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                voided1.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
+                voided1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                voided1.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(voided1);
 
                 //diff aatf not counted
                 var voided2 = NoteCommon.CreateNote(database, organisation, null, aatf2);
-                voided2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser());
-                voided2.UpdateStatus(NoteStatus.Void, context.GetCurrentUser());
+                voided2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                voided2.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(voided2);
 
                 await context.SaveChangesAsync();

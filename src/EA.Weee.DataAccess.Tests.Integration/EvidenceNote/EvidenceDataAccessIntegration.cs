@@ -8,6 +8,7 @@
     using Domain.Lookup;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
@@ -63,7 +64,7 @@
 
                 await dataAccess.Update(findNote, updateScheme, startDate, endDate, WasteType.NonHouseHold, Protocol.SmwProtocol,
                     noteTonnages,
-                    NoteStatus.Submitted);
+                    NoteStatus.Submitted, SystemTime.UtcNow);
 
                 await context.SaveChangesAsync();
 

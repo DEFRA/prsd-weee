@@ -23,13 +23,13 @@
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;
 
-    public class EditEvidenceNoteRequestHandlerTests
+    public class EditEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
         private EditEvidenceNoteRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Scheme scheme;
@@ -37,27 +37,27 @@
 
         public EditEvidenceNoteRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             note = A.Fake<Note>();
-            fixture.Create<Guid>();
-            var organisationId = fixture.Create<Guid>();
+            TestFixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
+            A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
-            A.CallTo(() => note.Id).Returns(fixture.Create<Guid>());
+            A.CallTo(() => note.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => note.Status).Returns(NoteStatus.Draft);
 
             request = Request();
 
-            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(request.Id)).Returns(note);
         }
@@ -68,7 +68,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -83,7 +83,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -118,7 +118,7 @@
         {
             //arrange 
             A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
-            A.CallTo(() => note.RecipientId).Returns(fixture.Create<Guid>());
+            A.CallTo(() => note.RecipientId).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
 
             //act
@@ -152,13 +152,25 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldGetSystemDateTime()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
+        }
+
         [Theory]
         [ClassData(typeof(ProtocolData))]
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
         {
             //arrange
+            var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
             request.Protocol = (Protocol?)protocol;
@@ -172,7 +184,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, currentDate)).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
         }
@@ -184,6 +196,8 @@
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            var currentDate = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
             request.WasteType = (WasteType?)waste;
@@ -197,7 +211,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._, currentDate)).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
         }
@@ -209,6 +223,8 @@
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            var currentDate = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
             request.Status = (Core.AatfEvidence.NoteStatus)status.Value;
@@ -222,7 +238,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status, currentDate)).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
         }
@@ -266,7 +282,7 @@
                         A<IList<NoteTonnage>>.That.Matches(t =>
                             t.Count(n => n.CategoryId.Equals(tonnageValue.CategoryId) &&
                                          n.Received.Equals(tonnageValue.Received) &&
-                                         n.Reused.Equals(tonnageValue.Reused)).Equals(1)), A<NoteStatus>._))
+                                         n.Reused.Equals(tonnageValue.Reused)).Equals(1)), A<NoteStatus>._, A<DateTime>._))
                     .MustHaveHappenedOnceExactly();
             }
         }
@@ -274,15 +290,15 @@
         private EditEvidenceNoteRequest Request()
         {
             return new EditEvidenceNoteRequest(organisation.Id,
-                fixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
                 scheme.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                fixture.Create<WasteType>(),
-                fixture.Create<Protocol>(),
-                fixture.CreateMany<TonnageValues>().ToList(),
-                fixture.Create<Core.AatfEvidence.NoteStatus>(),
-                fixture.Create<Guid>());
+                TestFixture.Create<WasteType>(),
+                TestFixture.Create<Protocol>(),
+                TestFixture.CreateMany<TonnageValues>().ToList(),
+                TestFixture.Create<Core.AatfEvidence.NoteStatus>(),
+                TestFixture.Create<Guid>());
         }
     }
 }

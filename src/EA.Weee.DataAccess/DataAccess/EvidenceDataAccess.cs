@@ -47,13 +47,14 @@
             WasteType? wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
-            NoteStatus status)
+            NoteStatus status,
+            DateTime updateDate)
         {
             note.Update(recipient, startDate, endDate, wasteType, protocol);
 
             if (status.Equals(NoteStatus.Submitted))
             {
-                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), updateDate);
             }
 
             foreach (var noteTonnage in tonnages)
@@ -135,7 +136,8 @@
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
-            string userId)
+            string userId,
+            DateTime date)
         {
             var evidenceNote = new Note(organisation,
                 scheme,
@@ -146,7 +148,7 @@
 
             if (status.Equals(NoteStatus.Submitted))
             {
-                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), date);
             }
 
             var note = await genericDataAccess.Add(evidenceNote);

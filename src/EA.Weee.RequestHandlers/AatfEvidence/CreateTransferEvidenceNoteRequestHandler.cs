@@ -12,6 +12,7 @@
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
@@ -25,13 +26,15 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IWeeeTransactionAdapter transactionAdapter;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
             ITransferTonnagesValidator transferTonnagesValidator, 
-            IWeeeTransactionAdapter transactionAdapter)
+            IWeeeTransactionAdapter transactionAdapter, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
@@ -39,6 +42,7 @@
             this.evidenceDataAccess = evidenceDataAccess;
             this.transferTonnagesValidator = transferTonnagesValidator;
             this.transactionAdapter = transactionAdapter;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
@@ -49,6 +53,7 @@
             Condition.Requires(request.Status)
                 .IsInRange(Core.AatfEvidence.NoteStatus.Draft, Core.AatfEvidence.NoteStatus.Submitted);
 
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
             var scheme = await genericDataAccess.GetById<Scheme>(request.SchemeId);
 
@@ -73,7 +78,7 @@
 
                     transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme, transferCategories,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
-                        userContext.UserId.ToString());
+                        userContext.UserId.ToString(), currentDate);
                 }
                 catch
                 {
