@@ -19,11 +19,16 @@
             if (source.CurrentDate.Date >= source.EvidenceSiteSelectionStartDateFrom && source.AatfList != null)
             {
                 aatfList = source.AatfList
+                    .Where(a => a.EvidenceSiteDisplay)
                     .GroupBy(a => a.AatfId)
                     .Select(a => a.OrderByDescending(a1 => a1.ComplianceYear).First())
-                    .Where(a => a.EvidenceSiteDisplay)
                     .OrderBy(a => a.Name)
                     .ToList();
+            }
+
+            foreach (var aatfData in aatfList)
+            {
+                aatfData.Name = $"{aatfData.Name} ({aatfData.ApprovalNumber})";
             }
 
             var model = new SelectYourAatfViewModel

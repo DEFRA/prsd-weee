@@ -22,22 +22,26 @@
             var aatf = aatfMap.Map(source.Aatf);
 
             var evidenceSiteDisplay = false;
-            if (aatf.HasEvidenceNotes)
+            var approvalDateValid = false;
+
+            if (aatf.ApprovalDate.HasValue)
+            {
+                var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
+                var approvalDate = aatf.ApprovalDate.Value.Date;
+
+                if (approvalDate <= complianceYearEndDate.Date && approvalDate >= source.SystemDateTime.Date)
+                {
+                    approvalDateValid = true;
+                }
+            }
+
+            if (aatf.HasEvidenceNotes && approvalDateValid)
             {
                 evidenceSiteDisplay = true;
             }
-            else
+            else if (!aatf.HasEvidenceNotes && approvalDateValid)
             {
-                if (aatf.ApprovalDate.HasValue)
-                {
-                    var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
-                    var approvalDate = aatf.ApprovalDate.Value.Date;
-
-                    if (approvalDate <= complianceYearEndDate.Date && approvalDate >= source.SystemDateTime.Date)
-                    {
-                        evidenceSiteDisplay = true;
-                    }
-                }
+                evidenceSiteDisplay = true;
             }
 
             aatf.EvidenceSiteDisplay = evidenceSiteDisplay;
