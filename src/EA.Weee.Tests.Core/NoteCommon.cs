@@ -84,7 +84,8 @@
             Organisation organisation,
             Scheme scheme,
             List<NoteTransferTonnage> noteTonnages = null,
-            List<NoteTransferCategory> noteTransferCategories = null)
+            List<NoteTransferCategory> noteTransferCategories = null,
+            int? complianceYear = null)
         {
             if (organisation == null)
             {
@@ -106,12 +107,17 @@
                 noteTransferCategories = new List<NoteTransferCategory>();
             }
 
+            if (!complianceYear.HasValue)
+            {
+                complianceYear = SystemTime.Now.Year;
+            }
+
             return new Note(organisation,
                 scheme,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
                 noteTransferCategories,
-                DateTime.Now.Year);
+                complianceYear.Value);
         }
     }
 }
