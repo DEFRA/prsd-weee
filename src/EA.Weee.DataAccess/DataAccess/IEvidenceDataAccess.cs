@@ -18,7 +18,8 @@
             WasteType? wasteType, 
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
-            NoteStatus status);
+            NoteStatus status,
+            DateTime date);
 
         Task<List<Note>> GetAllNotes(NoteFilter filter);
 
@@ -32,7 +33,8 @@
             List<NoteTransferTonnage> transferTonnage,
             NoteStatus status,
             int complianceYear,
-            string userId);
+            string userId,
+            DateTime date);
 
         Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
 

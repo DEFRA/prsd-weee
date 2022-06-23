@@ -20,17 +20,14 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetAatfNotesRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess, 
-            IMapper mapper, 
-            ISystemDataDataAccess systemDataDataAccess)
+            IMapper mapper)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
-            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<List<EvidenceNoteData>> HandleAsync(GetAatfNotesRequest message)

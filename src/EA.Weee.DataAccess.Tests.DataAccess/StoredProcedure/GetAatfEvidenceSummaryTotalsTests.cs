@@ -56,12 +56,12 @@
                 {
                     if (noteStatus.Equals(NoteStatus.Submitted))
                     {
-                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser());
+                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
                     }
                     else
                     {
-                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser());
-                        note1.UpdateStatus(noteStatus, db.WeeeContext.GetCurrentUser());
+                        note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
+                        note1.UpdateStatus(noteStatus, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
                     }
                 }
 
@@ -352,8 +352,8 @@
         {
             var note1 = NoteCommon.CreateNote(db, organisation1, null, aatf1);
             note1.ComplianceYear = complianceYear;
-            note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser());
-            note1.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser());
+            note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
+            note1.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
             return note1;
         }
     }

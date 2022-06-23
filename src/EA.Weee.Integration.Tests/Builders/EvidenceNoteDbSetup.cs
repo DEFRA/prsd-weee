@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Prsd.Core;
 
     public class EvidenceNoteDbSetup : DbTestDataBuilder<Note, EvidenceNoteDbSetup>
     {
@@ -56,7 +57,7 @@
 
         public EvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
         {
-            instance.UpdateStatus(statusToUpdate, user);
+            instance.UpdateStatus(statusToUpdate, user, SystemTime.UtcNow);
             return this;
         }
 
