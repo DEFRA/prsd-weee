@@ -71,5 +71,45 @@
                 return this.View("EditDraftTransfer", model);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
+                    noteData, null));
+
+                return this.View("SubmittedTransfer", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubmittedTransfer(ReviewTransferNoteViewModel model)
+        {
+            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+
+            if (ModelState.IsValid)
+            {
+                //TODO: set note status request
+            }
+            
+            using (var client = apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+
+                var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId,
+                    noteData, null));
+
+                return this.View("SubmittedTransfer", refreshedModel);
+            }
+        }
     }
 }
