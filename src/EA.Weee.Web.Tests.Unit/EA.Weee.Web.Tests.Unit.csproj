@@ -328,6 +328,7 @@
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\ReviewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceTonnageViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTests.cs" />

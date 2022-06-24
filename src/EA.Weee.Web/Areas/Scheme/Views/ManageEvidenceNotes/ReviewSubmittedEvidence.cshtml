@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Extensions
@@ -54,9 +55,16 @@
                                 {
                                     <td class="govuk-table__cell"> </td>
                                 }
-                                <td class="govuk-table__cell">
+                            <td class="govuk-table__cell">
+                                @if (note.Type == NoteType.Evidence)
+                                {
                                     @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                </td>
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_submitted_transfer", new { action = "SubmittedTransfer", controller = "OutgoingTransfers", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                }
+                            </td>
                             </tr>
                         }
                     }

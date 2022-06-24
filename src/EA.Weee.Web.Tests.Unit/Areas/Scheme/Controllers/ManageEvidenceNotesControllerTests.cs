@@ -471,6 +471,7 @@
         {
             // Arrange
             var statuses = GetOutgoingTransfersAllowedStatuses();
+            var noteTypes = new List<NoteType>() { NoteType.Transfer };
             var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
@@ -489,7 +490,7 @@
                      statuses.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == true &&
-                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
+                     g.NoteTypeFilterList.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -497,6 +498,7 @@
         {
             // Arrange
             var statuses = GetOutgoingTransfersAllowedStatuses();
+            var noteTypes = new List<NoteType>() { NoteType.Transfer };
             var schemeName = Faker.Company.Name();
             var evidenceData = Fixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
@@ -519,7 +521,7 @@
                      statuses.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear) &&
                      g.TransferredOut == true &&
-                     g.NoteTypeFilter == NoteType.Transfer))).MustHaveHappenedOnceExactly();
+                     g.NoteTypeFilterList.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object[]> ManageEvidenceModelData =>

@@ -69,7 +69,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -96,7 +97,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -168,7 +170,8 @@
                 "created",
                 null,
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -180,7 +183,8 @@
                 "created",
                 transferTonnages.ToList(),
                 null,
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -194,7 +198,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentOutOfRangeException>();
         }
@@ -454,7 +459,7 @@
             result.Organisation.Should().Be(organisation);
             result.Recipient.Should().Be(scheme);
             result.Aatf.Should().BeNull();
-            result.WasteType.Should().BeNull();
+            result.WasteType.Should().Be(WasteType.HouseHold);
             result.Protocol.Should().BeNull();
             result.StartDate.Should().Be(date);
             result.EndDate.Should().Be(date);
@@ -487,7 +492,8 @@
                 createdBy,
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear);
+                complianceYear,
+                WasteType.HouseHold);
         }
     }
 }
