@@ -34,7 +34,7 @@
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
         {
-            instance.UpdateStatus(statusToUpdate, user, reason, SystemTime.UtcNow);
+            instance.UpdateStatus(statusToUpdate, user, SystemTime.UtcNow, reason);
             return this;
         }
 
