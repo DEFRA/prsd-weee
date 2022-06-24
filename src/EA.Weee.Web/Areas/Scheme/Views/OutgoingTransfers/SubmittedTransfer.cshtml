@@ -1,0 +1,32 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
+@{
+
+}
+@{
+    ViewBag.Title = "Evidence note (transfer) - GOV.UK";
+}
+
+@section full_main_content
+{
+    @using (Html.BeginRouteForm("Scheme_submitted_transfer", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.SelectedComplianceYear)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.SchemeId)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "status-id" })
+
+        @Html.Gds().ValidationSummary()
+        @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
+
+        <div class="govuk-form-group">
+            @this.WeeeGds().Button("Save and continue")
+        </div>
+    }
+}
