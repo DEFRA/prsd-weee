@@ -289,5 +289,27 @@
             //assert
             result.Should().Be(year.ToString());
         }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft, "Draft evidence note")]
+        [InlineData(NoteStatus.Rejected, "Rejected evidence note")]
+        [InlineData(NoteStatus.Approved, "Approved evidence note")]
+        [InlineData(NoteStatus.Returned, "Returned evidence note")]
+        [InlineData(NoteStatus.Submitted, "Submitted evidence note")]
+        [InlineData(NoteStatus.Void, "")]
+        public void TabName_GivenNoteStatus_ShouldHaveCorrectTabName(NoteStatus status, string expected)
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
+            };
+
+            //act
+            var result = model.TabName;
+
+            //assert
+            result.Should().Be(expected);
+        }
     }
 }

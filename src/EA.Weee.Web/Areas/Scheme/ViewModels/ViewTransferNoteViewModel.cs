@@ -2,44 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using ManageEvidenceNotes;
+    using Web.ViewModels.Shared;
 
-    public class ViewTransferNoteViewModel
+    public class ViewTransferNoteViewModel : ViewEvidenceNoteViewModel
     {
-        public Guid SchemeId { get; set; }
-
         public Guid EvidenceNoteId { get; set; }
-
-        public int Reference { get; set; }
-
-        public NoteType Type { get; set; }
-
-        public NoteStatus Status { get; set; }
-
-        [DisplayName("Reference ID")]
-        public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";
-
-        public string SuccessMessage { get; set; }
-
-        public bool DisplayMessage => !string.IsNullOrWhiteSpace(SuccessMessage);
-
-        [DisplayName("Compliance year")]
-        public string ComplianceYearDisplay => ComplianceYear.ToString();
-
-        public int ComplianceYear { get; set; }
-
-        public string RecipientAddress { get; set; }
-
+        
         public string TransferredByAddress { get; set; }
 
         public IList<TotalCategoryValue> TotalCategoryValues { get; set; }
 
         public IList<ViewTransferEvidenceAatfDataViewModel> Summary { get; set; }
-
-        public int? SelectedComplianceYear { get; set; }
 
         public string RedirectTab
         {
@@ -57,7 +33,7 @@
 
         public bool EditMode { get; set; }
 
-        public string TabName
+        public override string TabName
         {
             get
             {
@@ -79,8 +55,8 @@
             }
         }
 
-        public bool DisplayEditButton => Status == NoteStatus.Draft;
-
         public bool ReturnToView { get; set; }
+
+        public new int? SelectedComplianceYear { get; set; }
     }
 }
