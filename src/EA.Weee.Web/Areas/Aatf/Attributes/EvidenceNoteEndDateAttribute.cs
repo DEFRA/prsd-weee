@@ -34,7 +34,14 @@
             {
                 if (thisDate.Year != currentDate.Year)
                 {
-                    return new ValidationResult("The end date must be within the current compliance year");
+                    //allowed range is first month of next compliance year
+                    var allowedRangeStart = new DateTime(thisDate.Year + 1, 1, 1).Date;
+                    var allowedRangeEnd = new DateTime(thisDate.Year + 1, 1, 31).Date;
+
+                    if (!(currentDate.Date >= allowedRangeStart && currentDate.Date <= allowedRangeEnd) || thisDate.Year != currentDate.Year - 1)
+                    {
+                        return new ValidationResult("The end date must be within the current compliance year");
+                    }
                 }
             }
            

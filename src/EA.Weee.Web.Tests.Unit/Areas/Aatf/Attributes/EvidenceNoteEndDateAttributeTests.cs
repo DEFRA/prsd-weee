@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Attributes
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using FakeItEasy;
     using FluentAssertions;
@@ -43,7 +44,7 @@
         public void EvidenceNoteEndDateAttribute_CurrentDateShouldBeRetrievedFromCache()
         {
             //arrange
-            var target = new ValidationTarget() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
             var context = new ValidationContext(target);
 
             //act
@@ -57,71 +58,150 @@
         public void EvidenceNoteEndDateAttribute_GivenEndDateDateIsBeforeStartDate_ValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
-            SystemTime.Freeze(currentDate);
+            var currentDate = new DateTime(2020, 1, 2);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate.AddDays(-1) };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate.AddDays(-1) };
             var context = new ValidationContext(target);
 
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
             //act
-            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
             result.ValidationResult.ErrorMessage.Should().Be("Ensure the end date is after the start date");
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_ValidationExceptionShouldNotBeThrown()
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYear_ValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
-            SystemTime.Freeze(currentDate);
-            var outOfComplianceYear = new DateTime(SystemTime.Now.Year + 1, 1, 1);
+            var currentDate = new DateTime(2020, 12, 31);
+            var outOfComplianceYear = new DateTime(2021, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var target = new ValidationTargetWithoutComplianceYearCheck() { StartDate = currentDate, EndDate = outOfComplianceYear };
             var context = new ValidationContext(target);
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
             result.Should().BeNull();
-
-            SystemTime.Unfreeze();
         }
 
-        [Fact]
-        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldBeThrown()
+        public static IEnumerable<object[]> ValidNextYearDates =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2021, 1, 31) },
+                new object[] { new DateTime(2021, 1, 1) }
+            };
+
+        [Theory]
+        [MemberData(nameof(ValidNextYearDates))]
+        public void EvidenceNoteEndDateAttribute_GivenCurrentDateIsWithinTheFirstMonthOfNextComplianceShouldAllowPreviousComplianceYear_ValidationExceptionShouldNotBeThrown(DateTime currentDate)
         {
             //arrange
-            var currentDate = DateTime.Now;
-            SystemTime.Freeze(currentDate);
-            var outOfComplianceYear = new DateTime(SystemTime.Now.Year + 1, 1, 1);
+            var endDate = new DateTime(2020, 12, 31);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = endDate.AddDays(-1), EndDate = endDate };
             var context = new ValidationContext(target);
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+        }
+
+        public static IEnumerable<object[]> InValidEndDates =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2018, 12, 31) },
+                new object[] { new DateTime(2021, 12, 31) }
+            };
+
+        [Theory]
+        [MemberData(nameof(InValidEndDates))]
+
+        public void EvidenceNoteEndDateAttribute_GivenCurrentDateIsWithinTheFirstMonthOfNextComplianceButEndDateIsOutsideOfPreviousYear_ValidationExceptionShouldBeThrown(DateTime endDate)
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = endDate.AddDays(-1), EndDate = endDate };
+            var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
             result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+        }
 
-            SystemTime.Unfreeze();
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenCurrentDateIsOutsideTheFirstMonthOfNextComplianceShouldNotAllowPreviousComplianceYear_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var endDate = new DateTime(2020, 12, 31);
+            var currentDate = new DateTime(2021, 2, 1);
+
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = endDate.AddDays(-1), EndDate = endDate };
+            var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldNotBeThrown()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 12, 31);
+            var outOfComplianceYear = new DateTime(2021, 1, 1);
+
+            var target = new ValidationTargetWithoutComplianceYearCheck() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEndDateIsAfterCurrentComplianceYearAndCheckComplianceYearIsTrue_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 12, 31);
+            var outOfComplianceYear = new DateTime(2021, 1, 1);
+
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var context = new ValidationContext(target);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
         }
 
         [Fact]
         public void EvidenceNoteEndDateAttribute_GivenStartDateIsEmpty_NoValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
-            SystemTime.Freeze(currentDate);
+            var currentDate = new DateTime(2020, 1, 1);
             A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
-            var target = new ValidationTarget() { StartDate = DateTime.MinValue, EndDate = currentDate };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = DateTime.MinValue, EndDate = currentDate };
             var context = new ValidationContext(target);
 
             //act
@@ -129,18 +209,15 @@
 
             //assert
             result.Should().BeNull();
-
-            SystemTime.Unfreeze();
         }
 
         [Fact]
         public void EvidenceNoteEndDateAttribute_GivenStartDateIsNull_NoValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
-            SystemTime.Freeze(currentDate);
+            var currentDate = new DateTime(2020, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = null, EndDate = currentDate };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = null, EndDate = currentDate };
             var context = new ValidationContext(target);
 
             //act
@@ -148,15 +225,21 @@
 
             //assert
             result.Should().BeNull();
-
-            SystemTime.Unfreeze();
         }
 
-        private class ValidationTarget
+        private class ValidationTargetWithComplianceYearCheck
         {
             public DateTime? StartDate { get; set; }
 
             [EvidenceNoteEndDate(nameof(StartDate), true)]
+            public DateTime? EndDate { get; set; }
+        }
+
+        private class ValidationTargetWithoutComplianceYearCheck
+        {
+            public DateTime? StartDate { get; set; }
+
+            [EvidenceNoteEndDate(nameof(StartDate), false)]
             public DateTime? EndDate { get; set; }
         }
     }
