@@ -4,9 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using Core.AatfEvidence;
     using Core.AatfReturn;
+    using Core.Helpers;
     using Core.Organisations;
     using Core.Scheme;
+    using Core.Tests.Unit.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -16,6 +19,7 @@
     using Mappings;
     using Prsd.Core.Mapper;
     using Xunit;
+    using NoteType = Domain.Evidence.NoteType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class TransferEvidenceNoteMapTests
@@ -30,6 +34,12 @@
             fixture = new Fixture();
 
             map = new TransferEvidenceNoteMap(mapper);
+        }
+
+        [Fact]
+        public void TransferEvidenceNoteMap_ShouldBeDerivedFromEvidenceNoteDataMapBase()
+        {
+            typeof(TransferEvidenceNoteMap).Should().BeDerivedFrom<EvidenceNoteDataMapBase<TransferEvidenceNoteData>>();
         }
 
         [Fact]
@@ -58,24 +68,30 @@
             //arrange
             var id = fixture.Create<Guid>();
             var reference = fixture.Create<int>();
+            var startDate = fixture.Create<DateTime>();
+            var endDate = fixture.Create<DateTime>();
+            var recipientId = fixture.Create<Guid>();
             var complianceYear = fixture.Create<short>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => note.Reference).Returns(reference);
-            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.StartDate).Returns(startDate);
+            A.CallTo(() => note.EndDate).Returns(endDate);
+            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
             A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
 
             //act
             var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
 
-            //arrange
+            //assert
             result.Id.Should().Be(id);
             result.Reference.Should().Be(reference);
-            result.Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
             result.SubmittedDate.Should().BeNull();
             result.ApprovedDate.Should().BeNull();
+            result.ReturnedDate.Should().BeNull();
             result.ComplianceYear.Should().Be(complianceYear);
+            result.RejectedDate.Should().BeNull();
         }
 
         [Fact]
@@ -337,6 +353,606 @@
             result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalReference.Should().Be(2);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).Type.Should().Be(Core.AatfEvidence.NoteType.Transfer);
             result.TransferEvidenceNoteTonnageData.ElementAt(1).OriginalNoteId.Should().Be(note2Id);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_SubmittedDateShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Submitted))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.SubmittedDate.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ReturnedDateShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedDate.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_RejectedDateShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedDate.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ReturnedReasonShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedReason.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_RejectedReasonShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedReason.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithSubmittedHistory_SubmittedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Submitted);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.SubmittedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRejectedHistory_RejectedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithReturnedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Returned);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedReason.Should().Be(reason);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRejectedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Rejected);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedReason.Should().Be(reason);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithReturnedHistoryAndNoteIsNotReturned_ReasonShouldBeNull(Domain.Evidence.NoteStatus status)
+        {
+            if (status.Equals(Domain.Evidence.NoteStatus.Returned))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(status);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(status);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedReason.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithRejectedHistoryAndNoteIsNotRejected_ReasonShouldBeNull(Domain.Evidence.NoteStatus status)
+        {
+            if (status.Equals(Domain.Evidence.NoteStatus.Rejected))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var reason = fixture.Create<string>();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ToStatus).Returns(status);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(status);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedReason.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleSubmittedHistory_SubmittedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddMilliseconds(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Submitted);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Submitted);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.SubmittedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleReturnedHistory_ReturnedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddHours(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleRejectedHistory_RejectedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddHours(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedDate.Should().Be(latestDate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleReturnedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var reasonEarly = fixture.Create<string>();
+            var returnedDateEarly = DateTime.Now;
+            var reasonLate = fixture.Create<string>();
+            var returnedDateLate = DateTime.Now.AddMinutes(10);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.Reason).Returns(reasonEarly);
+            A.CallTo(() => history1.ChangedDate).Returns(returnedDateEarly);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.Reason).Returns(reasonLate);
+            A.CallTo(() => history2.ChangedDate).Returns(returnedDateLate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Returned);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Returned);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ReturnedReason.Should().Be(reasonLate);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleRejectedHistory_ReasonShouldBeSet()
+        {
+            //arrange
+            var reasonEarly = fixture.Create<string>();
+            var rejectedDateEarly = DateTime.Now;
+            var reasonLate = fixture.Create<string>();
+            var rejectedDateLate = DateTime.Now.AddMinutes(10);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.Reason).Returns(reasonEarly);
+            A.CallTo(() => history1.ChangedDate).Returns(rejectedDateEarly);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.Reason).Returns(reasonLate);
+            A.CallTo(() => history2.ChangedDate).Returns(rejectedDateLate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Rejected);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Rejected);
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.RejectedReason.Should().Be(reasonLate);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNoteWithOtherHistory_ApprovedDateShouldNotBeSet(Domain.Evidence.NoteStatus noteStatus)
+        {
+            if (noteStatus.Equals(Domain.Evidence.NoteStatus.Approved))
+            {
+                return;
+            }
+
+            //arrange
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(DateTime.Now);
+            A.CallTo(() => history.ToStatus).Returns(noteStatus);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ApprovedDate.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithApprovedHistory_ApprovedDateShouldBeSet()
+        {
+            //arrange
+            var date = DateTime.Now;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Approved);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ApprovedDate.Should().BeSameDateAs(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithMultipleApprovedHistory_ApprovedDateShouldBeSet()
+        {
+            //arrange
+            var latestDate = DateTime.Now;
+            var notLatestDate = latestDate.AddMilliseconds(-1);
+            var historyList = new List<NoteStatusHistory>();
+            var history1 = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history1.ChangedDate).Returns(latestDate);
+            A.CallTo(() => history1.ToStatus).Returns(Domain.Evidence.NoteStatus.Approved);
+
+            var history2 = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history2.ChangedDate).Returns(notLatestDate);
+            A.CallTo(() => history2.ToStatus).Returns(Domain.Evidence.NoteStatus.Approved);
+
+            historyList.Add(history1);
+            historyList.Add(history2);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.ApprovedDate.Should().Be(latestDate);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteTypeData))]
+        public void Map_GivenNote_NoteTypePropertyShouldBeMapped(NoteType noteType)
+        {
+            //arrange
+            var note = A.Fake<Note>();
+
+            A.CallTo(() => note.NoteType).Returns(noteType);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.Type.ToInt().Should().Be(noteType.Value);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void Map_GivenNote_NoteStatusPropertyShouldBeMapped(Domain.Evidence.NoteStatus noteStatus)
+        {
+            //arrange
+            var note = A.Fake<Note>();
+
+            A.CallTo(() => note.Status).Returns(noteStatus);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.Status.ToInt().Should().Be(noteStatus.Value);
+        }
+
+        [Theory]
+        [ClassData(typeof(WasteTypeData))]
+        public void Map_GivenNote_WasteTypePropertyShouldBeMapped(Domain.Evidence.WasteType wasteType)
+        {
+            //arrange
+            var note = A.Fake<Note>();
+
+            A.CallTo(() => note.WasteType).Returns(wasteType);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+
+            //assert
+            result.WasteType.ToInt().Should().Be(wasteType.ToInt());
         }
     }
 }

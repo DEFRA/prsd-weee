@@ -6,22 +6,8 @@
     using System.Linq;
     using Organisations;
 
-    public class TransferEvidenceNoteData
+    public class TransferEvidenceNoteData : EvidenceNoteDataBase
     {
-        public Guid Id { get; set; }
-
-        public NoteType Type { get; set; }
-
-        public NoteStatus Status { get; set; }
-
-        public int Reference { get; set; }
-
-        public DateTime? SubmittedDate { get; set; }
-
-        public DateTime? ApprovedDate { get; set; }
-
-        public int ComplianceYear { get; set; }
-
         public List<TransferEvidenceNoteTonnageData> TransferEvidenceNoteTonnageData { get; set; }
 
         public List<int> CategoryIds
