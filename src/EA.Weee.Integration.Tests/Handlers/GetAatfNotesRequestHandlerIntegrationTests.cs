@@ -369,6 +369,83 @@
             };
         }
 
+        [Component]
+        public class WhenIGetEvidenceNotesBasedSameComplianceYear : GetAatfNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init()
+               .Create();
+
+                aatf = AatfDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .Create();
+
+                OrganisationUserDbSetup.Init()
+                .WithUserIdAndOrganisationId(UserId, organisation.Id)
+                .WithStatus(UserStatus.Active)
+                .Create();
+
+                var evidence1 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(complianceYear - 1)
+                .Create();
+
+                var evidence2 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(complianceYear)
+                .Create();
+
+                var evidence3 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(complianceYear)
+                .Create();
+
+                var evidence4 = EvidenceNoteDbSetup.Init()
+                .WithOrganisation(organisation.Id)
+                .WithAatf(aatf.Id)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                })
+                .WithComplianceYear(complianceYear + 1)
+                .Create();
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null))).Result;
+            };
+
+            private readonly It shouldHaveExpectedResultsCount = () =>
+            {
+                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear).Should().Be(2);
+                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear - 1).Should().Be(0);
+                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear + 1).Should().Be(0);
+            };
+        }
+
         public class GetAatfNotesRequestHandlerTestBase : WeeeContextSpecification
         {
             protected static List<EvidenceNoteData> evidenceNoteData;

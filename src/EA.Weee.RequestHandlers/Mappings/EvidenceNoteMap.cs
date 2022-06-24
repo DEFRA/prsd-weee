@@ -11,13 +11,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Organisation;
-    using NoteStatus = Core.AatfEvidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
     using Protocol = Core.AatfEvidence.Protocol;
     using Scheme = Domain.Scheme.Scheme;
-    using WasteType = Core.AatfEvidence.WasteType;
 
-    public class EvidenceNoteMap : IMap<Note, EvidenceNoteData>
+    public class EvidenceNoteMap : EvidenceNoteDataMapBase<EvidenceNoteData>, IMap<Note, EvidenceNoteData>
     {
         private readonly IMapper mapper;
 
@@ -29,51 +26,25 @@
         public EvidenceNoteData Map(Note source)
         {
             var excludedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Rejected, Domain.Evidence.NoteStatus.Void };
-            return new EvidenceNoteData
-            {
-                Id = source.Id,
-                Reference = source.Reference,
-                Type = (NoteType)source.NoteType.Value,
-                Status = (NoteStatus)source.Status.Value,
-                StartDate = source.StartDate,
-                EndDate = source.EndDate,
-                Protocol = source.Protocol.HasValue ? (Protocol?)source.Protocol.Value : null,
-                WasteType = source.WasteType.HasValue ? (WasteType?)source.WasteType.Value : null,
-                EvidenceTonnageData = source.NoteTonnage.Select(t =>
-                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused,
-                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Received).Sum(),
-                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status)).Select(ntt => ntt.Reused).Sum())).ToList(),
-                SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient),
-                OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation),
-                AatfData = mapper.Map<Aatf, AatfData>(source.Aatf),
-                RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation),
-                RecipientId = source.Recipient.Id,
-                ComplianceYear = source.ComplianceYear,
-                ReturnedReason = source.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned) ? (source.NoteStatusHistory
-                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
-                        .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
-                    ?.Reason : null,
-                RejectedReason = source.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected) ? (source.NoteStatusHistory
-                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
-                        .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
-                    ?.Reason : null,  // Note: do not change the order of update between Returned and Rejected as the last update wins
-                SubmittedDate = source.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate,
-                ApprovedDate = source.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Approved))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate,
-                ReturnedDate = source.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate,
-                RejectedDate = source.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate
-            };
+
+            var data = MapCommonProperties(source);
+
+            data.StartDate = source.StartDate;
+            data.EndDate = source.EndDate;
+            data.Protocol = source.Protocol.HasValue ? (Protocol?)source.Protocol.Value : null;
+            data.EvidenceTonnageData = source.NoteTonnage.Select(t =>
+                new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused,
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
+                        .Select(ntt => ntt.Received).Sum(),
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
+                        .Select(ntt => ntt.Reused).Sum())).ToList();
+            data.SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient);
+            data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation);
+            data.AatfData = mapper.Map<Aatf, AatfData>(source.Aatf);
+            data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation);
+            data.RecipientId = source.Recipient.Id;
+
+            return data;
         }
     }
 }

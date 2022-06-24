@@ -53,7 +53,7 @@
                 organisationId = request.OrganisationId;
                 schemeId = null;
             }
-            
+
             var filter = new NoteFilter(DateTime.Now.Year)
             {
                 NoteTypeFilter = new List<NoteType>() { request.NoteTypeFilter.ToDomainEnumeration<NoteType>() },
