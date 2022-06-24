@@ -56,7 +56,7 @@
 
             var filter = new NoteFilter(DateTime.Now.Year)
             {
-                NoteTypeFilter = new List<NoteType>() { request.NoteTypeFilter.ToDomainEnumeration<NoteType>() },
+                NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 SchemeId = schemeId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
