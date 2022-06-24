@@ -90,6 +90,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmittedTransfer(ReviewTransferNoteViewModel model)
         {
             await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
