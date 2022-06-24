@@ -60,8 +60,7 @@
                 SchemeId = schemeId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear,
-                WasteTypeId = (request.HouseholdOnly.HasValue && request.HouseholdOnly.Value) ? (int?)Domain.Evidence.WasteType.HouseHold : null
+                ComplianceYear = request.ComplianceYear
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
