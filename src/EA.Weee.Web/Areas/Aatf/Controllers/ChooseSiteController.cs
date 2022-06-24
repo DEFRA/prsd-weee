@@ -38,7 +38,11 @@
         public virtual async Task<ActionResult> Index(Guid organisationId)
         {
             var model = await GenerateSelectYourAatfViewModel(organisationId);
-            
+
+            if (model.AatfList.Count == 0)
+            {
+                return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
+            }
             if (model.AatfList.Count == 1)
             {
                 return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.AatfList[0].Id });

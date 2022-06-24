@@ -67,7 +67,7 @@
         {
             //arrange
             var approvalDate = new DateTime(2020, 1, 1);
-            var date = approvalDate.AddDays(-1);
+            var date = approvalDate.AddDays(1);
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
                 .With(a => a.FacilityType, FacilityType.Aatf)
@@ -87,7 +87,7 @@
         {
             //arrange
             var approvalDate = new DateTime(2020, 1, 1);
-            var date = approvalDate.AddDays(1);
+            var date = approvalDate.AddDays(-1);
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
                 .With(a => a.FacilityType, FacilityType.Aatf)
@@ -146,8 +146,8 @@
         public void Map_GivenMappedAatfDataHasNoEvidenceNotesAndApprovalDateOutsideOfCurrentDate_EvidenceSiteDisplayShouldBeFalse()
         {
             //arrange
-            var date = new DateTime(2020, 2, 2);
-            var approvalDate = new DateTime(2020, 2, 1);
+            var date = new DateTime(2020, 2, 1);
+            var approvalDate = new DateTime(2020, 2, 2);
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.HasEvidenceNotes, false)
                 .With(a => a.FacilityType, FacilityType.Aatf)
@@ -166,7 +166,7 @@
         public static IEnumerable<object[]> Dates =>
             new List<object[]>
             {
-                new object[] { new DateTime(2020, 5, 5), new DateTime(2020, 5, 6) },
+                new object[] { new DateTime(2020, 5, 5), new DateTime(2020, 5, 4) },
                 new object[] { new DateTime(2020, 5, 5), new DateTime(2020, 5, 5) },
             };
 
