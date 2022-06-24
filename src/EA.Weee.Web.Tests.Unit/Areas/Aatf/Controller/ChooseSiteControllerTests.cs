@@ -111,6 +111,28 @@
         }
 
         [Fact]
+        public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToHolding()
+        {
+            var organisationId = Guid.NewGuid();
+            var aatfList = new List<AatfData>();
+
+            var model = new SelectYourAatfViewModel()
+            {
+                OrganisationId = organisationId,
+                AatfList = aatfList,
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            var result = await controller.Index(organisationId) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+        }
+
+        [Fact]
         public async void IndexGet_OnSingleAatf_PageRedirectsToManageEvidence()
         {
             var organisationId = Guid.NewGuid();
