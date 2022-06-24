@@ -28,7 +28,8 @@
             user.UserId.ToString(),
             tonnages,
             categories,
-            DateTime.Now.Year);
+            DateTime.Now.Year,
+            WasteType.HouseHold);
         }
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
