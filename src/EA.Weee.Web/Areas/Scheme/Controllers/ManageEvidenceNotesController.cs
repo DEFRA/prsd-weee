@@ -84,7 +84,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted }, 
-                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false, false));
+                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -107,7 +107,7 @@
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false, true));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -132,7 +132,7 @@
                         NoteStatus.Submitted,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Transfer, true, true));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Transfer, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new TransferredOutEvidenceNotesViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));

@@ -9,14 +9,13 @@
     public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
         public bool TransferredOut { get; private set; }
-        public bool? HouseholdOnly { get; private set; }
 
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
             int complianceYear,
             NoteType noteTypeFilter,
-            bool transferredOut,
-            bool? householdOnly = false)
+            bool transferredOut)
+            //bool? householdOnly = false)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
@@ -29,7 +28,6 @@
             ComplianceYear = complianceYear;
             NoteTypeFilter = noteTypeFilter;
             TransferredOut = transferredOut;
-            HouseholdOnly = householdOnly;
         }
     }
 }
