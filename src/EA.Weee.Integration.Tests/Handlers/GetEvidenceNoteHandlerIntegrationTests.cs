@@ -232,8 +232,8 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 

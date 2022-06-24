@@ -393,8 +393,8 @@
                 .WithAatf(aatf.Id)
                 .With(n =>
                 {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .WithComplianceYear(complianceYear - 1)
                 .Create();
@@ -404,8 +404,8 @@
                 .WithAatf(aatf.Id)
                 .With(n =>
                 {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .WithComplianceYear(complianceYear)
                 .Create();
@@ -415,8 +415,8 @@
                 .WithAatf(aatf.Id)
                 .With(n =>
                 {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .WithComplianceYear(complianceYear)
                 .Create();
@@ -426,8 +426,8 @@
                 .WithAatf(aatf.Id)
                 .With(n =>
                 {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString());
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString());
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .WithComplianceYear(complianceYear + 1)
                 .Create();
