@@ -12,7 +12,7 @@
 
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
-            int complianceYear, 
+            int complianceYear,
             NoteType noteTypeFilter,
             bool transferredOut)
         {

@@ -32,9 +32,9 @@
             DateTime.Now.Year);
         }
 
-        public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
+        public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
         {
-            instance.UpdateStatus(statusToUpdate, user, SystemTime.UtcNow);
+            instance.UpdateStatus(statusToUpdate, user, reason, SystemTime.UtcNow);
             return this;
         }
 
