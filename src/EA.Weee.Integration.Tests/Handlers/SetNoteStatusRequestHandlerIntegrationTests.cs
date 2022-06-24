@@ -41,7 +41,7 @@
                     .WithRecipient(scheme.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 
@@ -85,7 +85,7 @@
                     .WithRecipient(scheme.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 

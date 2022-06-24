@@ -334,6 +334,7 @@
     <Compile Include="Mapping\AatfContactDataMapTests.cs" />
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
+    <Compile Include="Mapping\AatfDataWithSystemTimeMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />

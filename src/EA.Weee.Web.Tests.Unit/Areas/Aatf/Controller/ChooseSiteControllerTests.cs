@@ -13,20 +13,23 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Web.Mvc;
     using Constant;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
+    using Weee.Requests.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ChooseSiteControllerTests
+    public class ChooseSiteControllerTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient weeeClient;
         private readonly ChooseSiteController controller;
         private readonly BreadcrumbService breadcrumb;
+        private readonly ConfigurationService configuration;
         private readonly IWeeeCache cache;
-        private readonly Fixture fixture;
         private readonly IMapper mapper;
 
         public ChooseSiteControllerTests()
@@ -34,10 +37,12 @@
             weeeClient = A.Fake<IWeeeClient>();
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-            fixture = new Fixture();
             mapper = A.Fake<IMapper>();
+            configuration = A.Fake<ConfigurationService>();
 
-            controller = new ChooseSiteController(cache, breadcrumb, () => weeeClient, mapper);
+            controller = new ChooseSiteController(cache, breadcrumb, () => weeeClient, mapper, configuration);
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(TestFixture.Create<SelectYourAatfViewModel>());
         }
 
         [Fact]
@@ -90,27 +95,41 @@
 
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(organisationId);
+            await controller.Index(organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_MapperShouldBeCalled()
+        public async void IndexGet_CurrentDateApiShouldBeCalled()
+        {
+            //act
+            await controller.Index(TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToHolding()
         {
             var organisationId = Guid.NewGuid();
+            var aatfList = new List<AatfData>();
+
             var model = new SelectYourAatfViewModel()
             {
-                AatfList = A.Fake<List<AatfData>>(),
+                OrganisationId = organisationId,
+                AatfList = aatfList,
             };
 
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
 
-            var facilityType = FacilityType.Aatf;
+            var result = await controller.Index(organisationId) as RedirectToRouteResult;
 
-            await controller.Index(organisationId);
-
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
         }
 
         [Fact]
@@ -135,7 +154,7 @@
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(organisationId) as RedirectToRouteResult;
 
@@ -148,20 +167,43 @@
         [Fact]
         public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeBuiltAsync()
         {
-            var organisationId = this.fixture.Create<Guid>();
-            var model = new SelectYourAatfViewModel()
-            {
-                OrganisationId = organisationId,
-                AatfList = A.Fake<List<AatfData>>(),
-            };
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var evidenceNoteStartDate = TestFixture.Create<DateTime>();
 
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => configuration.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
 
-            var result = await this.controller.Index(organisationId) as ViewResult;
+            //act
+            var result = await controller.Index(organisationId) as ViewResult;
+            
+            //assert
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
+                A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
+                    v => v.CurrentDate == currentDate &&
+                         v.AatfList == aatfs &&
+                         v.OrganisationId == organisationId &&
+                         v.EvidenceSiteSelectionStartDateFrom == evidenceNoteStartDate))).MustHaveHappenedOnceExactly();
+        }
 
-            var modelResult = result.Model as SelectYourAatfViewModel;
+        [Fact]
+        public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<SelectYourAatfViewModel>();
 
-            modelResult.OrganisationId.Should().Be(organisationId);
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
+                A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await controller.Index(TestFixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
         }
 
         [Fact]
@@ -189,8 +231,8 @@
         {
             var model = new SelectYourAatfViewModel()
             {
-                OrganisationId = fixture.Create<Guid>(),
-                SelectedId = fixture.Create<Guid>(),
+                OrganisationId = TestFixture.Create<Guid>(),
+                SelectedId = TestFixture.Create<Guid>(),
             };
 
             var result = await controller.Index(model) as RedirectToRouteResult;
@@ -202,39 +244,67 @@
         }
 
         [Fact]
+        public async void IndexPost_GivenInvalidModel_CurrentDateApiShouldBeCalled()
+        {
+            var organisationId = Guid.NewGuid();
+
+            await controller.Index(organisationId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexPost_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeBuiltAsync()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var existingModel = TestFixture.Build<SelectYourAatfViewModel>()
+                .With(v => v.OrganisationId, organisationId).Create();
+            var currentDate = TestFixture.Create<DateTime>();
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            await controller.Index(existingModel);
+
+            //assert
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
+                A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
+                    v => v.CurrentDate == currentDate &&
+                         v.AatfList == aatfs &&
+                         v.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<SelectYourAatfViewModel>();
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
+                A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await controller.Index(model) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
         public async void IndexPost_GivenInvalidModel_ApiShouldBeCalled()
         {
             var organisationId = Guid.NewGuid();
-            var model = new SelectYourAatfViewModel()
-            {
-                AatfList = A.Fake<List<AatfData>>(),
-            };
-
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(organisationId);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
-        }
-
-        [Fact]
-        public async void IndexPost_GivenInvalid_MapperShouldBeCalled()
-        {
-            var organisationId = Guid.NewGuid();
-            var model = new SelectYourAatfViewModel()
-            {
-                AatfList = A.Fake<List<AatfData>>(),
-            };
-
-            this.controller.ModelState.AddModelError("error", "error");
-
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
-
-            var facilityType = FacilityType.Aatf;
-
-            await controller.Index(organisationId);
-
-            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(a => a.FacilityType == facilityType && a.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]

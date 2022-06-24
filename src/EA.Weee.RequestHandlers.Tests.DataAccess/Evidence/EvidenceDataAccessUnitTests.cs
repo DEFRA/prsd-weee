@@ -18,7 +18,7 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class EvidenceDataAccessUnitTests
+    public class EvidenceDataAccessUnitTests : SimpleUnitTestBase
     {
         private readonly EvidenceDataAccess evidenceDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
@@ -37,22 +37,21 @@
             var userContext = A.Fake<IUserContext>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             userId = Guid.NewGuid();
-            var fixture = new Fixture();
 
             dbContextHelper = new DbContextHelper();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             tonnages = new List<NoteTransferTonnage>()
             {
-                fixture.Create<NoteTransferTonnage>(),
-                fixture.Create<NoteTransferTonnage>()
+                TestFixture.Create<NoteTransferTonnage>(),
+                TestFixture.Create<NoteTransferTonnage>()
             };
             categories = new List<NoteTransferCategory>()
             {
-                fixture.Create<NoteTransferCategory>(),
-                fixture.Create<NoteTransferCategory>()
+                TestFixture.Create<NoteTransferCategory>(),
+                TestFixture.Create<NoteTransferCategory>()
             };
-            complianceYear = fixture.Create<short>();
+            complianceYear = TestFixture.Create<short>();
             A.CallTo(() => userContext.UserId).Returns(userId);
 
             evidenceDataAccess = new EvidenceDataAccess(context, userContext, genericDataAccess);
@@ -66,7 +65,7 @@
             SystemTime.Freeze(date);
             
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Draft, complianceYear, userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), date);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
@@ -111,7 +110,7 @@
             SystemTime.Freeze(date);
 
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Submitted, complianceYear, userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Submitted, complianceYear, userId.ToString(), date);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
@@ -154,7 +153,7 @@
         public async Task AddTransferNote_GivenTransferNote_NoteShouldBeAddedAndSaveChangesCalled(Core.AatfEvidence.NoteStatus status)
         {
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString());
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).MustHaveHappenedOnceExactly().Then(
@@ -174,7 +173,7 @@
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
             //act
-            var result = await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString());
+            var result = await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
 
             //assert
             result.Should().Be(id);
