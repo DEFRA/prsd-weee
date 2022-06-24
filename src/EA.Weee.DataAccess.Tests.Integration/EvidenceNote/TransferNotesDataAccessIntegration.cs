@@ -154,6 +154,8 @@
                 notes.Should().NotContain(n => n.Id.Equals(note9ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note11ToNotBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note12ToNotBeFound.Id));
+                notes.ElementAtOrDefault(0).WasteType.Should().Be(WasteType.HouseHold);
+                notes.ElementAtOrDefault(1).WasteType.Should().Be(WasteType.HouseHold);
             }
         }
 
@@ -209,6 +211,8 @@
                 notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
                 notes.Should().Contain(n => n.Id.Equals(note2ToBeFound.Id));
                 notes.Should().NotContain(n => n.Id.Equals(note3NotToBeFound.Id));
+                notes.ElementAtOrDefault(0).WasteType.Should().Be(WasteType.HouseHold);
+                notes.ElementAtOrDefault(1).WasteType.Should().Be(WasteType.HouseHold);
             }
         }
 

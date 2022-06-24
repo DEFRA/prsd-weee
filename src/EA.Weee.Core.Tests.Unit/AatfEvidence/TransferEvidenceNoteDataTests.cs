@@ -14,6 +14,12 @@
     public class TransferEvidenceNoteDataTests : SimpleUnitTestBase
     {
         [Fact]
+        public void TransferEvidenceNoteData_ShouldBeDerivedFromEvidenceNoteDataBase()
+        {
+            typeof(TransferEvidenceNoteData).Should().BeDerivedFrom<EvidenceNoteDataBase>();
+        }
+
+        [Fact]
         public void CategoryIds_GivenTransferEvidenceNoteTonnageDataIsNull_EmptyListShouldBeReturned()
         {
             //arrange
