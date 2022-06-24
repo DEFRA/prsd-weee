@@ -27,7 +27,7 @@
         {
         }
 
-        public NoteStatusHistory(string changedById, NoteStatus fromStatus, NoteStatus toStatus, string reason = null)
+        public NoteStatusHistory(string changedById, NoteStatus fromStatus, NoteStatus toStatus, DateTime date, string reason = null)
         {
             Condition.Requires(changedById).IsNotNullOrWhiteSpace();
             Condition.Requires(fromStatus).IsNotNull();
@@ -36,7 +36,7 @@
             ChangedById = changedById;
             FromStatus = fromStatus;
             ToStatus = toStatus;
-            ChangedDate = SystemTime.UtcNow;
+            ChangedDate = date;
             Reason = reason;
         }
     }

@@ -10,19 +10,23 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
 
     public class SetNoteStatusRequestHandler : IRequestHandler<SetNoteStatus, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public SetNoteStatusRequestHandler(
             WeeeContext context,
             IUserContext userContext,
-            IWeeeAuthorization authorization)
+            IWeeeAuthorization authorization, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
+            this.systemDataDataAccess = systemDataDataAccess;
             this.context = context;
             this.userContext = userContext;
         }
@@ -37,8 +41,10 @@
             
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
-            string changedBy = userContext.UserId.ToString();
-            evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, message.Reason);
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+            var changedBy = userContext.UserId.ToString();
+
+            evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, currentDate, message.Reason);
 
             await context.SaveChangesAsync();
 

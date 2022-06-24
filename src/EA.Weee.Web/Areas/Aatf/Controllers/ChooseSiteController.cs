@@ -15,6 +15,7 @@
     using Services.Caching;
     using ViewModels;
     using Weee.Requests.AatfReturn;
+    using Weee.Requests.Shared;
 
     public class ChooseSiteController : AatfEvidenceBaseController
     {
@@ -22,13 +23,15 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
+        private readonly ConfigurationService configurationService;
 
-        public ChooseSiteController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper)
+        public ChooseSiteController(IWeeeCache cache, BreadcrumbService breadcrumb, Func<IWeeeClient> client, IMapper mapper, ConfigurationService configurationService)
         {
             this.apiClient = client;
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.configurationService = configurationService;
         }
 
         [HttpGet]
@@ -36,6 +39,10 @@
         {
             var model = await GenerateSelectYourAatfViewModel(organisationId);
 
+            if (model.AatfList.Count == 0)
+            {
+                return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
+            }
             if (model.AatfList.Count == 1)
             {
                 return RedirectToAction("Index", "ManageEvidenceNotes", new { organisationId = model.OrganisationId, aatfId = model.AatfList[0].Id });
@@ -73,9 +80,17 @@
         {
             using (var client = apiClient())
             {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiDate());
+
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
-                return mapper.Map<SelectYourAatfViewModel>(new AatfDataToSelectYourAatfViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = FacilityType.Aatf });
+                return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
+                {
+                    AatfList = allAatfsAndAes, 
+                    OrganisationId = organisationId, 
+                    CurrentDate = currentDate,
+                    EvidenceSiteSelectionStartDateFrom = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom
+                });
             }
         }
     }

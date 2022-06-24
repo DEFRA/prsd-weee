@@ -398,8 +398,8 @@
 
             var result = await dataAccess.GetAatfByAatfIdAndComplianceYear(aatfId, 2019);
 
-            result.Should().Be(aatf.Id);
-            result.Should().NotBe(aatf1.Id);
+            result.Should().Be(aatf);
+            result.Should().NotBe(aatf1);
         }
     }
 }

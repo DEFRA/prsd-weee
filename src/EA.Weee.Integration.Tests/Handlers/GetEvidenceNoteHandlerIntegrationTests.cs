@@ -16,6 +16,7 @@
     using Domain.Organisation;
     using FluentAssertions;
     using NUnit.Specifications;
+    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
@@ -85,7 +86,7 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
                 
@@ -133,7 +134,7 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 
@@ -182,7 +183,7 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 
@@ -231,8 +232,8 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
 

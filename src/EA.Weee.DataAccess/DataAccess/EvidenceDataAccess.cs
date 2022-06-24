@@ -47,13 +47,14 @@
             WasteType? wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
-            NoteStatus status)
+            NoteStatus status,
+            DateTime updateDate)
         {
             note.Update(recipient, startDate, endDate, wasteType, protocol);
 
             if (status.Equals(NoteStatus.Submitted))
             {
-                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), updateDate);
             }
 
             foreach (var noteTonnage in tonnages)
@@ -75,11 +76,21 @@
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
 
-            var notes = await context.Notes
+            Guid? groupedAatfId = null;
+            if (filter.AatfId.HasValue)
+            {
+                var aatf = await context.Aatfs.FindAsync(filter.AatfId);
+
+                Condition.Requires(aatf).IsNotNull();
+
+                groupedAatfId = aatf.AatfId;
+            }
+
+            var notes = context.Notes
                .Where(p => p.ComplianceYear.Equals(filter.ComplianceYear)
                             && allowedNoteTypes.Contains(p.NoteType.Value)
                             && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                                && (!filter.AatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
+                                //&& (!groupedAatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                                 && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                                 && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
                                     || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value)))
@@ -95,10 +106,14 @@
                             && (filter.SearchRef == null ||
                                 (filter.FormattedNoteType > 0 ?
                                     (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) :
-                                    (filter.FormattedSearchRef == p.Reference.ToString()))))
-               .ToListAsync();
-
-            return notes;
+                                    (filter.FormattedSearchRef == p.Reference.ToString()))));
+            
+            if (groupedAatfId.HasValue)
+            {
+                return await notes.Where(p => p.Aatf.AatfId == groupedAatfId).ToListAsync();
+            }
+            
+            return await notes.ToListAsync();
         }
 
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
@@ -136,7 +151,8 @@
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
-            string userId)
+            string userId,
+            DateTime date)
         {
             var evidenceNote = new Note(organisation,
                 scheme,
@@ -148,7 +164,7 @@
 
             if (status.Equals(NoteStatus.Submitted))
             {
-                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString());
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), date);
             }
 
             var note = await genericDataAccess.Add(evidenceNote);

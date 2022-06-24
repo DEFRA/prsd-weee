@@ -14,22 +14,28 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess.DataAccess;
+    using Domain;
+    using Mappings;
+    using Prsd.Core;
     using RequestHandlers.Aatf;
     using Xunit;
 
     public class GetAatfInfoByOrganisationRequestHandlerTests
     {
         private GetAatfInfoByOrganisationRequestHandler handler;
-        private readonly IMap<Aatf, AatfData> mapper;
+        private readonly IMap<AatfWithSystemDateMapperObject, AatfData> mapper;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IWeeeAuthorization authorization;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetAatfInfoByOrganisationRequestHandlerTests()
         {
-            mapper = A.Fake<IMap<Aatf, AatfData>>();
+            mapper = A.Fake<IMap<AatfWithSystemDateMapperObject, AatfData>>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
-            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, aatfDataAccess, authorization);
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            handler = new GetAatfInfoByOrganisationRequestHandler(mapper, aatfDataAccess, authorization, systemDataDataAccess);
         }
 
         [Fact]
@@ -37,7 +43,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
 
-            handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<Aatf, AatfData>>(), A.Fake<IAatfDataAccess>(), authorization);
+            handler = new GetAatfInfoByOrganisationRequestHandler(A.Fake<IMap<AatfWithSystemDateMapperObject, AatfData>>(), A.Fake<IAatfDataAccess>(), authorization, systemDataDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
 
@@ -55,18 +61,61 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfData_AatfDataShouldBeMapped()
+        public async void HandleAsync_GivenRequest_SystemSettingsShouldBeRetrieved()
+        {
+            //arrange
+            var id = Guid.NewGuid();
+
+            //act
+            await handler.HandleAsync(new GetAatfByOrganisation(id));
+
+            //assert
+            A.CallTo(() => systemDataDataAccess.Get()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenAatfDataWithUseFixedDate_AatfDataShouldBeMapped()
         {
             var aatfs = Aatfs();
+            var systemData = A.Fake<SystemData>();
+            var date = new DateTime(2019, 1, 1);
 
+            systemData.ToggleFixedCurrentDateUsage(true);
+            systemData.UpdateFixedCurrentDate(date);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
             A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(A<Guid>._)).Returns(aatfs);
 
             await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
 
-            for (var i = 0; i < aatfs.Count; i++)
+            foreach (var aatfData in aatfs)
             {
-                A.CallTo(() => mapper.Map(aatfs.ElementAt(i))).MustHaveHappened(1, Times.Exactly);
+                A.CallTo(() => mapper.Map(A<AatfWithSystemDateMapperObject>.That.Matches(a =>
+                    Equals(a.Aatf, aatfData) && a.SystemDateTime == date))).MustHaveHappenedOnceExactly();
             }
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenAatfDataWithUseCurrentDate_AatfDataShouldBeMapped()
+        {
+            var date = new DateTime(2020, 1, 1);
+            SystemTime.Freeze(date);
+            var aatfs = Aatfs();
+            var systemData = A.Fake<SystemData>();
+            systemData.ToggleFixedCurrentDateUsage(false);
+
+            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemData);
+            A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(A<Guid>._)).Returns(aatfs);
+
+            await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
+
+            foreach (var aatfData in aatfs)
+            {
+                A.CallTo(() => mapper.Map(A<AatfWithSystemDateMapperObject>.That.Matches(a =>
+                    Equals(a.Aatf, aatfData) && a.SystemDateTime == date))).MustHaveHappenedOnceExactly();
+            }
+
+            SystemTime.Unfreeze();
         }
 
         [Fact]
@@ -79,7 +128,7 @@
             }.ToArray();
 
             A.CallTo(() => aatfDataAccess.GetAatfsForOrganisation(A<Guid>._)).Returns(Aatfs());
-            A.CallTo(() => mapper.Map(A<Aatf>._)).ReturnsNextFromSequence(aatfDatas);
+            A.CallTo(() => mapper.Map(A<AatfWithSystemDateMapperObject>._)).ReturnsNextFromSequence(aatfDatas);
 
             var result = await handler.HandleAsync(A.Dummy<GetAatfByOrganisation>());
 

@@ -19,14 +19,17 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
-            ISchemeDataAccess schemeDataAccess)
+            ISchemeDataAccess schemeDataAccess, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
             this.schemeDataAccess = schemeDataAccess;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<Guid> HandleAsync(EditEvidenceNoteRequest message)
@@ -36,6 +39,8 @@
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.Id);
 
             authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
+
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
 
             if (!EnsureTheSchemeNotChanged(evidenceNote, message.RecipientId))
             {
@@ -63,7 +68,8 @@
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 tonnageValues,
-                message.Status.ToDomainEnumeration<NoteStatus>());
+                message.Status.ToDomainEnumeration<NoteStatus>(),
+                currentDate);
 
             return evidenceNote.Id;
         }
