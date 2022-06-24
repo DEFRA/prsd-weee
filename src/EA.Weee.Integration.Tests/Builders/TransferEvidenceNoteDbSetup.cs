@@ -32,9 +32,9 @@
             WasteType.HouseHold);
         }
 
-        public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
+        public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
         {
-            instance.UpdateStatus(statusToUpdate, user);
+            instance.UpdateStatus(statusToUpdate, user, reason);
             return this;
         }
 

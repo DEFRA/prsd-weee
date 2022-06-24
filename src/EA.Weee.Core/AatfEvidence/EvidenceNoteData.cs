@@ -7,39 +7,15 @@
     using Organisations;
     using Prsd.Core;
 
-    public class EvidenceNoteData
+    public class EvidenceNoteData : EvidenceNoteDataBase
     {
-        public Guid Id { get; set; }
-
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
 
-        public NoteType Type { get; set; }
-
-        public NoteStatus Status { get; set; }
-
-        public WasteType? WasteType { get; set; }
-
         public Protocol? Protocol { get; set; }
 
-        public int Reference { get; set; }
-
         public Guid RecipientId { get; set; }
-
-        public DateTime? SubmittedDate { get; set; }
-
-        public DateTime? ApprovedDate { get; set; }
-
-        public DateTime? ReturnedDate { get; set; }
-
-        public string ReturnedReason { get; set; }
-
-        public DateTime? RejectedDate { get; set; }
-
-        public string RejectedReason { get; set; }
-
-        public int ComplianceYear { get; set; }
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
