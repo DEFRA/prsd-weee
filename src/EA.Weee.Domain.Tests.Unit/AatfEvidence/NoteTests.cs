@@ -485,7 +485,7 @@
             result.Organisation.Should().Be(organisation);
             result.Recipient.Should().Be(scheme);
             result.Aatf.Should().BeNull();
-            result.WasteType.Should().BeNull();
+            result.WasteType.Should().Be(WasteType.HouseHold);
             result.Protocol.Should().BeNull();
             result.StartDate.Should().Be(date);
             result.EndDate.Should().Be(date);
