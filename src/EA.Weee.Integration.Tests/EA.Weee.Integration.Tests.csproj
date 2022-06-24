@@ -255,10 +255,6 @@
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.RequestHandlers\EA.Weee.RequestHandlers.csproj">
-      <Project>{575a5355-b008-422a-b9b6-535ca2b5cc26}</Project>
-      <Name>EA.Weee.RequestHandlers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
       <Name>EA.Weee.Requests</Name>
