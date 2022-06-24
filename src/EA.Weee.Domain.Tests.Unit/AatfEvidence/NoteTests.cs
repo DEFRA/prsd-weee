@@ -70,7 +70,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -97,7 +98,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -169,7 +171,8 @@
                 "created",
                 null,
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -181,7 +184,8 @@
                 "created",
                 transferTonnages.ToList(),
                 null,
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -195,7 +199,8 @@
                 "created",
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear));
+                complianceYear,
+                WasteType.HouseHold));
 
             result.Should().BeOfType<ArgumentOutOfRangeException>();
         }
@@ -513,7 +518,8 @@
                 createdBy,
                 transferTonnages.ToList(),
                 transferCategories.ToList(),
-                complianceYear);
+                complianceYear,
+                WasteType.HouseHold);
         }
     }
 }

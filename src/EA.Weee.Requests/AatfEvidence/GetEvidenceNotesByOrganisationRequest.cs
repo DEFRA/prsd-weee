@@ -10,22 +10,24 @@
     {
         public bool TransferredOut { get; private set; }
 
+        public List<NoteType> NoteTypeFilterList { get; private set; }
+
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
             int complianceYear, 
-            NoteType noteTypeFilter,
+            List<NoteType> noteTypeFilterList,
             bool transferredOut)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
-            Condition.Requires(noteTypeFilter);
+            Condition.Requires(noteTypeFilterList);
 
             OrganisationId = organisationId;
             AllowedStatuses = allowedStatuses;
             ComplianceYear = complianceYear;
-            NoteTypeFilter = noteTypeFilter;
+            NoteTypeFilterList = noteTypeFilterList;
             TransferredOut = transferredOut;
         }
     }
