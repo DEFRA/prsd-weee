@@ -211,6 +211,55 @@
         }
 
         [Component]
+        public class WhenIGetOneApprovedEvidenceNote : GetEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                    })
+                    .Create();
+
+                request = new GetEvidenceNoteForAatfRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveRApprovedTheEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveApprovedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(Core.AatfEvidence.NoteStatus.Approved);
+                result.ApprovedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Approved)).ChangedDate.ToShortDateString());
+            };
+        }
+
+        [Component]
         public class WhenIGetOneNoteWhereNoteDoesNotExist : GetEvidenceNoteHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
