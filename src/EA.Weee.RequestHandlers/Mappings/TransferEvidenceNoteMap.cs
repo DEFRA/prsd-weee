@@ -14,7 +14,7 @@
     using NoteType = Core.AatfEvidence.NoteType;
     using Scheme = Domain.Scheme.Scheme;
 
-    public class TransferEvidenceNoteMap : IMap<TransferNoteMapTransfer, TransferEvidenceNoteData>
+    public class TransferEvidenceNoteMap : EvidenceNoteDataMapBase<TransferEvidenceNoteData>, IMap<TransferNoteMapTransfer, TransferEvidenceNoteData>
     {
         private readonly IMapper mapper;
 
@@ -28,21 +28,18 @@
             Condition.Requires(source.Note).IsNotNull();
             Condition.Requires(source.Scheme).IsNotNull();
 
-            return new TransferEvidenceNoteData
-            {
-                Id = source.Note.Id,
-                Reference = source.Note.Reference,
-                Type = (NoteType)source.Note.NoteType.Value,
-                Status = (NoteStatus)source.Note.Status.Value,
-                ComplianceYear = source.Note.ComplianceYear,
-                TransferredOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation),
-                RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient.Organisation),
-                RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient),
-                TransferredSchemeData = mapper.Map<Scheme, SchemeData>(source.Scheme),
-                TransferEvidenceNoteTonnageData = source.Note.NoteTransferTonnage.Select(nt => new TransferEvidenceNoteTonnageData()
+            var data = MapCommonProperties(source.Note);
+
+            data.TransferredOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
+            data.RecipientOrganisationData =
+                mapper.Map<Organisation, OrganisationData>(source.Note.Recipient.Organisation);
+            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient);
+            data.TransferredSchemeData = mapper.Map<Scheme, SchemeData>(source.Scheme);
+            data.TransferEvidenceNoteTonnageData = source.Note.NoteTransferTonnage.Select(nt =>
+                new TransferEvidenceNoteTonnageData()
                 {
-                    EvidenceTonnageData = new EvidenceTonnageData(nt.Id, 
-                        (WeeeCategory)nt.NoteTonnage.CategoryId, 
+                    EvidenceTonnageData = new EvidenceTonnageData(nt.Id,
+                        (WeeeCategory)nt.NoteTonnage.CategoryId,
                         nt.NoteTonnage.Received,
                         nt.NoteTonnage.Reused,
                         nt.Received,
@@ -54,8 +51,9 @@
                     Type = (NoteType)nt.NoteTonnage.Note.NoteType.Value,
                     OriginalReference = nt.NoteTonnage.Note.Reference,
                     OriginalNoteId = nt.NoteTonnage.Note.Id
-                }).ToList()
-            };
+                }).ToList();
+
+            return data;
         }
     }
 }
