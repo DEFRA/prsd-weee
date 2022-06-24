@@ -118,6 +118,7 @@
                 .IncludeFilter(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage).Select(ntt => ntt.Select(nttt => nttt.TransferNote)))
                 .Where(n => n.RecipientId == schemeId &&
                     n.NoteType.Value == NoteType.EvidenceNote.Value &&
+                    n.WasteType.Value == WasteType.HouseHold &&
                     n.Status.Value == NoteStatus.Approved.Value &&
                     n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)) && evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)).ToListAsync();
 
