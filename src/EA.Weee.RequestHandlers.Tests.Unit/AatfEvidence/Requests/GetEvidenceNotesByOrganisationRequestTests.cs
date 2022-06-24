@@ -12,10 +12,12 @@
     public class GetEvidenceNotesByOrganisationRequestTests
     {
         private readonly Fixture fixture;
+        private readonly int complianceYear;
 
         public GetEvidenceNotesByOrganisationRequestTests()
         {
             fixture = new Fixture();
+            complianceYear = fixture.Create<int>();
         }
 
         [Fact]
@@ -29,7 +31,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -40,7 +42,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, 2022, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -51,7 +53,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -60,11 +62,11 @@
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public void GetEvidenceNotesByOrganisationRequest_GivenNComplianceYearIsNotGreaterThanZero_ArgumentOutOfRangeExceptionExpected(short complianceYear)
+        public void GetEvidenceNotesByOrganisationRequest_GivenNComplianceYearIsNotGreaterThanZero_ArgumentOutOfRangeExceptionExpected(int currentYear)
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -78,7 +80,6 @@
             //arrange
             var organisationId = fixture.Create<Guid>();
             var statusList = fixture.CreateMany<NoteStatus>().ToList();
-            var complianceYear = fixture.Create<short>();
 
             //act
             var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut);
