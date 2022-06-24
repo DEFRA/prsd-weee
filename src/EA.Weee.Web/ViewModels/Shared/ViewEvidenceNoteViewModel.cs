@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel;
-    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Extensions;
 
@@ -52,5 +51,27 @@
         public bool DisplayH2Title { get; set; }
 
         public int SelectedComplianceYear { get; set; }
+
+        public virtual string TabName
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case NoteStatus.Draft:
+                        return "Draft evidence note";
+                    case NoteStatus.Rejected:
+                        return "Rejected evidence note";
+                    case NoteStatus.Approved:
+                        return "Approved evidence note";
+                    case NoteStatus.Returned:
+                        return "Returned evidence note";
+                    case NoteStatus.Submitted:
+                        return "Submitted evidence note";
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
     }
 }
