@@ -31,7 +31,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -53,7 +53,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -66,7 +66,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
