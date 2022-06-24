@@ -29,19 +29,18 @@
                 var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
                 var approvalDate = aatf.ApprovalDate.Value.Date;
 
-                if (approvalDate <= complianceYearEndDate.Date && approvalDate >= source.SystemDateTime.Date)
+                if (approvalDate <= complianceYearEndDate.Date && approvalDate <= source.SystemDateTime.Date)
                 {
                     approvalDateValid = true;
                 }
             }
 
-            if (aatf.HasEvidenceNotes && approvalDateValid)
+            switch (aatf.HasEvidenceNotes)
             {
-                evidenceSiteDisplay = true;
-            }
-            else if (!aatf.HasEvidenceNotes && approvalDateValid)
-            {
-                evidenceSiteDisplay = true;
+                case true when approvalDateValid:
+                case false when approvalDateValid:
+                    evidenceSiteDisplay = true;
+                    break;
             }
 
             aatf.EvidenceSiteDisplay = evidenceSiteDisplay;

@@ -215,11 +215,13 @@
         [Fact]
         public void Note_Constructor_GivenDraftTransferEvidenceNoteValues_PropertiesShouldBeSet()
         {
-            var date = SystemTime.UtcNow;
-
+            var date = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(date);
+            
             var result = CreateTransferNote();
 
             TransferNoteShouldBeEqualTo(result, date);
+            SystemTime.Unfreeze();
         }
         
         [Fact]
