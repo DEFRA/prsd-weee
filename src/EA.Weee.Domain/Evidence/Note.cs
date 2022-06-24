@@ -58,7 +58,8 @@
             string createdBy,
             IList<NoteTransferTonnage> transfer,
             IList<NoteTransferCategory> categories,
-            int complianceYear)
+            int complianceYear,
+            WasteType wasteType)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -80,6 +81,7 @@
             NoteTransferTonnage = transfer;
             NoteTransferCategories = categories;
             ComplianceYear = complianceYear;
+            WasteType = wasteType;
         }
 
         public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,

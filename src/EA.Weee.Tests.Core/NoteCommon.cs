@@ -111,7 +111,8 @@
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
                 noteTransferCategories,
-                DateTime.Now.Year);
+                DateTime.Now.Year,
+                WasteType.HouseHold);
         }
     }
 }

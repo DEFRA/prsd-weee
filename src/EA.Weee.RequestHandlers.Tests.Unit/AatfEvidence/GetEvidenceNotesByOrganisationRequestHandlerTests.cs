@@ -44,7 +44,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence, false);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -135,7 +135,7 @@
             //arrange
             var scheme = A.Fake<Scheme>();
             var schemeId = fixture.Create<Guid>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Transfer, true);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
 
             A.CallTo(() => scheme.Id).Returns(schemeId);
             var status = request.AllowedStatuses
@@ -229,7 +229,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), NoteType.Evidence, false);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
         }
     }
 }
