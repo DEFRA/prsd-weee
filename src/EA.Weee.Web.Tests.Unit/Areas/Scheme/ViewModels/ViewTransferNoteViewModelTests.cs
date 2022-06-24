@@ -7,6 +7,7 @@
     using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
+    using Web.ViewModels.Shared;
     using Xunit;
 
     public class ViewTransferNoteViewModelTests
@@ -16,6 +17,12 @@
         {
             typeof(ViewTransferNoteViewModel).GetProperty("ReferenceDisplay").Should()
                 .BeDecoratedWith<DisplayNameAttribute>(d => d.DisplayName.Equals("Reference ID"));
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModel_ShouldBeDerivedFrom_ViewEvidenceNoteViewModel()
+        {
+            typeof(ViewTransferNoteViewModel).Should().BeDerivedFrom<ViewEvidenceNoteViewModel>();
         }
 
         [Fact]
@@ -109,7 +116,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void DisplayEditButton_GivenNoteStatusIsNotDraft_ShouldBeFalse(NoteStatus status)
         {
-            if (status == NoteStatus.Draft)
+            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
             {
                 return;
             }
