@@ -40,6 +40,12 @@
         }
 
         [Fact]
+        public void EvidenceNoteMap_ShouldBeDerivedFromEvidenceNoteDataMapBase()
+        {
+            typeof(EvidenceNoteMap).Should().BeDerivedFrom<EvidenceNoteDataMapBase<EvidenceNoteData>>();
+        }
+
+        [Fact]
         public void Map_GivenNote_StandardPropertiesShouldBeMapped()
         {
             //arrange
