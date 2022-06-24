@@ -17,6 +17,7 @@
     using EA.Weee.Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
+    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
@@ -88,7 +89,7 @@
                     .WithRecipient(scheme.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();
                 
@@ -138,7 +139,7 @@
                     .WithRecipient(scheme.Id)
                      .With(n =>
                      {
-                         n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), "reason returned");
+                         n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow, "reason returned");
                      })
                     .Create();
 
@@ -189,7 +190,7 @@
                     .WithRecipient(scheme.Id)
                      .With(n =>
                      {
-                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), "reason rejected");
+                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow, "reason rejected");
                      })
                     .Create();
 

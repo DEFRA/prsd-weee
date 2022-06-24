@@ -7,6 +7,7 @@
     using Base;
     using Core.Helpers;
     using Domain.Evidence;
+    using Prsd.Core;
     using Prsd.Core.Domain;
 
     public class TransferEvidenceNoteDbSetup : DbTestDataBuilder<Note, TransferEvidenceNoteDbSetup>
@@ -34,7 +35,7 @@
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
         {
-            instance.UpdateStatus(statusToUpdate, user, reason);
+            instance.UpdateStatus(statusToUpdate, user, SystemTime.UtcNow, reason);
             return this;
         }
 

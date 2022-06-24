@@ -139,8 +139,8 @@
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                 {
-                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage1).Create();
 
                 // create another transfer from note 1
@@ -151,8 +151,8 @@
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                 {
-                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage2).Create();
 
                 // create another transfer from note 1 but is rejected so wont be included
@@ -163,7 +163,7 @@
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                 {
-                    t.UpdateStatus(NoteStatus.Rejected, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3).Create();
 
                 // now to call the request to take the last 1 tonne
@@ -237,8 +237,8 @@
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                 {
-                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString());
-                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString());
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage).Create();
 
                 transferTonnageValues = new List<TransferTonnageValue>()

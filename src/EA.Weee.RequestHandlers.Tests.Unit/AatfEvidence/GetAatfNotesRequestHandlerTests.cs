@@ -27,13 +27,11 @@
     using NoteType = Domain.Evidence.NoteType;
     using WasteType = Core.AatfEvidence.WasteType;
 
-    public class GetAatfNotesRequestHandlerTests
+    public class GetAatfNotesRequestHandlerTests : SimpleUnitTestBase
     {
         private GetAatfNotesRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess noteDataAccess;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IMapper mapper;
         private readonly GetAatfNotesRequest request;
         private readonly Organisation organisation;
@@ -46,35 +44,31 @@
 
         public GetAatfNotesRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
-            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
-            var recipientId = fixture.Create<Guid>();
-            wasteType = fixture.Create<WasteType>();
-            noteStatus = fixture.Create<NoteStatus>();
+            var recipientId = TestFixture.Create<Guid>();
+            wasteType = TestFixture.Create<WasteType>();
+            noteStatus = TestFixture.Create<NoteStatus>();
             startDate = SystemTime.UtcNow;
             endDate = startDate.AddDays(2);
-            currentYear = fixture.Create<int>();
+            currentYear = TestFixture.Create<int>();
             var systemSettings = A.Fake<SystemData>();
             systemSettings.ToggleFixedCurrentDateUsage(false);
 
-            A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
-            A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
+            A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => aatf.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
-            A.CallTo(() => systemDataDataAccess.Get()).Returns(systemSettings);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<string>(), currentYear, recipientId, wasteType, noteStatus, startDate, endDate);
+                aatf.Id, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<string>(), currentYear, recipientId, wasteType, noteStatus, startDate, endDate);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
-                mapper,
-                systemDataDataAccess);
+                mapper);
         }
 
         [Fact]
@@ -83,7 +77,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest(currentYear)));
@@ -97,7 +91,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
+            handler = new GetAatfNotesRequestHandler(authorization, noteDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAatfNotesRequest(currentYear)));
@@ -139,7 +133,7 @@
         public async void HandleAsync_GivenRequestWithSearchRef_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var searchRef = fixture.Create<string>();
+            var searchRef = TestFixture.Create<string>();
             var request = GetAatfNotesRequest(SystemTime.UtcNow.Year, searchRef);
 
             // act
@@ -183,7 +177,7 @@
         public async void HandleAsync_GivenRequestWithWasteTypeFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            WasteType? wasteType = fixture.Create<WasteType?>();
+            WasteType? wasteType = TestFixture.Create<WasteType?>();
             var request = GetAatfNotesRequest(currentYear, null, null, wasteType);
 
             // act
@@ -207,7 +201,7 @@
         public async void HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            NoteStatus? noteStatus = fixture.Create<NoteStatus?>();
+            NoteStatus? noteStatus = TestFixture.Create<NoteStatus?>();
             var request = GetAatfNotesRequest(currentYear, null, null, null, noteStatus);
 
             // act
@@ -231,7 +225,7 @@
         public async void HandleAsync_GivenRequestWithStartDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var startDate = fixture.Create<DateTime?>();
+            var startDate = TestFixture.Create<DateTime?>();
             var request = GetAatfNotesRequest(currentYear, null, null, null, null, startDate);
 
             // act
@@ -256,7 +250,7 @@
         public async void HandleAsync_GivenRequestWithEndDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var endDate = fixture.Create<DateTime?>();
+            var endDate = TestFixture.Create<DateTime?>();
             var request = GetAatfNotesRequest(currentYear, null, null, null, null, null, endDate);
 
             // act
@@ -282,7 +276,7 @@
         public async void HandleAsync_GivenRequestAllFiltersSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var searchRef = fixture.Create<string>();
+            var searchRef = TestFixture.Create<string>();
             var receivedId = Guid.NewGuid();
             var request = GetAatfNotesRequest(currentYear, searchRef, receivedId, wasteType, noteStatus, startDate, endDate);
 
@@ -346,7 +340,7 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>().ToList();
 
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {
@@ -376,7 +370,7 @@
         {
             return new GetAatfNotesRequest(organisation.Id, 
                 aatf.Id, 
-                fixture.CreateMany<NoteStatus>().ToList(),
+                TestFixture.CreateMany<NoteStatus>().ToList(),
                 searchRef, selectedComplianceYear, receivedId, wasteType, noteStatus, startDate, endDate);
         }
     }

@@ -98,7 +98,7 @@
             EndDate = endDate;
         }
 
-        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, string reason = null)
+        public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, DateTime date, string reason = null)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
             {
@@ -121,7 +121,7 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus, reason));
+            NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus, date, reason));
 
             Status = newStatus;
         }

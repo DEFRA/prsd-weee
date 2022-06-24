@@ -28,14 +28,14 @@
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;
 
-    public class CreateEvidenceNoteRequestHandlerTests
+    public class CreateEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
         private CreateEvidenceNoteRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly IUserContext userContext;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly CreateEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Aatf aatf;
@@ -44,22 +44,21 @@
 
         public CreateEvidenceNoteRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             aatfDataAccess = A.Fake<IAatfDataAccess>();
             userContext = A.Fake<IUserContext>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             organisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
             scheme = A.Fake<Scheme>();
             var note = A.Fake<Note>();
-            userId = fixture.Create<Guid>();
 
             A.CallTo(() => note.Reference).Returns(1);
-            A.CallTo(() => scheme.Id).Returns(fixture.Create<Guid>());
-            A.CallTo(() => organisation.Id).Returns(fixture.Create<Guid>());
-            A.CallTo(() => aatf.Id).Returns(fixture.Create<Guid>());
+            A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => aatf.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
@@ -68,16 +67,17 @@
                 scheme.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                fixture.Create<WasteType>(),
-                fixture.Create<Protocol>(),
-                fixture.CreateMany<TonnageValues>().ToList(),
-                fixture.Create<Core.AatfEvidence.NoteStatus>(),
+                TestFixture.Create<WasteType>(),
+                TestFixture.Create<Protocol>(),
+                TestFixture.CreateMany<TonnageValues>().ToList(),
+                TestFixture.Create<Core.AatfEvidence.NoteStatus>(),
                 Guid.Empty);
 
             handler = new CreateEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
@@ -93,7 +93,8 @@
 
             handler = new CreateEvidenceNoteRequestHandler(authorization, genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -110,7 +111,8 @@
 
             handler = new CreateEvidenceNoteRequestHandler(authorization, genericDataAccess,
                 aatfDataAccess,
-                userContext);
+                userContext,
+                systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -159,6 +161,16 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldGetSystemDateTime()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
         {
             //act
@@ -181,11 +193,43 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_AatfForComplianceYearShouldBeRetrieved()
+        {
+            //arrange
+            var aatfId = TestFixture.Create<Guid>();
+            A.CallTo(() => aatf.AatfId).Returns(aatfId);
+            A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatfId, request.StartDate.Year))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndThereIsNoAatfForTheComplianceYear_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatfDataAccess.GetDetails(A<Guid>._)).Returns(aatf);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns((Aatf)null);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
         {
             //act
-            var date = SystemTime.UtcNow;
-            SystemTime.Freeze(date);
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
+
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //arrange
             var request = new CreateEvidenceNoteRequest(organisation.Id,
@@ -193,9 +237,9 @@
                 scheme.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                fixture.Create<WasteType>(),
-                fixture.Create<Protocol>(),
-                fixture.CreateMany<TonnageValues>().ToList(),
+                TestFixture.Create<WasteType>(),
+                TestFixture.Create<Protocol>(),
+                TestFixture.CreateMany<TonnageValues>().ToList(),
                 Core.AatfEvidence.NoteStatus.Draft,
                 Guid.Empty);
 
@@ -203,9 +247,8 @@
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(request.EndDate) &&
-
                                                                            n.Aatf.Equals(aatf) &&
-                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.CreatedDate == currentDate &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
                                                                            n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
@@ -234,8 +277,13 @@
         public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext()
         {
             //act
-            var date = SystemTime.UtcNow;
-            SystemTime.Freeze(date);
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
+
+            var systemDateTime = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
+
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //arrange
             var request = new CreateEvidenceNoteRequest(organisation.Id,
@@ -243,9 +291,9 @@
                 scheme.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                fixture.Create<WasteType>(),
-                fixture.Create<Protocol>(),
-                fixture.CreateMany<TonnageValues>().ToList(),
+                TestFixture.Create<WasteType>(),
+                TestFixture.Create<Protocol>(),
+                TestFixture.CreateMany<TonnageValues>().ToList(),
                 Core.AatfEvidence.NoteStatus.Submitted,
                 Guid.Empty);
 
@@ -253,9 +301,8 @@
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(request.EndDate) &&
-
                                                                            n.Aatf.Equals(aatf) &&
-                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.CreatedDate.Equals(currentDate) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
                                                                            n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
@@ -279,7 +326,7 @@
 
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteStatusHistory.First(c =>
                 c.ChangedById.Equals(userId.ToString()) &&
-                c.ChangedDate.Equals(date) &&
+                c.ChangedDate.Equals(systemDateTime) &&
                 c.FromStatus.Equals(NoteStatus.Draft) &&
                 c.ToStatus.Equals(NoteStatus.Submitted)) != null))).MustHaveHappenedOnceExactly();
 
@@ -290,8 +337,10 @@
         public async Task HandleAsync_GivenRequestWithNullWasteAndProtocol_NoteShouldBeAddedToContext()
         {
             //act
-            var date = SystemTime.UtcNow;
-            SystemTime.Freeze(date);
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
+
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             var newRequest = new CreateEvidenceNoteRequest(organisation.Id,
                 aatf.Id,
@@ -311,7 +360,7 @@
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(newRequest.EndDate) &&
 
                                                                            n.Aatf.Equals(aatf) &&
-                                                                           n.CreatedDate.Equals(date) &&
+                                                                           n.CreatedDate.Equals(currentDate) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.Equals(null) &&
                                                                            n.WasteType.Equals(null) &&
@@ -331,7 +380,7 @@
         public async Task HandleAsync_GivenRequest_ReferenceShouldBeReturned()
         {
             //act
-            var id = fixture.Create<Guid>();
+            var id = TestFixture.Create<Guid>();
             var newNote = A.Fake<Note>();
             A.CallTo(() => newNote.Id).Returns(id);
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(newNote);
@@ -350,10 +399,10 @@
                 scheme.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                fixture.Create<WasteType>(),
-                fixture.Create<Protocol>(),
+                TestFixture.Create<WasteType>(),
+                TestFixture.Create<Protocol>(),
                 new List<TonnageValues>(),
-                fixture.Create<Core.AatfEvidence.NoteStatus>(),
+                TestFixture.Create<Core.AatfEvidence.NoteStatus>(),
                 Guid.Empty);
         }
     }

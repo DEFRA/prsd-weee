@@ -72,5 +72,7 @@
         public virtual Guid? LocalAreaDataId { get; set; }
 
         public bool HasEvidenceNotes { get; set; }
+
+        public bool EvidenceSiteDisplay { get; set; }
     }
 }

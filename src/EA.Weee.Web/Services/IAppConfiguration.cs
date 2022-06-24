@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using System;
+
     public interface IAppConfiguration
     {
         string Environment { get; set; }
@@ -57,5 +59,7 @@
         int MaximumProducerOrganisationSearchResults { get; set; }
 
         bool MaintenanceMode { get; set; }
+
+        DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
     }
 }
