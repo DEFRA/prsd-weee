@@ -69,9 +69,11 @@
                         var category = Model.EvidenceNotesDataList.ElementAt(i).CategoryValues.ElementAt(j);
 
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                @category.CategoryId. @category.CategoryDisplay
-
+                            <td class="govuk-table__cell govuk-!-padding-left-0 govuk-!-padding-right-0">
+                                <span class="weee-span-as-cell " style="width: 10%">
+                                    @category.CategoryId.
+                                </span>
+                                <span class="weee-span-as-cell">@category.CategoryDisplay</span>
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].Id)
@@ -142,7 +144,6 @@
 
                 <tr class="govuk-table__row govuk-panel-grey-background">
                     <td class="govuk-table__cell govuk-!-padding-left-2">
-
                         @Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay
                     </td>
 
@@ -160,7 +161,7 @@
 
                 @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
                 @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
-                
+
             </div>
         </div>
     }
