@@ -72,7 +72,7 @@
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&
-                                                                           n.WasteType == null &&
+                                                                           n.WasteType == WasteType.HouseHold &&
                                                                            n.Recipient.Equals(scheme) &&
                                                                            n.StartDate.Equals(date) &&
                                                                            n.EndDate.Equals(date) &&
@@ -116,7 +116,7 @@
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&
-                                                                           n.WasteType == null &&
+                                                                           n.WasteType == WasteType.HouseHold &&
                                                                            n.Recipient.Equals(scheme) &&
                                                                            n.StartDate.Equals(date) &&
                                                                            n.EndDate.Equals(date) &&
