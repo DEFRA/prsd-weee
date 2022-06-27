@@ -294,7 +294,7 @@
                 note.Aatf.Should().BeNull();
                 note.EndDate.Date.Should().BeSameDateAs(SystemTime.UtcNow.Date);
                 note.StartDate.Date.Should().BeSameDateAs(SystemTime.UtcNow.Date);
-                note.WasteType.Should().BeNull();
+                note.WasteType.Should().Be(WasteType.HouseHold);
                 note.Protocol.Should().BeNull();
                 note.Recipient.Should().Be(recipient);
                 note.Reference.Should().BeGreaterThan(0);
