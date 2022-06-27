@@ -17,7 +17,7 @@
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
-    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
+    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
     }
