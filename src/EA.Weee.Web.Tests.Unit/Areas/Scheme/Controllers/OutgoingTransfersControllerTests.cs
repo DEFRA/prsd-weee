@@ -560,7 +560,7 @@
         }
 
         [Fact]
-        public async Task EditTransferFrom_GivenMappedModel_ModelShouldBeReturned()
+        public async Task EditTransferFromGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
@@ -575,13 +575,45 @@
         }
 
         [Fact]
-        public async Task EditTransferFrom_ShouldReturnView()
+        public async Task EditTransferFromGet_ShouldReturnView()
         {
             //act
             var result = await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("EditTransferFrom");
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenInvalidModel_ViewShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("EditTransferFrom");
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenInvalidModel_BreadcrumbShouldBeSet()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
         }
     }
 }
