@@ -16,6 +16,7 @@
     using FluentAssertions;
     using Prsd.Core;
     using RequestHandlers.AatfEvidence;
+    using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
@@ -168,6 +169,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
         {
             //arrange
+            SystemTime.Freeze(DateTime.Now);
             var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
@@ -185,9 +187,10 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
+            SystemTime.Unfreeze();
         }
 
         [Theory]
