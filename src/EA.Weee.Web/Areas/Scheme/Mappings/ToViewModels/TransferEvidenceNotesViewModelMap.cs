@@ -11,14 +11,15 @@
 
     public class TransferEvidenceNotesViewModelMap : TransferEvidenceMapBase<TransferEvidenceNotesViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>
     {
-        public TransferEvidenceNotesViewModelMap(IMapper mapper, IWeeeCache cache) : base(mapper, cache)
+        public TransferEvidenceNotesViewModelMap(IMapper mapper, IWeeeCache cache, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper) : base(mapper, cache, transferNoteMapper)
         {
         }
 
         public TransferEvidenceNotesViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
-            Condition.Requires(source.Request).IsNotNull();
+            
+            //Condition.Requires(source.Request).IsNotNull();
 
             var model = MapBaseProperties(source);
 

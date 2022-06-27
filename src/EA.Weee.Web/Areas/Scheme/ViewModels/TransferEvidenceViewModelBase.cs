@@ -14,6 +14,8 @@
 
         public List<TotalCategoryValue> CategoryValues { get; set; }
 
+        public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
+
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();

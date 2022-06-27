@@ -35,6 +35,12 @@
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: "Scheme_edit_transfer_notes",
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-transfer-from/{evidenceNoteId}",
+                defaults: new { action = "EditTransferFrom", controller = "OutgoingTransfers", area = "Scheme" },
+                namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Scheme_edit_transfer",
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "EditDraftTransfer", controller = "OutgoingTransfers", area = "Scheme" },

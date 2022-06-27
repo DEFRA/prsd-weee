@@ -1,21 +1,25 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
-    ViewBag.Title = "Transfer from - GOV.UK";
+    ViewBag.Title = "From which evidence notes would you like to transfer tonnage to? - GOV.UK";
 }
 
 @section full_main_content
 {
+    @Html.Gds().ValidationSummary()
+
+    @(this.WeeeGds().Warning("Unselecting notes may remove data you have previously input"))
+    
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
     </h1>
+
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
     @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
     }
 }
+

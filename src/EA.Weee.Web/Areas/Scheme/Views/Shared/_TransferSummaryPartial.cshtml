@@ -1,0 +1,17 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
+
+
+<div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-1">
+    @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-bottom-1">
+    @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
+</div>
+<div class="govuk-!-padding-bottom-5"></div>
