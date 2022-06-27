@@ -160,6 +160,44 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithExistingNoteData_SelectedEvidenceNotePairsShouldBeSet()
+        {
+            //arrange
+            var existingNoteId = TestFixture.Create<Guid>();
+            var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
+            {
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId).Create()
+            };
+
+            var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
+                .Create();
+
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, existingNoteId).Create(),
+                TestFixture.Create<EvidenceNoteData>()
+            };
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SelectedEvidenceNotePairs.Count.Should().Be(2);
+            result.SelectedEvidenceNotePairs.FirstOrDefault(s => s.Key == existingNoteId).Should().NotBeNull();
+            result.SelectedEvidenceNotePairs.FirstOrDefault(s => s.Key == existingNoteId).Value.Should().BeTrue();
+            foreach (var genericControlPair in result.SelectedEvidenceNotePairs.Where(s => s.Key != existingNoteId))
+            {
+                genericControlPair.Value.Should().BeFalse();
+            }
+        }
+
+        [Fact]
         public void Map_GivenSource_ViewTransferNoteViewModelShouldBeMapped()
         {
             //arrange

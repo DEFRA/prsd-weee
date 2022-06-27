@@ -132,5 +132,12 @@
                 return this.View("EditTransferFrom", model);
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model)
+        {
+            return this.View("EditTransferFrom", model);
+        }
     }
 }
