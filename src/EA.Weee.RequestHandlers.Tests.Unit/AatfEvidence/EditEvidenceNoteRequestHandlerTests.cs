@@ -169,8 +169,8 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
         {
             //arrange
-            SystemTime.Freeze(DateTime.Now);
             var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
