@@ -13,19 +13,23 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels;
+    using Weee.Requests.Scheme;
 
     public class OutgoingTransfersController : SchemeEvidenceBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
+        private readonly ISessionService sessionService;
 
         public OutgoingTransfersController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
+            Func<IWeeeClient> apiClient, 
+            ISessionService sessionService) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
+            this.sessionService = sessionService;
         }
 
         [HttpGet]
@@ -37,7 +41,11 @@
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
+                var request = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
+
                 var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
+
+                existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
 
                 var result = await client.SendAsync(User.GetAccessToken(),
                     new GetEvidenceNotesForTransferRequest(pcsId, noteData.CategoryIds, existingEvidenceNoteIds));
@@ -137,6 +145,31 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model)
         {
+            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    //TODO: Remove this API call when selected categories are passed from the select category edit when it is in place
+                    var noteData = await client.SendAsync(User.GetAccessToken(),
+                        new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+
+                    var selectedEvidenceNotes =
+                        model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
+
+                    var updatedTransferRequest =
+                        new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, noteData.CategoryIds,
+                            selectedEvidenceNotes.ToList());
+
+                    sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
+                        SessionKeyConstant.TransferNoteKey);
+
+                    return RedirectToRoute("Scheme_edit_transfer_tonnages",
+                        new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+                }
+            }
+
             return this.View("EditTransferFrom", model);
         }
     }
