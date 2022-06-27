@@ -135,6 +135,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessor.cs" />
     <Compile Include="Admin\Obligations\SchemeToObligationSchemeDataTransfer.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationHandler.cs" />
+    <Compile Include="Factories\CurrentSystemTimeHelper.cs" />
     <Compile Include="Mappings\AatfDataWithSystemTimeMap.cs" />
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />

@@ -14,6 +14,7 @@
     using EA.Weee.Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
@@ -180,7 +181,7 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, null))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), A<DateTime>.That.IsEqualTo(new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day)), null))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
@@ -208,7 +209,7 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, "reason passed as parameter"))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), A<DateTime>.That.IsEqualTo(new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day)), "reason passed as parameter"))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
