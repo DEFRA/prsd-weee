@@ -160,14 +160,20 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithExistingNoteData_SelectedEvidenceNotePairsShouldBeSet()
+        public void Map_GivenSourceWithExistingNoteData_SelectedEvidenceNotePairsShouldBeSetAndOrderedCorrectly()
         {
             //arrange
-            var existingNoteId = TestFixture.Create<Guid>();
+            var existingNoteId1 = TestFixture.Create<Guid>();
+            var existingNoteId2 = TestFixture.Create<Guid>();
+            var notExistingNoteId1 = TestFixture.Create<Guid>();
+            var notExistingNoteId2 = TestFixture.Create<Guid>();
+
             var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
             {
-                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId).Create(),
-                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId).Create()
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId1).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>().With(n => n.OriginalNoteId, existingNoteId2).Create()
             };
 
             var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
@@ -176,9 +182,21 @@
 
             var notes = new List<EvidenceNoteData>()
             {
-                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, existingNoteId).Create(),
-                TestFixture.Create<EvidenceNoteData>()
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, notExistingNoteId1).With(e => e.Reference, 1).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, existingNoteId2).With(e => e.Reference, 2).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, existingNoteId1).With(e => e.Reference, 3).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, notExistingNoteId2).With(e => e.Reference, 4).Create(),
             };
+
+            var viewEvidenceNoteModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, notExistingNoteId1).With(e => e.Reference, 1).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Reference, 2).With(e => e.Id, existingNoteId2).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Reference, 3).With(e => e.Id, existingNoteId1).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, notExistingNoteId2).With(e => e.Reference, 4).Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).ReturnsNextFromSequence(viewEvidenceNoteModels.ToArray());
 
             var organisationId = TestFixture.Create<Guid>();
 
@@ -188,13 +206,18 @@
             var result = map.Map(source);
 
             //assert
-            result.SelectedEvidenceNotePairs.Count.Should().Be(2);
-            result.SelectedEvidenceNotePairs.FirstOrDefault(s => s.Key == existingNoteId).Should().NotBeNull();
-            result.SelectedEvidenceNotePairs.FirstOrDefault(s => s.Key == existingNoteId).Value.Should().BeTrue();
-            foreach (var genericControlPair in result.SelectedEvidenceNotePairs.Where(s => s.Key != existingNoteId))
-            {
-                genericControlPair.Value.Should().BeFalse();
-            }
+            result.EvidenceNotesDataList.ElementAt(0).Reference.Should().Be(3);
+            result.EvidenceNotesDataList.ElementAt(1).Reference.Should().Be(2);
+            result.EvidenceNotesDataList.ElementAt(2).Reference.Should().Be(4);
+            result.EvidenceNotesDataList.ElementAt(3).Reference.Should().Be(1);
+            result.SelectedEvidenceNotePairs.ElementAt(0).Key.Should().Be(existingNoteId1);
+            result.SelectedEvidenceNotePairs.ElementAt(0).Value.Should().BeTrue();
+            result.SelectedEvidenceNotePairs.ElementAt(1).Key.Should().Be(existingNoteId2);
+            result.SelectedEvidenceNotePairs.ElementAt(1).Value.Should().BeTrue();
+            result.SelectedEvidenceNotePairs.ElementAt(2).Key.Should().Be(notExistingNoteId2);
+            result.SelectedEvidenceNotePairs.ElementAt(2).Value.Should().BeFalse();
+            result.SelectedEvidenceNotePairs.ElementAt(3).Key.Should().Be(notExistingNoteId1);
+            result.SelectedEvidenceNotePairs.ElementAt(3).Value.Should().BeFalse();
         }
 
         [Fact]
