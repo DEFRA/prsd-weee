@@ -342,6 +342,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
@@ -762,6 +763,9 @@
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\SubmittedTransfer.cshtml" />
+    <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTransferFrom.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_TransferSummaryPartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_TransferFromSummaryPartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
