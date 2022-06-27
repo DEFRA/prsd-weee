@@ -58,6 +58,13 @@
         }
 
         [Fact]
+        public void EditTransferFrom_ShouldHaveHttpGetAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public void EditTonnagesGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid) }).Should()
@@ -475,6 +482,106 @@
 
             //assert
             result.ViewName.Should().Be("SubmittedTransfer");
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+        }
+
+        [Fact]
+        public async Task EditTransferFrom_GivenEvidenceNoteId_ShouldRetrieveTransferNote()
+        {
+            //arrange
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, evidenceNoteId);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFrom_GivenTransferNoteData_TransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
+            var categories = transferEvidenceNoteData.CategoryIds;
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
+                        r.OrganisationId == organisationId &&
+                        r.Categories.SequenceEqual(transferEvidenceNoteData.CategoryIds))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenTransferNoteAndCategories_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
+                        t.TransferEvidenceNoteData ==
+                        transferEvidenceNoteData &&
+                        t.Request == null &&
+                        t.Notes.SequenceEqual(evidenceNoteData) &&
+                        t.OrganisationId == organisationId)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFrom_GivenMappedModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task EditTransferFrom_ShouldReturnView()
+        {
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("EditTransferFrom");
         }
     }
 }

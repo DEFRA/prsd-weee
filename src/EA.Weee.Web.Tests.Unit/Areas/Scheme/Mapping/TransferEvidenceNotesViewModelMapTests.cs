@@ -15,13 +15,14 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Scheme;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class TransferEvidenceNotesViewModelMapTests
+    public class TransferEvidenceNotesViewModelMapTests : SimpleUnitTestBase
     {
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
-        private readonly Fixture fixture;
+        private readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper;
 
         private readonly TransferEvidenceNotesViewModelMap map;
 
@@ -29,9 +30,9 @@
         {
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
-            fixture = new Fixture();
+            transferNoteMapper = A.Fake<IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>>();
 
-            map = new TransferEvidenceNotesViewModelMap(mapper, cache);
+            map = new TransferEvidenceNotesViewModelMap(mapper, cache, transferNoteMapper);
         }
 
         [Fact]
@@ -75,7 +76,7 @@
         public void Map_GivenSource_SchemeNameShouldBeRetrievedFromCacheAndSet()
         {
             //arrange
-            var schemeName = fixture.Create<string>();
+            var schemeName = TestFixture.Create<string>();
             var source = GetTransferObject();
 
             A.CallTo(() => cache.FetchSchemeName(source.Request.SchemeId)).Returns(schemeName);
@@ -107,16 +108,16 @@
             //arrange
             var notes = new List<EvidenceNoteData>()
             {
-                fixture.Create<EvidenceNoteData>(),
-                fixture.Create<EvidenceNoteData>()
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>()
             };
 
-            var viewEvidenceNoteViewModel = fixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
+            var viewEvidenceNoteViewModel = TestFixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
 
-            var request = fixture.Build<TransferEvidenceNoteRequest>()
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 
-            var organisationId = fixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
 
             var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
 
@@ -158,15 +159,66 @@
             }
         }
 
+        [Fact]
+        public void Map_GivenSource_ViewTransferNoteViewModelShouldBeMapped()
+        {
+            //arrange
+            var source = GetTransferNoteDataTransferObject();
+
+            //act
+            map.Map(source);
+
+            //assert
+            A.CallTo(() => transferNoteMapper.Map(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v =>
+                v.TransferEvidenceNoteData == source.TransferEvidenceNoteData && v.DisplayNotification == null &&
+                v.SchemeId == source.OrganisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenSource_ModelShouldBeReturned()
+        {
+            //arrange
+            var source = GetTransferNoteDataTransferObject();
+            var viewTransferNoteViewModel = TestFixture.Create<ViewTransferNoteViewModel>();
+
+            A.CallTo(() => transferNoteMapper.Map(A<ViewTransferNoteViewModelMapTransfer>._))
+                .Returns(viewTransferNoteViewModel);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ViewTransferNoteViewModel.Should().Be(viewTransferNoteViewModel);
+        }
+
         private TransferEvidenceNotesViewModelMapTransfer GetTransferObject()
         {
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var request = fixture.Build<TransferEvidenceNoteRequest>()
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ConsumerEquipment.ToInt(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 
-            var organisationId = fixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
 
             return new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+        }
+
+        private TransferEvidenceNotesViewModelMapTransfer GetTransferNoteDataTransferObject()
+        {
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>()
+            };
+
+            var transferNoteTonnageData = TestFixture.CreateMany<TransferEvidenceNoteTonnageData>().ToList();
+
+            var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
+                .Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            return new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
         }
     }
 }

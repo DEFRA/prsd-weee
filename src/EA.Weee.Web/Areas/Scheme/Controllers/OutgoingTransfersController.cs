@@ -111,5 +111,26 @@
                 return this.View("SubmittedTransfer", refreshedModel);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var result = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(pcsId, noteData.CategoryIds));
+
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, noteData, pcsId);
+
+                var model =
+                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+                return this.View("EditTransferFrom", model);
+            }
+        }
     }
 }
