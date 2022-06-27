@@ -1,0 +1,7 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ManageEvidenceNotesViewModel
+
+<br />
+@if (!Model.EvidenceNotesDataList.Any())
+{
+    Html.Raw(@ViewData["no-results-message"]);
+}

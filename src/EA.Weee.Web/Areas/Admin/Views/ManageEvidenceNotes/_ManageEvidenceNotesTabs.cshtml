@@ -1,0 +1,33 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Shared
+@using HomeController = EA.Weee.Web.Areas.Scheme.Controllers.HomeController
+
+@model ManageEvidenceNotesViewModel
+@{
+    ViewBag.Title = " View All Evidence Notes - GOV.UK";
+}
+
+@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        @ViewBag.Title
+    </h1>
+</header>
+
+<ul class="govuk-tabs__list">
+    @this.WeeeGds().Tab("View all evidence notes",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString() }), 
+        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes, "viewAllEvidenceNotes")
+
+    @this.WeeeGds().Tab("View all evidence transfers",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfers")
+</ul>
+
+

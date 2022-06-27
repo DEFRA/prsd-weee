@@ -10,6 +10,7 @@
     using FluentAssertions;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class EvidenceNoteRowViewModelMapTests
     {

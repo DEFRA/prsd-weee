@@ -9,7 +9,7 @@
     [Serializable]
     public class EvidenceNoteFilterBaseRequest : IRequest<List<EvidenceNoteData>>
     {
-        public List<NoteStatus> AllowedStatuses { get; protected set; }
+        public List<Core.AatfEvidence.NoteStatus> AllowedStatuses { get; protected set; }
 
         public Guid OrganisationId { get; protected set; }
 

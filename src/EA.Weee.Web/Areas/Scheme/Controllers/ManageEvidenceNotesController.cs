@@ -20,6 +20,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class ManageEvidenceNotesController : SchemeEvidenceBaseController
     {
@@ -83,7 +84,7 @@
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
-                    new List<NoteStatus>() { NoteStatus.Submitted }, 
+                    new List<Core.AatfEvidence.NoteStatus>() { NoteStatus.Submitted }, 
                     SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), NoteType.Evidence, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(

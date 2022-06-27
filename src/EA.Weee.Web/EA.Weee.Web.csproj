@@ -328,6 +328,10 @@
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\EvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ListOfAdminEvidenceNoteDataMap.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
@@ -761,6 +765,9 @@
     <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewAllEvidenceNotes.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ManageEvidenceNotesTabs.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_NoResultsPartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

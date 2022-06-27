@@ -7,6 +7,7 @@
     using Core.Helpers;
     using EA.Weee.Core.Shared;
     using ManageEvidenceNotes;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class ViewTransferNoteViewModel
     {
@@ -18,7 +19,7 @@
 
         public NoteType Type { get; set; }
 
-        public NoteStatus Status { get; set; }
+        public Core.AatfEvidence.NoteStatus Status { get; set; }
 
         [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{Reference}";

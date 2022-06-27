@@ -9,6 +9,7 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     [Serializable]
     public class EvidenceNoteViewModel

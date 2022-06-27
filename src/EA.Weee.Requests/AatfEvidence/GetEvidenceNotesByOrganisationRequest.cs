@@ -12,7 +12,7 @@
         public bool TransferredOut { get; private set; }
 
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
-            List<NoteStatus> allowedStatuses,
+            List<Core.AatfEvidence.NoteStatus> allowedStatuses,
             int complianceYear, 
             NoteType noteTypeFilter,
             bool transferredOut)

@@ -12,6 +12,7 @@
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class ViewTransferNoteViewModelMapTests
     {
@@ -103,7 +104,7 @@
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                    fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, Core.Shared.NoteType.Transfer).Create(),
+                    fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, NoteType.Transfer).Create(),
                     null);
 
             //act

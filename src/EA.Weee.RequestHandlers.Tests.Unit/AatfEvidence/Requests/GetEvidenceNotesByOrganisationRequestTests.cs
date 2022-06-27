@@ -30,7 +30,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), 2022, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<Core.AatfEvidence.NoteStatus>().ToList(), 2022, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -52,7 +52,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), 2022, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<Core.AatfEvidence.NoteStatus>(), 2022, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -65,7 +65,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), complianceYear, NoteType.Evidence, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<Core.AatfEvidence.NoteStatus>().ToList(), complianceYear, NoteType.Evidence, false));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -78,7 +78,7 @@
         {
             //arrange
             var organisationId = fixture.Create<Guid>();
-            var statusList = fixture.CreateMany<NoteStatus>().ToList();
+            var statusList = fixture.CreateMany<Core.AatfEvidence.NoteStatus>().ToList();
             var complianceYear = fixture.Create<short>();
 
             //act

@@ -1,0 +1,87 @@
+﻿@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs">
+
+                @Html.Partial("_ManageEvidenceNotesTabs.cshtml", Model)
+
+                <section class="govuk-tabs__panel" id="allOtherNotes">
+
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                    {
+                        @Html.Gds().ValidationSummary()
+                        @Html.Hidden("tab", Model.ActiveDisplayOption)
+                        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+                    }
+
+                    <table id="all-other-notes-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header">
+                                    Reference ID
+                                </th>
+                                <th class="govuk-table__header">
+                                    Date submitted
+                                </th>
+                                <th class="govuk-table__header">
+                                    Submitted by
+                                </th>
+                                <th class="govuk-table__header">
+                                    Recipient
+                                </th>
+                                <th class="govuk-table__header">
+                                    Status
+                                </th>
+                                @*<th class="govuk-table__header">@Html.Gds().VisuallyHidden("actions")</th>*@
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @if (Model.EvidenceNotesDataList.Any())
+                            {
+                                foreach (var note in Model.EvidenceNotesDataList)
+                                {
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                @if (note.SubmittedDate.HasValue)
+                                {
+                                    <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                }
+                                else
+                                {
+                                    <td class="govuk-table__cell"></td>
+                                }
+                                <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                <td class="govuk-table__cell">@note.Recipient</td>
+                                <td class="govuk-table__cell">@note.Status.ToString() </td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6">
+                                        @Html.Partial("_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p> Showing 0 - 0 of 0 </p>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <br />
+                </section>
+            </div>
+        </div>
+    </div>
+</section>

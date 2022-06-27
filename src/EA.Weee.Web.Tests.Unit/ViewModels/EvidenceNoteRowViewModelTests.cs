@@ -9,6 +9,7 @@
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class EvidenceNoteRowViewModelTests
     {

@@ -5,6 +5,7 @@
     using Core.Helpers;
     using EA.Weee.Core.Shared;
     using Infrastructure;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class EvidenceNoteRowViewModel 
     {

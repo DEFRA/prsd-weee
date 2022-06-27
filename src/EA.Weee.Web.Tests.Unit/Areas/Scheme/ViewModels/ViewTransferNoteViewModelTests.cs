@@ -9,6 +9,7 @@
     using Web.Areas.Scheme.ViewModels;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class ViewTransferNoteViewModelTests
     {

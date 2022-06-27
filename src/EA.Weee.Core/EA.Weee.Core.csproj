@@ -111,6 +111,8 @@
     <Compile Include="AatfEvidence\EvidenceSummaryTonnageData.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageDataBase.cs" />
     <Compile Include="AatfEvidence\NoteStatusFilter.cs" />
+    <Compile Include="Admin\AdminEvidenceNoteData.cs" />
+    <Compile Include="Shared\NoteStatus.cs" />
     <Compile Include="Shared\NoteType.cs" />
     <Compile Include="AatfEvidence\NoteStatus.cs" />
     <Compile Include="AatfEvidence\EvidenceCategoryValue.cs" />

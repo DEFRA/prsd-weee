@@ -1,13 +1,16 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using System;
+    using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Admin;
 
-    public class GetAllNotes : IRequest<Guid>
+    public class GetAllNotes : IRequest<List<AdminEvidenceNoteData>>
     {
-        public NoteType NoteType { get; set; }
+        public int SelectedComplianceYear { get; private set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public GetAllNotes(int selectedComplianceYear)
+        {
+            SelectedComplianceYear = selectedComplianceYear;
+        }
     }
 }

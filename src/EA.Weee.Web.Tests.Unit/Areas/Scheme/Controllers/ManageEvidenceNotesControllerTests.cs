@@ -27,6 +27,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class ManageEvidenceNotesControllerTests
     {
