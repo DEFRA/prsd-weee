@@ -338,6 +338,7 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
