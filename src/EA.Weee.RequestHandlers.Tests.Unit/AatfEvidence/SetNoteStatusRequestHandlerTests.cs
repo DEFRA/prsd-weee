@@ -14,8 +14,10 @@
     using EA.Weee.Core.Helpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
+    using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Weee.Requests.Note;
     using Weee.Tests.Core;
@@ -165,6 +167,7 @@
         public async Task HandleAsync_ExternalUser_WithStatusNoteUpdate_UpdateStatusAndSaveChangesShouldBeCalled(Core.AatfEvidence.NoteStatus status)
         {
             // Arrange
+            SystemTime.Freeze(DateTime.UtcNow);
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
@@ -180,10 +183,11 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, null))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)), null))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
+            SystemTime.Unfreeze();
         }
 
         [Theory]
@@ -193,6 +197,7 @@
         public async Task HandleAsync_ExternalUser_WithReasonNoteUpdate_SaveChangesAsyncShouldBeCalled(Core.AatfEvidence.NoteStatus status)
         {
             // Arrange
+            SystemTime.Freeze(DateTime.UtcNow);
             var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
@@ -208,10 +213,11 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), currentDate, "reason passed as parameter"))
+            A.CallTo(() => note.UpdateStatus(status.ToDomainEnumeration<NoteStatus>(), userId.ToString(), A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)), "reason passed as parameter"))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
+            SystemTime.Freeze(DateTime.UtcNow);
         }
     }
 }
