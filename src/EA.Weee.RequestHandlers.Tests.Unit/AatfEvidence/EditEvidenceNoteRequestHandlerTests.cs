@@ -14,6 +14,7 @@
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
     using Weee.Requests.Aatf;
@@ -184,7 +185,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, currentDate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
         }
