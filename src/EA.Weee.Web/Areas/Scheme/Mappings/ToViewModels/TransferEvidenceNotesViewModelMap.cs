@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -19,13 +20,17 @@
         {
             Condition.Requires(source).IsNotNull();
             
-            //Condition.Requires(source.Request).IsNotNull();
-
             var model = MapBaseProperties(source);
 
             foreach (var evidenceNoteData in source.Notes)
             {
-                model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, false));
+                var selected = false;
+                if (source.TransferEvidenceNoteData != null)
+                {
+                    selected = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Any(t =>
+                        t.OriginalNoteId == evidenceNoteData.Id);
+                }
+                model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, selected));
             }
 
             return model;
