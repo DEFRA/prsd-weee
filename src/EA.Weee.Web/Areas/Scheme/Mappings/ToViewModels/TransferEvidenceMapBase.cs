@@ -32,7 +32,8 @@
             var model = new T()
             {
                 PcsId = source.OrganisationId,
-                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId))
+                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId)),
+                RecipientId = recipientId
             };
 
             foreach (var evidenceNoteData in source.Notes)
