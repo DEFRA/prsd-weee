@@ -9,6 +9,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using Factories;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
@@ -82,7 +83,7 @@
 
             if (message.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
             {
-                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), currentDate);
+                evidenceNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
             }
 
             var newNote = await genericDataAccess.Add(evidenceNote);

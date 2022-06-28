@@ -11,6 +11,7 @@
     using System;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
+    using Factories;
 
     public class SetNoteStatusRequestHandler : IRequestHandler<SetNoteStatus, Guid>
     {
@@ -44,7 +45,7 @@
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var changedBy = userContext.UserId.ToString();
 
-            evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, currentDate, message.Reason);
+            evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate), message.Reason);
 
             await context.SaveChangesAsync();
 
