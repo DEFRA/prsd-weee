@@ -5,9 +5,8 @@
     using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Admin;
 
-    public class GetAllNotes : IRequest<List<AdminEvidenceNoteData>>
+    public class GetAllNotes : IRequest<List<EvidenceNoteData>>
     {
         public List<NoteType> NoteTypeFilterList { get; private set; }
 

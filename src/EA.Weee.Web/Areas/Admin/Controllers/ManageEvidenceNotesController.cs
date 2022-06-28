@@ -60,7 +60,7 @@
 
         private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned };
+            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotes(new List<NoteType> { NoteType.Evidence }, allowedStatuses));
 
