@@ -45,7 +45,10 @@
 
                 var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
-                existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
+                if (request != null)
+                {
+                    existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
+                }
 
                 var result = await client.SendAsync(User.GetAccessToken(),
                     new GetEvidenceNotesForTransferRequest(pcsId, noteData.CategoryIds, existingEvidenceNoteIds));
