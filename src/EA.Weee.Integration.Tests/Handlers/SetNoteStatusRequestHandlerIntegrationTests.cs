@@ -41,7 +41,7 @@
                     .WithRecipient(scheme.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), DateTime.UtcNow);
                     })
                     .Create();
 
@@ -64,7 +64,7 @@
             {
                 var history = Query.GetLatestNoteStatusHistoryForNote(note.Id);
                 history.ChangedById.Should().Be(UserId.ToString());
-                history.ChangedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                history.ChangedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 history.FromStatus.Should().Be(NoteStatus.Submitted);
                 history.ToStatus.Should().Be(NoteStatus.Approved);
             };
@@ -85,7 +85,7 @@
                     .WithRecipient(scheme.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), DateTime.UtcNow);
                     })
                     .Create();
 
@@ -108,7 +108,7 @@
             {
                 var history = Query.GetLatestNoteStatusHistoryForNote(note.Id);
                 history.ChangedById.Should().Be(UserId.ToString());
-                history.ChangedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                history.ChangedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
                 history.FromStatus.Should().Be(NoteStatus.Submitted);
                 history.ToStatus.Should().Be(NoteStatus.Returned);
                 history.Reason.Should().Be("reason returned");

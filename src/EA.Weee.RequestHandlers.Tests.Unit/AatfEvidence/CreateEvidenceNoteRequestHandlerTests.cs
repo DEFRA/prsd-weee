@@ -326,7 +326,9 @@
 
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.NoteStatusHistory.First(c =>
                 c.ChangedById.Equals(userId.ToString()) &&
-                c.ChangedDate.Equals(systemDateTime) &&
+                c.ChangedDate.Year == systemDateTime.Year &&
+                c.ChangedDate.Month == currentDate.Month &&
+                c.ChangedDate.Day == currentDate.Day &&
                 c.FromStatus.Equals(NoteStatus.Draft) &&
                 c.ToStatus.Equals(NoteStatus.Submitted)) != null))).MustHaveHappenedOnceExactly();
 

@@ -7,6 +7,7 @@
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
+    using Factories;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
@@ -69,7 +70,7 @@
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 tonnageValues,
                 message.Status.ToDomainEnumeration<NoteStatus>(),
-                currentDate);
+                CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
             return evidenceNote.Id;
         }
