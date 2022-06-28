@@ -63,7 +63,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id)
+        public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id, int? selectedComplianceYear)
         {
             using (var client = apiClient())
             {
@@ -76,6 +76,7 @@
                 var schemeObligationData =
                     await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, 2022));
 
+                // TODO: get the obligation compliance years using the GetObligationComplianceYears request and pass to the model mapper using the ComplianceYears property on UploadObligationsViewModelMapTransfer
                 var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
                 {
                     CompetentAuthority = authority,

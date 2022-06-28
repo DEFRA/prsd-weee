@@ -12,6 +12,10 @@
 
         public List<SchemeObligationData> ObligationData { get; set; }
 
+        public List<int> ComplianceYears { get; set; }
+
+        public int? SelectedComplianceYear { get; set; }
+
         public UploadObligationsViewModelMapTransfer()
         {
             ObligationData = new List<SchemeObligationData>();
