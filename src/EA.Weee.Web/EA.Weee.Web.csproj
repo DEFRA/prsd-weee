@@ -330,8 +330,6 @@
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
-    <Compile Include="Areas\Admin\Mappings\ToViewModel\AdminEvidenceNoteDataMap.cs" />
-    <Compile Include="Areas\Admin\Mappings\ToViewModel\ListOfEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
