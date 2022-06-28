@@ -19,10 +19,13 @@
 
         public List<EvidenceTonnageData> EvidenceTonnageData { get; set; }
 
-        public SchemeData SchemeData { get; set; }
+        public SchemeData RecipientSchemeData { get; set; }
 
         public AatfData AatfData { get; set; }
+
         public OrganisationData OrganisationData { get; set; }
+
+        public SchemeData OrganisationSchemaData { get; set; }
 
         public OrganisationData RecipientOrganisationData { get; set; }
 
@@ -30,18 +33,18 @@
         {
         }
 
-        public EvidenceNoteData(SchemeData schemeData)
+        public EvidenceNoteData(SchemeData recipientSchemeData)
         {
-            Guard.ArgumentNotNull(() => schemeData, schemeData);
-            SchemeData = schemeData;
+            Guard.ArgumentNotNull(() => recipientSchemeData, recipientSchemeData);
+            RecipientSchemeData = recipientSchemeData;
         }
 
-        public EvidenceNoteData(SchemeData schemeData, AatfData aatfData)
+        public EvidenceNoteData(SchemeData recipientSchemeData, AatfData aatfData)
         {
             Guard.ArgumentNotNull(() => aatfData, aatfData);
-            Guard.ArgumentNotNull(() => schemeData, schemeData);
+            Guard.ArgumentNotNull(() => recipientSchemeData, recipientSchemeData);
 
-            SchemeData = schemeData;
+            RecipientSchemeData = recipientSchemeData;
             AatfData = aatfData;
         }
     }

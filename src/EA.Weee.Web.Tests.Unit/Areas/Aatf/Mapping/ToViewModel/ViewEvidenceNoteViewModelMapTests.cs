@@ -127,7 +127,7 @@
             
             const string recipientAddress = "recipientAddress";
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                 organisation.OrganisationName,
                 organisation.BusinessAddress.Address1,
                 organisation.BusinessAddress.Address2,
@@ -157,7 +157,7 @@
 
             const string recipientAddress = "recipientAddress";
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                 organisation.OrganisationName,
                 organisation.NotificationAddress.Address1,
                 organisation.NotificationAddress.Address2,

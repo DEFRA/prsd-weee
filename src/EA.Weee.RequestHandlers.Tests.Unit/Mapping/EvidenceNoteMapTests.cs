@@ -711,7 +711,7 @@
             var result = map.Map(note);
 
             //assert
-            result.SchemeData.Should().Be(schemeData);
+            result.RecipientSchemeData.Should().Be(schemeData);
         }
 
         [Fact]
