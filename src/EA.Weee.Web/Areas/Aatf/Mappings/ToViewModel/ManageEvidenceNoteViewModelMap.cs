@@ -4,10 +4,8 @@
     using Core.AatfReturn;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
-    using EA.Weee.Web.ViewModels.Shared.Mapping;
-    using Prsd.Core;
+    using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core.Mapper;
-    using ViewModels;
 
     public class ManageEvidenceNoteViewModelMap : IMap<ManageEvidenceNoteTransfer, ManageEvidenceNoteViewModel>
     {
