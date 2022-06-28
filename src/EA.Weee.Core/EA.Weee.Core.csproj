@@ -128,10 +128,8 @@
     <Compile Include="Admin\AatfDeletionData.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistoryData.cs" />
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
-    <Compile Include="Admin\AdminEvidenceNoteData.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
-    <Compile Include="Admin\ListOfAdminEvidenceNoteDataMap.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationAmountData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationData.cs" />
