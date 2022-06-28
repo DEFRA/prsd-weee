@@ -160,7 +160,7 @@
                         new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
 
                     var selectedEvidenceNotes =
-                        model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
+                        model.SelectedEvidenceNotePairs.Where(a => a.Value).Select(b => b.Key);
 
                     var updatedTransferRequest =
                         new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, noteData.CategoryIds,
