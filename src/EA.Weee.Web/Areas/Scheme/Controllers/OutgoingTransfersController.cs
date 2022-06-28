@@ -48,6 +48,7 @@
                 if (request != null)
                 {
                     existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
+                    existingEvidenceNoteIds.RemoveAll(a => !request.EvidenceNoteIds.Contains(a));
                 }
 
                 var result = await client.SendAsync(User.GetAccessToken(),
