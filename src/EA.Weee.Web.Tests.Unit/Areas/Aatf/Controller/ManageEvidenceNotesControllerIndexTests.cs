@@ -16,6 +16,7 @@
     using EA.Prsd.Core;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
