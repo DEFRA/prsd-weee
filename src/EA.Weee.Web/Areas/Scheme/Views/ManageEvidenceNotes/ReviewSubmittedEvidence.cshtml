@@ -62,7 +62,7 @@
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme" }, null)
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false }, null)
                                 }
                             </td>
                             </tr>

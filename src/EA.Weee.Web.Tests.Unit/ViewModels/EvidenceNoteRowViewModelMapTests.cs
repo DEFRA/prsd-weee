@@ -92,8 +92,7 @@
             var schemeName = fixture.Create<string>();
             var evidenceNoteData = new EvidenceNoteData() 
             { 
-                RecipientSchemeData = new SchemeData() { SchemeName = schemeName }, 
-                OrganisationData = new OrganisationData(),
+                OrganisationSchemaData = new SchemeData() { SchemeName = schemeName},
                 Type = NoteType.Transfer
             };
 
