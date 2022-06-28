@@ -76,7 +76,7 @@
         public void Map_GivenEvidenceNoteDataWithNoSubmittedDate_PropertiesShouldBeMapped()
         {
             //arrange
-            var evidenceNoteData = new EvidenceNoteData() { SchemeData = new SchemeData() };
+            var evidenceNoteData = new EvidenceNoteData() { RecipientSchemeData = new SchemeData() };
 
             //act
             var result = map.Map(evidenceNoteData);
@@ -92,7 +92,7 @@
             var schemeName = fixture.Create<string>();
             var evidenceNoteData = new EvidenceNoteData() 
             { 
-                SchemeData = new SchemeData() { SchemeName = schemeName }, 
+                RecipientSchemeData = new SchemeData() { SchemeName = schemeName }, 
                 OrganisationData = new OrganisationData(),
                 Type = NoteType.Transfer
             };

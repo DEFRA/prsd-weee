@@ -287,8 +287,8 @@
                 result.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
-                result.SchemeData.Should().NotBeNull();
-                result.SchemeData.Id.Should().Be(note.Recipient.Id);
+                result.RecipientSchemeData.Should().NotBeNull();
+                result.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);

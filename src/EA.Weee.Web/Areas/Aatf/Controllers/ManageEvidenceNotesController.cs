@@ -280,7 +280,7 @@
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel));
 
-            var schemeData = resultAllNotes.Select(x => x.SchemeData)
+            var schemeData = resultAllNotes.Select(x => x.RecipientSchemeData)
                                            .Distinct(new SchemeDataComparer())
                                            .OrderBy(s => s.SchemeName)
                                            .ToList();
