@@ -41,5 +41,10 @@
         public List<SchemeObligationViewModel> SchemeObligations { get; set; }
 
         public bool AnyObligation => SchemeObligations.Any();
+
+        public IEnumerable<int> ComplianceYearList { get; set; }
+
+        [DisplayName("Compliance year")]
+        public int? SelectedComplianceYear { get; set; }
     }
 }

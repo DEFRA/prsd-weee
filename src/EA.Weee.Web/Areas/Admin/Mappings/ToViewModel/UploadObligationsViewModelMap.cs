@@ -14,7 +14,11 @@
             Condition.Requires(source).IsNotNull();
 
             var model = new UploadObligationsViewModel(source.CompetentAuthority);
+
+            //TODO: Take the ComplianceYears property of the UploadObligationsViewModelMapTransfer source and create the ComplianceYearList on UploadObligationsViewModel. Also need unit tests for these properties
             
+            model.ComplianceYearList = new List<int>() { 2022, 2021 };
+            model.SelectedComplianceYear = source.SelectedComplianceYear;
             SetErrors(source, model);
 
             SetSchemeObligations(source, model);

@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Core.Shared;
-    using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
 
     public class GetObligationComplianceYears : IRequest<List<int>>

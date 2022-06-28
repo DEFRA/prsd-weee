@@ -52,6 +52,28 @@
         @(this.WeeeGds().Panel("You have successfully uploaded the obligations for the compliance year 2022"))
     }
 
+    <p>
+        To upload your PCS's obligations, you need to first download the CSV template for the current compliance year. After this you can fill in the template with the data and upload it.
+    </p>
+    <p>
+        @Html.ActionLink("Download template", "DownloadTemplate", new { authority = Model.Authority })
+    </p>
+
+    @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Get, new { id = "ComplianceYearForm" }))
+    {
+        @Html.HiddenFor(m => m.Authority)
+        <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
+        <span class="text-margin govuk-!-padding-right-3">
+            @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
+                new SelectList(Model.ComplianceYearList),
+                new { autocomplete = "false" }, false, false)
+        </span>
+        <noscript>
+            @(this.WeeeGds().Button("Apply", null, true))
+        </noscript>
+        <div class="govuk-!-padding-bottom-7"></div>
+    }
+
     @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Post, new
     {
         enctype = "multipart/form-data",
@@ -59,12 +81,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Authority)
-        <p>
-            To upload your PCS's obligations, you need to first download the CSV template for the current compliance year. After this you can fill in the template with the data and upload it.
-        </p>
-        <p>
-            @Html.ActionLink("Download template", "DownloadTemplate", new { authority = Model.Authority })
-        </p>
+        @Html.HiddenFor(m => m.SelectedComplianceYear)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
             @(this.WeeeGds().ScreenVisuallyHiddenLabelFor(m => m.File))
