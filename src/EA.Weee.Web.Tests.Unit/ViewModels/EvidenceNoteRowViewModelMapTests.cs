@@ -93,6 +93,7 @@
             var evidenceNoteData = new EvidenceNoteData() 
             { 
                 OrganisationSchemaData = new SchemeData() { SchemeName = schemeName},
+                RecipientSchemeData = new SchemeData(),
                 Type = NoteType.Transfer
             };
 
