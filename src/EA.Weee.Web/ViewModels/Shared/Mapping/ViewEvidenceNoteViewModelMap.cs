@@ -62,7 +62,7 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.SchemeData.SchemeName,
+                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                     source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
                     organisationAddress.Address1,
                     organisationAddress.Address2,

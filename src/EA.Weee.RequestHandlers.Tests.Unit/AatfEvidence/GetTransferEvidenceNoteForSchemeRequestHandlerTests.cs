@@ -20,7 +20,7 @@
 
     public class GetTransferEvidenceNoteForSchemeRequestHandlerTests
     {
-        private GetTransferEvidenceNoteForSchemeRequestHandler handler;
+        private readonly GetTransferEvidenceNoteForSchemeRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -47,6 +47,7 @@
             organisationId = fixture.Create<Guid>();
 
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -56,12 +57,36 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoExternalAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+            var schemeId = fixture.Create<Guid>();
+            A.CallTo(() => note.RecipientId).Returns(schemeId);
+            
+            //act
+            await handler.HandleAsync(request);
 
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            //assert
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(schemeId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOrganisationOrSchemeAccess_ShouldThrowSecurityException()
+        {
+            //arrange
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(A<Guid>._)).Returns(false);
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(false);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -71,18 +96,31 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenOrganisationButNoSchemeAccess_ShouldNotThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(A<Guid>._)).Returns(false);
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
             //assert
-            result.Should().BeOfType<SecurityException>();
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoSchemeAccessButOrganisationAccess_ShouldNotThrowSecurityException()
+        {
+            //arrange
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(A<Guid>._)).Returns(true);
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(false);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -93,17 +131,6 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
-                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
