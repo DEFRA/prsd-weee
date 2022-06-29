@@ -56,18 +56,20 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithEvidenceNoteStartDateThatIsAfterCurrentDate_EmptyListShouldBeReturned()
+        public void Map_GivenSourceWithAatfsWithApprovalDateAfterEvidenceNoteBeforeDate_EmptyListShouldBeReturned()
         {
             //arrange
-            var aatfList = TestFixture.CreateMany<AatfData>().ToList();
             var currentDate = new DateTime(2020, 1, 1);
+            var aatfList = TestFixture.Build<AatfData>()
+                .With(a => a.ApprovalDate, currentDate).CreateMany(3)
+                .ToList();
             var evidenceNoteStartDate = currentDate.AddDays(1);
 
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, evidenceNoteStartDate)
                 .Create();
+
             //act
             var result = map.Map(source);
 
@@ -87,19 +89,47 @@
         public void Map_GivenSourceWithEvidenceNoteStartDateThatIsBeforeOrEqualCurrentDate_AatfListShouldBeReturned(DateTime evidenceNoteStartDate)
         {
             //arrange
-            var aatfList = TestFixture.Build<AatfData>().With(a => a.EvidenceSiteDisplay, true).CreateMany().ToList();
             var currentDate = new DateTime(2020, 2, 1);
+            var aatfId1 = TestFixture.Create<Guid>();
+            var aatfId2 = TestFixture.Create<Guid>();
+            var aatfId3 = TestFixture.Create<Guid>();
+            var aatfId4 = TestFixture.Create<Guid>();
 
+            var aatfList = new List<AatfData>()
+            {
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.ApprovalDate, evidenceNoteStartDate.AddDays(2))
+                    .With(a => a.Id, aatfId1)
+                    .Create(),
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.ApprovalDate, evidenceNoteStartDate.AddDays(-1))
+                    .With(a => a.Id, aatfId2)
+                    .Create(),
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.ApprovalDate, evidenceNoteStartDate)
+                    .With(a => a.Id, aatfId4)
+                    .Create(),
+                TestFixture.Build<AatfData>()
+                    .With(a => a.EvidenceSiteDisplay, true)
+                    .With(a => a.ApprovalDate, evidenceNoteStartDate.AddDays(1))
+                    .With(a => a.Id, aatfId3)
+                    .Create()
+            };
+            
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, evidenceNoteStartDate)
                 .Create();
             //act
             var result = map.Map(source);
 
             //assert
-            result.AatfList.Should().BeEquivalentTo(aatfList);
+            result.AatfList.Count.Should().Be(2);
+            result.AatfList.FirstOrDefault(a => a.Id == aatfId1).Should().NotBeNull();
+            result.AatfList.FirstOrDefault(a => a.Id == aatfId3).Should().NotBeNull();
         }
 
         [Fact]
@@ -118,7 +148,6 @@
 
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, currentDate)
                 .Create();
 
@@ -153,7 +182,6 @@
 
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, currentDate)
                 .Create();
 
@@ -203,7 +231,6 @@
 
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, currentDate)
                 .Create();
 
@@ -243,7 +270,6 @@
 
             var source = TestFixture.Build<AatfEvidenceToSelectYourAatfViewModelMapTransfer>()
                 .With(s => s.AatfList, aatfList)
-                .With(s => s.CurrentDate, currentDate)
                 .With(s => s.EvidenceSiteSelectionStartDateFrom, currentDate)
                 .Create();
 
