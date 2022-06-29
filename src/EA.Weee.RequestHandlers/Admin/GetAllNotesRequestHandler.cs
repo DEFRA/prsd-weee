@@ -8,7 +8,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
@@ -31,7 +30,7 @@
         public async Task<List<EvidenceNoteData>> HandleAsync(GetAllNotes message)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
+            authorization.EnsureUserInRole(Roles.InternalUser);
 
             var noteFilter = new NoteFilter(2022)
             {
