@@ -10,7 +10,6 @@
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
@@ -60,21 +59,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoInternalUserRoleAccess_ShouldThrowSecurityException()
-        {
-            //arrange
-            var authorization = new AuthorizationBuilder().DenyRole(Roles.InternalUser).Build();
-
-            handler = new GetAllNotesRequestHandler(authorization, noteDataAccess, mapper);
-
-            //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAllNotes()));
-
-            //assert
-            result.Should().BeOfType<SecurityException>();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCallEnsureCanAccessInternalArea()
         {
             //act
@@ -82,17 +66,6 @@
 
             //assert
             A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCallEnsureUserInRole()
-        {
-            //act
-            await handler.HandleAsync(message);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureUserInRole(Roles.InternalUser))
                 .MustHaveHappenedOnceExactly();
         }
 
