@@ -36,7 +36,6 @@
         public async Task<List<EvidenceNoteData>> HandleAsync(GetAllNotes message)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalUser);
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
 
