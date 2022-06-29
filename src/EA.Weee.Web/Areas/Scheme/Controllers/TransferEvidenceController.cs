@@ -8,7 +8,6 @@
     using Constant;
     using Core.Helpers;
     using Core.Scheme;
-    using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
