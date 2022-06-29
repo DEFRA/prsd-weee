@@ -14,11 +14,13 @@
     {
         protected readonly IWeeeCache Cache;
         protected readonly IMapper Mapper;
+        protected readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> TransferNoteMapper;
 
-        protected TransferEvidenceMapBase(IMapper mapper, IWeeeCache cache)
+        protected TransferEvidenceMapBase(IMapper mapper, IWeeeCache cache, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper)
         {
             Mapper = mapper;
             Cache = cache;
+            TransferNoteMapper = transferNoteMapper;
         }
 
         protected T MapBaseProperties(TransferEvidenceNotesViewModelMapTransfer source)
@@ -30,7 +32,8 @@
             var model = new T()
             {
                 PcsId = source.OrganisationId,
-                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId))
+                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId)),
+                RecipientId = recipientId
             };
 
             foreach (var evidenceNoteData in source.Notes)
@@ -40,6 +43,12 @@
                     {
                         IncludeAllCategories = false
                     }));
+            }
+
+            if (source.TransferEvidenceNoteData != null)
+            {
+                model.ViewTransferNoteViewModel = TransferNoteMapper.Map(
+                    new ViewTransferNoteViewModelMapTransfer(source.OrganisationId, source.TransferEvidenceNoteData, null));
             }
 
             var categoryValues = source.Request != null
