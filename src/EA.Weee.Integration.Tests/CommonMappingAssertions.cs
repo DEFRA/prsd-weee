@@ -33,8 +33,8 @@
             result.ComplianceYear.ToInt().Should().Be(note.ComplianceYear);
             result.AatfData.Should().NotBeNull();
             result.AatfData.Id.Should().Be(note.Aatf.Id);
-            result.SchemeData.Should().NotBeNull();
-            result.SchemeData.Id.Should().Be(note.Recipient.Id);
+            result.RecipientSchemeData.Should().NotBeNull();
+            result.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
             result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
             foreach (var evidenceTonnageData in result.EvidenceTonnageData)
             {
