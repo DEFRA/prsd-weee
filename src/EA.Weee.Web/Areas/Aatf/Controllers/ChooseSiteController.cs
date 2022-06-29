@@ -6,8 +6,6 @@
     using AatfEvidence.Controllers;
     using Api.Client;
     using Constant;
-    using Core.AatfReturn;
-    using EA.Weee.Web.Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -15,7 +13,6 @@
     using Services.Caching;
     using ViewModels;
     using Weee.Requests.AatfReturn;
-    using Weee.Requests.Shared;
 
     public class ChooseSiteController : AatfEvidenceBaseController
     {
@@ -80,15 +77,12 @@
         {
             using (var client = apiClient())
             {
-                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiDate());
-
                 var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
 
                 return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
                 {
                     AatfList = allAatfsAndAes, 
                     OrganisationId = organisationId, 
-                    CurrentDate = currentDate,
                     EvidenceSiteSelectionStartDateFrom = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom
                 });
             }
