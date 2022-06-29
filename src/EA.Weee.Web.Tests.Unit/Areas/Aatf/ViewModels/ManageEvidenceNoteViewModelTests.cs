@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
+    using EA.Weee.Web.ViewModels.Shared;
     using FluentAssertions;
-    using Web.Areas.Aatf.ViewModels;
     using Xunit;
 
     public class ManageEvidenceNoteViewModelTests
