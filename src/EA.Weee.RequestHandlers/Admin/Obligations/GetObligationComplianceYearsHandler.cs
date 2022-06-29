@@ -2,10 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.Admin.Obligation;
     using DataAccess.DataAccess;
-    using Domain.Scheme;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
