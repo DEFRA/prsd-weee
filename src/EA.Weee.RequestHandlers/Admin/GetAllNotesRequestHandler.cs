@@ -10,7 +10,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Security;
     using Mappings;
     using Security;
     using NoteType = Domain.Evidence.NoteType;
@@ -30,7 +29,6 @@
         public async Task<List<EvidenceNoteData>> HandleAsync(GetAllNotes message)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalUser);
 
             var noteFilter = new NoteFilter(2022)
             {
