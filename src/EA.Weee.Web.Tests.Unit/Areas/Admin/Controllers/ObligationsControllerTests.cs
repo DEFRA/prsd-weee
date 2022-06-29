@@ -21,16 +21,16 @@
     using Core.Admin.Obligation;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ObligationsControllerTests
+    public class ObligationsControllerTests : SimpleUnitTestBase
     {
         private readonly IAppConfiguration configuration;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient client;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
-        private readonly Fixture fixture;
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligationsController controller;
 
@@ -42,8 +42,6 @@
             apiClient = () => client;
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-
-            fixture = new Fixture();
 
             controller = new ObligationsController(configuration, breadcrumb, cache, apiClient, mapper);
         }
@@ -204,7 +202,7 @@
                                                                         A.Dummy<IWeeeCache>(), 
                                                                         () => A.Dummy<IWeeeClient>(),
                                                                         mapper);
-            var model = fixture.Create<SelectAuthorityViewModel>();
+            var model = TestFixture.Create<SelectAuthorityViewModel>();
             controller.ModelState.AddModelError("error", new Exception());
 
             // Act - holding page until obligations page is implemented
@@ -221,7 +219,7 @@
         public void PostSelectAuthority_WithValidModel_RedirectsToUploadObligationsAction()
         {
             // Arrange
-            var model = fixture.Create<SelectAuthorityViewModel>();
+            var model = TestFixture.Create<SelectAuthorityViewModel>();
 
             var result = controller.SelectAuthority(model) as RedirectToRouteResult;
 
@@ -266,10 +264,10 @@
         public async Task UploadObligationsGet_GivenSelectedAuthority_AuthoritySchemeObligationsShouldBeRetrieved()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
+            var authority = TestFixture.Create<CompetentAuthority>();
 
             //act
-            await controller.UploadObligations(authority, null);
+            await controller.UploadObligations(authority, null, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -281,14 +279,14 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationData = fixture.CreateMany<SchemeObligationData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligation>._)).Returns(obligationData);
 
             //act
-            await controller.UploadObligations(authority, null);
+            await controller.UploadObligations(authority, null, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() =>
@@ -302,11 +300,11 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_SchemeUploadObligationShouldBeRetrieved()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
 
             //act
-            await controller.UploadObligations(authority, obligationId);
+            await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -318,15 +316,15 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
+            var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
 
             //act
-            await controller.UploadObligations(authority, obligationId);
+            await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() =>
@@ -339,9 +337,9 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeReturned()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
+            var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -352,7 +350,7 @@
                         A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var viewResult = await controller.UploadObligations(authority, obligationId) as ViewResult;
+            var viewResult = await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             viewResult.Model.Should().Be(model);
@@ -362,7 +360,7 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeReturned()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
+            var authority = TestFixture.Create<CompetentAuthority>();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() =>
@@ -370,7 +368,7 @@
                         A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await controller.UploadObligations(authority, fixture.Create<Guid>()) as ViewResult;
+            var result = await controller.UploadObligations(authority, TestFixture.Create<Guid>(), TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -451,7 +449,7 @@
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
-            var request = fixture.Create<SubmitSchemeObligation>();
+            var request = TestFixture.Create<SubmitSchemeObligation>();
 
             A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model)).Returns(request);
 
@@ -467,7 +465,7 @@
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
-            var obligationUploadId = fixture.Create<Guid>();
+            var obligationUploadId = TestFixture.Create<Guid>();
 
             A.CallTo(() => client.SendAsync(A<string>._, A<SubmitSchemeObligation>._)).Returns(obligationUploadId);
 
@@ -499,7 +497,7 @@
             var model = new UploadObligationsViewModel()
             {
                 File = A.Fake<HttpPostedFileBase>(),
-                Authority = fixture.Create<CompetentAuthority>()
+                Authority = TestFixture.Create<CompetentAuthority>()
             };
             return model;
         }
