@@ -303,11 +303,13 @@
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert
-            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status == NoteStatus.Draft))
+            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted };
+
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => acceptedList.Contains(e.Status)))
             {
                 evidenceNoteRowViewModel.DisplayViewLink.Should().BeTrue();
             }
-            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status != NoteStatus.Draft))
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => !acceptedList.Contains(e.Status)))
             {
                 evidenceNoteRowViewModel.DisplayViewLink.Should().BeFalse();
             }

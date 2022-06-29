@@ -15,6 +15,13 @@
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
+    @if (Model.HasSubmittedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
@@ -26,14 +33,25 @@
 }
 
 <div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0">
-    <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Transferred by</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
     </div>
-    <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="recipient" class="govuk-label--s">Recipient</span><br />
         <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
     </div>
+
+    @if (Model.EditMode)
+    {
+        <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+            @Html.NavigationRouteLink("Edit recipients and categories", "Edit recipients and categories for transfer note" + Model.Reference, "Scheme_edit_transfer_notes", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+        </div>
+    }
+    else
+    {
+        <div class="govuk-grid-column-one-third">&nbsp;</div>
+    }
 </div>
 <div class="ui-helper-clearfix"></div>
 <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Total transferred (tonnes)</h2>
