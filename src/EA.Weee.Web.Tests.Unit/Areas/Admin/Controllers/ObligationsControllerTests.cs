@@ -231,7 +231,7 @@
         [Fact]
         public void UploadObligationsGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?) }, null)
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?), typeof(int?) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
