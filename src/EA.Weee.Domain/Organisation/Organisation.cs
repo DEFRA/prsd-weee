@@ -174,6 +174,6 @@
             }
         }
 
-        public List<Scheme> Schemes { get; set; }
+        public virtual List<Scheme> Schemes { get; set; }
     }
 }
