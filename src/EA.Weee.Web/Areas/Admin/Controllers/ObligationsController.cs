@@ -81,7 +81,8 @@
                 {
                     CompetentAuthority = authority,
                     ErrorData = errorData,
-                    ObligationData = schemeObligationData
+                    ObligationData = schemeObligationData,
+                    SelectedComplianceYear = selectedComplianceYear
                 });
 
                 return View(model);
