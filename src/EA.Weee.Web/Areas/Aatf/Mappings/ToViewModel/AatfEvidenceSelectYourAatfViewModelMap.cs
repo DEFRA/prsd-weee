@@ -16,10 +16,10 @@
 
             var aatfList = new List<AatfData>();
 
-            if (source.CurrentDate.Date >= source.EvidenceSiteSelectionStartDateFrom && source.AatfList != null)
+            if (source.AatfList != null)
             {
                 aatfList = source.AatfList
-                    .Where(a => a.EvidenceSiteDisplay)
+                    .Where(a => a.EvidenceSiteDisplay && a.ApprovalDate.HasValue && a.ApprovalDate.Value.Date > source.EvidenceSiteSelectionStartDateFrom)
                     .GroupBy(a => a.AatfId)
                     .Select(a => a.OrderByDescending(a1 => a1.ComplianceYear).First())
                     .OrderBy(a => a.Name)

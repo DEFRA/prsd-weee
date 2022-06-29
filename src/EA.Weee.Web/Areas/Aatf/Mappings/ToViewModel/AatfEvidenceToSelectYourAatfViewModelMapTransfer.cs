@@ -10,8 +10,6 @@
 
         public List<AatfData> AatfList { get; set; }
 
-        public DateTime CurrentDate { get; set; }
-
         public DateTime EvidenceSiteSelectionStartDateFrom { get; set; }
     }
 }
