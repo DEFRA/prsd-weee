@@ -18,7 +18,7 @@
             //TODO: Take the ComplianceYears property of the UploadObligationsViewModelMapTransfer source and create the ComplianceYearList on UploadObligationsViewModel. Also need unit tests for these properties
             
             model.ComplianceYearList = new List<int>() { 2022, 2021 };
-            model.SelectedComplianceYear = source.SelectedComplianceYear;
+            model.SelectedComplianceYear = source.SelectedComplianceYear ?? model.ComplianceYearList.ElementAt(0);
             SetErrors(source, model);
 
             SetSchemeObligations(source, model);
