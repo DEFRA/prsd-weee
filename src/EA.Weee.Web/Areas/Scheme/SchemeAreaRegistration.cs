@@ -20,7 +20,7 @@
                 name: "Scheme_submitted_transfer",
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/submitted-transfer/{evidenceNoteId}",
                 defaults: new { action = "SubmittedTransfer", controller = "OutgoingTransfers", area = "Scheme" },
-                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+                namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: "Scheme_view_transfer",
