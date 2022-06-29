@@ -21,19 +21,26 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public GetAllNotesRequestHandler(IWeeeAuthorization authorization, IEvidenceDataAccess noteDataAccess, IMapper mapper)
+        public GetAllNotesRequestHandler(IWeeeAuthorization authorization, 
+            IEvidenceDataAccess noteDataAccess, 
+            IMapper mapper, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
         public async Task<List<EvidenceNoteData>> HandleAsync(GetAllNotes message)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
+            authorization.EnsureUserInRole(Roles.InternalUser);
 
-            var noteFilter = new NoteFilter(2022)
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+
+            var noteFilter = new NoteFilter(currentDate.Year)
             {
                 NoteTypeFilter = message.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
