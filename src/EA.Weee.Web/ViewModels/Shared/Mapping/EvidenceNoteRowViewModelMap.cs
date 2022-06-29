@@ -10,14 +10,14 @@
         {
             return new EvidenceNoteRowViewModel
             {
-                Recipient = source.SchemeData.SchemeName,
+                Recipient = source.RecipientSchemeData.SchemeName,
                 ReferenceId = source.Reference,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,
                 Id = source.Id,
                 Type = source.Type,
                 SubmittedDate = source.SubmittedDate,
-                SubmittedBy = source.Type == NoteType.Transfer ? source.SchemeData.SchemeName : source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty,
+                SubmittedBy = source.Type == NoteType.Transfer ? source.OrganisationSchemaData.SchemeName : source.SubmittedDate.HasValue ? source.AatfData.Name : string.Empty,
                 RejectedDate = source.RejectedDate,
                 ReturnedDate = source.ReturnedDate,
                 RejectedReason = source.RejectedReason,

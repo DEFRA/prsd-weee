@@ -38,10 +38,14 @@
                         .Select(ntt => ntt.Received).Sum(),
                     t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
                         .Select(ntt => ntt.Reused).Sum())).ToList();
-            data.SchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient);
+            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Recipient);
             data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Organisation);
             data.AatfData = mapper.Map<Aatf, AatfData>(source.Aatf);
             data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Recipient.Organisation);
+            if (source.Organisation.Schemes != null && source.Organisation.Schemes.Any())
+            {
+                data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Organisation.Schemes.ElementAt(0));
+            }
             data.RecipientId = source.Recipient.Id;
 
             return data;
