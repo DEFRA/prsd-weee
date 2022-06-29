@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
     using Core.AatfEvidence;
-    using Core.Helpers;
     using CuttingEdge.Conditions;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
@@ -43,6 +43,7 @@
                 Status = source.TransferEvidenceNoteData.Status,
                 SchemeId = source.SchemeId,
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
+                SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>

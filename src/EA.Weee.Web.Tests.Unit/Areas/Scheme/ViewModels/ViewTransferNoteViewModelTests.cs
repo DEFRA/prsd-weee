@@ -94,7 +94,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void RedirectTab_GivenNoteStatusIsNotDraft_TabShouldBeViewAndTransferEvidence(NoteStatus status)
         {
-            if (status == NoteStatus.Draft)
+            if (status == NoteStatus.Draft || status == NoteStatus.Submitted)
             {
                 return;
             }
