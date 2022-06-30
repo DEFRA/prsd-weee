@@ -14,6 +14,8 @@
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
     </h1>
 
+    @Html.Gds().ValidationSummary()
+
     @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
