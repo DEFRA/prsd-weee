@@ -1,0 +1,51 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
+@{
+
+    var navigateBackToSelectedTab = Model.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+
+    string title;
+    if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
+    {
+        title = "Approved evidence note";
+    }
+    else if(Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
+    {
+        title = "Rejected evidence note";
+    }
+    else if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Returned))
+    {
+        title = "Returned evidence note";
+    }
+    else
+    {
+        title = "View evidence note";
+    }
+
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section full_main_content{
+
+    @if (Model.DisplayMessage)
+    {
+    @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+            "Manage evidence notes")
+            )
+    @(this.WeeeGds().Panel(Model.SuccessMessage))
+    }
+    else
+    {
+    @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
+            )
+    }
+    <div class="govuk-!-margin-top-3"></div>
+    @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
+}

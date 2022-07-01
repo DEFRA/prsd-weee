@@ -25,6 +25,19 @@
         @Html.Gds().ValidationSummary()
         @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
 
+        <!-- radiobuttons for approved only -->
+        <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note transfer</p>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
+            @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Choose whether to approve, reject or return the evidence note transfer",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked,
+                Model.HintItems)
+        </div>
+
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
         </div>

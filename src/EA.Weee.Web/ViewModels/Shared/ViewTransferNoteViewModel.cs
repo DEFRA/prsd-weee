@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using ManageEvidenceNotes;
-    using Web.ViewModels.Shared;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public class ViewTransferNoteViewModel : ViewEvidenceNoteViewModel
     {
