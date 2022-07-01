@@ -344,8 +344,26 @@
             var model = map.Map(source);
 
             //assert
-            //Two times per TransferEvidenceNoteTonnageData
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(A<decimal?>._)).MustHaveHappened(20, Times.Exactly);
+            //Two times per TransferEvidenceNoteTonnageData with tonnage
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(A<decimal?>._)).MustHaveHappened(18, Times.Exactly);
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenTransfer_DisplayCategoryDoesNotDisplayZeroedCategories()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData())
+                    .With(x => x.RecipientOrganisationData, CreateOrganisationData())
+                    .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageDataWithNoTonnage()).Create(),
+                false);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.TotalCategoryValues.Should().OnlyContain(x => x.DisplaySummedCategory == false);
         }
 
         private OrganisationData CreateOrganisationData()
@@ -480,6 +498,130 @@
                 OriginalReference = 1002,
                 Type = NoteType.Transfer,
                 EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 20, 20, 10, 10)
+            };
+
+            // Note 3 - Cat4
+            var note3Cat4 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf2,
+                OriginalNoteId = note3Id,
+                OriginalReference = 1002,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, null, null, null, null)
+            };
+
+            return new List<TransferEvidenceNoteTonnageData>() { noteCat1, noteCat2, noteCat3, note2Cat1, note2Cat2, note2Cat3, note3Cat1, note3Cat2, note3Cat3, note3Cat4 };
+        }
+
+        private IList<TransferEvidenceNoteTonnageData> CreateTransferEvidenceNoteTonnageDataWithNoTonnage()
+        {
+            //Aatf1
+            var aatf1 = new AatfData()
+            {
+                Name = "Test One",
+                ApprovalNumber = "Approval",
+            };
+
+            //Aatf2
+            var aatf2 = new AatfData()
+            {
+                Name = "Test Two",
+                ApprovalNumber = "ApprovalTwo",
+            };
+
+            //Note Ids
+            var note1Id = Guid.NewGuid();
+            var note2Id = Guid.NewGuid();
+            var note3Id = Guid.NewGuid();
+
+            // Note 1 - Cat1
+            var noteCat1 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note1Id,
+                OriginalReference = 1000,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.LargeHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 1 - Cat2
+            var noteCat2 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note1Id,
+                OriginalReference = 1000,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.SmallHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 1 - Cat3
+            var noteCat3 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note1Id,
+                OriginalReference = 1000,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 0, 0, 0, 0)
+            };
+
+            // Note 2 - Cat1
+            var note2Cat1 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note2Id,
+                OriginalReference = 1001,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.LargeHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 2 - Cat2
+            var note2Cat2 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note2Id,
+                OriginalReference = 1001,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.SmallHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 2 - Cat3
+            var note2Cat3 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf1,
+                OriginalNoteId = note2Id,
+                OriginalReference = 1001,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 0, 0, 0, 0)
+            };
+
+            // Note 3 - Cat1
+            var note3Cat1 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf2,
+                OriginalNoteId = note3Id,
+                OriginalReference = 1002,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.LargeHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 3 - Cat2
+            var note3Cat2 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf2,
+                OriginalNoteId = note3Id,
+                OriginalReference = 1002,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.SmallHouseholdAppliances, 0, 0, 0, 0)
+            };
+
+            // Note 3 - Cat3
+            var note3Cat3 = new TransferEvidenceNoteTonnageData()
+            {
+                OriginalAatf = aatf2,
+                OriginalNoteId = note3Id,
+                OriginalReference = 1002,
+                Type = NoteType.Transfer,
+                EvidenceTonnageData = new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 0, 0, 0, 0)
             };
 
             // Note 3 - Cat4
