@@ -4,7 +4,7 @@
 
 <ul class="govuk-footer__inline-list">
     @* Show terms and conditions and privacy policy only on external site *@
-    @if ((HttpContext.Current.Session["IsInternalUser"] == null) || ((bool)HttpContext.Current.Session["IsInternalUser"] == false))
+    @if ((HttpContext.Current.Session["ShowFooterAndLinks"] == null) || ((bool)HttpContext.Current.Session["ShowFooterAndLinks"] == false))
     {
         <li class="govuk-footer__inline-list-item">
             <a href="~/new-user/terms-and-conditions" class="govuk-footer__link" onclick="ga('send', 'event', 'Policies', 'Terms and conditions');">Terms and conditions</a>
