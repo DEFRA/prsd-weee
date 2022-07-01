@@ -92,16 +92,17 @@
         [HttpGet]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
         {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
             using (var client = apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                var result = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
-
-                ReviewTransferNoteViewModel model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, result, null)
+                ReviewTransferNoteViewModel model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
                     SchemeId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear
+                    SelectedComplianceYear = selectedComplianceYear, 
+                    ReturnToView = returnToView
                 });
 
                 return this.View("SubmittedTransfer", model);

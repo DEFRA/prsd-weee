@@ -40,15 +40,15 @@
                 switch (Status)
                 {
                     case NoteStatus.Draft:
-                        return "Draft evidence note";
+                        return "Draft evidence note transfer";
                     case NoteStatus.Rejected:
-                        return "Rejected evidence note";
+                        return "Rejected evidence note transfer";
                     case NoteStatus.Approved:
-                        return "Approved evidence note";
+                        return "Approved evidence note transfer";
                     case NoteStatus.Returned:
-                        return "Returned evidence note";
+                        return "Returned evidence note transfer";
                     case NoteStatus.Submitted:
-                        return "Submitted evidence note";
+                        return "Submitted evidence note transfer";
                     default:
                         return string.Empty;
                 }
