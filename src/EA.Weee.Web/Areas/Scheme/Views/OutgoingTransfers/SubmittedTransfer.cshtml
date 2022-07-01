@@ -25,6 +25,8 @@
         @Html.Gds().ValidationSummary()
         @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
 
+        <div class="govuk-!-margin-top-7"></div>
+
         <!-- radiobuttons for approved only -->
         <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note transfer</p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
@@ -37,6 +39,8 @@
                 RadioButtonLayout.Stacked,
                 Model.HintItems)
         </div>
+
+        <div class="govuk-!-margin-top-7"></div>
 
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
