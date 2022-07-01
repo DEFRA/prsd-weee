@@ -17,6 +17,7 @@
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IUserInfoClient> userInfoClient;
+        private HttpContext context = HttpContext.Current;
 
         public WeeeAuthorization(Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager, Func<IUserInfoClient> userInfoClient)
         {
@@ -58,14 +59,18 @@
 
         public void SignOut()
         {
+            context.Session["IsInternalUser"] = false;
             authenticationManager.SignOut();
         }
 
         private async Task<ActionResult> GetLoginAction(string accessToken)
         {
+            context.Session["IsInternalUser"] = false;
+
             var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
             if (userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea))
             {
+                context.Session["IsInternalUser"] = true;
                 return new RedirectToRouteResult("InternalLogin", null);
             }
 
