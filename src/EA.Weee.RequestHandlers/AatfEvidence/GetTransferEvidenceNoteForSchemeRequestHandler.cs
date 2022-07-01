@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using System.Threading.Tasks;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;

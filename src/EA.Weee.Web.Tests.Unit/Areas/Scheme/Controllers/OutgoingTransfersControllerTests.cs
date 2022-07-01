@@ -19,7 +19,6 @@
     using System.Web.Mvc;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
-    using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
