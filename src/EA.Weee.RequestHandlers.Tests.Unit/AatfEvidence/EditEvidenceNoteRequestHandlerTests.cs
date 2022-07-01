@@ -14,7 +14,9 @@
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using RequestHandlers.AatfEvidence;
+    using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
@@ -168,6 +170,7 @@
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
@@ -184,9 +187,10 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, currentDate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
+            SystemTime.Unfreeze();
         }
 
         [Theory]
@@ -194,9 +198,11 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
         {
             //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
-            var currentDate = TestFixture.Create<DateTime>();
+           
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -211,9 +217,12 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._, currentDate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._,
+                A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
+
+            SystemTime.Unfreeze();
         }
 
         [Theory]
@@ -221,9 +230,10 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.NoteStatus status)
         {
             //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
-            var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -238,9 +248,10 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status, currentDate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
+            SystemTime.Unfreeze();
         }
 
         [Fact]

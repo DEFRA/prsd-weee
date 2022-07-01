@@ -124,6 +124,7 @@
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYears.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
+    <Compile Include="Admin\GetAllNotes.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetEEEWEEEDataReturnSchemesByComplianceYear.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />

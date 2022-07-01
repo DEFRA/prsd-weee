@@ -8,6 +8,7 @@
     using Base;
     using Domain.AatfReturn;
     using Domain.Evidence;
+    using EA.Weee.Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -1274,6 +1275,120 @@
 
                 notes.Count.Should().Be(1);
                 notes.ElementAt(0).Id.Should().Be(note2CurrentNote.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllNotes_GivenMultipleNoteType_ShouldReturnAllNotes_OfThoseType()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+                var complianceYear = 2022;
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                context.Organisations.Add(organisation);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: complianceYear);
+
+                context.Aatfs.Add(aatf1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note1);
+
+                var note2 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note2);
+
+                var note3 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note3);
+
+                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote1);
+                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote2);
+                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote3);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new NoteFilter(complianceYear)
+                {
+                    NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote, NoteType.TransferNote },
+                    OrganisationId = organisation.Id,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(6);
+                notes.Where(x => x.NoteType == NoteType.EvidenceNote).Count().Should().Be(3);
+                notes.Where(x => x.NoteType == NoteType.TransferNote).Count().Should().Be(3);
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteTypeData))]
+        public async Task GetAllNotes_GivenSingleNoteType_ShouldReturnOnlyNotes_OfThoseType(NoteType noteType)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+                var complianceYear = 2022;
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                context.Organisations.Add(organisation);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: complianceYear);
+
+                context.Aatfs.Add(aatf1);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note1);
+
+                var note2 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note2);
+
+                var note3 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
+                note3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(note3);
+
+                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote1);
+                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote2);
+                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                transferNote3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                context.Notes.Add(transferNote3);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new NoteFilter(complianceYear)
+                {
+                    NoteTypeFilter = new List<NoteType> { noteType },
+                    OrganisationId = organisation.Id,
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Submitted },
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.Count.Should().Be(3);
+                notes.Should().OnlyContain(x => x.NoteType == noteType);
             }
         }
     }

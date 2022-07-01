@@ -87,6 +87,7 @@
             }
 
             var notes = context.Notes
+                .Include(n => n.Organisation.Schemes)
                .Where(p => p.ComplianceYear.Equals(filter.ComplianceYear)
                             && allowedNoteTypes.Contains(p.NoteType.Value)
                             && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)

@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
+    using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core;
-    using ViewModels;
 
     public class EvidenceNotesViewModelTransfer
     {
