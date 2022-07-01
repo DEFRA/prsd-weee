@@ -107,7 +107,10 @@
                 {
                     ReferenceId = nt.First().OriginalReference,
                     Type = nt.First().Type,
-                    CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId).Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
+                    CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId)
+                    .Where(ntt => (ntt.EvidenceTonnageData.TransferredReceived.HasValue && ntt.EvidenceTonnageData.TransferredReceived != 0)
+                    || (ntt.EvidenceTonnageData.TransferredReused.HasValue && ntt.EvidenceTonnageData.TransferredReused != 0))
+                    .Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {
                         Received = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReceived),
                         Reused = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReused)
