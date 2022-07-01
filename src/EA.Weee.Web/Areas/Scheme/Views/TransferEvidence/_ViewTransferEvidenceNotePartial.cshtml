@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Core.Helpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewTransferNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
 
 <h1 class="govuk-heading-l">Evidence note (transfer)</h1>
 
@@ -14,6 +14,13 @@
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
+
+    @if (Model.HasApprovedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate.ToDisplayString(), "govuk-grid-column-one-quarter")
+        </div>
+    }
 
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")

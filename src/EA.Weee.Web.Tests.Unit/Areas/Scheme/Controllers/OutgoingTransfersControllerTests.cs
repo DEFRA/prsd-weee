@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
     using AutoFixture;
+    using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -14,7 +16,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.AatfEvidence;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.AatfEvidence;
@@ -399,6 +400,7 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
+            model.SelectedValue = "Approve evidence note transfer";
             var organisationName = "OrganisationName";
             A.CallTo(() => cache.FetchOrganisationName(model.OrganisationId)).Returns(organisationName);
 
@@ -431,9 +433,8 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
-
+            Guid schemeId = model.ViewTransferNoteViewModel.SchemeId;
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
 
             //act
@@ -442,7 +443,7 @@
             //assert
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                     A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t => t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                                                                              t.SchemeId == model.OrganisationId))).MustHaveHappenedOnceExactly();
+                                                                              t.SchemeId == schemeId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
