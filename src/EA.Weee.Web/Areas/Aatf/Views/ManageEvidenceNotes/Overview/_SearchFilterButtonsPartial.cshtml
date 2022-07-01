@@ -2,15 +2,15 @@
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-    <div class="govuk-button-group govuk-!-padding-top-4 govuk-!-padding-left-1 govuk-!-padding-right-1">
+<div class="govuk-button-group govuk-!-padding-top-4 govuk-!-padding-left-1 govuk-!-padding-right-1">
 
-        @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply" }, secondaryButton: false, filterButton: true)
+    @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply" }, secondaryButton: false, filterButton: true)
 
-       
-        @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
-        new { organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString() }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
-       
-    </div>
- 
+
+    @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
+    new { organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString() }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+
+</div>
+

@@ -76,7 +76,7 @@
         public void Map_GivenEvidenceNoteDataWithNoSubmittedDate_PropertiesShouldBeMapped()
         {
             //arrange
-            var evidenceNoteData = new EvidenceNoteData() { SchemeData = new SchemeData() };
+            var evidenceNoteData = new EvidenceNoteData() { RecipientSchemeData = new SchemeData() };
 
             //act
             var result = map.Map(evidenceNoteData);
@@ -86,14 +86,14 @@
         }
 
         [Fact]
-        public void Map_GivenTransferNoteData_SubmittedByShouldBeSet()
+        public void Map_GivenTransferNoteData_SubmittedByShouldBeSet_ToSchemeName()
         {
             //arrange
-            var organisationName = fixture.Create<string>();
+            var schemeName = fixture.Create<string>();
             var evidenceNoteData = new EvidenceNoteData() 
             { 
-                SchemeData = new SchemeData(), 
-                OrganisationData = new OrganisationData() { OrganisationName = organisationName },
+                OrganisationSchemaData = new SchemeData() { SchemeName = schemeName},
+                RecipientSchemeData = new SchemeData(),
                 Type = NoteType.Transfer
             };
 
@@ -101,7 +101,7 @@
             var result = map.Map(evidenceNoteData);
 
             //assert
-            result.SubmittedBy.Should().Be(organisationName);
+            result.SubmittedBy.Should().Be(schemeName);
         }
     }
 }

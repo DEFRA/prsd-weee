@@ -101,16 +101,6 @@
         }
 
         [Fact]
-        public async void IndexGet_CurrentDateApiShouldBeCalled()
-        {
-            //act
-            await controller.Index(TestFixture.Create<Guid>());
-
-            //assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToHolding()
         {
             var organisationId = Guid.NewGuid();
@@ -184,8 +174,7 @@
             //assert
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
                 A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
-                    v => v.CurrentDate == currentDate &&
-                         v.AatfList == aatfs &&
+                    v => v.AatfList == aatfs &&
                          v.OrganisationId == organisationId &&
                          v.EvidenceSiteSelectionStartDateFrom == evidenceNoteStartDate))).MustHaveHappenedOnceExactly();
         }
@@ -244,16 +233,6 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidModel_CurrentDateApiShouldBeCalled()
-        {
-            var organisationId = Guid.NewGuid();
-
-            await controller.Index(organisationId);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async void IndexPost_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeBuiltAsync()
         {
             //arrange
@@ -274,8 +253,7 @@
             //assert
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
                 A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
-                    v => v.CurrentDate == currentDate &&
-                         v.AatfList == aatfs &&
+                    v => v.AatfList == aatfs &&
                          v.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
         }
 

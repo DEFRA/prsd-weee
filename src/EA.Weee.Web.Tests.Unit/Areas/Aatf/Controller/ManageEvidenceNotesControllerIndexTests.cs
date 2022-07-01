@@ -16,6 +16,7 @@
     using EA.Prsd.Core;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
@@ -645,15 +646,15 @@
             // order by SchemeName -  bba, ccc, fgg, iioo, pppp, ree, trrr, vva, xxsss 
             var schemeDataListOrdered = new List<SchemeData> { scheme2, scheme3, scheme9, scheme5, scheme6, scheme8, scheme4, scheme1, scheme7 };
 
-            var note1 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme1).Create();
-            var note2 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme2).Create();
-            var note3 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme3).Create();
-            var note4 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme4).Create();
-            var note5 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme5).Create();
-            var note6 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme6).Create();
-            var note7 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme7).Create();
-            var note8 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme8).Create();
-            var note9 = Fixture.Build<EvidenceNoteData>().With(x => x.SchemeData, scheme9).Create();
+            var note1 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme1).Create();
+            var note2 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme2).Create();
+            var note3 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme3).Create();
+            var note4 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme4).Create();
+            var note5 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme5).Create();
+            var note6 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme6).Create();
+            var note7 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme7).Create();
+            var note8 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme8).Create();
+            var note9 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme9).Create();
 
             var notes = new List<EvidenceNoteData> { note1, note2, note3, note4, note5, note6, note7, note8, note9 };
 
@@ -705,9 +706,9 @@
         {
             // arrange
             var schemeData1 = Fixture.Create<SchemeData>();
-            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.SchemeData, schemeData1).Create();
+            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData1).Create();
             var schemeData2 = Fixture.Create<SchemeData>();
-            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.SchemeData, schemeData2).Create();
+            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData2).Create();
 
             var notes = new List<EvidenceNoteData>();
             notes.Add(evidenceNoteData1);
@@ -732,9 +733,9 @@
         {
             // arrange
             var schemeData1 = Fixture.Build<SchemeData>().With(sc => sc.SchemeName, "aaaa").Create();
-            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.SchemeData, schemeData1).Create();
+            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData1).Create();
             var schemeData2 = Fixture.Build<SchemeData>().With(sc => sc.SchemeName, "gggg").Create();
-            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.SchemeData, schemeData2).Create();
+            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData2).Create();
 
             var notes = new List<EvidenceNoteData>();
             notes.Add(evidenceNoteData1);

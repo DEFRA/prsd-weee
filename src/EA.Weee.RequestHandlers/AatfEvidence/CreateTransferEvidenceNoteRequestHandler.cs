@@ -12,6 +12,7 @@
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
+    using Factories;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
@@ -78,7 +79,7 @@
 
                     transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme, transferCategories,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
-                        userContext.UserId.ToString(), currentDate);
+                        userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
                 }
                 catch
                 {

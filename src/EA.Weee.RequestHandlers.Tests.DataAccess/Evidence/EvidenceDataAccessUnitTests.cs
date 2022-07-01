@@ -189,5 +189,15 @@
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
         }
+
+        [Fact]
+        public async Task AddTransferNote_TransferNote_ShouldHave_HouseholdWasteType()
+        {
+            //act
+            await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), DateTime.Now);
+
+            //assert
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(x => x.WasteType == WasteType.HouseHold))).MustHaveHappenedOnceExactly();
+        }
     }
 }
