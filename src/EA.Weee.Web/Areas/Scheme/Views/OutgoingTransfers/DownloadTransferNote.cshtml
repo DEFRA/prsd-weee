@@ -6,45 +6,45 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
 @{
-
     var navigateBackToSelectedTab = Model.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
 
     string title;
     if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
     {
-        title = "Approved evidence note";
+        title = "Approved evidence note transfer";
     }
     else if(Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
     {
-        title = "Rejected evidence note";
+        title = "Rejected evidence note transfer";
     }
     else if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Returned))
     {
-        title = "Returned evidence note";
+        title = "Returned evidence note transfer";
     }
     else
     {
-        title = "View evidence note";
+        title = "View evidence note transfer";
     }
 
     ViewBag.Title = title + " - GOV.UK";
 }
 
-@section full_main_content{
+@section full_main_content
+{
 
     @if (Model.DisplayMessage)
     {
-    @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
-            "Manage evidence notes")
-            )
-    @(this.WeeeGds().Panel(Model.SuccessMessage))
+        @(this.WeeeGds().BackLink(
+                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+                "Manage evidence notes")
+                )
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-    @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
-            )
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
+                )
     }
     <div class="govuk-!-margin-top-3"></div>
     @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
