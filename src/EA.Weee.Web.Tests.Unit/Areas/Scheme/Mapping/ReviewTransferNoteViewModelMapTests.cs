@@ -8,6 +8,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
