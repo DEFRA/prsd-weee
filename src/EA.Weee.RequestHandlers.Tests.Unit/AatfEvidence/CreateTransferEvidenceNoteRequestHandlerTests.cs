@@ -16,6 +16,7 @@
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
@@ -218,11 +219,11 @@
         public async Task HandleAsync_GivenValidRequest_TransferNoteShouldBeAdded()
         {
             //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+            SystemTime.Freeze(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(request.SchemeId)).Returns(scheme);
             A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(A<List<Guid>>._)).Returns(complianceYear);
-
-            var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             //act
@@ -233,7 +234,8 @@
                 evidenceDataAccess.AddTransferNote(organisation, scheme,
                     A<List<NoteTransferCategory>>.That.Matches(t => t.Count.Equals(request.CategoryIds.Count)),
                     A<List<NoteTransferTonnage>>.That.Matches(t => 
-                        t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, complianceYear, userId.ToString(), currentDate)).MustHaveHappenedOnceExactly();
+                        t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, complianceYear, userId.ToString(), 
+                    A<DateTime>.That.Matches(d => d.Year == currentDate.Year && d.Month == currentDate.Month && d.Day == currentDate.Day))).MustHaveHappenedOnceExactly();
 
             foreach (var transferValue in request.TransferValues)
             {
@@ -256,6 +258,7 @@
                             A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
                     .MustHaveHappenedOnceExactly();
             }
+            SystemTime.Unfreeze();
         }
 
         [Fact]

@@ -347,6 +347,7 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferredOutEvidenceNotesSchemeViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
+    <Compile Include="RazorHelpers\GdsWarningUnitTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelMapTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteViewModelTests.cs" />

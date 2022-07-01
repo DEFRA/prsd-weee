@@ -3,6 +3,9 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Scheme;
 
     public partial class Organisation : Entity
     {
@@ -170,5 +173,7 @@
                 }
             }
         }
+
+        public virtual List<Scheme> Schemes { get; set; }
     }
 }

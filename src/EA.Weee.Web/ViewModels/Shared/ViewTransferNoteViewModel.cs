@@ -21,7 +21,7 @@
         {
             get
             {
-                if (Status.Equals(NoteStatus.Draft))
+                if (Status.Equals(NoteStatus.Draft) || Status.Equals(NoteStatus.Submitted))
                 {
                     return ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
                 }
