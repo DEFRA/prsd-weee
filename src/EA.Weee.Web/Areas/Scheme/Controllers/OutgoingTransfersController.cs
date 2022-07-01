@@ -1,13 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -75,15 +80,17 @@
         [HttpGet]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-
             using (var client = apiClient())
             {
-                var noteData = await client.SendAsync(User.GetAccessToken(),
-                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-                var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
-                    noteData, null));
+                var result = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                ReviewTransferNoteViewModel model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, result, null)
+                {
+                    SchemeId = pcsId,
+                    SelectedComplianceYear = selectedComplianceYear
+                });
 
                 return this.View("SubmittedTransfer", model);
             }
@@ -95,20 +102,41 @@
         {
             await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-            if (ModelState.IsValid)
+            using (var client = this.apiClient())
             {
-                //TODO: set note status request
-            }
-            
-            using (var client = apiClient())
-            {
-                var noteData = await client.SendAsync(User.GetAccessToken(),
-                    new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+                if (ModelState.IsValid)
+                {
+                    var status = model.SelectedEnumValue;
 
-                var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId,
-                    noteData, null));
+                    var request = new SetNoteStatus(model.ViewTransferNoteViewModel.EvidenceNoteId, status, model.Reason);
 
-                return this.View("SubmittedTransfer", refreshedModel);
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
+
+                    await client.SendAsync(User.GetAccessToken(), request);
+
+                    var requestRefreshed = new GetTransferEvidenceNoteForSchemeRequest(request.NoteId);
+
+                    TransferEvidenceNoteData note = await client.SendAsync(User.GetAccessToken(), requestRefreshed);
+
+                    var modelRefreshed = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId, note, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                    {
+                        SchemeId = model.OrganisationId,
+                        SelectedComplianceYear = model.ViewTransferNoteViewModel.ComplianceYear
+                    });
+
+                    return View("DownloadTransferNote", modelRefreshed);
+                }
+
+                TransferEvidenceNoteData noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+
+                var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.ViewTransferNoteViewModel.SchemeId, noteData, null)
+                {
+                    SchemeId = model.ViewTransferNoteViewModel.SchemeId,
+                    SelectedComplianceYear = model.ViewTransferNoteViewModel.SelectedComplianceYear.Value
+                });
+
+                return View("SubmittedTransfer", refreshedModel);
             }
         }
     }

@@ -4,6 +4,7 @@
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
@@ -84,12 +85,13 @@
                     switch (note.Status)
                     {
                         case NoteStatus.Submitted:
-                            model.SuccessMessage =
-                            $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
                             break;
                         case NoteStatus.Draft:
-                            model.SuccessMessage =
-                                $"You have successfully saved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
+                            model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
+                            break;
+                        case NoteStatus.Approved:
+                            model.SuccessMessage = $"You have approved the evidence note transfer with reference ID E{note.Reference}";
                             break;
                     }
                 }
