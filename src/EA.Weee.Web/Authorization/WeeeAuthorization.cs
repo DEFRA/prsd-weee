@@ -59,18 +59,18 @@
 
         public void SignOut()
         {
-            context.Session["IsInternalUser"] = false;
+            context.Session["ShowFooterAndLinks"] = false;
             authenticationManager.SignOut();
         }
 
         private async Task<ActionResult> GetLoginAction(string accessToken)
         {
-            context.Session["IsInternalUser"] = false;
+            context.Session["ShowFooterAndLinks"] = false;
 
             var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
             if (userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea))
             {
-                context.Session["IsInternalUser"] = true;
+                context.Session["ShowFooterAndLinks"] = true;
                 return new RedirectToRouteResult("InternalLogin", null);
             }
 
