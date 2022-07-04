@@ -96,7 +96,7 @@
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                ReviewTransferNoteViewModel model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
+                var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
                     SchemeId = pcsId,
                     SelectedComplianceYear = selectedComplianceYear, 
@@ -136,8 +136,6 @@
                         SelectedComplianceYear = model.ViewTransferNoteViewModel.ComplianceYear
                     });
 
-                    // "Save and Continue" button on Approval still is to be fixed.
-                    //return View("~/Areas/Scheme/Views/OutgoingTransfers/DownloadTransferNote", modelRefreshed);
                     return View("DownloadTransferNote", modelRefreshed);
                 }
 
