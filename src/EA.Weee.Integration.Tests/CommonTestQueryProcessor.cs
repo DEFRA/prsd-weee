@@ -78,6 +78,11 @@
             return dbContext.Roles.First(c => c.Description.Equals("Administrator"));
         }
 
+        public Role GetInternalUserRole()
+        {
+            return dbContext.Roles.First(c => c.Description.Equals("Standard"));
+        }
+
         public ObligationUpload GetObligationUploadById(Guid id)
         {
             return dbContext.ObligationUploads.First(o => o.Id == id);
