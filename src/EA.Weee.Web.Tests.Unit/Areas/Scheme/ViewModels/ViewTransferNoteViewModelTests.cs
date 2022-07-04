@@ -158,12 +158,12 @@
         }
 
         [Theory]
-        [InlineData(NoteStatus.Draft, "Draft evidence note")]
+        [InlineData(NoteStatus.Draft, "Draft evidence note transfer")]
         [InlineData(NoteStatus.Void, "")]
-        [InlineData(NoteStatus.Rejected, "Rejected evidence note")]
-        [InlineData(NoteStatus.Returned, "Returned evidence note")]
-        [InlineData(NoteStatus.Submitted, "Submitted evidence note")]
-        [InlineData(NoteStatus.Approved, "Approved evidence note")]
+        [InlineData(NoteStatus.Rejected, "Rejected evidence note transfer")]
+        [InlineData(NoteStatus.Returned, "Returned evidence note transfer")]
+        [InlineData(NoteStatus.Submitted, "Submitted evidence note transfer")]
+        [InlineData(NoteStatus.Approved, "Approved evidence note transfer")]
         public void TabName_CorrectlyReturnsTabName_GivenStatus(NoteStatus status, string expectedTabName)
         {
             //arrange
