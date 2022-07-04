@@ -7,18 +7,19 @@
 
 @model ManageEvidenceNotesViewModel
 @{
-    ViewBag.Title = "Manage evidence notes";
+    var title = "Manage evidence notes";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.Index())))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        @ViewBag.Title
+        @title
     </h1>
 </header>
 
-<ul class="govuk-tabs__list">
+<ul class="govuk-tabs__list govuk-!-padding-top-5">
     @this.WeeeGds().Tab("View all evidence notes",
         Url.Action("Index", "ManageEvidenceNotes",
             new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString() }),
