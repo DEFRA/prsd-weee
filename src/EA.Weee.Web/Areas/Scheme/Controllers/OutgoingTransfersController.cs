@@ -1,13 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
-    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -138,6 +136,8 @@
                         SelectedComplianceYear = model.ViewTransferNoteViewModel.ComplianceYear
                     });
 
+                    // "Save and Continue" button on Approval still is to be fixed.
+                    //return View("~/Areas/Scheme/Views/OutgoingTransfers/DownloadTransferNote", modelRefreshed);
                     return View("DownloadTransferNote", modelRefreshed);
                 }
 
