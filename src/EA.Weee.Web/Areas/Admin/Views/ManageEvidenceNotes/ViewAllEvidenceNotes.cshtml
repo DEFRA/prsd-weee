@@ -39,11 +39,14 @@
                                 <th class="govuk-table__header" style="vertical-align: bottom;" scope="col">
                                     Submitted by
                                 </th>
-                                <th class="govuk-table__header"  style="vertical-align: bottom;" scope="col">
+                                <th class="govuk-table__header" style="vertical-align: bottom;" scope="col">
                                     Recipient
-                                </th> 
+                                </th>
                                 <th class="govuk-table__header" style="vertical-align: bottom;" scope="col">
                                     Status
+                                </th>
+                                <th class="govuk-table__header">
+                                    @Html.Gds().VisuallyHidden("actions")
                                 </th>
                             </tr>
                         </thead>
@@ -52,20 +55,23 @@
                             {
                                 foreach (var note in Model.EvidenceNotesDataList)
                                 {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                        @if (note.SubmittedDate.HasValue)
-                                        {
-                                            <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="govuk-table__cell"></td>
-                                        }
-                                        <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                        <td class="govuk-table__cell">@note.Recipient</td>
-                                        <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                    </tr>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                @if (note.SubmittedDate.HasValue)
+                                {
+                                    <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                }
+                                else
+                                {
+                                    <td class="govuk-table__cell"></td>
+                                }
+                                <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                <td class="govuk-table__cell">@note.Recipient</td>
+                                <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                <td class="govuk-table__cell">
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                </td>
+                            </tr>
                                 }
                             }
                             else
