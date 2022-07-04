@@ -36,7 +36,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
-                ReturnToView = source.ReturnToView ?? false,
+                ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
@@ -45,7 +45,8 @@
                 SchemeId = source.SchemeId,
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
                 SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
-                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
+                ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
                     new TotalCategoryValue(n.First().EvidenceTonnageData.CategoryId)

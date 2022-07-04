@@ -4,20 +4,21 @@
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
+@*@model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel*@
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
 @{
-    var navigateBackToSelectedTab = Model.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+    var navigateBackToSelectedTab = Model.ViewTransferNoteViewModel.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
 
     string title;
-    if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
+    if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
     {
         title = "Approved evidence note transfer";
     }
-    else if(Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
+    else if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
     {
         title = "Rejected evidence note transfer";
     }
-    else if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Returned))
+    else if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Returned))
     {
         title = "Returned evidence note transfer";
     }
@@ -32,20 +33,20 @@
 @section full_main_content
 {
 
-    @if (Model.DisplayMessage)
+    @if (Model.ViewTransferNoteViewModel.DisplayMessage)
     {
         @(this.WeeeGds().BackLink(
-                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }),
                 "Manage evidence notes")
                 )
-        @(this.WeeeGds().Panel(Model.SuccessMessage))
+        @(this.WeeeGds().Panel(Model.ViewTransferNoteViewModel.SuccessMessage))
     }
     else
     {
         @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
+                new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }))
                 )
     }
     <div class="govuk-!-margin-top-3"></div>
-    @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
+    @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
 }

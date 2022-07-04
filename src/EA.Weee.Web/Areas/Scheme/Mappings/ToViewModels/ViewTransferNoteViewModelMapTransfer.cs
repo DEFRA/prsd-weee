@@ -26,6 +26,7 @@
             SchemeId = schemeId;
             TransferEvidenceNoteData = transferEvidenceNoteData;
             DisplayNotification = displayNotification;
+            SelectedComplianceYear = transferEvidenceNoteData.ComplianceYear;
         }
     }
 }
