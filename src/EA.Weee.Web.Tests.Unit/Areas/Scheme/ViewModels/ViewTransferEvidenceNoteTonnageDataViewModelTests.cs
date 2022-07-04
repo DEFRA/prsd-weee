@@ -37,5 +37,16 @@
             // assert
             model.DisplayTransferNote.Should().BeFalse();
         }
+
+        [Fact]
+        public void ViewTransferEvidenceNoteTonnageDataViewModel_DisplayTransferNote_ShouldBeFalse_IfNullCategoryValues()
+        {
+            // arrange
+            var model = new ViewTransferEvidenceNoteTonnageDataViewModel();
+            model.CategoryValues = null;
+
+            // assert
+            model.DisplayTransferNote.Should().BeFalse();
+        }
     }
 }

@@ -40,5 +40,19 @@
             // assert
             model.DisplayAatf.Should().BeFalse();
         }
+
+        [Fact]
+        public void ViewTransferEvidenceAatfDataViewModel_DisplayAatf_ShouldBeFalse_WhenThereAreOnlyEmptyNotesToBeDisplayed()
+        {
+            // arrange
+            var model = new ViewTransferEvidenceAatfDataViewModel();
+            var notesList = new List<ViewTransferEvidenceNoteTonnageDataViewModel>();
+            var note = new ViewTransferEvidenceNoteTonnageDataViewModel() { CategoryValues = new List<EvidenceCategoryValue>() };
+            notesList.Add(note);
+            model.Notes = notesList;
+
+            // assert
+            model.DisplayAatf.Should().BeFalse();
+        }
     }
 }
