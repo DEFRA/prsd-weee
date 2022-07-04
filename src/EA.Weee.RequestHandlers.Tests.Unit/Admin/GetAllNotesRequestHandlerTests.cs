@@ -31,7 +31,6 @@
         private readonly GetAllNotes message;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly GetAllNotes messageWithEmptyNoteTypeList;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetAllNotesRequestHandlerTests()
         {
