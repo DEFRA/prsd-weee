@@ -83,15 +83,16 @@
         @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
         {
             var item = categoryCount;
-
-            <tr class="govuk-table__row govuk-panel-grey-background">
-                <td class="govuk-table__cell govuk-!-padding-left-2">
-                    @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
-                </td>
-                <td class="govuk-table__cell govuk-!-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
-            </tr>
-
+            if (Model.TotalCategoryValues[categoryCount].DisplaySummedCategory)
+            {
+                <tr class="govuk-table__row govuk-panel-grey-background">
+                    <td class="govuk-table__cell govuk-!-padding-left-2">
+                        @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
+                </tr>
+            }
         }
     </tbody>
 </table>
