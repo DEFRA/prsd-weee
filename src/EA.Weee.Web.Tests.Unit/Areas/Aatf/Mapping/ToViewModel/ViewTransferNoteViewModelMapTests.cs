@@ -4,10 +4,11 @@
     using System.Collections.Generic;
     using AutoFixture;
     using Core.AatfEvidence;
-    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
@@ -364,6 +365,27 @@
 
             //assert
             model.TotalCategoryValues.Should().OnlyContain(x => x.DisplaySummedCategory == false);
+        }
+        
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenSubmittedTransfer_HasSubmittedDate_WithCorrectFormat()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData())
+                    .With(x => x.RecipientOrganisationData, CreateOrganisationData())
+                    .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
+                false);
+
+            source.TransferEvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.HasSubmittedDate.Should().BeTrue();
+            model.SubmittedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
         }
 
         private OrganisationData CreateOrganisationData()
