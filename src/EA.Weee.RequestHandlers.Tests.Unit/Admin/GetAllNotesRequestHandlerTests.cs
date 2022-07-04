@@ -30,17 +30,19 @@
         private readonly IMapper mapper;
         private readonly GetAllNotes message;
         private readonly GetAllNotes messageWithEmptyNoteTypeList;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetAllNotesRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             message = new GetAllNotes(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList());
             messageWithEmptyNoteTypeList = new GetAllNotes(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList());
 
-            handler = new GetAllNotesRequestHandler(weeeAuthorization, noteDataAccess, mapper);
+            handler = new GetAllNotesRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
 
         [Fact]
@@ -49,7 +51,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new GetAllNotesRequestHandler(authorization, noteDataAccess, mapper);
+            handler = new GetAllNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAllNotes()));
