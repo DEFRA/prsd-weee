@@ -189,34 +189,58 @@
             notes = new List<EvidenceNoteData>()
             {
                 TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>(),
                 TestFixture.Create<EvidenceNoteData>()
             };
 
-            var viewEvidenceNoteViewModel = TestFixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
-            var request = DefaultRequest();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.CategoryIds, new List<int>())
+                .Create();
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
 
-            A.CallTo(() =>
-                    mapper.Map<ViewEvidenceNoteViewModel>(
-                        A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
-                .Returns(viewEvidenceNoteViewModel.ElementAt(0));
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
 
-            A.CallTo(() =>
-                    mapper.Map<ViewEvidenceNoteViewModel>(
-                        A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
-                .Returns(viewEvidenceNoteViewModel.ElementAt(1));
+            var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                TestFixture.Build<ViewEvidenceNoteViewModel>()
+                    .With(n => n.Reference, 1)
+                    .With(n => n.SubmittedBy, "Z")
+                    .Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>()
+                    .With(n => n.Reference, 2)
+                    .With(n => n.SubmittedBy, "Z")
+                    .Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>()
+                    .With(n => n.SubmittedBy, "A")
+                    .With(n => n.Reference, 1)
+                    .Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>()
+                    .With(n => n.SubmittedBy, "A")
+                    .With(n => n.Reference, 3)
+                    .Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>()
+                    .With(n => n.SubmittedBy, "A")
+                    .With(n => n.Reference, 2)
+                    .Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._))
+                .ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
 
             //act
             var result = map.Map(source);
 
             //assert
-            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModel.ElementAt(0));
-            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModel.ElementAt(1));
+            result.EvidenceNotesDataList.Count.Should().Be(5);
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModels.ElementAt(0));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModels.ElementAt(1));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModels.ElementAt(2));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModels.ElementAt(3));
+            result.EvidenceNotesDataList.Should().ContainEquivalentOf(viewEvidenceNoteViewModels.ElementAt(4));
             result.EvidenceNotesDataList.Should().BeInAscendingOrder(e => e.SubmittedBy).And
-                .ThenBeInAscendingOrder(e => e.Id);
+                .ThenBeInDescendingOrder(e => e.Reference);
         }
 
         [Theory]
