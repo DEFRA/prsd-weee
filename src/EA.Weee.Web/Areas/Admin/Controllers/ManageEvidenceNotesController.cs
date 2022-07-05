@@ -62,7 +62,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewEvidenceNoteDetails(Guid evidenceNoteId)
+        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
