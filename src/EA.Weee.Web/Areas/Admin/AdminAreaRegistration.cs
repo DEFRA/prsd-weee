@@ -39,6 +39,12 @@
                 url: "admin/{controller}/{action}/{id}",
                 defaults: new { action = "Index", controller = "Home", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+              name: "admin_view_submitted_evidence",
+              url: "admin/{controller}/{action}/submitted-evidence/{evidenceNoteId}",
+              defaults: new { action = "ViewSubmittedEvidenceNote", controller = "ManageEvidenceNotes" },
+              namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
         }
     }
 }
