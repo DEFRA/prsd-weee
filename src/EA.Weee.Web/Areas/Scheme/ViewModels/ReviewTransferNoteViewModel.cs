@@ -10,18 +10,18 @@
 
     public class ReviewTransferNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint, IValidatableObject
     {
-        private const string ApproveEvidenceNote = "Approve evidence note";
-        private const string RejectEvidenceNote = "Reject evidence note";
-        private const string ReturnEvidenceNote = "Return evidence note";
+        private const string ApproveEvidenceNote = "Approve evidence note transfer";
+        private const string RejectEvidenceNote = "Reject evidence note transfer";
+        private const string ReturnEvidenceNote = "Return evidence note transfer";
 
         public Guid OrganisationId { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
-        [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note")]
+        [Required(ErrorMessage = "Choose whether to approve, reject or return the evidence note transfer")]
         public override string SelectedValue { get; set; }
 
-        [DisplayName("What is the reason you are rejecting or returning the evidence note?")]
+        [DisplayName("What is the reason you are rejecting or returning the evidence note transfer?")]
         public string Reason { get; set; }
 
         public NoteStatus SelectedEnumValue
@@ -42,7 +42,7 @@
             }
         }
 
-        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote, RejectEvidenceNote, ReturnEvidenceNote })
+        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote })
         {
         }
 
@@ -50,8 +50,8 @@
             new Dictionary<string, string>
             {
                 { ApproveEvidenceNote, null },
-                { RejectEvidenceNote, "Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note" },
-                { ReturnEvidenceNote, "Return an evidence note if there are some minor updates to be made by the AATF" }
+                { RejectEvidenceNote, "Reject an evidence note transfer if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note transfer" },
+                { ReturnEvidenceNote, "Return an evidence note transfer if there are some minor updates" }
             };
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
