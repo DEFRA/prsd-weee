@@ -15,10 +15,9 @@
 
             var model = new UploadObligationsViewModel(source.CompetentAuthority)
             {
-                ComplianceYearList = source.ComplianceYears
+                ComplianceYearList = source.ComplianceYears,
+                SelectedComplianceYear = source.SelectedComplianceYear
             };
-
-            model.SelectedComplianceYear = source.SelectedComplianceYear ?? model.ComplianceYearList.ElementAt(0);
 
             SetErrors(source, model);
 
@@ -46,19 +45,22 @@
             var displayDataError = false;
             var displayFileError = false;
 
-            if (source.ErrorData != null)
+            if (source.DisplayNotification)
             {
-                displayDataError = source.ErrorData.Any(r => dataErrorTypes.Contains(r.ErrorType));
-                displayFileError =
-                    source.ErrorData.Any(r => r.ErrorType == SchemeObligationUploadErrorType.File);
-                model.NumberOfDataErrors = source.ErrorData.Count(r => dataErrorTypes.Contains(r.ErrorType));
-                model.DisplaySuccessMessage = displayDataError == false && displayFileError == false && source.DisplayNotification;
+                if (source.ErrorData != null)
+                {
+                    displayDataError = source.ErrorData.Any(r => dataErrorTypes.Contains(r.ErrorType));
+                    displayFileError =
+                        source.ErrorData.Any(r => r.ErrorType == SchemeObligationUploadErrorType.File);
+                    model.NumberOfDataErrors = source.ErrorData.Count(r => dataErrorTypes.Contains(r.ErrorType));
+                    model.DisplaySuccessMessage = displayDataError == false && displayFileError == false && source.DisplayNotification;
+                }
+
                 model.UploadedMessage =
                     $"You have successfully uploaded the obligations for the compliance year {source.SelectedComplianceYear}";
+                model.DisplayFormatError = displayFileError && source.DisplayNotification;
+                model.DisplayDataError = displayFileError != true && displayDataError && source.DisplayNotification;
             }
-
-            model.DisplayFormatError = displayFileError;
-            model.DisplayDataError = displayFileError != true && displayDataError;
         }
     }
 }
