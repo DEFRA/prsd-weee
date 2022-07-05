@@ -69,7 +69,7 @@
                                 <td class="govuk-table__cell">@note.Recipient</td>
                                 <td class="govuk-table__cell">@note.Status.ToString() </td>
                                 <td class="govuk-table__cell">
-                                    @Html.NavigationRouteLink("Review", "View evidence note with reference " + @note.ReferenceId, "admin_view_submitted_evidence", new { action = "ViewSubmittedEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_note_details", new { action = "ViewEvidenceNoteDetails", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
                                 </td>
                             </tr>
                                 }

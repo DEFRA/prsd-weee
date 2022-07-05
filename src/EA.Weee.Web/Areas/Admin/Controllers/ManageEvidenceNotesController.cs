@@ -9,7 +9,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -61,13 +60,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewSubmittedEvidenceNote(Guid evidenceNoteId)
+        public async Task<ActionResult> ViewEvidenceNoteDetails(Guid evidenceNoteId)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
             using (var client = apiClient())
             {
-                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+                var request = new GetEvidenceNoteForInternalUserRequest(evidenceNoteId);
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
