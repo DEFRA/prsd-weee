@@ -46,5 +46,7 @@
 
         [DisplayName("Compliance year")]
         public int? SelectedComplianceYear { get; set; }
+
+        public string UploadedMessage { get; set; }
     }
 }
