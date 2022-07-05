@@ -14,7 +14,7 @@
         private const string RejectEvidenceNote = "Reject evidence note transfer";
         private const string ReturnEvidenceNote = "Return evidence note transfer";
 
-        public Guid OrganisationId { get; set; }
+        public virtual Guid OrganisationId { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
@@ -22,7 +22,9 @@
         public override string SelectedValue { get; set; }
 
         [DisplayName("What is the reason you are rejecting or returning the evidence note transfer?")]
-        public string Reason { get; set; }
+        public virtual string Reason { get; set; }
+
+        //public virtual Guid OrganisationId => ViewTransferNoteViewModel.OrganisationId;
 
         public NoteStatus SelectedEnumValue
         {
