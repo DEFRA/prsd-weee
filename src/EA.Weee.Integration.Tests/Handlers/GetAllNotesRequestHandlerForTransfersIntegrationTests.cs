@@ -18,16 +18,21 @@
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
 
-    public class GetAllNotesRequestHandlerIntegrationTests : IntegrationTestBase
+    public class GetAllNotesRequestHandlerForTransfersIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithCorrectStatusAndType : GetAllNotesRequestHandlerTestBase
+        public class WhenIGetAListOfEvidenceNoteDataAsTransferNotesWithCorrectStatusAndType : GetAllNotesRequestHandlerTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
 
-                var evidenceWithApprovedStatus = EvidenceNoteDbSetup.Init()
+                var noteRejectedStatus = TransferEvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Rejected, UserId.ToString(), "rejected")
+                    .Create();
+
+                var noteApprovedStatus = TransferEvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -35,39 +40,32 @@
                  })
                  .Create();
 
-                var evidenceWithSubmittedStatus = EvidenceNoteDbSetup.Init()
+                var notehSubmittedStatus = TransferEvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                  })
                  .Create();
 
-                var evidenceWithReturnedStatus = EvidenceNoteDbSetup.Init()
+                var noteReturnedStatus = TransferEvidenceNoteDbSetup.Init()
                 .With(n =>
                 {
                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .Create();
 
-                var evidenceWithRejectedStatus = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
-                  })
-                  .Create();
-
-                var evidenceWithVoidStatus = EvidenceNoteDbSetup.Init()
+                var noteVoidStatus = TransferEvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
                  .Create();
 
-                notesSet.Add(evidenceWithApprovedStatus);
-                notesSet.Add(evidenceWithSubmittedStatus);
-                notesSet.Add(evidenceWithReturnedStatus);
-                notesSet.Add(evidenceWithRejectedStatus);
-                notesSet.Add(evidenceWithVoidStatus);
+                notesSet.Add(noteApprovedStatus);
+                notesSet.Add(notehSubmittedStatus);
+                notesSet.Add(noteRejectedStatus);
+                notesSet.Add(noteReturnedStatus);
+                notesSet.Add(noteVoidStatus);
             };
 
             private readonly Because of = () =>
@@ -96,25 +94,25 @@
         }
 
         [Component]
-        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithNotAllowedStatusAndType : GetAllNotesRequestHandlerTestBase
+        public class WhenIGetAListOfEvidenceNoteDataAsTransferNotesWithNotAllowedStatusAndType : GetAllNotesRequestHandlerTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
 
-                var evidenceWithDraftStatus1 = EvidenceNoteDbSetup.Init()
+                var noteWithDraftStatus1 = TransferEvidenceNoteDbSetup.Init()
                  .Create();
 
-                var evidenceWithDraftStatus2 = EvidenceNoteDbSetup.Init()
+                var noteWithDraftStatus2 = TransferEvidenceNoteDbSetup.Init()
                 .Create();
 
-                notesSet.Add(evidenceWithDraftStatus1);
-                notesSet.Add(evidenceWithDraftStatus2);
+                notesSet.Add(noteWithDraftStatus1);
+                notesSet.Add(noteWithDraftStatus2);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotes(noteTypeFilterForTransferNote, notAllowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotes(noteTypeFilterForEvidenceNote, notAllowedStatuses))).Result;
             };
 
             private readonly It shouldReturnEmptyListOfEvidenceNotes = () =>
@@ -135,7 +133,7 @@
             protected static List<NoteStatus> allowedStatuses;
             protected static List<NoteStatus> notAllowedStatuses;
             protected static List<NoteType> noteTypeFilter;
-            protected static List<NoteType> noteTypeFilterForTransferNote;
+            protected static List<NoteType> noteTypeFilterForEvidenceNote;
             protected static IRequestHandler<GetAllNotes, List<EvidenceNoteData>> handler;
             protected static Fixture fixture;
 
@@ -158,8 +156,8 @@
                 notesSet = new List<Note>();
                 allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Returned };
                 notAllowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
-                noteTypeFilter = new List<NoteType> { NoteType.Evidence };
-                noteTypeFilterForTransferNote = new List<NoteType> { NoteType.Transfer };
+                noteTypeFilter = new List<NoteType> { NoteType.Transfer };
+                noteTypeFilterForEvidenceNote = new List<NoteType> { NoteType.Evidence };
                 handler = Container.Resolve<IRequestHandler<GetAllNotes, List<EvidenceNoteData>>>();
             }
         }

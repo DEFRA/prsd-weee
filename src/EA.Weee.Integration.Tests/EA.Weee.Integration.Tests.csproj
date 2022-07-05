@@ -198,6 +198,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\GetAllNotesRequestHandlerForTransfersIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllNotesRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationUploadHandlerIntegrationTests.cs" />
