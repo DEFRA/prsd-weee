@@ -106,7 +106,13 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("UploadObligations", new { authority = model.Authority, id = result, selectedComplianceYear = model.SelectedComplianceYear, displayNotification = true });
+                    return RedirectToAction("UploadObligations", new
+                    {
+                        authority = model.Authority, 
+                        id = result, 
+                        selectedComplianceYear = model.SelectedComplianceYear, 
+                        displayNotification = true
+                    });
                 }
             }
 
