@@ -68,8 +68,7 @@
             await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), date);
 
             //assert
-            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
-                                                                           n.Aatf == null &&
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.Aatf == null &&
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&
@@ -113,8 +112,7 @@
             await evidenceDataAccess.AddTransferNote(organisation, scheme, categories, tonnages, NoteStatus.Submitted, complianceYear, userId.ToString(), date);
 
             //assert
-            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.EndDate.Equals(date) &&
-                                                                           n.Aatf == null &&
+            A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.Aatf == null &&
                                                                            n.CreatedDate.Equals(date) &&
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&

@@ -25,8 +25,8 @@
             new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString() }),
         Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes, "viewAllEvidenceNotes")
 
-    @*@this.WeeeGds().Tab("View all evidence transfers",
+    @this.WeeeGds().Tab("View all evidence transfers",
         Url.Action("Index", "ManageEvidenceNotes",
             new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() }),
-        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfers")*@
+        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfers")
 </ul>
