@@ -100,8 +100,8 @@
         }
 
         [Theory]
-        [InlineData(SchemeObligationUploadErrorType.Data, true)]
-        [InlineData(SchemeObligationUploadErrorType.Scheme, true)]
+        [InlineData(SchemeObligationUploadErrorType.Data)]
+        [InlineData(SchemeObligationUploadErrorType.Scheme)]
         public void Map_GivenSourceWithObligationUploadDataErrorsAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithDisplayDataErrorAsFalse(SchemeObligationUploadErrorType errorType)
         {
             //arrange
