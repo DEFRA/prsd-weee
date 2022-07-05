@@ -3,6 +3,7 @@
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -102,6 +103,19 @@
                 }
 
                 return ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString();
+            }
+        }
+
+        public string InternalUserRedirectTab
+        {
+            get
+            {
+                if (Type.Equals(NoteType.Transfer))
+                {
+                    return ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString();
+                }
+
+                return ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString();
             }
         }
     }
