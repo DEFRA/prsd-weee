@@ -42,7 +42,7 @@
 
             context.MapLowercaseDashedRoute(
               name: "admin_view_evidence_note_details",
-              url: "admin/{controller}/{action}/evidence-note/{evidenceNoteId}",
+              url: "admin/{controller}/view-evidence-note/{evidenceNoteId}",
               defaults: new { action = "ViewEvidenceNoteDetails", controller = "ManageEvidenceNotes" },
               namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
         }
