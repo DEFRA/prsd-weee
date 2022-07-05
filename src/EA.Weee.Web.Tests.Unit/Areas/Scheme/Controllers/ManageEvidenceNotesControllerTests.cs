@@ -1,6 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AutoFixture;
+    using Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
@@ -15,15 +21,9 @@
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Core.Helpers;
-    using Web.Areas.Aatf.ViewModels;
     using Weee.Requests.Shared;
     using Xunit;
 
