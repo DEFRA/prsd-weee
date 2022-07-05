@@ -261,13 +261,30 @@
         }
 
         [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthority_AuthoritySchemeObligationsShouldBeRetrieved()
+        public async Task UploadObligationsGet_GivenSelectedAuthority_ComplianceYearsShouldBeRetrieved()
         {
             //arrange
             var authority = TestFixture.Create<CompetentAuthority>();
 
             //act
             await controller.UploadObligations(authority, null, TestFixture.Create<int?>());
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetObligationComplianceYears>.That.Matches(s => s.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoSelectedComplianceYear_AuthoritySchemeObligationsShouldBeRetrieved()
+        {
+            //arrange
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
+            //act
+            await controller.UploadObligations(authority, null, null);
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
