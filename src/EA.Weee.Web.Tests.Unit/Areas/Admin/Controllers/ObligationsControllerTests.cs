@@ -231,7 +231,7 @@
         [Fact]
         public void UploadObligationsGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?), typeof(int?) }, null)
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?), typeof(int?), typeof(bool) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -288,29 +288,54 @@
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == 2022 &&
+                    A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == complianceYears.ElementAt(0) &&
                                                              s.Authority == authority))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndSelectedComplianceYear_AuthoritySchemeObligationsShouldBeRetrieved()
+        {
+            //arrange
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var selectedComplianceYear = TestFixture.Create<int>();
+
+            //act
+            await controller.UploadObligations(authority, null, selectedComplianceYear);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == selectedComplianceYear &&
+                                                         s.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped(bool displayNotification)
         {
             //arrange
             var authority = TestFixture.Create<CompetentAuthority>();
             var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
+            var selectedComplianceYear = TestFixture.Create<int?>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligation>._)).Returns(obligationData);
 
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
             //act
-            await controller.UploadObligations(authority, null, TestFixture.Create<int?>());
+            await controller.UploadObligations(authority, null, selectedComplianceYear, displayNotification);
 
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
                         A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority &&
                             u.ObligationData.SequenceEqual(obligationData) &&
-                            u.ErrorData == null))).MustHaveHappenedOnceExactly();
+                            u.SelectedComplianceYear == selectedComplianceYear &&
+                            u.ErrorData == null &&
+                            u.ComplianceYears.SequenceEqual(complianceYears) &&
+                            u.DisplayNotification == displayNotification))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -329,24 +354,40 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped(bool displayNotification)
         {
             //arrange
             var authority = TestFixture.Create<CompetentAuthority>();
             var obligationId = TestFixture.Create<Guid>();
             var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var selectedComplianceYear = TestFixture.Create<int?>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+            var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
+            
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligation>._)).Returns(obligationData);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
 
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
             //act
-            await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>());
+            await controller.UploadObligations(authority, obligationId, selectedComplianceYear, displayNotification);
 
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.ErrorData == schemeUploadObligationData)))
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => 
+                            u.CompetentAuthority == authority && 
+                            u.ErrorData == schemeUploadObligationData &&
+                            u.SelectedComplianceYear == selectedComplianceYear &&
+                            u.ComplianceYears.SequenceEqual(complianceYears) &&
+                            u.DisplayNotification == displayNotification &&
+                            u.ObligationData == obligationData)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -493,6 +534,8 @@
             result.RouteValues["action"].Should().Be("UploadObligations");
             result.RouteValues["authority"].Should().Be(model.Authority);
             result.RouteValues["id"].Should().Be(obligationUploadId);
+            result.RouteValues["selectedComplianceYear"].Should().Be(model.SelectedComplianceYear);
+            result.RouteValues["displayNotification"].Should().Be(true);
         }
 
         [Fact]
