@@ -13,12 +13,13 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = new UploadObligationsViewModel(source.CompetentAuthority);
+            var model = new UploadObligationsViewModel(source.CompetentAuthority)
+            {
+                ComplianceYearList = source.ComplianceYears
+            };
 
-            //TODO: Take the ComplianceYears property of the UploadObligationsViewModelMapTransfer source and create the ComplianceYearList on UploadObligationsViewModel. Also need unit tests for these properties
-            
-            model.ComplianceYearList = new List<int>() { 2022, 2021 };
             model.SelectedComplianceYear = source.SelectedComplianceYear ?? model.ComplianceYearList.ElementAt(0);
+
             SetErrors(source, model);
 
             SetSchemeObligations(source, model);
@@ -51,7 +52,9 @@
                 displayFileError =
                     source.ErrorData.Any(r => r.ErrorType == SchemeObligationUploadErrorType.File);
                 model.NumberOfDataErrors = source.ErrorData.Count(r => dataErrorTypes.Contains(r.ErrorType));
-                model.DisplaySuccessMessage = displayDataError == false && displayFileError == false;
+                model.DisplaySuccessMessage = displayDataError == false && displayFileError == false && source.DisplayNotification;
+                model.UploadedMessage =
+                    $"You have successfully uploaded the obligations for the compliance year {source.SelectedComplianceYear}";
             }
 
             model.DisplayFormatError = displayFileError;
