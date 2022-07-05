@@ -10,7 +10,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
@@ -303,13 +302,57 @@
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert
-            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status == NoteStatus.Draft))
+            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted };
+
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => acceptedList.Contains(e.Status)))
             {
                 evidenceNoteRowViewModel.DisplayViewLink.Should().BeTrue();
             }
-            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => e.Status != NoteStatus.Draft))
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => !acceptedList.Contains(e.Status)))
             {
                 evidenceNoteRowViewModel.DisplayViewLink.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void Map_GivenListOfEvidenceNoteRowViewModel_DisplayEditLinkPropertyShouldBeSet()
+        {
+            //arrange
+            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Draft).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Approved).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Rejected).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Returned).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Submitted).Create(),
+                fixture.Build<EvidenceNoteRowViewModel>().With(e => e.Status, NoteStatus.Void).Create()
+            };
+
+            var organisationId = Guid.NewGuid();
+
+            var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
+                notes,
+                fixture.Create<string>(),
+                fixture.Create<DateTime>(),
+                fixture.Create<ManageEvidenceNoteViewModel>());
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            // assert
+            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft };
+
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => acceptedList.Contains(e.Status)))
+            {
+                evidenceNoteRowViewModel.DisplayEditLink.Should().BeTrue();
+            }
+            foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => !acceptedList.Contains(e.Status)))
+            {
+                evidenceNoteRowViewModel.DisplayEditLink.Should().BeFalse();
             }
         }
     }

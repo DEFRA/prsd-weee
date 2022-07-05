@@ -10,5 +10,6 @@
         public virtual NoteType Type { get; set; }
         public virtual string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
+        public virtual bool DisplayTransferNote => CategoryValues != null && CategoryValues.Count > 0;
     }
 }

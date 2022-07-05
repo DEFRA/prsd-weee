@@ -5,6 +5,7 @@
     using CuttingEdge.Conditions;
     using Domain.AatfReturn;
     using Prsd.Core.Mapper;
+    using FacilityType = Domain.AatfReturn.FacilityType;
 
     public class AatfDataWithSystemTimeMap : IMap<AatfWithSystemDateMapperObject, AatfData>
     {
@@ -24,27 +25,30 @@
             var evidenceSiteDisplay = false;
             var approvalDateValid = false;
 
-            if (aatf.ApprovalDate.HasValue)
+            if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
             {
-                var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
-                var approvalDate = aatf.ApprovalDate.Value.Date;
-
-                if (approvalDate <= complianceYearEndDate.Date && approvalDate <= source.SystemDateTime.Date)
+                if (aatf.ApprovalDate.HasValue)
                 {
-                    approvalDateValid = true;
+                    var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
+                    var approvalDate = aatf.ApprovalDate.Value.Date;
+
+                    if (approvalDate <= complianceYearEndDate.Date && approvalDate <= source.SystemDateTime.Date)
+                    {
+                        approvalDateValid = true;
+                    }
+                }
+
+                switch (aatf.HasEvidenceNotes)
+                {
+                    case true when approvalDateValid:
+                    case false when approvalDateValid:
+                        evidenceSiteDisplay = true;
+                        break;
                 }
             }
 
-            switch (aatf.HasEvidenceNotes)
-            {
-                case true when approvalDateValid:
-                case false when approvalDateValid:
-                    evidenceSiteDisplay = true;
-                    break;
-            }
-
             aatf.EvidenceSiteDisplay = evidenceSiteDisplay;
-            
+
             return aatf;
         }
     }

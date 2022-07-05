@@ -193,7 +193,7 @@
 
             if (selection == InternalUserActivity.ManageEvidenceNotes)
             {
-                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+                Assert.Equal("ManageEvidenceNotes", redirectToRouteResult.RouteValues["controller"]);
             }
 
             if (selection == InternalUserActivity.ManageAatfs)
