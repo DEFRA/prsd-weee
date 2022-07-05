@@ -70,10 +70,9 @@
 
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell govuk-!-padding-left-0 govuk-!-padding-right-0">
-                                <span class="weee-span-as-cell " style="width: 10%">
-                                    @category.CategoryId.
-                                </span>
-                                <span class="weee-span-as-cell">@category.CategoryDisplay</span>
+                           
+                                @category.CategoryId. @category.CategoryDisplay
+
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].Id)

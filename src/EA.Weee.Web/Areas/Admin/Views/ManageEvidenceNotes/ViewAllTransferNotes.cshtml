@@ -1,0 +1,92 @@
+﻿@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using MvcNavigationHelpers
+
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllTransferNotesViewModel
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs">
+
+                @Html.Partial("_ManageEvidenceNotesTabs", Model)
+
+                <section class="govuk-tabs__panel" id="allTransferNotes">
+
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                    {
+                        @Html.Gds().ValidationSummary()
+                        @Html.Hidden("tab", Model.ActiveDisplayOption)
+                    }
+
+                    <h2 class="govuk-heading-m govuk-!-padding-bottom-8">
+                        View all evidence transfers
+                    </h2>
+
+                    <table id="all-transfer-notes-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row"> 
+                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
+                                    Reference ID
+                                </th>
+                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
+                                    Date submitted
+                                </th>
+                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
+                                    Submitted by
+                                </th>
+                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
+                                    Recipient
+                                </th>
+                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @if (Model.EvidenceNotesDataList.Any())
+                            {
+                                foreach (var note in Model.EvidenceNotesDataList)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                        @if (note.SubmittedDate.HasValue)
+                                        {
+                                            <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="govuk-table__cell"></td>
+                                        }
+                                        <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                        <td class="govuk-table__cell">@note.Recipient</td>
+                                        <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6">
+                                        <p>There have not been any evidence note transfers </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p> Showing 0 - 0 of 0 </p>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <br />
+                </section>
+            </div>
+        </div>
+    </div>
+</section>

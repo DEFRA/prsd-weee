@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using ManageEvidenceNotes;
-    using Web.ViewModels.Shared;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public class ViewTransferNoteViewModel : ViewEvidenceNoteViewModel
     {
@@ -21,7 +21,7 @@
         {
             get
             {
-                if (Status.Equals(NoteStatus.Draft))
+                if (Status.Equals(NoteStatus.Draft) || Status.Equals(NoteStatus.Submitted))
                 {
                     return ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
                 }
@@ -40,15 +40,15 @@
                 switch (Status)
                 {
                     case NoteStatus.Draft:
-                        return "Draft evidence note";
+                        return "Draft evidence note transfer";
                     case NoteStatus.Rejected:
-                        return "Rejected evidence note";
+                        return "Rejected evidence note transfer";
                     case NoteStatus.Approved:
-                        return "Approved evidence note";
+                        return "Approved evidence note transfer";
                     case NoteStatus.Returned:
-                        return "Returned evidence note";
+                        return "Returned evidence note transfer";
                     case NoteStatus.Submitted:
-                        return "Submitted evidence note";
+                        return "Submitted evidence note transfer";
                     default:
                         return string.Empty;
                 }

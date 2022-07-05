@@ -827,5 +827,65 @@
             result.EvidenceTonnageData[0].AvailableReceived.Should().Be(expectedAvailableReceive);
             result.EvidenceTonnageData[0].AvailableReused.Should().Be(expectedAvailableReuse);
         }
+
+        [Fact]
+        public void Map_GivenNoteWhereNoteOriginatingOrganisationHasScheme_OrganisationSchemaDataShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            var schemeData = fixture.Create<SchemeData>();
+            var scheme = A.Fake<Scheme>();
+
+            A.CallTo(() => note.Organisation).Returns(organisation);
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.OrganisationSchemaData.Should().Be(schemeData);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWhereNoteOriginatingOrganisationHasNoScheme_OrganisationSchemaDataShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            var schemeData = fixture.Create<SchemeData>();
+            var scheme = A.Fake<Scheme>();
+
+            A.CallTo(() => note.Organisation).Returns(organisation);
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>());
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.OrganisationSchemaData.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWhereNoteOriginatingOrganisationHasNullScheme_OrganisationSchemaDataShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            var schemeData = fixture.Create<SchemeData>();
+            var scheme = A.Fake<Scheme>();
+
+            A.CallTo(() => note.Organisation).Returns(organisation);
+            A.CallTo(() => organisation.Schemes).Returns(null);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
+
+            //act
+            var result = map.Map(note);
+
+            //assert
+            result.OrganisationSchemaData.Should().BeNull();
+        }
     }
 }
