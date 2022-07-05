@@ -86,7 +86,7 @@
                     return RedirectToAction("Search", "Producers");
 
                 case InternalUserActivity.ManageEvidenceNotes:
-                    return RedirectToAction("Index", "AdminHolding");
+                    return RedirectToAction("Index", "ManageEvidenceNotes");
 
                 case InternalUserActivity.SubmissionsHistory:
                     if (configuration.EnableDataReturns)

@@ -4,6 +4,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using CuttingEdge.Conditions;
+    using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core.Mapper;
     using ViewModels;
     using Web.ViewModels.Returns.Mappings.ToViewModel;

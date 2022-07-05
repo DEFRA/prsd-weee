@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
@@ -13,11 +12,8 @@
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
-        private readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper;
-
-        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper) : base(mapper, cache)
+        public TransferEvidenceTonnageViewModelMap(IMapper mapper, IWeeeCache cache, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper) : base(mapper, cache, transferNoteMapper)
         {
-            this.transferNoteMapper = transferNoteMapper;
         }
 
         public TransferEvidenceTonnageViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)
@@ -25,12 +21,6 @@
             Condition.Requires(source).IsNotNull();
             
             var model = MapBaseProperties(source);
-
-            if (source.TransferEvidenceNoteData != null)
-            {
-                model.ViewTransferNoteViewModel = transferNoteMapper.Map(
-                    new ViewTransferNoteViewModelMapTransfer(source.OrganisationId, source.TransferEvidenceNoteData, null));
-            }
 
             model.TransferAllTonnage = source.TransferAllTonnage;
 

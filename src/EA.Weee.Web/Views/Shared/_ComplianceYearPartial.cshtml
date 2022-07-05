@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 
-@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 @{
     var controller = ViewData["controller"] as string;
     var selectedTab = ViewData["tab"] as string;
@@ -14,7 +14,7 @@
     <span class="text-margin govuk-!-padding-right-3">
         @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
             new SelectList(Model.ComplianceYearList),
-            new { autocomplete = "false", style="min-width: " + width }, false, false)
+            new { autocomplete = "false", style = "min-width: " + width }, false, false)
     </span>
     <noscript>
         @(this.WeeeGds().Button("Apply", null, true))

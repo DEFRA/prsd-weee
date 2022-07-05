@@ -5,26 +5,13 @@
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Threading.Tasks;
 
     [AuthorizeInternalClaims(Claims.InternalAdmin)]
     [ValidatePcsObligationsEnabled]
-    public abstract class ObligationsBaseController : AdminController
+    public abstract class ObligationsBaseController : AdminBreadcrumbBaseController
     {
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly IWeeeCache Cache;
-        protected ObligationsBaseController(BreadcrumbService breadcrumb, IWeeeCache cache)
+        protected ObligationsBaseController(BreadcrumbService breadcrumb, IWeeeCache cache) : base(breadcrumb, cache)
         {
-            this.Breadcrumb = breadcrumb;
-            this.Cache = cache;
-        }
-
-        protected async Task SetBreadcrumb(Guid organisationId, string activity)
-        {
-            Breadcrumb.ExternalOrganisation = await Cache.FetchOrganisationName(organisationId);
-            Breadcrumb.ExternalActivity = activity;
-            Breadcrumb.OrganisationId = organisationId;
         }
     }
 }
