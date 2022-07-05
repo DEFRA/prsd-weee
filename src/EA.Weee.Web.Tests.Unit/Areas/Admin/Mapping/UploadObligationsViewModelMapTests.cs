@@ -76,8 +76,8 @@
         }
 
         [Theory]
-        [InlineData(SchemeObligationUploadErrorType.Data, true)]
-        [InlineData(SchemeObligationUploadErrorType.Scheme, true)]
+        [InlineData(SchemeObligationUploadErrorType.Data)]
+        [InlineData(SchemeObligationUploadErrorType.Scheme)]
         public void Map_GivenSourceWithObligationUploadDataErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayDataErrorAsTrue(SchemeObligationUploadErrorType errorType)
         {
             //arrange
@@ -86,7 +86,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             { 
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ErrorData = schemeUploadObligationData
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
             };
             
             //act
@@ -95,6 +96,30 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayDataError.Should().BeTrue();
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(SchemeObligationUploadErrorType.Data, true)]
+        [InlineData(SchemeObligationUploadErrorType.Scheme, true)]
+        public void Map_GivenSourceWithObligationUploadDataErrorsAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithDisplayDataErrorAsFalse(SchemeObligationUploadErrorType errorType)
+        {
+            //arrange
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>() { new SchemeObligationUploadErrorData(errorType, TestFixture.Create<string>(), TestFixture.Create<string>(), TestFixture.Create<string>(), null) };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = false
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayDataError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -152,7 +177,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayDataError.Should().BeFalse();
-            model.NumberOfDataErrors.Should().Be(2);
+            model.NumberOfDataErrors.Should().Be(0);
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -253,7 +278,7 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = false
             };
 
             //act
@@ -299,7 +324,7 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = false
             };
 
             //act

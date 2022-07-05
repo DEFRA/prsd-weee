@@ -50,7 +50,8 @@
             //arrange
             var model = new UploadObligationsViewModel()
             {
-                File = A.Fake<HttpPostedFileBase>()
+                File = A.Fake<HttpPostedFileBase>(),
+                SelectedComplianceYear = TestFixture.Create<int>()
             };
 
             //act
