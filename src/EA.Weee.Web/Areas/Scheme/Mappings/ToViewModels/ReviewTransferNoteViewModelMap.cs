@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;

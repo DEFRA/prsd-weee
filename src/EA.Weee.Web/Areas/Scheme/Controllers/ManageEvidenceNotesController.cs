@@ -212,9 +212,7 @@
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
         {
-            var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
-
-            var result = await client.SendAsync(User.GetAccessToken(), request);
+            var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
             {
