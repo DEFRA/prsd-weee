@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
@@ -82,10 +83,10 @@
 
                             </td>
                             <td class="govuk-table__cell govuk-!-text-align-right">
-                                @Model.TransferCategoryValues[elementCount].AvailableReceived
+                                @Model.TransferCategoryValues[elementCount].AvailableReceived.ToTonnageDisplay()
                             </td>
                             <td class="govuk-table__cell govuk-!-text-align-right">
-                                @Model.TransferCategoryValues[elementCount].AvailableReused
+                                @Model.TransferCategoryValues[elementCount].AvailableReused.ToTonnageDisplay()
                             </td>
                             <td class="govuk-table__cell govuk-!-text-align-right">
                                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues[elementCount],m => m.TransferCategoryValues[elementCount].Received)">
