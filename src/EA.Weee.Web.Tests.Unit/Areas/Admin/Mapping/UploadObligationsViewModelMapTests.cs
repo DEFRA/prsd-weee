@@ -46,11 +46,38 @@
             model.DisplayFormatError.Should().BeFalse();
             model.DisplaySelectFileError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
+            model.UploadedMessage.Should().BeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithComplianceYearsList_UploadObligationsViewModelShouldBeReturnedWithComplianceYearList()
+        {
+            //arrange
+            var source = new UploadObligationsViewModelMapTransfer() { ComplianceYears = TestFixture.CreateMany<int>().ToList() };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.ComplianceYearList.Should().BeEquivalentTo(source.ComplianceYears);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSelectedComplianceYear_UploadObligationsViewModelSelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var source = new UploadObligationsViewModelMapTransfer() { SelectedComplianceYear = TestFixture.Create<int>() };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
         }
 
         [Theory]
-        [InlineData(SchemeObligationUploadErrorType.Data)]
-        [InlineData(SchemeObligationUploadErrorType.Scheme)]
+        [InlineData(SchemeObligationUploadErrorType.Data, true)]
+        [InlineData(SchemeObligationUploadErrorType.Scheme, true)]
         public void Map_GivenSourceWithObligationUploadDataErrors_UploadObligationsViewModelShouldBeReturnedWithDisplayDataErrorAsTrue(SchemeObligationUploadErrorType errorType)
         {
             //arrange
@@ -86,7 +113,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ErrorData = schemeUploadObligationData
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
             };
 
             //act
@@ -95,6 +123,35 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayDataError.Should().BeTrue();
+            model.NumberOfDataErrors.Should().Be(2);
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithObligationUploadDataErrorsAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithNumberOfDataErrorsSet()
+        {
+            //arrange
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null),
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = false
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayDataError.Should().BeFalse();
             model.NumberOfDataErrors.Should().Be(2);
             model.DisplaySuccessMessage.Should().BeFalse();
         }
@@ -112,7 +169,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ErrorData = schemeUploadObligationData
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
             };
 
             //act
@@ -121,6 +179,32 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeTrue();
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithObligationUploadFileErrorsAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsFalse()
+        {
+            //arrange
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = false
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayFormatError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -139,7 +223,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ErrorData = schemeUploadObligationData
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
             };
 
             //act
@@ -153,6 +238,35 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithDifferentErrorTypesAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithDisplayFormatErrorAsFalseAndDisplayFormatErrorAsFalse()
+        {
+            //arrange
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>()
+            {
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null),
+                new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+            };
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayFormatError.Should().BeFalse();
+            model.DisplayDataError.Should().BeFalse();
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Fact]
         public void Map_GivenSourceWithUploadWithNoError_UploadObligationsViewModelShouldBeReturnedWithDisplaySuccessMessageAsTrue()
         {
             //arrange
@@ -161,7 +275,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ErrorData = schemeUploadObligationData
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
             };
 
             //act
@@ -172,6 +287,64 @@
             model.DisplayFormatError.Should().BeFalse();
             model.DisplayDataError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithUploadWithNoErrorAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithDisplaySuccessMessageAsFalse()
+        {
+            //arrange
+            var schemeUploadObligationData = new List<SchemeObligationUploadErrorData>();
+
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
+                ErrorData = schemeUploadObligationData,
+                DisplayNotification = true
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Authority.Should().Be(source.CompetentAuthority);
+            model.DisplayFormatError.Should().BeFalse();
+            model.DisplayDataError.Should().BeFalse();
+            model.DisplaySuccessMessage.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithUploadWithNoError_UploadObligationsViewModelShouldBeReturnedWithUploadedMessage()
+        {
+            //arrange
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                SelectedComplianceYear = TestFixture.Create<int>(),
+                DisplayNotification = true
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.UploadedMessage.Should()
+                .Be($"You have successfully uploaded the obligations for the compliance year {source.SelectedComplianceYear}");
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithUploadWithNoErrorAndDisplayNotificationIsFalse_UploadObligationsViewModelShouldBeReturnedWithEmptyUploadedMessage()
+        {
+            //arrange
+            var source = new UploadObligationsViewModelMapTransfer()
+            {
+                SelectedComplianceYear = TestFixture.Create<int>(),
+                DisplayNotification = false
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.UploadedMessage.Should().BeNullOrWhiteSpace();
         }
 
         [Fact]

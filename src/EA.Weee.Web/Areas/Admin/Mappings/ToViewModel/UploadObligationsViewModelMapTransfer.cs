@@ -14,7 +14,7 @@
 
         public List<int> ComplianceYears { get; set; }
 
-        public int? SelectedComplianceYear { get; set; }
+        public int SelectedComplianceYear { get; set; }
 
         public bool DisplayNotification { get; set; }
 
