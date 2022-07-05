@@ -1,12 +1,12 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     [Serializable]
-    public class ManageEvidenceNoteViewModel 
+    public class ManageEvidenceNoteViewModel
     {
         public string AatfName { get; set; }
 
