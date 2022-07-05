@@ -23,7 +23,7 @@
     using Xunit;
     using FileInfo = Core.Shared.FileInfo;
 
-    public class SubmitSchemeObligationsHandlerTests
+    public class SubmitSchemeObligationsHandlerTests : SimpleUnitTestBase
     {
         private SubmitSchemeObligationHandler handler;
         private readonly IObligationCsvReader obligationCsvReader;
@@ -32,21 +32,19 @@
         private readonly ICommonDataAccess commonDataAccess;
         private readonly IObligationDataAccess obligationDataAccess;
         private readonly ISchemeObligationsDataProcessor schemeObligationsDataProcessor;
-        private readonly Fixture fixture;
         private readonly SubmitSchemeObligation request;
 
         public SubmitSchemeObligationsHandlerTests()
         {
             obligationCsvReader = A.Fake<IObligationCsvReader>();
             obligationUploadValidator = A.Fake<IObligationUploadValidator>();
-            fixture = new Fixture();
             authorization = A.Fake<IWeeeAuthorization>();
             commonDataAccess = A.Fake<ICommonDataAccess>();
             obligationDataAccess = A.Fake<IObligationDataAccess>();
             schemeObligationsDataProcessor = A.Fake<ISchemeObligationsDataProcessor>();
 
-            var fileInfo = new FileInfo("test.csv", fixture.Create<byte[]>());
-            request = new SubmitSchemeObligation(fileInfo, fixture.Create<CompetentAuthority>(), 2022);
+            var fileInfo = new FileInfo("test.csv", TestFixture.Create<byte[]>());
+            request = new SubmitSchemeObligation(fileInfo, TestFixture.Create<CompetentAuthority>(), TestFixture.Create<int>());
 
             handler = new SubmitSchemeObligationHandler(obligationCsvReader, obligationUploadValidator, authorization, commonDataAccess, obligationDataAccess, schemeObligationsDataProcessor);
         }
@@ -149,14 +147,13 @@
         {
             //arrange
             var obligationErrors = new List<ObligationUploadError>();
-            var authority = fixture.Create<UKCompetentAuthority>();
-            var obligationSchemes = fixture.CreateMany<ObligationScheme>().ToList();
+            var authority = TestFixture.Create<UKCompetentAuthority>();
+            var obligationSchemes = TestFixture.CreateMany<ObligationScheme>().ToList();
 
             A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
-            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, 2022))
-                .Returns(obligationSchemes);
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>._, A<int>._)).Returns(obligationSchemes);
 
             //act
             await handler.HandleAsync(request);
@@ -173,8 +170,8 @@
         public async Task HandleAsync_GivenRequestWithErrors_ObligationDataAccessShouldBeCalled()
         {
             //arrange
-            var obligationErrors = fixture.CreateMany<ObligationUploadError>().ToList();
-            var authority = fixture.Create<UKCompetentAuthority>();
+            var obligationErrors = TestFixture.CreateMany<ObligationUploadError>().ToList();
+            var authority = TestFixture.Create<UKCompetentAuthority>();
             
             A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
@@ -203,7 +200,7 @@
         public async Task HandleAsync_GivenRequestWithCsvReaderExceptionError_ObligationDataAccessShouldBeCalled(Exception exception)
         {
             //arrange
-            var authority = fixture.Create<UKCompetentAuthority>();
+            var authority = TestFixture.Create<UKCompetentAuthority>();
             A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Throws(exception);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
 
@@ -229,7 +226,7 @@
         public async Task HandleAsync_GivenRequestWithCsvReaderExceptionError_RestOfFileShouldNotBeValidated(Exception exception)
         {
             //arrange
-            var authority = fixture.Create<UKCompetentAuthority>();
+            var authority = TestFixture.Create<UKCompetentAuthority>();
             A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Throws(exception);
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
 
@@ -260,7 +257,7 @@
             //arrange
             A.CallTo(() =>
                     obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<IList<ObligationCsvUpload>>._))
-                .Returns(fixture.CreateMany<ObligationUploadError>().ToList());
+                .Returns(TestFixture.CreateMany<ObligationUploadError>().ToList());
 
             //act
             await handler.HandleAsync(request);
@@ -276,14 +273,14 @@
             var obligationErrors = new List<ObligationUploadError>();
             A.CallTo(() => obligationUploadValidator.Validate(A<UKCompetentAuthority>._, A<List<ObligationCsvUpload>>._))
                 .Returns(obligationErrors);
-            var obligationUploadData = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            var obligationUploadData = TestFixture.CreateMany<ObligationCsvUpload>().ToList();
             A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Returns(obligationUploadData);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>.That.IsSameSequenceAs(obligationUploadData), 2022))
+            A.CallTo(() => schemeObligationsDataProcessor.Build(A<List<ObligationCsvUpload>>.That.IsSameSequenceAs(obligationUploadData), request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -291,8 +288,8 @@
         public async Task HandleAsync_GivenNonCsvFile_ShouldGiveFileFormatException_AndMethodsNotCalled()
         {
             //arrange
-            var badFileInfo = new FileInfo("Bad.xlsl", fixture.Create<byte[]>());
-            var badRequest = new SubmitSchemeObligation(badFileInfo, fixture.Create<CompetentAuthority>(), 2022);
+            var badFileInfo = new FileInfo("Bad.xlsl", TestFixture.Create<byte[]>());
+            var badRequest = new SubmitSchemeObligation(badFileInfo, TestFixture.Create<CompetentAuthority>(), 2022);
 
             var error = new ObligationUploadError(ObligationUploadErrorType.File, "The error may be a problem with the file structure, which prevents our system from validating your file. You should rectify this error before we can continue our validation process.");
 
