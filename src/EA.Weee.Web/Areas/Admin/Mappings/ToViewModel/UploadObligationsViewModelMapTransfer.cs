@@ -16,6 +16,8 @@
 
         public int? SelectedComplianceYear { get; set; }
 
+        public bool DisplayNotification { get; set; }
+
         public UploadObligationsViewModelMapTransfer()
         {
             ObligationData = new List<SchemeObligationData>();

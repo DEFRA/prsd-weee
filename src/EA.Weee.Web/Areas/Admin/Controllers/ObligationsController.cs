@@ -11,6 +11,7 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
@@ -63,7 +64,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id, int? selectedComplianceYear)
+        public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id, int? selectedComplianceYear, bool displayNotification = false)
         {
             using (var client = apiClient())
             {
@@ -73,16 +74,20 @@
                     errorData = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligationUpload(id.Value));
                 }
 
-                var schemeObligationData =
-                    await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, 2022));
+                var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority));
+                var complianceYear = selectedComplianceYear ?? complianceYears.ElementAt(0);
 
-                // TODO: get the obligation compliance years using the GetObligationComplianceYears request and pass to the model mapper using the ComplianceYears property on UploadObligationsViewModelMapTransfer
+                var schemeObligationData =
+                    await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, complianceYear));
+                
                 var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
                 {
                     CompetentAuthority = authority,
                     ErrorData = errorData,
                     ObligationData = schemeObligationData,
-                    SelectedComplianceYear = selectedComplianceYear
+                    SelectedComplianceYear = selectedComplianceYear,
+                    ComplianceYears = complianceYears,
+                    DisplayNotification = displayNotification
                 });
 
                 return View(model);
@@ -101,7 +106,7 @@
 
                     var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("UploadObligations", new { authority = model.Authority, id = result });
+                    return RedirectToAction("UploadObligations", new { authority = model.Authority, id = result, selectedComplianceYear = model.SelectedComplianceYear, displayNotification = true });
                 }
             }
 

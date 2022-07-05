@@ -49,7 +49,7 @@
     }
     @if (Model.DisplaySuccessMessage)
     {
-        @(this.WeeeGds().Panel("You have successfully uploaded the obligations for the compliance year 2022"))
+        @(this.WeeeGds().Panel(Model.UploadedMessage))
     }
 
     <p>
