@@ -351,6 +351,8 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferredOutEvidenceNotesSchemeViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
     <Compile Include="RazorHelpers\GdsWarningUnitTests.cs" />

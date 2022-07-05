@@ -856,8 +856,8 @@
 
         public static readonly object[][] EndDates =
         {
-            new object[] { DateTime.Now },
-            new object[] { DateTime.Now.AddDays(1) }
+            new object[] { SystemTime.UtcNow },
+            new object[] { SystemTime.UtcNow.AddDays(1) }
         };
 
         [Theory, MemberData(nameof(EndDates))]
