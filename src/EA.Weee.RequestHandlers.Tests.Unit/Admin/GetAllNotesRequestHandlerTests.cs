@@ -29,8 +29,8 @@
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly GetAllNotes message;
-        private readonly GetAllNotes messageWithEmptyNoteTypeList;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly GetAllNotes messageWithEmptyNoteTypeList;
 
         public GetAllNotesRequestHandlerTests()
         {
