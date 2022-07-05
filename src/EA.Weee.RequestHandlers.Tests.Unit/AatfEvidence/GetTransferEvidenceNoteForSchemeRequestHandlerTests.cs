@@ -29,6 +29,7 @@
         private readonly GetTransferEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Scheme scheme;
+        private readonly Guid recipientId;
         private readonly Guid evidenceNoteId;
         private readonly Guid organisationId;
 
@@ -42,12 +43,13 @@
             mapper = A.Fake<IMapper>();
             note = A.Fake<Note>();
             scheme = A.Fake<Scheme>();
-            fixture.Create<Guid>();
+            recipientId = fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
             organisationId = fixture.Create<Guid>();
 
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
+            A.CallTo(() => note.RecipientId).Returns(recipientId);
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -126,6 +128,9 @@
         [Fact]
         public async Task HandleAsync_GivenRequest_EvidenceNoteShouldBeRetrieved()
         {
+            //arrange
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
+
             //act
             await handler.HandleAsync(request);
 
@@ -137,10 +142,11 @@
         public async Task HandleAsync_GivenTransferNote_SchemeShouldBeRetrieved()
         {
             //arrange
-            var organisationId = fixture.Create<Guid>();
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
+
             //act
             await handler.HandleAsync(request);
 
@@ -167,6 +173,7 @@
         {
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
 
             //act
@@ -182,7 +189,8 @@
         {
             //arrange
             var evidenceNote = fixture.Create<TransferEvidenceNoteData>();
-
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
             A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>._)).Returns(evidenceNote);
 
             //act
