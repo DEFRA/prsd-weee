@@ -4,9 +4,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
