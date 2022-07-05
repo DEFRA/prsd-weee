@@ -1,9 +1,6 @@
-﻿@using EA.Weee.Web.Extensions
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.Helpers
-@using MvcNavigationHelpers
+@using EA.Weee.Core.AatfEvidence
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
 
@@ -68,9 +65,18 @@
                                 <td class="govuk-table__cell">@note.SubmittedBy</td>
                                 <td class="govuk-table__cell">@note.Recipient</td>
                                 <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                <td class="govuk-table__cell">
-                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_note_details", new { action = "ViewEvidenceNoteDetails", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
-                                </td>
+                                <td class="govuk-table__cell"> </td>
+
+                                @if (!note.Status.Equals(NoteStatus.Void))
+                                {
+                                    <td class="govuk-table__cell">
+                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="govuk-table__cell"> </td>
+                                }
                             </tr>
                                 }
                             }
