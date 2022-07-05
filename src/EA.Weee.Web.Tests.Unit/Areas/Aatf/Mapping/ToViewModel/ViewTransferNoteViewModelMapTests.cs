@@ -5,7 +5,6 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Tests.Unit.Helpers;
-    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Web.Extensions;
