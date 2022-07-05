@@ -53,6 +53,8 @@
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
                         return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel);
+                    case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel);
                     default:
                         return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel);
                 }
@@ -85,6 +87,17 @@
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapModel(notes, manageEvidenceNoteViewModel));
 
             return View("ViewAllEvidenceNotes", model);
+        }
+
+        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotes(new List<NoteType> { NoteType.Transfer }, allowedStatuses));
+
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapModel(notes, manageEvidenceNoteViewModel));
+
+            return View("ViewAllTransferNotes", model);
         }
     }
 }
