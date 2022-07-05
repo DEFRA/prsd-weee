@@ -83,6 +83,26 @@
         }
 
         [Fact]
+        public void Map_GivenMappedAatfDataHasEvidenceNotesAndHasValidApprovalDateButIsAnAe_EvidenceSiteDisplayShouldBeFalse()
+        {
+            //arrange
+            var approvalDate = new DateTime(2020, 1, 1);
+            var date = approvalDate.AddDays(1);
+            var aatfData = TestFixture.Build<AatfData>()
+                .With(a => a.HasEvidenceNotes, false)
+                .With(a => a.FacilityType, FacilityType.Ae)
+                .With(a => a.ApprovalDate, approvalDate)
+                .Create();
+            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+            //act
+            var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
+
+            //assert
+            result.EvidenceSiteDisplay.Should().BeFalse();
+        }
+
+        [Fact]
         public void Map_GivenMappedAatfDataHasEvidenceNotesAndHasInValidApprovalDate_EvidenceSiteDisplayShouldBeFalse()
         {
             //arrange
@@ -209,7 +229,7 @@
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
 
             //assert
-            result.EvidenceSiteDisplay.Should().BeTrue();
+            result.EvidenceSiteDisplay.Should().BeFalse();
         }
     }
 }

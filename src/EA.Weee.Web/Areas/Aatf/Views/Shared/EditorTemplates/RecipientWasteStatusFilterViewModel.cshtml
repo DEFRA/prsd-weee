@@ -1,11 +1,9 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceNoteViewModel
+@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
 <style>
-
-
 </style>
 <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-2">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
@@ -20,7 +18,7 @@
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
-        string.Empty, new { @class="full-width-important" })
+        string.Empty, new { @class = "full-width-important" })
     </div>
 </div>
 <div class="govuk-grid-column-one-quarter govuk-!-padding-left-2 govuk-!-padding-right-2">

@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
     using Core.AatfEvidence;
-    using Core.Helpers;
     using CuttingEdge.Conditions;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
@@ -35,7 +36,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
-                ReturnToView = source.ReturnToView ?? false,
+                ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
@@ -43,7 +44,9 @@
                 Status = source.TransferEvidenceNoteData.Status,
                 SchemeId = source.SchemeId,
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
-                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
+                SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
+                ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
                     new TotalCategoryValue(n.First().EvidenceTonnageData.CategoryId)
@@ -84,12 +87,13 @@
                     switch (note.Status)
                     {
                         case NoteStatus.Submitted:
-                            model.SuccessMessage =
-                            $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
                             break;
                         case NoteStatus.Draft:
-                            model.SuccessMessage =
-                                $"You have successfully saved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
+                            model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
+                            break;
+                        case NoteStatus.Approved:
+                            model.SuccessMessage = $"You have approved the evidence note transfer with reference ID E{note.Reference}";
                             break;
                     }
                 }
@@ -106,7 +110,10 @@
                 {
                     ReferenceId = nt.First().OriginalReference,
                     Type = nt.First().Type,
-                    CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId).Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
+                    CategoryValues = nt.OrderBy(ntt => ntt.EvidenceTonnageData.CategoryId)
+                    .Where(ntt => (ntt.EvidenceTonnageData.TransferredReceived.HasValue && ntt.EvidenceTonnageData.TransferredReceived != 0)
+                    || (ntt.EvidenceTonnageData.TransferredReused.HasValue && ntt.EvidenceTonnageData.TransferredReused != 0))
+                    .Select(ntt => new EvidenceCategoryValue((Core.DataReturns.WeeeCategory)ntt.EvidenceTonnageData.CategoryId)
                     {
                         Received = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReceived),
                         Reused = tonnageUtilities.CheckIfTonnageIsNull(ntt.EvidenceTonnageData.TransferredReused)

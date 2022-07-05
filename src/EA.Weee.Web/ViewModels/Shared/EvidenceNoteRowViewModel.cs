@@ -33,6 +33,8 @@
 
         public bool DisplayViewLink { get; set; }
 
+        public bool DisplayEditLink { get; set; }
+
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
 
         public string SubmittedDateDisplay => SubmittedDate.HasValue ? SubmittedDate.Value.ToShortDateString() : "-";

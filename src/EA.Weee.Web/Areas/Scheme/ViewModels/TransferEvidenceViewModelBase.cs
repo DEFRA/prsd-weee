@@ -10,9 +10,13 @@
 
         public string RecipientName { get; set; }
 
+        public Guid RecipientId { get; set; }
+
         public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
 
         public List<TotalCategoryValue> CategoryValues { get; set; }
+
+        public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
         protected TransferEvidenceViewModelBase()
         {
