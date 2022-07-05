@@ -131,9 +131,9 @@
         public async Task HandleAsync_GivenRequest_CsvDataShouldBeValidated()
         {
             //arrange
-            var obligationUploadData = fixture.CreateMany<ObligationCsvUpload>().ToList();
+            var obligationUploadData = TestFixture.CreateMany<ObligationCsvUpload>().ToList();
             A.CallTo(() => obligationCsvReader.Read(A<byte[]>._)).Returns(obligationUploadData);
-            var authority = fixture.Create<UKCompetentAuthority>();
+            var authority = TestFixture.Create<UKCompetentAuthority>();
             A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).Returns(authority);
             //act
             await handler.HandleAsync(request);
