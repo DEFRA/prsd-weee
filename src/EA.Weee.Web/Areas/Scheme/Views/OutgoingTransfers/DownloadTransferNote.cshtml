@@ -1,0 +1,51 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
+@{
+    var navigateBackToSelectedTab = Model.ViewTransferNoteViewModel.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+
+    string title;
+    if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
+    {
+        title = "Approved evidence note transfer";
+    }
+    else if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
+    {
+        title = "Rejected evidence note transfer";
+    }
+    else if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Returned))
+    {
+        title = "Returned evidence note transfer";
+    }
+    else
+    {
+        title = "View evidence note transfer";
+    }
+
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section full_main_content
+{
+
+    @if (Model.ViewTransferNoteViewModel.DisplayMessage)
+    {
+        @(this.WeeeGds().BackLink(
+                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }),
+                "Manage evidence notes")
+                )
+        @(this.WeeeGds().Panel(Model.ViewTransferNoteViewModel.SuccessMessage))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }))
+                )
+    }
+    <div class="govuk-!-margin-top-3"></div>
+    @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
+}
