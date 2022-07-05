@@ -85,7 +85,7 @@
                     CompetentAuthority = authority,
                     ErrorData = errorData,
                     ObligationData = schemeObligationData,
-                    SelectedComplianceYear = selectedComplianceYear,
+                    SelectedComplianceYear = complianceYear,
                     ComplianceYears = complianceYears,
                     DisplayNotification = displayNotification
                 });
