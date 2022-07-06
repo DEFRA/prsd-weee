@@ -24,7 +24,6 @@
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "status-id" })
 
-        @*@(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewTransferNoteViewModel.SchemeId, Model.RedirectTab, null))))*@
         @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.RedirectTab, null))))
 
         @Html.Gds().ValidationSummary()
