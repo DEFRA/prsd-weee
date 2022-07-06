@@ -29,7 +29,7 @@
                             <p class="govuk-error-message govuk-!-font-weight-regular">@Html.Gds().VisuallyHidden("Error:") You must select a file before you can upload it</p>
                         </li>
                     }
-                    @if (Model.DisplayDataError)
+                    @if (Model.DisplayDataAndSchemeErrors)
                     {
                         <li>
                             <a href="#File">Your file contains @Model.NumberOfDataErrors data error@(Model.NumberOfDataErrors == 1 ? "" : "s")</a>
