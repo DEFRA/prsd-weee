@@ -137,5 +137,50 @@
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
         }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenDraftStatus_DraftRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Draft;
+
+            //act
+            var result = model.SchemeViewRouteName;
+
+            //assert
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenSubmittedStatus_SubmittedRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Submitted;
+
+            //act
+            var result = model.SchemeViewRouteName;
+
+            //assert
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void SchemeViewRouteName_GivenNotDraftOrSubmittedStatus_InvalidOperationExceptionExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft || status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            //arrange
+            model.Status = status;
+
+            //act
+            var exception = Record.Exception(() => model.AatfViewRouteName);
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+        }
     }
 }
