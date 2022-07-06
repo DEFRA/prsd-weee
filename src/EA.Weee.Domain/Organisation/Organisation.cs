@@ -65,7 +65,7 @@
 
         public virtual Address NotificationAddress { get; private set; }
 
-        public virtual Guid? NotificationAddressId { get; private set; }
+        public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
 
         public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
         {
