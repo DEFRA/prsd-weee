@@ -177,7 +177,7 @@
             model.Status = status;
 
             //act
-            var exception = Record.Exception(() => model.AatfViewRouteName);
+            var exception = Record.Exception(() => model.SchemeViewRouteName);
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
