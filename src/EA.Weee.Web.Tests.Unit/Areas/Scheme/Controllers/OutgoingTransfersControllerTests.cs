@@ -4,6 +4,7 @@
     using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
@@ -96,6 +97,14 @@
             typeof(OutgoingTransfersController)
                 .GetMethod("SubmittedTransfer", new[] { typeof(ReviewTransferNoteViewModel) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void SubmittedTransferPost_ShouldHaveAntiforgeryAttribute()
+        {
+            typeof(OutgoingTransfersController)
+                .GetMethod("SubmittedTransfer", new[] { typeof(ReviewTransferNoteViewModel) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
         [Fact]
@@ -646,9 +655,7 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
-            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._))
-                .Returns(model);
-
+            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
 
             //act
@@ -659,11 +666,49 @@
         }
 
         [Fact]
+        public async Task SubmittedTransferPost_GivenValidModelMappedModel_TempDataShouldBeSet()
+        {
+            //arrange
+            var model = A.Fake<ReviewTransferNoteViewModel>();
+            model.ViewTransferNoteViewModel = TestFixture.Create<ViewTransferNoteViewModel>();
+            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+            A.CallTo(() => model.SelectedValue).Returns("Approve evidence note transfer");
+            A.CallTo(() => model.Reason).Returns(null);
+            A.CallTo(() => model.OrganisationId).Returns(Guid.NewGuid());
+
+            //act
+            var result = await outgoingTransferEvidenceController.SubmittedTransfer(model) as ViewResult;
+
+            //assert
+            result.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.Approved);
+            result.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(true);
+        }
+
+        [Fact]
+        public async Task SubmittedTransferPost_GivenValidModelMappedModel_DownloadTransferNoteShouldBeReturned()
+        {
+            //arrange
+            var model = A.Fake<ReviewTransferNoteViewModel>();
+            model.ViewTransferNoteViewModel = TestFixture.Create<ViewTransferNoteViewModel>();
+            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+            A.CallTo(() => model.SelectedValue).Returns("Approve evidence note transfer");
+            A.CallTo(() => model.Reason).Returns(null);
+            A.CallTo(() => model.OrganisationId).Returns(Guid.NewGuid());
+
+            //act
+            var result = await outgoingTransferEvidenceController.SubmittedTransfer(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("DownloadTransferNote");
+        }
+
+        [Fact]
         public async Task SubmittedTransferPost_ShouldReturnView()
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
-
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
 
             //act
