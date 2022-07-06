@@ -40,7 +40,7 @@
             //arrange
             var model = new UploadObligationsViewModel()
             {
-                DisplayDataError = displayDataError, DisplayFormatError = displayFormatError,
+                DisplayDataAndSchemeErrors = displayDataError, DisplayFormatError = displayFormatError,
                 DisplaySelectFileError = displaySelectFileError
             };
 
