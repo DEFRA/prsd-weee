@@ -341,6 +341,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\OrganisationMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationDataMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationUploadDataTests.cs" />
     <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
