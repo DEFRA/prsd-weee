@@ -42,7 +42,7 @@
         {
             using (var client = this.apiClient())
             {
-                //await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 //var scheme = await Cache.FetchSchemePublicInfo(pcsId);
 
                 //var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
