@@ -26,7 +26,7 @@
             SchemeObligations = new List<SchemeObligationViewModel>();
         }
 
-        public bool DisplayDataError { get; set; }
+        public bool DisplayDataAndSchemeErrors { get; set; }
 
         public int NumberOfDataErrors { get; set; }
 
@@ -34,12 +34,19 @@
 
         public bool DisplaySelectFileError { get; set; }
 
-        public bool AnyError => DisplayDataError || DisplayFormatError || DisplaySelectFileError;
+        public bool AnyError => DisplayDataAndSchemeErrors || DisplayFormatError || DisplaySelectFileError;
 
         public bool DisplaySuccessMessage { get; set; }
 
         public List<SchemeObligationViewModel> SchemeObligations { get; set; }
 
         public bool AnyObligation => SchemeObligations.Any();
+
+        public IEnumerable<int> ComplianceYearList { get; set; }
+
+        [DisplayName("Compliance year")]
+        public int? SelectedComplianceYear { get; set; }
+
+        public string UploadedMessage { get; set; }
     }
 }
