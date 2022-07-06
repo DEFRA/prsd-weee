@@ -617,6 +617,40 @@
         }
 
         [Fact]
+        public async Task FetchSearchResultsJson_GivenValidRequest_JsonResultExpectedShouldNotContainBalancingScheme()
+        {
+            const string query = "query";
+
+            SetupControllerAjaxRequest();
+            var address = new AddressData()
+            {
+                Address1 = "Address 1",
+                TownOrCity = "Town",
+                CountryName = "England"
+            };
+
+            var organisationId = Guid.NewGuid();
+            var balancingSchemeId = Guid.NewGuid();
+
+            var organisationResult = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult() { Name = "name", OrganisationId = organisationId, Address = address },
+                new OrganisationSearchResult() { Name = "name", OrganisationId = balancingSchemeId, Address = address, IsBalancingScheme = true }
+            };
+
+            A.CallTo(() => organisationSearcher.Search(query, A<int>._, true)).Returns(organisationResult);
+
+            var jsonResult = await controller.FetchSearchResultsJson(query) as JsonResult;
+
+            var serializer = new JavaScriptSerializer();
+            var result = serializer.Deserialize<List<OrganisationSearchResult>>(serializer.Serialize(jsonResult.Data));
+
+            result.Count().Should().Be(1);
+            result.Should().Contain(r => r.OrganisationId == organisationId);
+            result.Should().NotContain(r => r.OrganisationId == balancingSchemeId);
+        }
+
+        [Fact]
         public async Task GetSearch_SearchTermThatExists_RedirectsToSearchResultsWithResultsInViewModel()
         {
             var organisationId = Guid.NewGuid();
@@ -647,6 +681,66 @@
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SearchResults");
             Assert.Equal(viewModel.SearchTerm, outputModel.SearchTerm);
             Assert.Equal(viewModel.Results, outputModel.Results);
+        }
+
+        [Fact]
+        public async Task GetSearch_SearchTermReturnsBalancingScheme_RedirectsToSearchResultsWithResultsInViewModelWithoutBalancingScheme()
+        {
+            var organisationId = Guid.NewGuid();
+            var balancingSchemeOrganisationId = Guid.NewGuid();
+
+            var entityType = fixture.Create<EntityType>();
+
+            IList<OrganisationSearchResult> results = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = organisationId
+                },
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = balancingSchemeOrganisationId,
+                    IsBalancingScheme = true
+                }
+            };
+
+            A.CallTo(() => organisationSearcher.Search(A<string>._, 5, A<bool>._)).Returns(results);
+
+            var result = await controller.SearchResults(A.Dummy<string>(), entityType) as ViewResult;
+
+            var outputModel = result.Model as SearchResultsViewModel;
+            outputModel.Results.Should().NotContain(r => r.OrganisationId == balancingSchemeOrganisationId);
+            outputModel.Results.Should().Contain(r => r.OrganisationId == organisationId);
+        }
+
+        [Fact]
+        public async Task PostSearch_GivenInvalidModelAndSearchTermReturnsBalancingScheme_ResultsInViewModelWithoutBalancingScheme()
+        {
+            var organisationId = Guid.NewGuid();
+            var balancingSchemeOrganisationId = Guid.NewGuid();
+
+            IList<OrganisationSearchResult> results = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = organisationId
+                },
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = balancingSchemeOrganisationId,
+                    IsBalancingScheme = true
+                }
+            };
+
+            var model = new SearchResultsViewModel();
+            A.CallTo(() => organisationSearcher.Search(A<string>._, 5, A<bool>._)).Returns(results);
+
+            controller.ModelState.AddModelError("error", "error");
+            var result = await controller.SearchResults(model) as ViewResult;
+
+            var outputModel = result.Model as SearchResultsViewModel;
+            outputModel.Results.Should().NotContain(r => r.OrganisationId == balancingSchemeOrganisationId);
+            outputModel.Results.Should().Contain(r => r.OrganisationId == organisationId);
         }
 
         [Fact]
