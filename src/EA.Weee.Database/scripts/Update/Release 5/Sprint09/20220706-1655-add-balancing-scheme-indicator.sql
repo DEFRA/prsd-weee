@@ -17,12 +17,14 @@ CREATE NONCLUSTERED INDEX [IDX_ProducerBalancingScheme_OrganisationId] ON [Organ
 	[OrganisationId] ASC
 )
 GO
+DECLARE @CountryId UNIQUEIDENTIFIER
+SELECT @CountryId = Id FROM [Lookup].Country WHERE Name = 'UK - England'
 
 DECLARE @AddressId UNIQUEIDENTIFIER
 SET @AddressId = NEWID()
 
 INSERT INTO [Organisation].Address (Id, Address1, TownOrCity, CountryId, Telephone, Email)
-VALUES (@AddressId, 'N/A', 'N/A', '184E1785-26B4-4AE4-80D3-AE319B103ACB', '00000000', 'N/A')
+VALUES (@AddressId, 'N/A', 'N/A', @CountryId, '00000000', 'N/A')
 
 DECLARE @OrganisationId UNIQUEIDENTIFIER
 SET @OrganisationId = NEWID()
