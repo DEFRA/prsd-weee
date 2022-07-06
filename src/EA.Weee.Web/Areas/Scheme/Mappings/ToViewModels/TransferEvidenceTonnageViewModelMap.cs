@@ -43,7 +43,7 @@
         private void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
             TransferEvidenceTonnageViewModel model)
         {
-            foreach (var category in model.CategoryValues)
+            foreach (var category in model.TotalCategoryValues)
             {
                 if (source.Request != null && source.TransferAllTonnage)
                 {

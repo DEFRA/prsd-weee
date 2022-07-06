@@ -345,6 +345,7 @@
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
@@ -780,6 +781,8 @@
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\DownloadTransferNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewAllTransferNotes.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
+    <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditCategories.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_TransferCategoriesPartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
