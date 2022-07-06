@@ -127,6 +127,7 @@
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
     <Compile Include="Admin\Obligations\IObligationCsvReader.cs" />

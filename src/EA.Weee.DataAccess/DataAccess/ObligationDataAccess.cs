@@ -26,6 +26,16 @@
             this.weeeContext = weeeContext;
         }
 
+        public async Task<List<int>> GetObligationComplianceYears(UKCompetentAuthority authority)
+        {
+            return await weeeContext.ObligationSchemes
+                .Where(s => s.Scheme.CompetentAuthority.Id == authority.Id)
+                .Select(s => s.ComplianceYear)
+                .Distinct()
+                .OrderByDescending(y => y)
+                .ToListAsync();
+        }
+
         public async Task<List<Scheme>> GetObligationScheme(UKCompetentAuthority authority, int complianceYear)
         {
             return await weeeContext.Schemes
