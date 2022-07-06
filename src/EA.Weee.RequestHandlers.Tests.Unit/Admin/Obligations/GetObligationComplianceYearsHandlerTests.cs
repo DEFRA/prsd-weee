@@ -11,7 +11,6 @@
     using Domain;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Mapper;
     using RequestHandlers.Admin.Obligations;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
