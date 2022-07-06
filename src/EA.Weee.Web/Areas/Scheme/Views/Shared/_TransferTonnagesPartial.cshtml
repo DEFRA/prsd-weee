@@ -133,22 +133,22 @@
         </thead>
         <tbody class="govuk-table__body">
 
-            @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
+            @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
             {
                 var item = categoryCount;
 
-                @Html.Hidden("categoryid_to_calculate" + categoryCount, Model.CategoryValues.ElementAt(categoryCount).CategoryId)
-                @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
-                var receivedId = "Received" + Model.CategoryValues.ElementAt(categoryCount).CategoryId + "Total";
-                var reusedId = "Reused" + Model.CategoryValues.ElementAt(categoryCount).CategoryId + "Total";
+                @Html.Hidden("categoryid_to_calculate" + categoryCount, Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId)
+                @Html.HiddenFor(m => m.TotalCategoryValues[item].CategoryDisplay)
+                var receivedId = "Received" + Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId + "Total";
+                var reusedId = "Reused" + Model.TotalCategoryValues.ElementAt(categoryCount).CategoryId + "Total";
 
                 <tr class="govuk-table__row govuk-panel-grey-background">
                     <td class="govuk-table__cell govuk-!-padding-left-2">
-                        @Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay
+                        @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
                     </td>
 
-                    <td class="govuk-table__cell govuk-!-text-align-right" id="@receivedId">@Model.CategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2" id="@reusedId">@Model.CategoryValues.ElementAt(categoryCount).TotalReused</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right" id="@receivedId">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2" id="@reusedId">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
                 </tr>
 
             }

@@ -172,6 +172,26 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
+        {
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = apiClient())
+            {
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemes, pcsId);
+
+                var model =
+                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(mapperObject);
+
+                return this.View("EditCategories", model);
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model)

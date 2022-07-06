@@ -302,7 +302,7 @@
             ManageEvidenceController.ModelState.AddModelError("StartDate", new Exception());
             ManageEvidenceController.ModelState.AddModelError("EndDate", new Exception());
             ManageEvidenceController.ModelState.AddModelError("Received-auto", new Exception());
-            ManageEvidenceController.ModelState.AddModelError("CategoryValues", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("TotalCategoryValues", new Exception());
 
             //act
             await ManageEvidenceController.CreateEvidenceNote(model, Fixture.Create<Guid>(), Fixture.Create<Guid>());
@@ -315,7 +315,7 @@
             ManageEvidenceController.ModelState.ElementAt(4).Key.Should().Be("WasteTypeValue");
             ManageEvidenceController.ModelState.ElementAt(5).Key.Should().Be("ProtocolValue");
             ManageEvidenceController.ModelState.ElementAt(6).Key.Should().Be("CategoryValues2");
-            ManageEvidenceController.ModelState.ElementAt(7).Key.Should().Be("CategoryValues");
+            ManageEvidenceController.ModelState.ElementAt(7).Key.Should().Be("TotalCategoryValues");
         }
 
         [Fact]
