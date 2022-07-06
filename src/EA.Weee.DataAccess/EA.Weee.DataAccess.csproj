@@ -150,6 +150,7 @@
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\ProducerBalancingSchemeMapping.cs" />
     <Compile Include="Mappings\PanAreaMapping.cs" />
     <Compile Include="Mappings\LocalAreaMapping.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMapping.cs" />
