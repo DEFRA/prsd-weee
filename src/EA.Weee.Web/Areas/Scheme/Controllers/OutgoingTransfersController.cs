@@ -6,6 +6,7 @@
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -88,7 +89,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
+        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
@@ -100,7 +101,8 @@
                 {
                     SchemeId = pcsId,
                     SelectedComplianceYear = selectedComplianceYear, 
-                    ReturnToView = returnToView
+                    ReturnToView = returnToView,
+                    RedirectTab = redirectTab,
                 });
 
                 return this.View("SubmittedTransfer", model);

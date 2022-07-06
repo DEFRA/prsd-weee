@@ -5,7 +5,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.Scheme.Controllers;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
@@ -519,7 +521,7 @@
 
             // act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int>(), TestFixture.Create<bool>());
+                TestFixture.Create<int>(), TestFixture.Create<bool>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -535,7 +537,7 @@
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, evidenceNoteId,
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>());
+                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -552,7 +554,7 @@
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>());
+                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
 
             //assert
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
@@ -571,7 +573,7 @@
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>()) as ViewResult;
+                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -582,7 +584,7 @@
         {
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>()) as ViewResult;
+                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("SubmittedTransfer");
