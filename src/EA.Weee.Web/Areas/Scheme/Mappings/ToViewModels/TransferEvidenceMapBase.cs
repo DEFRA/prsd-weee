@@ -36,15 +36,18 @@
                 RecipientId = recipientId
             };
 
-            foreach (var evidenceNoteData in source.Notes)
+            if (source.Notes != null)
             {
-                model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-                    new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)
-                    {
-                        IncludeAllCategories = false
-                    }));
+                foreach (var evidenceNoteData in source.Notes)
+                {
+                    model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)
+                        {
+                            IncludeAllCategories = false
+                        }));
+                }
             }
-
+            
             if (source.TransferEvidenceNoteData != null)
             {
                 model.ViewTransferNoteViewModel = TransferNoteMapper.Map(
@@ -57,7 +60,7 @@
 
             foreach (var requestCategoryId in categoryValues.OrderBy(c => c.ToInt()))
             {
-                model.CategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
+                model.TotalCategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }
 
             return model;

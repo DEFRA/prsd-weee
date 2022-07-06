@@ -30,7 +30,7 @@
                             if (value > returnTonnage)
                             {
                                 var categoryFocus = o.CategoryId - 1;
-                                context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
+                                context.AddFailure(new ValidationFailure($"TotalCategoryValues[{categoryFocus}].Tonnage",
                                     $"Category {o.CategoryId} tonnage must be less than or equal to {returnTonnage}"));
                             }
                         }
@@ -47,14 +47,14 @@
                             if (value < returnTonnage)
                             {
                                 var categoryFocus = o.CategoryId - 1;
-                                context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
+                                context.AddFailure(new ValidationFailure($"TotalCategoryValues[{categoryFocus}].Tonnage",
                                     $"Category {o.CategoryId} tonnage must be greater than or equal to {returnTonnage}"));
                             }
                         }
                         else if (o.Tonnage == null && returnTonnage != null)
                         {
                             var categoryFocus = o.CategoryId - 1;
-                            context.AddFailure(new ValidationFailure($"CategoryValues[{categoryFocus}].Tonnage",
+                            context.AddFailure(new ValidationFailure($"TotalCategoryValues[{categoryFocus}].Tonnage",
                                 $"Category {o.CategoryId} tonnage must be greater than or equal to {returnTonnage}"));
                         }
                     }

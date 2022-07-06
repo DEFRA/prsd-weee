@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    public class TransferEvidenceNoteCategoriesViewModel
+    public class TransferEvidenceNoteCategoriesViewModel : TransferEvidenceViewModelBase
     {
         public Guid OrganisationId { get; set; }
 

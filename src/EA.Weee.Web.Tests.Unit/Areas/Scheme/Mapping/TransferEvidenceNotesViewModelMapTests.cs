@@ -98,8 +98,8 @@
             var result = map.Map(source);
 
             //assert
-            result.CategoryValues.Should().NotBeEmpty();
-            source.Request.CategoryIds.ForEach(c => result.CategoryValues.Should().Contain(cv => cv.CategoryId.Equals(c)));
+            result.TotalCategoryValues.Should().NotBeEmpty();
+            source.Request.CategoryIds.ForEach(c => result.TotalCategoryValues.Should().Contain(cv => cv.CategoryId.Equals(c)));
         }
 
         [Fact]

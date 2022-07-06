@@ -132,7 +132,7 @@
         [Fact]
         public void EvidenceNoteViewModel_EvidenceCategoryValues_ShouldHaveRequiredTonnageAttribute()
         {
-            typeof(EditEvidenceNoteViewModel).GetProperty("CategoryValues").Should().BeDecoratedWith<RequiredTonnageAttribute>();
+            typeof(EditEvidenceNoteViewModel).GetProperty("TotalCategoryValues").Should().BeDecoratedWith<RequiredTonnageAttribute>();
         }
 
         [Fact]

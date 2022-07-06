@@ -29,6 +29,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: "Scheme_edit_transfer_categories",
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-categories/{evidenceNoteId}",
+                defaults: new { action = "EditCategories", controller = "OutgoingTransfers", area = "Scheme" },
+                namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Scheme_edit_transfer_tonnages",
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-tonnages/{evidenceNoteId}",
                 defaults: new { action = "EditTonnages", controller = "OutgoingTransfers", area = "Scheme" },
