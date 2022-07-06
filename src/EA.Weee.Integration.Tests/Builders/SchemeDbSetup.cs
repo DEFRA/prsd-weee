@@ -6,6 +6,7 @@
     using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Scheme;
+    using Weee.Tests.Core;
 
     public class SchemeDbSetup : DbTestDataBuilder<Scheme, SchemeDbSetup>
     {
@@ -50,7 +51,8 @@
 
         public SchemeDbSetup WithAuthority(Guid id)
         {
-            instance.UpdateOrganisation(id);
+            ObjectInstantiator<Scheme>.SetProperty(o => o.CompetentAuthorityId, id, instance);
+            ObjectInstantiator<Scheme>.SetProperty(o => o.CompetentAuthority, null, instance);
 
             return this;
         }

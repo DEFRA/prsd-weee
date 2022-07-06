@@ -175,7 +175,7 @@
             var addressMapper = new AddressMap();
             var contactMapper = new ContactMap();
             var userMapper = new UserMap();
-            var orgMapper = new OrganisationMap(addressMapper, contactMapper);
+            var orgMapper = new OrganisationMap(addressMapper);
             return new OrganisationUserMap(orgMapper, userMapper);
         }
 

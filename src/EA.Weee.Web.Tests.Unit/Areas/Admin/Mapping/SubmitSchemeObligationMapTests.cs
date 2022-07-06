@@ -9,19 +9,17 @@
     using Services;
     using Web.Areas.Admin.Mappings.FromViewModel;
     using Web.Areas.Admin.ViewModels.Obligations;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class SubmitSchemeObligationMapTests
+    public class SubmitSchemeObligationMapTests : SimpleUnitTestBase
     {
         private readonly IFileConverterService fileConverterService;
         private readonly SubmitSchemeObligationMap map;
-        private readonly Fixture fixture;
 
         public SubmitSchemeObligationMapTests()
         {
             fileConverterService = A.Fake<IFileConverterService>();
-
-            fixture = new Fixture();
 
             map = new SubmitSchemeObligationMap(fileConverterService);
         }
@@ -37,12 +35,23 @@
         }
 
         [Fact]
+        public void Map_GivenNullSelectedComplianceYear_ArgumentNullExceptionExpected()
+        {
+            //act
+            var exception = Record.Exception(() => map.Map(new UploadObligationsViewModel()));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
         public void Map_GivenModelSource_FileConverterServiceShouldBeCalled()
         {
             //arrange
             var model = new UploadObligationsViewModel()
             {
-                File = A.Fake<HttpPostedFileBase>()
+                File = A.Fake<HttpPostedFileBase>(),
+                SelectedComplianceYear = TestFixture.Create<int>()
             };
 
             //act
@@ -59,9 +68,11 @@
             var model = new UploadObligationsViewModel()
             {
                 File = A.Fake<HttpPostedFileBase>(),
-                Authority = fixture.Create<CompetentAuthority>()
+                Authority = TestFixture.Create<CompetentAuthority>(),
+                SelectedComplianceYear = TestFixture.Create<int>()
             };
-            var fileData = fixture.Create<byte[]>();
+
+            var fileData = TestFixture.Create<byte[]>();
 
             A.CallTo(() => fileConverterService.ConvertCsv(A<HttpPostedFileBase>._)).Returns(fileData);
 
@@ -72,6 +83,7 @@
             result.Authority.Should().Be(model.Authority);
             result.FileInfo.Data.Should().BeEquivalentTo(fileData);
             result.FileInfo.FileName.Should().Be(model.File.FileName);
+            result.ComplianceYear.Should().Be(model.SelectedComplianceYear);
         }
     }
 }
