@@ -5,6 +5,8 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
     using ManageEvidenceNotes;
 
@@ -18,7 +20,9 @@
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
-        [Required(ErrorMessage = "Choose whether to approve, reject or return the evidence note transfer")]
+        public string RedirectTab => ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString();
+
+        [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note transfer")]
         public override string SelectedValue { get; set; }
 
         [DisplayName("What is the reason you are rejecting or returning the evidence note transfer?")]
