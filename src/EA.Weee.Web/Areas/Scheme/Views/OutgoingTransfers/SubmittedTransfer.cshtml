@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
 @using MvcNavigationHelpers
@@ -12,7 +13,7 @@
 
 @section full_main_content
 {
-    @using (Html.BeginRouteForm("Scheme_submitted_transfer", FormMethod.Post))
+    @using (Html.BeginRouteForm(SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, FormMethod.Post))
     {
 
         @(this.WeeeGds().BackLink(
@@ -28,6 +29,9 @@
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "status-id" })
+
+        @*@(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewTransferNoteViewModel.SchemeId, Model.RedirectTab, null))))*@
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.RedirectTab, null))))
 
         @Html.Gds().ValidationSummary()
         @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
