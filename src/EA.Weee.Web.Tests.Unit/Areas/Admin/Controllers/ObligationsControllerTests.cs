@@ -21,16 +21,16 @@
     using Core.Admin.Obligation;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ObligationsControllerTests
+    public class ObligationsControllerTests : SimpleUnitTestBase
     {
         private readonly IAppConfiguration configuration;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeClient client;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
-        private readonly Fixture fixture;
         private readonly BreadcrumbService breadcrumb;
         private readonly ObligationsController controller;
 
@@ -42,8 +42,6 @@
             apiClient = () => client;
             breadcrumb = A.Fake<BreadcrumbService>();
             cache = A.Fake<IWeeeCache>();
-
-            fixture = new Fixture();
 
             controller = new ObligationsController(configuration, breadcrumb, cache, apiClient, mapper);
         }
@@ -204,7 +202,7 @@
                                                                         A.Dummy<IWeeeCache>(), 
                                                                         () => A.Dummy<IWeeeClient>(),
                                                                         mapper);
-            var model = fixture.Create<SelectAuthorityViewModel>();
+            var model = TestFixture.Create<SelectAuthorityViewModel>();
             controller.ModelState.AddModelError("error", new Exception());
 
             // Act - holding page until obligations page is implemented
@@ -221,7 +219,7 @@
         public void PostSelectAuthority_WithValidModel_RedirectsToUploadObligationsAction()
         {
             // Arrange
-            var model = fixture.Create<SelectAuthorityViewModel>();
+            var model = TestFixture.Create<SelectAuthorityViewModel>();
 
             var result = controller.SelectAuthority(model) as RedirectToRouteResult;
 
@@ -233,7 +231,7 @@
         [Fact]
         public void UploadObligationsGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?) }, null)
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority), typeof(Guid?), typeof(int?), typeof(bool) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -263,50 +261,92 @@
         }
 
         [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthority_AuthoritySchemeObligationsShouldBeRetrieved()
+        public async Task UploadObligationsGet_GivenSelectedAuthority_ComplianceYearsShouldBeRetrieved()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
+            var authority = TestFixture.Create<CompetentAuthority>();
 
             //act
-            await controller.UploadObligations(authority, null);
+            await controller.UploadObligations(authority, null, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == 2022 &&
+                A<GetObligationComplianceYears>.That.Matches(s => s.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoSelectedComplianceYear_AuthoritySchemeObligationsShouldBeRetrieved()
+        {
+            //arrange
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
+            //act
+            await controller.UploadObligations(authority, null, null);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                    A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == complianceYears.ElementAt(0) &&
                                                              s.Authority == authority))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped()
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndSelectedComplianceYear_AuthoritySchemeObligationsShouldBeRetrieved()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationData = fixture.CreateMany<SchemeObligationData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var selectedComplianceYear = TestFixture.Create<int>();
+
+            //act
+            await controller.UploadObligations(authority, null, selectedComplianceYear);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligation>.That.Matches(s => s.ComplianceYear == selectedComplianceYear &&
+                                                         s.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeMapped(bool displayNotification)
+        {
+            //arrange
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
+            var selectedComplianceYear = TestFixture.Create<int?>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligation>._)).Returns(obligationData);
 
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
             //act
-            await controller.UploadObligations(authority, null);
+            await controller.UploadObligations(authority, null, selectedComplianceYear, displayNotification);
 
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
                         A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority &&
                             u.ObligationData.SequenceEqual(obligationData) &&
-                            u.ErrorData == null))).MustHaveHappenedOnceExactly();
+                            u.SelectedComplianceYear == selectedComplianceYear &&
+                            u.ErrorData == null &&
+                            u.ComplianceYears.SequenceEqual(complianceYears) &&
+                            u.DisplayNotification == displayNotification))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_SchemeUploadObligationShouldBeRetrieved()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
 
             //act
-            await controller.UploadObligations(authority, obligationId);
+            await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -314,24 +354,40 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeMapped(bool displayNotification)
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
+            var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var selectedComplianceYear = TestFixture.Create<int?>();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+            var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
+            
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligation>._)).Returns(obligationData);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
 
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
             //act
-            await controller.UploadObligations(authority, obligationId);
+            await controller.UploadObligations(authority, obligationId, selectedComplianceYear, displayNotification);
 
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.CompetentAuthority == authority && u.ErrorData == schemeUploadObligationData)))
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => 
+                            u.CompetentAuthority == authority && 
+                            u.ErrorData == schemeUploadObligationData &&
+                            u.SelectedComplianceYear == selectedComplianceYear &&
+                            u.ComplianceYears.SequenceEqual(complianceYears) &&
+                            u.DisplayNotification == displayNotification &&
+                            u.ObligationData == obligationData)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -339,9 +395,9 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndObligationUploadId_ModelShouldBeReturned()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
-            var obligationId = fixture.Create<Guid>();
-            var schemeUploadObligationData = fixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var obligationId = TestFixture.Create<Guid>();
+            var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() => client.SendAsync(A<string>._,
@@ -352,7 +408,7 @@
                         A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var viewResult = await controller.UploadObligations(authority, obligationId) as ViewResult;
+            var viewResult = await controller.UploadObligations(authority, obligationId, TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             viewResult.Model.Should().Be(model);
@@ -362,7 +418,7 @@
         public async Task UploadObligationsGet_GivenSelectedAuthorityAndNoObligationUploadId_ModelShouldBeReturned()
         {
             //arrange
-            var authority = fixture.Create<CompetentAuthority>();
+            var authority = TestFixture.Create<CompetentAuthority>();
             var model = ValidUploadObligationsViewModel();
 
             A.CallTo(() =>
@@ -370,7 +426,7 @@
                         A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await controller.UploadObligations(authority, fixture.Create<Guid>()) as ViewResult;
+            var result = await controller.UploadObligations(authority, TestFixture.Create<Guid>(), TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -451,7 +507,7 @@
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
-            var request = fixture.Create<SubmitSchemeObligation>();
+            var request = TestFixture.Create<SubmitSchemeObligation>();
 
             A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model)).Returns(request);
 
@@ -467,7 +523,7 @@
         {
             //arrange
             var model = ValidUploadObligationsViewModel();
-            var obligationUploadId = fixture.Create<Guid>();
+            var obligationUploadId = TestFixture.Create<Guid>();
 
             A.CallTo(() => client.SendAsync(A<string>._, A<SubmitSchemeObligation>._)).Returns(obligationUploadId);
 
@@ -478,6 +534,8 @@
             result.RouteValues["action"].Should().Be("UploadObligations");
             result.RouteValues["authority"].Should().Be(model.Authority);
             result.RouteValues["id"].Should().Be(obligationUploadId);
+            result.RouteValues["selectedComplianceYear"].Should().Be(model.SelectedComplianceYear);
+            result.RouteValues["displayNotification"].Should().Be(true);
         }
 
         [Fact]
@@ -499,7 +557,7 @@
             var model = new UploadObligationsViewModel()
             {
                 File = A.Fake<HttpPostedFileBase>(),
-                Authority = fixture.Create<CompetentAuthority>()
+                Authority = TestFixture.Create<CompetentAuthority>()
             };
             return model;
         }
