@@ -351,6 +351,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
