@@ -340,6 +340,7 @@
     <Content Include="scripts\Update\Release 5\Sprint07\20220610-1015-obligation-scheme-unq.sql" />
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obligation-upload-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obigation-upload-schema.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint09\20220706-1655-add-balancing-scheme-indicator.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
