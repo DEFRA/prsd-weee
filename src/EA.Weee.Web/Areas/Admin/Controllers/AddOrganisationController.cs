@@ -66,7 +66,7 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            var searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
+            var searchResults = await GetSearchResults(searchTerm, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
@@ -80,7 +80,7 @@
             {
                 SearchTerm = searchTerm,
                 EntityType = entityType,
-                Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+                Results = await GetSearchResults(searchTerm, false)
             };
 
             return View(viewModel);
@@ -114,7 +114,7 @@
 
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
+                viewModel.Results = await GetSearchResults(viewModel.SearchTerm, false);
 
                 return View(viewModel);
             }
@@ -366,6 +366,13 @@
         private void SetBreadcrumb(string activity)
         {
             breadcrumb.InternalActivity = activity;
+        }
+
+        private async Task<List<OrganisationSearchResult>> GetSearchResults(string searchTerm, bool asYouType)
+        {
+            var results = await organisationSearcher.Search(searchTerm, maximumSearchResults, asYouType);
+
+            return results.Where(r => !r.IsBalancingScheme).ToList();
         }
     }
 }
