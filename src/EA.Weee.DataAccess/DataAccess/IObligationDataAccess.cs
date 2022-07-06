@@ -16,5 +16,7 @@
             IList<ObligationScheme> obligations);
 
         Task<List<Scheme>> GetObligationScheme(UKCompetentAuthority authority, int complianceYear);
+
+        Task<List<int>> GetObligationComplianceYears(UKCompetentAuthority authority);
     }
 }

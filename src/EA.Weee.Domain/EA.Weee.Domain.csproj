@@ -132,6 +132,7 @@
     <Compile Include="Obligation\ObligationUploadError.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Organisation\ProducerBalancingScheme.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
     <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
