@@ -60,5 +60,21 @@
                 throw new InvalidOperationException("Invalid route name");
             }
         }
+
+        public string SchemeViewRouteName
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case NoteStatus.Draft:
+                        return SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
+                    case NoteStatus.Submitted:
+                        return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
+                }
+
+                throw new InvalidOperationException("Invalid route name");
+            }
+        }
     }
 }

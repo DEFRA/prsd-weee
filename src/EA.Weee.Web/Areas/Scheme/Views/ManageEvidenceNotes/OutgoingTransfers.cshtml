@@ -38,48 +38,44 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        @if (Model.EvidenceNotesDataList.Any())
+                    @if (Model.EvidenceNotesDataList.Any())
+                    {
+                        foreach (var note in Model.EvidenceNotesDataList)
                         {
-                            foreach (var note in Model.EvidenceNotesDataList)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                    <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
-                                    <td class="govuk-table__cell">@note.Recipient</td>
-                                    <td class="govuk-table__cell">@note.Status</td>
-                                    <td class="govuk-table__cell">
-                                        @if (note.DisplayViewLink)
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                                <td class="govuk-table__cell">@note.Recipient</td>
+                                <td class="govuk-table__cell">@note.Status</td>
+                                <td class="govuk-table__cell">
+                                    @if (note.DisplayViewLink)
+                                    {
+                                        if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft || note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted)
                                         {
-                                            if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft)
-                                            {
-                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, "Scheme_view_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                            }
-                                            else if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted)
-                                            {
-                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() }, null)
-                                            }
+                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
                                         }
-                                        @if (note.DisplayEditLink)
-                                        {
-                                            @Html.NavigationRouteLink("Edit", "Edit transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="5">
-                                    <p>There have not been any evidence note transfers </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p> Showing 0 - 0 of 0 </p>
+                                    }
+                                    @if (note.DisplayEditLink)
+                                    {
+                                        @Html.NavigationRouteLink("Edit", "Edit transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                    }
                                 </td>
                             </tr>
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <p>There have not been any evidence note transfers </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p> Showing 0 - 0 of 0 </p>
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </section>
