@@ -1,5 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Scheme.Controllers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
 @{
 
@@ -21,6 +23,9 @@
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "status-id" })
+
+        @*@(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.ViewTransferNoteViewModel.SchemeId, Model.RedirectTab, null))))*@
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.RedirectTab, null))))
 
         @Html.Gds().ValidationSummary()
         @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
