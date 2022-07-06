@@ -495,6 +495,7 @@
 
             var organisation = A.Dummy<Domain.Organisation.Organisation>();
             A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
             A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
 
             var organisations = new List<Domain.Organisation.Organisation>()
