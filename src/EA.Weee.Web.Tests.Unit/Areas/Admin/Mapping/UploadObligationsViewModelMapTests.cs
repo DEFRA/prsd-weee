@@ -42,7 +42,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.NumberOfDataErrors.Should().Be(0);
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplayFormatError.Should().BeFalse();
             model.DisplaySelectFileError.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
@@ -95,7 +95,7 @@
 
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
-            model.DisplayDataError.Should().BeTrue();
+            model.DisplayDataAndSchemeErrors.Should().BeTrue();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -119,7 +119,7 @@
 
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -147,7 +147,7 @@
 
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
-            model.DisplayDataError.Should().BeTrue();
+            model.DisplayDataAndSchemeErrors.Should().BeTrue();
             model.NumberOfDataErrors.Should().Be(2);
             model.DisplaySuccessMessage.Should().BeFalse();
         }
@@ -176,7 +176,7 @@
 
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.NumberOfDataErrors.Should().Be(0);
             model.DisplaySuccessMessage.Should().BeFalse();
         }
@@ -258,7 +258,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeTrue();
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -287,7 +287,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeFalse();
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 
@@ -310,7 +310,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeFalse();
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeTrue();
         }
 
@@ -333,7 +333,7 @@
             //assert
             model.Authority.Should().Be(source.CompetentAuthority);
             model.DisplayFormatError.Should().BeFalse();
-            model.DisplayDataError.Should().BeFalse();
+            model.DisplayDataAndSchemeErrors.Should().BeFalse();
             model.DisplaySuccessMessage.Should().BeFalse();
         }
 

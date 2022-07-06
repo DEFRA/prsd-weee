@@ -59,7 +59,7 @@
                 model.UploadedMessage =
                     $"You have successfully uploaded the obligations for the compliance year {source.SelectedComplianceYear}";
                 model.DisplayFormatError = displayFileError && source.DisplayNotification;
-                model.DisplayDataError = displayFileError != true && displayDataError && source.DisplayNotification;
+                model.DisplayDataAndSchemeErrors = displayFileError != true && displayDataError && source.DisplayNotification;
             }
         }
     }
