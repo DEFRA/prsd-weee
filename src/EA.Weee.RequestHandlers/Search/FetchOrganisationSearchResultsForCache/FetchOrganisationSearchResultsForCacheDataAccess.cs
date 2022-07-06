@@ -22,12 +22,6 @@
             this.addressMapper = addressMapper;
         }
 
-        /// <summary>
-        /// Returns a list of all complete organisations, ordered by organisation name.
-        /// For now, only organisations representing schemes will be returned, excluding
-        /// any scheme that has a status of rejected.
-        /// </summary>
-        /// <returns></returns>
         public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
         {
             var organisations = await context.Organisations
@@ -44,9 +38,10 @@
                 Address = addressMapper.Map(r.BusinessAddress),
                 PcsCount = schemes.Count(p => p.OrganisationId == r.Id && p.SchemeStatus != Domain.Scheme.SchemeStatus.Rejected),
                 AatfCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Aatf),
-                AeCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Ae)
+                AeCount = aatfs.Count(p => p.Organisation.Id == r.Id && p.FacilityType == FacilityType.Ae),
+                IsBalancingScheme = r.ProducerBalancingScheme != null
             })
-                .Where(r => r.PcsCount > 0 || r.AatfCount > 0 || r.AeCount > 0)
+                .Where(r => r.PcsCount > 0 || r.AatfCount > 0 || r.AeCount > 0 || r.IsBalancingScheme)
                 .OrderBy(r => r.Name)
                 .ToList();
         }
