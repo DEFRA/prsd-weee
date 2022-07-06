@@ -17,6 +17,8 @@
 
         public int PcsCount { get; set; }
 
+        public bool IsBalancingScheme { get; set; }
+
         public string AddressString
         {
             get
