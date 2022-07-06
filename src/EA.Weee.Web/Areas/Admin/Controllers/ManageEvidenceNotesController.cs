@@ -19,6 +19,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
 
     public class ManageEvidenceNotesController : AdminBreadcrumbBaseController
     {
@@ -57,6 +58,23 @@
                     default:
                         return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel);
                 }
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteForInternalUserRequest(evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                return View(model);
             }
         }
 
