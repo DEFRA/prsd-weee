@@ -48,13 +48,9 @@
                                 <td class="govuk-table__cell">
                                     @if (note.DisplayViewLink)
                                     {
-                                        if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft)
+                                        if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft || note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted)
                                         {
-                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, "Scheme_view_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                        }
-                                        else if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted)
-                                        {
-                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
                                         }
                                     }
                                     @if (note.DisplayEditLink)
