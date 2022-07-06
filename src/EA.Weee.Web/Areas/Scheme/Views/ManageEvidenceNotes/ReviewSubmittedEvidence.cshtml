@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.Extensions
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedManageEvidenceNotesSchemeViewModel
@@ -62,7 +62,7 @@
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false }, null)
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_submitted_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
                                 }
                             </td>
                             </tr>
