@@ -1,0 +1,16 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
+@{
+    ViewBag.Title = Model.TabName + " - GOV.UK";
+}
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.InternalUserRedirectTab, null))))
+
+    @Html.Partial("_ViewEvidenceNotePartial", Model)
+}
+
