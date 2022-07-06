@@ -8,6 +8,7 @@
     public class SubmitSchemeObligation : IRequest<Guid>
     {
         public FileInfo FileInfo { get; private set; }
+
         public CompetentAuthority Authority { get; private set; }
 
         public int ComplianceYear { get; private set; }
