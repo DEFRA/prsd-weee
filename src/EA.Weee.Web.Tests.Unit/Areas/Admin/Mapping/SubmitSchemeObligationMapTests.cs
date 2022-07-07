@@ -35,16 +35,6 @@
         }
 
         [Fact]
-        public void Map_GivenNullSelectedComplianceYear_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => map.Map(new UploadObligationsViewModel()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Map_GivenModelSource_FileConverterServiceShouldBeCalled()
         {
             //arrange
