@@ -23,7 +23,16 @@
             schemeData.RemoveAll(s => s.OrganisationId == source.OrganisationId);
 
             model.OrganisationId = source.OrganisationId;
-            model.SchemasToDisplay = source.SchemeData;
+            model.SchemasToDisplay = schemeData;
+            model.SelectedSchema = source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+
+            foreach (var categoryBooleanViewModel in model.CategoryValues)
+            {
+                if (source.TransferEvidenceNoteData.CategoryIds.Contains(categoryBooleanViewModel.CategoryId))
+                {
+                    categoryBooleanViewModel.Selected = true;
+                }
+            }
 
             return model;
         }
