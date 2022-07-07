@@ -5,10 +5,13 @@
     using System.Collections.Generic;
     using Core.Scheme;
     using CuttingEdge.Conditions;
+    using ViewModels;
     using Weee.Requests.Scheme;
 
     public class TransferEvidenceNotesViewModelMapTransfer
     {
+        public TransferEvidenceNoteCategoriesViewModel ExistingTransferEvidenceNoteCategoriesViewModel { get; }
+
         public IList<EvidenceNoteData> Notes { get; }
 
         public TransferEvidenceNoteRequest Request { get; }
@@ -51,7 +54,8 @@
 
         public TransferEvidenceNotesViewModelMapTransfer(TransferEvidenceNoteData transferNoteData,
             IList<SchemeData> schemeData,
-            Guid organisationId)
+            Guid organisationId,
+            TransferEvidenceNoteCategoriesViewModel existingModel)
         {
             Condition.Requires(transferNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
@@ -60,6 +64,7 @@
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
             SchemeData = schemeData;
+            ExistingTransferEvidenceNoteCategoriesViewModel = existingModel;
         }
     }
 }

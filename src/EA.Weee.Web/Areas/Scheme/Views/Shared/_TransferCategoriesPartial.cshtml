@@ -31,7 +31,7 @@
                             var category = Model.CategoryValues[i];
                             var selectedOption = Model.CategoryValues[i].Selected ? "checked" : "";
                             var id = "CategoryValues_" + i + "__Selected";
-                            var name = "TotalCategoryValues[" + i + "].Selected";
+                            var name = "CategoryValues[" + i + "].Selected";
                         }
 
                         <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
