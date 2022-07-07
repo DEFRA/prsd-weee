@@ -74,13 +74,23 @@
                     errorData = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligationUpload(id.Value));
                 }
 
-                var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority));
-                var complianceYear = selectedComplianceYear ?? complianceYears.ElementAt(0);
+                var model = await UploadObligationsViewModel(authority, selectedComplianceYear, displayNotification, client, errorData);
 
-                var schemeObligationData =
-                    await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, complianceYear));
-                
-                var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(new UploadObligationsViewModelMapTransfer()
+                return View(model);
+            }
+        }
+
+        private async Task<UploadObligationsViewModel> UploadObligationsViewModel(CompetentAuthority authority, int? selectedComplianceYear,
+            bool displayNotification, IWeeeClient client, List<SchemeObligationUploadErrorData> errorData)
+        {
+            var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority));
+            var complianceYear = selectedComplianceYear ?? complianceYears.ElementAt(0);
+
+            var schemeObligationData =
+                await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, complianceYear));
+
+            var model = mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                new UploadObligationsViewModelMapTransfer()
                 {
                     CompetentAuthority = authority,
                     ErrorData = errorData,
@@ -89,18 +99,16 @@
                     ComplianceYears = complianceYears,
                     DisplayNotification = displayNotification
                 });
-
-                return View(model);
-            }
+            return model;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadObligations(UploadObligationsViewModel model)
         {
-            if (ModelState.IsValid)
+            using (var client = apiClient())
             {
-                using (var client = apiClient())
+                if (ModelState.IsValid)
                 {
                     var request = mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model);
 
@@ -108,20 +116,23 @@
 
                     return RedirectToAction("UploadObligations", new
                     {
-                        authority = model.Authority, 
-                        id = result, 
-                        selectedComplianceYear = model.SelectedComplianceYear, 
+                        authority = model.Authority,
+                        id = result,
+                        selectedComplianceYear = model.SelectedComplianceYear,
                         displayNotification = true
                     });
                 }
-            }
 
-            if (ModelState.HasErrorForProperty<UploadObligationsViewModel, HttpPostedFileBase>(m => m.File))
-            {
-                model.DisplaySelectFileError = true;
-            }
+                var refreshedModel = await UploadObligationsViewModel(model.Authority, model.SelectedComplianceYear,
+                    false, client, null);
 
-            return View(model);
+                if (ModelState.HasErrorForProperty<UploadObligationsViewModel, HttpPostedFileBase>(m => m.File))
+                {
+                    refreshedModel.DisplaySelectFileError = true;
+                }
+
+                return View(refreshedModel);
+            }
         }
 
         [HttpGet]
