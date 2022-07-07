@@ -63,20 +63,6 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithComplianceYearsList_UploadObligationsViewModelShouldBeReturnedWithOrderedComplianceYearList()
-        {
-            //arrange
-            var complianceYears = new List<int>() { 2022, 2021, 2019, 2024 };
-            var source = new UploadObligationsViewModelMapTransfer() { ComplianceYears = complianceYears };
-
-            //act
-            var model = map.Map(source);
-
-            //assert
-            model.ComplianceYearList.Should().BeInAscendingOrder();
-        }
-
-        [Fact]
         public void Map_GivenSourceWithSelectedComplianceYear_UploadObligationsViewModelSelectedComplianceYearShouldBeSet()
         {
             //arrange
