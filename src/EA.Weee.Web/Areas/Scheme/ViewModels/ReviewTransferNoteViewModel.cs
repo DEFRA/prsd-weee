@@ -45,7 +45,7 @@
             }
         }
 
-        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote })
+        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote, RejectEvidenceNote, ReturnEvidenceNote })
         {
         }
 
