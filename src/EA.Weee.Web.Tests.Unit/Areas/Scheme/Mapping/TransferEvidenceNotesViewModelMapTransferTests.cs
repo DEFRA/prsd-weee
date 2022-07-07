@@ -4,6 +4,7 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.Scheme;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Weee.Requests.Scheme;
@@ -120,6 +121,65 @@
             result.OrganisationId.Should().Be(organisationId);
             result.Notes.ToList().Should().BeEquivalentTo(notes);
             result.TransferEvidenceNoteData.Should().Be(noteData);
+        }
+
+        [Fact]
+        public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferCategoryConstructorValues_PropertiesShouldBeSet()
+        {
+            //arrange
+            var schemeData = fixture.CreateMany<SchemeData>().ToList();
+            var noteData = fixture.Create<TransferEvidenceNoteData>();
+            var organisationId = fixture.Create<Guid>();
+
+            //act
+            var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, organisationId);
+
+            //assert
+            result.OrganisationId.Should().Be(organisationId);
+            result.SchemeData.Should().BeEquivalentTo(schemeData);
+            result.TransferEvidenceNoteData.Should().Be(noteData);
+        }
+
+        [Fact]
+        public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndTransferNoteDataIsNull_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var schemeData = fixture.CreateMany<SchemeData>().ToList();
+            var organisationId = fixture.Create<Guid>();
+
+            //act
+            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(null, schemeData, organisationId));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndSchemeDataIsNull_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var noteData = fixture.Create<TransferEvidenceNoteData>();
+            var organisationId = fixture.Create<Guid>();
+
+            //act
+            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(noteData, null, organisationId));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndOrganisationIdIsEmpty_ArgumentExceptionExpected()
+        {
+            //arrange
+            var schemeData = fixture.CreateMany<SchemeData>().ToList();
+            var noteData = fixture.Create<TransferEvidenceNoteData>();
+
+            //act
+            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, Guid.Empty));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
         }
     }
 }
