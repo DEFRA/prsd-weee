@@ -20,6 +20,8 @@
 
     @using (Html.BeginRouteForm("Scheme_edit_transfer_categories", method: FormMethod.Post))
     {
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
     }
 }

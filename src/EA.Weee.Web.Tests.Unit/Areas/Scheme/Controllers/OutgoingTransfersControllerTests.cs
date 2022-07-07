@@ -19,6 +19,7 @@
     using System.Web.Mvc;
     using Core.Scheme;
     using Web.Areas.Scheme.Mappings.ToViewModels;
+    using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
@@ -30,6 +31,7 @@
         private readonly IWeeeClient weeeClient;
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
+        private readonly ITransferEvidenceRequestCreator transferEvidenceRequestCreator;
         private readonly OutgoingTransfersController outgoingTransferEvidenceController;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -45,11 +47,12 @@
             cache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
+            transferEvidenceRequestCreator = A.Fake<ITransferEvidenceRequestCreator>();
 
             organisationId = Guid.NewGuid();
 
             outgoingTransferEvidenceController =
-                new OutgoingTransfersController(mapper, breadcrumb, cache, () => weeeClient, sessionService);
+                new OutgoingTransfersController(mapper, breadcrumb, cache, () => weeeClient, sessionService, transferEvidenceRequestCreator);
 
             transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
             evidenceNoteData = TestFixture.CreateMany<EvidenceNoteData>().ToList();
@@ -84,7 +87,7 @@
         }
 
         [Fact]
-        public void EditCategories_ShouldHaveHttpGetAttribute()
+        public void EditCategoriesGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
@@ -128,6 +131,14 @@
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
                     new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditCategoriesPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(OutgoingTransfersController)
+                .GetMethod("EditCategories", new[] { typeof(TransferEvidenceNoteCategoriesViewModel) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
         }
 
         [Fact]
@@ -987,7 +998,8 @@
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.SchemeData.SequenceEqual(schemes) &&
                         t.OrganisationId == organisationId &&
-                        t.TransferEvidenceNoteData == transferEvidenceNoteData))).MustHaveHappenedOnceExactly();
+                        t.TransferEvidenceNoteData == transferEvidenceNoteData &&
+                        t.ExistingTransferEvidenceNoteCategoriesViewModel == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1012,6 +1024,157 @@
 
             //assert
             result.ViewName.Should().Be("EditCategories");
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_ShouldSetBreadcrumb()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.PcsId);
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenValidModel_TransferRequestShouldBeBuilt()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => transferEvidenceRequestCreator.SelectCategoriesToRequest(model))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenValidModelAndTransferRequest_TransferRequestShouldBeSetInSession()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            A.CallTo(() => transferEvidenceRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, request,
+                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenValidModel_ShouldBeRedirectedToEditNotes()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteName.Should().Be("Scheme_edit_transfer_notes");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["evidenceNoteId"].Should().Be(model.ViewTransferNoteViewModel.EvidenceNoteId);
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenInvalidModel_ViewShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("EditCategories");
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenEvidenceNoteId_ShouldRetrieveTransferNote()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == model.ViewTransferNoteViewModel.EvidenceNoteId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_SchemesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn == false))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenTransferNoteAndSchemes_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
+            var schemes = TestFixture.CreateMany<SchemeData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetSchemesExternal>._)).Returns(schemes);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.SchemeData.SequenceEqual(schemes) &&
+                        t.OrganisationId == model.PcsId &&
+                        t.TransferEvidenceNoteData == transferEvidenceNoteData &&
+                        t.ExistingTransferEvidenceNoteCategoriesViewModel == model))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenMappedModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            var refreshedModel = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(refreshedModel);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(model) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(refreshedModel);
         }
     }
 }
