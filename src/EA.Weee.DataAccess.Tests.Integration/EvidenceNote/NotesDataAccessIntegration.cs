@@ -891,7 +891,7 @@
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = date,
-                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected },
+                    AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Returned },
                     AatfId = aatf.Id, 
                     ComplianceYear = aatf.ComplianceYear
                 };
