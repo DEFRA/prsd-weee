@@ -45,7 +45,7 @@
         public IEnumerable<int> ComplianceYearList { get; set; }
 
         [DisplayName("Compliance year")]
-        public int? SelectedComplianceYear { get; set; }
+        public int SelectedComplianceYear { get; set; }
 
         public string UploadedMessage { get; set; }
     }
