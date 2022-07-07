@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Mapping
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.AatfReturn;
@@ -12,6 +9,9 @@
     using FluentAssertions;
     using Prsd.Core.Mapper;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
@@ -392,7 +392,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -546,7 +546,7 @@
                 .Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
 
             //act
             var result = map.Map(source);
@@ -601,7 +601,7 @@
                 .Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
 
             //act
             var result = map.Map(source);
@@ -804,7 +804,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
         }
 
         private TransferEvidenceNoteRequest DefaultRequest()
