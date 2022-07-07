@@ -26,7 +26,9 @@
 
         public bool TransferAllTonnage { get; set; }
 
-        public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
+        public TransferEvidenceNotesViewModelMapTransfer(
+            IList<EvidenceNoteData> notes,
+            TransferEvidenceNoteRequest request,
             TransferEvidenceNoteData transferNoteData,
             Guid organisationId)
         {
@@ -34,6 +36,7 @@
             Condition.Requires(transferNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
+            Request = request;
             Notes = notes;
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
