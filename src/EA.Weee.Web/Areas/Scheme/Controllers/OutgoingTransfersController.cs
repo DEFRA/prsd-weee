@@ -15,6 +15,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Requests;
     using ViewModels;
     using Weee.Requests.Scheme;
 
@@ -23,16 +24,19 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
+        private readonly ITransferEvidenceRequestCreator transferEvidenceRequestCreator;
 
         public OutgoingTransfersController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
             Func<IWeeeClient> apiClient, 
-            ISessionService sessionService) : base(breadcrumb, cache)
+            ISessionService sessionService,
+            ITransferEvidenceRequestCreator transferEvidenceRequestCreator) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
             this.sessionService = sessionService;
+            this.transferEvidenceRequestCreator = transferEvidenceRequestCreator;
         }
 
         [HttpGet]
@@ -179,16 +183,33 @@
 
             using (var client = apiClient())
             {
-                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
-
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemes, pcsId);
-
-                var model =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(mapperObject);
+                var model = await TransferEvidenceNoteCategoriesViewModel(pcsId, evidenceNoteId, client, null);
 
                 return this.View("EditCategories", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditCategories(TransferEvidenceNoteCategoriesViewModel model)
+        {
+            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            if (ModelState.IsValid)
+            {
+                var transferRequest = transferEvidenceRequestCreator.SelectCategoriesToRequest(model);
+
+                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
+
+                return RedirectToRoute("Scheme_edit_transfer_notes",
+                    new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+            }
+
+            using (var client = apiClient())
+            {
+                var refreshedModel = await TransferEvidenceNoteCategoriesViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client, model);
+
+                return this.View("EditCategories", refreshedModel);
             }
         }
 
@@ -222,6 +243,23 @@
             }
 
             return this.View("EditTransferFrom", model);
+        }
+
+        private async Task<TransferEvidenceNoteCategoriesViewModel> TransferEvidenceNoteCategoriesViewModel(Guid pcsId, 
+            Guid evidenceNoteId, 
+            IWeeeClient client,
+            TransferEvidenceNoteCategoriesViewModel existingModel)
+        {
+            var noteData =
+                await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+            var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemes, pcsId, existingModel);
+
+            var model =
+                mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(mapperObject);
+            return model;
         }
     }
 }

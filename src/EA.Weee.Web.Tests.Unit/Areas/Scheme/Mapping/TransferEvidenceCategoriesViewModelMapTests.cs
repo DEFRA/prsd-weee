@@ -91,7 +91,7 @@
             var schemeData = TestFixture.CreateMany<SchemeData>(3).ToList();
             schemeData.ElementAt(1).OrganisationId = organisationId;
             
-            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId);
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, null);
 
             //act
             var result = map.Map(transfer);
@@ -129,7 +129,7 @@
                 .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
                 .Create();
 
-            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId);
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, null);
 
             //act
             var result = map.Map(transfer);
@@ -180,7 +180,69 @@
             result.ViewTransferNoteViewModel.Should().Be(viewTransferNoteViewModel);
         }
 
-        private TransferEvidenceNotesViewModelMapTransfer GetTransferObject()
+        [Fact]
+        public void Map_GivenSourceWithExistingModel_SelectedSchemaShouldBeSetToExistingModelValue()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
+            {
+                TestFixture
+                    .Build<TransferEvidenceNoteTonnageData>()
+                    .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.Empty, WeeeCategory.MedicalDevices, null, null, null, null)).Create(),
+                TestFixture
+                    .Build<TransferEvidenceNoteTonnageData>()
+                    .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.Empty, WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null)).Create(),
+                TestFixture
+                    .Build<TransferEvidenceNoteTonnageData>()
+                    .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.Empty, WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null)).Create(),
+                TestFixture
+                    .Build<TransferEvidenceNoteTonnageData>()
+                    .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.Empty, WeeeCategory.AutomaticDispensers, null, null, null, null)).Create()
+            };
+
+            var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
+                .Create();
+
+            var existingModel = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
+                .With(t => t.CategoryValues, new CategoryValues<CategoryBooleanViewModel>()
+                {
+                    new CategoryBooleanViewModel(WeeeCategory.LargeHouseholdAppliances)
+                    {
+                        Selected = true
+                    },
+                    new CategoryBooleanViewModel(WeeeCategory.ToysLeisureAndSports)
+                    {
+                        Selected = true
+                    },
+                    new CategoryBooleanViewModel(WeeeCategory.AutomaticDispensers)
+                    {
+                        Selected = true
+                    }
+                }).Create();
+
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, existingModel);
+
+            //act
+            var result = map.Map(transfer);
+
+            //assert
+            var expectedSelectedCategory = new List<int>
+            {
+                WeeeCategory.LargeHouseholdAppliances.ToInt(),
+                WeeeCategory.ToysLeisureAndSports.ToInt(),
+                WeeeCategory.AutomaticDispensers.ToInt()
+            };
+
+            result.CategoryValues.Where(c => expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+                .Should().BeTrue();
+            result.CategoryValues.Where(c => !expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+                .Should().BeFalse();
+        }
+        
+        private TransferEvidenceNotesViewModelMapTransfer GetTransferObject(TransferEvidenceNoteCategoriesViewModel existingModel = null)
         {
             var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>().Create();
 
@@ -188,7 +250,7 @@
 
             var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, existingModel);
         }
     }
 }

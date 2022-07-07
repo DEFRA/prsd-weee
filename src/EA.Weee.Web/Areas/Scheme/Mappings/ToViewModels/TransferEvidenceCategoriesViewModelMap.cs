@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using CuttingEdge.Conditions;
     using Prsd.Core.Mapper;
@@ -21,20 +22,35 @@
 
             var schemeData = source.SchemeData.ToList();
             schemeData.RemoveAll(s => s.OrganisationId == source.OrganisationId);
-
-            model.OrganisationId = source.OrganisationId;
             model.SchemasToDisplay = schemeData;
-            model.SelectedSchema = source.TransferEvidenceNoteData.RecipientSchemeData.Id;
 
+            if (source.ExistingTransferEvidenceNoteCategoriesViewModel != null)
+            {
+                model.SelectedSchema = source.ExistingTransferEvidenceNoteCategoriesViewModel.SelectedSchema;
+
+                SetCategoryValues(source.ExistingTransferEvidenceNoteCategoriesViewModel.SelectedCategoryValues, model);
+            }
+            else
+            {
+                model.OrganisationId = source.OrganisationId;
+                model.SelectedSchema = source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+
+                SetCategoryValues(source.TransferEvidenceNoteData.CategoryIds, model);
+            }
+            
+            return model;
+        }
+
+        private static void SetCategoryValues(List<int> categoryValues,
+            TransferEvidenceNoteCategoriesViewModel model)
+        {
             foreach (var categoryBooleanViewModel in model.CategoryValues)
             {
-                if (source.TransferEvidenceNoteData.CategoryIds.Contains(categoryBooleanViewModel.CategoryId))
+                if (categoryValues.Contains(categoryBooleanViewModel.CategoryId))
                 {
                     categoryBooleanViewModel.Selected = true;
                 }
             }
-
-            return model;
         }
     }
 }
