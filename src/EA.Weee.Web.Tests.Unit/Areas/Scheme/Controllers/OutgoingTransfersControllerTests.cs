@@ -358,17 +358,22 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
 
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
             //act
             await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
 
             //assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
-                        t.TransferEvidenceNoteData ==
-                        transferEvidenceNoteData &&
+                        t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.Request == null &&
                         t.Notes.SequenceEqual(evidenceNoteData) &&
-                        t.OrganisationId == organisationId)))
+                        t.OrganisationId == organisationId &&
+                        t.Request == request)))
                 .MustHaveHappenedOnceExactly();
         }
 
