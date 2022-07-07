@@ -15,7 +15,7 @@
 
             var model = new UploadObligationsViewModel(source.CompetentAuthority)
             {
-                ComplianceYearList = source.ComplianceYears.OrderBy(c => c),
+                ComplianceYearList = source.ComplianceYears,
                 SelectedComplianceYear = source.SelectedComplianceYear
             };
 
