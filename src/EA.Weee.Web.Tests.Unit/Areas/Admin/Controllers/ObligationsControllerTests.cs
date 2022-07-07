@@ -398,7 +398,7 @@
             var authority = TestFixture.Create<CompetentAuthority>();
             var obligationId = TestFixture.Create<Guid>();
             var schemeUploadObligationData = TestFixture.CreateMany<SchemeObligationUploadErrorData>().ToList();
-            var model = ValidUploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligationUpload>._)).Returns(schemeUploadObligationData);
@@ -419,7 +419,7 @@
         {
             //arrange
             var authority = TestFixture.Create<CompetentAuthority>();
-            var model = ValidUploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
 
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
@@ -450,7 +450,7 @@
         public async Task UploadObligationsPost_GivenInvalidViewModel_DefaultViewShouldBeReturned()
         {
             //arrange
-            var model = new UploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
             controller.ModelState.AddModelError("error", new Exception());
             
             //act
@@ -461,24 +461,10 @@
         }
 
         [Fact]
-        public async Task UploadObligationsPost_GivenInvalidViewModel_ModelShouldBeReturned()
-        {
-            //arrange
-            var model = new UploadObligationsViewModel();
-            controller.ModelState.AddModelError("error", new Exception());
-
-            //act
-            var result = await controller.UploadObligations(model) as ViewResult;
-
-            //assert
-            result.Model.Should().Be(model);
-        }
-
-        [Fact]
         public async Task UploadObligationsPost_GivenModelFilePropertyHasError_ModelDisplaySelectFileErrorShouldBeTrue()
         {
             //arrange
-            var model = new UploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
             controller.ModelState.AddModelError("File", new Exception());
 
             //act
@@ -492,7 +478,7 @@
         public async Task UploadObligationsPost_GivenValidModel_RequestShouldBeMapped()
         {
             //arrange
-            var model = ValidUploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
 
             //act
             await controller.UploadObligations(model);
@@ -506,7 +492,7 @@
         public async Task UploadObligationsPost_GivenValidModelAndSubmitObligationRequest_ApiShouldBeCalled()
         {
             //arrange
-            var model = ValidUploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
             var request = TestFixture.Create<SubmitSchemeObligation>();
 
             A.CallTo(() => mapper.Map<UploadObligationsViewModel, SubmitSchemeObligation>(model)).Returns(request);
@@ -522,7 +508,7 @@
         public async Task UploadObligationsPost_GivenValidModel_ShouldRedirectToUploadObligationsGet()
         {
             //arrange
-            var model = ValidUploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
             var obligationUploadId = TestFixture.Create<Guid>();
 
             A.CallTo(() => client.SendAsync(A<string>._, A<SubmitSchemeObligation>._)).Returns(obligationUploadId);
@@ -542,7 +528,7 @@
         public async Task UploadObligationsPost_GivenModelFilePropertyDoesNotHaveError_ModelDisplaySelectFileErrorShouldBeFalse()
         {
             //arrange
-            var model = new UploadObligationsViewModel();
+            var model = UploadObligationsViewModel();
             controller.ModelState.AddModelError("NotFile", new Exception());
 
             //act
@@ -552,12 +538,96 @@
             ((UploadObligationsViewModel)result.Model).DisplaySelectFileError.Should().BeFalse();
         }
 
-        private UploadObligationsViewModel ValidUploadObligationsViewModel()
+        [Fact]
+        public async Task UploadObligationsPost_GivenInvalidViewModel_ComplianceYearsShouldBeRetrieved()
+        {
+            //arrange
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var model = new UploadObligationsViewModel() { Authority = authority, SelectedComplianceYear = TestFixture.Create<int>() };
+
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>
+                .That.Matches(g => g.Authority == authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsPost_GivenInvalidViewModel_ObligationDataShouldBeRetrieved()
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var model = new UploadObligationsViewModel() { SelectedComplianceYear = complianceYear, Authority = authority };
+
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeObligation>
+                .That.Matches(g => g.Authority == authority && g.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsPost_GivenInvalidViewModel_ModelShouldBeMapped()
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+            var authority = TestFixture.Create<CompetentAuthority>();
+            var model = new UploadObligationsViewModel() { SelectedComplianceYear = complianceYear, Authority = authority };
+            var schemeObligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeObligation>._)).Returns(schemeObligationData);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationComplianceYears>._)).Returns(complianceYears);
+
+            //act
+            await controller.UploadObligations(model);
+
+            //assert
+            A.CallTo(() =>
+                mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                    A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.DisplayNotification == false &&
+                                                                               u.SelectedComplianceYear == complianceYear && 
+                                                                               u.CompetentAuthority == authority && 
+                                                                               u.ComplianceYears.SequenceEqual(complianceYears) &&
+                                                                               u.ErrorData == null &&
+                                                                               u.ObligationData.SequenceEqual(schemeObligationData)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task UploadObligationsPost_GivenInvalidViewModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var model = UploadObligationsViewModel();
+
+            controller.ModelState.AddModelError("error", "error");
+
+            A.CallTo(() =>
+                mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
+                    A<UploadObligationsViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await controller.UploadObligations(model) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        private UploadObligationsViewModel UploadObligationsViewModel()
         {
             var model = new UploadObligationsViewModel()
             {
                 File = A.Fake<HttpPostedFileBase>(),
-                Authority = TestFixture.Create<CompetentAuthority>()
+                Authority = TestFixture.Create<CompetentAuthority>(),
+                SelectedComplianceYear = TestFixture.Create<int>()
             };
             return model;
         }
