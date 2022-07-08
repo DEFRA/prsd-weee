@@ -86,7 +86,9 @@
             // assert
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
-                e.NoteTypeFilter.SequenceEqual(noteTypeFilter)))).MustHaveHappenedOnceExactly();
+                e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
+                e.PageNumber == 0 &&
+                e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -103,7 +105,9 @@
             // assert
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
-                e.NoteTypeFilter.SequenceEqual(noteTypeFilter)))).MustHaveHappenedOnceExactly();
+                e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
+                e.PageSize == int.MaxValue &&
+                e.PageNumber == 0))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

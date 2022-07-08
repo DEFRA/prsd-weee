@@ -16,6 +16,11 @@
 
         public int ComplianceYear { get; protected set; }
 
-        public NoteType NoteTypeFilter { get; protected set; }
+        public int PageNumber { get; private set; }
+
+        /// <summary>
+        /// Defines how many users are returned for the requested page of results.
+        /// </summary>
+        public int PageSize { get; private set; }
     }
 }

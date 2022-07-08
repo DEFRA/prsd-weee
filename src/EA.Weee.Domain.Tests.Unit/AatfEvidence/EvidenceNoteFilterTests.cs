@@ -10,16 +10,18 @@
     public class EvidenceNoteFilterTests
     {
         [Fact]
-        public void EvidenceNoteFilter_GivenComplianceYear_ComplianceYearShouldBeSet()
+        public void EvidenceNoteFilter_GivenConstructorArguments_PropertiesShouldBeSet()
         {
             //arrange
             var complianceYear = DateTime.Now.Year;
 
             //act
-            var filter = new NoteFilter(complianceYear);
+            var filter = new NoteFilter(complianceYear, int.MaxValue, 0);
 
             //assert
             filter.ComplianceYear.Should().Be(complianceYear);
+            filter.PageNumber.Should().Be(0);
+            filter.PageSize.Should().Be(int.MaxValue);
         }
 
         [Theory]
@@ -27,7 +29,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoteType_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $"{noteType.DisplayName}1"
             };
@@ -44,7 +46,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoteTypeAndIsLowerCase_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $"{noteType.DisplayName.ToLower()}1"
             };
@@ -75,7 +77,7 @@
         public void FormattedSearchRef_GivenSearchRefWithUnknownNoteType_ShouldNotReturnFormattedReference(string noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $"{noteType}1"
             };
@@ -92,7 +94,7 @@
         public void FormattedSearchRef_GivenSearchRefWithWhiteSpaceAndNoteType_ShouldReturnFormattedReference(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $" {noteType.DisplayName}1 "
             };
@@ -108,7 +110,7 @@
         public void FormattedSearchRef_GivenSearchRefWithNoNoteType_ShouldReturnFormattedReference()
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = "1"
             };
@@ -127,7 +129,7 @@
         public void FormattedNoteType_GivenEmptySearchRef_ShouldReturnMinusOne(string searchRef)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = searchRef
             };
@@ -144,7 +146,7 @@
         public void FormattedNoteType_GivenSearchRefWithNoteType_ShouldReturnNoteTypeValue(NoteType noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $"{noteType.DisplayName}1"
             };
@@ -175,7 +177,7 @@
         public void FormattedNoteType_GivenSearchRefWithUnknownNoteType_ShouldReturnZero(string noteType)
         {
             //arrange
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 SearchRef = $"{noteType}1"
             };
