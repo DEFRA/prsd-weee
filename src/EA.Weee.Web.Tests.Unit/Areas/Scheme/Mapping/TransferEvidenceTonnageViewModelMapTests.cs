@@ -392,7 +392,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), null, transferNoteData, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -546,7 +546,7 @@
                 .Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, null, transferNoteData, organisationId);
 
             //act
             var result = map.Map(source);
@@ -601,7 +601,7 @@
                 .Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, null, transferNoteData, organisationId);
 
             //act
             var result = map.Map(source);
@@ -614,6 +614,56 @@
             result.TotalCategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
             result.TotalCategoryValues.ElementAt(2).TotalReceived.Should().Be("100.000");
             result.TotalCategoryValues.ElementAt(2).TotalReused.Should().Be("0.000");
+        }
+
+        [Fact]
+        public void Map_GivenGivenTransferNoteDataSourceWithTonnagesAlongWithCategoriesAndWithTransferRequestCategories_TotalsShouldBeInitialisedWithOnlyTransferRequestCategories()
+        {
+            //arrange
+            notes = TestFixture.CreateMany<EvidenceNoteData>(2).ToList();
+
+            var viewEvidenceNoteViewModel = TestFixture.Create<ViewEvidenceNoteViewModel>();
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._))
+                .Returns(viewEvidenceNoteViewModel);
+
+            var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
+            {
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.AutomaticDispensers, 2, 1, 20, 10)).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.ConsumerEquipment, 4, 2, 25, 0)).Create()
+            };
+
+            var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
+                .Create();
+
+            var sessionCategories = new List<int>()
+            {
+                WeeeCategory.AutomaticDispensers.ToInt(),
+                WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.CategoryIds, sessionCategories)
+                .Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, transferNoteData, organisationId);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TotalCategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.TotalCategoryValues.ElementAt(0).TotalReceived.Should().Be("0.000");
+            result.TotalCategoryValues.ElementAt(0).TotalReused.Should().Be("0.000");
+            result.TotalCategoryValues.ElementAt(1).TotalReceived.Should().Be("20.000");
+            result.TotalCategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
+            result.TotalCategoryValues.Should().NotContain(c => c.CategoryId == WeeeCategory.ConsumerEquipment.ToInt());
+            result.TotalCategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.AutomaticDispensers.ToInt());
+            result.TotalCategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.ToysLeisureAndSports.ToInt());
         }
 
         [Fact]
@@ -804,7 +854,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(notes, TestFixture.Create<TransferEvidenceNoteRequest>(), transferNoteData, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(notes, null, transferNoteData, organisationId);
         }
 
         private TransferEvidenceNoteRequest DefaultRequest()
