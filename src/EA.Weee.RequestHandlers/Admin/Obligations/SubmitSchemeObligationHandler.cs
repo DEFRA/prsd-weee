@@ -67,7 +67,7 @@
 
             if (!errors.Any())
             {
-                obligations = await schemeObligationsDataProcessor.Build(csvObligations, 2022);
+                obligations = await schemeObligationsDataProcessor.Build(csvObligations, request.ComplianceYear);
             }
             
             var obligationUpload = await obligationDataAccess.AddObligationUpload(authority,

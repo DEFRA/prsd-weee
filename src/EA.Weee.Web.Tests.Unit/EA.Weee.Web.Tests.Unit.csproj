@@ -332,7 +332,9 @@
     <Compile Include="Areas\Admin\ViewModels\ViewAllTransferNotesViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ViewAllEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersControllerTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
@@ -347,6 +349,7 @@
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotesDisplayOptionsTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />

@@ -219,6 +219,7 @@
     <Compile Include="Admin\ManageEvidenceNotes\GetAllNotesTests.cs" />
     <Compile Include="Admin\Obligations\GetObligationSchemeTests.cs" />
     <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandlerTests.cs" />
+    <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandlerUnitTests.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandlerUnitTests.cs" />
     <Compile Include="Admin\Obligations\ObligationCsvReaderTests.cs" />
@@ -340,6 +341,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\OrganisationMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationDataMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationUploadDataTests.cs" />
     <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />

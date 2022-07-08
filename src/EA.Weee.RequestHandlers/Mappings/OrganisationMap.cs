@@ -11,12 +11,10 @@
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
         private readonly IMap<Address, AddressData> addressMap;
-        private readonly IMap<Contact, ContactData> contactMap;
 
-        public OrganisationMap(IMap<Address, AddressData> addressMap, IMap<Contact, ContactData> contactMap)
+        public OrganisationMap(IMap<Address, AddressData> addressMap)
         {
             this.addressMap = addressMap;
-            this.contactMap = contactMap;
         }
 
         public OrganisationData Map(Organisation source)
@@ -47,6 +45,7 @@
                 HasBusinessAddress = source.HasBusinessAddress,
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,
+                IsBalancingScheme = source.ProducerBalancingScheme != null
             };
         }
     }
