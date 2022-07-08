@@ -93,7 +93,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -137,7 +137,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -175,7 +175,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -215,7 +215,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.TransferNote },
                     OrganisationId = organisation1.Id,
@@ -257,7 +257,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -300,7 +300,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -341,7 +341,7 @@
                 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -383,7 +383,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -425,7 +425,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -473,7 +473,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -518,7 +518,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation.Id,
@@ -562,7 +562,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation.Id,
@@ -588,7 +588,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = noteShouldBeFound.Reference.ToString(),
@@ -629,7 +629,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     WasteTypeId = (int?)WasteType.HouseHold,
@@ -671,7 +671,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SchemeId = schemeToMatch.Id,
@@ -712,7 +712,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     NoteStatusId = NoteStatus.Void.Value,
@@ -761,7 +761,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(aatf.ComplianceYear)
+                var filter = new NoteFilter(aatf.ComplianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = date,
@@ -800,7 +800,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = DateTime.Now.AddDays(1),
@@ -838,7 +838,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(aatf.ComplianceYear)
+                var filter = new NoteFilter(aatf.ComplianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = DateTime.Now.AddDays(-1),
@@ -887,7 +887,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(aatf.ComplianceYear)
+                var filter = new NoteFilter(aatf.ComplianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     EndDateSubmitted = date,
@@ -937,7 +937,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(DateTime.Now.Year)
+                var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     StartDateSubmitted = DateTime.Now.AddDays(-1),
@@ -966,7 +966,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = noteShouldBeFound.Reference.ToString(),
@@ -993,7 +993,7 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"Z{noteShouldNotBeFound.Reference}",
@@ -1017,7 +1017,7 @@
                 var noteShouldBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
                 var noteShouldNotBeFound = await SetupSingleNote(context, database);
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"{NoteType.EvidenceNote.DisplayName}{noteShouldBeFound.Reference}",
@@ -1044,7 +1044,7 @@
 
                 var noteShouldNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote);
 
-                var filter = new NoteFilter(SystemTime.Now.Year)
+                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = $"{NoteType.TransferNote.DisplayName}{noteShouldNotBeFound.Reference}",
@@ -1217,7 +1217,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(oldComplianceYear)
+                var filter = new NoteFilter(oldComplianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -1263,7 +1263,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(currentComplianceYear)
+                var filter = new NoteFilter(currentComplianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
@@ -1320,7 +1320,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(complianceYear)
+                var filter = new NoteFilter(complianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { NoteType.EvidenceNote, NoteType.TransferNote },
                     OrganisationId = organisation.Id,
@@ -1330,8 +1330,8 @@
                 var notes = await dataAccess.GetAllNotes(filter);
 
                 notes.Count.Should().Be(6);
-                notes.Where(x => x.NoteType == NoteType.EvidenceNote).Count().Should().Be(3);
-                notes.Where(x => x.NoteType == NoteType.TransferNote).Count().Should().Be(3);
+                notes.Count(x => x.NoteType == NoteType.EvidenceNote).Should().Be(3);
+                notes.Count(x => x.NoteType == NoteType.TransferNote).Should().Be(3);
             }
         }
 
@@ -1378,7 +1378,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(complianceYear)
+                var filter = new NoteFilter(complianceYear, int.MaxValue, 0)
                 {
                     NoteTypeFilter = new List<NoteType> { noteType },
                     OrganisationId = organisation.Id,

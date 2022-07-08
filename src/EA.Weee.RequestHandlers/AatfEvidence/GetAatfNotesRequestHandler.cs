@@ -35,7 +35,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var filter = new NoteFilter(message.ComplianceYear)
+            var filter = new NoteFilter(message.ComplianceYear, int.MaxValue, 0)
             {
                 AatfId = message.AatfId,
                 NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
