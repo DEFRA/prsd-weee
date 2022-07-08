@@ -341,9 +341,11 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
+    <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesController.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
+    <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseController.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
@@ -352,6 +354,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />

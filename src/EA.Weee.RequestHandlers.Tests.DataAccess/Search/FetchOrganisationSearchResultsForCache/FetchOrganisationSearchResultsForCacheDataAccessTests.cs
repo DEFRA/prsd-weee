@@ -15,7 +15,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
+    using FluentAssertions;
     using Xunit;
+    using Organisation = Weee.Tests.Core.Model.Organisation;
 
     public class FetchOrganisationSearchResultsForCacheDataAccessTests
     {
@@ -306,7 +309,7 @@
         }
 
         [Fact]
-        public async Task FetchCompleteOrganisations_OrganisationHasRejectedSchemeWithNoAatfsOrAes_OrganisationNotReturned()
+        public async Task FetchCompleteOrganisations_OrganisationHasRejectedSchemeWithNoAatfsOrAesOrBalancingScheme_OrganisationNotReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -419,6 +422,71 @@
         }
 
         [Fact]
+        public async Task FetchOrganisations_OrganisationThatIsBalancingScheme_OrganisationReturned()
+        {
+            var dbContextHelper = new DbContextHelper();
+
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(A.Dummy<ProducerBalancingScheme>());
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            results.Count.Should().Be(1);
+            results.Should().Contain(o => o.OrganisationId == organisationId);
+            results.ElementAt(0).IsBalancingScheme.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task FetchOrganisations_OrganisationThatIsNotBalancingScheme_OrganisationShouldBeReturnedWithIsBalancingSchemeAsFalse()
+        {
+            var dbContextHelper = new DbContextHelper();
+
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            var schemes = new List<Domain.Scheme.Scheme>()
+            {
+                new Domain.Scheme.Scheme(organisation)
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            results.Count.Should().Be(1);
+            results.Should().Contain(o => o.OrganisationId == organisationId);
+            results.ElementAt(0).IsBalancingScheme.Should().BeFalse();
+        }
+
+        [Fact]
         public async Task FetchOrganisations_OrganisationWithRejectedPcs_NoAatfs_OrganisationNotReturned()
         {
             var dbContextHelper = new DbContextHelper();
@@ -427,6 +495,7 @@
 
             var organisation = A.Dummy<Domain.Organisation.Organisation>();
             A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
             A.CallTo(() => organisation.OrganisationStatus).Returns(Domain.Organisation.OrganisationStatus.Complete);
 
             var organisations = new List<Domain.Organisation.Organisation>()
