@@ -27,6 +27,8 @@
         [DisplayName("What is the reason you are rejecting or returning the evidence note transfer?")]
         public virtual string Reason { get; set; }
 
+        public string RedirectTabName { get; set; }
+
         public NoteStatus SelectedEnumValue
         {
             get
