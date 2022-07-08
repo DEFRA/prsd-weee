@@ -3,6 +3,7 @@
     using System;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public class ViewTransferNoteViewModelMapTransfer
     {
@@ -17,6 +18,8 @@
         public bool Edit { get; set; }
 
         public bool? ReturnToView { get; set; }
+
+        public string RedirectTab { get; set; }
 
         public ViewTransferNoteViewModelMapTransfer(Guid schemeId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
         {
