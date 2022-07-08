@@ -143,6 +143,7 @@
                     sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
                     return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction });
                 }
+
                 if (ModelState.IsValid)
                 {
                     var request = createRequestCreator.ViewModelToRequest(viewModel);

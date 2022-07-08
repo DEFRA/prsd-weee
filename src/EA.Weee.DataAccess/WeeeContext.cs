@@ -188,8 +188,6 @@
 
         public virtual DbSet<NoteTransferTonnage> NoteTransferTonnage { get; set; }
 
-        public virtual DbSet<NoteTransferCategory> NoteTransferCategories { get; set; }
-
         public virtual DbSet<ObligationUpload> ObligationUploads { get; set; }
 
         public virtual DbSet<ObligationUploadError> ObligationUploadErrors { get; set; }
