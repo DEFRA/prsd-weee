@@ -889,7 +889,7 @@
 
                 var filter = new NoteFilter(aatf.ComplianceYear)
                 {
-                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
+                    NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote, NoteType.TransferNote },
                     EndDateSubmitted = date,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Returned },
                     AatfId = aatf.Id, 
