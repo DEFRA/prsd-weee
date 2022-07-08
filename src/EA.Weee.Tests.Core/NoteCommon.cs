@@ -35,12 +35,12 @@
 
             if (startDate == null)
             {
-                startDate = DateTime.Now;
+                startDate = DateTime.UtcNow;
             }
 
             if (endDate == null)
             {
-                endDate = DateTime.Now;
+                endDate = DateTime.UtcNow;
             }
 
             if (aatf == null)

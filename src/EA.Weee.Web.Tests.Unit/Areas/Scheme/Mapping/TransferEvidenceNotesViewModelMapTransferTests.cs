@@ -27,20 +27,6 @@
         }
 
         [Fact]
-        public void TransferEvidenceNotesViewModelMapTransfer_GivenNullRequest_ShouldThrowArgumentNullException()
-        {
-            //act
-            var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
-                    null,
-                    TestFixture.Create<TransferEvidenceNoteData>(),
-                    TestFixture.Create<Guid>()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void TransferEvidenceNotesViewModelMapTransfer_GivenNullNotesWithTransferNoteData_ShouldThrowArgumentNullException()
         {
             //act

@@ -17,10 +17,12 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Core.Helpers;
     using Core.Scheme;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
+    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
@@ -204,8 +206,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId1 = TestFixture.Create<Guid>();
@@ -222,16 +223,20 @@
             var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
                 {
-                    TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId1)
-                        .Create(),
-                    TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId2)
-                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId1).Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId2).Create(),
                 }).Create();
 
-            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
-                .With(t => t.EvidenceNoteIds, sessionEvidenceNotes).Create();
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
 
-            var categories = transferEvidence.CategoryIds;
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, sessionEvidenceNotes)
+                .With(c => c.CategoryIds, sessionCategories)
+                .Create();
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
@@ -250,15 +255,14 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
-                        r.Categories.SequenceEqual(categories) &&
+                        r.Categories.SequenceEqual(sessionCategories) &&
                         r.OrganisationId == organisationId &&
                         r.EvidenceNotes.SequenceEqual(expectedEvidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselected_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndSessionTransferRequest_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var removedEvidenceNoteId = TestFixture.Create<Guid>();
@@ -276,10 +280,16 @@
                         .With(e => e.OriginalNoteId, removedEvidenceNoteId).Create()
                 }).Create();
 
-            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
-                .With(t => t.EvidenceNoteIds, sessionEvidenceNotes).Create();
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
 
-            var categories = transferEvidence.CategoryIds;
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, sessionEvidenceNotes)
+                .With(c => c.CategoryIds, sessionCategories)
+                .Create();
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
@@ -293,11 +303,43 @@
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
-                        r.Categories.SequenceEqual(categories) &&
+                        r.Categories.SequenceEqual(sessionCategories) &&
                         r.OrganisationId == organisationId &&
                         !r.EvidenceNotes.Contains(removedEvidenceNoteId) &&
                         r.EvidenceNotes.Contains(newlySelectedEvidenceNoteId) &&
                         r.EvidenceNotes.Count() == 1)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndNullSessionTransferRequest_TransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var removedEvidenceNoteId = TestFixture.Create<Guid>();
+            var newlySelectedEvidenceNoteId = TestFixture.Create<Guid>();
+
+            var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
+                {
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, removedEvidenceNoteId).Create()
+                }).Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(null);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
+                        r.Categories.SequenceEqual(transferEvidence.CategoryIds) &&
+                        r.OrganisationId == organisationId &&
+                        r.EvidenceNotes.SequenceEqual(transferEvidence.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList()))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -318,7 +360,8 @@
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
-                        r.OrganisationId == organisationId && r.Categories.SequenceEqual(categories) &&
+                        r.OrganisationId == organisationId 
+                        && r.Categories.SequenceEqual(categories) &&
                         r.EvidenceNotes.SequenceEqual(existingNotes))))
                 .MustHaveHappenedOnceExactly();
         }
@@ -343,7 +386,8 @@
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
-                        r.OrganisationId == organisationId && r.Categories.SequenceEqual(categories) &&
+                        r.OrganisationId == organisationId && 
+                        r.Categories.SequenceEqual(categories) &&
                         r.EvidenceNotes.SequenceEqual(existingNotes))))
                 .MustHaveHappenedOnceExactly();
         }
@@ -370,7 +414,6 @@
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                        t.Request == null &&
                         t.Notes.SequenceEqual(evidenceNoteData) &&
                         t.OrganisationId == organisationId &&
                         t.Request == request)))
@@ -764,6 +807,9 @@
             //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
 
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
             //act
             await outgoingTransferEvidenceController.EditTransferFrom(organisationId, evidenceNoteId);
 
@@ -774,23 +820,25 @@
         }
 
         [Fact]
-        public async Task EditTransferFrom_GivenTransferNoteData_TransferNotesShouldBeRetrieved()
+        public async Task EditTransferFromGet_GivenTransferSessionTransferRequestIsNull_ShouldRedirectToManageEvidenceNotes()
         {
             //arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
-            var categories = transferEvidenceNoteData.CategoryIds;
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                    A<string>._)).Returns(null);
 
             //act
-            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as RedirectToRouteResult;
 
             //assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
-                        r.OrganisationId == organisationId &&
-                        r.Categories.SequenceEqual(categories))))
-                .MustHaveHappenedOnceExactly();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["area"].Should().Be("Scheme");
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
         }
 
         [Fact]
@@ -803,15 +851,18 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
 
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
             //act
             await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
 
             //assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
-                        t.TransferEvidenceNoteData ==
-                        transferEvidenceNoteData &&
-                        t.Request == null &&
+                        t.TransferEvidenceNoteData == transferEvidenceNoteData &&
+                        t.Request == request &&
                         t.Notes.SequenceEqual(evidenceNoteData) &&
                         t.OrganisationId == organisationId)))
                 .MustHaveHappenedOnceExactly();
@@ -825,6 +876,9 @@
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
             //act
             var result =
                 await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as
@@ -837,6 +891,10 @@
         [Fact]
         public async Task EditTransferFromGet_ShouldReturnView()
         {
+            //arrange
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
             //act
             var result =
                 await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>()) as
@@ -880,21 +938,6 @@
         }
 
         [Fact]
-        public async Task EditTransferFromPost_GivenValidViewModel_TransferNotesShouldBeRetrieved()
-        {
-            //arrange
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
-
-            //act
-            await outgoingTransferEvidenceController.EditTransferFrom(model);
-
-            //assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r =>
-                    r.EvidenceNoteId == model.ViewTransferNoteViewModel.EvidenceNoteId))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task EditTransferFromPost_GivenValidViewModel_SessionRequestShouldBeUpdated()
         {
             //arrange
@@ -912,6 +955,10 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
             //act
             await outgoingTransferEvidenceController.EditTransferFrom(model);
 
@@ -919,8 +966,7 @@
             A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
                 A<object>.That.Matches(o => ((TransferEvidenceNoteRequest)o).OrganisationId == model.PcsId &&
                                             ((TransferEvidenceNoteRequest)o).SchemeId == model.RecipientId &&
-                                            ((TransferEvidenceNoteRequest)o).CategoryIds.SequenceEqual(
-                                                transferEvidenceNoteData.CategoryIds) &&
+                                            ((TransferEvidenceNoteRequest)o).CategoryIds.SequenceEqual(request.CategoryIds) &&
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(selectedId) &&
                                             !((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(notSelectedId) &&
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Count() == 1),
@@ -928,9 +974,32 @@
         }
 
         [Fact]
+        public async Task EditTransferFromPost_GivenValidViewModelAndNullSessionTransferRequest_ShouldRedirectToManageEvidenceNotes()
+        {
+            //arrange
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>().Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(null);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["area"].Should().Be("Scheme");
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+        }
+
+        [Fact]
         public async Task EditTransferFromPost_GivenValidViewModel_ShouldRedirectToEditTonnagesRoute()
         {
             //arrange
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
 
             //act

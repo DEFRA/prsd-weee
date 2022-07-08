@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
     using CuttingEdge.Conditions;
@@ -54,9 +55,7 @@
                     new ViewTransferNoteViewModelMapTransfer(source.OrganisationId, source.TransferEvidenceNoteData, null));
             }
 
-            var categoryValues = source.Request != null
-                ? source.Request.CategoryIds
-                : source.TransferEvidenceNoteData.CategoryIds;
+            var categoryValues = source.Request != null ? source.Request.CategoryIds : (source.TransferEvidenceNoteData != null ? source.TransferEvidenceNoteData.CategoryIds : new List<int>());
 
             foreach (var requestCategoryId in categoryValues.OrderBy(c => c.ToInt()))
             {
