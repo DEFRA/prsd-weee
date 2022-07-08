@@ -160,6 +160,55 @@
         }
 
         [Fact]
+        public async Task GetNotesToTransfer_GivenSchemeAndCategoriesAndPreviouslyTransferredNote_NotesShouldBeReturned()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+
+                // to be found matching category, scheme and status
+                var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                note1ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, null));
+
+                context.Notes.Add(note1ToBeFound);
+
+                await context.SaveChangesAsync();
+
+                var transferTonnage = new NoteTransferTonnage(note1ToBeFound.NoteTonnage.ElementAt(0).Id, 1, null);
+
+                var transferNote = await SetupSingleNote(context, database, NoteType.TransferNote, scheme);
+                transferNote.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                transferNote.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                transferNote.NoteTransferTonnage.Add(transferTonnage);
+
+                context.Notes.Add(transferNote);
+
+                await context.SaveChangesAsync();
+
+                var categorySearch = new List<int>()
+                {
+                    WeeeCategory.ConsumerEquipment.ToInt()
+                };
+
+                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
+
+                notes.Count().Should().Be(1);
+                notes.ElementAt(0).NoteTonnage.Count().Should().Be(1);
+                notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.Count.Should().Be(1);
+                notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).TransferNoteId.Should().Be(transferNote.Id);
+                notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).NoteTonnage.Id.Should()
+                    .Be(note1ToBeFound.NoteTonnage.ElementAt(0).Id);
+                notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).Received.Should().Be(1);
+            }
+        }
+
+        [Fact]
         public async Task GetNotesToTransfer_GivenSchemeAndCategoriesWithNonMatchingComplianceYear_NotesShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
