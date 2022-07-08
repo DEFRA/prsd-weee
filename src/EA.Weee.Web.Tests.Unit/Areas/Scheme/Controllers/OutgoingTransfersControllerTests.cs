@@ -24,7 +24,6 @@
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
-    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
@@ -596,7 +595,7 @@
 
             // act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int>(), TestFixture.Create<bool>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
+                TestFixture.Create<int>(), TestFixture.Create<bool>(), DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -612,7 +611,7 @@
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, evidenceNoteId,
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
+                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -629,7 +628,7 @@
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
+                TestFixture.Create<int?>(), TestFixture.Create<bool?>(), DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
@@ -648,7 +647,7 @@
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as ViewResult;
+                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -659,7 +658,7 @@
         {
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString()) as ViewResult;
+                TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(), DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("SubmittedTransfer");
@@ -840,7 +839,7 @@
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["pcsId"].Should().Be(organisationId);
             result.RouteValues["area"].Should().Be("Scheme");
-            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["tab"].Should().Be(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence));
         }
 
         [Fact]
@@ -992,7 +991,7 @@
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["pcsId"].Should().Be(model.PcsId);
             result.RouteValues["area"].Should().Be("Scheme");
-            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["tab"].Should().Be(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence));
         }
 
         [Fact]

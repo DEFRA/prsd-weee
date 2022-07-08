@@ -19,7 +19,6 @@
     using Core.Helpers;
     using Requests;
     using ViewModels;
-    using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.Scheme;
 
     public class OutgoingTransfersController : SchemeEvidenceBaseController
