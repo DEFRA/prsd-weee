@@ -34,7 +34,6 @@
                 .Include(n => n.NoteTransferTonnage)
                 .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage))
                 .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage.Note))
-                .Include(n => n.NoteTransferCategories)
                 .Include(n => n.NoteStatusHistory)
                 .FirstOrDefaultAsync(n => n.Id == id);
 
@@ -91,7 +90,6 @@
                .Where(p => p.ComplianceYear.Equals(filter.ComplianceYear)
                             && allowedNoteTypes.Contains(p.NoteType.Value)
                             && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                                //&& (!groupedAatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                                 && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                                 && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
                                     || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value)))
@@ -125,21 +123,24 @@
             return note.ComplianceYear;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
             var notes = await context.Notes
-                .IncludeFilter(n => n.NoteTonnage.Where(nt => 
-                    nt.Received.HasValue && categories.Contains((int)nt.CategoryId)))
+                .IncludeFilter(n => n.NoteTonnage.Where(nt => nt.Received.HasValue && categories.Contains((int)nt.CategoryId)))
                 .IncludeFilter(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage))
                 .IncludeFilter(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage).Select(ntt => ntt.Select(nttt => nttt.TransferNote)))
                 .Where(n => n.RecipientId == schemeId &&
                     n.NoteType.Value == NoteType.EvidenceNote.Value &&
                     n.WasteType.Value == WasteType.HouseHold &&
                     n.Status.Value == NoteStatus.Approved.Value &&
-                    n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)) && evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)).ToListAsync();
+                    n.ComplianceYear == complianceYear &&
+                    (evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)) &&
+                    n.NoteTonnage.Where(nt => nt.Received != null)
+                        .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e))).ToListAsync();
 
             return notes;
         }
+
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)
         {
             return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value) && n.ComplianceYear.Equals(complianceYear))
@@ -147,8 +148,7 @@
         }
 
         public async Task<Guid> AddTransferNote(Organisation organisation, 
-            Scheme scheme, 
-            List<NoteTransferCategory> transferCategories,
+            Scheme scheme,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
@@ -159,7 +159,6 @@
                 scheme,
                 userId,
                 transferTonnage,
-                transferCategories,
                 complianceYear,
                 WasteType.HouseHold);
 

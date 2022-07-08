@@ -56,21 +56,21 @@
 
             for (int i = 0; i < categoryValues.Count; i++)
             {
-                model.CategoryValues.ElementAt(i).Should().BeEquivalentTo(categoryValues.ElementAt(i));
+                model.CategoryBooleanViewModels.ElementAt(i).Should().BeEquivalentTo(categoryValues.ElementAt(i));
             }
         }
 
         [Fact]
-        public void TransferEvidenceNoteDataViewModel_Constructor_GivenOneCaregoryIsSelected_HasSelectedAtLeastOneCategoryShouldBeTrue()
+        public void TransferEvidenceNoteDataViewModel_Constructor_GivenOneCategoryIsSelected_HasSelectedAtLeastOneCategoryShouldBeTrue()
         {
-            model.CategoryValues.ElementAt(0).Selected = true;
+            model.CategoryBooleanViewModels.ElementAt(0).Selected = true;
             model.HasSelectedAtLeastOneCategory.Should().BeTrue();   
         }
 
         [Fact]
         public void TransferEvidenceNoteDataViewModel_Constructor_GivenCategoryValuesIsNull_HasSelectedAtLeastOneCategoryShouldBeFalse()
         {
-            model.CategoryValues = null;
+            model.CategoryBooleanViewModels = null;
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
         }
 

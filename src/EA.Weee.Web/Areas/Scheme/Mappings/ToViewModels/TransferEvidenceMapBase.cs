@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
     using CuttingEdge.Conditions;
@@ -36,24 +37,25 @@
                 RecipientId = recipientId
             };
 
-            foreach (var evidenceNoteData in source.Notes)
+            if (source.Notes != null)
             {
-                model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-                    new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)
-                    {
-                        IncludeAllCategories = false
-                    }));
+                foreach (var evidenceNoteData in source.Notes)
+                {
+                    model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)
+                        {
+                            IncludeAllCategories = false
+                        }));
+                }
             }
-
+            
             if (source.TransferEvidenceNoteData != null)
             {
                 model.ViewTransferNoteViewModel = TransferNoteMapper.Map(
                     new ViewTransferNoteViewModelMapTransfer(source.OrganisationId, source.TransferEvidenceNoteData, null));
             }
 
-            var categoryValues = source.Request != null
-                ? source.Request.CategoryIds
-                : source.TransferEvidenceNoteData.CategoryIds;
+            var categoryValues = source.Request != null ? source.Request.CategoryIds : (source.TransferEvidenceNoteData != null ? source.TransferEvidenceNoteData.CategoryIds : new List<int>());
 
             foreach (var requestCategoryId in categoryValues.OrderBy(c => c.ToInt()))
             {

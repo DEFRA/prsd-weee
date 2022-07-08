@@ -35,12 +35,12 @@
 
             if (startDate == null)
             {
-                startDate = DateTime.Now;
+                startDate = DateTime.UtcNow;
             }
 
             if (endDate == null)
             {
-                endDate = DateTime.Now;
+                endDate = DateTime.UtcNow;
             }
 
             if (aatf == null)
@@ -84,7 +84,6 @@
             Organisation organisation,
             Scheme scheme,
             List<NoteTransferTonnage> noteTonnages = null,
-            List<NoteTransferCategory> noteTransferCategories = null,
             int? complianceYear = null)
         {
             if (organisation == null)
@@ -102,11 +101,6 @@
                 noteTonnages = new List<NoteTransferTonnage>();
             }
 
-            if (noteTransferCategories == null)
-            {
-                noteTransferCategories = new List<NoteTransferCategory>();
-            }
-
             if (!complianceYear.HasValue)
             {
                 complianceYear = SystemTime.Now.Year;
@@ -116,7 +110,6 @@
                 scheme,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
-                noteTransferCategories,
                 complianceYear.Value,
                 WasteType.HouseHold);
         }
