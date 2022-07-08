@@ -141,6 +141,21 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequestAndObligationYears_OrderedYearsShouldBeReturned()
+        {
+            //arrange
+            var years = new List<int>() { 2021, 2019, 2022, 2018 };
+
+            A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(A<UKCompetentAuthority>._)).Returns(years);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.Should().BeInDescendingOrder(r => r);
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequestAndObligationYearsAndCurrentYearIsNotInList_YearsShouldBeReturned()
         {
             //arrange
