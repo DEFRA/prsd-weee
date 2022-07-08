@@ -55,6 +55,7 @@
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\0012-InsertBalancingScheme.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
@@ -340,7 +341,7 @@
     <Content Include="scripts\Update\Release 5\Sprint07\20220610-1015-obligation-scheme-unq.sql" />
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obligation-upload-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obigation-upload-schema.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint09\20220706-0919-add-balancing-scheme-indicator.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint09\20220706-1742-add-balancing-scheme-indicator.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

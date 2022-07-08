@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
@@ -43,7 +44,7 @@
                 complianceYears.Insert(0, systemDateTime.Year);
             }
 
-            return complianceYears;
+            return complianceYears.OrderByDescending(c => c).ToList();
         }
     }
 }
