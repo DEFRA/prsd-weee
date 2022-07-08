@@ -14,14 +14,14 @@
 
         public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
 
-        public List<TotalCategoryValue> TotalCategoryValues { get; set; }
+        public List<TotalCategoryValue> CategoryValues { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
-            TotalCategoryValues = new List<TotalCategoryValue>();
+            CategoryValues = new List<TotalCategoryValue>();
         }
     }
 }

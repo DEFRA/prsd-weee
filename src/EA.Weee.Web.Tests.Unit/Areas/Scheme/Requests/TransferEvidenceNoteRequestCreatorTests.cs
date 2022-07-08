@@ -71,7 +71,7 @@
             var selectedScheme = Guid.NewGuid();
 
             var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
-            var selectedIds = model.CategoryValues.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
            //act
            var request = requestCreator.SelectCategoriesToRequest(model);
@@ -142,9 +142,9 @@
         private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme, Guid organisationId)
         {
             var model = GetModel();
-            model.CategoryValues.ElementAt(0).Selected = true;
-            model.CategoryValues.ElementAt(1).Selected = true;
-            model.CategoryValues.ElementAt(2).Selected = true;
+            model.CategoryBooleanViewModels.ElementAt(0).Selected = true;
+            model.CategoryBooleanViewModels.ElementAt(1).Selected = true;
+            model.CategoryBooleanViewModels.ElementAt(2).Selected = true;
             model.SelectedSchema = selectedScheme;
             model.OrganisationId = organisationId;
 

@@ -44,7 +44,7 @@
         private static void SetCategoryValues(List<int> categoryValues,
             TransferEvidenceNoteCategoriesViewModel model)
         {
-            foreach (var categoryBooleanViewModel in model.CategoryValues)
+            foreach (var categoryBooleanViewModel in model.CategoryBooleanViewModels)
             {
                 if (categoryValues.Contains(categoryBooleanViewModel.CategoryId))
                 {

@@ -222,11 +222,11 @@
             {
                 foreach (var id in ids)
                 {
-                    for (int i = 0; i < model.CategoryValues.Count; i++)
+                    for (int i = 0; i < model.CategoryBooleanViewModels.Count; i++)
                     {
-                        if (model.CategoryValues[i].CategoryId == id)
+                        if (model.CategoryBooleanViewModels[i].CategoryId == id)
                         {
-                            model.CategoryValues[i].Selected = true;
+                            model.CategoryBooleanViewModels[i].Selected = true;
                         }
                     }
                 }

@@ -25,7 +25,7 @@
             //assert
             result.EvidenceNotesDataList.Should().NotBeNull();
             result.SelectedEvidenceNotePairs.Should().NotBeNull();
-            result.TotalCategoryValues.Should().NotBeNull();
+            result.CategoryValues.Should().NotBeNull();
         }
 
         [Fact]
