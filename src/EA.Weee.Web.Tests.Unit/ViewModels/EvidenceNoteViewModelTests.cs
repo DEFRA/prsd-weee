@@ -8,6 +8,7 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Tests.Unit.Helpers;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Helpers;
@@ -160,6 +161,26 @@
             };
 
             model.DisplayReturnedReason.Should().BeTrue();
+        }
+
+        [Fact]
+        public void InternalRedirectTab_GivenTypeIsEvidence_ViewAllEvidenceNotesTabShouldBeReturned()
+        {
+            model.Type = NoteType.Evidence;
+
+            var tab = model.InternalUserRedirectTab;
+
+            tab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString());
+        }
+
+        [Fact]
+        public void InternalRedirectTab_GivenTypeIsTransfer_ViewAllEvidenceTransferNotesTabShouldBeReturned()
+        {
+            model.Type = NoteType.Transfer;
+
+            var tab = model.InternalUserRedirectTab;
+
+            tab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
         }
     }
 }
