@@ -11,7 +11,6 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Domain.Lookup;
-    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using FluentAssertions;
     using NUnit.Specifications;
@@ -19,12 +18,11 @@
     using Prsd.Core.Mediator;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
 
     public class GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetOneSubmittedEvidenceNote : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneSubmittedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -37,13 +35,12 @@
                 };
 
                 note = EvidenceNoteDbSetup
-                .Init()
-                .WithTonnages(categories)
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .Create();
+                        .Init()
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        }).Create();
 
                 request = new GetEvidenceNoteForInternalUserRequest(note.Id);
             };
@@ -68,7 +65,7 @@
         }
 
         [Component]
-        public class WhenIGetOneApproveEvidenceNote : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneApprovedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -113,7 +110,7 @@
         }
 
         [Component]
-        public class WhenIGetOneRejectedEvidenceNote : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneRejectedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -158,7 +155,7 @@
         }
 
         [Component]
-        public class WhenIGetOneReturnedEvidenceNote : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneReturnedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -213,7 +210,8 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true).WithInternalAdminUserAccess();
+                    .WithDefaultSettings(resetDb: true)
+                    .WithInternalUserAccess(false);
 
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetInternalUserRole();

@@ -96,7 +96,7 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData(true)
-                    .WithInternalAdminUserAccess();
+                    .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetAdminRole();

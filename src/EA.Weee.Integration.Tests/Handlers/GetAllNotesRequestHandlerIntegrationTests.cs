@@ -143,7 +143,7 @@
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings(resetDb: true)
-                    .WithInternalAdminUserAccess();
+                    .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetInternalUserRole();
