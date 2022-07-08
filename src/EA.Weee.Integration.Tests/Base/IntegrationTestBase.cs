@@ -102,14 +102,14 @@
                 return this;
             }
 
-            public IntegrationTestSetupBuilder WithInternalAdminUserAccess()
+            public IntegrationTestSetupBuilder WithInternalUserAccess(bool asAdmin = true)
             {
                 if (Principal == null)
                 {
                     throw new InvalidOperationException("Principal must have been set to login as particular user type");
                 }
 
-                var userContext = new TestUserContext(Guid.Parse(User.Id), false, true);
+                var userContext = new TestUserContext(Guid.Parse(User.Id), false, asAdmin);
                 InitIocWithUser(userContext);
 
                 return this;

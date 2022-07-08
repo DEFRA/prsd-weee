@@ -16,7 +16,7 @@
 
         public bool Dcf { get; set; }
 
-        private ICategoryValueTotalCalculator categoryValueCalculator;
+        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
 
         public NonObligatedValuesViewModel()
         {

@@ -96,17 +96,6 @@
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
             };
-
-            private readonly It shouldHaveCreatedNoteCategories = () =>
-            {
-                note.NoteTransferCategories.Count.Should().Be(3);
-                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.DisplayEquipment)).Should()
-                    .NotBeNull();
-                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Should()
-                    .NotBeNull();
-                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments)).Should()
-                    .NotBeNull();
-            };
         }
 
         [Component]
@@ -197,13 +186,6 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
-            };
-
-            private readonly It shouldHaveCreatedNoteCategories = () =>
-            {
-                note.NoteTransferCategories.Count.Should().Be(1);
-                note.NoteTransferCategories.First(n => n.CategoryId.Equals(WeeeCategory.ConsumerEquipment)).Should()
-                    .NotBeNull();
             };
         }
 

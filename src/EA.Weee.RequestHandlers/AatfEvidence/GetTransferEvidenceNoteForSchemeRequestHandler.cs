@@ -46,10 +46,6 @@
                 throw new SecurityException($"The user does not have access to the organisation or scheme with note ID {request.EvidenceNoteId}");
             }
 
-            if (!allowedAccess)
-            {
-                throw new SecurityException($"The user does not have access to the organisation or scheme with note ID {request.EvidenceNoteId}");
-            }
             var transferNote = mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(new TransferNoteMapTransfer(transferredScheme, evidenceNote));
 
             return transferNote;
