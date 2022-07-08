@@ -127,7 +127,6 @@
     <Compile Include="Mappings\ObligationUploadErrorMapping.cs" />
     <Compile Include="Mappings\ObligationSchemeMapping.cs" />
     <Compile Include="Mappings\ObligationUploadMapping.cs" />
-    <Compile Include="Mappings\EvidenceNoteTransferCategoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTransferMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteStatusHistoryMapping.cs" />
     <Compile Include="Mappings\EvidenceNoteTonnageMapping.cs" />

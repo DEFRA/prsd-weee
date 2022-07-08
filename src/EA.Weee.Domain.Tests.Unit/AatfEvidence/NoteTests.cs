@@ -26,7 +26,6 @@
         private string createdBy;
         private IEnumerable<NoteTonnage> tonnages;
         private readonly IEnumerable<NoteTransferTonnage> transferTonnages;
-        private readonly IEnumerable<NoteTransferCategory> transferCategories;
         private NoteStatus status;
         private readonly short complianceYear;
 
@@ -42,7 +41,6 @@
             createdBy = TestFixture.Create<string>();
             tonnages = TestFixture.CreateMany<NoteTonnage>();
             transferTonnages = TestFixture.CreateMany<NoteTransferTonnage>();
-            transferCategories = TestFixture.CreateMany<NoteTransferCategory>();
             status = NoteStatus.Draft;
             complianceYear = TestFixture.Create<short>();
         }
@@ -68,7 +66,6 @@
             var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
                 "created",
                 transferTonnages.ToList(),
-                transferCategories.ToList(),
                 complianceYear,
                 WasteType.HouseHold));
 
@@ -96,7 +93,6 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
                 "created",
                 transferTonnages.ToList(),
-                transferCategories.ToList(),
                 complianceYear,
                 WasteType.HouseHold));
 
@@ -169,7 +165,6 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
                 null,
-                transferCategories.ToList(),
                 complianceYear,
                 WasteType.HouseHold));
 
@@ -181,7 +176,6 @@
         {
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
-                transferTonnages.ToList(),
                 null,
                 complianceYear,
                 WasteType.HouseHold));
@@ -197,7 +191,6 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
                 "created",
                 transferTonnages.ToList(),
-                transferCategories.ToList(),
                 complianceYear,
                 WasteType.HouseHold));
 
@@ -491,7 +484,6 @@
                 scheme,
                 createdBy,
                 transferTonnages.ToList(),
-                transferCategories.ToList(),
                 complianceYear,
                 WasteType.HouseHold);
         }
