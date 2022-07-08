@@ -17,12 +17,17 @@
 {
     @if (Model.DisplayMessage)
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null)), "Manage evidence notes"))
+        @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.SelectedComplianceYear }), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.SchemeId, Model.RedirectTab, null))))
+        @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.SelectedComplianceYear })))
+
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)

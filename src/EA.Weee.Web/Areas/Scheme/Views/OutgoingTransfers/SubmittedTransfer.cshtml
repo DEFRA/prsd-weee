@@ -1,8 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
 @{
 
@@ -15,6 +15,11 @@
 {
     @using (Html.BeginRouteForm(SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, FormMethod.Post))
     {
+
+        @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.SelectedComplianceYear })))
+
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(m => m.OrganisationId)
@@ -37,12 +42,12 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
             @this.WeeeGds().RadioButtonsFor(
-                m => m.SelectedValue,
-                Model.PossibleValues,
-                "Choose whether to approve, reject or return the evidence note transfer",
-                RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Stacked,
-                Model.HintItems)
+                                    m => m.SelectedValue,
+                                    Model.PossibleValues,
+                                    "Choose whether to approve, reject or return the evidence note transfer",
+                                    RadioButtonLegend.VisuallyHidden,
+                                    RadioButtonLayout.Stacked,
+                                    Model.HintItems)
         </div>
 
         <div class="govuk-!-margin-top-7"></div>
