@@ -137,18 +137,14 @@
             public static IntegrationTestSetupBuilder LocalSetup()
             {
                 var setup = SetupTest(IocApplication.RequestHandler)
-                    .WithIoC()
+                    .WithIoC(true)
                     .WithTestData()
                     .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetAdminRole();
 
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligation, List<SchemeObligationData>>>();
