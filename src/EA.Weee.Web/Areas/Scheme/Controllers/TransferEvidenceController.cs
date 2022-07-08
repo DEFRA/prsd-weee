@@ -27,32 +27,27 @@
         private readonly IMapper mapper;
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
-        private readonly IWeeeCache cache;
 
         public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService) : base(breadcrumb, cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
             this.transferNoteRequestCreator = transferNoteRequestCreator;
-            this.cache = cache;
             this.sessionService = sessionService;
         }
 
         [HttpGet]
         public async Task<ActionResult> TransferEvidenceNote(Guid pcsId)
         {
-            using (var client = this.apiClient())
+            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            var model = new TransferEvidenceNoteCategoriesViewModel
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                OrganisationId = pcsId,
+                SchemasToDisplay = await GetApprovedSchemes(pcsId)
+            };
 
-                var model = new TransferEvidenceNoteCategoriesViewModel
-                {
-                    OrganisationId = pcsId,
-                    SchemasToDisplay = await GetApprovedSchemes(pcsId)
-                };
-
-                return this.View("TransferEvidenceNote", model);
-            }
+            return this.View("TransferEvidenceNote", model);
         }
 
         [HttpPost]
@@ -227,11 +222,11 @@
             {
                 foreach (var id in ids)
                 {
-                    for (int i = 0; i < model.CategoryValues.Count; i++)
+                    for (int i = 0; i < model.CategoryBooleanViewModels.Count; i++)
                     {
-                        if (model.CategoryValues[i].CategoryId == id)
+                        if (model.CategoryBooleanViewModels[i].CategoryId == id)
                         {
-                            model.CategoryValues[i].Selected = true;
+                            model.CategoryBooleanViewModels[i].Selected = true;
                         }
                     }
                 }

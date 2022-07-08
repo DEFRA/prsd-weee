@@ -29,6 +29,7 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly GetEvidenceNotesForTransferRequest request;
         private readonly Scheme scheme;
         private readonly Guid schemeId;
@@ -39,6 +40,7 @@
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
             fixture.Create<Guid>();
             schemeId = fixture.Create<Guid>();
@@ -50,7 +52,7 @@
 
             request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<int>().ToList());
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
         }
 
         [Fact]
@@ -59,7 +61,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -74,7 +76,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
            
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -108,14 +110,29 @@
         }
 
         [Fact]
+        public async void HandleAsync_GivenRequest_SystemTimeShouldBeRetrieved()
+        {
+            // act
+            await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async void HandleAsync_GivenRequest_DataAccessGetNotesToTransferShouldBeCalled()
         {
+            //arrange
+            var date = fixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
+
             //act
             await handler.HandleAsync(request);
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._))
+                    evidenceDataAccess.GetNotesToTransfer(schemeId, 
+                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, date.Year))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -128,13 +145,15 @@
             
             A.CallTo(() => scheme.Id).Returns(schemeId);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
+            var date = fixture.Create<DateTime>();
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes)))
+                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), date.Year))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -161,7 +180,7 @@
             };
 
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._)).Returns(noteList);
+                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._, A<int>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
@@ -188,7 +207,7 @@
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
 
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._, A<int>._)).Returns(noteList);
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act

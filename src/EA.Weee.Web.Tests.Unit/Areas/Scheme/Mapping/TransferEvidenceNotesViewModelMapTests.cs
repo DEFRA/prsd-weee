@@ -200,7 +200,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TransferEvidenceNoteRequest(), transferNoteData, organisationId);
 
             //act
             var result = map.Map(source);
@@ -277,9 +277,23 @@
                 .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
                 .Create();
 
+            var request = TransferEvidenceNoteRequest();
+
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(notes, transferNoteData, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(notes, request, transferNoteData, organisationId);
+        }
+
+        private TransferEvidenceNoteRequest TransferEvidenceNoteRequest()
+        {
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.CategoryIds,
+                    new List<int>()
+                    {
+                        Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                        Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+                    }).Create();
+            return request;
         }
     }
 }

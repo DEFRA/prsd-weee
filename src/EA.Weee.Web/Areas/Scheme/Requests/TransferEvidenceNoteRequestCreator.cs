@@ -22,7 +22,7 @@
                 throw new InvalidOperationException("TransferEvidenceNoteRequest PCS(Schema) Id Should Be Not NULL");
             }
 
-            var selectedIds = viewModel.CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
+            var selectedIds = viewModel.CategoryBooleanViewModels.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
 
             if (!selectedIds.Any())
             {

@@ -72,12 +72,9 @@
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    var transferCategories = request.CategoryIds.Select(t =>
-                        new NoteTransferCategory((WeeeCategory)t)).ToList();
-
                     var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme, transferCategories,
+                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
                 }

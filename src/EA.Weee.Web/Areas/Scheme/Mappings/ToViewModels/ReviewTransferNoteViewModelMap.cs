@@ -21,7 +21,8 @@
             var model = new ReviewTransferNoteViewModel()
             {
                 ViewTransferNoteViewModel = mapper.Map<ViewTransferNoteViewModel>(source),
-                OrganisationId = source.SchemeId
+                OrganisationId = source.SchemeId,
+                RedirectTabName = source.RedirectTab,
             };
 
             return model;

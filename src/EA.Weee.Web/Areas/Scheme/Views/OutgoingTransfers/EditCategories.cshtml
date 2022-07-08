@@ -1,0 +1,28 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNoteCategoriesViewModel
+@{
+    ViewBag.Title = "Transfer evidence to another scheme - GOV.UK";
+}
+
+@section full_main_content
+{
+    @(this.WeeeGds().Warning("Unselecting categories may change previous evidence note selections"))
+
+    <h1 class="govuk-heading-l">
+        Transfer evidence to another scheme
+    </h1>
+
+    @Html.Gds().ValidationSummary()
+
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
+
+    @using (Html.BeginRouteForm("Scheme_edit_transfer_categories", method: FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+
+        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
+    }
+}
+

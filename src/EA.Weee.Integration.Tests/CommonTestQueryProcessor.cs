@@ -3,9 +3,12 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Reflection.Emit;
     using Autofac;
+    using Builders;
     using DataAccess;
     using Domain;
+    using Domain.Admin;
     using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
@@ -33,7 +36,6 @@
                 .Include(n => n.Recipient)
                 .Include(n => n.NoteTransferTonnage)
                 .Include(n => n.NoteTonnage)
-                .Include(n => n.NoteTransferCategories)
                 .FirstOrDefault(n => n.Id.Equals(id));
         }
 
@@ -88,10 +90,24 @@
             return dbContext.ObligationUploads.First(o => o.Id == id);
         }
 
-        public bool CompetentAuthorityUserExists(string userId)
+        public bool CompetentAuthorityUserExists(string userId, Guid roleId)
         {
             return dbContext.CompetentAuthorityUsers.Any(u =>
-                u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value);
+                u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value && u.RoleId == roleId);
+        }
+
+        public void SetupUserWithRole(string userId, Guid roleId, Guid authorityId)
+        {
+            var user = dbContext.CompetentAuthorityUsers.First(u => u.UserId == userId);
+
+            if (user != null)
+            {
+                dbContext.CompetentAuthorityUsers.Remove(user);
+            }
+
+            dbContext.SaveChanges();
+
+            CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, authorityId, roleId).Create();
         }
     }
 }
