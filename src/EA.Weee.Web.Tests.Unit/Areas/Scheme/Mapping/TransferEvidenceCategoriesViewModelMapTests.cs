@@ -142,9 +142,9 @@
                 WeeeCategory.AutomaticDispensers.ToInt()
             };
 
-            result.CategoryValues.Where(c => expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+            result.CategoryBooleanViewModels.Where(c => expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
                 .Should().BeTrue();
-            result.CategoryValues.Where(c => !expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+            result.CategoryBooleanViewModels.Where(c => !expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
                 .Should().BeFalse();
         }
 
@@ -207,7 +207,7 @@
                 .Create();
 
             var existingModel = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
-                .With(t => t.CategoryValues, new CategoryValues<CategoryBooleanViewModel>()
+                .With(t => t.CategoryBooleanViewModels, new CategoryValues<CategoryBooleanViewModel>()
                 {
                     new CategoryBooleanViewModel(WeeeCategory.LargeHouseholdAppliances)
                     {
@@ -236,9 +236,9 @@
                 WeeeCategory.AutomaticDispensers.ToInt()
             };
 
-            result.CategoryValues.Where(c => expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+            result.CategoryBooleanViewModels.Where(c => expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
                 .Should().BeTrue();
-            result.CategoryValues.Where(c => !expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
+            result.CategoryBooleanViewModels.Where(c => !expectedSelectedCategory.Contains(c.CategoryId)).All(c => c.Selected)
                 .Should().BeFalse();
         }
         

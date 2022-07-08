@@ -43,6 +43,7 @@
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 2).ToString();
                 model.CategoryValues.ElementAt(count).Dcf = true;
             }
+
             model.Dcf = true;
 
             validator = new NonObligatedValuesViewModelValidator(returnData);
@@ -53,7 +54,7 @@
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
-                validationResult.Errors[i].PropertyName.Should().Be("TotalCategoryValues[" + i + "].Tonnage");
+                validationResult.Errors[i].PropertyName.Should().Be("CategoryValues[" + i + "].Tonnage");
                 validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be less than or equal to " + returnData.NonObligatedData[i].Tonnage);
             }
         }
@@ -123,7 +124,7 @@
             {
                 var categoryId = i + 1;
                 validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be greater than or equal to " + returnData.NonObligatedData[i].Tonnage);
-                validationResult.Errors[i].PropertyName.Should().Be("TotalCategoryValues[" + i + "].Tonnage");
+                validationResult.Errors[i].PropertyName.Should().Be("CategoryValues[" + i + "].Tonnage");
             }
         }
 
@@ -163,7 +164,7 @@
             {
                 var categoryId = i + 1;
                 validationResult.Errors[i].ErrorMessage.Should().Be("Category " + categoryId + " tonnage must be greater than or equal to " + returnData.NonObligatedData[i].Tonnage);
-                validationResult.Errors[i].PropertyName.Should().Be("TotalCategoryValues[" + i + "].Tonnage");
+                validationResult.Errors[i].PropertyName.Should().Be("CategoryValues[" + i + "].Tonnage");
             }
         }
 

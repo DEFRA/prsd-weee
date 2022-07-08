@@ -8,14 +8,14 @@
 
 <h2 class="govuk-heading-m">Showing approved evidence notes with categories</h2>
 <ul class="govuk-list">
-    @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
+    @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
     {
         var item = categoryCount;
 
-        @Html.HiddenFor(m => m.TotalCategoryValues[item].CategoryId)
-        @Html.HiddenFor(m => m.TotalCategoryValues[item].CategoryDisplay)
+        @Html.HiddenFor(m => m.CategoryValues[item].CategoryId)
+        @Html.HiddenFor(m => m.CategoryValues[item].CategoryDisplay)
 
-        <li>@Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay</li>
+        <li>@Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay</li>
     }
 </ul>
 <p class="govuk-body-m">Select up to 5 notes</p>
