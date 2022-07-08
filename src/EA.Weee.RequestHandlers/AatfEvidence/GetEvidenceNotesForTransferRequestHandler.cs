@@ -19,16 +19,19 @@
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetEvidenceNotesForTransferRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
-            ISchemeDataAccess schemeDataAccess)
+            ISchemeDataAccess schemeDataAccess, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
             this.schemeDataAccess = schemeDataAccess;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<IList<EvidenceNoteData>> HandleAsync(GetEvidenceNotesForTransferRequest message)
@@ -38,12 +41,14 @@
 
             var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
 
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+
             Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
 
             authorization.EnsureSchemeAccess(scheme.Id);
 
             var notes = await noteDataAccess.GetNotesToTransfer(scheme.Id, 
-                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes);
+                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, currentDate.Year);
 
             return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList())).ListOfEvidenceNoteData;
         }

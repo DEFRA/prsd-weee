@@ -90,7 +90,6 @@
                .Where(p => p.ComplianceYear.Equals(filter.ComplianceYear)
                             && allowedNoteTypes.Contains(p.NoteType.Value)
                             && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                                //&& (!groupedAatfId.HasValue || p.Aatf.Id == filter.AatfId.Value)
                                 && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
                                 && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
                                     || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value)))
@@ -124,7 +123,7 @@
             return note.ComplianceYear;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
             var notes = await context.Notes
                 .IncludeFilter(n => n.NoteTonnage.Where(nt => 
@@ -134,8 +133,11 @@
                 .Where(n => n.RecipientId == schemeId &&
                     n.NoteType.Value == NoteType.EvidenceNote.Value &&
                     n.WasteType.Value == WasteType.HouseHold &&
-                    n.Status.Value == NoteStatus.Approved.Value &&
-                    n.NoteTonnage.Where(nt => nt.Received != null).Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)) && evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)).ToListAsync();
+                    n.Status.Value == NoteStatus.Approved.Value && 
+                    n.ComplianceYear == complianceYear &&
+                    n.NoteTonnage.Where(nt => nt.Received != null)
+                        .Select(nt1 => (int)nt1.CategoryId).AsEnumerable()
+                        .Any(e => categories.Contains(e)) && evidenceNotes.Count == 0 || (evidenceNotes.Contains(n.Id) && n.ComplianceYear == complianceYear)).ToListAsync();
 
             return notes;
         }
