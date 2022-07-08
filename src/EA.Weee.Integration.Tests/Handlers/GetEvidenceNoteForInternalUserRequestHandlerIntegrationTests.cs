@@ -216,7 +216,7 @@
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetInternalUserRole();
 
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
+                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
                 {
                     CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
                         .Create();
