@@ -54,7 +54,7 @@
                 schemeId = null;
             }
 
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 SchemeId = schemeId,

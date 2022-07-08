@@ -126,7 +126,9 @@
                                                               e.ComplianceYear == request.ComplianceYear &&
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
                                                               e.NoteTypeFilter.Count == 1 && 
-                                                              e.OrganisationId == null))).MustHaveHappenedOnceExactly();
+                                                              e.OrganisationId == null &&
+                                                              e.PageNumber == 0 &&
+                                                              e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -106,13 +106,16 @@
                                 (filter.FormattedNoteType > 0 ?
                                     (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) :
                                     (filter.FormattedSearchRef == p.Reference.ToString()))));
-            
+
             if (groupedAatfId.HasValue)
             {
-                return await notes.Where(p => p.Aatf.AatfId == groupedAatfId).ToListAsync();
+                notes = notes.Where(p => p.Aatf.AatfId == groupedAatfId);
             }
-            
-            return await notes.ToListAsync();
+
+            return await notes.OrderByDescending(n => n.Reference)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
         }
 
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
