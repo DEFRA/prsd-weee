@@ -34,7 +34,6 @@
                 .Include(n => n.NoteTransferTonnage)
                 .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage))
                 .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage.Note))
-                .Include(n => n.NoteTransferCategories)
                 .Include(n => n.NoteStatusHistory)
                 .FirstOrDefaultAsync(n => n.Id == id);
 
@@ -147,8 +146,7 @@
         }
 
         public async Task<Guid> AddTransferNote(Organisation organisation, 
-            Scheme scheme, 
-            List<NoteTransferCategory> transferCategories,
+            Scheme scheme,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
@@ -159,7 +157,6 @@
                 scheme,
                 userId,
                 transferTonnage,
-                transferCategories,
                 complianceYear,
                 WasteType.HouseHold);
 

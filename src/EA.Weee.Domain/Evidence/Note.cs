@@ -57,7 +57,6 @@
             Scheme recipient,
             string createdBy,
             IList<NoteTransferTonnage> transfer,
-            IList<NoteTransferCategory> categories,
             int complianceYear,
             WasteType wasteType)
         {
@@ -65,7 +64,6 @@
             Guard.ArgumentNotNull(() => recipient, recipient);
             Guard.ArgumentNotNullOrEmpty(() => createdBy, createdBy);
             Guard.ArgumentNotNull(() => transfer, transfer);
-            Guard.ArgumentNotNull(() => categories, categories);
             Condition.Requires(complianceYear).IsGreaterThan(0);
 
             Organisation = organisation;
@@ -79,7 +77,6 @@
             NoteTonnage = new List<NoteTonnage>();
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = transfer;
-            NoteTransferCategories = categories;
             ComplianceYear = complianceYear;
             WasteType = wasteType;
         }
@@ -197,7 +194,5 @@
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
 
         public virtual int ComplianceYear { get; set; }
-
-        public virtual ICollection<NoteTransferCategory> NoteTransferCategories { get; protected set; }
     }
 }

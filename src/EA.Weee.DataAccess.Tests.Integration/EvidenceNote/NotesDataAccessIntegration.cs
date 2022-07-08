@@ -1308,13 +1308,13 @@
                 note3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note3);
 
-                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote1);
-                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote2);
-                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote3);
 
@@ -1366,13 +1366,13 @@
                 note3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note3);
 
-                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote1 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote1);
-                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote2 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote2);
-                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, null, complianceYear);
+                var transferNote3 = NoteCommon.CreateTransferNote(database, organisation, null, null, complianceYear);
                 transferNote3.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(transferNote3);
 

@@ -269,25 +269,10 @@
                     new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id, 4, null)
                 };
 
-                var transferCategories = new List<NoteTransferCategory>
-                {
-                    new NoteTransferCategory(WeeeCategory.LargeHouseholdAppliances),
-                    new NoteTransferCategory(WeeeCategory.GasDischargeLampsAndLedLightSources),
-                    new NoteTransferCategory(WeeeCategory.ElectricalAndElectronicTools),
-                };
-
-                var noteId = await dataAccess.AddTransferNote(transferOrganisation, recipientScheme, transferCategories, transferTonnages,
+                var noteId = await dataAccess.AddTransferNote(transferOrganisation, recipientScheme, transferTonnages,
                     NoteStatus.Draft, noteToBeTransferred1.ComplianceYear, context.GetCurrentUser(), SystemTime.Now);
 
                 var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
-
-                refreshedTransferNote.NoteTransferCategories.Count.Should().Be(3);
-                refreshedTransferNote.NoteTransferCategories.Should()
-                    .Contain(nt => nt.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
-                refreshedTransferNote.NoteTransferCategories.Should()
-                    .Contain(nt => nt.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources));
-                refreshedTransferNote.NoteTransferCategories.Should()
-                    .Contain(nt => nt.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools));
 
                 refreshedTransferNote.Aatf.Should().BeNull();
                 refreshedTransferNote.CreatedById.Should().Be(context.GetCurrentUser());
