@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.ViewModels.Shared;
+    using ManageEvidenceNotes;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.ViewModels.Shared;
-    using ManageEvidenceNotes;
 
     public class ReviewTransferNoteViewModel : RadioButtonStringCollectionViewModel, IRadioButtonHint, IValidatableObject
     {
@@ -18,13 +19,13 @@
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
-        [Required(ErrorMessage = "Choose whether to approve, reject or return the evidence note transfer")]
+        public string RedirectTab => ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString();
+
+        [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note transfer")]
         public override string SelectedValue { get; set; }
 
         [DisplayName("What is the reason you are rejecting or returning the evidence note transfer?")]
         public virtual string Reason { get; set; }
-
-        //public virtual Guid OrganisationId => ViewTransferNoteViewModel.OrganisationId;
 
         public NoteStatus SelectedEnumValue
         {
