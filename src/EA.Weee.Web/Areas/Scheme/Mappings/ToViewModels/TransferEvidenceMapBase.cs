@@ -59,7 +59,7 @@
 
             foreach (var requestCategoryId in categoryValues.OrderBy(c => c.ToInt()))
             {
-                model.TotalCategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
+                model.CategoryValues.Add(new TotalCategoryValue((Core.DataReturns.WeeeCategory)requestCategoryId));
             }
 
             return model;

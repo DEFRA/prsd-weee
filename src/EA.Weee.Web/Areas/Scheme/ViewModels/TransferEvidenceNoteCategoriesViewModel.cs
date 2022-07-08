@@ -16,10 +16,10 @@
 
         public IList<SchemeData> SchemasToDisplay { get; set; }
 
-        public CategoryValues<CategoryBooleanViewModel> CategoryValues { get; set; }
+        public CategoryValues<CategoryBooleanViewModel> CategoryBooleanViewModels { get; set; }
 
         [Range(typeof(bool), "true", "true", ErrorMessage = "Select a category you would like to transfer evidence from")]
-        public bool HasSelectedAtLeastOneCategory => CategoryValues != null && CategoryValues.Any(c => c.Selected);
+        public bool HasSelectedAtLeastOneCategory => CategoryBooleanViewModels != null && CategoryBooleanViewModels.Any(c => c.Selected);
 
         public TransferEvidenceNoteCategoriesViewModel()
         {
@@ -28,16 +28,16 @@
 
         public void AddCategoryValues()
         {
-            CategoryValues = new CategoryValues<CategoryBooleanViewModel>();
+            CategoryBooleanViewModels = new CategoryValues<CategoryBooleanViewModel>();
         }
 
         public List<int> SelectedCategoryValues
         {
             get
             {
-                if (CategoryValues != null)
+                if (CategoryBooleanViewModels != null)
                 {
-                    return CategoryValues.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
+                    return CategoryBooleanViewModels.Where(c => c.Selected).Select(c => c.CategoryId).ToList();
                 }
 
                 return new List<int>();

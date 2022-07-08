@@ -175,10 +175,10 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.Should().NotBeEmpty();
-            result.TotalCategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.CategoryValues.Should().NotBeEmpty();
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
             source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData
-                .ForEach(c => result.TotalCategoryValues.Should()
+                .ForEach(c => result.CategoryValues.Should()
                     .Contain(cv => cv.CategoryId.Equals(c.EvidenceTonnageData.CategoryId.ToInt())));
         }
 
@@ -552,9 +552,9 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
-            result.TotalCategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
-            result.TotalCategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.CategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
+            result.CategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
         }
 
         [Fact]
@@ -607,13 +607,13 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
-            result.TotalCategoryValues.ElementAt(0).TotalReceived.Should().Be("33.000");
-            result.TotalCategoryValues.ElementAt(0).TotalReused.Should().Be("22.000");
-            result.TotalCategoryValues.ElementAt(1).TotalReceived.Should().Be("45.000");
-            result.TotalCategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
-            result.TotalCategoryValues.ElementAt(2).TotalReceived.Should().Be("100.000");
-            result.TotalCategoryValues.ElementAt(2).TotalReused.Should().Be("0.000");
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("33.000");
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("22.000");
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("45.000");
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
+            result.CategoryValues.ElementAt(2).TotalReceived.Should().Be("100.000");
+            result.CategoryValues.ElementAt(2).TotalReused.Should().Be("0.000");
         }
 
         [Fact]
@@ -656,14 +656,14 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
-            result.TotalCategoryValues.ElementAt(0).TotalReceived.Should().Be("0.000");
-            result.TotalCategoryValues.ElementAt(0).TotalReused.Should().Be("0.000");
-            result.TotalCategoryValues.ElementAt(1).TotalReceived.Should().Be("20.000");
-            result.TotalCategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
-            result.TotalCategoryValues.Should().NotContain(c => c.CategoryId == WeeeCategory.ConsumerEquipment.ToInt());
-            result.TotalCategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.AutomaticDispensers.ToInt());
-            result.TotalCategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.ToysLeisureAndSports.ToInt());
+            result.CategoryValues.Should().BeInAscendingOrder(c => c.CategoryId);
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("0.000");
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("0.000");
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("20.000");
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("10.000");
+            result.CategoryValues.Should().NotContain(c => c.CategoryId == WeeeCategory.ConsumerEquipment.ToInt());
+            result.CategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.AutomaticDispensers.ToInt());
+            result.CategoryValues.Should().Contain(c => c.CategoryId == WeeeCategory.ToysLeisureAndSports.ToInt());
         }
 
         [Fact]
@@ -676,8 +676,8 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
-            result.TotalCategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
+            result.CategoryValues.ForEach(c => c.TotalReused.Should().Be("0.000"));
+            result.CategoryValues.ForEach(c => c.TotalReceived.Should().Be("0.000"));
         }
 
         [Fact]
@@ -691,11 +691,11 @@
             var result = map.Map(source);
 
             //assert
-            result.TotalCategoryValues.ElementAt(0).TotalReceived.Should().Be("1.000"); // 3.000 - 2.000
-            result.TotalCategoryValues.ElementAt(0).TotalReused.Should().Be("3.000"); // 6.000 - 3.000
-            result.TotalCategoryValues.ElementAt(1).TotalReceived.Should().Be("15.000"); // 15.000 - 0
-            result.TotalCategoryValues.ElementAt(1).TotalReused.Should().Be("17.000"); // 17.000 - 0
-            result.TotalCategoryValues.Count.Should().Be(2);
+            result.CategoryValues.ElementAt(0).TotalReceived.Should().Be("1.000"); // 3.000 - 2.000
+            result.CategoryValues.ElementAt(0).TotalReused.Should().Be("3.000"); // 6.000 - 3.000
+            result.CategoryValues.ElementAt(1).TotalReceived.Should().Be("15.000"); // 15.000 - 0
+            result.CategoryValues.ElementAt(1).TotalReused.Should().Be("17.000"); // 17.000 - 0
+            result.CategoryValues.Count.Should().Be(2);
         }
 
         private TransferEvidenceNotesViewModelMapTransfer SetupTotals()

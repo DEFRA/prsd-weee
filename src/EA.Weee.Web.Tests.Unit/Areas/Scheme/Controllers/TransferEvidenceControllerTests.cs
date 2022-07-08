@@ -162,10 +162,10 @@
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
        
             // assert
-            model.CategoryValues.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
+            model.CategoryBooleanViewModels.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
             for (int i = 0; i < categoryValues.Count; i++)
             {
-                model.CategoryValues.ElementAt(i).Should().BeEquivalentTo(categoryValues.ElementAt(i));
+                model.CategoryBooleanViewModels.ElementAt(i).Should().BeEquivalentTo(categoryValues.ElementAt(i));
             }
         }
 
