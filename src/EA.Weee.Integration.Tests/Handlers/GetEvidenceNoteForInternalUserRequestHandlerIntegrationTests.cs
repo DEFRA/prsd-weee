@@ -239,7 +239,7 @@
                 data.AatfData.Id.Should().Be(note.Aatf.Id);
                 data.RecipientSchemeData.Should().NotBeNull();
                 data.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
-                data.EvidenceTonnageData.Count.Should().Be(3);
+                data.EvidenceTonnageData.Count.Should().Be(note.NoteTonnage.Count);
                 data.OrganisationData.Should().NotBeNull();
                 data.OrganisationData.Id.Should().Be(note.Organisation.Id);
                 ((int)data.Type).Should().Be(note.NoteType.Value);
