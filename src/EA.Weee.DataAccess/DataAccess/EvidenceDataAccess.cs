@@ -125,22 +125,25 @@
 
         public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
-            var notes = await context.Notes
-                .IncludeFilter(n => n.NoteTonnage.Where(nt => 
-                    nt.Received.HasValue && categories.Contains((int)nt.CategoryId)))
-                .IncludeFilter(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage))
-                .IncludeFilter(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage).Select(ntt => ntt.Select(nttt => nttt.TransferNote)))
-                .Where(n => n.RecipientId == schemeId &&
-                    n.NoteType.Value == NoteType.EvidenceNote.Value &&
-                    n.WasteType.Value == WasteType.HouseHold &&
-                    n.Status.Value == NoteStatus.Approved.Value && 
-                    n.ComplianceYear == complianceYear &&
-                    n.NoteTonnage.Where(nt => nt.Received != null)
-                        .Select(nt1 => (int)nt1.CategoryId).AsEnumerable()
-                        .Any(e => categories.Contains(e)) && evidenceNotes.Count == 0 || (evidenceNotes.Contains(n.Id) && n.ComplianceYear == complianceYear)).ToListAsync();
+            var notes = context.Notes
+                    .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage))
+                    .Where(n => n.RecipientId == schemeId &&
+                                n.NoteType.Value == NoteType.EvidenceNote.Value &&
+                                n.WasteType.Value == WasteType.HouseHold &&
+                                n.Status.Value == NoteStatus.Approved.Value &&
+                                n.ComplianceYear == complianceYear
+                                && (evidenceNotes.Count == 0 || (evidenceNotes.Contains(n.Id))));
 
-            return notes;
+            var filterNotes = await notes.IncludeFilter(n => n.NoteTonnage.Where(nt =>
+                    nt.Received.HasValue && categories.Contains((int)nt.CategoryId)))
+                .Where(n => n.NoteTonnage.Where(nt => nt.Received != null)
+                        .Select(nt1 => (int)nt1.CategoryId).AsEnumerable()
+                        .Any(e => categories.Contains(e)))
+                .ToListAsync();
+
+            return filterNotes;
         }
+
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)
         {
             return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value) && n.ComplianceYear.Equals(complianceYear))
