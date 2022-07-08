@@ -34,7 +34,7 @@
         public void Map_GivenSourceWithAuthorityAndNoUploadData_UploadObligationsViewModelShouldBeReturned()
         {
             //arrange
-            var source = new UploadObligationsViewModelMapTransfer() { CompetentAuthority = TestFixture.Create<CompetentAuthority>() };
+            var source = new UploadObligationsViewModelMapTransfer() { CompetentAuthority = TestFixture.Create<CompetentAuthority>(), ComplianceYears = TestFixture.CreateMany<int>().ToList() };
 
             //act
             var model = map.Map(source);
@@ -66,7 +66,7 @@
         public void Map_GivenSourceWithSelectedComplianceYear_UploadObligationsViewModelSelectedComplianceYearShouldBeSet()
         {
             //arrange
-            var source = new UploadObligationsViewModelMapTransfer() { SelectedComplianceYear = TestFixture.Create<int>() };
+            var source = new UploadObligationsViewModelMapTransfer() { SelectedComplianceYear = TestFixture.Create<int>(), ComplianceYears = TestFixture.CreateMany<int>().ToList() };
 
             //act
             var model = map.Map(source);
@@ -87,7 +87,8 @@
             { 
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
             
             //act
@@ -111,7 +112,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -139,7 +141,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -168,7 +171,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -195,7 +199,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -221,7 +226,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -242,14 +248,15 @@
                 new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.File, TestFixture.Create<string>(),
                     TestFixture.Create<string>(), TestFixture.Create<string>(), null),
                 new SchemeObligationUploadErrorData(SchemeObligationUploadErrorType.Data, TestFixture.Create<string>(),
-                    TestFixture.Create<string>(), TestFixture.Create<string>(), null)
+                    TestFixture.Create<string>(), TestFixture.Create<string>(), null),
             };
 
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -278,7 +285,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -301,7 +309,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -324,7 +333,8 @@
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
                 ErrorData = schemeUploadObligationData,
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -344,7 +354,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 SelectedComplianceYear = TestFixture.Create<int>(),
-                DisplayNotification = true
+                DisplayNotification = true,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -362,7 +373,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 SelectedComplianceYear = TestFixture.Create<int>(),
-                DisplayNotification = false
+                DisplayNotification = false,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -385,7 +397,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ObligationData = schemeObligationData
+                ObligationData = schemeObligationData,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -409,7 +422,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ObligationData = schemeObligationData
+                ObligationData = schemeObligationData,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -435,7 +449,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ObligationData = schemeObligationData
+                ObligationData = schemeObligationData,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
@@ -457,7 +472,8 @@
             var source = new UploadObligationsViewModelMapTransfer()
             {
                 CompetentAuthority = TestFixture.Create<CompetentAuthority>(),
-                ObligationData = schemeObligationData
+                ObligationData = schemeObligationData,
+                ComplianceYears = TestFixture.CreateMany<int>().ToList()
             };
 
             //act
