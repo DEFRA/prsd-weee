@@ -14,11 +14,11 @@
     {
         protected override Note Instantiate()
         {
-            DefaultNote(new List<NoteTransferTonnage>(), new List<NoteTransferCategory>());
+            DefaultNote(new List<NoteTransferTonnage>());
             return instance;
         }
 
-        private void DefaultNote(IList<NoteTransferTonnage> tonnages, IList<NoteTransferCategory> categories)
+        private void DefaultNote(IList<NoteTransferTonnage> tonnages)
         {
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var scheme = DbContext.Schemes.First(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
@@ -28,7 +28,6 @@
             scheme,
             user.UserId.ToString(),
             tonnages,
-            categories,
             DateTime.Now.Year,
             WasteType.HouseHold);
         }

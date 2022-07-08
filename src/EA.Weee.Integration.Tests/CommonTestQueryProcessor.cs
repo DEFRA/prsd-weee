@@ -33,7 +33,6 @@
                 .Include(n => n.Recipient)
                 .Include(n => n.NoteTransferTonnage)
                 .Include(n => n.NoteTonnage)
-                .Include(n => n.NoteTransferCategories)
                 .FirstOrDefault(n => n.Id.Equals(id));
         }
 

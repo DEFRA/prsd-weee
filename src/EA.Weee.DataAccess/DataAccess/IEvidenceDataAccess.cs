@@ -29,7 +29,6 @@
 
         Task<Guid> AddTransferNote(Organisation organisation,
             Scheme scheme,
-            List<NoteTransferCategory> transferCategories,
             List<NoteTransferTonnage> transferTonnage,
             NoteStatus status,
             int complianceYear,
