@@ -641,12 +641,12 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithInternalAdminUserAccess();
+                    .WithInternalUserAccess();
 
                 authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetAdminRole();
 
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString()))
+                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
                 {
                     CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
                         .Create();

@@ -6,8 +6,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
@@ -15,33 +13,13 @@
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
-    public class ManageEvidenceNotesControllerTests
+    public class ManageEvidenceNotesControllerTests : ManageEvidenceNotesControllerTestsBase
     {
-        protected readonly IWeeeClient WeeeClient;
-        protected readonly IMapper Mapper;
-        protected readonly ManageEvidenceNotesController ManageEvidenceController;
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly Fixture Fixture;
-        protected readonly IWeeeCache Cache;
-
-        public ManageEvidenceNotesControllerTests()
-        {
-            Fixture = new Fixture();
-            WeeeClient = A.Fake<IWeeeClient>();
-            Breadcrumb = A.Fake<BreadcrumbService>();
-            Mapper = A.Fake<IMapper>();
-            Cache = A.Fake<IWeeeCache>();
-
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
-        }
-
         [Fact]
         public void ManageEvidenceNotesControllerInheritsAdminBreadcrumbBaseController()
         {
@@ -175,9 +153,9 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
 
@@ -194,9 +172,9 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_ViewModelShouldBeBuilt()
         {
             // arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
 
@@ -215,9 +193,9 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTabWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
 
@@ -235,9 +213,9 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTabWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt()
         {
             // arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
 
@@ -257,7 +235,7 @@
         public async Task IndexGet_GivenViewAllEvidenceNotesTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
         {
             // Arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
@@ -277,7 +255,7 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
         {
             // Arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
@@ -297,7 +275,7 @@
         public async Task IndexGet_GivenViewAllEvidenceNotesViewModel_ViewAllEvidenceNotesViewModelShouldBeReturned(string tab)
         {
             //arrange
-            var viewModel = Fixture.Create<ViewAllEvidenceNotesViewModel>();
+            var viewModel = TestFixture.Create<ViewAllEvidenceNotesViewModel>();
 
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewAllEvidenceNotesMapModel>._)).Returns(viewModel);
 
@@ -312,7 +290,7 @@
         public async Task IndexGet_GivenViewAllTransferNotesViewModel_ViewAllEvidenceNotesViewModelShouldBeReturned()
         {
             //arrange
-            var viewModel = Fixture.Create<ViewAllTransferNotesViewModel>();
+            var viewModel = TestFixture.Create<ViewAllTransferNotesViewModel>();
 
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewAllEvidenceNotesMapModel>._)).Returns(viewModel);
 
