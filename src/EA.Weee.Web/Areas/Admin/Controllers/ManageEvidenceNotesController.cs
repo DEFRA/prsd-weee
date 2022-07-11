@@ -14,6 +14,7 @@
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -73,6 +74,24 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteTransfersForInternalUserRequest(evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
+                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
 
                 return View(model);
             }
