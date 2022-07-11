@@ -44,13 +44,15 @@
                         {
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                                <td class="govuk-table__cell">@note.SubmittedDateDisplay</td>
                                 <td class="govuk-table__cell">@note.Recipient</td>
                                 <td class="govuk-table__cell">@note.Status</td>
                                 <td class="govuk-table__cell">
                                     @if (note.DisplayViewLink)
                                     {
-                                        if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft || note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted)
+                                        if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Draft || 
+                                            note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Submitted ||
+                                            note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Approved)
                                         {
                                             @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
                                         }
