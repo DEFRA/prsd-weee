@@ -53,7 +53,7 @@
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: "Scheme_edit_transfer",
+                name: SchemeTransferEvidenceRedirect.EditDraftTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "EditDraftTransfer", controller = "OutgoingTransfers", area = "Scheme" },
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });

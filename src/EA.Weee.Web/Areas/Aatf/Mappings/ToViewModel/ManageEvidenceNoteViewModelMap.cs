@@ -17,13 +17,23 @@
                 a.FacilityType.Equals(FacilityType.Aatf) && 
                 ((int)a.ComplianceYear).Equals(source.ComplianceYear));
 
+            var currentAATF = source.Aatfs.FirstOrDefault(a => a.Id == source.AatfId);
+
+            Condition.Requires(currentAATF).IsNotNull();
+
+            //is there an aatf for the org in the selected compliance year that can create / edit notes
+            var canEdit = source.Aatfs.Any(a =>
+                a.AatfId == currentAATF.AatfId && a.ComplianceYear == source.ComplianceYear &&
+                a.CanCreateEditEvidence);
+
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId, 
                 AatfId = source.AatfId, 
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1),
-                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate)
+                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
+                CanCreateEdit = canEdit
             };
 
             if (source.FilterViewModel != null)
