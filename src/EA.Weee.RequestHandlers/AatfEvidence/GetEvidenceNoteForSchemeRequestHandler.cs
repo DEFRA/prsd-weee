@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
+    using Mappings;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
@@ -32,7 +33,7 @@
 
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
-            var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote));
 
             return evidenceNoteData;
         }

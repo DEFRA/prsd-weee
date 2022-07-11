@@ -194,6 +194,43 @@
         }
 
         [Fact]
+        public async void HandleAsync_GivenCategoryFilterAndNotesData_ReturnedNotesDataShouldBeMapped()
+        {
+            // arrange
+            var note1 = A.Fake<Note>();
+            var note2 = A.Fake<Note>();
+            var note3 = A.Fake<Note>();
+
+            A.CallTo(() => note1.Reference).Returns(2);
+            A.CallTo(() => note1.CreatedDate).Returns(DateTime.Now.AddDays(1));
+            A.CallTo(() => note2.Reference).Returns(4);
+            A.CallTo(() => note2.CreatedDate).Returns(DateTime.Now);
+            A.CallTo(() => note3.Reference).Returns(6);
+            A.CallTo(() => note3.CreatedDate).Returns(DateTime.Now.AddDays(2));
+
+            var noteList = new List<Note>()
+            {
+                note1,
+                note2,
+                note3
+            };
+
+            A.CallTo(() =>
+                evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._, A<int>._)).Returns(noteList);
+
+            // act
+            await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a =>
+                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
+                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
+                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
+                a.ListOfNotes.Count.Equals(3) &&
+                a.CategoryFilter.SequenceEqual(request.Categories)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
