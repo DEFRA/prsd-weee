@@ -100,8 +100,8 @@
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 }
 
-<div class="govuk-table govuk-!-margin-bottom-0">
-    <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-2">
+<div class="govuk-table govuk-!-margin-bottom-0 govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-0">
 
         <h2 class="govuk-heading-m govuk-!-padding-left-0 govuk-!-margin-left-0" style="text-align: left;">Breakdown of evidence transferred</h2>
     </div>
@@ -124,9 +124,13 @@
 {
     var aatf = Model.Summary.ElementAt(aatfCount);
 
+        if (aatfCount == 0)
+        {
+
+        }
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-full govuk-!-margin-left-0 govuk-!-padding-left-0">
-                <h3 class="govuk-heading-s">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
+                <h3 class="govuk-heading-s govuk-!-padding-top-0">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
             </div>
         </div>
 
