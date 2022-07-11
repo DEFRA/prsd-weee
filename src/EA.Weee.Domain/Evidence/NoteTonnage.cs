@@ -9,7 +9,7 @@
 
     public partial class NoteTonnage : Entity
     {
-        private NoteTonnage()
+        public NoteTonnage()
         {
         }
 

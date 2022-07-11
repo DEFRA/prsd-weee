@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using Castle.Core.Internal;
     using Core.AatfEvidence;
     using Core.Scheme;
     using Domain.Evidence;
@@ -67,7 +68,7 @@
             // assert
             result.Should().BeOfType<ListOfEvidenceNoteDataMap>();
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustNotHaveHappened();
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(evidenceNoteData)).MustNotHaveHappened();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(evidenceNoteData) && e.CategoryFilter.IsNullOrEmpty()))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -82,9 +83,9 @@
             var evidenceData2 = fixture.Create<EvidenceNoteData>();
             var evidenceData3 = fixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData3);
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData2);
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).ReturnsNextFromSequence(evidenceData1);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData3);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData2);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData1);
 
             // act
             var result = map.Map(source);
