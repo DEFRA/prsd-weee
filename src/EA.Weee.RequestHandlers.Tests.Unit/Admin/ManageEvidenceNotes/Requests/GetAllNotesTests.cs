@@ -1,23 +1,16 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.ManageEvidenceNotes
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.ManageEvidenceNotes.Requests
 {
     using System;
     using System.Collections.Generic;
-    using AutoFixture;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Tests.Core;
     using FluentAssertions;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
 
-    public class GetAllNotesTests
+    public class GetAllNotesTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
-        public GetAllNotesTests()
-        {
-            fixture = new Fixture();
-        }
-
         [Fact]
         public void GetAllNotes_Constructor_GivenNullAllowedStatusesList()
         {
