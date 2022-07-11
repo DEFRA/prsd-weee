@@ -168,7 +168,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void SchemeViewRouteName_GivenNotDraftOrSubmittedStatus_InvalidOperationExceptionExpected(NoteStatus status)
         {
-            if (status == NoteStatus.Draft || status == NoteStatus.Submitted)
+            if (status == NoteStatus.Draft || status == NoteStatus.Submitted || status == NoteStatus.Approved)
             {
                 return;
             }
