@@ -16,7 +16,7 @@
 
             HasRequired(a => a.Note).WithMany(n => n.NoteTonnage).HasForeignKey(n => n.NoteId);
 
-            HasMany(a => a.NoteTransferTonnage).WithRequired(a => a.NoteTonnage).HasForeignKey(a => a.NoteTonnageId);
+            //HasMany(a => a.NoteTransferTonnage).WithRequired(a => a.NoteTonnage).HasForeignKey(a => a.NoteTonnageId);
         }
     }
 }
