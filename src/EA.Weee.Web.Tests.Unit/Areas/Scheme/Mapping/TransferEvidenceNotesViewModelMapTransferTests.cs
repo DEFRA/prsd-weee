@@ -154,7 +154,8 @@
             var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
-            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
+                .With(t => t.CategoryBooleanViewModels, new CategoryValues<CategoryBooleanViewModel>()).Create();
 
             //act
             var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, organisationId, model);
