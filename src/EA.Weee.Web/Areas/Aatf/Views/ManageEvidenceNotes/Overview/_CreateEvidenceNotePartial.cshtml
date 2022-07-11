@@ -10,7 +10,11 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.AatfId)
-    @(this.WeeeGds().Submit("Create new evidence note"))
+
+    if (Model.CanCreateEdit)
+    {
+        @(this.WeeeGds().Submit("Create new evidence note"))
+    }
 }
 
 <br />
