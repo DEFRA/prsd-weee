@@ -158,6 +158,7 @@
             var evidenceData = Fixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
             var currentDate = Fixture.Create<DateTime>();
+            var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(returnList);
@@ -171,7 +172,8 @@
                 g => g.OrganisationId.Equals(OrganisationId) && 
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
-                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
+                     g.TransferredOut == false &&
+                     g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -186,6 +188,7 @@
             var returnList = new List<EvidenceNoteData>() { evidenceData };
             var currentDate = Fixture.Create<DateTime>();
             var complianceYear = Fixture.Create<short>();
+            var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
@@ -202,7 +205,8 @@
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear) &&
-                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
+                     g.TransferredOut == false &&
+                     g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -362,6 +366,7 @@
                 NoteStatus.Void,
                 NoteStatus.Returned
             };
+            var noteTypes = new List<NoteType>() { NoteType.Evidence };
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -374,7 +379,8 @@
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
-                     g.TransferredOut == false))).MustHaveHappenedOnceExactly();
+                     g.TransferredOut == false &&
+                     g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -393,6 +399,7 @@
             var complianceYear = Fixture.Create<short>();
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
+            var noteTypes = new List<NoteType>() { NoteType.Evidence };
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -404,7 +411,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(model.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
+                     g.ComplianceYear.Equals(model.SelectedComplianceYear) &&
+                     g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -490,7 +498,7 @@
                      statuses.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == true &&
-                     g.NoteTypeFilterList.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
+                     noteTypes.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -521,7 +529,7 @@
                      statuses.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear) &&
                      g.TransferredOut == true &&
-                     g.NoteTypeFilterList.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
+                     noteTypes.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object[]> ManageEvidenceModelData =>
