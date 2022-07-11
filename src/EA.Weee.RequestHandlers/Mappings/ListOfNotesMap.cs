@@ -8,10 +8,13 @@
     {
         public List<Note> ListOfNotes { get; protected set; }
 
+        public List<int> CategoryFilter { get; set; }
+
         public ListOfNotesMap(List<Note> listOfNotes)
         {
             Guard.ArgumentNotNull(() => listOfNotes, listOfNotes);
             ListOfNotes = listOfNotes;
+            CategoryFilter = new List<int>();
         }
     }
 }
