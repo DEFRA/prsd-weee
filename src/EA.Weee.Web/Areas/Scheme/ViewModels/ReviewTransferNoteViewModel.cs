@@ -19,8 +19,6 @@
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
-        public string RedirectTab => ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString();
-
         [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note transfer")]
         public override string SelectedValue { get; set; }
 
