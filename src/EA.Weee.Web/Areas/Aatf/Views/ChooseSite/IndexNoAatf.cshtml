@@ -1,6 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.RazorHelpers
+@using HomeController = EA.Weee.Web.Areas.Scheme.Controllers.HomeController
+@using MvcNavigationHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.SelectYourAatfViewModel
 @{
@@ -8,11 +10,12 @@
     ViewBag.Title = title + " - GOV.UK";
 }
 
-<section id="main-content">
+@section full_main_content
+{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-            @Html.ActionLink("Back", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-back-link weee-back-link" })
+            @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
 
             @Html.Gds().ValidationSummary()
 
@@ -21,18 +24,18 @@
                     @title
                 </h1>
             </header>
-                <p class="govuk-body">
-                    There are currently no sites available for you to manage evidence notes for. The site(s) you are looking for may not be approved for the current compliance year.
-                </p>
+            <p class="govuk-body">
+                There are currently no sites available for you to manage evidence notes for. The site(s) you are looking for may not be approved for the current compliance year.
+            </p>
 
-                <p class="govuk-body">
-                    Evidence notes for compliance years prior to 2023 are not stored in this service.
-                </p>
+            <p class="govuk-body">
+                Evidence notes for compliance years prior to 2023 are not stored in this service.
+            </p>
 
-                <p class="govuk-body">
-                    Contact your environmental regulator if you believe this is incorrect.
-                </p>
-            </div>
+            <p class="govuk-body">
+                Contact your environmental regulator if you believe this is incorrect.
+            </p>
+        </div>
     </div>
-</section>
+}
 
