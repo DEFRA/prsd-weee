@@ -32,6 +32,7 @@
                 name: SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-approved-transfer/{evidenceNoteId}",
                 defaults: new { action = "ViewTransferNote", controller = "OutgoingTransfers", area = "Scheme" },
+                //defaults: new { action = "TransferEvidence", controller = "TransferEvidence", area = "Scheme" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
