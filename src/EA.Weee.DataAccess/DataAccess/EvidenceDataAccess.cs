@@ -69,9 +69,8 @@
         }
         public async Task<List<Note>> GetAllNotes(NoteFilter filter)
         {
-            var allowedStatus = filter.AllowedStatuses.Select(v => v.Value);
-            var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value);
-
+            var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
+            var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
 
@@ -87,31 +86,61 @@
 
             var notes = context.Notes
                 .Include(n => n.Organisation.Schemes)
-               .Where(p => p.ComplianceYear.Equals(filter.ComplianceYear)
-                            && allowedNoteTypes.Contains(p.NoteType.Value)
-                            && ((!filter.OrganisationId.HasValue || p.Organisation.Id == filter.OrganisationId.Value)
-                                && (!filter.SchemeId.HasValue || p.Recipient.Id == filter.SchemeId)
-                                && (filter.NoteStatusId.HasValue && p.Status.Value == filter.NoteStatusId
-                                    || !filter.NoteStatusId.HasValue && allowedStatus.Contains(p.Status.Value)))
-                            && (!filter.StartDateSubmitted.HasValue
-                                || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                && DbFunctions.TruncateTime(p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) >= submittedStartDateFilter)
-                            && (!filter.EndDateSubmitted.HasValue
-                                || p.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                && DbFunctions.TruncateTime(p.NoteStatusHistory.Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
-                                    .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) <= submittedEndDateFilter)
-                            && (!filter.WasteTypeId.HasValue || (int)p.WasteType == filter.WasteTypeId)
-                            && (filter.SearchRef == null ||
-                                (filter.FormattedNoteType > 0 ?
-                                    (filter.FormattedNoteType == p.NoteType.Value && filter.FormattedSearchRef == p.Reference.ToString()) :
-                                    (filter.FormattedSearchRef == p.Reference.ToString()))));
-            
+                .Where(n => n.ComplianceYear == filter.ComplianceYear);
+
+            if (allowedNoteTypes.Any())
+            {
+                notes = notes.Where(n => allowedNoteTypes.Contains(n.NoteType.Value));
+            }
+            if (filter.OrganisationId.HasValue)
+            {
+                notes = notes.Where(n => n.Organisation.Id == filter.OrganisationId.Value);
+            }
+            if (filter.SchemeId.HasValue)
+            {
+                notes = notes.Where(n => n.Recipient.Id == filter.SchemeId.Value);
+            }
+            if (filter.NoteStatusId.HasValue)
+            {
+                notes = notes.Where(n => n.Status.Value == filter.NoteStatusId);
+            }
+            if (filter.AllowedStatuses.Any() && !filter.NoteStatusId.HasValue)
+            {
+                notes = notes.Where(n => allowedStatus.Contains(n.Status.Value));
+            }
+            if (submittedStartDateFilter.HasValue)
+            {
+                notes = notes.Where(n =>
+                    n.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
+                    && DbFunctions.TruncateTime(n.NoteStatusHistory
+                        .Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.NoteId == n.Id)
+                        .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) >=
+                    submittedStartDateFilter);
+            }
+            if (submittedEndDateFilter.HasValue)
+            {
+                notes = notes.Where(n =>
+                    n.NoteStatusHistory.Any(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value)
+                    && DbFunctions.TruncateTime(n.NoteStatusHistory
+                        .Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.NoteId == n.Id)
+                        .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) <=
+                    submittedEndDateFilter);
+            }
+            if (filter.WasteTypeId.HasValue)
+            {
+                notes = notes.Where(n => (int)n.WasteType == filter.WasteTypeId);
+            }
+            if (filter.SearchRef != null)
+            {
+                notes = notes.Where(n => filter.FormattedNoteType > 0 ?
+                                        (filter.FormattedNoteType == n.NoteType.Value && filter.FormattedSearchRef == n.Reference.ToString()) :
+                                        (filter.FormattedSearchRef == n.Reference.ToString()));
+            }
             if (groupedAatfId.HasValue)
             {
                 return await notes.Where(p => p.Aatf.AatfId == groupedAatfId).ToListAsync();
             }
-            
+
             return await notes.ToListAsync();
         }
 
