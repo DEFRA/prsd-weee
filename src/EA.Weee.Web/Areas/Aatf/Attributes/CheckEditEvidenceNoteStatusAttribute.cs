@@ -6,14 +6,17 @@
     using Api.Client;
     using Core.AatfEvidence;
     using Filters;
+    using Helpers;
     using Infrastructure;
-    using ViewModels;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.AatfReturn;
 
     public class CheckEditEvidenceNoteStatusAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
+
+        public IAatfEvidenceHelper AatfEvidenceHelper { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -56,7 +59,13 @@
             {
                 var evidenceNoteData = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetEvidenceNoteForAatfRequest(evidenceNoteId));
 
-                if (!evidenceNoteData.Status.Equals(NoteStatus.Draft) && !evidenceNoteData.Status.Equals(NoteStatus.Returned))
+                var allAatfsAndAes = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(evidenceNoteData.AatfData.Organisation.Id));
+
+                var canEdit = AatfEvidenceHelper.AatfCanEditCreateNotes(allAatfsAndAes, evidenceNoteData.AatfData.Id,
+                    evidenceNoteData.ComplianceYear);
+
+                if ((!evidenceNoteData.Status.Equals(NoteStatus.Draft)
+                     && !evidenceNoteData.Status.Equals(NoteStatus.Returned)) || !canEdit)
                 {
                     throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} is incorrect state to be edited");
                 }
