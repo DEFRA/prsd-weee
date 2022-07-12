@@ -73,18 +73,160 @@
             };
         }
 
+        [Component]
+        public class WhenIGetOneApprovedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
+                };
+
+                note = EvidenceNoteDbSetup
+                        .Init()
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                            n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                        }).Create();
+
+                request = new GetEvidenceNoteTransfersForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Approved);
+            };
+        }
+
+        [Component]
+        public class WhenIGetOneRejectedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
+                };
+
+                note = EvidenceNoteDbSetup
+                        .Init()
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                            n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                        }).Create();
+
+                request = new GetEvidenceNoteTransfersForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Rejected);
+            };
+        }
+
+        [Component]
+        public class WhenIGetOneReturnedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
+                };
+
+                note = EvidenceNoteDbSetup
+                        .Init()
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                            n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(2));
+                            n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(400));
+                        }).Create();
+
+                request = new GetEvidenceNoteTransfersForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveReturnedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Returned);
+            };
+        }
+
         public class GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetEvidenceNoteTransfersForInternalUserRequest, TransferEvidenceNoteData> handler;
             protected static Organisation organisation;
             protected static GetEvidenceNoteTransfersForInternalUserRequest request;
-            protected static IList<EvidenceNoteData> result;
             protected static TransferEvidenceNoteData data;
             protected static Scheme scheme;
             protected static Note note;
             protected static Fixture fixture;
-            protected static List<Note> notesSetToBeIncluded;
-            protected static List<Note> notesSetToNotBeIncluded;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -102,9 +244,6 @@
                     CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
                         .Create();
                 }
-
-                notesSetToBeIncluded = new List<Note>();
-                notesSetToNotBeIncluded = new List<Note>();
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetEvidenceNoteTransfersForInternalUserRequest, TransferEvidenceNoteData>>();
