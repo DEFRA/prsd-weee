@@ -101,7 +101,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToHolding()
+        public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToIndexNoAatf()
         {
             var organisationId = Guid.NewGuid();
             var aatfList = new List<AatfData>();
@@ -115,11 +115,27 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfList);
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
 
-            var result = await controller.Index(organisationId) as RedirectToRouteResult;
+            var result = await controller.Index(organisationId) as ViewResult;
 
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
-            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.ViewName.Should().Be("IndexNoAatf");
+        }
+
+        [Fact]
+        public async void IndexGet_GivenNoAatfsInTheList_BreadcrumShouldBeSet()
+        {
+            var organisationName = "Organisation";
+            var model = new SelectYourAatfViewModel()
+            {
+                AatfList = new List<AatfData>(),
+            };
+
+            A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+
+            await controller.Index(A.Dummy<Guid>());
+
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
 
         [Fact]
