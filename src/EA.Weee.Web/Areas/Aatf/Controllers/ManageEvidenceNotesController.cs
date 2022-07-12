@@ -118,7 +118,9 @@
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+
                 var existingModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
+
                 sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.EditEvidenceViewModelKey);
 
                 var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(schemes, null, organisationId, aatfId)) 
