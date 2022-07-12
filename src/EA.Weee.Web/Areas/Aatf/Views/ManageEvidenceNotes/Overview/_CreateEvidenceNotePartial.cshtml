@@ -15,6 +15,14 @@
     {
         @(this.WeeeGds().Submit("Create new evidence note"))
     }
+    else
+    {
+        @(this.WeeeGds().CreateProgressiveDisclosure("Why can I not create or edit an evidence note?",
+            "You cannot create evidence if your site has been cancelled or suspended or your site is not yet approved for the current compliance year",
+            "Hidden content",
+            "Progressive disclosure",
+            "Why can't I see all of my sites?"))
+    }
 }
 
 <br />

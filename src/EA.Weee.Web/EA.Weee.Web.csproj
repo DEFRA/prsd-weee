@@ -315,11 +315,12 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="App_Start\CustomDateBinder.cs" />
     <Compile Include="App_Start\CustomModelBindersConfig.cs" />
-    <Compile Include="Areas\Aatf\AatfEvidenceHelper.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCreateEvidenceNoteStatusAttribute.cs" />
+    <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
-    <Compile Include="Areas\Aatf\IAatfEvidenceHelper.cs" />
+    <Compile Include="Areas\Aatf\Helpers\IAatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\RecipientWasteStatusViewModelMap.cs" />

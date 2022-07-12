@@ -5,6 +5,7 @@
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
+    using Helpers;
     using Prsd.Core.Mapper;
 
     public class ManageEvidenceNoteViewModelMap : IMap<ManageEvidenceNoteTransfer, ManageEvidenceNoteViewModel>
@@ -23,8 +24,6 @@
             var singleAatf = source.Aatfs.Where(a =>
                 a.FacilityType.Equals(FacilityType.Aatf) && 
                 ((int)a.ComplianceYear).Equals(source.ComplianceYear));
-
-            
 
             var model = new ManageEvidenceNoteViewModel()
             {
