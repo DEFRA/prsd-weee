@@ -107,5 +107,25 @@
             result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note transfer");
             result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer if there are some minor updates");
         }
+
+        [Fact]
+        public void Map_GivenAMappedTransferNoteViewModel_MustReturnMappedViewModel()
+        {
+            //arrange
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(), note, null);
+
+            var transferNoteViewModel = TestFixture.Create<ViewTransferNoteViewModel>();
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(transferNoteViewModel);
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert 
+            result.ViewTransferNoteViewModel.ApprovedDate.Should().Be(transferNoteViewModel.ApprovedDate);
+            result.ViewTransferNoteViewModel.RejectedDate.Should().Be(transferNoteViewModel.RejectedDate);
+            result.ViewTransferNoteViewModel.RejectedReason.Should().Be(transferNoteViewModel.RejectedReason);
+            result.ViewTransferNoteViewModel.ReturnedDate.Should().Be(transferNoteViewModel.ReturnedDate);
+            result.ViewTransferNoteViewModel.ReturnedReason.Should().Be(transferNoteViewModel.ReturnedReason);
+        }
     }
 }
