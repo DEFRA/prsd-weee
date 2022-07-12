@@ -112,7 +112,8 @@
         }
 
         [HttpGet]
-        
+        [CheckCreateEvidenceNoteStatus]
+
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, bool returnFromCopyPaste = false)
         { 
             using (var client = apiClient())
@@ -134,6 +135,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CheckCreateEvidenceNoteStatus]
         public async Task<ActionResult> CreateEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
