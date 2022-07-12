@@ -4,6 +4,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Castle.Core.Internal;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
@@ -15,6 +16,7 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using Mappings;
     using Xunit;
 
     public class GetEvidenceNoteForInternalUserRequestHandlerTests : SimpleUnitTestBase
@@ -81,7 +83,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty()))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -90,7 +92,7 @@
             //arrange
             var evidenceNote = TestFixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

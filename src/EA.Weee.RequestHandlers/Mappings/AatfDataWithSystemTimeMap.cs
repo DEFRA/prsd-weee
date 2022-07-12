@@ -2,6 +2,7 @@
 {
     using System;
     using Core.AatfReturn;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using Domain.AatfReturn;
     using Prsd.Core.Mapper;
@@ -25,35 +26,30 @@
 
             SetAatfDisplayProperty(source, aatf);
 
+            SetCanCreateEditEvidence(source, aatf);
+
+            return aatf;
+        }
+
+        private void SetCanCreateEditEvidence(AatfWithSystemDateMapperObject source, AatfData aatf)
+        {
             //AATF is allowed to create / edit
             //1. if approval date and compliance year is valid for the current system year and is approved
             //2. if the aatf compliance year is in the previous year and we are in the january period of the next compliance year and aatf is approved 
-            var complianceYearEndDate = new DateTime(source.SystemDateTime.Year + 1, 1, 31);
             var approvalDateValid = ApprovalDateValid(aatf.ApprovalDate, source.SystemDateTime);
             var canCreateEdit = false;
 
             if (aatf.FacilityType == FacilityType.Aatf)
             {
-                if (aatf.ComplianceYear == source.SystemDateTime.Year && approvalDateValid &&
+                if (WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, source.SystemDateTime)
+                    && approvalDateValid &&
                     aatf.AatfStatus == AatfStatus.Approved)
                 {
                     canCreateEdit = true;
                 }
-                else if (aatf.ComplianceYear == source.SystemDateTime.Year - 1 && approvalDateValid &&
-                         ComplianceYearJanuaryPeriod(source.SystemDateTime))
-                {
-                    canCreateEdit = true;
-                }
             }
-            
+
             aatf.CanCreateEditEvidence = canCreateEdit;
-
-            return aatf;
-        }
-
-        private bool ComplianceYearJanuaryPeriod(DateTime systemDateTime)
-        {
-            return systemDateTime.Date.Month == 1;
         }
 
         private bool ApprovalDateValid(DateTime? aatfApprovalDate, DateTime systemDate)

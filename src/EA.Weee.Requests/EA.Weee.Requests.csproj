@@ -127,7 +127,8 @@
     <Compile Include="Admin\GetAllNotes.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetEEEWEEEDataReturnSchemesByComplianceYear.cs" />
-    <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
+    <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequest.cs" />
+    <Compile Include="Admin\GetEvidenceNoteForInternalUserRequest.cs" />
     <Compile Include="Admin\GetInternalOrganisation.cs" />
     <Compile Include="Admin\GetLocalAreas.cs" />
     <Compile Include="Admin\GetMemberRegistrationSchemesByComplianceYear.cs" />
