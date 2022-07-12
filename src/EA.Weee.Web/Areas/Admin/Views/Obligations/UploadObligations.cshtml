@@ -58,7 +58,7 @@
     <p>
         @Html.ActionLink("Download template", "DownloadTemplate", new { authority = Model.Authority })
     </p>
-
+    <div class="govuk-!-padding-bottom-5"></div>
     @using (Html.BeginForm("UploadObligations", "Obligations", new RouteValueDictionary() { { "authority", Model.Authority } }, FormMethod.Get, 
         new { id = "ComplianceYearForm" }))
     {
