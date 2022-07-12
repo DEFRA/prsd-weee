@@ -7,10 +7,12 @@
     using Api.Client;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.AatfReturn;
     using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Attributes;
+    using Web.Areas.Aatf.Helpers;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Xunit;
@@ -20,12 +22,14 @@
         private readonly CheckEditEvidenceNoteStatusAttribute attribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
+        private readonly IAatfEvidenceHelper aatfEvidenceHelper;
         private readonly Fixture fixture;
 
         public CheckEditEvidenceNoteStatusAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
-            attribute = new CheckEditEvidenceNoteStatusAttribute { Client = () => client };
+            aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
+            attribute = new CheckEditEvidenceNoteStatusAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
             fixture = new Fixture();
 
@@ -140,12 +144,15 @@
             var note = fixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Draft;
 
-            //act
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int?>._)).Returns(true);
+
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
+            //act
+            var result = Record.Exception(() => attribute.OnActionExecuting(context));
 
             //assert
-            var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
             result.Should().BeNull();
         }
 
@@ -156,12 +163,15 @@
             var note = fixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Returned;
 
-            //act
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int?>._)).Returns(true);
+
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
 
-            //assert
+            //act
             var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
+            //assert
             result.Should().BeNull();
         }
     }

@@ -35,11 +35,7 @@
         {
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(Fixture.CreateMany<AatfData>().ToList());
 
-            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
-                .Returns(new ManageEvidenceNoteViewModel());
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(new SelectYourAatfViewModel() { AatfList = new List<AatfData>() });
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(new ManageEvidenceNoteViewModel());
 
             currentDate = new DateTime(2019, 1, 1);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -94,30 +90,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGet_GivenOrganisationId_SelectYourAatfViewModelMapperShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
-        {
-            //arrange
-            var organisationId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var aatfs = Fixture.CreateMany<AatfData>().ToList();
-
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
-
-            //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
-
-            //assert
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                A<AatfDataToSelectYourAatfViewModelMapTransfer>.That.Matches(
-                    a => a.AatfList.Equals(aatfs) && a.FacilityType.Equals(FacilityType.Aatf) &&
-                         a.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
@@ -128,11 +100,6 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
@@ -146,13 +113,8 @@
                      && m.AatfData.Equals(aatfData) 
                      && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel == null 
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                        m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate &&
+                     m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -165,11 +127,6 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
@@ -183,13 +140,8 @@
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel == null 
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate
+                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -202,12 +154,7 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
@@ -221,13 +168,8 @@
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId) 
                      && m.FilterViewModel.Equals(filter.FilterViewModel) 
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate
+                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -239,14 +181,10 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
+            
             var recipientFilter = new RecipientWasteStatusFilterViewModel();
             var viewModel = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.RecipientWasteStatusFilterViewModel, recipientFilter).Create();
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(
                     A<RecipientWasteStatusFilterBase>._))
@@ -264,13 +202,8 @@
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
                      && m.RecipientWasteStatusFilterViewModel.Equals(recipientFilter)
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate
+                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -282,14 +215,10 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
+
             var submittedDateFilter = new SubmittedDatesFilterViewModel();
             var viewModel = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SubmittedDatesFilterViewModel, submittedDateFilter).Create();
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => Mapper.Map<SubmittedDatesFilterViewModel>(
                     A<SubmittedDateFilterBase>._))
@@ -307,13 +236,8 @@
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
                      && m.SubmittedDatesFilterViewModel.Equals(submittedDateFilter)
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate
+                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -326,12 +250,7 @@
             var aatfId = Guid.NewGuid();
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
-            var selectYourAatfViewModel = new SelectYourAatfViewModel() { AatfList = aatfs };
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
-
-            A.CallTo(() => Mapper.Map<SelectYourAatfViewModel>(
-                    A<AatfDataToSelectYourAatfViewModelMapTransfer>._))
-                .Returns(selectYourAatfViewModel);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
@@ -345,13 +264,8 @@
                      && m.AatfData.Equals(aatfData)
                      && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel.Equals(filter.FilterViewModel)
-                     && m.CurrentDate == currentDate))).MustHaveHappenedOnceExactly();
-
-            foreach (var aatf in selectYourAatfViewModel.AatfList)
-            {
-                A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
-                    m => m.Aatfs.Contains(aatf)))).MustHaveHappenedOnceExactly();
-            }
+                     && m.CurrentDate == currentDate
+                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -434,11 +348,11 @@
         {
             //arrange
             var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
-            var recieved = Fixture.Create<Guid>();
+            var received = Fixture.Create<Guid>();
             var wasteType = Fixture.Create<WasteType?>();
             var statusFilter = Fixture.Create<NoteStatus?>();
             var recipientWasteStatusFilter = Fixture.Build<RecipientWasteStatusFilterViewModel>()
-                .With(r => r.ReceivedId, recieved)
+                .With(r => r.ReceivedId, received)
                 .With(r => r.WasteTypeValue, wasteType)
                 .With(r => r.NoteStatusValue, statusFilter)
                 .Create();
