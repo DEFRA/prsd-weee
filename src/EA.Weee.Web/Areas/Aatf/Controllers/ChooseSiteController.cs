@@ -38,7 +38,8 @@
 
             if (model.AatfList.Count == 0)
             {
-                return RedirectToAction("Index", "Holding", new { organisationId = model.OrganisationId });
+                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.AatfManageEvidence);
+                return View("IndexNoAatf", model);
             }
             if (model.AatfList.Count == 1)
             {
