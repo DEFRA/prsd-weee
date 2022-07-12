@@ -7,6 +7,7 @@
     using Scheme;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using CuttingEdge.Conditions;
     using User;
 
@@ -188,6 +189,11 @@
         public virtual int Reference { get; set; }
 
         public virtual ICollection<NoteTonnage> NoteTonnage { get; protected set; }
+
+        public IList<NoteTonnage> FilteredNoteTonnage(IList<int> categories)
+        {
+            return NoteTonnage.Where(nt => nt.Received.HasValue && categories.Contains((int)nt.CategoryId)).ToList();
+        }
 
         public virtual ICollection<NoteStatusHistory> NoteStatusHistory { get; protected set; }
 

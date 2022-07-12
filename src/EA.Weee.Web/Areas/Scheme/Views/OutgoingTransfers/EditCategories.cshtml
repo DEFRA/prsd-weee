@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNoteCategoriesViewModel
 @{
@@ -8,6 +9,10 @@
 
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.EditDraftTransferEvidenceRouteName, new { pcsId = Model.PcsId, evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId })))
+    
+    <div class="govuk-!-padding-bottom-2"></div>
+
     @(this.WeeeGds().Warning("Unselecting categories may change previous evidence note selections"))
 
     <h1 class="govuk-heading-l">
