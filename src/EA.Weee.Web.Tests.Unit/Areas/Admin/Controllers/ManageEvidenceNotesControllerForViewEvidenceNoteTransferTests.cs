@@ -6,14 +6,12 @@
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.ViewModels.Shared;
-    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
@@ -35,16 +33,18 @@
         public async Task ViewEvidenceNoteTransferGet_BreadcrumbShouldBeSet()
         {
             //act
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
-
+           
             //assert
             Breadcrumb.InternalActivity.Should().Be(BreadCrumbConstant.ManageEvidenceNotesAdmin);
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferGet_GivenEvidenceId_EvidenceNoteShouldBeRetrieved()
+        public async Task ViewEvidenceNoteTransferGet_GivenEvidenceId_TransferEvidenceNoteShouldBeRetrieved()
         {
             //act
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
 
             //asset
@@ -106,27 +106,14 @@
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferGet_WhenNoteTypeIsEvidence_ModelWithRedirectTabIsCreated()
+        public async Task ViewEvidenceNoteTransferGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
         {
             // act
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
             var result = await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId) as ViewResult;
 
             // act
             var model = result.Model as ViewTransferNoteViewModel;
-            model.Type = NoteType.Transfer;
-
-            //assert
-            model.InternalUserRedirectTab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
-        }
-
-        [Fact]
-        public async Task ViewEvidenceNoteTransferGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
-        {
-            // act
-            var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
-
-            // act
-            var model = result.Model as ViewEvidenceNoteViewModel;
             model.Type = NoteType.Transfer;
 
             //assert
