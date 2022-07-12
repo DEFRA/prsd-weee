@@ -1,6 +1,4 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @using HomeController = EA.Weee.Web.Areas.Scheme.Controllers.HomeController
 @using MvcNavigationHelpers
 
@@ -16,8 +14,6 @@
         <div class="govuk-grid-column-full">
 
             @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
-
-            @Html.Gds().ValidationSummary()
 
             <header class="hgroup">
                 <h1 class="govuk-heading-l">
