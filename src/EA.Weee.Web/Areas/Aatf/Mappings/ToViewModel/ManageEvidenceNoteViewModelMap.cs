@@ -9,6 +9,13 @@
 
     public class ManageEvidenceNoteViewModelMap : IMap<ManageEvidenceNoteTransfer, ManageEvidenceNoteViewModel>
     {
+        private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+
+        public ManageEvidenceNoteViewModelMap(IAatfEvidenceHelper aatfEvidenceHelper)
+        {
+            this.aatfEvidenceHelper = aatfEvidenceHelper;
+        }
+
         public ManageEvidenceNoteViewModel Map(ManageEvidenceNoteTransfer source)
         {
             Condition.Requires(source).IsNotNull();
@@ -17,14 +24,7 @@
                 a.FacilityType.Equals(FacilityType.Aatf) && 
                 ((int)a.ComplianceYear).Equals(source.ComplianceYear));
 
-            var currentAATF = source.Aatfs.FirstOrDefault(a => a.Id == source.AatfId);
-
-            Condition.Requires(currentAATF).IsNotNull();
-
-            //is there an aatf for the org in the selected compliance year that can create / edit notes
-            var canEdit = source.Aatfs.Any(a =>
-                a.AatfId == currentAATF.AatfId && a.ComplianceYear == source.ComplianceYear &&
-                a.CanCreateEditEvidence);
+            
 
             var model = new ManageEvidenceNoteViewModel()
             {
@@ -33,7 +33,7 @@
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1),
                 ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
-                CanCreateEdit = canEdit
+                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear)
             };
 
             if (source.FilterViewModel != null)
