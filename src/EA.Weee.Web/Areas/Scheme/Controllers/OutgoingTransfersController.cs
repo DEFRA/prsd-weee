@@ -160,26 +160,26 @@
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult> ViewTransferNote(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab)
-        {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+        //[HttpGet]
+        //public async Task<ActionResult> ViewTransferNote(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab)
+        //{
+        //    await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
-            using (var client = apiClient())
-            {
-                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+        //    using (var client = apiClient())
+        //    {
+        //        var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
-                {
-                    SchemeId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear,
-                    ReturnToView = returnToView,
-                    RedirectTab = redirectTab,
-                });
+        //        var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
+        //        {
+        //            SchemeId = pcsId,
+        //            SelectedComplianceYear = selectedComplianceYear,
+        //            ReturnToView = returnToView,
+        //            RedirectTab = redirectTab,
+        //        });
 
-                return this.View("DownloadTransferNote", model);
-            }
-        }
+        //        return this.View("DownloadTransferNote", model);
+        //    }
+        //}
 
         [HttpGet]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
