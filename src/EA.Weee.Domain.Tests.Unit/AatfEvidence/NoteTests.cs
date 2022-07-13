@@ -4,12 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.Scheme;
     using Evidence;
     using FakeItEasy;
     using FluentAssertions;
+    using Lookup;
     using Prsd.Core;
     using Weee.Tests.Core;
     using Xunit;
@@ -427,6 +429,28 @@
             note.EndDate.Should().Be(updatedEndDate);
             note.WasteType.Should().Be(updatedWasteType);
             note.Protocol.Should().Be(updatedProtocol);
+        }
+
+        [Fact]
+        public void FilteredNoteTonnage_GivenReceivedValues_FilteredTonnageShouldBeAsExpected()
+        {
+            //arrange
+            var note = CreateNote();
+            note.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 2, 1));
+            note.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 3, 1));
+            note.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LightingEquipment, null, 1));
+            note.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1));
+
+            //act
+            var tonnage = note.FilteredNoteTonnage(new List<int>() { WeeeCategory.ITAndTelecommsEquipment.ToInt(), WeeeCategory.ElectricalAndElectronicTools.ToInt() });
+
+            //assert
+            tonnage.Count.Should().Be(2);
+            tonnage.Should().Contain(t => t.CategoryId == WeeeCategory.ITAndTelecommsEquipment && t.Received == 2);
+            tonnage.Should().Contain(t => t.CategoryId == WeeeCategory.ElectricalAndElectronicTools && t.Received == 3);
+            tonnage.Should().NotContain(t => t.Received == null);
+            tonnage.Should().NotContain(t => t.CategoryId == WeeeCategory.LightingEquipment);
+            tonnage.Should().NotContain(t => t.CategoryId == WeeeCategory.ConsumerEquipment);
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)

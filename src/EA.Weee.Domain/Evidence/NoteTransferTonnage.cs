@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Domain.Evidence
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using Prsd.Core.Domain;
 
     public partial class NoteTransferTonnage : Entity
     {
-        private NoteTransferTonnage()
+        public NoteTransferTonnage()
         {
         }
 

@@ -29,9 +29,37 @@
         </div>
     }
 
+    @if (Model.HasRejectedDate)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
+    @if (Model.HasBeenReturned)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
+
+    @if (Model.HasRejectedDate)
+    {
+        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+            @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+        </div>
+    }
+
+    @if (Model.HasBeenReturned)
+    {
+        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+            @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+        </div>
+    }
 </div>
 
 @if (Model.EditMode)
@@ -100,8 +128,8 @@
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 }
 
-<div class="govuk-table govuk-!-margin-bottom-0">
-    <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-2">
+<div class="govuk-table govuk-!-margin-bottom-0 govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-0">
 
         <h2 class="govuk-heading-m govuk-!-padding-left-0 govuk-!-margin-left-0" style="text-align: left;">Breakdown of evidence transferred</h2>
     </div>
@@ -126,7 +154,7 @@
 
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-full govuk-!-margin-left-0 govuk-!-padding-left-0">
-                <h3 class="govuk-heading-s">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
+                <h3 class="govuk-heading-s govuk-!-padding-top-0">@string.Format("Original AATF: {0} ({1})", aatf.AatfName, aatf.AatfApprovalNumber)</h3>
             </div>
         </div>
 
