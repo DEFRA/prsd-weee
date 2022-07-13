@@ -1,7 +1,9 @@
 (function () {
     "use strict"
     var root = this;
-    if (typeof root.GOVUK === 'undefined') { root.GOVUK = {}; }
+    if (typeof root.GOVUK === 'undefined') {
+        root.GOVUK = {};
+    }
 
     /*
       Cookie methods
@@ -29,7 +31,9 @@
     GOVUK.cookie = function (name, value, options) {
         if (typeof value !== 'undefined') {
             if (value === false || value === null) {
-                return GOVUK.setCookie(name, '', { days: -1 });
+                return GOVUK.setCookie(name, '', {
+                    days: -1
+                });
             } else {
                 return GOVUK.setCookie(name, value, options);
             }
