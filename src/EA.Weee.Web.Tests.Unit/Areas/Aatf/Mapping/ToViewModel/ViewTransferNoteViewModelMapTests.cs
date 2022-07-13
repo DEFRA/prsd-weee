@@ -13,20 +13,19 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewTransferNoteViewModelMapTests
+    public class ViewTransferNoteViewModelMapTests : SimpleUnitTestBase
     {
         private readonly IAddressUtilities addressUtilities;
         private readonly ITonnageUtilities tonnageUtilities;
-        private readonly Fixture fixture;
         private readonly ViewTransferNoteViewModelMap map;
 
         public ViewTransferNoteViewModelMapTests()
         {
             addressUtilities = A.Fake<IAddressUtilities>();
             tonnageUtilities = A.Fake<ITonnageUtilities>();
-            fixture = new Fixture();
             map = new ViewTransferNoteViewModelMap(addressUtilities, tonnageUtilities);
         }
 
@@ -44,7 +43,7 @@
         public void ViewTransferNoteViewModelMap_GivenSource_ViewTransferNoteViewModelShouldBeReturned()
         {
             //arrange
-            var source = fixture.Create<ViewTransferNoteViewModelMapTransfer>();
+            var source = TestFixture.Create<ViewTransferNoteViewModelMapTransfer>();
 
             //act
             var model = map.Map(source);
@@ -60,7 +59,7 @@
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool returnToView)
         {
             //arrange
-            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, returnToView).Create();
+            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, returnToView).Create();
 
             //act
             var model = map.Map(source);
@@ -73,7 +72,7 @@
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsTrue_ShouldSetReturnToView()
         {
             //arrange
-            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, true).Create();
+            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, true).Create();
 
             //act
             var model = map.Map(source);
@@ -82,13 +81,27 @@
             model.ReturnToView.Should().BeTrue();
         }
 
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenSourceWithRedirectTab_ShouldSetRedirectTab()
+        {
+            //arrange
+            var tab = TestFixture.Create<string>();
+            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.RedirectTab, tab).Create();
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.RedirectTab.Should().Be(tab);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public void ViewTransferNoteViewModelMap_GivenSource_PropertiesShouldBeSet(bool editMode)
         {
             //arrange
-            var source = fixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.Edit, editMode).Create();
+            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.Edit, editMode).Create();
 
             //act
             var model = map.Map(source);
@@ -104,8 +117,8 @@
         public void ViewTransferNoteViewModelMap_GivenSourceNoteType_PropertiesShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                    fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, NoteType.Transfer).Create(),
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, NoteType.Transfer).Create(),
                     null);
 
             //act
@@ -120,8 +133,8 @@
         public void ViewTransferNoteViewModelMap_GivenSourceNoteStatus_PropertiesShouldBeSet(NoteStatus status)
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Status, status).Create(),
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Status, status).Create(),
                 null);
 
             //act
@@ -135,8 +148,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsDraft_SuccessMessageShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t => t.Status, NoteStatus.Draft)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
@@ -154,8 +167,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsSubmitted_SuccessMessageShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t => t.Status, NoteStatus.Submitted)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
@@ -173,8 +186,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsApproved_SuccessMessageShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t => t.Status, NoteStatus.Approved)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
@@ -191,8 +204,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsRejected_SuccessMessageShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t => t.Status, NoteStatus.Rejected)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
@@ -209,8 +222,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturned_SuccessMessageShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t => t.Status, NoteStatus.Returned)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
@@ -231,8 +244,8 @@
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationIsFalse_SuccessMessageShouldBeEmpty(bool? display, NoteStatus status)
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(t2 => t2.Status, status)
                     .With(t1 => t1.Reference, 1).Create(),
                 display);
@@ -248,8 +261,8 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_CallsAddressUtilities()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
@@ -265,13 +278,15 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_PropertiesShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
-                false);
-            source.ReturnToView = true;
+                false)
+            {
+                ReturnToView = true
+            };
 
             //act
             var model = map.Map(source);
@@ -296,8 +311,8 @@
         public void Map_GivenSource_RecipientAddressShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
             const string siteAddress = "siteAddress";
@@ -322,8 +337,8 @@
         public void Map_GivenSource_TransferredByAddressShouldBeSet()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .Create(),
                 false);
@@ -349,8 +364,8 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_CorrectlySumsAndOrdersTotalCategories()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
@@ -367,8 +382,8 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_CorrectlyGeneratesViewTransferEvidenceAatfDataViewModel_InCorrectOrder()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
@@ -387,8 +402,8 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_WhenGeneratingAatfDataViewModel_CallsTonnageUtilities()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
@@ -406,8 +421,8 @@
         public void ViewTransferNoteViewModelMap_GivenTransfer_DisplayCategoryDoesNotDisplayZeroedCategories()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageDataWithNoTonnage()).Create(),
@@ -424,14 +439,18 @@
         public void ViewTransferNoteViewModelMap_GivenSubmittedTransfer_HasSubmittedDate_WithCorrectFormat()
         {
             //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
-                fixture.Build<TransferEvidenceNoteData>()
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData())
                     .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
-                false);
-
-            source.TransferEvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
+                false)
+            {
+                TransferEvidenceNoteData =
+                {
+                    SubmittedDate = DateTime.Parse("01/01/2001 13:30:30")
+                }
+            };
 
             //act
             var model = map.Map(source);

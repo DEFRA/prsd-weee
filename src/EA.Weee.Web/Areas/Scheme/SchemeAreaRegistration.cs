@@ -29,6 +29,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-approved-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
