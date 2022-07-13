@@ -769,7 +769,7 @@
         }
 
         [Fact]
-        public void Map_GivenNote_TonnageDataShouldBeMapped()
+        public void Map_GivenNoteToIncludeTonnageData_TonnageDataShouldBeMapped()
         {
             //arrange
             var note = A.Fake<Note>();
@@ -782,8 +782,11 @@
 
             A.CallTo(() => note.NoteTonnage).Returns(tonnages);
 
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = true;
+
             //act
-            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
+            var result = map.Map(mapObject);
 
             //assert
             result.EvidenceTonnageData.Count.Should().Be(tonnages.Count);
@@ -791,6 +794,30 @@
             result.EvidenceTonnageData.Should().BeEquivalentTo(
                 tonnages.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, null, null)).ToList());
+        }
+
+        [Fact]
+        public void Map_GivenNoteToNotIncludeTonnageData_TonnageDataShouldBeEmpty()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, null, null)
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = false;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceTonnageData.Should().BeEmpty();
         }
 
         [Fact]
@@ -811,8 +838,9 @@
             var mapObject = EvidenceNoteWithCriteriaMap(note);
             mapObject.CategoryFilter = new List<int>()
             {
-                Domain.Lookup.WeeeCategory.ConsumerEquipment.ToInt(), Domain.Lookup.WeeeCategory.MedicalDevices.ToInt()
+                Domain.Lookup.WeeeCategory.ConsumerEquipment.ToInt(), Domain.Lookup.WeeeCategory.MedicalDevices.ToInt(),
             };
+            mapObject.IncludeTonnage = true;
 
             var result = map.Map(mapObject);
 
@@ -859,8 +887,11 @@
             A.CallTo(() => approvedTransferNote.Status).Returns(NoteStatus.Approved);
             A.CallTo(() => note.NoteTonnage).Returns(tonnages);
 
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = true;
+
             //Act
-            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
+            var result = map.Map(mapObject);
 
             //Assert
             result.EvidenceTonnageData[0].AvailableReceived.Should().Be(expectedAvailableReceive);

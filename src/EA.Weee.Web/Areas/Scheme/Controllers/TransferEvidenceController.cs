@@ -172,7 +172,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, string redirectTab)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
@@ -184,7 +184,8 @@
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
-                    SelectedComplianceYear = selectedComplianceYear
+                    SelectedComplianceYear = selectedComplianceYear,
+                    RedirectTab = redirectTab
                 });
 
                 return this.View("TransferredEvidence", model);
