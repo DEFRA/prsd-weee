@@ -333,7 +333,8 @@
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
                 a.ListOfNotes.Count.Equals(3) &&
-                a.CategoryFilter.IsNullOrEmpty()))).MustHaveHappenedOnceExactly();
+                a.CategoryFilter.IsNullOrEmpty() &&
+                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
 
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
         }
