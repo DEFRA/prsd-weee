@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Api.Client;
@@ -15,15 +16,16 @@
     using Web.Areas.Aatf.Helpers;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.AatfReturn;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class CheckCanEditEvidenceAttributeTests
+    public class CheckCanEditEvidenceAttributeTests : SimpleUnitTestBase
     {
         private readonly CheckCanEditEvidenceAttribute attribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
-        private readonly Fixture fixture;
 
         public CheckCanEditEvidenceAttributeTests()
         {
@@ -31,7 +33,6 @@
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
             attribute = new CheckCanEditEvidenceAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
-            fixture = new Fixture();
 
             var routeData = new RouteData();
             routeData.Values.Add("evidenceNoteId", Guid.NewGuid());
@@ -67,7 +68,7 @@
                 var actionParameters = new Dictionary<string, object> { { "viewModel", viewModel } };
                 A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
-                var note = fixture.Create<EvidenceNoteData>();
+                var note = TestFixture.Create<EvidenceNoteData>();
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
@@ -120,7 +121,7 @@
             if (noteStatus != NoteStatus.Draft && noteStatus != NoteStatus.Returned)
             {
                 //arrange
-                var note = fixture.Create<EvidenceNoteData>();
+                var note = TestFixture.Create<EvidenceNoteData>();
                 note.Status = noteStatus;
 
                 A.CallTo(() => client.SendAsync(A<string>._,
@@ -141,7 +142,7 @@
         public void OnActionExecuting_GivenEvidenceNoteIdIsDraft_NoExceptionExpected()
         {
             //arrange
-            var note = fixture.Create<EvidenceNoteData>();
+            var note = TestFixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Draft;
 
             A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int>._)).Returns(true);
@@ -160,7 +161,7 @@
         public void OnActionExecuting_GivenEvidenceNoteIdIsReturned_NoExceptionExpected()
         {
             //arrange
-            var note = fixture.Create<EvidenceNoteData>();
+            var note = TestFixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Returned;
 
             A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int>._)).Returns(true);
@@ -173,6 +174,37 @@
 
             //assert
             result.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void OnActionExecuting_GivenEvidenceNoteIdIsDraftOrReturnedAndEvidenceCanNotBeEdited_ExceptionShouldBeThrown(NoteStatus noteStatus)
+        {
+            if (noteStatus == NoteStatus.Draft || noteStatus == NoteStatus.Returned)
+            {
+                //arrange
+                var note = TestFixture.Create<EvidenceNoteData>();
+                note.Status = noteStatus;
+                var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+
+                A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
+
+                A.CallTo(() => client.SendAsync(A<string>._,
+                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
+                    .Returns(aatfs);
+
+                A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
+                    .Returns(false);
+
+                //act
+                var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
+                //assert
+                result.Should().BeOfType<AggregateException>();
+                result.InnerException.Should().BeOfType<InvalidOperationException>()
+                    .Which.Message.Should()
+                    .Be($"Evidence note {note.Id} cannot edit notes");
+            }
         }
     }
 }

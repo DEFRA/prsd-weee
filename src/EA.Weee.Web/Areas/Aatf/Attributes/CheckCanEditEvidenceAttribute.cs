@@ -59,15 +59,20 @@
             {
                 var evidenceNoteData = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetEvidenceNoteForAatfRequest(evidenceNoteId));
 
+                if ((!evidenceNoteData.Status.Equals(NoteStatus.Draft)
+                     && !evidenceNoteData.Status.Equals(NoteStatus.Returned)))
+                {
+                    throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} is incorrect state to be edited");
+                }
+
                 var allAatfsAndAes = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(evidenceNoteData.AatfData.Organisation.Id));
 
                 var canEdit = AatfEvidenceHelper.AatfCanEditCreateNotes(allAatfsAndAes, evidenceNoteData.AatfData.Id,
                     evidenceNoteData.ComplianceYear);
 
-                if ((!evidenceNoteData.Status.Equals(NoteStatus.Draft)
-                     && !evidenceNoteData.Status.Equals(NoteStatus.Returned)) || !canEdit)
+                if (!canEdit)
                 {
-                    throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} is incorrect state to be edited");
+                    throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} cannot edit notes");
                 }
             }
         }
