@@ -66,7 +66,6 @@
 
             //assert
             model.ReturnToView.Should().BeFalse();
-            model.RedirectTab.Should().BeNullOrWhiteSpace();
         }
 
         [Fact]
