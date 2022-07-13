@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using Weee.Tests.Core;
     using Xunit;
+    using AatfStatus = Core.AatfReturn.AatfStatus;
     using FacilityType = Core.AatfReturn.FacilityType;
 
     public class AatfDataWithSystemTimeMapTests : SimpleUnitTestBase
@@ -230,6 +231,103 @@
 
             //assert
             result.EvidenceSiteDisplay.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenAatfApprovalDateIsInvalid_CanCreateEditEvidenceShouldBeFalse()
+        {
+            var date = new DateTime(2020, 1, 2);
+
+            var aatfData = TestFixture.Build<AatfData>()
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.ApprovalDate, date.AddDays(1))
+                .With(a => a.AatfStatus, AatfStatus.Approved)
+                .With(a => a.ComplianceYear, date.Year)
+                .Create();
+
+            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+            //act
+            var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
+
+            //assert
+            result.CanCreateEditEvidence.Should().BeFalse();
+        }
+
+        [Theory]
+        [MemberData(nameof(Dates))]
+        public void Map_GivenAatfApprovalDateIsValidButFacilityTypeIsAe_CanCreateEditEvidenceShouldBeFalse(DateTime currentDate, DateTime approvalDate)
+        {
+            var aatfData = TestFixture.Build<AatfData>()
+                .With(a => a.FacilityType, FacilityType.Ae)
+                .With(a => a.ApprovalDate, approvalDate)
+                .With(a => a.AatfStatus, AatfStatus.Approved)
+                .With(a => a.ComplianceYear, currentDate.Year)
+                .Create();
+
+            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+            //act
+            var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
+
+            //assert
+            result.CanCreateEditEvidence.Should().BeFalse();
+        }
+
+        public static IEnumerable<object[]> OutOfComplianceYear =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 2, 1), 2020 },
+                new object[] { new DateTime(2020, 1, 1), 2019 },
+            };
+
+        [Theory]
+        [MemberData(nameof(OutOfComplianceYear))]
+        public void Map_GivenAatfApprovalDateIsValidAndNotInComplianceYear_CanCreateEditEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            var aatfData = TestFixture.Build<AatfData>()
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.ApprovalDate, currentDate.AddDays(-1))
+                .With(a => a.AatfStatus, AatfStatus.Approved)
+                .With(a => a.ComplianceYear, complianceYear)
+                .Create();
+
+            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+            //act
+            var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
+
+            //assert
+            result.CanCreateEditEvidence.Should().BeFalse();
+        }
+
+        [Theory]
+        [MemberData(nameof(Dates))]
+        public void Map_GivenAatfApprovalDateIsValidComplianceYearIsValidButNotApproved_CanCreateEditEvidenceShouldBeFalse(DateTime currentDate, DateTime approvalDate)
+        {
+            foreach (var status in Prsd.Core.Domain.Enumeration.GetAll<AatfStatus>())
+            {
+                if (status == AatfStatus.Approved)
+                {
+                    return;
+                }
+
+                var aatfData = TestFixture.Build<AatfData>()
+                    .With(a => a.FacilityType, FacilityType.Aatf)
+                    .With(a => a.ApprovalDate, approvalDate)
+                    .With(a => a.AatfStatus, status)
+                    .With(a => a.ComplianceYear, currentDate.Year)
+                    .Create();
+
+                A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+
+                //act
+                var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
+
+                //assert
+                result.CanCreateEditEvidence.Should().BeFalse();
+            }
+            
         }
     }
 }
