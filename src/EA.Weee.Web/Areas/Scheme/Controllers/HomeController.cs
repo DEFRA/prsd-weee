@@ -86,9 +86,9 @@
 
                 var activities = new List<string>();
 
-                if (isBalancingScheme)
+                if (configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
                 {
-                    if (configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
+                    if (isBalancingScheme)
                     {
                         activities.Add(PcsAction.ManagePBSEvidenceNotes);
                     }
