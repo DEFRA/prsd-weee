@@ -164,11 +164,50 @@
             result.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName);
         }
 
+        [Fact]
+        public void SchemeViewRouteName_GivenApprovedStatus_ApprovedRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Approved;
+
+            //act
+            var result = model.SchemeViewRouteName;
+
+            //assert
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenReturnedStatus_ReturnedRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Returned;
+
+            //act
+            var result = model.SchemeViewRouteName;
+
+            //assert
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenRejectedStatus_RejectedRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Rejected;
+
+            //act
+            var result = model.SchemeViewRouteName;
+
+            //assert
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName);
+        }
+
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void SchemeViewRouteName_GivenNotDraftOrSubmittedStatus_InvalidOperationExceptionExpected(NoteStatus status)
+        public void SchemeViewRouteName_GivenNotDraftOrSubmittedOrReviewedStatus_InvalidOperationExceptionExpected(NoteStatus status)
         {
-            if (status == NoteStatus.Draft || status == NoteStatus.Submitted || status == NoteStatus.Approved)
+            if (status != NoteStatus.Void)
             {
                 return;
             }

@@ -73,6 +73,10 @@
                         return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
                     case NoteStatus.Approved:
                         return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
+                    case NoteStatus.Rejected:
+                        return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
+                    case NoteStatus.Returned:
+                        return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
                 }
 
                 return string.Empty;
