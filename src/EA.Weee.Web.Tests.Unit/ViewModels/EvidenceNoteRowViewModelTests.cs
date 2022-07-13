@@ -177,10 +177,10 @@
             model.Status = status;
 
             //act
-            var exception = Record.Exception(() => model.SchemeViewRouteName);
+            var route = model.SchemeViewRouteName;
 
             //assert
-            exception.Should().BeOfType<InvalidOperationException>();
+            route.Should().BeEmpty();
         }
     }
 }

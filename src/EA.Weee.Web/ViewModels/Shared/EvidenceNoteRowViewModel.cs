@@ -75,7 +75,7 @@
                         return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
                 }
 
-                throw new InvalidOperationException("Invalid route name");
+                return string.Empty;
             }
         }
     }
