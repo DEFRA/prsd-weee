@@ -6,15 +6,11 @@
     using System.Web.Routing;
     using Api.Client;
     using Constant;
-    using Core.AatfEvidence;
     using Filters;
     using Helpers;
     using Infrastructure;
     using Services;
-    using Web.ViewModels.Shared;
-    using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
-    using Weee.Requests.Shared;
 
     public class CheckCanCreateEvidenceNoteAttribute : ActionFilterAttribute
     {

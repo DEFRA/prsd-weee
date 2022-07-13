@@ -187,7 +187,7 @@
         }
 
         [HttpGet]
-        [CheckCanEditEvidence]
+        [CheckCanEditEvidenceNote]
         public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
         {
             using (var client = apiClient())
@@ -210,7 +210,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CheckCanEditEvidence]
+        [CheckCanEditEvidenceNote]
         public async Task<ActionResult> EditEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())

@@ -22,7 +22,7 @@
 
     public class CheckCanEditEvidenceAttributeTests : SimpleUnitTestBase
     {
-        private readonly CheckCanEditEvidenceAttribute attribute;
+        private readonly CheckCanEditEvidenceNoteAttribute attribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
@@ -31,7 +31,7 @@
         {
             client = A.Fake<IWeeeClient>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
-            attribute = new CheckCanEditEvidenceAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
+            attribute = new CheckCanEditEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
 
             var routeData = new RouteData();
@@ -89,10 +89,10 @@
         public void OnActionExecuting_GivenNoEvidenceNoteId_ArgumentExceptionExpected()
         {
             //arrange
-            Action action = () => attribute.OnActionExecuting(context);
+            A.CallTo(() => context.RouteData).Returns(new RouteData());
 
             //act
-            A.CallTo(() => context.RouteData).Returns(new RouteData());
+            Action action = () => attribute.OnActionExecuting(context);
 
             //assert
             action.Should().Throw<ArgumentException>().WithMessage("No evidence note ID was specified.");
@@ -204,6 +204,101 @@
                 result.InnerException.Should().BeOfType<InvalidOperationException>()
                     .Which.Message.Should()
                     .Be($"Evidence note {note.Id} cannot edit notes");
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void OnActionExecuting_GivenViewModelAndNoteIsDraftOrReturnedAndEvidenceCanNotBeEdited_ExceptionShouldBeThrown(NoteStatus noteStatus)
+        {
+            if (noteStatus == NoteStatus.Draft || noteStatus == NoteStatus.Returned)
+            {
+                //arrange
+                var viewModel = new EvidenceNoteViewModel()
+                {
+                    Id = Guid.NewGuid()
+                };
+
+                var actionParameters = new Dictionary<string, object> { { "viewModel", viewModel } };
+                A.CallTo(() => context.ActionParameters).Returns(actionParameters);
+
+                var note = TestFixture.Create<EvidenceNoteData>();
+                note.Status = noteStatus;
+                var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+
+                A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
+
+                A.CallTo(() => client.SendAsync(A<string>._,
+                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
+                    .Returns(aatfs);
+
+                A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
+                    .Returns(false);
+
+                //act
+                var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
+                //assert
+                result.Should().BeOfType<AggregateException>();
+                result.InnerException.Should().BeOfType<InvalidOperationException>()
+                    .Which.Message.Should()
+                    .Be($"Evidence note {note.Id} cannot edit notes");
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void OnActionExecuting_GivenEvidenceNoteIdIsDraftOrReturnedAndEvidenceCanBeEdited_NoExceptionShouldBeThrown(NoteStatus noteStatus)
+        {
+            if (noteStatus == NoteStatus.Draft || noteStatus == NoteStatus.Returned)
+            {
+                //arrange
+                var note = TestFixture.Create<EvidenceNoteData>();
+                note.Status = noteStatus;
+                var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+
+                A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
+
+                A.CallTo(() => client.SendAsync(A<string>._,
+                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
+                    .Returns(aatfs);
+
+                A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
+                    .Returns(true);
+
+                //act
+                var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
+                //assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void OnActionExecuting_GivenViewModelAndNoteIsDraftOrReturnedAndEvidenceCanBeEdited_NoExceptionShouldBeThrown(NoteStatus noteStatus)
+        {
+            if (noteStatus == NoteStatus.Draft || noteStatus == NoteStatus.Returned)
+            {
+                //arrange
+                var note = TestFixture.Create<EvidenceNoteData>();
+                note.Status = noteStatus;
+                var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+
+                A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
+
+                A.CallTo(() => client.SendAsync(A<string>._,
+                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
+                    .Returns(aatfs);
+
+                A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
+                    .Returns(true);
+
+                //act
+                var result = Record.Exception(() => attribute.OnActionExecuting(context));
+
+                //assert
+                result.Should().BeNull();
             }
         }
     }
