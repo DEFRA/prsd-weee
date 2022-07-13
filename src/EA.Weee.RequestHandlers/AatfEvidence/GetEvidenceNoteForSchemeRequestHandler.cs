@@ -33,7 +33,10 @@
 
             authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
 
-            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote));
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
+            {
+                IncludeTonnage = true
+            });
 
             return evidenceNoteData;
         }
