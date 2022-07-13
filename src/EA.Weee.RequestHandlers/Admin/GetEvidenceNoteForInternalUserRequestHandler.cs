@@ -31,7 +31,10 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote));
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
+            {
+                IncludeTonnage = true
+            });
 
             return evidenceNoteData;
         }
