@@ -248,7 +248,7 @@
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
-    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCanEditEvidenceAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ChooseSiteControllerTests.cs" />
     <Compile Include="Areas\AatfReturn\Attributes\ValidateReturnBaseActionFilterAttributeTests.cs" />
