@@ -17,19 +17,7 @@
 
         public IList<ViewTransferEvidenceAatfDataViewModel> Summary { get; set; }
 
-        public string RedirectTab
-        {
-            get
-            {
-                if (Status.Equals(NoteStatus.Draft) || Status.Equals(NoteStatus.Submitted))
-                {
-                    return ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
-                }
-
-                //TODO: this will get updated when viewing and editing of transfer notes is added
-                return ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
-            }
-        }
+        public string RedirectTab { get; set; }
 
         public bool EditMode { get; set; }
 
