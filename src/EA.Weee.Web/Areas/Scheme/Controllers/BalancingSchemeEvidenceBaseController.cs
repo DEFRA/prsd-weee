@@ -2,10 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
+    using EA.Weee.Web.Areas.Scheme.Attributes;
     using EA.Weee.Web.Controllers.Base;
     using Services;
     using Services.Caching;
 
+    [ValidatePBSEvidenceNotesEnabled]
     public abstract class BalancingSchemeEvidenceBaseController : ExternalSiteController
     {
         protected readonly BreadcrumbService Breadcrumb;
