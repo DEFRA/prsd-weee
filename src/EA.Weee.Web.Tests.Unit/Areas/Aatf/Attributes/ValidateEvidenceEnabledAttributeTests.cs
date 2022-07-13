@@ -15,6 +15,7 @@
         private readonly ValidateAatfEvidenceEnabledAttribute aatfAttribute;
         private readonly ValidatePcsEvidenceEnabledAttribute pcsAttribute;
         private readonly ValidatePcsObligationsEnabledAttribute obligationsAttribute;
+        private readonly ValidatePBSEvidenceNotesEnabledAttribute pbsAttribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
 
@@ -24,11 +25,13 @@
             aatfAttribute = new ValidateAatfEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             pcsAttribute = new ValidatePcsEvidenceEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             obligationsAttribute = new ValidatePcsObligationsEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
+            pbsAttribute = new ValidatePBSEvidenceNotesEnabledAttribute { ConfigService = A.Fake<ConfigurationService>(), Client = () => client };
             context = A.Fake<ActionExecutingContext>();
 
             A.CallTo(() => pcsAttribute.ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes).Returns(true);
             A.CallTo(() => aatfAttribute.ConfigService.CurrentConfiguration.EnableAATFEvidenceNotes).Returns(true);
             A.CallTo(() => obligationsAttribute.ConfigService.CurrentConfiguration.EnablePCSObligations).Returns(true);
+            A.CallTo(() => pbsAttribute.ConfigService.CurrentConfiguration.EnablePBSEvidenceNotes).Returns(true);
         }
 
         [Fact]
@@ -87,6 +90,26 @@
             A.CallTo(() => obligationsAttribute.ConfigService.CurrentConfiguration.EnablePCSObligations).Returns(true);
 
             Action action = () => obligationsAttribute.OnActionExecuting(context);
+
+            action.Should().NotThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePBSEvidenceNotesIsFalse_InvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => pbsAttribute.ConfigService.CurrentConfiguration.EnablePBSEvidenceNotes).Returns(false);
+
+            Action action = () => pbsAttribute.OnActionExecuting(context);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Manage PBS evidence notes is not enabled.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenEnablePBSEvidenceNotesIsTrue_NoInvalidOperationExceptionExpected()
+        {
+            A.CallTo(() => pbsAttribute.ConfigService.CurrentConfiguration.EnablePBSEvidenceNotes).Returns(true);
+
+            Action action = () => pbsAttribute.OnActionExecuting(context);
 
             action.Should().NotThrow<InvalidOperationException>();
         }
