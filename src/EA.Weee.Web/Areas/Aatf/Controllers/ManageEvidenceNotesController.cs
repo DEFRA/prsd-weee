@@ -23,6 +23,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -108,7 +109,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Index(ManageEvidenceNoteViewModel model)
         {
-              return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
+            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
         }
 
         [HttpGet]
@@ -320,7 +321,13 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            var selectedComplianceYear = sessionService.GetTransferSessionObject<object>(Session, SessionKeyConstant.AatfSelectedComplianceYear);
+
+            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : (selectedComplianceYear == null ? currentDate.Year : (int)selectedComplianceYear);
+
+            sessionService.SetTransferSessionObject(Session, complianceYear, SessionKeyConstant.AatfSelectedComplianceYear);
+
+            return complianceYear;
         }
 
         private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, 
