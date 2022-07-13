@@ -113,7 +113,7 @@
         }
 
         [HttpGet]
-        [CheckCreateEvidenceNoteStatus]
+        [CheckCanCreateEvidenceNote]
 
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, bool returnFromCopyPaste = false)
         { 
@@ -136,7 +136,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CheckCreateEvidenceNoteStatus]
+        [CheckCanCreateEvidenceNote]
         public async Task<ActionResult> CreateEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
@@ -188,7 +188,7 @@
         }
 
         [HttpGet]
-        [CheckEditEvidenceNoteStatus]
+        [CheckCanEditEvidence]
         public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
         {
             using (var client = apiClient())
@@ -211,7 +211,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CheckEditEvidenceNoteStatus]
+        [CheckCanEditEvidence]
         public async Task<ActionResult> EditEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())

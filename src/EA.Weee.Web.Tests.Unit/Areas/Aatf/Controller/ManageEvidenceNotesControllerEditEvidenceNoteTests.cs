@@ -345,14 +345,14 @@
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
-                .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
+                .BeDecoratedWith<CheckCanEditEvidenceAttribute>();
         }
 
         [Fact]
         public void EditDraftEvidenceNotePost_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
-                .BeDecoratedWith<CheckEditEvidenceNoteStatusAttribute>();
+                .BeDecoratedWith<CheckCanEditEvidenceAttribute>();
         }
 
         [Fact]

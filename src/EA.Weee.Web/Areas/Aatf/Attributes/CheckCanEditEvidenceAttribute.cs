@@ -12,7 +12,7 @@
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
 
-    public class CheckEditEvidenceNoteStatusAttribute : ActionFilterAttribute
+    public class CheckCanEditEvidenceAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
 

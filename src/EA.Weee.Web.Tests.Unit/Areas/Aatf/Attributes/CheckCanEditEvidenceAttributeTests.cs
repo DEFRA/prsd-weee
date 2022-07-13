@@ -17,19 +17,19 @@
     using Weee.Requests.AatfEvidence;
     using Xunit;
 
-    public class CheckEditEvidenceNoteStatusAttributeTests
+    public class CheckCanEditEvidenceAttributeTests
     {
-        private readonly CheckEditEvidenceNoteStatusAttribute attribute;
+        private readonly CheckCanEditEvidenceAttribute attribute;
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
         private readonly Fixture fixture;
 
-        public CheckEditEvidenceNoteStatusAttributeTests()
+        public CheckCanEditEvidenceAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
-            attribute = new CheckEditEvidenceNoteStatusAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
+            attribute = new CheckCanEditEvidenceAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
             fixture = new Fixture();
 
@@ -144,7 +144,7 @@
             var note = fixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Draft;
 
-            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int?>._)).Returns(true);
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int>._)).Returns(true);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
@@ -163,7 +163,7 @@
             var note = fixture.Create<EvidenceNoteData>();
             note.Status = NoteStatus.Returned;
 
-            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int?>._)).Returns(true);
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>._, A<Guid>._, A<int>._)).Returns(true);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetEvidenceNoteForAatfRequest>.That.Matches(r => r.EvidenceNoteId.Equals((Guid)context.RouteData.Values["evidenceNoteId"])))).Returns(note);
