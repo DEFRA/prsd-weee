@@ -227,7 +227,8 @@
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
                 a.ListOfNotes.Count.Equals(3) &&
-                a.CategoryFilter.SequenceEqual(request.Categories)))).MustHaveHappenedOnceExactly();
+                a.CategoryFilter.SequenceEqual(request.Categories) &&
+                a.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

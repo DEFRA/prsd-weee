@@ -29,8 +29,12 @@
 
             var data = MapCommonProperties(source.Note);
 
-            var noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : source.Note.NoteTonnage.ToList();
-
+            var noteTonnage = new List<NoteTonnage>();
+            if (source.IncludeTonnage)
+            {
+                noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : source.Note.NoteTonnage.ToList();
+            }
+            
             data.StartDate = source.Note.StartDate;
             data.EndDate = source.Note.EndDate;
             data.Protocol = source.Note.Protocol.HasValue ? (Protocol?)source.Note.Protocol.Value : null;

@@ -138,7 +138,8 @@
                 a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
+                a.ListOfNotes.Count.Equals(3) &&
+                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
 
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
         }
