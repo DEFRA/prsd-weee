@@ -76,16 +76,21 @@
         public void Map_SourceIsNotEmpty_ResultDataListPropertiesShouldBeMapped(bool includeTonnages)
         {
             // arrange
-            var listOfNotes = TestFixture.CreateMany<Note>().ToList();
-
-            var source = new ListOfNotesMap(listOfNotes, includeTonnages);
+            var listOfNotes = TestFixture.CreateMany<Note>(3).ToList();
             var categories = TestFixture.CreateMany<int>().ToList();
 
+            var source = new ListOfNotesMap(listOfNotes, includeTonnages)
+            {
+                CategoryFilter = categories
+            };
+            
             var evidenceData1 = TestFixture.Create<EvidenceNoteData>();
             var evidenceData2 = TestFixture.Create<EvidenceNoteData>();
             var evidenceData3 = TestFixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories)))).ReturnsNextFromSequence(evidenceData1, evidenceData2, evidenceData3);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(0))))).Returns(evidenceData1);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(1))))).Returns(evidenceData2);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(2))))).Returns(evidenceData3);
 
             // act
             var result = map.Map(source);
