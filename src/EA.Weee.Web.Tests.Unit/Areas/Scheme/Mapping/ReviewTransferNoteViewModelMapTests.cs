@@ -4,7 +4,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -106,6 +109,31 @@
             result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note transfer");
             result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note transfer");
             result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer if there are some minor updates");
+        }
+
+        [Fact]
+        public void Map_GivenAMappedTransferNoteViewModel_MustReturnMappedViewModel()
+        {
+            //arrange
+            DateTime today = DateTime.UtcNow;
+            note.ApprovedDate = today;
+            note.RejectedDate = today;
+            note.ReturnedDate = today;
+            note.RejectedReason = "rejected reason";
+            note.ReturnedReason = "returned reason";
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(), note, null);
+
+            var mapper = new ViewTransferNoteViewModelMap(A.Fake<IAddressUtilities>(), A.Fake<ITonnageUtilities>());
+
+            //act
+            var result = mapper.Map(transfer);
+
+            // assert 
+            result.ApprovedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedReason.Should().Be("rejected reason");
+            result.ReturnedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.ReturnedReason.Should().Be("returned reason");
         }
     }
 }
