@@ -6,38 +6,37 @@
     using FluentAssertions;
     using System;
     using System.Linq;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ListOfNotesMapTests
+    public class ListOfNotesMapTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
         public ListOfNotesMapTests()
         {
-            fixture = new Fixture();
         }
 
         [Fact]
         public void Constructor_GivenListIsNull_ArgumentNullExceptionExpected()
         {
             // act
-            Action action = () => new ListOfNotesMap(null);
+            Action action = () => new ListOfNotesMap(null, TestFixture.Create<bool>());
 
             // assert
             action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public void Constrctor_GivenListIsNotNull_ShouldContainTheListOfNotes()
+        public void Constructor_GivenListIsNotNull_ShouldContainTheListOfNotes()
         {
             // arrange
-            var notes = fixture.CreateMany<Note>().ToList();
-
+            var notes = TestFixture.CreateMany<Note>().ToList();
+            var includeTonnage = TestFixture.Create<bool>();
             // act
-            var result = new ListOfNotesMap(notes);
+            var result = new ListOfNotesMap(notes, includeTonnage);
 
             // assert
             result.ListOfNotes.Should().BeEquivalentTo(notes);
+            result.IncludeTonnage.Should().Be(includeTonnage);
         }
     }
 }
