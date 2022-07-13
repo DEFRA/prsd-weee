@@ -960,7 +960,7 @@
             var id = TestFixture.Create<Guid>();
 
             //act
-            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id, null);
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id, null, TestFixture.Create<string>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId.Equals(id)))).MustHaveHappenedOnceExactly();
@@ -975,7 +975,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -992,15 +992,17 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(noteData);
 
+            var redirectTab = TestFixture.Create<string>();
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), complianceYear);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), complianceYear, redirectTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
                     t => t.SchemeId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
-                         t.SelectedComplianceYear == complianceYear)))
+                         t.SelectedComplianceYear == complianceYear &&
+                         t.RedirectTab == redirectTab)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1013,7 +1015,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>()) as ViewResult;
 
             // assert
             result.Model.Should().Be(viewModel);
@@ -1028,7 +1030,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>()) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferredEvidence");
@@ -1046,14 +1048,16 @@
             transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] =
                 displayNotification;
 
+            var redirectTab = TestFixture.Create<string>();
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, redirectTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
                     t => t.SchemeId.Equals(organisationId) &&
                          t.TransferEvidenceNoteData.Equals(noteData) &&
-                         t.DisplayNotification.Equals(displayNotification))))
+                         t.DisplayNotification.Equals(displayNotification) &&
+                         t.RedirectTab == redirectTab)))
                 .MustHaveHappenedOnceExactly();
         }
 

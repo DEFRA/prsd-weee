@@ -36,6 +36,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
