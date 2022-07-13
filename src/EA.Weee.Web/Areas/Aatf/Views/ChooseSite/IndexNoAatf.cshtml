@@ -29,8 +29,14 @@
             </p>
 
             <p class="govuk-body">
-                Contact your environmental regulator if you believe this is incorrect.
+                If you think you should be able to view one of your sites, contact your environmental regulator.
             </p>
+
+            @(this.WeeeGds().CreateProgressiveDisclosure("How to contact your environmental regulator",
+                    @Html.Partial("~/Areas/AatfReturn/Views/Shared/_ContactProgressiveDisclosure.cshtml").ToString(),
+                    "Hidden content",
+                    "Progressive disclosure",
+                    "How to contact your environmental regulator"))
         </div>
     </div>
 }
