@@ -866,7 +866,7 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+                var dataAccess = new EvidenceDataAccess(context, A.Fake<IUserContext>(), new GenericDataAccess(context));
 
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 context.Organisations.Add(organisation);
@@ -884,8 +884,7 @@
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
                 context.Notes.Add(noteShouldNotBeFound);
-
-                await database.WeeeContext.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
                 var filter = new NoteFilter(aatf.ComplianceYear)
                 {
