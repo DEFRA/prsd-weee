@@ -15,7 +15,7 @@
         }
 
         [Fact]
-        public void SchemeEvidenceBaseController_ShouldHaveNoCache()
+        public void AatfEvidenceBaseController_ShouldHaveNoCache()
         {
             typeof(AatfEvidenceBaseController).Should().BeDecoratedWith<OutputCacheAttribute>(a =>
                 a.NoStore == true &&
