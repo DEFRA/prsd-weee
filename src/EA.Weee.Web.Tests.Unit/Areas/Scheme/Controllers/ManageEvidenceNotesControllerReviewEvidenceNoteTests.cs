@@ -46,6 +46,15 @@
             OrganisationId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+
+            A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(
+                new ReviewEvidenceNoteViewModel()
+                {
+                    ViewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel()
+                    {
+                        Status = NoteStatus.Submitted
+                    }
+                });
         }
 
         [Fact]
@@ -275,7 +284,12 @@
         public async Task ReviewEvidenceNoteGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = TestFixture.Build<ReviewEvidenceNoteViewModel>()
+                .With(r => r.ViewEvidenceNoteViewModel, new ViewEvidenceNoteViewModel()
+                {
+                    Status = NoteStatus.Submitted
+                }).Create();
+
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
             // act
@@ -295,17 +309,6 @@
 
             // assert
             Assert.Equal<IList<string>>(expected, model.PossibleValues);
-        }
-
-        [Fact]
-        public async Task ReviewEvidenceNoteGet_GivenANewModelIsCreated_ModelWithEmptySelectedValueIsCreated()
-        {
-            // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
-            var model = result.Model as ReviewEvidenceNoteViewModel;
-
-            // assert
-            model.SelectedValue.Should().Be(string.Empty);
         }
 
         [Fact]
