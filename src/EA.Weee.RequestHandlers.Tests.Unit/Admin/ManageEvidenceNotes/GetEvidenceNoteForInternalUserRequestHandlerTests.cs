@@ -1,63 +1,48 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.ManageEvidenceNotes
 {
     using System;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
     using Castle.Core.Internal;
-    using Core.AatfEvidence;
-    using DataAccess.DataAccess;
-    using Domain.AatfReturn;
-    using Domain.Evidence;
-    using Domain.Organisation;
-    using Domain.Scheme;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.Evidence;
+    using EA.Weee.RequestHandlers.Admin;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.Admin;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
-    using Prsd.Core.Domain;
-    using Prsd.Core.Mapper;
-    using RequestHandlers.Aatf;
-    using RequestHandlers.AatfEvidence;
-    using RequestHandlers.Security;
-    using Weee.Requests.AatfEvidence;
-    using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteRequestHandlerTests
+    public class GetEvidenceNoteForInternalUserRequestHandlerTests : SimpleUnitTestBase
     {
-        private GetEvidenceNoteRequestHandler handler;
-        private readonly Fixture fixture;
+        private GetEvidenceNoteForInternalUserRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly GetEvidenceNoteForAatfRequest request;
+        private readonly GetEvidenceNoteForInternalUserRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
-        private readonly Guid organisationId;
 
-        public GetEvidenceNoteRequestHandlerTests()
+        public GetEvidenceNoteForInternalUserRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
 
-            A.Fake<IAatfDataAccess>();
             A.Fake<IUserContext>();
 
-            A.Fake<Organisation>();
-            A.Fake<Aatf>();
-            A.Fake<Scheme>();
             note = A.Fake<Note>();
-            fixture.Create<Guid>();
-            evidenceNoteId = fixture.Create<Guid>();
-            organisationId = fixture.Create<Guid>();
+            evidenceNoteId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => note.OrganisationId).Returns(organisationId);
+            request = new GetEvidenceNoteForInternalUserRequest(evidenceNoteId);
 
-            request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
-
-            handler = new GetEvidenceNoteRequestHandler(weeeAuthorization,
+            handler = new GetEvidenceNoteForInternalUserRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
                 mapper);
 
@@ -68,26 +53,9 @@
         public async Task HandleAsync_GivenNoExternalAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new GetEvidenceNoteRequestHandler(authorization,
-                evidenceDataAccess,
-                mapper);
-
-            //act
-            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
-
-            //assert
-            result.Should().BeOfType<SecurityException>();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
-        {
-            //arrange
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-           
-            handler = new GetEvidenceNoteRequestHandler(authorization,
+            handler = new GetEvidenceNoteForInternalUserRequestHandler(authorization,
                 evidenceDataAccess,
                 mapper);
 
@@ -109,17 +77,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
         {
             //act
@@ -133,7 +90,7 @@
         public async Task HandleAsync_GivenRequestAndNote_MappedNoteShouldBeReturned()
         {
             //arrange
-            var evidenceNote = fixture.Create<EvidenceNoteData>();
+            var evidenceNote = TestFixture.Create<EvidenceNoteData>();
 
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 

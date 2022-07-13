@@ -46,10 +46,21 @@
                                     Model.HintItems)
         </div>
 
-        <div class="govuk-!-margin-top-7"></div>
+        <div class="govuk-form-group govuk-!-margin-bottom-7 @Html.Gds().FormGroupClass(m => m.Reason)" id="ReasonDiv">
+            @Html.Gds().LabelFor(m => m.Reason, showOptionalLabel: false)
+            @Html.Gds().ValidationMessageFor(m => m.Reason)
+            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @id = "Reason", @class = "govuk-textarea", @maxlength = "200", @title = "You can type up to 200 characters" })
+        </div>
 
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
+}
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initReviewEvidenceNote();
+        });
+    </script>
 }
