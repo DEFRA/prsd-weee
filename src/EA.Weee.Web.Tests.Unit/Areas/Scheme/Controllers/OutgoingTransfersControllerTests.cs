@@ -58,7 +58,9 @@
             outgoingTransferEvidenceController =
                 new OutgoingTransfersController(mapper, breadcrumb, cache, () => weeeClient, sessionService, transferEvidenceRequestCreator);
 
-            transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, NoteStatus.Submitted).Create();
+
             evidenceNoteData = TestFixture.CreateMany<EvidenceNoteData>().ToList();
             transferEvidenceTonnageViewModel = TestFixture.Create<TransferEvidenceTonnageViewModel>();
 
@@ -674,6 +676,7 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
+
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._))
                 .Returns(model);
 
