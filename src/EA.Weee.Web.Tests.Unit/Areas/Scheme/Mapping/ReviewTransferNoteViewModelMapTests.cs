@@ -4,7 +4,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -112,20 +115,25 @@
         public void Map_GivenAMappedTransferNoteViewModel_MustReturnMappedViewModel()
         {
             //arrange
+            DateTime today = DateTime.UtcNow;
+            note.ApprovedDate = today;
+            note.RejectedDate = today;
+            note.ReturnedDate = today;
+            note.RejectedReason = "rejected reason";
+            note.ReturnedReason = "returned reason";
             var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(), note, null);
 
-            var transferNoteViewModel = TestFixture.Create<ViewTransferNoteViewModel>();
-            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(transferNoteViewModel);
+            var mapper = new ViewTransferNoteViewModelMap(A.Fake<IAddressUtilities>(), A.Fake<ITonnageUtilities>());
 
             //act
-            var result = map.Map(transfer);
+            var result = mapper.Map(transfer);
 
             // assert 
-            result.ViewTransferNoteViewModel.ApprovedDate.Should().Be(transferNoteViewModel.ApprovedDate);
-            result.ViewTransferNoteViewModel.RejectedDate.Should().Be(transferNoteViewModel.RejectedDate);
-            result.ViewTransferNoteViewModel.RejectedReason.Should().Be(transferNoteViewModel.RejectedReason);
-            result.ViewTransferNoteViewModel.ReturnedDate.Should().Be(transferNoteViewModel.ReturnedDate);
-            result.ViewTransferNoteViewModel.ReturnedReason.Should().Be(transferNoteViewModel.ReturnedReason);
+            result.ApprovedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedReason.Should().Be("rejected reason");
+            result.ReturnedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.ReturnedReason.Should().Be("returned reason");
         }
     }
 }
