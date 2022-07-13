@@ -48,6 +48,9 @@
         [DefaultValue(false)]
         public bool EnableAATFReturns { get; set; }
 
+        [DefaultValue(false)]
+        public bool EnablePBSEvidenceNotes { get; set; }
+
         /// <summary>
         /// defines whether the radio-button option "Manage PCS evidence notes" will be available in menu or not
         /// </summary>
