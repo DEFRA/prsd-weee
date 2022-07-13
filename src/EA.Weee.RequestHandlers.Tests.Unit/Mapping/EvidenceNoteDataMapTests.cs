@@ -12,19 +12,18 @@
     using FluentAssertions;
     using Mappings;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 
-    public class EvidenceNoteDataMapTests
+    public class EvidenceNoteDataMapTests : SimpleUnitTestBase
     {
         private readonly IMapper mapper;
         private readonly EvidenceNoteDataMap map;
-        private readonly Fixture fixture;
 
         public EvidenceNoteDataMapTests()
         {
             mapper = A.Fake<IMapper>();
-            fixture = new Fixture();
 
             map = new EvidenceNoteDataMap(mapper);
         }
@@ -44,7 +43,7 @@
         {
             // arrange
             var notes = new List<Note>();
-            var source = new ListOfNotesMap(notes);
+            var source = new ListOfNotesMap(notes, TestFixture.Create<bool>());
 
             // act
             var result = map.Map(source);
@@ -58,7 +57,7 @@
         {
             // arrange
             var notes = new List<Note>();
-            var source = new ListOfNotesMap(notes);
+            var source = new ListOfNotesMap(notes, TestFixture.Create<bool>());
             var scheme = A.Fake<Scheme>();
             var evidenceNoteData = A.Fake<Note>();
 
@@ -71,21 +70,27 @@
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(evidenceNoteData) && e.CategoryFilter.IsNullOrEmpty()))).MustNotHaveHappened();
         }
 
-        [Fact]
-        public void Map_SourceIsNotEmpty_ResultDataListPropertiesShouldBeMapped()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_SourceIsNotEmpty_ResultDataListPropertiesShouldBeMapped(bool includeTonnages)
         {
             // arrange
-            var listOfNotes = fixture.CreateMany<Note>().ToList();
-            var source = new ListOfNotesMap(listOfNotes);
-            var schemeData = fixture.Create<SchemeData>();
-     
-            var evidenceData1 = fixture.Create<EvidenceNoteData>();
-            var evidenceData2 = fixture.Create<EvidenceNoteData>();
-            var evidenceData3 = fixture.Create<EvidenceNoteData>();
+            var listOfNotes = TestFixture.CreateMany<Note>(3).ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
 
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData3);
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData2);
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).ReturnsNextFromSequence(evidenceData1);
+            var source = new ListOfNotesMap(listOfNotes, includeTonnages)
+            {
+                CategoryFilter = categories
+            };
+            
+            var evidenceData1 = TestFixture.Create<EvidenceNoteData>();
+            var evidenceData2 = TestFixture.Create<EvidenceNoteData>();
+            var evidenceData3 = TestFixture.Create<EvidenceNoteData>();
+
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(0))))).Returns(evidenceData1);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(1))))).Returns(evidenceData2);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(2))))).Returns(evidenceData3);
 
             // act
             var result = map.Map(source);

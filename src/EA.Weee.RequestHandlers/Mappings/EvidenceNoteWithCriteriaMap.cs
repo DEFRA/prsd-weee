@@ -9,6 +9,8 @@
 
         public List<int> CategoryFilter { get; set; }
 
+        public bool IncludeTonnage { get; set; }
+
         public EvidenceNoteWithCriteriaMap(Note note)
         {
             Note = note;

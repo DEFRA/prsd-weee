@@ -27,7 +27,8 @@
                 { 
                     var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
                     {
-                        CategoryFilter = source.CategoryFilter
+                        CategoryFilter = source.CategoryFilter,
+                        IncludeTonnage = source.IncludeTonnage
                     });
                     model.ListOfEvidenceNoteData.Add(evidenceNoteData);
                 }

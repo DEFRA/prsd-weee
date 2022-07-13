@@ -36,6 +36,7 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
@@ -46,6 +47,10 @@
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
                 SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                RejectedDate = source.TransferEvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
+                ReturnedDate = source.TransferEvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(), 
+                RejectedReason = source.TransferEvidenceNoteData.RejectedReason, 
+                ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
@@ -94,6 +99,12 @@
                             break;
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            break;
+                        case NoteStatus.Rejected:
+                            model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
                             break;
                     }
                 }

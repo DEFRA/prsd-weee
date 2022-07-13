@@ -38,6 +38,8 @@
 
         bool EnablePCSEvidenceNotes { get; set; }
 
+        bool EnablePBSEvidenceNotes { get; set; }
+
         bool EnableAATFEvidenceNotes { get; set; }
 
         /// <summary>
