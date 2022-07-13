@@ -21,6 +21,7 @@
     using System.Web.Mvc;
     using Core.Helpers;
     using Core.Scheme;
+    using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
@@ -617,6 +618,37 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task SubmittedTransferGet_GivenTransferNoteIsNotAtSubmittedStatus_ShouldRedirectToManageEvidenceNotes(NoteStatus status)
+        {
+            if (status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            var redirectTab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+            var noteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, status).Create();
+            
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+
+            //act
+            var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
+                    TestFixture.Create<Guid>(),
+                    TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    redirectTab) as
+                RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["tab"].Should().Be(redirectTab);
         }
 
         [Fact]
