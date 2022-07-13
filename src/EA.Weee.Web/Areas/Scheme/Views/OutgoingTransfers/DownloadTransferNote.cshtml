@@ -6,7 +6,7 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
 @{
-    var navigateBackToSelectedTab = Model.ViewTransferNoteViewModel.ReferenceDisplay.StartsWith("T") ? ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+    var navigateBackToSelectedTab = Model.ViewTransferNoteViewModel.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
 
     string title;
     if (Model.ViewTransferNoteViewModel.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
