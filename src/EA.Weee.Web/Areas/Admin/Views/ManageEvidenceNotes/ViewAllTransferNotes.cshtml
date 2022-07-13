@@ -4,6 +4,7 @@
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using MvcNavigationHelpers
+@using EA.Weee.Core.AatfEvidence
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllTransferNotesViewModel
 
@@ -29,7 +30,7 @@
                     <table id="all-transfer-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row"> 
+                            <tr class="govuk-table__row">
                                 <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
                                     Reference ID
                                 </th>
@@ -44,6 +45,9 @@
                                 </th>
                                 <th class="govuk-table__header" scope="col" style="vertical-align: bottom;">
                                     Status
+                                </th>
+                                <th class="govuk-table__header">
+                                    @Html.Gds().VisuallyHidden("actions")
                                 </th>
                             </tr>
                         </thead>
@@ -65,6 +69,16 @@
                                         <td class="govuk-table__cell">@note.SubmittedBy</td>
                                         <td class="govuk-table__cell">@note.Recipient</td>
                                         <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                        @if (!note.Status.Equals(NoteStatus.Void))
+                                        {
+                                         <td class="govuk-table__cell">
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, }, null)
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="govuk-table__cell"> </td>
+                                        }
                                     </tr>
                                 }
                             }

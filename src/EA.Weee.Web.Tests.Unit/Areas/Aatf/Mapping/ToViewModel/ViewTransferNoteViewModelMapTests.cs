@@ -169,6 +169,60 @@
                 .Be($"You have successfully submitted the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
         }
 
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsApproved_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Status, NoteStatus.Approved)
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                true);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should().Be($"You have approved the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsRejected_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Status, NoteStatus.Rejected)
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                true);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should().Be($"You have rejected the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturned_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(fixture.Create<Guid>(),
+                fixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Status, NoteStatus.Returned)
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                true);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should().Be($"You have returned the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
         [Theory]
         [InlineData(null, NoteStatus.Draft)]
         [InlineData(false, NoteStatus.Draft)]

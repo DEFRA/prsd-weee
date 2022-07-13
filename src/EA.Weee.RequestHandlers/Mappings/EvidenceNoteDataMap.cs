@@ -25,7 +25,10 @@
             {
                 foreach (var note in source.ListOfNotes)
                 { 
-                    var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(note);
+                    var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
+                    {
+                        CategoryFilter = source.CategoryFilter
+                    });
                     model.ListOfEvidenceNoteData.Add(evidenceNoteData);
                 }
             }
