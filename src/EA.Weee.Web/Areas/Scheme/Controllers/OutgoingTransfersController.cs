@@ -104,6 +104,11 @@
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
+                if (noteData.Status != NoteStatus.Submitted)
+                {
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = redirectTab });
+                }
+
                 var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
                     SchemeId = pcsId,

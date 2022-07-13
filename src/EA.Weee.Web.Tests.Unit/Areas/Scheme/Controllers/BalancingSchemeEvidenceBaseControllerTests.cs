@@ -13,5 +13,12 @@
         {
             typeof(BalancingSchemeEvidenceBaseController).BaseType.Name.Should().Be(nameof(ExternalSiteController));
         }
+
+        [Fact]
+        public void Controller_IsDecoratedWith_ValidatePBSEvidenceNotesEnabled()
+        {
+            typeof(BalancingSchemeEvidenceBaseController).Should()
+                .BeDecoratedWith<ValidatePBSEvidenceNotesEnabledAttribute>(a => a.Match(new ValidatePBSEvidenceNotesEnabledAttribute()));
+        }
     }
 }

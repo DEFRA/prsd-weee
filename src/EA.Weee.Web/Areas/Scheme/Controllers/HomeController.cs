@@ -82,48 +82,59 @@
 
                 var organisationOverview = await GetOrganisationOverview(pcsId);
 
+                var isBalancingScheme = organisationDetails.IsBalancingScheme;
+
                 var activities = new List<string>();
 
-                if (organisationDetails.SchemeId != null)
+                if (isBalancingScheme)
                 {
-                    if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
+                    if (configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
                     {
-                        activities.Add(PcsAction.ManagePcsEvidenceNotes);
+                        activities.Add(PcsAction.ManagePBSEvidenceNotes);
+                    }
+                }
+                else
+                {
+                    if (organisationDetails.SchemeId != null)
+                    {
+                        if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
+                        {
+                            activities.Add(PcsAction.ManagePcsEvidenceNotes);
+                        }
+
+                        activities.Add(PcsAction.ManagePcsMembers);
+
+                        if (configurationService.CurrentConfiguration.EnableDataReturns)
+                        {
+                            activities.Add(PcsAction.ManageEeeWeeeData);
+                        }
+
+                        activities.Add(PcsAction.ManagePcsContactDetails);
                     }
 
-                    activities.Add(PcsAction.ManagePcsMembers);
-
-                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                    if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
                     {
-                        activities.Add(PcsAction.ManageEeeWeeeData);
+                        activities.Add(PcsAction.ViewSubmissionHistory);
                     }
 
-                    activities.Add(PcsAction.ManagePcsContactDetails);
-                }
+                    if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
+                    {
+                        activities.Add(PcsAction.ManageAatfEvidenceNotes);
+                    }
+                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
+                    {
+                        activities.Add(PcsAction.ManageAatfReturns);
+                        activities.Add(PcsAction.ManageAatfContactDetails);
+                    }
 
-                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-                {
-                    activities.Add(PcsAction.ViewSubmissionHistory);
+                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
+                    {
+                        activities.Add(PcsAction.ManageAeReturns);
+                        activities.Add(PcsAction.ManageAeContactDetails);
+                    }
+                    activities.Add(PcsAction.ViewOrganisationDetails);
                 }
-
-                if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
-                {
-                    activities.Add(PcsAction.ManageAatfEvidenceNotes);
-                }
-                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
-                {
-                    activities.Add(PcsAction.ManageAatfReturns);
-                    activities.Add(PcsAction.ManageAatfContactDetails);
-                }
-
-                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
-                {
-                    activities.Add(PcsAction.ManageAeReturns);
-                    activities.Add(PcsAction.ManageAeContactDetails);
-                }
-
-                activities.Add(PcsAction.ViewOrganisationDetails);
 
                 if (organisationOverview.HasMultipleOrganisationUsers)
                 {
@@ -244,6 +255,12 @@
                 if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                }
+
+                // 8. Manage PBS Evidence Notes
+                if (viewModel.SelectedValue == PcsAction.ManagePBSEvidenceNotes)
+                {
+                    return this.RedirectToAction("Index", "Holding", new { organisationId = viewModel.OrganisationId});
                 }
             }
 

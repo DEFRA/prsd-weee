@@ -168,7 +168,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void SchemeViewRouteName_GivenNotDraftOrSubmittedStatus_InvalidOperationExceptionExpected(NoteStatus status)
         {
-            if (status == NoteStatus.Draft || status == NoteStatus.Submitted)
+            if (status == NoteStatus.Draft || status == NoteStatus.Submitted || status == NoteStatus.Approved)
             {
                 return;
             }
@@ -177,10 +177,10 @@
             model.Status = status;
 
             //act
-            var exception = Record.Exception(() => model.SchemeViewRouteName);
+            var route = model.SchemeViewRouteName;
 
             //assert
-            exception.Should().BeOfType<InvalidOperationException>();
+            route.Should().BeEmpty();
         }
     }
 }
