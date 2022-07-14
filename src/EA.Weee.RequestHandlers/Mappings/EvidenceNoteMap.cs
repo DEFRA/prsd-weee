@@ -48,9 +48,9 @@
             data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
             data.AatfData = mapper.Map<Aatf, AatfData>(source.Note.Aatf);
             data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient.Organisation);
-            if (source.Note.Organisation.Schemes != null && source.Note.Organisation.Schemes.Any())
+            if (source.Note.Organisation.Scheme != null)
             {
-                data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Schemes.ElementAt(0));
+                data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Scheme);
             }
             data.RecipientId = source.Note.Recipient.Id;
 
