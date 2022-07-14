@@ -58,6 +58,7 @@
             userId = TestFixture.Create<Guid>();
             complianceYear = TestFixture.Create<short>();
 
+            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
             A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { scheme });
             A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
