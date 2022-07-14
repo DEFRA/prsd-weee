@@ -189,6 +189,11 @@
 
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
 
+            if (selection == InternalUserActivity.ViewPCSObligationAndEvidenceSummary)
+            {
+                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+            }
+
             if (selection == InternalUserActivity.ManagePcsObligations)
             {
                 Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
