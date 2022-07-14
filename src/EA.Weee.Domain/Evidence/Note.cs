@@ -20,7 +20,7 @@
         }
 
         public Note(Organisation organisation,
-            Scheme recipient, 
+            Organisation recipient, 
             DateTime startDate,
             DateTime endDate,
             WasteType? wasteType,
@@ -55,7 +55,7 @@
         }
 
         public Note(Organisation organisation,
-            Scheme recipient,
+            Organisation recipient,
             string createdBy,
             IList<NoteTransferTonnage> transfer,
             int complianceYear,
@@ -82,7 +82,7 @@
             WasteType = wasteType;
         }
 
-        public void Update(Scheme recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
+        public void Update(Organisation recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
             Protocol? protocol)
         {
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -164,7 +164,7 @@
 
         public virtual Organisation Organisation { get; private set; }
 
-        public virtual Scheme Recipient { get; private set; }
+        public virtual Organisation Recipient { get; private set; }
 
         public virtual DateTime StartDate { get; private set; }
 

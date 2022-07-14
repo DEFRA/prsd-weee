@@ -302,7 +302,7 @@
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
                 result.RecipientOrganisationData.Should().NotBeNull();
-                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
             }
         }
     }
