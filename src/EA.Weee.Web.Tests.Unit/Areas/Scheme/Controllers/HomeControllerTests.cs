@@ -149,6 +149,12 @@
                   SchemeId = Guid.NewGuid()
               });
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
+
             var result = await HomeControllerSetupForEnableDataReturnsAndEnablePBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ManageEeeWeeeData, result);
@@ -163,11 +169,31 @@
         }
 
         [Fact]
-        public async Task GetActivities_WithEnabledPBSEvidenceNotesSetToTrue_ShouldNotReturnViewOrganisationDetailsOptions()
+        public async Task GetActivities_WithEnabledPBSEvidenceNotesSetToTrueAndIsPBS_ShouldNotReturnViewOrganisationDetailsOptions()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
+
             var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
 
             Assert.DoesNotContain(PcsAction.ViewOrganisationDetails, result);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithEnabledPBSEvidenceNotesSetToTrueAndIsNotPBS_ShouldReturnViewOrganisationDetailsOptions()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = false
+                });
+
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+
+            Assert.Contains(PcsAction.ViewOrganisationDetails, result);
         }
 
         [Fact]
@@ -208,6 +234,12 @@
               {
                   SchemeId = Guid.NewGuid(),
               });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
 
             var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
 
@@ -423,6 +455,12 @@
                    HasMemberSubmissions = true,
                    HasDataReturnSubmissions = false
                });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
 
             var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
 
@@ -1110,6 +1148,12 @@
               {
                   HasAatfs = true,
               });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
 
             var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
 
@@ -1899,6 +1943,12 @@
               {
                   SchemeId = A.Dummy<Guid>()
               });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    IsBalancingScheme = true
+                });
 
             var result = await HomeControllerSetupForPCSEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
 

@@ -89,7 +89,7 @@
                     return RedirectToAction("Index", "ManageEvidenceNotes");
 
                 case InternalUserActivity.ViewPCSObligationAndEvidenceSummary:
-                    return RedirectToAction("Index", "Holding");
+                    return RedirectToAction("Index", "AdminHolding");
 
                 case InternalUserActivity.SubmissionsHistory:
                     if (configuration.EnableDataReturns)
