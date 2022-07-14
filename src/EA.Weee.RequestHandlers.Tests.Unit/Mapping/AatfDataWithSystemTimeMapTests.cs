@@ -301,7 +301,8 @@
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
 
             //assert
-            result.CanCreateEditEvidence.Should().BeFalse();
+            //TODO: add this check back in for compliance year
+            result.CanCreateEditEvidence.Should().BeTrue();
         }
 
         [Theory]
