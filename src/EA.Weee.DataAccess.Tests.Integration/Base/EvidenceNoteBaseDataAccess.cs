@@ -11,7 +11,7 @@
         protected async Task<Note> SetupSingleNote(WeeeContext context,
             DatabaseWrapper database,
             NoteType noteType = null,
-            EA.Weee.Domain.Scheme.Scheme scheme = null,
+            EA.Weee.Domain.Organisation.Organisation recipientOrganisation = null,
             int? complianceYear = null)
         {
             var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
@@ -29,9 +29,10 @@
                 noteType = NoteType.EvidenceNote;
             }
 
-            if (scheme == null)
+            if (recipientOrganisation == null)
             {
-                scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                recipientOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
             }
 
             if (complianceYear == null)
@@ -40,8 +41,8 @@
             }
 
             var note = noteType.Equals(NoteType.EvidenceNote) ? 
-                NoteCommon.CreateNote(database, organisation, scheme, aatf1, complianceYear: complianceYear) : 
-                NoteCommon.CreateTransferNote(database, organisation, scheme, complianceYear: complianceYear);
+                NoteCommon.CreateNote(database, organisation, recipientOrganisation, aatf1, complianceYear: complianceYear) : 
+                NoteCommon.CreateTransferNote(database, organisation, recipientOrganisation, complianceYear: complianceYear);
 
             context.Notes.Add(note);
 
