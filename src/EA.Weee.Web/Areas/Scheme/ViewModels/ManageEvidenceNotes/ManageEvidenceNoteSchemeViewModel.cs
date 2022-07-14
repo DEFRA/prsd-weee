@@ -10,6 +10,7 @@
         public Guid OrganisationId { get; set; }
 
         public string SchemeName { get; set; }
+        public string OrganisationName { get; set; }
 
         public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
