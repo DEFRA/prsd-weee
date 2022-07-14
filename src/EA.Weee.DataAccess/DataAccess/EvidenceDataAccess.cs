@@ -42,7 +42,7 @@
             return note;
         }
 
-        public async Task<Note> Update(Note note, Scheme recipient, DateTime startDate, DateTime endDate,
+        public async Task<Note> Update(Note note, Organisation recipient, DateTime startDate, DateTime endDate,
             WasteType? wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
@@ -175,7 +175,7 @@
         }
 
         public async Task<Guid> AddTransferNote(Organisation organisation, 
-            Scheme scheme,
+            Organisation recipientOrganisation,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
@@ -183,7 +183,7 @@
             DateTime date)
         {
             var evidenceNote = new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 userId,
                 transferTonnage,
                 complianceYear,

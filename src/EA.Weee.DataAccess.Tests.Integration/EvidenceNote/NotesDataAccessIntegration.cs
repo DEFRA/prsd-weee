@@ -127,11 +127,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var note1 = NoteCommon.CreateNote(database, organisation1, scheme, aatf1, complianceYear: SystemTime.Now.Year);
+                var note1 = NoteCommon.CreateNote(database, organisation1, organisation1, aatf1, complianceYear: SystemTime.Now.Year);
                 
                 context.Notes.Add(note1);
 
-                var transferNote = NoteCommon.CreateTransferNote(database, organisation1, scheme, complianceYear: SystemTime.Now.Year);
+                var transferNote = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
 
                 context.Notes.Add(transferNote);
 
@@ -208,7 +208,7 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var note1Excluded = NoteCommon.CreateNote(database, organisation1, aatf: aatf, complianceYear: SystemTime.Now.Year);
-                var note2Included = NoteCommon.CreateTransferNote(database, organisation1, scheme, complianceYear: SystemTime.Now.Year);
+                var note2Included = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
 
                 context.Notes.Add(note1Excluded);
                 context.Notes.Add(note2Included);
@@ -245,9 +245,9 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var note1Excluded = NoteCommon.CreateTransferNote(database, organisation1, scheme, complianceYear: SystemTime.Now.Year);
-                var note2Excluded = NoteCommon.CreateTransferNote(database, organisation1, scheme, complianceYear: SystemTime.Now.Year);
-                var note3Excluded = NoteCommon.CreateTransferNote(database, organisation1, scheme, complianceYear: SystemTime.Now.Year);
+                var note1Excluded = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
+                var note2Excluded = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
+                var note3Excluded = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
                 var note4Included = NoteCommon.CreateNote(database, organisation1, aatf: aatf);
 
                 context.Notes.Add(note1Excluded);
@@ -288,10 +288,10 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var note1Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf, complianceYear: SystemTime.Now.Year);
-                var note2Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf,
+                var note1Included = NoteCommon.CreateNote(database, organisation1, organisation1, aatf, complianceYear: SystemTime.Now.Year);
+                var note2Included = NoteCommon.CreateNote(database, organisation1, organisation1, aatf,
                     complianceYear: SystemTime.Now.Year);
-                var note3Included = NoteCommon.CreateNote(database, organisation1, scheme, aatf,
+                var note3Included = NoteCommon.CreateNote(database, organisation1, organisation1, aatf,
                     complianceYear: SystemTime.Now.Year);
 
                 context.Notes.Add(note1Included);
@@ -656,6 +656,10 @@
                 context.Organisations.Add(organisation);
 
                 var schemeToMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+
+                var organisationNotMatch = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                context.Organisations.Add(organisationNotMatch);
+
                 var schemeNotMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
 
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: SystemTime.UtcNow.Year);
@@ -663,10 +667,10 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, schemeToMatch, aatf, WasteType.HouseHold, complianceYear: SystemTime.UtcNow.Year);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, organisation, aatf, WasteType.HouseHold, complianceYear: SystemTime.UtcNow.Year);
                 context.Notes.Add(noteShouldBeFound);
 
-                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, schemeNotMatch, aatf, WasteType.NonHouseHold, complianceYear: SystemTime.UtcNow.Year);
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, organisationNotMatch, aatf, WasteType.NonHouseHold, complianceYear: SystemTime.UtcNow.Year);
                 context.Notes.Add(noteShouldNotBeFound);
 
                 await database.WeeeContext.SaveChangesAsync();

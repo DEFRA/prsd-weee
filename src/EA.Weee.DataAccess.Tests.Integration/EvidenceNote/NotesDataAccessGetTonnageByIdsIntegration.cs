@@ -30,19 +30,19 @@
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
                 // to be found matching category, scheme and status
-                var note1 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                var note1 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1));
                 note1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 2, 1));
 
                 context.Notes.Add(note1);
 
-                var note2 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                var note2 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.DisplayEquipment, 8, null));
                 note2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LightingEquipment, 10, null));
 
                 context.Notes.Add(note2);
 
-                var note3 = await SetupSingleNote(context, database, NoteType.EvidenceNote, scheme);
+                var note3 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note3.NoteTonnage.Add(new NoteTonnage(WeeeCategory.DisplayEquipment, null, 2));
 
                 context.Notes.Add(note3);
