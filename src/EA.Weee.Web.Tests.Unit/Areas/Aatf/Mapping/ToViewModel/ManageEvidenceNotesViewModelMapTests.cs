@@ -11,6 +11,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Web.Areas.Aatf.Helpers;
     using Xunit;
 
     public class ManageEvidenceNotesViewModelMapTests
@@ -21,10 +22,13 @@
         private readonly Guid aatfId;
         private readonly AatfData aatfData;
         private readonly List<AatfData> aatfDataList;
+        private readonly IAatfEvidenceHelper aatfEvidenceHelper;
 
         public ManageEvidenceNotesViewModelMapTests()
         {
-            map = new ManageEvidenceNoteViewModelMap();
+            aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
+
+            map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper);
             fixture = new Fixture();
             organisationId = Guid.NewGuid();
             aatfId = Guid.NewGuid();

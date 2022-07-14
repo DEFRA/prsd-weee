@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Core.Helpers;
     using EA.Prsd.Core;
     using Filters;
 
@@ -33,13 +34,13 @@
 
             if (CheckComplianceYear)
             {
-                if (thisDate.Year != currentDate.Year)
+                if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
                 {
                     return new ValidationResult("The start date must be within the current compliance year");
                 }
             }
           
-            if (thisDate > new DateTime(currentDate.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day))
+            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
             }
