@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Prsd.Core;
+    using Weee.Tests.Core;
 
     public class EvidenceNoteDbSetup : DbTestDataBuilder<Note, EvidenceNoteDbSetup>
     {
@@ -37,9 +38,10 @@
             tonnages);
         }
 
-        public EvidenceNoteDbSetup WithRecipient(Guid schemeId)
+        public EvidenceNoteDbSetup WithRecipient(Guid recipientId)
         {
-            instance.UpdateScheme(schemeId);
+            ObjectInstantiator<Note>.SetProperty(n => n.Recipient, null, instance);
+            ObjectInstantiator<Note>.SetProperty(n => n.RecipientId, recipientId, instance);
             return this;
         }
 

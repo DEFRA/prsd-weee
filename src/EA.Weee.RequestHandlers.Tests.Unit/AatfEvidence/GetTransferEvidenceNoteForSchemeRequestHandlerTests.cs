@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using Domain.Evidence;
+    using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
@@ -49,7 +51,11 @@
 
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
-            A.CallTo(() => note.RecipientId).Returns(recipientId);
+            var recipientOrganisation = A.Fake<Organisation>();
+            var recipientScheme = A.Fake<Scheme>();
+            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -61,15 +67,11 @@
         [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
-            //arrange
-            var schemeId = fixture.Create<Guid>();
-            A.CallTo(() => note.RecipientId).Returns(schemeId);
-            
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(schemeId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(recipientId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

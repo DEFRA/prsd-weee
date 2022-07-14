@@ -475,11 +475,11 @@
                 result.Id.Should().Be(note.Id);
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
                 result.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
-                result.RecipientSchemeData.Id.Should().Be(note.Organisation.Scheme.Id);
                 result.TransferredOrganisationData.Id.Should().Be(note.OrganisationId);
-
-                var recipientScheme = Query.GetSchemeByOrganisationId(note.OrganisationId);
-                result.TransferredSchemeData.Id.Should().Be(recipientScheme.Id);
+                var recipientScheme = Query.GetSchemeByOrganisationId(note.RecipientId);
+                result.RecipientSchemeData.Id.Should().Be(recipientScheme.Id);
+                var transferredScheme = Query.GetSchemeByOrganisationId(note.OrganisationId);
+                result.TransferredSchemeData.Id.Should().Be(transferredScheme.Id);
             }
         }
     }

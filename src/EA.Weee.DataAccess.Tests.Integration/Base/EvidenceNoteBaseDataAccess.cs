@@ -32,7 +32,10 @@
             if (recipientOrganisation == null)
             {
                 recipientOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+                database.WeeeContext.Schemes.Add(recipientScheme);
+
+                await database.WeeeContext.SaveChangesAsync();
             }
 
             if (complianceYear == null)

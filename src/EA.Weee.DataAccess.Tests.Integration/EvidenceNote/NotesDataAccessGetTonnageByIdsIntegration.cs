@@ -29,6 +29,8 @@
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
+                context.Schemes.Add(scheme);
+
                 // to be found matching category, scheme and status
                 var note1 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1));

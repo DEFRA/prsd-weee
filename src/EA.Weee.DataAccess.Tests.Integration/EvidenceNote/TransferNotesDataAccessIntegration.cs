@@ -32,6 +32,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // to be found matching category, scheme and status
                 var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
@@ -169,6 +170,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // to be found matching category, scheme and status
                 var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
@@ -218,6 +220,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // to be found matching category, scheme and status and compliance year
                 var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year);
@@ -269,6 +272,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // to be found matching category, scheme and status and id is requested
                 var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
@@ -338,6 +342,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // to be found matching category, scheme and status and id is requested
                 var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year);
@@ -393,6 +398,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
 
                 // create note that has tonnage to be transferred
                 var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
@@ -412,10 +418,11 @@
 
                 context.Notes.Add(noteToBeTransferred2);
 
-                await context.SaveChangesAsync();
-
                 var transferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation);
+                var transferOrganisationScheme = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation);
+                context.Schemes.Add(transferOrganisationScheme);
+
+                await context.SaveChangesAsync();
 
                 var transferTonnages = new List<NoteTransferTonnage>
                 {
@@ -424,7 +431,7 @@
                     new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id, 4, null)
                 };
 
-                var noteId = await dataAccess.AddTransferNote(transferOrganisation, transferOrganisation, transferTonnages,
+                var noteId = await dataAccess.AddTransferNote(organisation1, transferOrganisation, transferTonnages,
                     NoteStatus.Draft, noteToBeTransferred1.ComplianceYear, context.GetCurrentUser(), SystemTime.Now);
 
                 var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
@@ -434,7 +441,7 @@
                 refreshedTransferNote.StartDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 refreshedTransferNote.EndDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
                 refreshedTransferNote.NoteType.Should().Be(NoteType.TransferNote);
-                refreshedTransferNote.Organisation.Should().Be(transferOrganisation);
+                refreshedTransferNote.Organisation.Should().Be(organisation1);
                 refreshedTransferNote.NoteStatusHistory.Count.Should().Be(0);
                 refreshedTransferNote.NoteTonnage.Count.Should().Be(0);
                 refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(3);
