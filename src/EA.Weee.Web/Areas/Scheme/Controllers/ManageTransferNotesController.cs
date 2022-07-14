@@ -43,6 +43,9 @@
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+                var organisationName = await Cache.FetchOrganisationName(pcsId);
+
                 //var scheme = await Cache.FetchSchemePublicInfo(pcsId);
 
                 //var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
@@ -66,7 +69,9 @@
                 //}
             }
 
-            return null;
+            var model = new ReviewSubmittedManageEvidenceNotesSchemeViewModel() {OrganisationName = "needs to be set in the mapper from name retrieved in cache above"};
+
+            return View("ReviewSubmittedEvidence", model);
         }
 
         //[HttpPost]
