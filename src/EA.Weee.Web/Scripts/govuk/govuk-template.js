@@ -22,7 +22,7 @@
     */
     function getDomain() {
         var host = window.location.hostname;
-        if (host.split('.').length > 1)
+        if (host.split('.').length > 1 && host !== "weee.service.gov.uk")
             return host.replace(host.split('.')[0], '');
         else
             return host;
@@ -72,6 +72,7 @@
         return null;
     };
 }).call(this);
+
 (function () {
     "use strict"
     var root = this;
@@ -87,6 +88,7 @@
         }
     };
 }).call(this);
+
 (function () {
     "use strict"
 
