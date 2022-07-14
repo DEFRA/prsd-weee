@@ -11,5 +11,15 @@
 
             return !(systemTime >= closedPeriodStart && systemTime < closedPeriodEnd);
         }
+
+        public static bool IsDateInComplianceYear(int complianceYear, DateTime systemDate)
+        {
+            if (complianceYear == systemDate.Year)
+            {
+                return true;
+            }
+
+            return complianceYear == systemDate.Year - 1 && systemDate.Date.Month == 1;
+        }
     }
 }
