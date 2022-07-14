@@ -86,12 +86,9 @@
 
                 var activities = new List<string>();
 
-                if (configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
+                if (isBalancingScheme && configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
                 {
-                    if (isBalancingScheme)
-                    {
-                        activities.Add(PcsAction.ManagePBSEvidenceNotes);
-                    }
+                    activities.Add(PcsAction.ManagePBSEvidenceNotes);
                 }
                 else
                 {
@@ -133,7 +130,11 @@
                         activities.Add(PcsAction.ManageAeReturns);
                         activities.Add(PcsAction.ManageAeContactDetails);
                     }
-                    activities.Add(PcsAction.ViewOrganisationDetails);
+
+                    if (!isBalancingScheme)
+                    {
+                        activities.Add(PcsAction.ViewOrganisationDetails);
+                    }
                 }
 
                 if (organisationOverview.HasMultipleOrganisationUsers)
