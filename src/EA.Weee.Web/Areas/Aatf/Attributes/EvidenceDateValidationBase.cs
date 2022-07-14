@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Attributes
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Helpers;
     using Services.Caching;
 
     public class EvidenceDateValidationBase : ValidationAttribute

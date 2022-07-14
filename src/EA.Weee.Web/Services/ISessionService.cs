@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using System;
     using System.Web;
 
     public interface ISessionService
