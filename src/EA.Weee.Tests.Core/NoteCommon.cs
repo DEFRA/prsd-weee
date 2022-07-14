@@ -12,9 +12,9 @@
 
     public static class NoteCommon
     {
-        public static Note CreateNote(DatabaseWrapper database, 
-            Organisation organisation = null, 
-            Organisation recipientOrganisation = null, 
+        public static Note CreateNote(DatabaseWrapper database,
+            Organisation organisation = null,
+            Organisation recipientOrganisation = null,
             Aatf aatf = null,
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
@@ -31,7 +31,11 @@
             if (recipientOrganisation == null)
             {
                 recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
-                //var scheme = new Scheme(recipientOrganisation);
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                database.WeeeContext.Schemes.Add(scheme);
+
+                database.WeeeContext.SaveChanges();
             }
 
             if (startDate == null)
@@ -96,7 +100,11 @@
             if (recipientOrganisation == null)
             {
                 recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
-                //var scheme = new Scheme(recipientOrganisation);
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                database.WeeeContext.Schemes.Add(scheme);
+
+                database.WeeeContext.SaveChanges();
             }
         
             if (noteTonnages == null)

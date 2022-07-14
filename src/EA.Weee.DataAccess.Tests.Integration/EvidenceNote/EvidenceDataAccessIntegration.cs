@@ -70,7 +70,7 @@
 
                 var updatedNote = await dataAccess.GetNoteById(note.Id);
 
-                updatedNote.Recipient.Should().Be(updateScheme);
+                updatedNote.Recipient.Should().Be(organisation);
                 updatedNote.WasteType.Should().Be(WasteType.NonHouseHold);
                 updatedNote.Protocol.Should().Be(Protocol.SmwProtocol);
                 updatedNote.StartDate.Should().Be(startDate);

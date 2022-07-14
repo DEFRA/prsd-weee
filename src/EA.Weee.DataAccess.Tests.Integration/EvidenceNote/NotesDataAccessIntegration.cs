@@ -118,7 +118,7 @@
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-
+                context.Schemes.Add(scheme);
                 context.Organisations.Add(organisation1);
                 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, year: SystemTime.Now.Year);
@@ -202,7 +202,7 @@
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, SystemTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-
+                context.Schemes.Add(scheme);
                 context.Organisations.Add(organisation1);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -240,7 +240,7 @@
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, year: SystemTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-
+                context.Schemes.Add(scheme);
                 context.Organisations.Add(organisation1);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -283,7 +283,7 @@
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, SystemTime.Now.Year);
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-
+                context.Schemes.Add(scheme);
                 context.Organisations.Add(organisation1);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -652,25 +652,25 @@
                 var context = database.WeeeContext;
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
-                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                context.Organisations.Add(organisation);
-
-                var schemeToMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                var organisationToMatch = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var schemeToMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisationToMatch);
+                context.Schemes.Add(schemeToMatch);
+                context.Organisations.Add(organisationToMatch);
 
                 var organisationNotMatch = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var schemeNotMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisationNotMatch);
+                context.Schemes.Add(schemeNotMatch);
                 context.Organisations.Add(organisationNotMatch);
-
-                var schemeNotMatch = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: SystemTime.UtcNow.Year);
+                
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisationToMatch, year: SystemTime.UtcNow.Year);
                 context.Aatfs.Add(aatf);
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, organisation, aatf, WasteType.HouseHold, complianceYear: SystemTime.UtcNow.Year);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisationToMatch, organisationToMatch, aatf, WasteType.HouseHold, complianceYear: SystemTime.UtcNow.Year);
                 context.Notes.Add(noteShouldBeFound);
 
-                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, organisationNotMatch, aatf, WasteType.NonHouseHold, complianceYear: SystemTime.UtcNow.Year);
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisationToMatch, organisationNotMatch, aatf, WasteType.NonHouseHold, complianceYear: SystemTime.UtcNow.Year);
                 context.Notes.Add(noteShouldNotBeFound);
 
                 await database.WeeeContext.SaveChangesAsync();
@@ -686,7 +686,7 @@
 
                 notes.Count.Should().Be(1);
                 notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.ElementAt(0).RecipientId.Should().Be(schemeToMatch.Id);
+                notes.ElementAt(0).RecipientId.Should().Be(organisationToMatch.Id);
                 notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
