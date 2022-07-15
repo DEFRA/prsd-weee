@@ -74,5 +74,7 @@
         public bool HasEvidenceNotes { get; set; }
 
         public bool EvidenceSiteDisplay { get; set; }
+
+        public bool CanCreateEditEvidence { get; set; }
     }
 }
