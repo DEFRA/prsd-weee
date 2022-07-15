@@ -22,11 +22,6 @@
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
-                evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Draft) ||
-                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted) ||
-                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Rejected) ||
-                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Returned) ||
-                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Approved);
                 evidenceNoteRowViewModel.DisplayEditLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Draft);
             }
 
