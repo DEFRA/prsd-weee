@@ -272,7 +272,7 @@
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
 
-        [Fact]
+        [Fact(Skip = "property usage has been removed as all statuses are allowed")]
         public void Map_GivenListOfEvidenceNoteRowViewModel_DisplayViewLinkPropertyShouldBeSet()
         {
             //arrange
