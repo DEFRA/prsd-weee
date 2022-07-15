@@ -201,6 +201,7 @@
     <Compile Include="Helpers\ProtocolData.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
     <Compile Include="Helpers\WasteTypeData.cs" />
+    <Compile Include="Helpers\WindowHelperTests.cs" />
     <Compile Include="Organisations\OrganisationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\ExternalRouteTests.cs" />
