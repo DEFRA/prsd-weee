@@ -53,9 +53,9 @@ a {
     margin-bottom: ($govuk-gutter*1.5);
 }
 
-#global-cookie-message {
+#global-cookie-message, #global-cookie-accept-message, #global-cookie-reject-message {
     width: 100%;
-    background-color: #d5e8f3;
+    background-color: #f3f2f1;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -65,41 +65,51 @@ a {
     visibility: hidden;
 }
 
-#global-header-bar, #global-cookie-message p {
+#global-header-bar, 
+#global-cookie-message p, 
+#global-cookie-accept-message p, 
+#global-cookie-reject-message p {
     max-width: 960px;
     margin: 0 15px;
 }
 
 @media (min-width: 641px) {
-    #global-cookie-message p {
+    #global-cookie-message p, 
+    #global-cookie-accept-message p, 
+    #global-cookie-reject-message p {
         margin: 0 30px;
     }
 }
 
 
 @media (min-width: 1020px) {
-    #global-cookie-message p {
+    #global-cookie-message p, 
+    #global-cookie-accept-message p, 
+    #global-cookie-reject-message p {
         margin: 0 auto;
     }
-}
-
-#global-cookie-message p {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .js-enabled #global-cookie-message {
     display: none;
 }
 
+#global-cookie-message-p1 {
+    font-size: 20px;
+    font-weight: 700;
+    font-style: normal;
+    margin-bottom: 10px !important;
+}
+
+#global-cookie-message-p2, #global-cookie-message-p3, #global-cookie-message-p4 {
+    font-size: 15px;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 10px !important;
+}
+
 // Example boxes
 // ==========================================================================
-
 .example {
     @include govuk-clearfix;
     position: relative;
@@ -1130,4 +1140,130 @@ details summary::-ms-details-marker {
 
 .not-reported-column {
     padding-right: 0;
+}
+
+.cookie-settings-confirmation {
+    font-size: 16px;
+    line-height: 1.3157894737;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    line-height: 1.25;
+    display: none;
+}
+
+.govuk-notification-banner-success {
+    border-color: #00703c;
+    background-color: #00703c;
+}
+
+.govuk-notification-banner {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+    margin-bottom: 30px;
+    border: 5px solid #00703c;
+    background-color: #00703c;
+}
+
+.govuk-notification-banner-header {
+    padding: 2px 15px 5px;
+    border-bottom: 1px solid transparent;
+}
+
+.govuk-notification-banner-heading {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.1111111111;
+    margin: 0 0 15px 0;
+    padding: 0;
+}
+
+.govuk-notification-banner-title {
+    font-size: 19px;
+    line-height: 1.3157894737;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.govuk-notification-banner-content {
+    color: #0b0c0c;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.govuk-notification-banner-success,
+.govuk-notification-banner-link:link,
+.govuk-notification-banner-success,
+.govuk-notification-banner-link:visited {
+    color: #00703c;
+}
+
+.govuk-body, .govuk-body-m {
+    color: #0b0c0c;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.previousPage {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: underline;
+    font-size: 18px !important;
+    color: #005ea5 !important;
+}
+
+#tbSessionCookies th, #tbSessionCookies td,
+#tbGoogleAnalytics th, #tbGoogleAnalytics td,
+#tbIntroductoryCookies th, #tbIntroductoryCookies td{
+    line-height: 1.31579 !important;
+    font-size: 16px !important;
+}
+
+.cookietbColumnWidth1 {
+    width: 25% !important;
+}
+
+.cookietbColumnWidth2 {
+    width: 55% !important;
+}
+
+.cookietbColumnWidth3 {
+    width: 20% !important;
+}
+
+#dvAccessibility1 ul li,
+#dvAccessibility2 ul li,
+#dvAccessibility3 ul li {
+    margin-bottom: 15px !important;
+}
+
+.accessibility-l{
+    padding-top: 0px !important;
+    margin-bottom : 15px !important;
+}
+
+#dvAccessbility a:visited {
+    color: #005ea5 !important;
 }
