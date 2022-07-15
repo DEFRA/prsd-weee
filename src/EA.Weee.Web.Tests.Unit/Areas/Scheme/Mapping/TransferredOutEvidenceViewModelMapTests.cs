@@ -302,7 +302,7 @@
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert
-            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted, NoteStatus.Approved };
+            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Returned };
 
             foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => acceptedList.Contains(e.Status)))
             {
