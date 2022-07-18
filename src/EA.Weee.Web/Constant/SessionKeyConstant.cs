@@ -5,5 +5,6 @@
         public static string TransferNoteKey = "transferNote";
         public static string EditEvidenceViewModelKey = "editEvidenceNoteViewModel";
         public static string FilterRecipientNameKey = "filterRecipientNameKey";
+        public static string AatfSelectedComplianceYear = "selectedComplianceYear";
     }
 }

@@ -1,6 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.Extensions
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.SchemeViewAndTransferManageEvidenceSchemeViewModel
@@ -71,7 +73,14 @@
                                 }
                                 <td class="govuk-table__cell">@note.Status</td>
                                 <td class="govuk-table__cell">
-                                    @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                    @if (@note.Type == NoteType.Transfer)
+                                    {
+                                        @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString() }, null)
+                                    }
+                                    else
+                                    {
+                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                    }
                                 </td>
                             </tr>
                         }

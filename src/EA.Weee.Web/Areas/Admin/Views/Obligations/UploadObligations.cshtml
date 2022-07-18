@@ -58,10 +58,10 @@
     <p>
         @Html.ActionLink("Download template", "DownloadTemplate", new { authority = Model.Authority })
     </p>
-
-    @using (Html.BeginForm("UploadObligations", "Obligations", FormMethod.Get, new { id = "ComplianceYearForm" }))
+    <div class="govuk-!-padding-bottom-5"></div>
+    @using (Html.BeginForm("UploadObligations", "Obligations", new RouteValueDictionary() { { "authority", Model.Authority } }, FormMethod.Get, 
+        new { id = "ComplianceYearForm" }))
     {
-        @Html.HiddenFor(m => m.Authority)
         <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
         <span class="text-margin govuk-!-padding-right-3">
             @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
@@ -81,7 +81,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Authority)
-        @Html.HiddenFor(m => m.SelectedComplianceYear)
+        @Html.HiddenFor(m => m.SelectedComplianceYear, new { id = "upload-obligations-id" })
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.File)">
             @(this.WeeeGds().ScreenVisuallyHiddenLabelFor(m => m.File))

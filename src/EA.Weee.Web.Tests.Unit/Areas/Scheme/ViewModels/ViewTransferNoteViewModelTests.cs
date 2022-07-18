@@ -74,44 +74,6 @@
             result.Should().BeTrue();
         }
 
-        [Fact]
-        public void RedirectTab_GivenNoteStatusIsDraft_TabShouldBeViewAndTransferEvidence()
-        {
-            //arrange
-            var model = new ViewTransferNoteViewModel()
-            {
-                Status = NoteStatus.Draft
-            };
-
-            //act
-            var result = model.RedirectTab;
-
-            //assert
-            result.Should().Be(ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString());
-        }
-
-        [Theory]
-        [ClassData(typeof(NoteStatusCoreData))]
-        public void RedirectTab_GivenNoteStatusIsNotDraft_TabShouldBeViewAndTransferEvidence(NoteStatus status)
-        {
-            if (status == NoteStatus.Draft || status == NoteStatus.Submitted)
-            {
-                return;
-            }
-
-            //arrange
-            var model = new ViewTransferNoteViewModel()
-            {
-                Status = status
-            };
-
-            //act
-            var result = model.RedirectTab;
-
-            //assert
-            result.Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
-        }
-
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
         public void DisplayEditButton_GivenNoteStatusIsNotDraft_ShouldBeFalse(NoteStatus status)

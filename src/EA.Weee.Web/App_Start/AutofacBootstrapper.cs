@@ -20,6 +20,7 @@
     using Requests.Base;
     using Security;
     using System.Reflection;
+    using Areas.Aatf.Helpers;
     using Areas.Aatf.Mappings.Filters;
     using Areas.Scheme.Requests;
 
@@ -102,6 +103,8 @@
             builder.RegisterType<SessionService>().As<ISessionService>();
             builder.RegisterType<HttpContextService>().As<IHttpContextService>();
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
+            builder.RegisterType<AatfEvidenceHelper>().As<IAatfEvidenceHelper>();
+
             return builder.Build();
         }
     }

@@ -55,15 +55,15 @@
             //arrange
             var schemeId = fixture.Create<Guid>();
             var note = fixture.Create<TransferEvidenceNoteData>();
-            var status = fixture.Create<object>();
+            var status = note.Status;
 
             //act
-            var result = new ViewTransferNoteViewModelMapTransfer(schemeId, note, status);
+            var result = new ViewTransferNoteViewModelMapTransfer(schemeId, note, null);
 
             //assert
             result.TransferEvidenceNoteData.Should().Be(note);
             result.SchemeId.Should().Be(schemeId);
-            result.DisplayNotification.Should().Be(status);
+            result.TransferEvidenceNoteData.Status.Should().Be(status);
         }
 
         [Fact]

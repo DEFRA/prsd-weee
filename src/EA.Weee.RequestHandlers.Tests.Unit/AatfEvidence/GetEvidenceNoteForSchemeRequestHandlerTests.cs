@@ -4,11 +4,13 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Castle.Core.Internal;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using FakeItEasy;
     using FluentAssertions;
+    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
@@ -106,7 +108,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -115,7 +117,7 @@
             //arrange
             var evidenceNote = fixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

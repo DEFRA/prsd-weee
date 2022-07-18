@@ -4,11 +4,14 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Threading.Tasks;
+    using System.Linq;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
@@ -87,25 +90,50 @@
             result.ViewTransferNoteViewModel.Should().Be(transferNoteViewModel);
         }
 
-        //TODO: put these back in
-        //[Fact]
-        //public void Map_GivenValidEvidenceNoteData_ShouldContainHintItems()
-        //{
-        //    //arrange
-        //    EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
-        //    ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status);
+        [Fact]
+        public void Map_GivenValidEvidenceNoteData_ShouldContainHintItems()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            TransferEvidenceNoteData note = TestFixture.Create<TransferEvidenceNoteData>();
+            ViewTransferNoteViewModelMapTransfer transfer = new ViewTransferNoteViewModelMapTransfer(schemeId, note, null);
 
-        //    //act
-        //    var result = map.Map(transfer);
+            //act
+            var result = map.Map(transfer);
 
-        //    // assert
-        //    result.HintItems.Count.Should().Be(3);
-        //    result.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note");
-        //    result.HintItems.ElementAt(0).Value.Should().BeNull();
-        //    result.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note");
-        //    result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note");
-        //    result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note");
-        //    result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note if there are some minor updates to be made by the AATF");
-        //}
+            // assert
+            result.HintItems.Count.Should().Be(3);
+            result.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note transfer");
+            result.HintItems.ElementAt(0).Value.Should().BeNull();
+            result.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note transfer");
+            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note transfer");
+            result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note transfer");
+            result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer if there are some minor updates");
+        }
+
+        [Fact]
+        public void Map_GivenAMappedTransferNoteViewModel_MustReturnMappedViewModel()
+        {
+            //arrange
+            DateTime today = DateTime.UtcNow;
+            note.ApprovedDate = today;
+            note.RejectedDate = today;
+            note.ReturnedDate = today;
+            note.RejectedReason = "rejected reason";
+            note.ReturnedReason = "returned reason";
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(), note, null);
+
+            var mapper = new ViewTransferNoteViewModelMap(A.Fake<IAddressUtilities>(), A.Fake<ITonnageUtilities>());
+
+            //act
+            var result = mapper.Map(transfer);
+
+            // assert 
+            result.ApprovedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.RejectedReason.Should().Be("rejected reason");
+            result.ReturnedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
+            result.ReturnedReason.Should().Be("returned reason");
+        }
     }
 }
