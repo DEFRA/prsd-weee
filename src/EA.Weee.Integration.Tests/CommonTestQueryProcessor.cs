@@ -98,14 +98,13 @@
 
         public void SetupUserWithRole(string userId, Guid roleId, Guid authorityId)
         {
-            var user = dbContext.CompetentAuthorityUsers.First(u => u.UserId == userId);
+            var user = dbContext.CompetentAuthorityUsers.FirstOrDefault(u => u.UserId == userId);
 
             if (user != null)
             {
                 dbContext.CompetentAuthorityUsers.Remove(user);
+                dbContext.SaveChanges();
             }
-
-            dbContext.SaveChanges();
 
             CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, authorityId, roleId).Create();
         }
