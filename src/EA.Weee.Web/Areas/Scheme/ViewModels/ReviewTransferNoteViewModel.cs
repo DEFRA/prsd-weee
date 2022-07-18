@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
     using ManageEvidenceNotes;
     using System;

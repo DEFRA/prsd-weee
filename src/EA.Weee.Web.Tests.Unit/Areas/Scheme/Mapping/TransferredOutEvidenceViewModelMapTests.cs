@@ -272,7 +272,7 @@
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
         }
 
-        [Fact]
+        [Fact(Skip = "property usage has been removed as all statuses are allowed")]
         public void Map_GivenListOfEvidenceNoteRowViewModel_DisplayViewLinkPropertyShouldBeSet()
         {
             //arrange
@@ -302,7 +302,7 @@
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             // assert
-            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted, NoteStatus.Approved };
+            var acceptedList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Submitted, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Returned };
 
             foreach (var evidenceNoteRowViewModel in result.EvidenceNotesDataList.Where(e => acceptedList.Contains(e.Status)))
             {

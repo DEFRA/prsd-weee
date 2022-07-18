@@ -74,9 +74,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            redirectTab = redirectTab ?? ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
 
             using (var client = apiClient())
             {
@@ -88,7 +90,8 @@
                 {
                     SelectedComplianceYear = selectedComplianceYear,
                     Edit = true,
-                    ReturnToView = returnToView
+                    ReturnToView = returnToView,
+                    RedirectTab = redirectTab
                 });
 
                 return this.View("EditDraftTransfer", model);
@@ -111,7 +114,7 @@
 
                 var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
-                    SchemeId = pcsId,
+                    OrganisationId = pcsId,
                     SelectedComplianceYear = selectedComplianceYear, 
                     ReturnToView = returnToView,
                     RedirectTab = redirectTab,
@@ -146,7 +149,7 @@
 
                     var modelRefreshed = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId, note, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                     {
-                        SchemeId = model.OrganisationId,
+                        OrganisationId = model.OrganisationId,
                         SelectedComplianceYear = model.ViewTransferNoteViewModel.ComplianceYear
                     });
 
@@ -157,7 +160,7 @@
 
                 var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.ViewTransferNoteViewModel.SchemeId, noteData, null)
                 {
-                    SchemeId = model.ViewTransferNoteViewModel.SchemeId,
+                    OrganisationId = model.ViewTransferNoteViewModel.SchemeId,
                     SelectedComplianceYear = model.ViewTransferNoteViewModel.SelectedComplianceYear.Value
                 });
 
