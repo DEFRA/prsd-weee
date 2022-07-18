@@ -46,32 +46,24 @@
 
                 var organisationName = await Cache.FetchOrganisationName(pcsId);
 
-                //var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                //var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                if (tab == null)
+                {
+                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+                }
+                var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
-                //if (tab == null)
-                //{
-                //    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
-                //}
-                //var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
+                var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNoteByPBSOrganisationRequest(pcsId,
+                    new List<NoteStatus>() { NoteStatus.Submitted },
+                    currentDate.Year, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
-                //switch (value)
-                //{
-                //    case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                //        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                //        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                //        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    default:
-                //        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //}
+                var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(pcsId, result, String.Empty, currentDate, manageEvidenceNoteViewModel));
+
+                return View("ReviewSubmittedEvidence", model);
             }
-
-            var model = new ReviewSubmittedManageEvidenceNotesSchemeViewModel() {OrganisationName = "needs to be set in the mapper from name retrieved in cache above"};
-
-            return View("ReviewSubmittedEvidence", model);
         }
 
         //[HttpPost]
