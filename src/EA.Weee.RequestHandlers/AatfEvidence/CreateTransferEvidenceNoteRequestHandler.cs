@@ -74,7 +74,7 @@
 
                     var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme,
+                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
                 }
