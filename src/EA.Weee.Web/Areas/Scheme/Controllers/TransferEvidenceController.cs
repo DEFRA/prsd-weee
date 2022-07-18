@@ -47,6 +47,16 @@
                 SchemasToDisplay = await GetApprovedSchemes(pcsId)
             };
 
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                  SessionKeyConstant.TransferNoteKey);
+
+            if (transferRequest != null)
+            {
+                var categoryIds = transferRequest.CategoryIds;
+                model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
+                    .ForEach(c => c.Selected = true);
+            }
+
             return this.View("TransferEvidenceNote", model);
         }
 

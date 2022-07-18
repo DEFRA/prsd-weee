@@ -10,6 +10,8 @@
 
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferEvidenceNote(Model.PcsId))))
+
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
     </h1>
