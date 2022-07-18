@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Mapping
 {
     using System;
     using AutoFixture;
-    using Core.AatfEvidence;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using FluentAssertions;
-    using Web.Areas.Scheme.Mappings.ToViewModels;
     using Xunit;
 
     public class ViewTransferNoteViewModelMapTransferTests
@@ -62,7 +62,7 @@
 
             //assert
             result.TransferEvidenceNoteData.Should().Be(note);
-            result.SchemeId.Should().Be(schemeId);
+            result.OrganisationId.Should().Be(schemeId);
             result.TransferEvidenceNoteData.Status.Should().Be(status);
         }
 
@@ -78,7 +78,7 @@
 
             //assert
             result.TransferEvidenceNoteData.Should().Be(note);
-            result.SchemeId.Should().Be(schemeId);
+            result.OrganisationId.Should().Be(schemeId);
             result.DisplayNotification.Should().BeNull();
         }
     }
