@@ -16,14 +16,17 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
-            IMapper mapper)
+            IMapper mapper, 
+            ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
             this.mapper = mapper;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<EvidenceNoteData> HandleAsync(GetEvidenceNoteForAatfRequest message)
@@ -34,9 +37,12 @@
 
             authorization.EnsureOrganisationAccess(evidenceNote.OrganisationId);
 
+            var currentDateTime = await systemDataDataAccess.GetSystemDateTime();
+
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
-                IncludeTonnage = true
+                IncludeTonnage = true,
+                SystemDateTime = currentDateTime
             });
 
             return evidenceNoteData;
