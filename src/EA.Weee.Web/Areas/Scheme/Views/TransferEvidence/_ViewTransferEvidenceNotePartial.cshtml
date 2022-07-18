@@ -15,6 +15,14 @@
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+    </div>
+
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+    </div>
+
     @if (Model.HasSubmittedDate)
     {
         <div class="govuk-grid-row govuk-!-margin-bottom-1">
@@ -46,20 +54,6 @@
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
-
-    @if (Model.HasRejectedDate)
-    {
-        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-            @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-        </div>
-    }
-
-    @if (Model.HasBeenReturned)
-    {
-        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
-            @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-        </div>
-    }
 </div>
 
 @if (Model.EditMode)
