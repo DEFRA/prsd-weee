@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPBSOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />
