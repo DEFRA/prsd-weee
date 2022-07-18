@@ -280,7 +280,9 @@
                 var context = db.WeeeContext;
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
 
+                context.Schemes.Add(recipientScheme);
                 context.Organisations.Add(organisation1);
 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation1);

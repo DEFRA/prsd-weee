@@ -38,6 +38,7 @@
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly CreateEvidenceNoteRequest request;
         private readonly Organisation organisation;
+        private readonly Organisation recipientOrganisation;
         private readonly Aatf aatf;
         private readonly Scheme scheme;
         private readonly Guid userId;
@@ -51,12 +52,15 @@
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             organisation = A.Fake<Organisation>();
+            recipientOrganisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
             scheme = A.Fake<Scheme>();
             var note = A.Fake<Note>();
 
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { scheme });
             A.CallTo(() => note.Reference).Returns(1);
             A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
@@ -252,7 +256,7 @@
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
                                                                            n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
-                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.Recipient.Equals(recipientOrganisation) &&
                                                                            n.StartDate.Equals(request.StartDate) &&
                                                                            n.EndDate.Equals(request.EndDate) &&
                                                                            n.CreatedById.Equals(userId.ToString()) &&
@@ -306,7 +310,7 @@
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.ToInt().Equals(request.Protocol.ToInt()) &&
                                                                            n.WasteType.ToInt().Equals(request.WasteType.ToInt()) &&
-                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.Recipient.Equals(recipientOrganisation) &&
                                                                            n.StartDate.Equals(request.StartDate) &&
                                                                            n.EndDate.Equals(request.EndDate) &&
                                                                            n.CreatedById.Equals(userId.ToString()) &&
@@ -366,7 +370,7 @@
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol.Equals(null) &&
                                                                            n.WasteType.Equals(null) &&
-                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.Recipient.Equals(recipientOrganisation) &&
                                                                            n.StartDate.Equals(newRequest.StartDate) &&
                                                                            n.EndDate.Equals(newRequest.EndDate) &&
                                                                            n.CreatedById.Equals(userId.ToString()) &&

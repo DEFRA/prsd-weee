@@ -37,6 +37,7 @@
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly TransferEvidenceNoteRequest request;
         private readonly Organisation organisation;
+        private readonly Organisation recipientOrganisation;
         private readonly Scheme scheme;
         private readonly Guid userId;
         private readonly short complianceYear;
@@ -51,11 +52,14 @@
             transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
+            recipientOrganisation = A.Fake<Organisation>();
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             userId = TestFixture.Create<Guid>();
             complianceYear = TestFixture.Create<short>();
 
+            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { scheme });
             A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
 
@@ -231,7 +235,7 @@
 
             //assert
             A.CallTo(() =>
-                evidenceDataAccess.AddTransferNote(organisation, scheme,
+                evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                     A<List<NoteTransferTonnage>>.That.Matches(t => 
                         t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, complianceYear, userId.ToString(), 
                     A<DateTime>.That.Matches(d => d.Year == currentDate.Year && d.Month == currentDate.Month && d.Day == currentDate.Day))).MustHaveHappenedOnceExactly();
@@ -239,7 +243,7 @@
             foreach (var transferValue in request.TransferValues)
             {
                 A.CallTo(() =>
-                    evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                    evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                         A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
                             t2 => t2.NoteTonnageId.Equals(transferValue.TransferTonnageId) && 
                                   t2.Received.Equals(transferValue.FirstTonnage) &&
@@ -250,7 +254,7 @@
             foreach (var transferCategories in request.CategoryIds)
             {
                 A.CallTo(() =>
-                        evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                        evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                             A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
                     .MustHaveHappenedOnceExactly();
             }
@@ -263,7 +267,7 @@
             //arrange
             var transferNoteId = TestFixture.Create<Guid>();
             A.CallTo(() =>
-                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                     A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(transferNoteId);
 
             //act
@@ -281,7 +285,7 @@
 
             //assert
             A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly()
-                .Then(A.CallTo(() => evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                .Then(A.CallTo(() => evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                     A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
         }
@@ -304,7 +308,7 @@
         {
             //arrange
             A.CallTo(() =>
-                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Scheme>._,
+                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                     A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).ThrowsAsync(new Exception());
 
             //act
