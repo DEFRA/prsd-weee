@@ -74,44 +74,6 @@
             result.Should().BeTrue();
         }
 
-        [Theory]
-        [ClassData(typeof(NoteStatusCoreData))]
-        public void DisplayEditButton_GivenNoteStatusIsNotDraft_ShouldBeFalse(NoteStatus status)
-        {
-            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
-            {
-                return;
-            }
-
-            //arrange
-            var model = new ViewTransferNoteViewModel()
-            {
-                Status = status
-            };
-
-            //act
-            var result = model.DisplayEditButton;
-
-            //assert
-            result.Should().BeFalse();
-        }
-
-        [Fact]
-        public void DisplayEditButton_GivenNoteStatusIsDraft_ShouldBeTrue()
-        {
-            //arrange
-            var model = new ViewTransferNoteViewModel()
-            {
-                Status = NoteStatus.Draft
-            };
-
-            //act
-            var result = model.DisplayEditButton;
-
-            //assert
-            result.Should().BeTrue();
-        }
-
         [Fact]
         public void ComplianceYearDisplay_Has_Correct_Attribute()
         {

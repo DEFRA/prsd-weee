@@ -87,7 +87,7 @@
             //assert
             A.CallTo(() => transferNoteMapper.Map(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v =>
                 v.TransferEvidenceNoteData == source.TransferEvidenceNoteData && v.DisplayNotification == null &&
-                v.SchemeId == source.OrganisationId))).MustHaveHappenedOnceExactly();
+                v.OrganisationId == source.OrganisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
