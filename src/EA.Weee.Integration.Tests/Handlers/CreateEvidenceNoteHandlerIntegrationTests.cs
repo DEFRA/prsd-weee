@@ -35,9 +35,14 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
+                OrganisationUserDbSetup
+                    .Init()
+                    .WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+               
                 var categories = new List<TonnageValues>()
                 {
                     new TonnageValues(Guid.Empty, (int)WeeeCategory.AutomaticDispensers, 2, 1),
@@ -47,7 +52,7 @@
 
                 request = new CreateEvidenceNoteRequest(organisation.Id,
                     aatf.Id,
-                    scheme.Id,
+                    recipientScheme.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),
@@ -85,7 +90,10 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
                 var categories = new List<TonnageValues>()
@@ -97,7 +105,7 @@
 
                 request = new CreateEvidenceNoteRequest(organisation.Id,
                     aatf.Id,
-                    scheme.Id,
+                    recipientScheme.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),
@@ -143,7 +151,7 @@
             protected static Organisation organisation;
             protected static Aatf aatf;
             protected static CreateEvidenceNoteRequest request;
-            protected static Scheme scheme;
+            protected static Organisation recipientOrganisation;
             protected static Guid result;
             protected static Note note;
             protected static Fixture fixture;
@@ -168,7 +176,7 @@
                 note.StartDate.Date.Should().Be(request.StartDate.Date);
                 note.WasteType.ToInt().Should().Be(request.WasteType.ToInt());
                 note.Protocol.ToInt().Should().Be(request.Protocol.ToInt());
-                note.Recipient.Should().Be(scheme);
+                note.Recipient.Should().Be(recipientOrganisation);
                 note.Reference.Should().BeGreaterThan(0);
                 note.CreatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
                 note.Organisation.Should().Be(organisation);

@@ -32,8 +32,8 @@
 
             data.TransferredOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
             data.RecipientOrganisationData =
-                mapper.Map<Organisation, OrganisationData>(source.Note.Recipient.Organisation);
-            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient);
+                mapper.Map<Organisation, OrganisationData>(source.Note.Recipient);
+            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient.Scheme);
             data.TransferredSchemeData = mapper.Map<Scheme, SchemeData>(source.Scheme);
             data.TransferEvidenceNoteTonnageData = source.Note.NoteTransferTonnage.Select(nt =>
                 new TransferEvidenceNoteTonnageData()

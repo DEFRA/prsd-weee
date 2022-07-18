@@ -700,10 +700,12 @@
         {
             //arrange
             var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
             var scheme = A.Fake<Scheme>();
             var schemeData = TestFixture.Create<SchemeData>();
 
-            A.CallTo(() => note.Recipient).Returns(scheme);
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => note.Recipient).Returns(organisation);
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
@@ -779,7 +781,7 @@
             var organisation = A.Fake<Organisation>();
             var organisationData = TestFixture.Create<OrganisationData>();
 
-            A.CallTo(() => note.Recipient.Organisation).Returns(organisation);
+            A.CallTo(() => note.Recipient).Returns(organisation);
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
 
             //act

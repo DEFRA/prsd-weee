@@ -34,11 +34,14 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 note = EvidenceNoteDbSetup.Init()
-                    .WithRecipient(scheme.Id)
+                    .WithRecipient(recipientOrganisation.Id)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), DateTime.UtcNow);
@@ -78,11 +81,14 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 note = EvidenceNoteDbSetup.Init()
-                    .WithRecipient(scheme.Id)
+                    .WithRecipient(recipientOrganisation.Id)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), DateTime.UtcNow);
@@ -121,7 +127,6 @@
             protected static Organisation organisation;
             protected static SetNoteStatus request;
             protected static Guid result;
-            protected static Scheme scheme;
             protected static Note note;
             protected static Fixture fixture;
 

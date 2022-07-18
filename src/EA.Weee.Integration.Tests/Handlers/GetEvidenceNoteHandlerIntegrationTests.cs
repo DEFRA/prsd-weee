@@ -329,7 +329,7 @@
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
                 result.RecipientSchemeData.Should().NotBeNull();
-                result.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
+                result.RecipientSchemeData.Id.Should().Be(note.Recipient.Scheme.Id);
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
@@ -344,7 +344,7 @@
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
                 result.RecipientOrganisationData.Should().NotBeNull();
-                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
             }
         }
     }
