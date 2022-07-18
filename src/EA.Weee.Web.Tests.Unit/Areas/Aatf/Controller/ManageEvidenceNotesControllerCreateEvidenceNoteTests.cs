@@ -11,6 +11,7 @@
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
@@ -27,6 +28,13 @@
         public void ManageEvidenceNotesControllerInheritsExternalSiteController()
         {
             typeof(ManageEvidenceNotesController).BaseType.Name.Should().Be(nameof(AatfEvidenceBaseController));
+        }
+
+        [Fact]
+        public void CreateEvidenceNoteGet_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+                .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
         }
 
         [Fact]
@@ -109,6 +117,13 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void CreateEvidenceNotePost_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
         }
 
         [Fact]
