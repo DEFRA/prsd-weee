@@ -21,6 +21,7 @@
     using System.Web.Mvc;
     using Core.Helpers;
     using Core.Scheme;
+    using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
@@ -57,7 +58,9 @@
             outgoingTransferEvidenceController =
                 new OutgoingTransfersController(mapper, breadcrumb, cache, () => weeeClient, sessionService, transferEvidenceRequestCreator);
 
-            transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, NoteStatus.Submitted).Create();
+
             evidenceNoteData = TestFixture.CreateMany<EvidenceNoteData>().ToList();
             transferEvidenceTonnageViewModel = TestFixture.Create<TransferEvidenceTonnageViewModel>();
 
@@ -132,7 +135,7 @@
         public void EditDraftTransfer_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -487,8 +490,33 @@
                     v => v.Edit == true &&
                          v.DisplayNotification == null &&
                          v.TransferEvidenceNoteData == transferNoteData &&
-                         v.SchemeId == organisationId && v.SelectedComplianceYear == complianceYear)))
-                .MustHaveHappenedOnceExactly();
+                         v.OrganisationId == organisationId && v.SelectedComplianceYear == complianceYear &&
+                         v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2022)]
+        public async Task EditDraftTransferGet_GivenTransferNoteWithRedirectTab_ModelMapperShouldBeCalled(int? complianceYear)
+        {
+            //arrange
+            var transferNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferNoteData);
+
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(),
+                complianceYear, null, tab);
+
+            //assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
+                v => v.Edit == true &&
+                     v.DisplayNotification == null &&
+                     v.TransferEvidenceNoteData == transferNoteData &&
+                     v.OrganisationId == organisationId && v.SelectedComplianceYear == complianceYear &&
+                     v.RedirectTab.Equals(tab)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -513,7 +541,9 @@
                 v => v.Edit == true &&
                      v.DisplayNotification == null &&
                      v.TransferEvidenceNoteData == transferNoteData &&
-                     v.SchemeId == organisationId && v.ReturnToView == returnToView))).MustHaveHappenedOnceExactly();
+                     v.OrganisationId == organisationId && 
+                     v.ReturnToView == returnToView &&
+                     v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -619,6 +649,37 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task SubmittedTransferGet_GivenTransferNoteIsNotAtSubmittedStatus_ShouldRedirectToManageEvidenceNotes(NoteStatus status)
+        {
+            if (status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            var redirectTab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+            var noteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, status).Create();
+            
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+
+            //act
+            var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
+                    TestFixture.Create<Guid>(),
+                    TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    redirectTab) as
+                RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
+            result.RouteValues["tab"].Should().Be(redirectTab);
+        }
+
         [Fact]
         public async Task SubmittedTransferGet_GivenTransferNote_ModelMapperShouldBeCalled()
         {
@@ -634,7 +695,7 @@
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                    t.SchemeId == organisationId))).MustHaveHappenedOnceExactly();
+                    t.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -642,6 +703,7 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
+
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._))
                 .Returns(model);
 
@@ -714,7 +776,7 @@
             //assert
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                     A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t => t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                                                                              t.SchemeId == schemeId))).MustHaveHappenedOnceExactly();
+                                                                              t.OrganisationId == schemeId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

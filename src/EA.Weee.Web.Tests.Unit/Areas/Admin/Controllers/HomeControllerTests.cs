@@ -106,11 +106,12 @@
             model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
             model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
             model.PossibleValues[3].Should().Be(InternalUserActivity.ManageEvidenceNotes);
-            model.PossibleValues[4].Should().Be(InternalUserActivity.ManagePcsCharges);
-            model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAatfs);
-            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAes);
-            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageUsers);
-            model.PossibleValues[8].Should().Be(InternalUserActivity.ViewReports);
+            model.PossibleValues[4].Should().Be(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
+            model.PossibleValues[5].Should().Be(InternalUserActivity.ManagePcsCharges);
+            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAatfs);
+            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageAes);
+            model.PossibleValues[8].Should().Be(InternalUserActivity.ManageUsers);
+            model.PossibleValues[9].Should().Be(InternalUserActivity.ViewReports);
         }
 
         [Fact]
@@ -130,12 +131,13 @@
             model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
             model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
             model.PossibleValues[3].Should().Be(InternalUserActivity.ManageEvidenceNotes);
-            model.PossibleValues[4].Should().Be(InternalUserActivity.ManagePcsObligations);
-            model.PossibleValues[5].Should().Be(InternalUserActivity.ManagePcsCharges);
-            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAatfs);
-            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageAes);
-            model.PossibleValues[8].Should().Be(InternalUserActivity.ManageUsers);
-            model.PossibleValues[9].Should().Be(InternalUserActivity.ViewReports);
+            model.PossibleValues[4].Should().Be(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
+            model.PossibleValues[5].Should().Be(InternalUserActivity.ManagePcsObligations);
+            model.PossibleValues[6].Should().Be(InternalUserActivity.ManagePcsCharges);
+            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageAatfs);
+            model.PossibleValues[8].Should().Be(InternalUserActivity.ManageAes);
+            model.PossibleValues[9].Should().Be(InternalUserActivity.ManageUsers);
+            model.PossibleValues[10].Should().Be(InternalUserActivity.ViewReports);
         }
 
         [Fact]
@@ -167,6 +169,7 @@
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
         [InlineData(InternalUserActivity.ManagePcsCharges, "SelectAuthority")]
         [InlineData(InternalUserActivity.ManagePcsObligations, "SelectAuthority")]
+        [InlineData(InternalUserActivity.ViewPCSObligationAndEvidenceSummary, "Index")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -185,6 +188,11 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
+
+            if (selection == InternalUserActivity.ViewPCSObligationAndEvidenceSummary)
+            {
+                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+            }
 
             if (selection == InternalUserActivity.ManagePcsObligations)
             {

@@ -16,6 +16,9 @@
         public static string ManageAatfContactDetails = "Manage AATF contact details";
         public static string ManageAeContactDetails = "Manage AE contact details";
 
+        // PBS menu items
+        public static string ManagePBSEvidenceNotes = "Manage PBS evidence notes";
+
         // these belong to both PCS and AATF menus
         public static string ManageOrganisationUsers = "Manage organisation users";
         public static string ViewOrganisationDetails = "View organisation details";

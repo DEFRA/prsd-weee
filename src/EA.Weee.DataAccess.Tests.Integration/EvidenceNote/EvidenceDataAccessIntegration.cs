@@ -62,7 +62,7 @@
                 noteTonnages.ElementAt(0).UpdateValues(null, null);
                 noteTonnages.ElementAt(1).UpdateValues(2, 1);
 
-                await dataAccess.Update(findNote, updateScheme, startDate, endDate, WasteType.NonHouseHold, Protocol.SmwProtocol,
+                await dataAccess.Update(findNote, organisation, startDate, endDate, WasteType.NonHouseHold, Protocol.SmwProtocol,
                     noteTonnages,
                     NoteStatus.Submitted, SystemTime.UtcNow);
 
@@ -70,7 +70,7 @@
 
                 var updatedNote = await dataAccess.GetNoteById(note.Id);
 
-                updatedNote.Recipient.Should().Be(updateScheme);
+                updatedNote.Recipient.Should().Be(organisation);
                 updatedNote.WasteType.Should().Be(WasteType.NonHouseHold);
                 updatedNote.Protocol.Should().Be(Protocol.SmwProtocol);
                 updatedNote.StartDate.Should().Be(startDate);

@@ -72,7 +72,7 @@
                 t.SecondTonnage));
 
             var evidenceNote = new Note(organisation,
-                scheme,
+                scheme.Organisation,
                 message.StartDate,
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
