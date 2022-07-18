@@ -3,11 +3,10 @@
     using System;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
-    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public class ViewTransferNoteViewModelMapTransfer
     {
-        public Guid SchemeId { get; set; }
+        public Guid OrganisationId { get; set; }
 
         public TransferEvidenceNoteData TransferEvidenceNoteData { get; private set; }
 
@@ -21,12 +20,12 @@
 
         public string RedirectTab { get; set; }
 
-        public ViewTransferNoteViewModelMapTransfer(Guid schemeId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
+        public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
         {
             Condition.Requires(transferEvidenceNoteData).IsNotNull();
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
-            SchemeId = schemeId;
+            OrganisationId = organisationId;
             TransferEvidenceNoteData = transferEvidenceNoteData;
             DisplayNotification = displayNotification;
             SelectedComplianceYear = transferEvidenceNoteData.ComplianceYear;
