@@ -315,9 +315,12 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="App_Start\CustomDateBinder.cs" />
     <Compile Include="App_Start\CustomModelBindersConfig.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
+    <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
+    <Compile Include="Areas\Aatf\Helpers\IAatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\RecipientWasteStatusViewModelMap.cs" />
@@ -341,6 +344,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
+    <Compile Include="Areas\Scheme\Attributes\ValidatePBSEvidenceNotesEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesController.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
@@ -445,7 +449,7 @@
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttribute.cs" />
-    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCanEditEvidenceNoteAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />
@@ -786,6 +790,9 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditCategories.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferCategoriesPartial.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewEvidenceNoteTransfer.cshtml" />
+    <Content Include="Areas\Aatf\Views\ChooseSite\IndexNoAatf.cshtml" />
+    <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

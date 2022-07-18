@@ -17,6 +17,7 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Castle.Core.Internal;
     using Core.Helpers;
     using Domain.Scheme;
     using Xunit;
@@ -201,7 +202,9 @@
                 a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
+                a.ListOfNotes.Count.Equals(3) &&
+                a.CategoryFilter.IsNullOrEmpty() &&
+                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

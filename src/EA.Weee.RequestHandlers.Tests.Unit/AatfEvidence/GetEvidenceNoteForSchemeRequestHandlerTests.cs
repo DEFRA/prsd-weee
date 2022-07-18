@@ -1,14 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Castle.Core.Internal;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using Domain.Evidence;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
@@ -39,7 +44,11 @@
             evidenceNoteId = fixture.Create<Guid>();
             recipientId = fixture.Create<Guid>();
 
-            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
+            var recipientOrganisation = A.Fake<Organisation>();
+            var recipientScheme = A.Fake<Scheme>();
+            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
 
             request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -106,7 +115,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(note)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -115,7 +124,7 @@
             //arrange
             var evidenceNote = fixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<Note, EvidenceNoteData>(A<Note>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

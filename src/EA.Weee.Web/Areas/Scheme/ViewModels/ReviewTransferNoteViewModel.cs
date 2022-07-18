@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
     using ManageEvidenceNotes;
     using System;
@@ -18,8 +17,6 @@
         public virtual Guid OrganisationId { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
-
-        public string RedirectTab => ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString();
 
         [Required(ErrorMessage = "Select whether you want to approve, reject or return the evidence note transfer")]
         public override string SelectedValue { get; set; }
@@ -47,7 +44,7 @@
             }
         }
 
-        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote })
+        public ReviewTransferNoteViewModel() : base(new List<string> { ApproveEvidenceNote, RejectEvidenceNote, ReturnEvidenceNote })
         {
         }
 
@@ -63,7 +60,7 @@
         {
             if (this.SelectedEnumValue == NoteStatus.Approved && !string.IsNullOrEmpty(this.Reason))
             {
-                yield return new ValidationResult("A reason can only be entered if you are rejecting or returning the evidence note. Delete any text you have entered.", new List<string>() { "reason"});
+                yield return new ValidationResult("A reason can only be entered if you are rejecting or returning the evidence note transfer. Delete any text you have entered.", new List<string>() { "reason"});
             }
         }
     }
