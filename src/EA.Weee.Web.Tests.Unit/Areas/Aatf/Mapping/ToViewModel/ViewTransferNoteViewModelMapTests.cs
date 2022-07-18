@@ -460,6 +460,48 @@
             model.SubmittedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
         }
 
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsNotDraftOrReturned_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status).Create(),
+                false);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturned_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status).Create(),
+                false);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeTrue();
+        }
+
         private OrganisationData CreateOrganisationData()
         {
             return new OrganisationData()
