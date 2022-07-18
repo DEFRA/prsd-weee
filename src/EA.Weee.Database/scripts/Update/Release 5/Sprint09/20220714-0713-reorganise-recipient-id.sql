@@ -35,7 +35,7 @@ GO
 
 CREATE NONCLUSTERED INDEX [IDX_RecipientOrganisation_OrganisationId] ON [Evidence].[Note]
 (
-	[OrganisationId] ASC
+	[RecipientId] ASC
 )
 GO
 
