@@ -633,7 +633,8 @@
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     WasteTypeId = (int?)WasteType.HouseHold,
-                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status },
+                    AatfId = aatf1.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
