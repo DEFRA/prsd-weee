@@ -26,7 +26,7 @@
         private readonly WeeeContext context;
         private Guid userId;
         private readonly Organisation organisation;
-        private readonly Scheme scheme;
+        private readonly Organisation recipientOrganisation;
         private readonly List<NoteTransferTonnage> tonnages;
         private readonly short complianceYear;
 
@@ -39,7 +39,7 @@
 
             dbContextHelper = new DbContextHelper();
             organisation = A.Fake<Organisation>();
-            scheme = A.Fake<Scheme>();
+            recipientOrganisation = A.Fake<Organisation>();
             tonnages = new List<NoteTransferTonnage>()
             {
                 TestFixture.Create<NoteTransferTonnage>(),
@@ -60,7 +60,7 @@
             SystemTime.Freeze(date);
             
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), date);
+            await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), date);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.Aatf == null &&
@@ -68,7 +68,7 @@
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&
                                                                            n.WasteType == WasteType.HouseHold &&
-                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.Recipient.Equals(recipientOrganisation) &&
                                                                            n.StartDate.Equals(date) &&
                                                                            n.EndDate.Equals(date) &&
                                                                            n.CreatedById.Equals(userId.ToString()) &&
@@ -98,7 +98,7 @@
             SystemTime.Freeze(date);
 
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, NoteStatus.Submitted, complianceYear, userId.ToString(), date);
+            await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, NoteStatus.Submitted, complianceYear, userId.ToString(), date);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(n => n.Aatf == null &&
@@ -106,7 +106,7 @@
                                                                            n.Organisation.Equals(organisation) &&
                                                                            n.Protocol == null &&
                                                                            n.WasteType == WasteType.HouseHold &&
-                                                                           n.Recipient.Equals(scheme) &&
+                                                                           n.Recipient.Equals(recipientOrganisation) &&
                                                                            n.StartDate.Equals(date) &&
                                                                            n.EndDate.Equals(date) &&
                                                                            n.CreatedById.Equals(userId.ToString()) &&
@@ -134,7 +134,7 @@
         public async Task AddTransferNote_GivenTransferNote_NoteShouldBeAddedAndSaveChangesCalled(Core.AatfEvidence.NoteStatus status)
         {
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
+            await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).MustHaveHappenedOnceExactly().Then(
@@ -154,7 +154,7 @@
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
             //act
-            var result = await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
+            var result = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
 
             //assert
             result.Should().Be(id);
@@ -177,7 +177,7 @@
         public async Task AddTransferNote_TransferNote_ShouldHave_HouseholdWasteType()
         {
             //act
-            await evidenceDataAccess.AddTransferNote(organisation, scheme, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), DateTime.Now);
+            await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, NoteStatus.Draft, complianceYear, userId.ToString(), DateTime.Now);
 
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(x => x.WasteType == WasteType.HouseHold))).MustHaveHappenedOnceExactly();

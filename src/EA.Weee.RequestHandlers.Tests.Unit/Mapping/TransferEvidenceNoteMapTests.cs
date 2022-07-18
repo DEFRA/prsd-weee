@@ -117,7 +117,7 @@
             var organisation = A.Fake<Organisation>();
             
             var note = A.Fake<Note>();
-            A.CallTo(() => note.Recipient.Organisation).Returns(organisation);
+            A.CallTo(() => note.Recipient).Returns(organisation);
 
             //act
             map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
@@ -130,10 +130,12 @@
         public void Map_GivenTransferNote_RecipientShouldBeMapped()
         {
             //arrange
+            var organisation = A.Fake<Organisation>();
             var scheme = A.Fake<Scheme>();
-
             var note = A.Fake<Note>();
-            A.CallTo(() => note.Recipient).Returns(scheme);
+
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => note.Recipient).Returns(organisation);
 
             //act
             map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
     using Scheme;
 
     public partial class Organisation : Entity
@@ -175,5 +176,18 @@
         }
 
         public virtual List<Scheme> Schemes { get; set; }
+
+        public Scheme Scheme
+        {
+            get
+            {
+                if (Schemes != null && Schemes.Any())
+                {
+                    return Schemes.ElementAt(0);
+                }
+
+                return null;
+            }
+        }
     }
 }

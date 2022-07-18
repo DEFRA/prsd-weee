@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Prsd.Core;
+    using Weee.Tests.Core;
 
     public class EvidenceNoteDbSetup : DbTestDataBuilder<Note, EvidenceNoteDbSetup>
     {
@@ -22,12 +23,12 @@
         private void DefaultNote(List<NoteTonnage> tonnages)
         {
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
-            var scheme = DbContext.Schemes.First(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
+            var recipientOrganisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var aatf = DbContext.Aatfs.First(s => s.Name.Equals(TestingConstants.TestCompanyName));
             var user = Container.Resolve<IUserContext>();
 
             instance = new Note(organisation,
-            scheme,
+                recipientOrganisation,
             DateTime.Now,
             DateTime.Now.AddDays(10),
             Fixture.Create<WasteType>(),
@@ -37,9 +38,10 @@
             tonnages);
         }
 
-        public EvidenceNoteDbSetup WithRecipient(Guid schemeId)
+        public EvidenceNoteDbSetup WithRecipient(Guid recipientId)
         {
-            instance.UpdateScheme(schemeId);
+            ObjectInstantiator<Note>.SetProperty(n => n.Recipient, null, instance);
+            ObjectInstantiator<Note>.SetProperty(n => n.RecipientId, recipientId, instance);
             return this;
         }
 
