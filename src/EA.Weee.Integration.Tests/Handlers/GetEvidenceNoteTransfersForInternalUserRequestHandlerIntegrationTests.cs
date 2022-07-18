@@ -27,7 +27,7 @@
     public class GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetOneSubmittedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneSubmittedTransferNoteAsAppropriateAuthority : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -70,11 +70,12 @@
             {
                 ShouldMapToNote();
                 data.Status.Should().Be(NoteStatus.Submitted);
+                data.SubmittedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Value == EA.Weee.Domain.Evidence.NoteStatus.Submitted.Value).ChangedDate.ToShortDateString());
             };
         }
 
         [Component]
-        public class WhenIGetOneApprovedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneApprovedTransferNoteAsAppropriateAuthority : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -118,11 +119,12 @@
             {
                 ShouldMapToNote();
                 data.Status.Should().Be(NoteStatus.Approved);
+                data.ApprovedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Value == EA.Weee.Domain.Evidence.NoteStatus.Approved.Value).ChangedDate.ToShortDateString());
             };
         }
 
         [Component]
-        public class WhenIGetOneRejectedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneRejectedTransferNoteAsAppropriateAuthority : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -166,11 +168,12 @@
             {
                 ShouldMapToNote();
                 data.Status.Should().Be(NoteStatus.Rejected);
+                data.RejectedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Value == EA.Weee.Domain.Evidence.NoteStatus.Rejected.Value).ChangedDate.ToShortDateString());
             };
         }
 
         [Component]
-        public class WhenIGetOneReturnedTransfreEvidenceNote : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        public class WhenIGetOneReturnedTransferNoteAsAppropriateAuthority : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -215,6 +218,7 @@
             {
                 ShouldMapToNote();
                 data.Status.Should().Be(NoteStatus.Returned);
+                data.ReturnedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Value == EA.Weee.Domain.Evidence.NoteStatus.Returned.Value).ChangedDate.ToShortDateString());
             };
         }
 
@@ -259,28 +263,12 @@
                 data.ComplianceYear.Should().Be(note.ComplianceYear);
                 data.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
                 ((int)data.Type).Should().Be(note.NoteType.Value);
-                data.SubmittedDate.Should().Be(note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(NoteStatus.Submitted))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate);
-                data.ApprovedDate.Should().Be(note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(NoteStatus.Approved))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate);
-                data.ReturnedDate.Should().Be(note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(NoteStatus.Returned))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate);
-                data.RejectedDate.Should().Be(note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
-                    ?.ChangedDate);
                 data.RecipientSchemeData.Should().NotBeNull();
                 data.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
                 data.TransferredOrganisationData.Should().NotBeNull();
                 data.TransferredOrganisationData.Id.Should().Be(note.Organisation.Id);
                 data.TransferredSchemeData.Should().NotBeNull();
-                data.TransferredSchemeData.Should().Be(note.Organisation.Id);
+                data.TransferredSchemeData.Id.Should().Be(note.Organisation.Schemes.First().Id);
                 data.RecipientOrganisationData.Should().NotBeNull();
                 data.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
 
