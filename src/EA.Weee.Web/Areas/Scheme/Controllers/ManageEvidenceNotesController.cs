@@ -17,6 +17,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -107,7 +108,7 @@
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence }, false));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
@@ -150,6 +151,11 @@
 
                 // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client, selectedComplianceYear);
+
+                if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
+                {
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), selectedComplianceYear });
+                }
 
                 //return viewmodel to view
                 return View("ReviewEvidenceNote", model);

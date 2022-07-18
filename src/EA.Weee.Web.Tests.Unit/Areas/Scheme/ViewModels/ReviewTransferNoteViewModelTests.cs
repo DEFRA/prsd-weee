@@ -143,7 +143,7 @@
             result.Count().Should().Be(1);
             result.Should().Contain(v =>
                 v.ErrorMessage.Equals(
-                    "A reason can only be entered if you are rejecting or returning the evidence note. Delete any text you have entered.") &&
+                    "A reason can only be entered if you are rejecting or returning the evidence note transfer. Delete any text you have entered.") &&
                 v.MemberNames.Contains("reason"));
         }
     }

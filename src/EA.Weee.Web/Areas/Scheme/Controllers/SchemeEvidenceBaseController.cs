@@ -2,12 +2,14 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Web.Areas.Scheme.Attributes;
     using EA.Weee.Web.Controllers.Base;
     using Services;
     using Services.Caching;
 
     [ValidatePcsEvidenceEnabled]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public abstract class SchemeEvidenceBaseController : ExternalSiteController
     {
         protected readonly BreadcrumbService Breadcrumb;
