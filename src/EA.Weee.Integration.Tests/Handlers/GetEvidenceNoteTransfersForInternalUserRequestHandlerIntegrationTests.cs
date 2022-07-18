@@ -264,11 +264,11 @@
                 data.WasteType.ToInt().Should().Be(note.WasteType.ToInt());
                 ((int)data.Type).Should().Be(note.NoteType.Value);
                 data.RecipientSchemeData.Should().NotBeNull();
-                data.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
+                data.RecipientSchemeData.Id.Should().Be(note.Recipient.Scheme.Id);
                 data.TransferredOrganisationData.Should().NotBeNull();
                 data.TransferredOrganisationData.Id.Should().Be(note.Organisation.Id);
                 data.TransferredSchemeData.Should().NotBeNull();
-                data.TransferredSchemeData.Id.Should().Be(note.Organisation.Schemes.First().Id);
+                data.TransferredSchemeData.Id.Should().Be(note.Organisation.Scheme.Id);
                 data.RecipientOrganisationData.Should().NotBeNull();
                 data.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
 

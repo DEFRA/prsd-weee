@@ -216,11 +216,7 @@
                 var authority = Query.GetEaCompetentAuthority();
                 var role = Query.GetInternalUserRole();
 
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData>>();
