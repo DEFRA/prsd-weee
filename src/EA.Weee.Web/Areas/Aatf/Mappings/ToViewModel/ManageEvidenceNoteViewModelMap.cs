@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfReturn;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
@@ -32,7 +33,8 @@
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1),
                 ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
-                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear)
+                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear),
+                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
             };
 
             if (source.FilterViewModel != null)
