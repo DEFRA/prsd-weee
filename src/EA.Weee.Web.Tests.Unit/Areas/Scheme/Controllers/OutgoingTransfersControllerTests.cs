@@ -490,7 +490,7 @@
                     v => v.Edit == true &&
                          v.DisplayNotification == null &&
                          v.TransferEvidenceNoteData == transferNoteData &&
-                         v.SchemeId == organisationId && v.SelectedComplianceYear == complianceYear &&
+                         v.OrganisationId == organisationId && v.SelectedComplianceYear == complianceYear &&
                          v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))))).MustHaveHappenedOnceExactly();
         }
 
@@ -515,7 +515,7 @@
                 v => v.Edit == true &&
                      v.DisplayNotification == null &&
                      v.TransferEvidenceNoteData == transferNoteData &&
-                     v.SchemeId == organisationId && v.SelectedComplianceYear == complianceYear &&
+                     v.OrganisationId == organisationId && v.SelectedComplianceYear == complianceYear &&
                      v.RedirectTab.Equals(tab)))).MustHaveHappenedOnceExactly();
         }
 
@@ -541,7 +541,7 @@
                 v => v.Edit == true &&
                      v.DisplayNotification == null &&
                      v.TransferEvidenceNoteData == transferNoteData &&
-                     v.SchemeId == organisationId && 
+                     v.OrganisationId == organisationId && 
                      v.ReturnToView == returnToView &&
                      v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))))).MustHaveHappenedOnceExactly();
         }
@@ -695,7 +695,7 @@
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                    t.SchemeId == organisationId))).MustHaveHappenedOnceExactly();
+                    t.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -776,7 +776,7 @@
             //assert
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                     A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t => t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                                                                              t.SchemeId == schemeId))).MustHaveHappenedOnceExactly();
+                                                                              t.OrganisationId == schemeId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

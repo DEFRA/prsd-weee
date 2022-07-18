@@ -308,8 +308,8 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
-    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTests.cs" />
-    <Compile Include="Areas\Aatf\Mapping\ToViewModel\ViewTransferNoteViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\AllOtherEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
