@@ -21,11 +21,11 @@
         private void DefaultNote(IList<NoteTransferTonnage> tonnages)
         {
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
-            var scheme = DbContext.Schemes.First(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
+            var recipientOrganisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var user = Container.Resolve<IUserContext>();
 
             instance = new Note(organisation,
-            scheme,
+                recipientOrganisation,
             user.UserId.ToString(),
             tonnages,
             DateTime.Now.Year,

@@ -44,13 +44,13 @@
                         .Select(ntt => ntt.Received).Sum(),
                     t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
                         .Select(ntt => ntt.Reused).Sum())).ToList();
-            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient);
+            data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient.Scheme);
             data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
-            data.AatfData = mapper.Map<Aatf, AatfData>(source.Note.Aatf);
-            data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient.Organisation);
-            if (source.Note.Organisation.Schemes != null && source.Note.Organisation.Schemes.Any())
+            data.AatfData = source.SystemDateTime.HasValue ? mapper.Map<AatfWithSystemDateMapperObject, AatfData>(new AatfWithSystemDateMapperObject(source.Note.Aatf, source.SystemDateTime.Value)) : mapper.Map<Aatf, AatfData>(source.Note.Aatf);
+            data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient);
+            if (source.Note.Organisation.Scheme != null)
             {
-                data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Schemes.ElementAt(0));
+                data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Scheme);
             }
             data.RecipientId = source.Note.Recipient.Id;
 

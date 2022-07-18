@@ -11,6 +11,8 @@
 
         public DateTime SystemDateTime { get; private set; }
 
+        public int? ComplianceYear { get; set; }
+
         public AatfWithSystemDateMapperObject(Aatf aatf, DateTime systemDateTime)
         {
             Condition.Requires(aatf).IsNotNull();

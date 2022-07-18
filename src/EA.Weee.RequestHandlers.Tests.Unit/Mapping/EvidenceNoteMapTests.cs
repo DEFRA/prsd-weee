@@ -18,6 +18,7 @@
     using FluentAssertions;
     using Mappings;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
@@ -25,16 +26,14 @@
     using Scheme = Domain.Scheme.Scheme;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class EvidenceNoteMapTests
+    public class EvidenceNoteMapTests : SimpleUnitTestBase
     {
         private readonly IMapper mapper;
         private readonly EvidenceNoteMap map;
-        private readonly Fixture fixture;
 
         public EvidenceNoteMapTests()
         {
             mapper = A.Fake<IMapper>();
-            fixture = new Fixture();
 
             map = new EvidenceNoteMap(mapper);
         }
@@ -49,12 +48,12 @@
         public void Map_GivenNote_StandardPropertiesShouldBeMapped()
         {
             //arrange
-            var id = fixture.Create<Guid>();
-            var reference = fixture.Create<int>();
-            var startDate = fixture.Create<DateTime>();
-            var endDate = fixture.Create<DateTime>();
-            var recipientId = fixture.Create<Guid>();
-            var complianceYear = fixture.Create<short>();
+            var id = TestFixture.Create<Guid>();
+            var reference = TestFixture.Create<int>();
+            var startDate = TestFixture.Create<DateTime>();
+            var endDate = TestFixture.Create<DateTime>();
+            var recipientId = TestFixture.Create<Guid>();
+            var complianceYear = TestFixture.Create<short>();
 
             var note = A.Fake<Note>();
             A.CallTo(() => note.Id).Returns(id);
@@ -295,7 +294,7 @@
             //arrange
             var historyList = new List<NoteStatusHistory>();
             var history = A.Fake<NoteStatusHistory>();
-            var reason = fixture.Create<string>();
+            var reason = TestFixture.Create<string>();
 
             A.CallTo(() => history.Reason).Returns(reason);
             A.CallTo(() => history.ToStatus).Returns(NoteStatus.Returned);
@@ -319,7 +318,7 @@
             //arrange
             var historyList = new List<NoteStatusHistory>();
             var history = A.Fake<NoteStatusHistory>();
-            var reason = fixture.Create<string>();
+            var reason = TestFixture.Create<string>();
 
             A.CallTo(() => history.Reason).Returns(reason);
             A.CallTo(() => history.ToStatus).Returns(NoteStatus.Rejected);
@@ -349,7 +348,7 @@
             //arrange
             var historyList = new List<NoteStatusHistory>();
             var history = A.Fake<NoteStatusHistory>();
-            var reason = fixture.Create<string>();
+            var reason = TestFixture.Create<string>();
 
             A.CallTo(() => history.Reason).Returns(reason);
             A.CallTo(() => history.ToStatus).Returns(status);
@@ -379,7 +378,7 @@
             //arrange
             var historyList = new List<NoteStatusHistory>();
             var history = A.Fake<NoteStatusHistory>();
-            var reason = fixture.Create<string>();
+            var reason = TestFixture.Create<string>();
 
             A.CallTo(() => history.Reason).Returns(reason);
             A.CallTo(() => history.ToStatus).Returns(status);
@@ -488,9 +487,9 @@
         public void Map_GivenNoteWithMultipleReturnedHistory_ReasonShouldBeSet()
         {
             //arrange
-            var reasonEarly = fixture.Create<string>();
+            var reasonEarly = TestFixture.Create<string>();
             var returnedDateEarly = DateTime.Now;
-            var reasonLate = fixture.Create<string>();
+            var reasonLate = TestFixture.Create<string>();
             var returnedDateLate = DateTime.Now.AddMinutes(10);
             var historyList = new List<NoteStatusHistory>();
             var history1 = A.Fake<NoteStatusHistory>();
@@ -522,9 +521,9 @@
         public void Map_GivenNoteWithMultipleRejectedHistory_ReasonShouldBeSet()
         {
             //arrange
-            var reasonEarly = fixture.Create<string>();
+            var reasonEarly = TestFixture.Create<string>();
             var rejectedDateEarly = DateTime.Now;
-            var reasonLate = fixture.Create<string>();
+            var reasonLate = TestFixture.Create<string>();
             var rejectedDateLate = DateTime.Now.AddMinutes(10);
             var historyList = new List<NoteStatusHistory>();
             var history1 = A.Fake<NoteStatusHistory>();
@@ -701,10 +700,12 @@
         {
             //arrange
             var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
             var scheme = A.Fake<Scheme>();
-            var schemeData = fixture.Create<SchemeData>();
+            var schemeData = TestFixture.Create<SchemeData>();
 
-            A.CallTo(() => note.Recipient).Returns(scheme);
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => note.Recipient).Returns(organisation);
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
@@ -720,7 +721,7 @@
             //arrange
             var note = A.Fake<Note>();
             var aatf = A.Fake<Aatf>();
-            var aatfData = fixture.Create<AatfData>();
+            var aatfData = TestFixture.Create<AatfData>();
 
             A.CallTo(() => note.Aatf).Returns(aatf);
             A.CallTo(() => mapper.Map<Aatf, AatfData>(aatf)).Returns(aatfData);
@@ -733,12 +734,34 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithCurrentSystemDateTime_AatfDataShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var aatf = A.Fake<Aatf>();
+            var aatfData = TestFixture.Create<AatfData>();
+            var currentSystemDateTime = TestFixture.Create<DateTime>();
+
+            A.CallTo(() => note.Aatf).Returns(aatf);
+            A.CallTo(() => mapper.Map<AatfWithSystemDateMapperObject, AatfData>(A<AatfWithSystemDateMapperObject>.That.Matches(a => a.Aatf.Equals(aatf)))).Returns(aatfData);
+
+            var source = EvidenceNoteWithCriteriaMap(note);
+            source.SystemDateTime = currentSystemDateTime;
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.AatfData.Should().Be(aatfData);
+        }
+
+        [Fact]
         public void Map_GivenNote_OrganisationDataShouldBeMapped()
         {
             //arrange
             var note = A.Fake<Note>();
             var organisation = A.Fake<Organisation>();
-            var organisationData = fixture.Create<OrganisationData>();
+            var organisationData = TestFixture.Create<OrganisationData>();
 
             A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
@@ -756,9 +779,9 @@
             //arrange
             var note = A.Fake<Note>();
             var organisation = A.Fake<Organisation>();
-            var organisationData = fixture.Create<OrganisationData>();
+            var organisationData = TestFixture.Create<OrganisationData>();
 
-            A.CallTo(() => note.Recipient.Organisation).Returns(organisation);
+            A.CallTo(() => note.Recipient).Returns(organisation);
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
 
             //act
@@ -874,8 +897,8 @@
 
             var transferTonnages = new List<NoteTransferTonnage>()
             {
-                new NoteTransferTonnage(fixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = rejectTransferNote}, // Should not be included
-                new NoteTransferTonnage(fixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = approvedTransferNote} // Sums should only be counted from this
+                new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = rejectTransferNote}, // Should not be included
+                new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = approvedTransferNote} // Sums should only be counted from this
             };
 
             var tonnages = new List<NoteTonnage>()
@@ -904,7 +927,7 @@
             //arrange
             var note = A.Fake<Note>();
             var organisation = A.Fake<Organisation>();
-            var schemeData = fixture.Create<SchemeData>();
+            var schemeData = TestFixture.Create<SchemeData>();
             var scheme = A.Fake<Scheme>();
 
             A.CallTo(() => note.Organisation).Returns(organisation);
@@ -924,7 +947,7 @@
             //arrange
             var note = A.Fake<Note>();
             var organisation = A.Fake<Organisation>();
-            var schemeData = fixture.Create<SchemeData>();
+            var schemeData = TestFixture.Create<SchemeData>();
             var scheme = A.Fake<Scheme>();
 
             A.CallTo(() => note.Organisation).Returns(organisation);
@@ -944,7 +967,7 @@
             //arrange
             var note = A.Fake<Note>();
             var organisation = A.Fake<Organisation>();
-            var schemeData = fixture.Create<SchemeData>();
+            var schemeData = TestFixture.Create<SchemeData>();
             var scheme = A.Fake<Scheme>();
 
             A.CallTo(() => note.Organisation).Returns(organisation);

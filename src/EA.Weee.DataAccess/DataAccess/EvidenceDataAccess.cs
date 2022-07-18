@@ -42,7 +42,7 @@
             return note;
         }
 
-        public async Task<Note> Update(Note note, Scheme recipient, DateTime startDate, DateTime endDate,
+        public async Task<Note> Update(Note note, Organisation recipient, DateTime startDate, DateTime endDate,
             WasteType? wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
@@ -98,7 +98,7 @@
             }
             if (filter.SchemeId.HasValue)
             {
-                notes = notes.Where(n => n.Recipient.Id == filter.SchemeId.Value);
+                notes = notes.Where(n => n.Recipient.Schemes.FirstOrDefault().Id == filter.SchemeId.Value);
             }
             if (filter.NoteStatusId.HasValue)
             {
@@ -156,7 +156,7 @@
         {
             var notes = await context.Notes
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
-                .Where(n => n.RecipientId == schemeId &&
+                .Where(n => n.Recipient.ProducerBalancingScheme != null ? true : n.Recipient.Schemes.FirstOrDefault().Id == schemeId &&
                             n.NoteType.Value == NoteType.EvidenceNote.Value &&
                             n.WasteType.Value == WasteType.HouseHold &&
                             n.Status.Value == NoteStatus.Approved.Value &&
@@ -175,7 +175,7 @@
         }
 
         public async Task<Guid> AddTransferNote(Organisation organisation, 
-            Scheme scheme,
+            Organisation recipientOrganisation,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
             int complianceYear,
@@ -183,7 +183,7 @@
             DateTime date)
         {
             var evidenceNote = new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 userId,
                 transferTonnage,
                 complianceYear,

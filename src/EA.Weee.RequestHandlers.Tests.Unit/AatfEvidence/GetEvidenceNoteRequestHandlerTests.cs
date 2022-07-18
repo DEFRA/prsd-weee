@@ -23,13 +23,13 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteRequestHandlerTests
+    public class GetEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNoteRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataAccess;
         private readonly GetEvidenceNoteForAatfRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
@@ -37,9 +37,9 @@
 
         public GetEvidenceNoteRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
+            systemDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
 
             A.Fake<IAatfDataAccess>();
@@ -49,9 +49,8 @@
             A.Fake<Aatf>();
             A.Fake<Scheme>();
             note = A.Fake<Note>();
-            fixture.Create<Guid>();
-            evidenceNoteId = fixture.Create<Guid>();
-            organisationId = fixture.Create<Guid>();
+            evidenceNoteId = TestFixture.Create<Guid>();
+            organisationId = TestFixture.Create<Guid>();
 
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
 
@@ -59,7 +58,8 @@
 
             handler = new GetEvidenceNoteRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
-                mapper);
+                mapper,
+                systemDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
@@ -72,7 +72,8 @@
 
             handler = new GetEvidenceNoteRequestHandler(authorization,
                 evidenceDataAccess,
-                mapper);
+                mapper,
+                systemDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -89,7 +90,8 @@
            
             handler = new GetEvidenceNoteRequestHandler(authorization,
                 evidenceDataAccess,
-                mapper);
+                mapper,
+                systemDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -109,6 +111,16 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_SystemDateTimeShouldBeRetrieved()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
         {
             //act
@@ -122,18 +134,25 @@
         [Fact]
         public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
         {
+            //arrange
+            var dateTime = TestFixture.Create<DateTime>();
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(dateTime);
+
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && 
+                e.CategoryFilter.IsNullOrEmpty() && 
+                e.IncludeTonnage == true &&
+                e.SystemDateTime == dateTime))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequestAndNote_MappedNoteShouldBeReturned()
         {
             //arrange
-            var evidenceNote = fixture.Create<EvidenceNoteData>();
+            var evidenceNote = TestFixture.Create<EvidenceNoteData>();
 
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 

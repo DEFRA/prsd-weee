@@ -10,7 +10,15 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.AatfId)
-    @(this.WeeeGds().Submit("Create new evidence note"))
+
+    if (Model.CanCreateEdit)
+    {
+        @(this.WeeeGds().Submit("Create new evidence note"))
+    }
+    else
+    {
+        <p class="govuk-details__text">You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year</p>
+    }
 }
 
 <br />
