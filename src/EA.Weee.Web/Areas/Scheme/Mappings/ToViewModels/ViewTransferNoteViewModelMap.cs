@@ -43,7 +43,7 @@
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
-                SchemeId = source.SchemeId,
+                SchemeId = source.OrganisationId,
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
                 SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
@@ -76,7 +76,8 @@
                     transferOrganisationAddress.Postcode,
                     null),
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned
+                DisplayEditButton = 
+                    (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);

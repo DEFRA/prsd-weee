@@ -1,19 +1,19 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Mapping
 {
     using System;
     using System.Collections.Generic;
     using AutoFixture;
-    using Core.AatfEvidence;
-    using Core.Tests.Unit.Helpers;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Tests.Unit.Helpers;
+    using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
-    using Web.Areas.Scheme.Mappings.ToViewModels;
-    using Weee.Tests.Core;
     using Xunit;
 
     public class ViewTransferNoteViewModelMapTests : SimpleUnitTestBase
@@ -107,7 +107,7 @@
             var model = map.Map(source);
 
             //assert
-            model.SchemeId.Should().Be(source.SchemeId);
+            model.SchemeId.Should().Be(source.OrganisationId);
             model.EvidenceNoteId.Should().Be(source.TransferEvidenceNoteData.Id);
             model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.EditMode.Should().Be(editMode);
@@ -299,7 +299,7 @@
             model.Reference.Should().Be(source.TransferEvidenceNoteData.Reference);
             model.Type.Should().Be(source.TransferEvidenceNoteData.Type);
             model.Status.Should().Be(source.TransferEvidenceNoteData.Status);
-            model.SchemeId.Should().Be(source.SchemeId);
+            model.SchemeId.Should().Be(source.OrganisationId);
             model.EvidenceNoteId.Should().Be(source.TransferEvidenceNoteData.Id);
             model.TotalCategoryValues.Count.Should().Be(3);
             model.Summary.Count.Should().Be(2);
@@ -483,16 +483,20 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturned_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedAndOrganisationIsTransferOrganisation_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
             if (status != NoteStatus.Draft && status != NoteStatus.Returned)
             {
                 return;
             }
 
-            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+            var transferOrganisationId = TestFixture.Create<Guid>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(x => x.Status, status).Create(),
+                    .With(x => x.Status, status)
+                    .With(x => x.TransferredOrganisationData, TestFixture.Build<OrganisationData>().With(o => o.Id, transferOrganisationId).Create())
+                    .Create(),
                 false);
 
             //act
@@ -500,6 +504,31 @@
 
             //assert
             model.DisplayEditButton.Should().BeTrue();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedButOrganisationIsNotTransferOrganisation_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var transferOrganisationId = TestFixture.Create<Guid>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status)
+                    .With(x => x.TransferredOrganisationData, TestFixture.Build<OrganisationData>().With(o => o.Id, transferOrganisationId).Create())
+                    .Create(),
+                false);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeFalse();
         }
 
         private OrganisationData CreateOrganisationData()
