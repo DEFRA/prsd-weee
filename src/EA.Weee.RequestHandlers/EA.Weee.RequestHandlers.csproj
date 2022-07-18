@@ -143,6 +143,7 @@
     <Compile Include="Mappings\AatfDataWithSystemTimeMap.cs" />
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />
+    <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
     <Compile Include="Mappings\SchemeObligationDataMap.cs" />
     <Compile Include="Mappings\SchemeObligationUploadDataMap.cs" />
     <Compile Include="Mappings\TransferEvidenceNoteMap.cs" />

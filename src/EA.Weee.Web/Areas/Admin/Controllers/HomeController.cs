@@ -88,6 +88,9 @@
                 case InternalUserActivity.ManageEvidenceNotes:
                     return RedirectToAction("Index", "ManageEvidenceNotes");
 
+                case InternalUserActivity.ViewPCSObligationAndEvidenceSummary:
+                    return RedirectToAction("Index", "AdminHolding");
+
                 case InternalUserActivity.SubmissionsHistory:
                     if (configuration.EnableDataReturns)
                     {
@@ -137,6 +140,7 @@
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
+            viewModel.PossibleValues.Add(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
 
             if (configuration.EnablePCSObligations && isAdmin)
             {

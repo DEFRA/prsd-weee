@@ -65,7 +65,7 @@
             A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.Id.Should().Be(id);
@@ -102,7 +102,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.SubmittedDate.Should().BeNull();
@@ -130,7 +130,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedDate.Should().BeNull();
@@ -158,7 +158,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedDate.Should().BeNull();
@@ -186,7 +186,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedReason.Should().BeNull();
@@ -214,7 +214,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedReason.Should().BeNull();
@@ -237,7 +237,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.SubmittedDate.Should().Be(date);
@@ -260,7 +260,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedDate.Should().Be(date);
@@ -283,7 +283,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedDate.Should().Be(date);
@@ -307,7 +307,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedReason.Should().Be(reason);
@@ -331,7 +331,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedReason.Should().Be(reason);
@@ -361,7 +361,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedReason.Should().BeNull();
@@ -391,7 +391,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedReason.Should().BeNull();
@@ -420,7 +420,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.SubmittedDate.Should().Be(latestDate);
@@ -449,7 +449,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedDate.Should().Be(latestDate);
@@ -478,7 +478,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedDate.Should().Be(latestDate);
@@ -512,7 +512,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ReturnedReason.Should().Be(reasonLate);
@@ -546,7 +546,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RejectedReason.Should().Be(reasonLate);
@@ -574,7 +574,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ApprovedDate.Should().BeNull();
@@ -597,7 +597,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ApprovedDate.Should().BeSameDateAs(date);
@@ -626,7 +626,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.ApprovedDate.Should().Be(latestDate);
@@ -642,7 +642,7 @@
             A.CallTo(() => note.NoteType).Returns(noteType);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.Type.ToInt().Should().Be(noteType.Value);
@@ -658,7 +658,7 @@
             A.CallTo(() => note.Status).Returns(noteStatus);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.Status.ToInt().Should().Be(noteStatus.Value);
@@ -674,7 +674,7 @@
             A.CallTo(() => note.Protocol).Returns(protocol);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.Protocol.ToInt().Should().Be(protocol.ToInt());
@@ -690,7 +690,7 @@
             A.CallTo(() => note.WasteType).Returns(wasteType);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.WasteType.ToInt().Should().Be(wasteType.ToInt());
@@ -708,7 +708,7 @@
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RecipientSchemeData.Should().Be(schemeData);
@@ -726,7 +726,7 @@
             A.CallTo(() => mapper.Map<Aatf, AatfData>(aatf)).Returns(aatfData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.AatfData.Should().Be(aatfData);
@@ -744,7 +744,7 @@
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.OrganisationData.Should().Be(organisationData);
@@ -762,27 +762,31 @@
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).Returns(organisationData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.RecipientOrganisationData.Should().Be(organisationData);
         }
 
         [Fact]
-        public void Map_GivenNote_TonnageDataShouldBeMapped()
+        public void Map_GivenNoteToIncludeTonnageData_TonnageDataShouldBeMapped()
         {
             //arrange
             var note = A.Fake<Note>();
             var tonnages = new List<NoteTonnage>()
             {
                 new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
-                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M)
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, null, null)
             };
 
             A.CallTo(() => note.NoteTonnage).Returns(tonnages);
 
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = true;
+
             //act
-            var result = map.Map(note);
+            var result = map.Map(mapObject);
 
             //assert
             result.EvidenceTonnageData.Count.Should().Be(tonnages.Count);
@@ -790,6 +794,69 @@
             result.EvidenceTonnageData.Should().BeEquivalentTo(
                 tonnages.Select(t =>
                     new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, null, null)).ToList());
+        }
+
+        [Fact]
+        public void Map_GivenNoteToNotIncludeTonnageData_TonnageDataShouldBeEmpty()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, null, null)
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = false;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceTonnageData.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithCategoryFilter_TonnageDataShouldBeMappedWithOnlyCategoriesRequestedReturned()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, 10, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.MedicalDevices, 2, 1),
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            //act
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.CategoryFilter = new List<int>()
+            {
+                Domain.Lookup.WeeeCategory.ConsumerEquipment.ToInt(), Domain.Lookup.WeeeCategory.MedicalDevices.ToInt(),
+            };
+            mapObject.IncludeTonnage = true;
+
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceTonnageData.Count.Should().Be(2);
+            result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
+            result.EvidenceTonnageData.ElementAt(0).CategoryId.ToInt().Should()
+                .Be(Domain.Lookup.WeeeCategory.ConsumerEquipment.ToInt());
+            result.EvidenceTonnageData.ElementAt(0).Received.Value.Should().Be(1);
+            result.EvidenceTonnageData.ElementAt(0).Reused.Value.Should().Be(2);
+            result.EvidenceTonnageData.ElementAt(1).CategoryId.ToInt().Should()
+                .Be(Domain.Lookup.WeeeCategory.MedicalDevices.ToInt());
+            result.EvidenceTonnageData.ElementAt(1).Received.Value.Should().Be(2);
+            result.EvidenceTonnageData.ElementAt(1).Reused.Value.Should().Be(1);
+            result.EvidenceTonnageData.Should().NotContain(a =>
+                a.CategoryId.ToInt() == Domain.Lookup.WeeeCategory.DisplayEquipment.ToInt());
         }
 
         [Theory]
@@ -820,8 +887,11 @@
             A.CallTo(() => approvedTransferNote.Status).Returns(NoteStatus.Approved);
             A.CallTo(() => note.NoteTonnage).Returns(tonnages);
 
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTonnage = true;
+
             //Act
-            var result = map.Map(note);
+            var result = map.Map(mapObject);
 
             //Assert
             result.EvidenceTonnageData[0].AvailableReceived.Should().Be(expectedAvailableReceive);
@@ -842,7 +912,7 @@
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.OrganisationSchemaData.Should().Be(schemeData);
@@ -862,7 +932,7 @@
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.OrganisationSchemaData.Should().BeNull();
@@ -882,10 +952,15 @@
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
 
             //act
-            var result = map.Map(note);
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
 
             //assert
             result.OrganisationSchemaData.Should().BeNull();
+        }
+
+        private EvidenceNoteWithCriteriaMap EvidenceNoteWithCriteriaMap(Note note)
+        {
+            return new EvidenceNoteWithCriteriaMap(note);
         }
     }
 }

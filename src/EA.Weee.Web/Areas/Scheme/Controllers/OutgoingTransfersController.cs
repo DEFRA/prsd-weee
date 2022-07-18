@@ -74,9 +74,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            redirectTab = redirectTab ?? ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
 
             using (var client = apiClient())
             {
@@ -88,7 +90,8 @@
                 {
                     SelectedComplianceYear = selectedComplianceYear,
                     Edit = true,
-                    ReturnToView = returnToView
+                    ReturnToView = returnToView,
+                    RedirectTab = redirectTab
                 });
 
                 return this.View("EditDraftTransfer", model);
@@ -103,6 +106,11 @@
             using (var client = apiClient())
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                if (noteData.Status != NoteStatus.Submitted)
+                {
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = redirectTab });
+                }
 
                 var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
