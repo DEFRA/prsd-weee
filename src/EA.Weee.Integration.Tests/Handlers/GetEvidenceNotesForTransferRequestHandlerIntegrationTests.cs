@@ -32,10 +32,14 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
-                var scheme2 = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                var transferOrganisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisation.Id).Create();
+
+                var transferOrganisationNonMatching = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisationNonMatching.Id).Create();
 
                 // note to be included
                 var categories1 = new List<NoteTonnage>()
@@ -47,7 +51,7 @@
                 notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories1).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories1).WithRecipient(transferOrganisation.Id).Create());
 
                 // note to not be included no matching category
                 var categories2 = new List<NoteTonnage>()
@@ -57,12 +61,12 @@
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories2).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories2).WithRecipient(transferOrganisation.Id).Create());
 
                 // note to not be included not matching on scheme
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(new List<NoteTonnage>()).WithRecipient(scheme2.Id).Create());
+                    .WithTonnages(new List<NoteTonnage>()).WithRecipient(transferOrganisationNonMatching.Id).Create());
 
                 // note to be included
                 var categories3 = new List<NoteTonnage>()
@@ -74,7 +78,7 @@
                 notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories3).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories3).WithRecipient(transferOrganisation.Id).Create());
 
                 // note to not be included as submitted
                 var categories4 = new List<NoteTonnage>()
@@ -83,7 +87,7 @@
                 };
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
-                    .WithTonnages(categories4).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories4).WithRecipient(transferOrganisation.Id).Create());
 
                 // note to not be included as draft
                 var categories5 = new List<NoteTonnage>()
@@ -91,7 +95,7 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, null),
                 };
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
-                    .WithTonnages(categories5).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories5).WithRecipient(transferOrganisation.Id).Create());
 
                 // note to not be included no tonnage entry
                 var categories6 = new List<NoteTonnage>()
@@ -101,9 +105,9 @@
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories6).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories6).WithRecipient(transferOrganisation.Id).Create());
 
-                request = new GetEvidenceNotesForTransferRequest(organisation.Id,
+                request = new GetEvidenceNotesForTransferRequest(transferOrganisation.Id,
                     new List<int>()
                     {
                         Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
@@ -162,8 +166,11 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 // note to be included
                 var categories1 = new List<NoteTonnage>()
@@ -173,7 +180,7 @@
                 notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories1).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories1).WithRecipient(recipientOrganisation.Id).Create());
 
                 // note to not be included no matching category
                 var categories2 = new List<NoteTonnage>()
@@ -183,7 +190,7 @@
                 notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories2).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories2).WithRecipient(recipientOrganisation.Id).Create());
 
                 // note to not be included not in note list
                 var categories3 = new List<NoteTonnage>()
@@ -193,9 +200,9 @@
                 notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories3).WithRecipient(scheme.Id).Create());
+                    .WithTonnages(categories3).WithRecipient(recipientOrganisation.Id).Create());
 
-                request = new GetEvidenceNotesForTransferRequest(organisation.Id,
+                request = new GetEvidenceNotesForTransferRequest(recipientOrganisation.Id,
                     new List<int>()
                     {
                         Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt()

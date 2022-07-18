@@ -5,10 +5,18 @@
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
+    using Helpers;
     using Prsd.Core.Mapper;
 
     public class ManageEvidenceNoteViewModelMap : IMap<ManageEvidenceNoteTransfer, ManageEvidenceNoteViewModel>
     {
+        private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+
+        public ManageEvidenceNoteViewModelMap(IAatfEvidenceHelper aatfEvidenceHelper)
+        {
+            this.aatfEvidenceHelper = aatfEvidenceHelper;
+        }
+
         public ManageEvidenceNoteViewModel Map(ManageEvidenceNoteTransfer source)
         {
             Condition.Requires(source).IsNotNull();
@@ -23,7 +31,8 @@
                 AatfId = source.AatfId, 
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1),
-                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate)
+                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
+                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear)
             };
 
             if (source.FilterViewModel != null)

@@ -75,18 +75,5 @@
         {
             Role = role;
         }
-
-        /// <summary>
-        /// To be used by integration tests
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="authorityId"></param>
-        /// <param name="roleId"></param>
-        public void UpdateUser(string userId, Guid authorityId, Guid roleId)
-        {
-            UserId = userId;
-            CompetentAuthorityId = authorityId;
-            RoleId = roleId;
-        }
     }
 }

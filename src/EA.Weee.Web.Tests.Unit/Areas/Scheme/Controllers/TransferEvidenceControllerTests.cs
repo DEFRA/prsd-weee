@@ -998,7 +998,7 @@
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
-                    t => t.SchemeId.Equals(organisationId) && 
+                    t => t.OrganisationId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
                          t.SelectedComplianceYear == complianceYear &&
@@ -1054,7 +1054,7 @@
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
-                    t => t.SchemeId.Equals(organisationId) &&
+                    t => t.OrganisationId.Equals(organisationId) &&
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification.Equals(displayNotification) &&
                          t.RedirectTab == redirectTab)))

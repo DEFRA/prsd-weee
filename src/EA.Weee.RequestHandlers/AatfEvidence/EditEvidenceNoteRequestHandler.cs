@@ -63,7 +63,7 @@
                 t.SecondTonnage)).ToList();
 
             await evidenceDataAccess.Update(evidenceNote,
-                scheme,
+                scheme.Organisation,
                 message.StartDate,
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
