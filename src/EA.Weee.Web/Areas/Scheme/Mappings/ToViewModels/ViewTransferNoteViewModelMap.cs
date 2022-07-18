@@ -75,7 +75,8 @@
                     transferOrganisationAddress.CountyOrRegion,
                     transferOrganisationAddress.Postcode,
                     null),
-                Summary = GenerateNotesModel(source)
+                Summary = GenerateNotesModel(source),
+                DisplayEditButton = source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
