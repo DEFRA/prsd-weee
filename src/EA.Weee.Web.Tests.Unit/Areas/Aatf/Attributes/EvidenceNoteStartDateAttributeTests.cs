@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Attributes
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using FakeItEasy;
     using FluentAssertions;
@@ -43,7 +44,7 @@
         public void EvidenceNoteStartDateAttribute_CurrentDateShouldBeRetrievedFromCache()
         {
             //arrange
-            var target = new ValidationTarget() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
             var context = new ValidationContext(target);
 
             //act
@@ -57,11 +58,12 @@
         public void EvidenceNoteStartDateAttribute_GivenStartDateIsAfterToday_ValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
-
+            var currentDate = new DateTime(2020, 1, 1);
             SystemTime.Freeze(currentDate);
-            var target = new ValidationTarget() {StartDate = currentDate.AddDays(1), EndDate = currentDate };
+            var target = new ValidationTargetWithComplianceYearCheck() {StartDate = currentDate.AddDays(1), EndDate = currentDate.AddDays(2) };
             var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -69,21 +71,57 @@
             //assert
             result.ValidationResult.ErrorMessage.Should()
                 .Be("The start date cannot be in the future. Select today's date or earlier.");
-            
             SystemTime.Unfreeze();
         }
 
-        [Fact]
-        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYear_ValidationExceptionShouldBeThrown()
+        public static IEnumerable<object[]> ValidStartDates =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 1, 31), new DateTime(2020, 1, 31) },
+                new object[] { new DateTime(2020, 1, 31), new DateTime(2020, 1, 1) },
+                new object[] { new DateTime(2020, 1, 1), new DateTime(2019, 12, 31) },
+            };
+
+        [Theory]
+        [MemberData(nameof(ValidStartDates))]
+        public void EvidenceNoteStartDateAttribute_GivenStartDateIsInAllowedComplianceYear_ValidationExceptionShouldNotBeThrown(DateTime currentDate, DateTime startDate)
         {
             //arrange
-            var currentDate = DateTime.Now;
             SystemTime.Freeze(currentDate);
-            var outOfComplianceYear = new DateTime(SystemTime.Now.Year, 1, 1).AddMilliseconds(-1);
-            var target = new ValidationTarget() { StartDate = outOfComplianceYear, EndDate = currentDate };
+
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = startDate, EndDate = startDate.AddDays(1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+
+            SystemTime.Unfreeze();
+        }
+
+        public static IEnumerable<object[]> InValidStartDates =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2019, 12, 31) },
+                new object[] { new DateTime(2018, 12, 31) }
+            };
+
+        [Theory]
+        [MemberData(nameof(InValidStartDates))]
+        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYear_ValidationExceptionShouldBeThrown(DateTime date)
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 12, 31);
+            SystemTime.Freeze(currentDate);
+            
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -95,24 +133,25 @@
             SystemTime.Unfreeze();
         }
 
-        [Fact]
-        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldNotBeThrown()
+        [Theory]
+        [MemberData(nameof(InValidStartDates))]
+        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldNotBeThrown(DateTime date)
         {
             //arrange
-            var currentDate = DateTime.Now;
+            var currentDate = new DateTime(2020, 12, 31);
             SystemTime.Freeze(currentDate);
-            var outOfComplianceYear = new DateTime(SystemTime.Now.Year, 1, 1).AddMilliseconds(-1);
-            var target = new ValidationTarget() { StartDate = outOfComplianceYear, EndDate = currentDate };
+
+            var target = new ValidationTargetWithoutComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
             result.Should().BeNull();
-           
+
             SystemTime.Unfreeze();
         }
 
@@ -120,11 +159,13 @@
         public void EvidenceNoteStartDateAttribute_GivenStartDateIsAfterEndDate_ValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
+            var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTarget() { StartDate = currentDate.AddDays(-1), EndDate = currentDate.AddDays(-2) };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate.AddDays(-1), EndDate = currentDate.AddDays(-2) };
             var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -140,11 +181,13 @@
         public void EvidenceNoteStartDateAttribute_GivenStartDateIsEqualToTheEndDate_NoValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
+            var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate };
             var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -159,11 +202,13 @@
         public void EvidenceNoteStartDateAttribute_GivenEndDateIsEmpty_NoValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
+            var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = DateTime.MinValue };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = DateTime.MinValue };
             var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -178,11 +223,13 @@
         public void EvidenceNoteStartDateAttribute_GivenEndDateIsNull_NoValidationExceptionShouldBeThrown()
         {
             //arrange
-            var currentDate = DateTime.Now;
+            var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = null };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = null };
             var context = new ValidationContext(target);
+
+            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -193,9 +240,17 @@
             SystemTime.Unfreeze();
         }
 
-        private class ValidationTarget
+        private class ValidationTargetWithComplianceYearCheck
         {
             [EvidenceNoteStartDate(nameof(EndDate), true)]
+            public DateTime? StartDate { get; set; }
+
+            public DateTime? EndDate { get; set; }
+        }
+
+        private class ValidationTargetWithoutComplianceYearCheck
+        {
+            [EvidenceNoteStartDate(nameof(EndDate), false)]
             public DateTime? StartDate { get; set; }
 
             public DateTime? EndDate { get; set; }

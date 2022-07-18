@@ -33,5 +33,7 @@
             SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel();
             RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel();
         }
+
+        public bool CanCreateEdit { get; set; }
     }
 }
