@@ -29,6 +29,24 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-approved-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-returned-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-rejected-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
@@ -53,7 +71,7 @@
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
-                name: "Scheme_edit_transfer",
+                name: SchemeTransferEvidenceRedirect.EditDraftTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "EditDraftTransfer", controller = "OutgoingTransfers", area = "Scheme" },
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });

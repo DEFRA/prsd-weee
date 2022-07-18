@@ -36,16 +36,21 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
                 SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
-                SchemeId = source.SchemeId,
+                SchemeId = source.OrganisationId,
                 EvidenceNoteId = source.TransferEvidenceNoteData.Id,
                 SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
+                RejectedDate = source.TransferEvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
+                ReturnedDate = source.TransferEvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(), 
+                RejectedReason = source.TransferEvidenceNoteData.RejectedReason, 
+                ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
@@ -70,7 +75,9 @@
                     transferOrganisationAddress.CountyOrRegion,
                     transferOrganisationAddress.Postcode,
                     null),
-                Summary = GenerateNotesModel(source)
+                Summary = GenerateNotesModel(source),
+                DisplayEditButton = 
+                    (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -94,6 +101,12 @@
                             break;
                         case NoteStatus.Approved:
                             model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            break;
+                        case NoteStatus.Rejected:
+                            model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            break;
+                        case NoteStatus.Returned:
+                            model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
                             break;
                     }
                 }

@@ -71,9 +71,15 @@
                         return SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
                     case NoteStatus.Submitted:
                         return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
+                    case NoteStatus.Approved:
+                        return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
+                    case NoteStatus.Rejected:
+                        return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
+                    case NoteStatus.Returned:
+                        return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
                 }
 
-                throw new InvalidOperationException("Invalid route name");
+                return string.Empty;
             }
         }
     }

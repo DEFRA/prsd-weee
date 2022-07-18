@@ -3,9 +3,12 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Reflection.Emit;
     using Autofac;
+    using Builders;
     using DataAccess;
     using Domain;
+    using Domain.Admin;
     using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
@@ -87,10 +90,22 @@
             return dbContext.ObligationUploads.First(o => o.Id == id);
         }
 
-        public bool CompetentAuthorityUserExists(string userId)
+        public bool CompetentAuthorityUserExists(string userId, Guid roleId)
         {
             return dbContext.CompetentAuthorityUsers.Any(u =>
-                u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value);
+                u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value && u.RoleId == roleId);
+        }
+
+        public void SetupUserWithRole(string userId, Guid roleId, Guid authorityId)
+        {
+            var user = dbContext.CompetentAuthorityUsers.FirstOrDefault(u => u.UserId == userId);
+
+            if (user != null)
+            {
+                dbContext.Database.ExecuteSqlCommand($"DELETE FROM [Admin].CompetentAuthorityUser WHERE UserId = '{userId}'");
+            }
+
+            CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, authorityId, roleId).Create();
         }
     }
 }

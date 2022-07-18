@@ -1,8 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
-@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ReviewTransferNoteViewModel
 @{
 
@@ -30,8 +28,6 @@
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "status-id" })
 
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.RedirectTab, null))))
-
         @Html.Gds().ValidationSummary()
         @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model.ViewTransferNoteViewModel)
 
@@ -50,10 +46,21 @@
                                     Model.HintItems)
         </div>
 
-        <div class="govuk-!-margin-top-7"></div>
+        <div class="govuk-form-group govuk-!-margin-bottom-7 @Html.Gds().FormGroupClass(m => m.Reason)" id="ReasonDiv">
+            @Html.Gds().LabelFor(m => m.Reason, showOptionalLabel: false)
+            @Html.Gds().ValidationMessageFor(m => m.Reason)
+            @Html.TextAreaFor(m => m.Reason, htmlAttributes: new { @id = "Reason", @class = "govuk-textarea", @maxlength = "200", @title = "You can type up to 200 characters" })
+        </div>
 
         <div class="govuk-form-group">
             @this.WeeeGds().Button("Save and continue")
         </div>
     }
+}
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initReviewEvidenceNote();
+        });
+    </script>
 }

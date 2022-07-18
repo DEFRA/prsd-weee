@@ -7,7 +7,6 @@
     using AutoFixture;
     using DataAccess;
     using DataAccess.DataAccess;
-    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
     using Domain.Scheme;
@@ -40,6 +39,12 @@
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             recipientId = TestFixture.Create<Guid>();
             note = A.Fake<Note>();
+
+            var recipientOrganisation = A.Fake<Organisation>();
+            var recipientScheme = A.Fake<Scheme>();
+            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
         }
 
         [Theory]
@@ -69,6 +74,8 @@
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var message = new SetNoteStatus(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
 
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
             //act
             await handler.HandleAsync(message);
 
@@ -83,7 +90,9 @@
             var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
-            
+
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
 
@@ -98,6 +107,8 @@
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
             //act
             await handler.HandleAsync(request);
 
@@ -109,8 +120,6 @@
         public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
         {
             //arrange
-            recipientId = TestFixture.Create<Guid>();
-            A.CallTo(() => note.Recipient.Id).Returns(recipientId);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);

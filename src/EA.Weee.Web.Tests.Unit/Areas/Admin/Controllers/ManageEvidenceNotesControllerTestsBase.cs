@@ -20,6 +20,7 @@
         protected readonly IWeeeCache Cache;
         protected readonly Guid EvidenceNoteId;
         protected readonly EvidenceNoteData EvidenceNoteData;
+        protected readonly TransferEvidenceNoteData TransferEvidenceNoteData;
 
         public ManageEvidenceNotesControllerTestsBase()
         {
@@ -30,6 +31,7 @@
             EvidenceNoteId = Guid.NewGuid();
 
             EvidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+            TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
 
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
         }

@@ -8,6 +8,7 @@
     using EA.Weee.Domain.Evidence;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
+    using Mappings;
 
     public class GetEvidenceNoteForInternalUserRequestHandler : IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData>
     {
@@ -30,7 +31,10 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            var evidenceNoteData = mapper.Map<Note, EvidenceNoteData>(evidenceNote);
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
+            {
+                IncludeTonnage = true
+            });
 
             return evidenceNoteData;
         }

@@ -12,9 +12,9 @@
 
     public static class NoteCommon
     {
-        public static Note CreateNote(DatabaseWrapper database, 
-            Organisation organisation = null, 
-            Scheme scheme = null, 
+        public static Note CreateNote(DatabaseWrapper database,
+            Organisation organisation = null,
+            Organisation recipientOrganisation = null,
             Aatf aatf = null,
             WasteType wasteType = WasteType.HouseHold,
             Protocol protocol = Protocol.Actual,
@@ -28,9 +28,14 @@
                 organisation = Organisation.CreateSoleTrader("Test Organisation");
             }
 
-            if (scheme == null)
+            if (recipientOrganisation == null)
             {
-                scheme = new Scheme(organisation);
+                recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                database.WeeeContext.Schemes.Add(scheme);
+
+                database.WeeeContext.SaveChanges();
             }
 
             if (startDate == null)
@@ -66,23 +71,24 @@
             }
 
             Note n = new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 startDate.Value,
                 endDate.Value,
                 wasteType,
                 protocol,
                 aatf,
                 database.WeeeContext.GetCurrentUser(),
-                noteTonnages);
-
-            n.ComplianceYear = complianceYear.HasValue ? complianceYear.Value : startDate.HasValue ? startDate.Value.Year : SystemTime.UtcNow.Year;
+                noteTonnages)
+            {
+                ComplianceYear = complianceYear ?? (startDate.Value.Year)
+            };
 
             return n;
         }
 
         public static Note CreateTransferNote(DatabaseWrapper database,
             Organisation organisation,
-            Scheme scheme,
+            Organisation recipientOrganisation = null,
             List<NoteTransferTonnage> noteTonnages = null,
             int? complianceYear = null)
         {
@@ -91,11 +97,16 @@
                 organisation = Organisation.CreateSoleTrader("Test Organisation");
             }
 
-            if (scheme == null)
+            if (recipientOrganisation == null)
             {
-                scheme = new Scheme(organisation);
-            }
+                recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
 
+                database.WeeeContext.Schemes.Add(scheme);
+
+                database.WeeeContext.SaveChanges();
+            }
+        
             if (noteTonnages == null)
             {
                 noteTonnages = new List<NoteTransferTonnage>();
@@ -107,7 +118,7 @@
             }
 
             return new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
                 complianceYear.Value,
