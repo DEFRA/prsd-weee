@@ -19,7 +19,7 @@
     public class NoteTests : SimpleUnitTestBase
     {
         private Organisation organisation;
-        private Scheme scheme;
+        private Organisation recipientOrganisation;
         private DateTime startDate;
         private DateTime endDate;
         private WasteType wasteType;
@@ -34,7 +34,7 @@
         public NoteTests()
         {
             organisation = A.Fake<Organisation>();
-            scheme = A.Fake<Scheme>();
+            recipientOrganisation = A.Fake<Organisation>();
             startDate = DateTime.Now.AddDays(1);
             endDate = DateTime.Now.AddDays(2);
             wasteType = TestFixture.Create<WasteType>();
@@ -50,7 +50,7 @@
         [Fact]
         public void Note_Constructor_GivenNullOrganisationArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(null, A.Fake<Organisation>(),
                 DateTime.Now,
                 DateTime.Now,
                 null,
@@ -65,7 +65,7 @@
         [Fact]
         public void TransferNote_Constructor_GivenNullOrganisationArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(null, A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(null, A.Fake<Organisation>(),
                 "created",
                 transferTonnages.ToList(),
                 complianceYear,
@@ -104,7 +104,7 @@
         [Fact]
         public void Note_Constructor_GivenDefaultStartDateArgumentExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 DateTime.MinValue,
                 DateTime.Now,
                 null,
@@ -119,7 +119,7 @@
         [Fact]
         public void Note_Constructor_GivenDefaultEndDateArgumentExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 DateTime.Now,
                 DateTime.MinValue,
                 null,
@@ -134,7 +134,7 @@
         [Fact]
         public void Note_Constructor_GivenNullAatfArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 DateTime.Now,
                 DateTime.Now,
                 null,
@@ -149,7 +149,7 @@
         [Fact]
         public void Note_Constructor_GivenNullTonnagesArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 DateTime.Now,
                 DateTime.Now,
                 null,
@@ -164,7 +164,7 @@
         [Fact]
         public void TransferNote_Constructor_GivenNullTransferTonnagesArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 null,
                 complianceYear,
@@ -176,7 +176,7 @@
         [Fact]
         public void TransferNote_Constructor_GivenNullTransferCategoriesArgumentNullExceptionExpected()
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 null,
                 complianceYear,
@@ -190,7 +190,7 @@
         [InlineData(-1)]
         public void TransferNote_Constructor_GivenInvalidComplianceYearArgumentExceptionExpected(short complianceYear)
         {
-            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Scheme>(),
+            var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 transferTonnages.ToList(),
                 complianceYear,
@@ -377,7 +377,7 @@
 
             //act
             var result = Record.Exception(() =>
-                note.Update(A.Fake<Scheme>(), DateTime.MinValue, DateTime.Now, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
+                note.Update(A.Fake<Organisation>(), DateTime.MinValue, DateTime.Now, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
 
             //assert
             result.Should().BeOfType<ArgumentException>();
@@ -391,7 +391,7 @@
 
             //act
             var result = Record.Exception(() =>
-                note.Update(A.Fake<Scheme>(), DateTime.Now, DateTime.MinValue, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
+                note.Update(A.Fake<Organisation>(), DateTime.Now, DateTime.MinValue, WasteType.HouseHold, Protocol.SiteSpecificProtocol));
 
             //assert
             result.Should().BeOfType<ArgumentException>();
@@ -402,7 +402,7 @@
         {
             //arrange
             organisation = A.Fake<Organisation>();
-            scheme = A.Fake<Scheme>();
+            recipientOrganisation = A.Fake<Organisation>();
             startDate = DateTime.Now.AddDays(1);
             endDate = DateTime.Now.AddDays(2);
             wasteType = WasteType.HouseHold;
@@ -412,9 +412,9 @@
             tonnages = TestFixture.CreateMany<NoteTonnage>();
             status = NoteStatus.Draft;
 
-            var note = new Note(organisation, scheme, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());
+            var note = new Note(organisation, recipientOrganisation, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());
 
-            var updatedScheme = A.Fake<Scheme>();
+            var updatedScheme = A.Fake<Organisation>();
             var updatedStartDate = DateTime.Now;
             var updatedEndDate = DateTime.Now.AddDays(4);
             var updatedWasteType = WasteType.NonHouseHold;
@@ -456,7 +456,7 @@
         private void ShouldBeEqualTo(Note result, DateTime date)
         {
             result.Organisation.Should().Be(organisation);
-            result.Recipient.Should().Be(scheme);
+            result.Recipient.Should().Be(recipientOrganisation);
             result.Aatf.Should().Be(aatf);
             result.WasteType.Should().Be(wasteType);
             result.Protocol.Should().Be(protocol);
@@ -474,7 +474,7 @@
         private void TransferNoteShouldBeEqualTo(Note result, DateTime date)
         {
             result.Organisation.Should().Be(organisation);
-            result.Recipient.Should().Be(scheme);
+            result.Recipient.Should().Be(recipientOrganisation);
             result.Aatf.Should().BeNull();
             result.WasteType.Should().Be(WasteType.HouseHold);
             result.Protocol.Should().BeNull();
@@ -492,7 +492,7 @@
         public Note CreateNote()
         {
             return new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 startDate,
                 endDate,
                 wasteType,
@@ -505,7 +505,7 @@
         public Note CreateTransferNote()
         {
             return new Note(organisation,
-                scheme,
+                recipientOrganisation,
                 createdBy,
                 transferTonnages.ToList(),
                 complianceYear,
