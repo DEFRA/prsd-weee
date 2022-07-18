@@ -102,8 +102,7 @@
 
             if (user != null)
             {
-                dbContext.CompetentAuthorityUsers.Remove(user);
-                dbContext.SaveChanges();
+                dbContext.Database.ExecuteSqlCommand($"DELETE FROM [Admin].CompetentAuthorityUser WHERE UserId = '{userId}'");
             }
 
             CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, authorityId, roleId).Create();
