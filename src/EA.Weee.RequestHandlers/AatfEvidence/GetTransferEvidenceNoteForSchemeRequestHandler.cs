@@ -39,7 +39,7 @@
 
             Condition.Requires(transferredScheme).IsNotNull();
 
-            var allowedAccess = authorization.CheckOrganisationAccess(evidenceNote.OrganisationId) || authorization.CheckSchemeAccess(evidenceNote.RecipientId);
+            var allowedAccess = authorization.CheckOrganisationAccess(evidenceNote.OrganisationId) || authorization.CheckSchemeAccess(evidenceNote.Recipient.Scheme.Id);
 
             if (!allowedAccess)
             {

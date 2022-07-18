@@ -236,7 +236,7 @@
                 data.AatfData.Should().NotBeNull();
                 data.AatfData.Id.Should().Be(note.Aatf.Id);
                 data.RecipientSchemeData.Should().NotBeNull();
-                data.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
+                data.RecipientSchemeData.Id.Should().Be(note.Recipient.Scheme.Id);
                 data.EvidenceTonnageData.Count.Should().Be(note.NoteTonnage.Count);
                 data.OrganisationData.Should().NotBeNull();
                 data.OrganisationData.Id.Should().Be(note.Organisation.Id);
@@ -251,7 +251,7 @@
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
                 data.RecipientOrganisationData.Should().NotBeNull();
-                data.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+                data.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
             }
         }
     }
