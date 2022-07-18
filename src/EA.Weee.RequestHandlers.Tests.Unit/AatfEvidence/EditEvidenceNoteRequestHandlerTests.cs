@@ -34,7 +34,8 @@
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
-        private readonly Scheme scheme;
+        private readonly Organisation recipientOrganisation;
+        private readonly Scheme recipientScheme;
         private readonly Note note;
 
         public EditEvidenceNoteRequestHandlerTests()
@@ -44,13 +45,16 @@
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
+            recipientScheme = A.Fake<Scheme>();
             organisation = A.Fake<Organisation>();
-            scheme = A.Fake<Scheme>();
+            recipientOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+            A.CallTo(() => recipientScheme.Organisation).Returns(recipientOrganisation);
             note = A.Fake<Note>();
             TestFixture.Create<Guid>();
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => recipientOrganisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
@@ -104,7 +108,7 @@
             if (!allowedStatus.Contains(status.Value))
             {
                 A.CallTo(() => note.Status).Returns(status);
-                A.CallTo(() => note.RecipientId).Returns(scheme.Id);
+                A.CallTo(() => note.RecipientId).Returns(recipientOrganisation.Id);
                 A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
 
                 //act
@@ -172,7 +176,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -187,7 +191,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, recipientOrganisation, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, protocol, A<IList<NoteTonnage>>._, A<NoteStatus>._, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
             SystemTime.Unfreeze();
@@ -201,7 +205,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
            
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
@@ -217,7 +221,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._,
+            A.CallTo(() => evidenceDataAccess.Update(note, recipientOrganisation, request.StartDate, request.EndDate, waste, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, A<NoteStatus>._,
                 A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
@@ -233,7 +237,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -248,7 +252,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.Update(note, scheme, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.Update(note, recipientOrganisation, request.StartDate, request.EndDate, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._, A<IList<NoteTonnage>>._, status, A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
 
             AssertTonnages(tonnageValues);
             SystemTime.Unfreeze();
@@ -259,7 +263,7 @@
         {
             //act
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
 
             //arrange
             var result = await handler.HandleAsync(request);
@@ -274,8 +278,8 @@
             //act
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
-            A.CallTo(() => note.RecipientId).Returns(scheme.Id);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => note.RecipientId).Returns(recipientOrganisation.Id);
+            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
 
             //arrange
             var result = await handler.HandleAsync(request);
@@ -289,7 +293,7 @@
             foreach (var tonnageValue in tonnageValues)
             {
                 A.CallTo(() => evidenceDataAccess.Update(A<Note>._,
-                        A<Scheme>._, A<DateTime>._, A<DateTime>._, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._,
+                        A<Organisation>._, A<DateTime>._, A<DateTime>._, A<Domain.Evidence.WasteType>._, A<Domain.Evidence.Protocol>._,
                         A<IList<NoteTonnage>>.That.Matches(t =>
                             t.Count(n => n.CategoryId.Equals(tonnageValue.CategoryId) &&
                                          n.Received.Equals(tonnageValue.Received) &&
@@ -302,7 +306,7 @@
         {
             return new EditEvidenceNoteRequest(organisation.Id,
                 TestFixture.Create<Guid>(),
-                scheme.Id,
+                recipientOrganisation.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
                 TestFixture.Create<WasteType>(),

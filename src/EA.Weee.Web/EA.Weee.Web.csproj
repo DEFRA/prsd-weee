@@ -315,9 +315,12 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="App_Start\CustomDateBinder.cs" />
     <Compile Include="App_Start\CustomModelBindersConfig.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
+    <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
+    <Compile Include="Areas\Aatf\Helpers\IAatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceSelectYourAatfViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceToSelectYourAatfViewModelMapTransfer.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\RecipientWasteStatusViewModelMap.cs" />
@@ -446,7 +449,7 @@
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttribute.cs" />
-    <Compile Include="Areas\Aatf\Attributes\CheckEditEvidenceNoteStatusAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\CheckCanEditEvidenceNoteAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateAatfEvidenceEnabledAttribute .cs" />
     <Compile Include="Areas\Aatf\Controllers\AatfEvidenceBaseController.cs" />
     <Compile Include="Areas\Aatf\Controllers\HoldingController.cs" />

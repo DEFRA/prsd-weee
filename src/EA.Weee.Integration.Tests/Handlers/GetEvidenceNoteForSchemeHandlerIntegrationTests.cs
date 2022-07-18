@@ -33,7 +33,9 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 var categories = new List<NoteTonnage>()
                 {
@@ -42,7 +44,10 @@
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
                 };
 
-                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
+                note = EvidenceNoteDbSetup
+                    .Init().WithTonnages(categories)
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithOrganisation(organisation.Id).Create();
 
                 request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };
@@ -74,8 +79,11 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 var categories = new List<NoteTonnage>()
                 {
@@ -86,7 +94,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
                     .WithOrganisation(organisation.Id)
-                    .WithRecipient(scheme.Id)
+                    .WithRecipient(recipientOrganisation.Id)
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -124,9 +132,12 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
                 scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
-     
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
+
                 var categories = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
@@ -136,7 +147,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
                     .WithOrganisation(organisation.Id)
-                    .WithRecipient(scheme.Id)
+                    .WithRecipient(recipientOrganisation.Id)
                      .With(n =>
                      {
                          n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow, "reason returned");
@@ -175,8 +186,11 @@
                 LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
                 scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
                 var categories = new List<NoteTonnage>()
                 {
@@ -187,7 +201,7 @@
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
                     .WithOrganisation(organisation.Id)
-                    .WithRecipient(scheme.Id)
+                    .WithRecipient(recipientOrganisation.Id)
                      .With(n =>
                      {
                          n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow, "reason rejected");
@@ -260,6 +274,7 @@
         {
             protected static IRequestHandler<GetEvidenceNoteForSchemeRequest, EvidenceNoteData> handler;
             protected static Organisation organisation;
+            protected static Organisation recipientOrganisation;
             protected static GetEvidenceNoteForSchemeRequest request;
             protected static EvidenceNoteData result;
             protected static Scheme scheme;
@@ -288,7 +303,8 @@
                 result.AatfData.Should().NotBeNull();
                 result.AatfData.Id.Should().Be(note.Aatf.Id);
                 result.RecipientSchemeData.Should().NotBeNull();
-                result.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
+                var recipientScheme = Query.GetSchemeByOrganisationId(recipientOrganisation.Id);
+                result.RecipientSchemeData.Id.Should().Be(recipientScheme.Id);
                 result.EvidenceTonnageData.Count.Should().Be(3);
                 result.OrganisationData.Should().NotBeNull();
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
@@ -302,7 +318,7 @@
                                                              ((int)n.CategoryId).Equals((int)noteTonnage.CategoryId));
                 }
                 result.RecipientOrganisationData.Should().NotBeNull();
-                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+                result.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
             }
         }
     }

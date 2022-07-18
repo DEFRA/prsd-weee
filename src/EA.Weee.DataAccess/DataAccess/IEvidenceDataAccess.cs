@@ -12,7 +12,7 @@
         Task<Note> GetNoteById(Guid id);
 
         Task<Note> Update(Note note, 
-            Scheme recipient, 
+            Organisation recipient, 
             DateTime startDate, 
             DateTime endDate, 
             WasteType? wasteType, 
@@ -28,7 +28,7 @@
         Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear);
 
         Task<Guid> AddTransferNote(Organisation organisation,
-            Scheme scheme,
+            Organisation scheme,
             List<NoteTransferTonnage> transferTonnage,
             NoteStatus status,
             int complianceYear,

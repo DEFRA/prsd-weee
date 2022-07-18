@@ -34,7 +34,7 @@
             result.AatfData.Should().NotBeNull();
             result.AatfData.Id.Should().Be(note.Aatf.Id);
             result.RecipientSchemeData.Should().NotBeNull();
-            result.RecipientSchemeData.Id.Should().Be(note.Recipient.Id);
+            result.RecipientSchemeData.Id.Should().Be(note.Recipient.Scheme.Id);
             result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
             foreach (var evidenceTonnageData in result.EvidenceTonnageData)
             {
@@ -48,7 +48,7 @@
             ((int)result.Type).Should().Be(note.NoteType.Value);
             result.Id.Should().Be(note.Id);
             result.RecipientOrganisationData.Should().NotBeNull();
-            result.RecipientOrganisationData.Id.Should().Be(note.Recipient.OrganisationId);
+            result.RecipientOrganisationData.Id.Should().Be(note.Recipient.Id);
         }
     }
 }

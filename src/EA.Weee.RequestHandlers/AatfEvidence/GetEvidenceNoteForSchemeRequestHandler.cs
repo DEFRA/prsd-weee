@@ -31,7 +31,7 @@
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            authorization.EnsureSchemeAccess(evidenceNote.Recipient.Id);
+            authorization.EnsureSchemeAccess(evidenceNote.Recipient.Scheme.Id);
 
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
