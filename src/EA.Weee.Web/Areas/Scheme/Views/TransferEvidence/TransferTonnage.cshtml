@@ -41,7 +41,7 @@
         </div>
     }
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model); }
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model, new ViewDataDictionary() { { "action", "TransferTonnage" }, { "controller", "TransferEvidence" } }); }
 
 }
 
