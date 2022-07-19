@@ -38,5 +38,10 @@
         Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
 
         Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds);
+
+        Task<Note> UpdateTransfer(Note note, Organisation recipient,
+            IList<NoteTransferTonnage> tonnages,
+            NoteStatus status,
+            DateTime updateDate);
     }
 }

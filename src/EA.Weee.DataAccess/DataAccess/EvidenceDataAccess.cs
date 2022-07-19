@@ -6,12 +6,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
-    using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
-    using Z.EntityFramework.Plus;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
     {
@@ -209,6 +206,42 @@
                 .Include(n => n.NoteTransferTonnage.Select(nt => nt.TransferNote))
                 .Where(n => ids.Contains(n.Id))
                 .ToListAsync();
+        }
+
+        public async Task<Note> UpdateTransfer(Note note, Organisation recipient,
+            IList<NoteTransferTonnage> tonnages,
+            NoteStatus status,
+            DateTime updateDate)
+        {
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), updateDate);
+            }
+
+            foreach (var noteTonnage in tonnages)
+            {
+                var existingTonnage = note.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage.NoteTonnageId);
+
+                if (existingTonnage == null)
+                {
+                    note.NoteTransferTonnage.Add(noteTonnage);
+                }
+                else
+                {
+                    existingTonnage.UpdateValues(noteTonnage.Received, noteTonnage.Reused);
+                }
+            }
+
+            var itemsToRemove =
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId));
+
+            genericDataAccess.RemoveMany(itemsToRemove);
+            
+            note.Update(recipient);
+
+            await context.SaveChangesAsync();
+
+            return note;
         }
     }
 }
