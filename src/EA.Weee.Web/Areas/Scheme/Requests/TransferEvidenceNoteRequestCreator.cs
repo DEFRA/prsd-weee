@@ -53,5 +53,23 @@
                 request.EvidenceNoteIds,
                 viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
         }
+
+        public EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel)
+        {
+            Condition.Requires(request).IsNotNull();
+            Condition.Requires(viewModel).IsNotNull();
+
+            var transferValues = viewModel.TransferCategoryValues.Select(t =>
+                new TransferTonnageValue(t.Id, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(),
+                    t.TransferTonnageId));
+
+            return new EditTransferEvidenceNoteRequest(viewModel.ViewTransferNoteViewModel.EvidenceNoteId,
+                request.OrganisationId,
+                request.SchemeId,
+                request.CategoryIds,
+                transferValues.ToList(),
+                request.EvidenceNoteIds,
+                viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
+        }
     }
 }
