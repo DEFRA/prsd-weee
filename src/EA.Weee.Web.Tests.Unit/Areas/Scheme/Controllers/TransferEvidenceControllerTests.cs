@@ -142,6 +142,10 @@
         public async Task TransferEvidenceNoteGet_GivenANewModelIsCreated_ModelWithDefaultValuesIsCreated()
         {
             // act
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
+
             var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
@@ -157,10 +161,14 @@
         public async Task TransferEvidenceNoteGet_GivenANewModelIsCreated_CategoryValuesShouldBeRetrievedFromTheWeeCategory()
         {
             // act
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
+
             var categoryValues = new CategoryValues<CategoryBooleanViewModel>();
             var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
-       
+
             // assert
             model.CategoryBooleanViewModels.Count.Should().Be(Enum.GetNames(typeof(WeeeCategory)).Length);
             for (int i = 0; i < categoryValues.Count; i++)
@@ -199,6 +207,70 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
                 .Matches(s => s.IncludeWithdrawn.Equals(false))))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNoteGet_TransferNoteSessionObjectShouldBeRetrieved()
+        {
+            // act
+            await transferEvidenceController.TransferEvidenceNote(organisationId);
+
+            // assert
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNoteGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull()
+        {
+            // arrange
+            A.CallTo(() =>
+             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                 SessionKeyConstant.TransferNoteKey)).Returns(null);
+
+            // act
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
+
+            // assert
+            model.CategoryValues.Should().AllBeOfType(typeof(CategoryBooleanViewModel));
+            model.CategoryBooleanViewModels.Should().AllSatisfy(s =>
+            {
+                s.Selected.Should().Be(false);
+            });
+
+            model.OrganisationId.Should().Be(organisationId);
+            model.SchemasToDisplay.Should().BeEmpty();
+            model.SelectedSchema.Should().BeNull();
+            model.HasSelectedAtLeastOneCategory.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNoteGet_GivenTransferNoteSessionObjectIsRetrieved_ShouldReflectTheModel()
+        {
+            // arrange
+            var request = GetRequestWithCategoryIds();
+            A.CallTo(() =>
+             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                 SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            // act
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
+
+            // assert
+            model.CategoryValues.Should().AllBeOfType(typeof(CategoryBooleanViewModel));
+
+            model.CategoryBooleanViewModels.Where(c => request.CategoryIds.Contains(c.CategoryId)).Should().AllSatisfy(s =>
+            {
+                s.Selected.Should().Be(true);
+            });
+
+            model.OrganisationId.Should().Be(organisationId);
+            model.SchemasToDisplay.Should().BeEmpty();
+            model.SelectedSchema.Should().BeNull();
+            model.HasSelectedAtLeastOneCategory.Should().BeTrue();
         }
 
         [Fact]
@@ -454,6 +526,60 @@
                     t.OrganisationId.Equals(organisationId) &&
                     t.Notes.Equals(notes) &&
                     t.Request.Equals(request)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferFromGet_GivenTransferNoteSessionObjectWithEvidenceNoteIds_ModelShouldBeMapped()
+        {
+            var request = GetRequest();
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).Returns(request);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+
+            // act
+            await transferEvidenceController.TransferFrom(organisationId);
+
+            // assert
+
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds)))).MustHaveHappenedOnceExactly();
+        }
+
+        public static IEnumerable<object[]> EvidenceNoteIds =>
+         new List<object[]>
+         {
+                new object[] { new List<Guid>() },
+                new object[] { new List<Guid> { Guid.NewGuid() } },
+                new object[] { new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() } }
+         };
+
+        [Theory]
+        [MemberData(nameof(EvidenceNoteIds))]
+        public async Task TransferFromGet_GivenTransferNoteSessionObjectWithListOfEvidenceIds_ModelShouldBeMapped(List<Guid> evidenceIds)
+        {
+            var request = GetRequest(evidenceIds);
+ 
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).Returns(request);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+
+            // act
+            await transferEvidenceController.TransferFrom(organisationId);
+
+            // assert
+
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1071,9 +1197,24 @@
             return new TransferEvidenceNoteCategoriesViewModel { OrganisationId = organisationId, SelectedSchema = selectedScheme };
         }
 
-        private TransferEvidenceNoteRequest GetRequest()
+        private TransferEvidenceNoteRequest GetRequest(List<Guid> evidenceIds = null)
         {
             var categoryIds = TestFixture.CreateMany<int>().ToList();
+          
+            if (evidenceIds == null)
+            {
+                evidenceIds = TestFixture.CreateMany<Guid>().ToList();
+            }
+           
+            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
+            {
+                EvidenceNoteIds = evidenceIds
+            };
+        }
+
+        private TransferEvidenceNoteRequest GetRequestWithCategoryIds()
+        {
+            var categoryIds = new List<int> { 3, 5, 9, 11 };
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
 
             return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
