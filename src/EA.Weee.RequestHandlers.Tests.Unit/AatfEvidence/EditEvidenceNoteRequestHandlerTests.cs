@@ -210,7 +210,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
@@ -242,7 +242,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.NoteStatus status)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
