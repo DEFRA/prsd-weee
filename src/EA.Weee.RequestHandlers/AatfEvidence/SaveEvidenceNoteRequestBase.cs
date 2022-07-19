@@ -8,7 +8,8 @@
     {
         public void AatfIsValidToSave(Aatf aatf, DateTime systemDateTime)
         {
-            if (aatf.AatfStatus != AatfStatus.Approved || !WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, systemDateTime) || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
+            if (aatf.AatfStatus != AatfStatus.Approved || !WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, systemDateTime) 
+                                                       || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
             {
                 throw new InvalidOperationException(
                     $"Aatf with Id {aatf.AatfId} has invalid status to save");
