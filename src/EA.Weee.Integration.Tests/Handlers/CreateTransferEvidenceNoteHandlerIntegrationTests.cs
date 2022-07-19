@@ -69,9 +69,9 @@
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.DisplayEquipment.ToInt(), 1, null, transferTonnage1.Id),
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.LargeHouseholdAppliances.ToInt(), 3, 1, transferTonnage2.Id),
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, transferTonnage3.Id),
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage2.Id, WeeeCategory.LargeHouseholdAppliances.ToInt(), 3, 1, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage3.Id, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, Guid.Empty),
                 };
 
                 request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, new List<int>()
@@ -165,7 +165,7 @@
                 // now to call the request to take the last 1 tonne
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, transferTonnage1.Id)
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, Guid.Empty)
                 };
 
                 request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, new List<int>()
@@ -233,7 +233,7 @@
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.DisplayEquipment.ToInt(), 1, null, transferTonnage1.Id)
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty)
                 };
 
                 request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, 
@@ -295,7 +295,7 @@
                 foreach (var transferTonnageValue in transferTonnageValues)
                 {
                     var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
-                        ntt.NoteTonnageId.Equals(transferTonnageValue.TransferTonnageId));
+                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
 
                     tonnage.Should().NotBeNull();
                     tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);
