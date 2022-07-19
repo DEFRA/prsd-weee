@@ -76,7 +76,7 @@
         @(this.WeeeGds().Submit("Continue"))
 
         <p class="govuk-body">
-            @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SearchAnAatf" }, new { @class = "govuk-back-link" })
+            @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SearchAnAatf" }, new { @class = "govuk-back-link" })
         </p>
 
         <div class="govuk-!-padding-bottom-8"></div>
