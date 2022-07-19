@@ -47,7 +47,7 @@
                     t.TransferTonnageId));
 
             return new TransferEvidenceNoteRequest(request.OrganisationId, 
-                request.SchemeId, 
+                request.RecipientId, 
                 request.CategoryIds,
                 transferValues.ToList(),
                 request.EvidenceNoteIds,
@@ -56,19 +56,19 @@
 
         public EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel)
         {
-            Condition.Requires(request).IsNotNull();
             Condition.Requires(viewModel).IsNotNull();
 
             var transferValues = viewModel.TransferCategoryValues.Select(t =>
                 new TransferTonnageValue(t.Id, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(),
                     t.TransferTonnageId));
 
+            var organisationId = viewModel.PcsId;
+            var recipientId = request?.RecipientId ?? viewModel.RecipientId;
+
             return new EditTransferEvidenceNoteRequest(viewModel.ViewTransferNoteViewModel.EvidenceNoteId,
-                request.OrganisationId,
-                request.SchemeId,
-                request.CategoryIds,
+                organisationId,
+                recipientId,
                 transferValues.ToList(),
-                request.EvidenceNoteIds,
                 viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
         }
     }
