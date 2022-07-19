@@ -75,7 +75,8 @@
 
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
 
-                    //var id = await client.SendAsync(User.GetAccessToken(), transferRequest);
+                    await client.SendAsync(User.GetAccessToken(), updatedRequest);
+
                     return new RedirectToRouteResult(route, new RouteValueDictionary()
                     {
                         { "pcsId", model.PcsId },

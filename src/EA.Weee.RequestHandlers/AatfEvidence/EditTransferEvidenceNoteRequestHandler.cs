@@ -19,7 +19,7 @@
     using Requests.Scheme;
     using Security;
 
-    public class CreateTransferEvidenceNoteRequestHandler : IRequestHandler<TransferEvidenceNoteRequest, Guid>
+    public class EditTransferEvidenceNoteRequestHandler : IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -29,7 +29,7 @@
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
+        public EditTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
@@ -46,7 +46,7 @@
             this.systemDataDataAccess = systemDataDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
+        public async Task<Guid> HandleAsync(EditTransferEvidenceNoteRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
@@ -66,17 +66,17 @@
                 Guid transferNoteId;
                 try
                 {
-                    await transferTonnagesValidator.Validate(request.TransferValues);
+                    //await transferTonnagesValidator.Validate(request.TransferValues);
 
-                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.Id,
+                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
+                    //var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
-                        transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
-                        userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+                    //transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
+                      //  transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
+                        //userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
                 }
                 catch
                 {
@@ -86,7 +86,7 @@
 
                 transactionAdapter.Commit(transaction);
 
-                return transferNoteId;
+                return Guid.NewGuid();
             }
         }
     }
