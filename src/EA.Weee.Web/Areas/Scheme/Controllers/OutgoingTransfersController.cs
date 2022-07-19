@@ -83,7 +83,7 @@
 
             var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
-            if (request != null)
+            if (request?.EvidenceNoteIds != null)
             {
                 existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
                 existingEvidenceNoteIds.RemoveAll(a => !request.EvidenceNoteIds.Contains(a));
