@@ -5,6 +5,7 @@
     using Prsd.Core;
     using Prsd.Core.Mediator;
 
+    [Serializable]
     public class GetEvidenceNoteTransfersForInternalUserRequest : IRequest<TransferEvidenceNoteData>
     {
         public Guid EvidenceNoteId { get; private set; }
