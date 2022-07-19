@@ -7,6 +7,12 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
+
+    if (ViewData != null)
+    {
+        ViewData.Add("action", "TransferTonnage");
+        ViewData.Add("controller", "TransferEvidence");
+    }
 }
 
 @section full_main_content
@@ -41,7 +47,7 @@
         </div>
     }
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model, new ViewDataDictionary() { { "action", "TransferTonnage" }, { "controller", "TransferEvidence" } }); }
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model); }
 
 }
 
