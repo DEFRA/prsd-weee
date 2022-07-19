@@ -57,26 +57,29 @@
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
             var scheme = await genericDataAccess.GetById<Scheme>(request.RecipientId);
-
+            
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(scheme).IsNotNull();
 
+            var note = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
+
             using (var transaction = transactionAdapter.BeginTransaction())
             {
-                Guid transferNoteId;
                 try
                 {
-                    //await transferTonnagesValidator.Validate(request.TransferValues);
-
-                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
+                    var newNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.Id,
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    //var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
+                    await evidenceDataAccess.UpdateTransfer(note,
+                        scheme.Organisation,
+                        newNoteTonnages,
+                        request.Status.ToDomainEnumeration<NoteStatus>(),
+                        CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
-                    //transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
-                      //  transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
-                        //userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+                    await transferTonnagesValidator.Validate(request.TransferValues, request.TransferNoteId);
+
+                    transactionAdapter.Commit(transaction);
                 }
                 catch
                 {
@@ -84,9 +87,7 @@
                     throw;
                 }
 
-                transactionAdapter.Commit(transaction);
-
-                return Guid.NewGuid();
+                return request.TransferNoteId;
             }
         }
     }

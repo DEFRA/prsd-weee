@@ -3,6 +3,7 @@
     using Prsd.Core;
     using System;
     using System.Linq;
+    using Core.Aatf;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using Extensions;

@@ -96,6 +96,13 @@
             EndDate = endDate;
         }
 
+        public void Update(Organisation recipient)
+        {
+            Guard.ArgumentNotNull(() => recipient, recipient);
+
+            Recipient = recipient;
+        }
+
         public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, DateTime date, string reason = null)
         {
             if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))

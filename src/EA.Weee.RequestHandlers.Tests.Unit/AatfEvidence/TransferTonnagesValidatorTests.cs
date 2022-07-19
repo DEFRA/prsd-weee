@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Aatf;
+    using Core.AatfEvidence;
     using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -14,6 +16,7 @@
     using RequestHandlers.AatfEvidence;
     using Weee.Requests.AatfEvidence;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class TransferTonnagesValidatorTests
     {
@@ -41,7 +44,7 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetTonnageByIds(
-                A<List<Guid>>.That.Matches(m => m.SequenceEqual(transferValues.Select(t => t.TransferTonnageId).ToList())))).MustHaveHappenedOnceExactly();
+                A<List<Guid>>.That.Matches(m => m.SequenceEqual(transferValues.Select(t => t.Id).ToList())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -65,9 +68,9 @@
         [Fact]
         public async Task Validate_GivenRequestedTonnageIsAvailableAsNoOtherTransfers_NoExceptionExpected()
         {
-            var transferTonnageId1 = Guid.NewGuid();
+            var noteTonnageId = Guid.NewGuid();
             var transferTonnageValue1 = A.Fake<TransferTonnageValue>();
-            A.CallTo(() => transferTonnageValue1.TransferTonnageId).Returns(transferTonnageId1);
+            A.CallTo(() => transferTonnageValue1.Id).Returns(noteTonnageId);
             A.CallTo(() => transferTonnageValue1.FirstTonnage).Returns(10);
 
             var transferValues = new List<TransferTonnageValue>()
@@ -76,7 +79,7 @@
             };
 
             var noteTonnage = A.Fake<NoteTonnage>();
-            A.CallTo(() => noteTonnage.Id).Returns(transferTonnageId1);
+            A.CallTo(() => noteTonnage.Id).Returns(noteTonnageId);
             A.CallTo(() => noteTonnage.Received).Returns(10);
 
             A.CallTo(() => evidenceDataAccess.GetTonnageByIds(A<List<Guid>>._))
@@ -92,9 +95,9 @@
         [Fact]
         public async Task Validate_GivenRequestedTonnageIsAvailableWithOtherTransfers_NoExceptionExpected()
         {
-            var transferValueTonnageId1 = Guid.NewGuid();
+            var noteTonnageId1 = Guid.NewGuid();
             var transferValuesTonnage1 = A.Fake<TransferTonnageValue>();
-            A.CallTo(() => transferValuesTonnage1.TransferTonnageId).Returns(transferValueTonnageId1);
+            A.CallTo(() => transferValuesTonnage1.Id).Returns(noteTonnageId1);
             A.CallTo(() => transferValuesTonnage1.FirstTonnage).Returns(1);
             var transferValues = new List<TransferTonnageValue>()
             {
@@ -116,7 +119,7 @@
             };
             
             var noteTonnage1 = A.Fake<NoteTonnage>();
-            A.CallTo(() => noteTonnage1.Id).Returns(transferValueTonnageId1);
+            A.CallTo(() => noteTonnage1.Id).Returns(noteTonnageId1);
             A.CallTo(() => noteTonnage1.Received).Returns(11);
             A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnages);
             A.CallTo(() => evidenceDataAccess.GetTonnageByIds(A<List<Guid>>._))
@@ -138,7 +141,7 @@
             //create the selected transfer tonnages
             var transferValueTonnageId1 = Guid.NewGuid();
             var transferValuesTonnage1 = A.Fake<TransferTonnageValue>();
-            A.CallTo(() => transferValuesTonnage1.TransferTonnageId).Returns(transferValueTonnageId1);
+            A.CallTo(() => transferValuesTonnage1.Id).Returns(transferValueTonnageId1);
             A.CallTo(() => transferValuesTonnage1.FirstTonnage).Returns(1);
             var transferValues = new List<TransferTonnageValue>()
             {
@@ -186,9 +189,9 @@
             }
 
             //create the selected transfer tonnages
-            var transferValueTonnageId1 = Guid.NewGuid();
+            var noteTonnageId1 = Guid.NewGuid();
             var transferValuesTonnage1 = A.Fake<TransferTonnageValue>();
-            A.CallTo(() => transferValuesTonnage1.TransferTonnageId).Returns(transferValueTonnageId1);
+            A.CallTo(() => transferValuesTonnage1.Id).Returns(noteTonnageId1);
             A.CallTo(() => transferValuesTonnage1.FirstTonnage).Returns(1);
             var transferValues = new List<TransferTonnageValue>()
             {
@@ -207,7 +210,7 @@
 
             // setup the tonnages for the new transfer
             var noteTonnage1 = A.Fake<NoteTonnage>();
-            A.CallTo(() => noteTonnage1.Id).Returns(transferValueTonnageId1);
+            A.CallTo(() => noteTonnage1.Id).Returns(noteTonnageId1);
             A.CallTo(() => noteTonnage1.Received).Returns(10);
             A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnages);
 

@@ -8,6 +8,8 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Aatf;
+    using Core.AatfEvidence;
     using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -21,6 +23,9 @@
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Requests.Scheme;
+    using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
+    using WasteType = Domain.Evidence.WasteType;
 
     public class CreateTransferEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
