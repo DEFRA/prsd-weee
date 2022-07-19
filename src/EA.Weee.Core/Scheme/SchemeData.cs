@@ -13,7 +13,9 @@
         public SchemeStatus SchemeStatus { get; set; }
         public string SchemeName { get; set; }
 
-        public string SchemeNameDisplay => SchemeName ?? $"Empty name ({SchemeStatus.ToString()})";
+        //public string SchemeNameDisplay => SchemeName ?? $"Empty name ({SchemeStatus.ToString()})";
+
+        public string SchemeNameDisplay => IsBalancingScheme ? "Producer compliance scheme balancing system (PBS)" : SchemeName ?? $"Empty name ({SchemeStatus.ToString()})";
 
         public string ApprovalName { get; set; }
         public string IbisCustomerReference { get; set; }

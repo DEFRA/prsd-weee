@@ -10,7 +10,7 @@
         {
             return new EvidenceNoteRowViewModel
             {
-                Recipient = source.RecipientSchemeData.SchemeName,
+                Recipient = source.RecipientSchemeData.SchemeNameDisplay,
                 ReferenceId = source.Reference,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,
