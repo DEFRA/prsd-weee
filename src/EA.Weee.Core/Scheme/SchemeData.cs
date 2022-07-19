@@ -31,5 +31,7 @@
         public bool HasAddress { get; set; }
 
         public bool HasContact { get; set; }
+
+        public bool IsBalancingScheme { get; set; }
     }
 }
