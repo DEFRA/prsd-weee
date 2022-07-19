@@ -7,7 +7,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -24,6 +23,7 @@
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class CreateTransferEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
@@ -206,7 +206,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => transferTonnagesValidator.Validate(request.TransferValues)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transferTonnagesValidator.Validate(request.TransferValues, null)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -245,19 +245,12 @@
                 A.CallTo(() =>
                     evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                         A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
-                            t2 => t2.NoteTonnageId.Equals(transferValue.TransferTonnageId) && 
+                            t2 => t2.NoteTonnageId.Equals(transferValue.Id) && 
                                   t2.Received.Equals(transferValue.FirstTonnage) &&
                                   t2.Reused.Equals(transferValue.SecondTonnage)).Equals(1)), A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
                     .MustHaveHappenedOnceExactly();
             }
 
-            foreach (var transferCategories in request.CategoryIds)
-            {
-                A.CallTo(() =>
-                        evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
-                            A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
-                    .MustHaveHappenedOnceExactly();
-            }
             SystemTime.Unfreeze();
         }
 
@@ -294,7 +287,7 @@
         public async Task HandleAsync_GivenErrorDuringValidation_TransactionShouldBeRolledBack()
         {
             //arrange
-            A.CallTo(() => transferTonnagesValidator.Validate(A<List<TransferTonnageValue>>._)).ThrowsAsync(new Exception());
+            A.CallTo(() => transferTonnagesValidator.Validate(A<List<TransferTonnageValue>>._, null)).ThrowsAsync(new Exception());
                 
             //act
             await Record.ExceptionAsync(async () => await handler.HandleAsync(request));

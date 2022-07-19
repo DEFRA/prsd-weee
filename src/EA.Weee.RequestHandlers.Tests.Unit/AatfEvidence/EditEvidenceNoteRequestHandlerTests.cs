@@ -6,6 +6,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Aatf;
     using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;

@@ -77,14 +77,14 @@
                     transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+
+                    transactionAdapter.Commit(transaction);
                 }
                 catch
                 {
                     transactionAdapter.Rollback(transaction);
                     throw;
                 }
-
-                transactionAdapter.Commit(transaction);
 
                 return transferNoteId;
             }

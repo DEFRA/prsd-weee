@@ -7,10 +7,7 @@
 
     public class EditTransferEvidenceNoteRequest : TransferEvidenceNoteRequest
     {
-        public EditTransferEvidenceNoteRequest()
-        {
-        }
-        public Guid TransferNoteId { get; }
+        public Guid TransferNoteId { get; set; }
 
         public EditTransferEvidenceNoteRequest(Guid transferNoteId,
             Guid organisationId,
