@@ -5,29 +5,30 @@
     using System.Linq;
     using AutoFixture;
     using Core.AatfEvidence;
+    using Core.AatfReturn;
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Organisations;
+    using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewEvidenceNoteViewModelMapTests
+    public class ViewEvidenceNoteViewModelMapTests : SimpleUnitTestBase
     {
         private readonly ITonnageUtilities tonnageUtilities;
         private readonly IAddressUtilities addressUtilities;
         private readonly ViewEvidenceNoteViewModelMap map;
-        private readonly Fixture fixture;
 
         public ViewEvidenceNoteViewModelMapTests()
         {
             tonnageUtilities = A.Fake<ITonnageUtilities>();
             addressUtilities = A.Fake<IAddressUtilities>();
-            fixture = new Fixture();
 
             map = new ViewEvidenceNoteViewModelMap(tonnageUtilities, addressUtilities);
         }
@@ -46,7 +47,7 @@
         public void Map_GivenSource_StandardPropertiesShouldBeMapped()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
 
             //act
             var result = map.Map(source);
@@ -73,7 +74,7 @@
         public void Map_GivenSource_OperatorAddressShouldBeSet()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             const string operatorAddress = "operatorAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
@@ -95,7 +96,7 @@
         public void Map_GivenSource_SiteAddressShouldBeSet()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             const string siteAddress = "siteAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
@@ -117,10 +118,10 @@
         public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
         {
             //arrange
-            var organisation = fixture.Build<OrganisationData>()
+            var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, true)
                 .With(o => o.OrganisationName, "org").Create();
-            var evidenceData = fixture.Build<EvidenceNoteData>()
+            var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
@@ -147,10 +148,10 @@
         public void Map_GivenSourceWithRecipientThatDoesNotHaveBusinessAddress_RecipientAddressShouldBeSetToNotificationAddress()
         {
             //arrange
-            var organisation = fixture.Build<OrganisationData>()
+            var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
                 .With(o => o.OrganisationName, "org").Create();
-            var evidenceData = fixture.Build<EvidenceNoteData>()
+            var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
@@ -177,7 +178,7 @@
         public void Map_GivenTonnagesAndIncludeAllCategories_TonnagesShouldBeFormatted()
         {
             //arrange
-            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, true).Create();
+            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, true).Create();
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -228,7 +229,7 @@
         public void Map_GivenTonnagesAndNotIncludeAllCategories_OnlyCategoriesThatNoteTonnageShouldBeIncluded()
         {
             //arrange
-            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, false).Create();
+            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, false).Create();
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -258,7 +259,7 @@
         public void Map_GivenTonnages_TotalReceivedShouldBeSet()
         {
             //arrange
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -284,7 +285,7 @@
         public void Map_GivenNoteStatusIsNull_SuccessMessageShouldNotBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), null);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), null);
 
             //act
             var result = map.Map(source);
@@ -297,7 +298,7 @@
         public void Map_GivenNoteStatusDraftCreated_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             //act
             var result = map.Map(source);
@@ -312,7 +313,7 @@
         public void Map_GivenNoteStatusSubmitted_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
 
             //act
             var result = map.Map(source);
@@ -327,7 +328,7 @@
         public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
 
             //act
             var result = map.Map(source);
@@ -343,7 +344,7 @@
         public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
 
             //act
             var result = map.Map(source);
@@ -359,7 +360,7 @@
         public void Map_GivenNoteStatusReturned_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
 
             //act
             var result = map.Map(source);
@@ -375,7 +376,7 @@
         public void Map_GivenNoteStatusReturnedSaved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved);
 
             //act
             var result = map.Map(source);
@@ -389,7 +390,7 @@
         [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -400,7 +401,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -411,7 +412,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -422,7 +423,7 @@
         [Fact]
         public void Map_GivenApprovedDateTime_FormatsToGMTString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.ApprovedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -433,7 +434,7 @@
         [Fact]
         public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.ApprovedDate = null;
 
             var result = map.Map(source);
@@ -444,7 +445,7 @@
         [Fact]
         public void Map_GivenReturnedDateTime_FormatsToGMTString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.ReturnedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -455,7 +456,7 @@
         [Fact]
         public void Map_GivenNoReturnedDateTime_FormatsToEmptyString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.ReturnedDate = null;
 
             var result = map.Map(source);
@@ -466,8 +467,8 @@
         [Fact]
         public void Map_GivenReturnedReasonAndNoRejectedReason_ReasonMustBeSet()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
-            var reason = fixture.Create<string>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.ReturnedReason = reason;
             source.EvidenceNoteData.RejectedReason = null;
             var result = map.Map(source);
@@ -478,7 +479,7 @@
         [Fact]
         public void Map_GivenNoReturnedReasonAndNoRejectedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.ReturnedReason = null;
             source.EvidenceNoteData.RejectedReason = null;
 
@@ -490,7 +491,7 @@
         [Fact]
         public void Map_GivenRejectedDateTime_FormatsToGMTString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.RejectedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -501,7 +502,7 @@
         [Fact]
         public void Map_GivenNoRejectedDateTime_FormatsToEmptyString()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.RejectedDate = null;
 
             var result = map.Map(source);
@@ -512,8 +513,8 @@
         [Fact]
         public void Map_GivenRejectedReason_ReasonMustBeSet()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
-            var reason = fixture.Create<string>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.RejectedReason = reason;
             var result = map.Map(source);
 
@@ -523,7 +524,7 @@
         [Fact]
         public void Map_GivenNoRejectedReasonAndNoReturnedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
             source.EvidenceNoteData.RejectedReason = null;
             source.EvidenceNoteData.ReturnedReason = null;
 
@@ -532,29 +533,76 @@
             result.RejectedReason.Should().BeNullOrEmpty();
         }
 
-        private ViewEvidenceNoteMapTransfer SetupTonnage(bool includeAll)
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenSourceWhereNoteStatusIsNotDraftOrReturned_DisplayEditButtonShouldBeFalse(NoteStatus status)
         {
-            var source = fixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, includeAll).Create();
-
-            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
+            if (status.Equals(NoteStatus.Draft) || status.Equals(NoteStatus.Returned))
             {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1, null, null),
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
-            };
+                return;
+            }
 
-            A.CallTo(() =>
-                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
-                .Returns(null);
-            A.CallTo(() =>
-                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Reused))
-                .Returns("1");
-            A.CallTo(() =>
-                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received))
-                .Returns("2");
-            A.CallTo(() =>
-                    tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Reused))
-                .Returns(null);
-            return source;
+            var evidenceNoteData = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, status)
+                .With(e => e.AatfData,
+                    TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
+                        .Create()).Create();
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenSourceWhereNoteStatusIsDraftOrReturnedAndAatfCanEditEvidenceNotes_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        {
+            if (!status.Equals(NoteStatus.Draft) && !status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            var evidenceNoteData = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, status)
+                .With(e => e.AatfData,
+                    TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
+                        .Create()).Create();
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayEditButton.Should().BeTrue();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenSourceWhereNoteStatusIsDraftOrReturnedAndAatfCannotEditEvidenceNotes_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (!status.Equals(NoteStatus.Draft) && !status.Equals(NoteStatus.Returned))
+            {
+                return;
+            }
+
+            var evidenceNoteData = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, status)
+                .With(e => e.AatfData,
+                    TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, false)
+                        .Create()).Create();
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayEditButton.Should().BeFalse();
         }
     }
 }
