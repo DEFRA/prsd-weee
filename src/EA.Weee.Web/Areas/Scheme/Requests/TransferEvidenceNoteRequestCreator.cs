@@ -43,8 +43,7 @@
             Condition.Requires(viewModel).IsNotNull();
 
             var transferValues = viewModel.TransferCategoryValues.Select(t =>
-                new TransferTonnageValue(Guid.Empty, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(),
-                    t.TransferTonnageId));
+                new TransferTonnageValue(t.Id, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(), Guid.Empty));
 
             return new TransferEvidenceNoteRequest(request.OrganisationId, 
                 request.RecipientId, 
