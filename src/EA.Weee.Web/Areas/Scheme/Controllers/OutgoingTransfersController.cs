@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Core.Helpers;
     using Requests;
     using ViewModels;
@@ -27,7 +28,7 @@
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly ITransferEvidenceRequestCreator transferEvidenceRequestCreator;
-
+        
         public OutgoingTransfersController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
@@ -64,40 +65,28 @@
             {
                 if (ModelState.IsValid)
                 {
+                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
+
+                    var updatedRequest = transferEvidenceRequestCreator.EditSelectTonnageToRequest(transferRequest, model);
+
+                    var route = updatedRequest.Status == NoteStatus.Submitted 
+                        ? SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName :
+                            SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
+
+                    //var id = await client.SendAsync(User.GetAccessToken(), transferRequest);
+                    return new RedirectToRouteResult(route, new RouteValueDictionary()
+                    {
+                        { "pcsId", updatedRequest.OrganisationId },
+                        { "evidenceNoteId", model.ViewTransferNoteViewModel.EvidenceNoteId }
+                    });
                 }
 
                 var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client);
 
                 return this.View("EditTonnages", updatedModel);
             }
-        }
-
-        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
-        {
-            var noteData =
-                await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
-
-            var request =
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
-
-            var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
-
-            if (request?.EvidenceNoteIds != null)
-            {
-                existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
-                existingEvidenceNoteIds.RemoveAll(a => !request.EvidenceNoteIds.Contains(a));
-            }
-
-            var noteIds = request != null ? request.CategoryIds : noteData.CategoryIds;
-
-            var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, existingEvidenceNoteIds));
-
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId);
-
-            var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
-            return model;
         }
 
         [HttpGet]
@@ -308,6 +297,34 @@
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(mapperObject);
+            return model;
+        }
+
+        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
+        {
+            var noteData =
+                await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+            var request =
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                    SessionKeyConstant.TransferNoteKey);
+
+            var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
+
+            if (request?.EvidenceNoteIds != null)
+            {
+                existingEvidenceNoteIds = existingEvidenceNoteIds.Union(request.EvidenceNoteIds).Distinct().ToList();
+                existingEvidenceNoteIds.RemoveAll(a => !request.EvidenceNoteIds.Contains(a));
+            }
+
+            var noteIds = request != null ? request.CategoryIds : noteData.CategoryIds;
+
+            var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, existingEvidenceNoteIds));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId);
+
+            var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
             return model;
         }
 
