@@ -1798,6 +1798,21 @@
         }
 
         [Fact]
+        public async Task EditTonnagesPost_GivenValid_ApiShouldBeCalled()
+        {
+            //arrange
+            var request = TestFixture.Create<EditTransferEvidenceNoteRequest>();
+
+            A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<TransferEvidenceNoteRequest>._, A<TransferEvidenceTonnageViewModel>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditTonnagesPost_GivenValidModel_TempDataNotificationShouldBeSet()
         {
             //act
