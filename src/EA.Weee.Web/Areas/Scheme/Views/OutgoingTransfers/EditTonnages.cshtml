@@ -3,6 +3,12 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Edit transfer tonnage - GOV.UK";
+
+    if (ViewData != null)
+    {
+        ViewData.Add("action", "EditTonnages");
+        ViewData.Add("controller", "OutgoingTransfers");
+    }
 }
 
 @section full_main_content
@@ -16,6 +22,6 @@
 
     <p class="govuk-body govuk-!-padding-top-2">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</p>
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model, new ViewDataDictionary() { { "action", "EditTonnages" }, { "controller", "OutgoingTransfers" } }); }
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferTonnagesPartial.cshtml", Model); }
 }
 
