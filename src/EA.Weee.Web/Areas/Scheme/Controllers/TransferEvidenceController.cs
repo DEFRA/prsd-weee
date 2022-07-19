@@ -104,6 +104,12 @@
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
 
+                var evidenceNoteIds = transferRequest.EvidenceNoteIds;
+                if (evidenceNoteIds != null)
+                {
+                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+                }
+
                 var model =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
 
