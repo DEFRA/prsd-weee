@@ -140,7 +140,7 @@
             var schemeName = TestFixture.Create<string>();
             var source = GetRequestTransferObject();
 
-            A.CallTo(() => cache.FetchSchemeName(source.Request.SchemeId)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemeName(source.Request.RecipientId)).Returns(schemeName);
 
             //act
             var result = map.Map(source);

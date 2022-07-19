@@ -56,7 +56,7 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Scheme>(request.SchemeId);
+            var scheme = await genericDataAccess.GetById<Scheme>(request.RecipientId);
 
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(scheme).IsNotNull();

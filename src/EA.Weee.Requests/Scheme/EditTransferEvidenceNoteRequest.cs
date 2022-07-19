@@ -11,14 +11,19 @@
 
         public EditTransferEvidenceNoteRequest(Guid transferNoteId,
             Guid organisationId,
-            Guid schemeId,
-            List<int> categoryIds,
+            Guid recipientId,
             List<TransferTonnageValue> transferValues,
-            List<Guid> evidenceNoteIds,
-            Core.AatfEvidence.NoteStatus status) : base(organisationId, schemeId, categoryIds, transferValues, evidenceNoteIds, status)
+            Core.AatfEvidence.NoteStatus status)
         {
             Condition.Requires(transferNoteId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(transferValues).IsNotNull();
 
+            OrganisationId = organisationId;
+            RecipientId = recipientId;
+            TransferValues = transferValues;
+            Status = status;
             TransferNoteId = transferNoteId;
         }
     }

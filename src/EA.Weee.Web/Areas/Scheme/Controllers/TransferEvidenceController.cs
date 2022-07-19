@@ -115,7 +115,7 @@
                     model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
 
                 var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.SchemeId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 

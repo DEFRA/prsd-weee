@@ -18,6 +18,7 @@
     if (Model.ViewTransferNoteViewModel != null)
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+        @Html.HiddenFor(m => m.RecipientId)
     }
 
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
