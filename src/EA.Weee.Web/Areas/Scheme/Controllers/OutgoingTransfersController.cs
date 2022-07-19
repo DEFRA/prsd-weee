@@ -54,6 +54,24 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditTonnages(TransferEvidenceTonnageViewModel model)
+        {
+            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+
+            using (var client = this.apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                }
+
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client);
+
+                return this.View("EditTonnages", updatedModel);
+            }
+        }
+
         private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
         {
             var noteData =
@@ -80,21 +98,6 @@
 
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
             return model;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> EditTonnages(TransferEvidenceTonnageViewModel model)
-        {
-            using (var client = this.apiClient())
-            {
-                if (ModelState.IsValid)
-                {
-                }
-
-                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client);
-
-                return this.View("EditTonnages", updatedModel);
-            }
         }
 
         [HttpGet]
