@@ -7,6 +7,9 @@
 
     public class EditTransferEvidenceNoteRequest : TransferEvidenceNoteRequest
     {
+        public EditTransferEvidenceNoteRequest()
+        {
+        }
         public Guid TransferNoteId { get; }
 
         public EditTransferEvidenceNoteRequest(Guid transferNoteId,

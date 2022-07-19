@@ -69,7 +69,7 @@
 
                     var updatedRequest = transferEvidenceRequestCreator.EditSelectTonnageToRequest(transferRequest, model);
 
-                    var route = updatedRequest.Status == NoteStatus.Submitted 
+                    var route = model.Action == ActionEnum.Submit
                         ? SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName :
                             SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
 
@@ -78,7 +78,7 @@
                     //var id = await client.SendAsync(User.GetAccessToken(), transferRequest);
                     return new RedirectToRouteResult(route, new RouteValueDictionary()
                     {
-                        { "pcsId", updatedRequest.OrganisationId },
+                        { "pcsId", model.PcsId },
                         { "evidenceNoteId", model.ViewTransferNoteViewModel.EvidenceNoteId }
                     });
                 }
