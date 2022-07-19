@@ -16,7 +16,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientId;
+            var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientSchemeData.Id;
             var rejectedReason = source.ExistingModel != null
                 ? source.ExistingModel.RejectedReason
                 : source.NoteData.RejectedReason;
@@ -53,7 +53,7 @@
             }
             else
             {
-                model.ReceivedId = source.NoteData.RecipientId;
+                model.ReceivedId = source.NoteData.RecipientSchemeData.Id;
                 model.StartDate = source.NoteData.StartDate;
                 model.EndDate = source.NoteData.EndDate;
                 model.WasteTypeValue = source.NoteData.WasteType;
