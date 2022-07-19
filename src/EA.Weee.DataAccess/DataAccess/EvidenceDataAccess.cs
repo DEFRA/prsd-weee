@@ -152,7 +152,7 @@
 
         public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
-            var notes = await context.Notes.AsNoTracking()
+            var notes = await context.Notes
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
                 .Where(n => n.Recipient.ProducerBalancingScheme != null ? true : n.Recipient.Schemes.FirstOrDefault().Id == schemeId &&
                             n.NoteType.Value == NoteType.EvidenceNote.Value &&
