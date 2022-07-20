@@ -171,7 +171,7 @@
                 .CountAsync();
         }
 
-        public async Task<Guid> AddTransferNote(Organisation organisation, 
+        public async Task<Note> AddTransferNote(Organisation organisation, 
             Organisation recipientOrganisation,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
@@ -195,7 +195,7 @@
 
             await context.SaveChangesAsync();
 
-            return note.Id;
+            return note;
         }
 
         public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)

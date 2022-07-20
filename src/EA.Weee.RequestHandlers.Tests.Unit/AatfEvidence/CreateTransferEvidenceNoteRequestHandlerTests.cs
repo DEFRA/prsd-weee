@@ -260,9 +260,12 @@
         {
             //arrange
             var transferNoteId = TestFixture.Create<Guid>();
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Id).Returns(transferNoteId);
+
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
-                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(transferNoteId);
+                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(note);
 
             //act
             var result = await handler.HandleAsync(request);

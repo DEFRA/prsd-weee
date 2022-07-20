@@ -431,10 +431,10 @@
                     new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id, 4, null)
                 };
 
-                var noteId = await dataAccess.AddTransferNote(organisation1, transferOrganisation, transferTonnages,
+                var note = await dataAccess.AddTransferNote(organisation1, transferOrganisation, transferTonnages,
                     NoteStatus.Draft, noteToBeTransferred1.ComplianceYear, context.GetCurrentUser(), SystemTime.Now);
 
-                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
+                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(note.Id));
 
                 refreshedTransferNote.Aatf.Should().BeNull();
                 refreshedTransferNote.CreatedById.Should().Be(context.GetCurrentUser());
