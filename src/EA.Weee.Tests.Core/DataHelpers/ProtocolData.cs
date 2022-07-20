@@ -1,16 +1,16 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core.DataHelpers
 {
     using System.Collections;
     using System.Collections.Generic;
-    using Domain.Evidence;
+    using EA.Weee.Domain.Evidence;
 
-    public class WasteTypeData : IEnumerable<object[]>
+    public class ProtocolData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var waste in typeof(WasteType).GetEnumValues())
+            foreach (var protocol in typeof(Protocol).GetEnumValues())
             {
-                yield return new[] { waste };
+                yield return new[] { protocol };
             }
 
             yield return new object[] { null };
