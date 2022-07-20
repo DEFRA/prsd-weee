@@ -55,6 +55,7 @@
                 var categoryIds = transferRequest.CategoryIds;
                 model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
                     .ForEach(c => c.Selected = true);
+                model.SelectedSchema = transferRequest.SchemeId;
             }
 
             return this.View("TransferEvidenceNote", model);

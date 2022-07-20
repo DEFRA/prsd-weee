@@ -250,7 +250,9 @@
         public async Task TransferEvidenceNoteGet_GivenTransferNoteSessionObjectIsRetrieved_ShouldReflectTheModel()
         {
             // arrange
+            var schemeId = TestFixture.Create<Guid>();
             var request = GetRequestWithCategoryIds();
+            request.SchemeId = schemeId;
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                  SessionKeyConstant.TransferNoteKey)).Returns(request);
@@ -269,7 +271,7 @@
 
             model.OrganisationId.Should().Be(organisationId);
             model.SchemasToDisplay.Should().BeEmpty();
-            model.SelectedSchema.Should().BeNull();
+            model.SelectedSchema.Should().Be(schemeId);
             model.HasSelectedAtLeastOneCategory.Should().BeTrue();
         }
 
