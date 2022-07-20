@@ -39,7 +39,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<SchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid()));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -49,7 +49,7 @@
         public void Map_GivenAatfIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<SchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -59,7 +59,7 @@
         public void Map_GivenTransferWithoutViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = fixture.CreateMany<SchemeData>().ToList();
+            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
@@ -83,7 +83,7 @@
         public void Map_GivenTransferWithViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = fixture.CreateMany<SchemeData>().ToList();
+            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var model = new EditEvidenceNoteViewModel()
