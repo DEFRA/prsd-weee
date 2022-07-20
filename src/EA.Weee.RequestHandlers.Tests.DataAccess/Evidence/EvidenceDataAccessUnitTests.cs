@@ -148,8 +148,6 @@
         {
             //arrange
             var note = A.Fake<Note>();
-            var id = Guid.NewGuid();
-            A.CallTo(() => note.Id).Returns(id);
 
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
@@ -157,7 +155,7 @@
             var result = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation, tonnages, status.ToDomainEnumeration<NoteStatus>(), complianceYear, userId.ToString(), SystemTime.UtcNow);
 
             //assert
-            result.Should().Be(id);
+            result.Should().Be(note);
         }
 
         [Fact]

@@ -60,7 +60,7 @@
 
             using (var transaction = transactionAdapter.BeginTransaction())
             {
-                Guid transferNoteId;
+                Note note;
                 try
                 {
                     await transferTonnagesValidator.Validate(request.TransferValues);
@@ -71,7 +71,7 @@
 
                     var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
+                    note = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
@@ -83,7 +83,7 @@
                     throw;
                 }
 
-                return transferNoteId;
+                return note.Id;
             }
         }
     }
