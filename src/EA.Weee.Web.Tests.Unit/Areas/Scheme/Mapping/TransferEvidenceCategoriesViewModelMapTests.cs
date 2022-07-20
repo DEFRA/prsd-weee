@@ -98,9 +98,9 @@
 
             //assert
             result.SchemasToDisplay.Count.Should().Be(2);
-            result.SchemasToDisplay.Should().NotContain(s => s.Id == organisationId);
-            result.SchemasToDisplay.Should().Contain(s => s.Id == schemeData.ElementAt(0).Id);
-            result.SchemasToDisplay.Should().Contain(s => s.Id == schemeData.ElementAt(2).Id);
+            result.SchemasToDisplay.Should().NotContain(s => s.OrganisationId == organisationId);
+            result.SchemasToDisplay.Should().Contain(s => s.OrganisationId == schemeData.ElementAt(0).Id);
+            result.SchemasToDisplay.Should().Contain(s => s.OrganisationId == schemeData.ElementAt(2).Id);
         }
 
         [Fact]

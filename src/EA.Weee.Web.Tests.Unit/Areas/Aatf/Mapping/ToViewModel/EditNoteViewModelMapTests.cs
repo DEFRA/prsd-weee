@@ -143,13 +143,13 @@
             var source = fixture.Create<EditNoteMapTransfer>();
             source.ExistingModel = null;
             var recipientId = source.NoteData.RecipientSchemeData.Id;
-            source.Schemes[0].Id = recipientId;
+            source.Schemes[0].OrganisationId = recipientId;
            
             //act
             var result = map.Map(source);
 
             // assert
-            result.SelectedSchemeName.Should().Be(source.Schemes[0].SchemeNameDisplay);
+            result.SelectedSchemeName.Should().Be(source.Schemes[0].DisplayName);
         }
     }
 }

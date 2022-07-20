@@ -173,12 +173,12 @@
         public async Task TransferEvidenceNoteGet_GivenSchemesList_ModelSchemesShouldBeSet()
         {
             // arrange
-            var schemeData = new List<SchemeData>()
+            var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                TestFixture.Create<SchemeData>(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Create<OrganisationSchemeData>(),
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
 
             // act
             var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
@@ -242,12 +242,12 @@
             {
                 OrganisationId = organisationId
             };
-            var schemeData = new List<SchemeData>()
+            var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                TestFixture.Create<SchemeData>(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Create<OrganisationSchemeData>(),
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
             AddModelError();
 
             // act
