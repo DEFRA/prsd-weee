@@ -3,17 +3,14 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
-    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using Factories;
-    using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
