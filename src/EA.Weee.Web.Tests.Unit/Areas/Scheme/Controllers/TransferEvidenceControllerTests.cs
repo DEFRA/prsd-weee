@@ -196,8 +196,8 @@
             await transferEvidenceController.TransferEvidenceNote(organisationId);
 
             // assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
-                .Matches(s => s.IncludeWithdrawn.Equals(false))))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>.That
+                .Matches(s => s.IncludePBS.Equals(false))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -232,7 +232,7 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(sh => sh.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(sh => sh.IncludePBS.Equals(false)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
