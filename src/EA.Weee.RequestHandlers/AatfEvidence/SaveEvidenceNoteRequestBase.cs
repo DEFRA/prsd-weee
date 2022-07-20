@@ -12,7 +12,7 @@
                                                        || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
             {
                 throw new InvalidOperationException(
-                    $"Aatf with Id {aatf.AatfId} has invalid status to save");
+                    $"Aatf with Id {aatf.AatfId} is in an invalid state to be saved");
             }
         }
     }
