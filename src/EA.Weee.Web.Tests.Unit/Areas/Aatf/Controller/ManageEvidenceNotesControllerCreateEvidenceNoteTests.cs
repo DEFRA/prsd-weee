@@ -65,22 +65,22 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNoteGet_SchemesListShouldBeRetrieved()
+        public async Task CreateEvidenceNoteGet_OrganisationSchemesListShouldBeRetrieved()
         {
             //act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS.Equals(true)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNoteGet_ViewModelMapperShouldBeCalled()
         {
             //arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
@@ -131,7 +131,7 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_GivenInvalidModel_SchemesListShouldBeRetrieved()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_OrganisationSchemesListShouldBeRetrieved()
         {
             //arrange
             AddModelError();
@@ -141,15 +141,15 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS.Equals(true)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNotePost_GivenInvalidModel_ViewModelMapperShouldBeCalled()
         {
             //arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
             var model = A.Dummy<EditEvidenceNoteViewModel>();
             AddModelError();
 
