@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPBSOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />

@@ -103,5 +103,24 @@
             //assert
             result.SubmittedBy.Should().Be(schemeName);
         }
+
+        [Fact]
+        public void Map_GivenTransferNoteData_AndNoOrganisationSchemeData_SubmittedByShouldBeSet_ToOrganisationName()
+        {
+            //arrange
+            var organisationName = fixture.Create<string>();
+            var evidenceNoteData = new EvidenceNoteData()
+            {
+                OrganisationData = new OrganisationData() { OrganisationName = organisationName },
+                RecipientSchemeData = new SchemeData(),
+                Type = NoteType.Transfer
+            };
+
+            //act
+            var result = map.Map(evidenceNoteData);
+
+            //assert
+            result.SubmittedBy.Should().Be(organisationName);
+        }
     }
 }
