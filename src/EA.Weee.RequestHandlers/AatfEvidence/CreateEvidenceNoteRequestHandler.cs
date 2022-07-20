@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Aatf;
+    using Core.AatfReturn;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -18,7 +20,7 @@
     using Protocol = Domain.Evidence.Protocol;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, Guid>
+    public class CreateEvidenceNoteRequestHandler : SaveEvidenceNoteRequestBase, IRequestHandler<CreateEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -59,7 +61,9 @@
 
             Condition.Requires(complianceYearAatf)
                 .IsNotNull($"Aatf not found for compliance year {message.StartDate.Year} and aatf {message.AatfId}");
-            
+
+            AatfIsValidToSave(complianceYearAatf, currentDate);
+
             if (aatf.Organisation.Id != message.OrganisationId)
             {
                 throw new InvalidOperationException(
