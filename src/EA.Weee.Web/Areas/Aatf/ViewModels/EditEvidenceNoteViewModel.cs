@@ -29,7 +29,7 @@
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
-        public List<SchemeData> SchemeList { get; set; }
+        public List<OrganisationSchemeData> SchemeList { get; set; }
 
         [Display(Name = "Recipient")]
         public string SelectedSchemeName { get; set; }

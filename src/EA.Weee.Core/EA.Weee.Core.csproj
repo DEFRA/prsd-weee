@@ -139,6 +139,7 @@
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Scheme\OrganisationSchemeData.cs" />
     <Compile Include="Shared\CategoryValue.cs" />
     <Compile Include="Shared\CsvReading\CsvValidationException.cs" />
     <Compile Include="Shared\CsvReading\CsvReaderException.cs" />

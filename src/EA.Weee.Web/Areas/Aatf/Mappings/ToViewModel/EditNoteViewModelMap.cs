@@ -24,7 +24,8 @@
                 ? source.ExistingModel.ReturnedReason
                 : source.NoteData.ReturnedReason;
 
-            var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
+            // assuming recipientId is the OrganisationId
+            var recipientName = source.Schemes.FirstOrDefault(s => s.OrganisationId == recipientId);
 
             var model = new EditEvidenceNoteViewModel
             {
@@ -39,7 +40,7 @@
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
                 RejectedReason = rejectedReason,
                 ReturnedReason = returnedReason,
-                SelectedSchemeName = recipientName == null ? string.Empty : recipientName.SchemeNameDisplay
+                SelectedSchemeName = recipientName == null ? string.Empty : recipientName.DisplayName
             };
 
             if (source.ExistingModel != null)

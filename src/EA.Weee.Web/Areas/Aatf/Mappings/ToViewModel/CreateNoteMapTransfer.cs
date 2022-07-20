@@ -7,7 +7,7 @@
 
     public class CreateNoteMapTransfer : ModifyNoteTransfer
     {
-        public CreateNoteMapTransfer(List<SchemeData> schemes, 
+        public CreateNoteMapTransfer(List<OrganisationSchemeData> schemes, 
             EditEvidenceNoteViewModel existingModel, 
             Guid organisationId, Guid aatfId) : base(schemes, existingModel, organisationId, aatfId)
         {
