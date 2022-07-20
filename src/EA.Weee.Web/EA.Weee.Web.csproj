@@ -351,6 +351,7 @@
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseController.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\SchemeDataOrganisationMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
