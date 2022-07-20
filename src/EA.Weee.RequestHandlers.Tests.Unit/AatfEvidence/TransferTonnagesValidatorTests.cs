@@ -15,6 +15,7 @@
     using FluentAssertions;
     using RequestHandlers.AatfEvidence;
     using Weee.Requests.AatfEvidence;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
 

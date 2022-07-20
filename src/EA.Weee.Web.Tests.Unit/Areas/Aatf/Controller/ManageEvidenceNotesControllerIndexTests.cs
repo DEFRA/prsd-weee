@@ -25,6 +25,7 @@
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerIndexTests : ManageEvidenceNotesControllerTestsBase

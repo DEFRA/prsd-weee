@@ -13,6 +13,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerViewDraftEvidenceNoteTests : ManageEvidenceNotesControllerTestsBase

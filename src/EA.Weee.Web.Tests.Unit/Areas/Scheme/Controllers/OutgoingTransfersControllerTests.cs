@@ -29,6 +29,7 @@
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class OutgoingTransfersControllerTests : SimpleUnitTestBase
