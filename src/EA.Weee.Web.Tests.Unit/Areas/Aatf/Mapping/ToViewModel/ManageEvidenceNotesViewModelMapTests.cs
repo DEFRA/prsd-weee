@@ -225,6 +225,26 @@
             result.CanCreateEdit.Should().Be(canCreateEdit);
         }
 
+        [Fact]
+        public void Map_GivenAatfCreateEvidenceNotesAndInComplianceYear_CanCreateEditShouldBeTrue()
+        {
+            //arrange
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var aatfId = TestFixture.Create<Guid>();
+            var currentDate = new DateTime(2021, 01, 31);
+            var complianceYear = currentDate.Year;
+
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
+
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(true);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanCreateEdit.Should().Be(true);
+        }
+
         public static IEnumerable<object[]> ClosedComplianceDates =>
             new List<object[]>
             {
