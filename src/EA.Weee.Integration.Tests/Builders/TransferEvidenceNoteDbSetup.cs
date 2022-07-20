@@ -28,8 +28,7 @@
                 recipientOrganisation,
             user.UserId.ToString(),
             tonnages,
-            DateTime.Now.Year,
-            WasteType.HouseHold);
+            DateTime.Now.Year);
         }
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)

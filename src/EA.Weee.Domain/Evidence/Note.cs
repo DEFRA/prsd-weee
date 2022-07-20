@@ -58,8 +58,7 @@
             Organisation recipient,
             string createdBy,
             IList<NoteTransferTonnage> transfer,
-            int complianceYear,
-            WasteType wasteType)
+            int complianceYear)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -79,7 +78,7 @@
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = transfer;
             ComplianceYear = complianceYear;
-            WasteType = wasteType;
+            WasteType = Evidence.WasteType.HouseHold;
         }
 
         public void Update(Organisation recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
