@@ -51,8 +51,7 @@
                     ? addressMap.Map(source.Address)
                     : null,
                 HasAddress = source.HasAddress,
-                HasContact = source.HasContact,
-                IsBalancingScheme = source.Organisation.ProducerBalancingScheme != null ? true : false
+                HasContact = source.HasContact
             };
         }
     }

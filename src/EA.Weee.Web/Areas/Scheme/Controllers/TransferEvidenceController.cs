@@ -234,15 +234,15 @@
             }
         }
 
-        private async Task<List<SchemeData>> GetApprovedSchemes(Guid pcsId)
+        private async Task<List<OrganisationSchemeData>> GetApprovedSchemes(Guid pcsId)
         {
             using (var client = apiClient())
             {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(false));
 
-                schemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
+                organisationSchemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
 
-                return schemes;
+                return organisationSchemes;
             }
         }
 

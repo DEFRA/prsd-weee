@@ -52,7 +52,7 @@
                     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ReceivedId)">
                         @Html.Gds().LabelFor(m => m.ReceivedId, new { @class = "govuk-label--s" })
                         @Html.Gds().ValidationMessageFor(m => m.ReceivedId)
-                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
+                        @Html.Gds().DropDownListFor(m => m.ReceivedId, new SelectList(Model.SchemeList, "OrganisationId", "DisplayName"), string.Empty, new { @class = "govuk-!-width-full" }, useHalfWidth: false, withLookAhead: true)
                     </div>
                 }
             </div>
