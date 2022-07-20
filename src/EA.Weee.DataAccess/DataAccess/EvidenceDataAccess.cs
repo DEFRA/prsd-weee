@@ -183,8 +183,7 @@
                 recipientOrganisation,
                 userId,
                 transferTonnage,
-                complianceYear,
-                WasteType.HouseHold);
+                complianceYear);
 
             if (status.Equals(NoteStatus.Submitted))
             {

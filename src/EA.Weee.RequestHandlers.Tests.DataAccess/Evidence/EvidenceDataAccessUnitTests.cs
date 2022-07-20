@@ -202,7 +202,7 @@
         {
             //arrange
             var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
-                TestFixture.Create<int>(), WasteType.HouseHold);
+                TestFixture.Create<int>());
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
@@ -236,7 +236,7 @@
             };
 
             var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", existingTonnages,
-                TestFixture.Create<int>(), WasteType.HouseHold);
+                TestFixture.Create<int>());
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), updateTonnages,
@@ -265,7 +265,7 @@
             var originalRecipient = A.Fake<Organisation>();
             var newRecipient = A.Fake<Organisation>();
             var note = new Note(A.Fake<Organisation>(), originalRecipient, "user", new List<NoteTransferTonnage>(),
-                TestFixture.Create<int>(), WasteType.HouseHold);
+                TestFixture.Create<int>());
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, newRecipient, new List<NoteTransferTonnage>(),
@@ -282,7 +282,7 @@
             //arrange
             var originalRecipient = A.Fake<Organisation>();
             var note = new Note(A.Fake<Organisation>(), originalRecipient, "user", new List<NoteTransferTonnage>(),
-                TestFixture.Create<int>(), WasteType.HouseHold);
+                TestFixture.Create<int>());
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, originalRecipient, new List<NoteTransferTonnage>(),
@@ -298,7 +298,7 @@
         {
             //arrange
             var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
-                TestFixture.Create<int>(), WasteType.HouseHold);
+                TestFixture.Create<int>());
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
