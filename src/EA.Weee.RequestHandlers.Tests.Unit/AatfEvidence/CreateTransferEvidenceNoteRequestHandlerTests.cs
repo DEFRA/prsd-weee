@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Common;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
@@ -294,6 +295,7 @@
 
             //assert
             A.CallTo(() => transactionAdapter.Rollback(null)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionAdapter.Commit(null)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -309,6 +311,7 @@
 
             //assert
             A.CallTo(() => transactionAdapter.Rollback(null)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionAdapter.Commit(null)).MustNotHaveHappened();
         }
 
         private TransferEvidenceNoteRequest Request()
