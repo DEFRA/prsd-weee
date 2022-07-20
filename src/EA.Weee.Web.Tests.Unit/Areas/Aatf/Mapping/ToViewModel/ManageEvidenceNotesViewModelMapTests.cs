@@ -206,14 +206,15 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Map_GivenAatfCreateEvidenceNotes_CanCreateEditShouldBeSet(bool canCreateEdit)
+        public void Map_GivenAatfCreateEvidenceNotesAndInComplianceYear_CanCreateEditShouldBeSet(bool canCreateEdit)
         {
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
             var aatfId = TestFixture.Create<Guid>();
-            var complianceYear = TestFixture.Create<int>();
+            var currentDate = new DateTime(2021, 01, 31);
+            var complianceYear = currentDate.Year;
 
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, TestFixture.Create<DateTime>());
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
 
             A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(canCreateEdit);
 
@@ -231,6 +232,25 @@
                 new object[] { 2019, new DateTime(2021, 02, 1) },
                 new object[] { 2023, new DateTime(2021, 02, 1) }
             };
+
+        [Theory]
+        [MemberData(nameof(ClosedComplianceDates))]
+        public void Map_GivenAatfCreateEvidenceNotesAndOutOfComplianceYear_CanCreateEditShouldBeSet(int complianceYear, DateTime currentDate)
+        {
+            //arrange
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var aatfId = TestFixture.Create<Guid>();
+
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
+
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(true);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanCreateEdit.Should().Be(false);
+        }
 
         [Theory]
         [MemberData(nameof(ClosedComplianceDates))]
