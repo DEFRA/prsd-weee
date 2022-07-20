@@ -3,17 +3,14 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
-    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using Factories;
-    using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
@@ -23,7 +20,6 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IWeeeTransactionAdapter transactionAdapter;
@@ -39,7 +35,6 @@
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
-            this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.transferTonnagesValidator = transferTonnagesValidator;
             this.transactionAdapter = transactionAdapter;
@@ -87,7 +82,7 @@
                     throw;
                 }
 
-                return request.TransferNoteId;
+                return note.Id;
             }
         }
     }
