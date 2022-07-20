@@ -35,5 +35,7 @@
         }
 
         public bool CanCreateEdit { get; set; }
+
+        public bool ComplianceYearClosed { get; set; }
     }
 }
