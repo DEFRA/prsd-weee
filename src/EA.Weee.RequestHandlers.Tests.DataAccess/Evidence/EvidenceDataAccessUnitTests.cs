@@ -180,5 +180,57 @@
             //assert
             A.CallTo(() => genericDataAccess.Add(A<Note>.That.Matches(x => x.WasteType == WasteType.HouseHold))).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task UpdateTransferNote_GivenDraftNoteWithDraftNoteStatus_NoteShouldHaveDraftStatus()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Status).Returns(NoteStatus.Draft);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
+                NoteStatus.Draft, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.Status.Should().Be(NoteStatus.Draft);
+        }
+
+        [Fact]
+        public async Task UpdateTransferNote_GivenDraftNoteWithSubmittedNoteStatus_NoteShouldHaveSubmittedStatus()
+        {
+            //arrange
+            var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
+                2020, WasteType.HouseHold);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
+                NoteStatus.Submitted, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.Status.Should().Be(NoteStatus.Submitted);
+        }
+
+        [Fact]
+        public async Task UpdateTransferNote_GivenNoteWithExistingTonnages_NoteShouldHaveNoteTonnagesUpdatedAddedOrRemoved()
+        {
+            //arrange
+            var noteTonnageId1 = TestFixture.Create<Guid>();
+
+            var existingTonnages = new List<NoteTransferTonnage>()
+            {
+                new NoteTransferTonnage(noteTonnageId1)
+            };
+
+            var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
+                2020, WasteType.HouseHold);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
+                NoteStatus.Submitted, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.Status.Should().Be(NoteStatus.Submitted);
+        }
     }
 }
