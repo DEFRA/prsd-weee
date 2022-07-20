@@ -16,6 +16,7 @@
     using Weee.DataAccess;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EvidenceDataAccessUnitTests : SimpleUnitTestBase
@@ -201,7 +202,7 @@
         {
             //arrange
             var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
-                2020, WasteType.HouseHold);
+                TestFixture.Create<int>(), WasteType.HouseHold);
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
@@ -211,26 +212,100 @@
             updatedNote.Status.Should().Be(NoteStatus.Submitted);
         }
 
-        [Fact]
-        public async Task UpdateTransferNote_GivenNoteWithExistingTonnages_NoteShouldHaveNoteTonnagesUpdatedAddedOrRemoved()
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task UpdateTransferNote_GivenNoteWithExistingTonnages_NoteShouldHaveNoteTonnagesUpdatedAddedOrRemoved(NoteStatus status)
         {
             //arrange
             var noteTonnageId1 = TestFixture.Create<Guid>();
+            var noteTonnageId2 = TestFixture.Create<Guid>();
+            var newNoteTonnage1 = TestFixture.Create<Guid>();
+            var newNoteTonnage2 = TestFixture.Create<Guid>();
 
             var existingTonnages = new List<NoteTransferTonnage>()
             {
-                new NoteTransferTonnage(noteTonnageId1)
+                new NoteTransferTonnage(noteTonnageId1, 10, 5),
+                new NoteTransferTonnage(noteTonnageId2, 2, 1),
             };
 
+            var updateTonnages = new List<NoteTransferTonnage>()
+            {
+                new NoteTransferTonnage(noteTonnageId1, 2, 1),
+                new NoteTransferTonnage(newNoteTonnage1, 20, 6),
+                new NoteTransferTonnage(newNoteTonnage2, 3, null),
+            };
+
+            var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", existingTonnages,
+                TestFixture.Create<int>(), WasteType.HouseHold);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), updateTonnages,
+                status, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.NoteTransferTonnage.Count.Should().Be(4); 
+            
+            //the note transfer tonnage will still contain the one that should have been removed (noteTonnageId2) but it should have been in the remove call
+            A.CallTo(() => genericDataAccess.RemoveMany(A<IEnumerable<NoteTransferTonnage>>
+                .That.Contains(existingTonnages.First(nt => nt.NoteTonnageId == noteTonnageId2)))).MustHaveHappenedOnceExactly();
+
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnageId1).Received.Should().Be(2);
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnageId1).Reused.Should().Be(1);
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == newNoteTonnage1).Received.Should().Be(20);
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == newNoteTonnage1).Reused.Should().Be(6);
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == newNoteTonnage2).Received.Should().Be(3);
+            updatedNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == newNoteTonnage2).Reused.Should().Be(null);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task UpdateTransferNote_GivenNoteWithChangedRecipient_RecipientShouldBeUpdated(NoteStatus status)
+        {
+            //arrange
+            var originalRecipient = A.Fake<Organisation>();
+            var newRecipient = A.Fake<Organisation>();
+            var note = new Note(A.Fake<Organisation>(), originalRecipient, "user", new List<NoteTransferTonnage>(),
+                TestFixture.Create<int>(), WasteType.HouseHold);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, newRecipient, new List<NoteTransferTonnage>(),
+                status, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.Recipient.Should().Be(newRecipient);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task UpdateTransferNote_GivenNoteWithNoInChangedRecipient_RecipientShouldNotBeUpdated(NoteStatus status)
+        {
+            //arrange
+            var originalRecipient = A.Fake<Organisation>();
+            var note = new Note(A.Fake<Organisation>(), originalRecipient, "user", new List<NoteTransferTonnage>(),
+                TestFixture.Create<int>(), WasteType.HouseHold);
+
+            //act
+            var updatedNote = await evidenceDataAccess.UpdateTransfer(note, originalRecipient, new List<NoteTransferTonnage>(),
+                status, TestFixture.Create<DateTime>());
+
+            //assert
+            updatedNote.Recipient.Should().Be(originalRecipient);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public async Task UpdateTransferNote_GivenNote_SaveChangesShouldBeCalled(NoteStatus status)
+        {
+            //arrange
             var note = new Note(A.Fake<Organisation>(), A.Fake<Organisation>(), "user", new List<NoteTransferTonnage>(),
-                2020, WasteType.HouseHold);
+                TestFixture.Create<int>(), WasteType.HouseHold);
 
             //act
             var updatedNote = await evidenceDataAccess.UpdateTransfer(note, A.Fake<Organisation>(), new List<NoteTransferTonnage>(),
-                NoteStatus.Submitted, TestFixture.Create<DateTime>());
+                status, TestFixture.Create<DateTime>());
 
             //assert
-            updatedNote.Status.Should().Be(NoteStatus.Submitted);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
     }
 }
