@@ -26,6 +26,8 @@
 
         public bool TransferAllTonnage { get; set; }
 
+        public IList<Guid> SessionEvidenceNotesId { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
