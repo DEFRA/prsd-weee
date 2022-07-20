@@ -33,7 +33,8 @@
                 AatfName = source.AatfData.Name, 
                 SingleAatf = singleAatf.Count().Equals(1),
                 ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
-                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear),
+                CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) && 
+                                 WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)),
                 ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
             };
 
