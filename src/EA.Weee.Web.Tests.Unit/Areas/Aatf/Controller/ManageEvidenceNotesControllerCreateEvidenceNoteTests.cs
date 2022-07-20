@@ -336,8 +336,8 @@
             var model = ValidModel();
             A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //Act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
@@ -353,8 +353,8 @@
         public async Task CreateEvidenceNoteGet_GivenFalseReturnFromCopyPaste_Should_CallMapperWithoutExistingModel()
         {
             //Arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //Act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, false);
