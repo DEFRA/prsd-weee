@@ -51,6 +51,7 @@
             userContext = A.Fake<IUserContext>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
+            var currentDate = new DateTime(2021, 12, 1);
             organisation = A.Fake<Organisation>();
             recipientOrganisation = A.Fake<Organisation>();
             aatf = A.Fake<Aatf>();
@@ -64,6 +65,9 @@
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => aatf.Organisation).Returns(organisation);
+            A.CallTo(() => aatf.ApprovalDate).Returns(currentDate.AddDays(-1));
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)currentDate.Year);
             A.CallTo(() => genericDataAccess.Add(A<Note>._)).Returns(note);
 
             request = new CreateEvidenceNoteRequest(organisation.Id,
@@ -85,8 +89,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year)).Returns(aatf);
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(new DateTime(2022, 1, 1));
         }
 
         [Fact]
@@ -200,15 +206,13 @@
         public async Task HandleAsync_GivenRequest_AatfForComplianceYearShouldBeRetrieved()
         {
             //arrange
-            var aatfId = TestFixture.Create<Guid>();
-            A.CallTo(() => aatf.AatfId).Returns(aatfId);
             A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatfId, request.StartDate.Year))
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -284,7 +288,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
 
-            var systemDateTime = TestFixture.Create<DateTime>();
+            var systemDateTime = new DateTime(2021, 12, 1);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
 
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
@@ -396,6 +400,79 @@
 
             //assert
             result.Should().Be(id);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfStatusIsCancelled_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Cancelled);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfStatusIsSuspended_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Suspended);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        public static IEnumerable<object[]> OutOfComplianceYear =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 2, 1), 2019 },
+                new object[] { new DateTime(2020, 1, 1), 2022 },
+            };
+
+        [Theory]
+        [MemberData(nameof(OutOfComplianceYear))]
+        public async Task HandleAsync_GivenRequestWhereComplianceYearInvalid_InvalidOperationExceptionExpected(DateTime systemDateTime, int complianceYear)
+        {
+            //arrange
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)complianceYear);
+            A.CallTo(() => aatf.ApprovalDate).Returns(systemDateTime.AddDays(1));
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfApprovalDateIsInvalid_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            A.CallTo(() => aatf.ApprovalDate).Returns(currentDate.AddDays(1));
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)currentDate.Year);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         private CreateEvidenceNoteRequest Request()
