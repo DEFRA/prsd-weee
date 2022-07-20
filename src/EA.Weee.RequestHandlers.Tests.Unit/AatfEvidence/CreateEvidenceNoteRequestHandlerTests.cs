@@ -414,7 +414,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("has invalid status to save");
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         [Fact]
@@ -429,7 +429,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("has invalid status to save");
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         public static IEnumerable<object[]> OutOfComplianceYear =>
@@ -454,7 +454,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("has invalid status to save");
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         [Fact]
@@ -472,7 +472,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("has invalid status to save");
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         private CreateEvidenceNoteRequest Request()
