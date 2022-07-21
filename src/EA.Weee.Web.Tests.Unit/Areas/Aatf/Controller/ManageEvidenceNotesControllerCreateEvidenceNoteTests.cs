@@ -187,7 +187,7 @@
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now,
-                ReceivedId = Guid.NewGuid()
+                RecipientId = Guid.NewGuid()
             };
             
             //act

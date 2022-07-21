@@ -57,7 +57,7 @@
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should()
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
-            result.ReceivedId.Should().Be(source.NoteData.RecipientSchemeData.Id);
+            result.RecipientId.Should().Be(source.NoteData.RecipientSchemeData.Id);
             result.StartDate.Should().Be(source.NoteData.StartDate);
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
@@ -126,7 +126,7 @@
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should()
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
-            result.ReceivedId.Should().Be(source.ExistingModel.ReceivedId);
+            result.RecipientId.Should().Be(source.ExistingModel.RecipientId);
             result.StartDate.Should().Be(source.ExistingModel.StartDate);
             result.EndDate.Should().Be(source.ExistingModel.EndDate);
             result.WasteTypeValue.Should().Be(source.ExistingModel.WasteTypeValue);

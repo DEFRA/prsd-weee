@@ -16,7 +16,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var recipientId = source.ExistingModel != null ? source.ExistingModel.ReceivedId : source.NoteData.RecipientSchemeData.Id;
+            var recipientId = source.ExistingModel != null ? source.ExistingModel.RecipientId : source.NoteData.RecipientOrganisationData.Id;
             var rejectedReason = source.ExistingModel != null
                 ? source.ExistingModel.RejectedReason
                 : source.NoteData.RejectedReason;
@@ -24,7 +24,6 @@
                 ? source.ExistingModel.ReturnedReason
                 : source.NoteData.ReturnedReason;
 
-            // assuming recipientId is the OrganisationId
             var recipientName = source.Schemes.FirstOrDefault(s => s.OrganisationId == recipientId);
 
             var model = new EditEvidenceNoteViewModel
@@ -45,7 +44,7 @@
 
             if (source.ExistingModel != null)
             {
-                model.ReceivedId = source.ExistingModel.ReceivedId;
+                model.RecipientId = source.ExistingModel.RecipientId;
                 model.StartDate = source.ExistingModel.StartDate;
                 model.EndDate = source.ExistingModel.EndDate;
                 model.WasteTypeValue = source.ExistingModel.WasteTypeValue;
@@ -54,7 +53,7 @@
             }
             else
             {
-                model.ReceivedId = source.NoteData.RecipientSchemeData.Id;
+                model.RecipientId = source.NoteData.RecipientSchemeData.Id;
                 model.StartDate = source.NoteData.StartDate;
                 model.EndDate = source.NoteData.EndDate;
                 model.WasteTypeValue = source.NoteData.WasteType;
