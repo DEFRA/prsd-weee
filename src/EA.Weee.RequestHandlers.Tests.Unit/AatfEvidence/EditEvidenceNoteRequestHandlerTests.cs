@@ -8,6 +8,7 @@
     using AutoFixture;
     using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
+    using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -38,6 +39,7 @@
         private readonly Organisation recipientOrganisation;
         private readonly Scheme recipientScheme;
         private readonly Note note;
+        private readonly Aatf aatf;
 
         public EditEvidenceNoteRequestHandlerTests()
         {
@@ -45,6 +47,7 @@
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            var currentDate = new DateTime(2021, 12, 1);
             genericDataAccess = A.Fake<IGenericDataAccess>();
 
             recipientScheme = A.Fake<Scheme>();
@@ -55,6 +58,10 @@
             note = A.Fake<Note>();
             TestFixture.Create<Guid>();
             var organisationId = TestFixture.Create<Guid>();
+            aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.ApprovalDate).Returns(currentDate.AddDays(-1));
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)currentDate.Year);
 
             A.CallTo(() => recipientOrganisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
@@ -62,12 +69,14 @@
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => note.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => note.Status).Returns(NoteStatus.Draft);
+            A.CallTo(() => note.Aatf).Returns(aatf);
 
             request = Request();
 
             handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess, genericDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(request.Id)).Returns(note);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
         }
 
         [Fact]
@@ -175,7 +184,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
@@ -204,7 +213,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
@@ -236,7 +245,7 @@
         public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.NoteStatus status)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
@@ -288,6 +297,75 @@
 
             //assert
             result.Should().Be(note.Id);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfStatusIsCancelled_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Cancelled);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfStatusIsSuspended_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Suspended);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        public static IEnumerable<object[]> OutOfComplianceYear =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 2, 1), 2019 },
+                new object[] { new DateTime(2020, 1, 1), 2022 },
+            };
+
+        [Theory]
+        [MemberData(nameof(OutOfComplianceYear))]
+        public async Task HandleAsync_GivenRequestWhereComplianceYearInvalid_InvalidOperationExceptionExpected(DateTime systemDateTime, int complianceYear)
+        {
+            //arrange
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)complianceYear);
+            A.CallTo(() => aatf.ApprovalDate).Returns(systemDateTime.AddDays(1));
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWhereAatfApprovalDateIsInvalid_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            A.CallTo(() => aatf.ApprovalDate).Returns(currentDate.AddDays(1));
+            A.CallTo(() => aatf.ComplianceYear).Returns((short)currentDate.Year);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Contain("is in an invalid state to be saved");
         }
 
         private void AssertTonnages(List<NoteTonnage> tonnageValues)
