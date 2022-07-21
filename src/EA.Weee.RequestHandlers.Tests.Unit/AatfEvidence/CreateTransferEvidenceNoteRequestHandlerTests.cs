@@ -74,7 +74,7 @@
                 systemDataDataAccess);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.SchemeId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
             A.CallTo(() => userContext.UserId).Returns(userId);
         }
 
@@ -226,7 +226,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.SchemeId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
             A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(A<List<Guid>>._)).Returns(complianceYear);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 

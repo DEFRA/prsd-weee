@@ -1028,7 +1028,7 @@
             //assert
             A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
                 A<object>.That.Matches(o => ((TransferEvidenceNoteRequest)o).OrganisationId == model.PcsId &&
-                                            ((TransferEvidenceNoteRequest)o).SchemeId == model.RecipientId &&
+                                            ((TransferEvidenceNoteRequest)o).RecipientId == model.RecipientId &&
                                             ((TransferEvidenceNoteRequest)o).CategoryIds.SequenceEqual(request.CategoryIds) &&
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(selectedId) &&
                                             !((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(notSelectedId) &&

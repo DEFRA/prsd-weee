@@ -53,7 +53,7 @@
             }
             else
             {
-                model.RecipientId = source.NoteData.RecipientSchemeData.Id;
+                model.RecipientId = source.NoteData.RecipientOrganisationData.Id;
                 model.StartDate = source.NoteData.StartDate;
                 model.EndDate = source.NoteData.EndDate;
                 model.WasteTypeValue = source.NoteData.WasteType;

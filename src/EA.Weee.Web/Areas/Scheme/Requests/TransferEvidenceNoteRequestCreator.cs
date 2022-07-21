@@ -47,7 +47,7 @@
                     t.TransferTonnageId));
 
             return new TransferEvidenceNoteRequest(request.OrganisationId, 
-                request.SchemeId, 
+                request.RecipientId, 
                 request.CategoryIds,
                 transferValues.ToList(),
                 request.EvidenceNoteIds,
