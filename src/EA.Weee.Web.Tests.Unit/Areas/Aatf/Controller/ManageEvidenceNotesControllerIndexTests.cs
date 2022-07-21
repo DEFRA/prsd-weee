@@ -66,6 +66,83 @@
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearIsNull_ModelMapperShouldBeCalledWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var currentDate = Fixture.Create<DateTime>();
+            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearHasValue_ModelMapperShouldBeCalledWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var currentDate = Fixture.Create<DateTime>();
+            var complianceYear = Fixture.Create<int>();
+            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearIsNull_SessionShouldBeUpdatedWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var currentDate = Fixture.Create<DateTime>();
+            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+
+            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, currentDate.Year,
+                SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearHasValue_SessionShouldBeUpdatedWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var complianceYear = Fixture.Create<int>();
+            var currentDate = Fixture.Create<DateTime>();
+            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+
+            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, complianceYear,
+                SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
+        }
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationId = Guid.NewGuid();
