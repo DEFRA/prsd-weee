@@ -66,7 +66,7 @@
             nameof(StartDate),
             $"{nameof(EndDate)}",
             $"{nameof(RecipientId)}",
-            "Received-auto",
+            "Recipient-auto",
             $"{nameof(WasteTypeValue)}",
             $"{nameof(ProtocolValue)}"
         };
