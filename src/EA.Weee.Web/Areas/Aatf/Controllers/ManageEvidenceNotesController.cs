@@ -21,8 +21,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.ApiClient;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -152,9 +154,23 @@
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                    try
+                    {
+                        var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                        return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                    }
+                    catch (ApiException ex)
+                    {
+                        if (ex.ErrorData.ExceptionType == typeof(InvalidOperationException).FullName)
+                        {
+                            ModelState.AddModelError("StartDate", "You cannot create evidence for the start date entered");
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
 
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
