@@ -121,8 +121,7 @@
                 recipientOrganisation,
                 database.WeeeContext.GetCurrentUser(),
                 noteTonnages,
-                complianceYear.Value,
-                WasteType.HouseHold);
+                complianceYear.Value);
         }
     }
 }

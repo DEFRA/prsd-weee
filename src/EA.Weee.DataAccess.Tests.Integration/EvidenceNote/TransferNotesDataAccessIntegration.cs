@@ -394,7 +394,9 @@
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
@@ -431,10 +433,10 @@
                     new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id, 4, null)
                 };
 
-                var noteId = await dataAccess.AddTransferNote(organisation1, transferOrganisation, transferTonnages,
+                var note = await dataAccess.AddTransferNote(organisation1, transferOrganisation, transferTonnages,
                     NoteStatus.Draft, noteToBeTransferred1.ComplianceYear, context.GetCurrentUser(), SystemTime.Now);
 
-                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(noteId));
+                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(note.Id));
 
                 refreshedTransferNote.Aatf.Should().BeNull();
                 refreshedTransferNote.CreatedById.Should().Be(context.GetCurrentUser());
@@ -468,6 +470,167 @@
                 transferTonnage.Should().NotBeNull();
                 transferTonnage.Received.Should().Be(4);
                 transferTonnage.Reused.Should().Be(null);
+            }
+        }
+
+        [Fact]
+        public async Task UpdateDraftTransferNote_TransferNoteShouldBeUpdated()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
+
+                var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 1, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 2, null));
+
+                context.Notes.Add(noteToBeTransferred1);
+
+                var noteToBeTransferred2 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                
+                noteToBeTransferred2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 10, null));
+                noteToBeTransferred2.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LightingEquipment, 30, null));
+
+                context.Notes.Add(noteToBeTransferred2);
+
+                var noteToBeTransferred3 = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                noteToBeTransferred3.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 10, null));
+
+                context.Notes.Add(noteToBeTransferred3);
+
+                var transferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var transferOrganisationScheme = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation);
+                context.Schemes.Add(transferOrganisationScheme);
+
+                await context.SaveChangesAsync();
+
+                var transferTonnages = new List<NoteTransferTonnage>
+                {
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 5, 4),
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources)).Id, 8, 7),
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 4, null),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.SmallHouseholdAppliances)).Id, 1, null)
+                };
+
+                var newTransferNote = await SetupSingleNote(context, database, NoteType.TransferNote, transferOrganisation);
+                newTransferNote.NoteTransferTonnage.AddRange(transferTonnages);
+
+                context.Notes.Add(newTransferNote);
+
+                await context.SaveChangesAsync();
+
+                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(newTransferNote.Id));
+
+                var newTransferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var newTransferOrganisationScheme = ObligatedWeeeIntegrationCommon.CreateScheme(newTransferOrganisation);
+                context.Schemes.Add(newTransferOrganisationScheme);
+
+                await context.SaveChangesAsync();
+
+                var newTransferTonnages = new List<NoteTransferTonnage>
+                {
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 2, 1),
+                    new NoteTransferTonnage(noteToBeTransferred3.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports)).Id, 6, 2),
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 4, null)
+                };
+
+                await dataAccess.UpdateTransfer(refreshedTransferNote, newTransferOrganisation, newTransferTonnages,
+                    NoteStatus.Draft, SystemTime.Now);
+
+                refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(newTransferNote.Id));
+
+                refreshedTransferNote.RecipientId.Should().Be(newTransferOrganisation.Id);
+                refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(3);
+                refreshedTransferNote.Status.Should().Be(NoteStatus.Draft);
+                var noteTonnage1 = noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
+                var noteTonnage2 = noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment));
+                var noteTonnage3 = noteToBeTransferred3.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports));
+                
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage1.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Received.Should().Be(2);
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Reused.Should().Be(1);
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage2.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage2.Id).Received.Should().Be(4);
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage2.Id).Reused.Should().Be(null);
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage3.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage3.Id).Received.Should().Be(6);
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage3.Id).Reused.Should().Be(2);
+            }
+        }
+
+        [Fact]
+        public async Task UpdateDraftTransferNoteToSubmitted_TransferNoteShouldBeUpdated()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
+
+                var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 1, null));
+
+                context.Notes.Add(noteToBeTransferred1);
+
+                var transferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var transferOrganisationScheme = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation);
+                context.Schemes.Add(transferOrganisationScheme);
+
+                await context.SaveChangesAsync();
+
+                var transferTonnages = new List<NoteTransferTonnage>
+                {
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 2, 1)
+                };
+
+                var newTransferNote = await SetupSingleNote(context, database, NoteType.TransferNote, transferOrganisation);
+                newTransferNote.NoteTransferTonnage.AddRange(transferTonnages);
+
+                context.Notes.Add(newTransferNote);
+
+                await context.SaveChangesAsync();
+
+                var refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(newTransferNote.Id));
+
+                var newTransferOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var newTransferOrganisationScheme = ObligatedWeeeIntegrationCommon.CreateScheme(newTransferOrganisation);
+                context.Schemes.Add(newTransferOrganisationScheme);
+
+                await context.SaveChangesAsync();
+
+                var newTransferTonnages = new List<NoteTransferTonnage>
+                {
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 4, 2)
+                };
+
+                await dataAccess.UpdateTransfer(refreshedTransferNote, newTransferOrganisation, newTransferTonnages,
+                    NoteStatus.Submitted, SystemTime.Now);
+
+                refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(newTransferNote.Id));
+
+                refreshedTransferNote.RecipientId.Should().Be(newTransferOrganisation.Id);
+                refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(1);
+                refreshedTransferNote.Status.Should().Be(NoteStatus.Submitted);
+                refreshedTransferNote.NoteStatusHistory.Count.Should().Be(1);
+                refreshedTransferNote.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be(context.GetCurrentUser());
+                refreshedTransferNote.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
+                refreshedTransferNote.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
+                refreshedTransferNote.NoteStatusHistory.ElementAt(0).ChangedDate.Should()
+                    .BeCloseTo(SystemTime.Now, TimeSpan.FromSeconds(10));
+                var noteTonnage1 = noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage1.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Received.Should().Be(4);
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Reused.Should().Be(2);
             }
         }
     }

@@ -16,17 +16,16 @@
     using Requests.Scheme;
     using Security;
 
-    public class CreateTransferEvidenceNoteRequestHandler : IRequestHandler<TransferEvidenceNoteRequest, Guid>
+    public class EditTransferEvidenceNoteRequestHandler : IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
+        public EditTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
@@ -36,14 +35,13 @@
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
-            this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.transferTonnagesValidator = transferTonnagesValidator;
             this.transactionAdapter = transactionAdapter;
             this.systemDataDataAccess = systemDataDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
+        public async Task<Guid> HandleAsync(EditTransferEvidenceNoteRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
@@ -54,26 +52,27 @@
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
             var scheme = await genericDataAccess.GetById<Scheme>(request.RecipientId);
-
+            
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(scheme).IsNotNull();
 
+            var note = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
+
             using (var transaction = transactionAdapter.BeginTransaction())
             {
-                Note note;
                 try
                 {
-                    await transferTonnagesValidator.Validate(request.TransferValues);
-
-                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.Id,
+                    var newNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.Id,
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
+                    await evidenceDataAccess.UpdateTransfer(note,
+                        scheme.Organisation,
+                        newNoteTonnages,
+                        request.Status.ToDomainEnumeration<NoteStatus>(),
+                        CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
-                    note = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
-                        transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
-                        userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+                    await transferTonnagesValidator.Validate(request.TransferValues, request.TransferNoteId);
 
                     transactionAdapter.Commit(transaction);
                 }
