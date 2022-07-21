@@ -252,7 +252,7 @@
             // arrange
             var schemeId = TestFixture.Create<Guid>();
             var request = GetRequestWithCategoryIds();
-            request.SchemeId = schemeId;
+            request.RecipientId = schemeId;
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                  SessionKeyConstant.TransferNoteKey)).Returns(request);
