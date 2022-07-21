@@ -252,7 +252,7 @@
             // arrange
             var schemeId = TestFixture.Create<Guid>();
             var request = GetRequestWithCategoryIds();
-            request.SchemeId = schemeId;
+            request.RecipientId = schemeId;
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                  SessionKeyConstant.TransferNoteKey)).Returns(request);
@@ -696,7 +696,7 @@
                 sessionService.SetTransferSessionObject(transferEvidenceController.Session, 
                     A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).OrganisationId.Equals(model.PcsId) &&
                                                 ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
-                                                ((TransferEvidenceNoteRequest)a).SchemeId.Equals(request.SchemeId) &&
+                                                ((TransferEvidenceNoteRequest)a).RecipientId.Equals(request.RecipientId) &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
                                                 ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.TrueForAll(s => selectedNotes.Contains(s))),
                     SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();

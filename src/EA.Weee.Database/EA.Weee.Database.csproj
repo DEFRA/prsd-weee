@@ -342,6 +342,7 @@
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obligation-upload-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint07\20220608-1346-obigation-upload-schema.sql" />
     <Content Include="scripts\Update\Release 5\Sprint09\20220714-0713-reorganise-recipient-id.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint09\20220720-1006-tracking-amounts.sql" />
     <Content Include="scripts\Update\Release 5\Sprint09\20220806-1020-remove-transfer-category-table.sql" />
     <Content Include="scripts\Update\Release 5\Sprint09\20220706-1742-add-balancing-scheme-indicator.sql" />
     <None Include="rebuild-development.bat" />

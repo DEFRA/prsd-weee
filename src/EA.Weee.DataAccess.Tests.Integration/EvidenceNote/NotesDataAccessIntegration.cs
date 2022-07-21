@@ -15,6 +15,7 @@
     using Prsd.Core.Domain;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Weee.Tests.Core.Model;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;

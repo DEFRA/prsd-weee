@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 

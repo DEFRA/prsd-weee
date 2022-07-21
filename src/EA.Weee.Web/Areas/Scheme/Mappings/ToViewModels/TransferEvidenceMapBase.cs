@@ -28,7 +28,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var recipientId = source.Request?.SchemeId ?? source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+            var recipientId = source.Request?.RecipientId ?? source.TransferEvidenceNoteData.RecipientSchemeData.Id;
 
             var model = new T()
             {

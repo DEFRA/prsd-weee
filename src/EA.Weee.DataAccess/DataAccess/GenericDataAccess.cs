@@ -45,10 +45,14 @@
 
         public void RemoveMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            foreach (var amount in entities)
+            for (int idx = entities.Count() - 1; idx >= 0; idx--)
             {
-                context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
+                context.Entry(entities.ElementAt(idx)).State = System.Data.Entity.EntityState.Deleted;
             }
+            //foreach (var amount in entities)
+            //{
+            //    context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
+            //}
         }
 
         public async Task<IEnumerable<TEntity>> GetAll<TEntity>() where TEntity : class
