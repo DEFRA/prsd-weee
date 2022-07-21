@@ -121,7 +121,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
-                                                              e.SchemeId.Equals(schemeId) && 
+                                                              e.RecipientId.Equals(schemeId) && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
                                                               e.ComplianceYear == request.ComplianceYear &&
@@ -149,7 +149,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.AatfId == null &&
                 e.ComplianceYear == request.ComplianceYear &&
