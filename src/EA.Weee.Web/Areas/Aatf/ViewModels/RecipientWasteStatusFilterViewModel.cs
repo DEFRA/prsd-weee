@@ -11,7 +11,7 @@
         [Display(Name = "Recipient")]
         public Guid? ReceivedId { get; set; }
 
-        public IEnumerable<SelectListItem> SchemeListSL { get; set; }
+        public IEnumerable<SelectListItem> RecipientList { get; set; }
 
         [Display(Name = "Type of waste")]
         public WasteType? WasteTypeValue { get; set; }

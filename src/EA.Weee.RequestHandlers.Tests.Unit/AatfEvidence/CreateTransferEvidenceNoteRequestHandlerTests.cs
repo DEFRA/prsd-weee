@@ -189,10 +189,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndNoSchemeFound_ShowThrowArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndRecipientOrganisationFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns((Scheme)null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).ReturnsNextFromSequence(A.Fake<Organisation>(), null);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -228,7 +228,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
             A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(A<List<Guid>>._)).Returns(complianceYear);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
