@@ -16,7 +16,7 @@
     using Protocol = Domain.Evidence.Protocol;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class EditEvidenceNoteRequestHandler : IRequestHandler<EditEvidenceNoteRequest, Guid>
+    public class EditEvidenceNoteRequestHandler : SaveEvidenceNoteRequestBase, IRequestHandler<EditEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -59,6 +59,8 @@
             {
                 throw new InvalidOperationException($"Evidence note {evidenceNote.Id} is incorrect state to be edited");
             }
+
+            AatfIsValidToSave(evidenceNote.Aatf, currentDate);
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
                 (WeeeCategory)t.CategoryId,
