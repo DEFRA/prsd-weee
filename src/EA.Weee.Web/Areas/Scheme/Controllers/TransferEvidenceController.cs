@@ -47,6 +47,17 @@
                 SchemasToDisplay = await GetApprovedSchemes(pcsId)
             };
 
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                  SessionKeyConstant.TransferNoteKey);
+
+            if (transferRequest != null)
+            {
+                var categoryIds = transferRequest.CategoryIds;
+                model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
+                    .ForEach(c => c.Selected = true);
+                model.SelectedSchema = transferRequest.SchemeId;
+            }
+
             return this.View("TransferEvidenceNote", model);
         }
 
@@ -93,6 +104,12 @@
                     new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
+
+                var evidenceNoteIds = transferRequest.EvidenceNoteIds;
+                if (evidenceNoteIds != null)
+                {
+                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+                }
 
                 var model =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);

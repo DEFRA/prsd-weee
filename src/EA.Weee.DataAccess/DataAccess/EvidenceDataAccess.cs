@@ -28,8 +28,6 @@
         {
             var note = await context.Notes
                 .Include(n => n.NoteTonnage)
-                .Include(n => n.NoteTransferTonnage)
-                .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage))
                 .Include(nt => nt.NoteTransferTonnage.Select(nt1 => nt1.NoteTonnage.Note))
                 .Include(n => n.NoteStatusHistory)
                 .FirstOrDefaultAsync(n => n.Id == id);

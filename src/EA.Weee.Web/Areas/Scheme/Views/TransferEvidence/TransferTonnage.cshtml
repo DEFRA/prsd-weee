@@ -4,6 +4,8 @@
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Scheme.ViewModels
 @using EA.Weee.Web.ViewModels.Shared
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
@@ -17,6 +19,8 @@
 
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferFrom(Model.PcsId))))
+
     @Html.Gds().ValidationSummary()
     <h1 class="govuk-heading-l">
         Transfer tonnage to @Model.RecipientName from selected evidence notes

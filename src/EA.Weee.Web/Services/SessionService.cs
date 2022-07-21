@@ -18,5 +18,13 @@
 
             return null;
         }
+
+        public void ClearTransferSessionObject(HttpSessionStateBase session, string sessionKey)
+        {
+            if (session[sessionKey] != null)
+            {
+                session[sessionKey] = null;
+            }
+        }
     }
 }
