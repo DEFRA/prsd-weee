@@ -43,7 +43,7 @@
         {
             //arrange
             var model = ValidModel();
-            model.ReceivedId = Guid.Empty;
+            model.RecipientId = Guid.Empty;
 
             //act
             var exception = Record.Exception(() => requestCreator.ViewModelToRequest(model));
@@ -132,7 +132,7 @@
             model.EndDate = endDate;
             model.StartDate = startDate;
             model.OrganisationId = organisationId;
-            model.ReceivedId = receivedId;
+            model.RecipientId = receivedId;
             model.WasteTypeValue = wasteTypeValue;
             model.ProtocolValue = protocolValue;
             model.CategoryValues = tonnageValues;
@@ -172,7 +172,7 @@
             model.EndDate = endDate;
             model.StartDate = startDate;
             model.OrganisationId = organisationId;
-            model.ReceivedId = receivedId;
+            model.RecipientId = receivedId;
             model.WasteTypeValue = wasteTypeValue;
             model.ProtocolValue = protocolValue;
             model.CategoryValues = tonnageValues;
@@ -211,7 +211,7 @@
             model.EndDate = endDate;
             model.StartDate = startDate;
             model.OrganisationId = organisationId;
-            model.ReceivedId = receivedId;
+            model.RecipientId = receivedId;
             model.WasteTypeValue = null;
             model.ProtocolValue = null;
             model.CategoryValues = tonnageValues;
@@ -271,7 +271,7 @@
         {
             var model = new EditEvidenceNoteViewModel()
             {
-                ReceivedId = Guid.NewGuid(),
+                RecipientId = Guid.NewGuid(),
                 Id = Guid.Empty,
                 OrganisationId = Guid.NewGuid(),
                 AatfId = Guid.NewGuid(),

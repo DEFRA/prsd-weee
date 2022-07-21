@@ -27,7 +27,7 @@
 
         [Required(ErrorMessage = "Select a recipient")]
         [Display(Name = "Recipient")]
-        public Guid? ReceivedId { get; set; }
+        public Guid? RecipientId { get; set; }
 
         public List<OrganisationSchemeData> SchemeList { get; set; }
 
@@ -65,7 +65,7 @@
         {
             nameof(StartDate),
             $"{nameof(EndDate)}",
-            $"{nameof(ReceivedId)}",
+            $"{nameof(RecipientId)}",
             "Received-auto",
             $"{nameof(WasteTypeValue)}",
             $"{nameof(ProtocolValue)}"
