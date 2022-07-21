@@ -135,17 +135,6 @@
             throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
         }
 
-        /// <summary>
-        /// Should only be used for integration tests
-        /// </summary>
-        /// <param name="organisation"></param>
-        public void UpdateOrganisation(Guid organisationId)
-        {
-            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-
-            OrganisationId = organisationId;
-            Organisation = null;
-        }
         public void UpdateAatf(Guid aatfId)
         {
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
