@@ -13,7 +13,6 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core;
@@ -31,13 +30,13 @@
         {
             private readonly Establish context = () =>
             {
-                var builder = LocalSetup();
+                LocalSetup();
 
                 organisation = OrganisationDbSetup.Init().Create();
                 aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 
                 recipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
                 OrganisationUserDbSetup
                     .Init()
@@ -52,7 +51,7 @@
 
                 request = new CreateEvidenceNoteRequest(organisation.Id,
                     aatf.Id,
-                    recipientScheme.Id,
+                    recipientOrganisation.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),
@@ -92,7 +91,7 @@
                 aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 recipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
@@ -105,7 +104,7 @@
 
                 request = new CreateEvidenceNoteRequest(organisation.Id,
                     aatf.Id,
-                    recipientScheme.Id,
+                    recipientOrganisation.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),

@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Scheme;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
@@ -140,7 +141,10 @@
             var schemeName = TestFixture.Create<string>();
             var source = GetRequestTransferObject();
 
-            A.CallTo(() => cache.FetchSchemeName(source.Request.RecipientId)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.Request.RecipientId)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
 
             //act
             var result = map.Map(source);
@@ -150,13 +154,18 @@
         }
 
         [Fact]
-        public void Map_GivenTransferNoteDataSource_SchemeNameShouldBeRetrievedFromCacheAndSet()
+        public void Map_GivenSourceWithTransferNoteData_SchemeNameShouldBeRetrievedFromCacheAndSet()
         {
             //arrange
             var schemeName = TestFixture.Create<string>();
-            var source = GetTransferNoteDataTransferObject();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(new List<EvidenceNoteData>(),
+                null, noteData, TestFixture.Create<Guid>());
 
-            A.CallTo(() => cache.FetchSchemeName(source.TransferEvidenceNoteData.RecipientSchemeData.Id)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.TransferEvidenceNoteData.RecipientOrganisationData.Id)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
 
             //act
             var result = map.Map(source);

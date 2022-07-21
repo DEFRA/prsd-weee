@@ -20,19 +20,16 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
-            ISchemeDataAccess schemeDataAccess, 
             ISystemDataDataAccess systemDataDataAccess, 
             IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
-            this.schemeDataAccess = schemeDataAccess;
             this.systemDataDataAccess = systemDataDataAccess;
             this.genericDataAccess = genericDataAccess;
         }
