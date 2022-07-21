@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -11,6 +12,7 @@
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Web.ApiClient;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
@@ -281,6 +283,44 @@
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
             result.RouteValues["aatfId"].Should().Be(AatfId);
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithInnerInvalidOperationException_ShouldAddErrorToModelState()
+        {
+            //arrange
+            var model = ValidModel();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = typeof(InvalidOperationException).FullName
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            await Record.ExceptionAsync(async () => await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().Be("StartDate");
+            ManageEvidenceController.ModelState.ElementAt(0).Value.Errors.ElementAt(0).ErrorMessage.Should()
+                .Be("You cannot create evidence for the start date entered");
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithWhereInnerItNotInvalidOperationException_ExceptionShouldBeReThrown()
+        {
+            //arrange
+            var model = ValidModel();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = Fixture.Create<string>()
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            var result = await Record.ExceptionAsync(async () => await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            result.Should().NotBeNull();
         }
 
         [Theory]
