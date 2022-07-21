@@ -7,8 +7,10 @@
     using Base;
     using Core.Helpers;
     using Domain.Evidence;
+    using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Weee.Tests.Core;
 
     public class TransferEvidenceNoteDbSetup : DbTestDataBuilder<Note, TransferEvidenceNoteDbSetup>
     {
@@ -28,8 +30,7 @@
                 recipientOrganisation,
             user.UserId.ToString(),
             tonnages,
-            DateTime.Now.Year,
-            WasteType.HouseHold);
+            DateTime.Now.Year);
         }
 
         public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user, string reason = null)
@@ -47,7 +48,8 @@
 
         public TransferEvidenceNoteDbSetup WithOrganisation(Guid organisationId)
         {
-            instance.UpdateOrganisation(organisationId);
+            ObjectInstantiator<Note>.SetProperty(o => o.Organisation, null, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.OrganisationId, organisationId, instance);
             return this;
         }
     }

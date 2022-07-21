@@ -776,7 +776,6 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\OutgoingTransfers.cshtml" />
-    <Content Include="Areas\Scheme\Views\TransferEvidence\EditTransferTonnage.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
@@ -1723,7 +1722,7 @@
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
-      <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
+      <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
