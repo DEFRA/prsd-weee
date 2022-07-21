@@ -140,7 +140,7 @@
                     WeeeCategory.MedicalDevices.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
 
                 notes.Count().Should().Be(2);
                 notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
@@ -198,7 +198,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
 
                 notes.Count().Should().Be(1);
                 notes.ElementAt(0).NoteTonnage.Count().Should().Be(1);
@@ -253,7 +253,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year);
 
                 notes.Count().Should().Be(1);
                 notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
@@ -317,7 +317,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>()
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
                 {
                     note1ToBeFound.Id,
                     note2ToBeFound.Id
@@ -375,7 +375,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(scheme.Id, categorySearch, new List<Guid>()
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
                 {
                     note1ToBeFound.Id,
                     note2NotToBeFound.Id

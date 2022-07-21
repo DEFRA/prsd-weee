@@ -75,7 +75,7 @@
                     .WithTonnages(existingTransferTonnages).Create();
 
                 updatedRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var updatedRecipientScheme = SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
@@ -83,7 +83,7 @@
                     new TransferTonnageValue(transferTonnage4.Id, WeeeCategory.ConsumerEquipment.ToInt(), 2, 2, Guid.Empty),
                 };
 
-                request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientScheme.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -157,6 +157,7 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 3, 1),
                     new NoteTransferTonnage(transferTonnage2.Id, 4, null),
                     new NoteTransferTonnage(transferTonnage3.Id, 5, 1),
+                    new NoteTransferTonnage(transferTonnage4.Id, 3, 1),
                 };
 
                 var transferNote = TransferEvidenceNoteDbSetup.Init()
@@ -164,7 +165,7 @@
                     .WithTonnages(existingTransferTonnages).Create();
 
                 updatedRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var updatedRecipientScheme = SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
@@ -172,7 +173,7 @@
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 2, 2, Guid.Empty),
                 };
 
-                request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientScheme.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Submitted);
+                request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Submitted);
             };
 
             private readonly Because of = () =>
@@ -280,7 +281,7 @@
                     .WithTonnages(editingTransferNoteTonnage).Create();
 
                 updatedRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var updatedRecipientScheme = SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
 
                 // now to call the request to edit the tonnage, should be allowed as this is an edit
                 transferTonnageValues = new List<TransferTonnageValue>()
@@ -288,7 +289,7 @@
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, Guid.Empty)
                 };
 
-                request = new EditTransferEvidenceNoteRequest(editingTransferNote.Id, editingTransferNote.OrganisationId, updatedRecipientScheme.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                request = new EditTransferEvidenceNoteRequest(editingTransferNote.Id, editingTransferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>
@@ -317,7 +318,7 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
 
                 existingRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(existingRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(existingRecipientOrganisation.Id).Create();
 
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
@@ -373,7 +374,7 @@
                     .WithTonnages(editingTransferNoteTonnage).Create();
 
                 updatedRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var updatedRecipientScheme = SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(updatedRecipientOrganisation.Id).Create();
 
                 // now to call the request to edit the tonnage, should not be allowed as requesting more than available
                 transferTonnageValues = new List<TransferTonnageValue>()
@@ -381,7 +382,7 @@
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.ConsumerEquipment.ToInt(), 2, null, Guid.Empty)
                 };
 
-                request = new EditTransferEvidenceNoteRequest(editingTransferNote.Id, editingTransferNote.OrganisationId, updatedRecipientScheme.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                request = new EditTransferEvidenceNoteRequest(editingTransferNote.Id, editingTransferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
             };
 
             private readonly Because of = () =>

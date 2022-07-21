@@ -13,7 +13,7 @@
 
         public Guid? OrganisationId { get; set; }
 
-        public Guid? SchemeId { get; set; }
+        public Guid? RecipientId { get; set; }
 
         public List<NoteStatus> AllowedStatuses { get; set; }
 

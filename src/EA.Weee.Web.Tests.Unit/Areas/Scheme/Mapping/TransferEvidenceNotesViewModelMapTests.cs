@@ -6,6 +6,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -79,7 +80,31 @@
             var schemeName = TestFixture.Create<string>();
             var source = GetTransferObject();
 
-            A.CallTo(() => cache.FetchSchemeName(source.Request.RecipientId)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.Request.RecipientId)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientName.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithTransferNoteData_SchemeNameShouldBeRetrievedFromCacheAndSet()
+        {
+            //arrange
+            var schemeName = TestFixture.Create<string>();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(),
+                null, noteData, TestFixture.Create<Guid>());
+
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.TransferEvidenceNoteData.RecipientOrganisationData.Id)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
 
             //act
             var result = map.Map(source);
