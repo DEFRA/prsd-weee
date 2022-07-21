@@ -142,7 +142,7 @@
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
-                    SchemeId = scheme.Id
+                    RecipientId = scheme.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
@@ -679,7 +679,7 @@
                 var filter = new NoteFilter(SystemTime.Now.Year)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
-                    SchemeId = schemeToMatch.Id,
+                    RecipientId = schemeToMatch.Id,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
                 };
 

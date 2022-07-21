@@ -6,12 +6,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
-    using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
-    using Z.EntityFramework.Plus;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
     {
@@ -94,9 +91,9 @@
             {
                 notes = notes.Where(n => n.Organisation.Id == filter.OrganisationId.Value);
             }
-            if (filter.SchemeId.HasValue)
+            if (filter.RecipientId.HasValue)
             {
-                notes = notes.Where(n => n.Recipient.Schemes.FirstOrDefault().Id == filter.SchemeId.Value);
+                notes = notes.Where(n => n.RecipientId == filter.RecipientId);
             }
             if (filter.NoteStatusId.HasValue)
             {
@@ -150,11 +147,11 @@
             return note.ComplianceYear;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid recipientOrganisationId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
             var notes = await context.Notes
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
-                .Where(n => n.Recipient.ProducerBalancingScheme != null ? true : n.Recipient.Schemes.FirstOrDefault().Id == schemeId &&
+                .Where(n => n.RecipientId == recipientOrganisationId &&
                             n.NoteType.Value == NoteType.EvidenceNote.Value &&
                             n.WasteType.Value == WasteType.HouseHold &&
                             n.Status.Value == NoteStatus.Approved.Value &&
