@@ -16,7 +16,7 @@
             Guard.ArgumentNotNull(() => source, source);
             var viewModel = new RecipientWasteStatusFilterViewModel();
 
-            var sortedmNoteStatusList = new Dictionary<int, string>
+            var sortedList = new Dictionary<int, string>
             {
                 { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
                 { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
@@ -24,16 +24,10 @@
                 { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
             };
 
-            if (source.SchemeList != null)
-            {
-                viewModel.SchemeListSL = new SelectList(source.SchemeList, "Id", "SchemeName");
-            }
-            else
-            {
-               viewModel.SchemeListSL = new SelectList(new List<SchemeData>(), "Id", "SchemeName");
-            }
+            viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
+                new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
 
-            viewModel.NoteStatusList = new SelectList(sortedmNoteStatusList, "Key", "Value");
+            viewModel.NoteStatusList = new SelectList(sortedList, "Key", "Value");
             viewModel.WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
             viewModel.ReceivedId = source.ReceivedId;
             viewModel.NoteStatusValue = source.NoteStatus;

@@ -183,7 +183,7 @@
             // arrange
             var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<OrganisationSchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
                 TestFixture.Create<OrganisationSchemeData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
@@ -193,8 +193,8 @@
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
-            model.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
-            model.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
+            model.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.Id != organisationId));
+            model.SchemasToDisplay.Should().NotContain(s => s.Id.Equals(organisationId));
         }
 
         [Fact]
@@ -318,7 +318,7 @@
             };
             var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<OrganisationSchemeData>().With(s => s.OrganisationId, organisationId).Create(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
                 TestFixture.Create<OrganisationSchemeData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
@@ -329,8 +329,8 @@
             var updatedModel = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
-            updatedModel.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
-            updatedModel.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
+            updatedModel.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.Id != organisationId));
+            updatedModel.SchemasToDisplay.Should().NotContain(s => s.Id.Equals(organisationId));
         }
 
         [Fact]

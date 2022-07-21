@@ -143,7 +143,7 @@
             var source = fixture.Create<EditNoteMapTransfer>();
             source.ExistingModel = null;
             var recipientId = source.NoteData.RecipientOrganisationData.Id;
-            source.Schemes[0].OrganisationId = recipientId;
+            source.Schemes[0].Id = recipientId;
            
             //act
             var result = map.Map(source);
