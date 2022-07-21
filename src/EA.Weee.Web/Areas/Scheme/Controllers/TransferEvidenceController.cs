@@ -257,7 +257,7 @@
             {
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(false));
 
-                organisationSchemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
+                organisationSchemes.RemoveAll(s => s.Id.Equals(pcsId));
 
                 return organisationSchemes;
             }

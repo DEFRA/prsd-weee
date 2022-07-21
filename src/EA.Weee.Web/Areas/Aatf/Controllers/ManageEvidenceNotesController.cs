@@ -284,16 +284,14 @@
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel));
 
-            var schemeData = resultAllNotes.Select(x => x.RecipientSchemeData)
-                                           .Distinct(new SchemeDataComparer())
-                                           .OrderBy(s => s.SchemeName)
-                                           .ToList();
+            var schemeData = resultAllNotes.CreateOrganisationSchemeDataList();
+
             if (schemeData.Any())
             {
                 sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
             }
 
-            schemeData = sessionService.GetTransferSessionObject<List<SchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+            schemeData = sessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 

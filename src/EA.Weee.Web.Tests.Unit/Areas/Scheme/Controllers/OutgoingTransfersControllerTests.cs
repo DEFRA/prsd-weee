@@ -1181,7 +1181,7 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn == false))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1191,9 +1191,9 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
-            var schemes = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipients = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>._)).Returns(schemes);
+                A<GetOrganisationScheme>._)).Returns(recipients);
 
             //act
             await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>());
@@ -1202,7 +1202,7 @@
             A.CallTo(() =>
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                        t.SchemeData.SequenceEqual(schemes) &&
+                        t.RecipientData.SequenceEqual(recipients) &&
                         t.OrganisationId == organisationId &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.ExistingTransferEvidenceNoteCategoriesViewModel == null))).MustHaveHappenedOnceExactly();
@@ -1337,7 +1337,7 @@
         }
 
         [Fact]
-        public async Task EditCategoriesPost_SchemesShouldBeRetrieved()
+        public async Task EditCategoriesPost_RecipientsShouldBeRetrieved()
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
@@ -1348,7 +1348,7 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn == false))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1361,9 +1361,9 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
-            var schemes = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>._)).Returns(schemes);
+                A<GetOrganisationScheme>._)).Returns(recipientData);
 
             //act
             await outgoingTransferEvidenceController.EditCategories(model);
@@ -1372,7 +1372,7 @@
             A.CallTo(() =>
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                        t.SchemeData.SequenceEqual(schemes) &&
+                        t.RecipientData.SequenceEqual(recipientData) &&
                         t.OrganisationId == model.PcsId &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.ExistingTransferEvidenceNoteCategoriesViewModel == model))).MustHaveHappenedOnceExactly();

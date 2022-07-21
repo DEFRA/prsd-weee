@@ -24,7 +24,7 @@
                 ? source.ExistingModel.ReturnedReason
                 : source.NoteData.ReturnedReason;
 
-            var recipientName = source.Schemes.FirstOrDefault(s => s.OrganisationId == recipientId);
+            var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
 
             var model = new EditEvidenceNoteViewModel
             {

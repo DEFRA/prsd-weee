@@ -39,7 +39,6 @@
         private readonly EditTransferEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Organisation recipientOrganisation;
-        private readonly Scheme scheme;
         private readonly Guid userId;
         private Guid transferNoteId;
 
@@ -55,13 +54,10 @@
 
             recipientOrganisation = A.Fake<Organisation>();
             organisation = A.Fake<Organisation>();
-            scheme = A.Fake<Scheme>();
             userId = TestFixture.Create<Guid>();
             transferNoteId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { scheme });
-            A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => recipientOrganisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(A.Fake<Note>());
 
@@ -76,7 +72,7 @@
                 systemDataDataAccess);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(organisation);
             A.CallTo(() => userContext.UserId).Returns(userId);
         }
 
@@ -189,10 +185,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndNoSchemeFound_ShowThrowArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndNoRecipientFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns((Scheme)null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).ReturnsNextFromSequence(A.Fake<Organisation>(), null);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -212,13 +208,13 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_SchemeRecipientShouldBeRetrieved()
+        public async Task HandleAsync_GivenRequest_RecipientShouldBeRetrieved()
         {
             //act
             var result = await handler.HandleAsync(Request());
 
             //assert
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -228,8 +224,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             var note = A.Fake<Note>();
-            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).ReturnsNextFromSequence(organisation, recipientOrganisation);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             
@@ -331,7 +326,7 @@
 
         private EditTransferEvidenceNoteRequest Request()
         {
-            return new EditTransferEvidenceNoteRequest(transferNoteId, organisation.Id, scheme.Id,
+            return new EditTransferEvidenceNoteRequest(transferNoteId, organisation.Id, recipientOrganisation.Id,
                 TestFixture.CreateMany<TransferTonnageValue>().ToList(),
                 Core.AatfEvidence.NoteStatus.Draft);
         }

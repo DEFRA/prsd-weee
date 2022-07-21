@@ -318,7 +318,7 @@
     <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
     <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
-    <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
+    <Compile Include="Areas\Aatf\Comparers\SchemeOrganisationDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
     <Compile Include="Areas\Aatf\Helpers\IAatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceSelectYourAatfViewModelMap.cs" />
@@ -359,6 +359,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />

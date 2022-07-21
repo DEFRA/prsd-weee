@@ -292,7 +292,7 @@
             var noteData =
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-            var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+            var schemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(false));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemes, pcsId, existingModel);
 
