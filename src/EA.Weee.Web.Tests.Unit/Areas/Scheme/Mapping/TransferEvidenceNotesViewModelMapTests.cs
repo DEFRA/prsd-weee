@@ -221,6 +221,73 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithSessionEvidenceDataIds_SelectedEvidenceNotePairsShouldBeSetAndOrderedCorrectly()
+        {
+            //arrange
+            var noteId1 = TestFixture.Create<Guid>();
+            var noteId2 = TestFixture.Create<Guid>();
+            var noteId3 = TestFixture.Create<Guid>();
+            var noteId4 = TestFixture.Create<Guid>();
+            var noteId5 = TestFixture.Create<Guid>();
+            var noteId6 = TestFixture.Create<Guid>();
+            var noteId7 = TestFixture.Create<Guid>();
+
+            var transferNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var organisationId = TestFixture.Create<Guid>();
+
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId1).With(e => e.Reference, 1).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId2).With(e => e.Reference, 2).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId3).With(e => e.Reference, 3).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId4).With(e => e.Reference, 4).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId5).With(e => e.Reference, 5).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId6).With(e => e.Reference, 6).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.Id, noteId7).With(e => e.Reference, 7).Create(),
+            };
+
+            var viewEvidenceNoteModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId1).With(e => e.Reference, 7).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId2).With(e => e.Reference, 4).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId3).With(e => e.Reference, 2).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId4).With(e => e.Reference, 5).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId5).With(e => e.Reference, 3).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId6).With(e => e.Reference, 1).Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(e => e.Id, noteId7).With(e => e.Reference, 6).Create(),
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).ReturnsNextFromSequence(viewEvidenceNoteModels.ToArray());
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, TransferEvidenceNoteRequest(), organisationId);
+            source.SessionEvidenceNotesId = new List<Guid>() { noteId2, noteId3, noteId5, noteId7};
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNotesDataList.ElementAt(0).Reference.Should().Be(6);
+            result.SelectedEvidenceNotePairs.ElementAt(0).Key.Should().Be(noteId7);
+            result.SelectedEvidenceNotePairs.ElementAt(0).Value.Should().BeTrue();
+
+            result.EvidenceNotesDataList.ElementAt(1).Reference.Should().Be(4);
+            result.SelectedEvidenceNotePairs.ElementAt(1).Key.Should().Be(noteId2);
+            result.SelectedEvidenceNotePairs.ElementAt(1).Value.Should().BeTrue();
+
+            result.EvidenceNotesDataList.ElementAt(2).Reference.Should().Be(3);
+            result.SelectedEvidenceNotePairs.ElementAt(2).Key.Should().Be(noteId5);
+            result.SelectedEvidenceNotePairs.ElementAt(2).Value.Should().BeTrue();
+
+            result.EvidenceNotesDataList.ElementAt(3).Reference.Should().Be(2);
+            result.SelectedEvidenceNotePairs.ElementAt(3).Key.Should().Be(noteId3);
+            result.SelectedEvidenceNotePairs.ElementAt(3).Value.Should().BeTrue();
+
+            result.SelectedEvidenceNotePairs.ElementAt(4).Value.Should().BeFalse();
+            result.SelectedEvidenceNotePairs.ElementAt(5).Value.Should().BeFalse();
+            result.SelectedEvidenceNotePairs.ElementAt(6).Value.Should().BeFalse();
+        }
+
+        [Fact]
         public void Map_GivenSource_ViewTransferNoteViewModelShouldBeMapped()
         {
             //arrange

@@ -12,12 +12,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using Web.Areas.Aatf.Helpers;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ManageEvidenceNotesViewModelMapTests
+    public class ManageEvidenceNotesViewModelMapTests : SimpleUnitTestBase
     {
         private readonly ManageEvidenceNoteViewModelMap map;
-        private readonly Fixture fixture;
         private readonly Guid organisationId;
         private readonly Guid aatfId;
         private readonly AatfData aatfData;
@@ -29,11 +29,10 @@
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
 
             map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper);
-            fixture = new Fixture();
             organisationId = Guid.NewGuid();
             aatfId = Guid.NewGuid();
-            aatfData = fixture.Create<AatfData>();
-            aatfDataList = fixture.CreateMany<AatfData>().ToList();
+            aatfData = TestFixture.Create<AatfData>();
+            aatfDataList = TestFixture.CreateMany<AatfData>().ToList();
         }
 
         [Fact]
@@ -50,7 +49,7 @@
         public void Map_GivenSource_ValidModelShouldBeReturned()
         {
             //arrange
-            var source = fixture.Create<ManageEvidenceNoteTransfer>();
+            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
 
             //act
             var model = map.Map(source);
@@ -63,9 +62,9 @@
         public void Map_GivenSourceWithSingleAatf_MapperShouldBeCalled()
         {
             //arrange
-            var aatfDataValid = fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
-            var aatfDataInvalid1 = fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.AddYears(-3).Year).Create();
-            var aatfDataInvalid2 = fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Ae).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
+            var aatfDataValid = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
+            var aatfDataInvalid1 = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.AddYears(-3).Year).Create();
+            var aatfDataInvalid2 = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Ae).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
 
             var aatfDataList = new List<AatfData>();
             aatfDataList.Add(aatfDataValid);
@@ -131,8 +130,8 @@
         public void Map_GivenSourceWithValidFilterModel_MapperShouldBeCalled()
         {
             //arrange
-            var aatfDataList = fixture.CreateMany<AatfData>().ToList();
-            var filterModel = fixture.Create<FilterViewModel>();
+            var aatfDataList = TestFixture.CreateMany<AatfData>().ToList();
+            var filterModel = TestFixture.Create<FilterViewModel>();
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, filterModel, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
@@ -146,8 +145,8 @@
         public void Map_GivenSourceWithValidRecipientWasteStatusModel_MapperShouldBeCalled()
         {
             //arrange
-            var aatfDataList = fixture.CreateMany<AatfData>().ToList();
-            var recipientWasteStatusModel = fixture.Create<RecipientWasteStatusFilterViewModel>();
+            var aatfDataList = TestFixture.CreateMany<AatfData>().ToList();
+            var recipientWasteStatusModel = TestFixture.Create<RecipientWasteStatusFilterViewModel>();
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, recipientWasteStatusModel, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
@@ -161,8 +160,8 @@
         public void Map_GivenSourceWithValidModel_MapperShouldBeCalled()
         {
             //arrange
-            var aatfDataList = fixture.CreateMany<AatfData>().ToList();
-            var submittedDateModel = fixture.Create<SubmittedDatesFilterViewModel>();
+            var aatfDataList = TestFixture.CreateMany<AatfData>().ToList();
+            var submittedDateModel = TestFixture.Create<SubmittedDatesFilterViewModel>();
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, submittedDateModel, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
@@ -176,10 +175,10 @@
         public void Map_GivenSourceToMapper_ComplianceYearShouldBeMapped()
         {
             //arrange
-            var expectedComplianceYear = fixture.Create<int>();
+            var expectedComplianceYear = TestFixture.Create<int>();
             var aatfDataList = new List<AatfData>
             {
-                fixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, expectedComplianceYear).Create()
+                TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, expectedComplianceYear).Create()
             };
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, expectedComplianceYear, SystemTime.UtcNow);
 
@@ -195,13 +194,118 @@
         {
             //arrange
             var currentDate = new DateTime(2019, 1, 1);
-            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, fixture.CreateMany<AatfData>().ToList(), null, null, null, fixture.Create<int>(), currentDate);
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, TestFixture.CreateMany<AatfData>().ToList(), null, null, null, TestFixture.Create<int>(), currentDate);
 
             //act
             var model = map.Map(source);
 
             // assert 
             model.ComplianceYearList.Should().BeEquivalentTo(new List<int>() { 2019, 2018, 2017 });
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenAatfCreateEvidenceNotesAndInComplianceYear_CanCreateEditShouldBeSet(bool canCreateEdit)
+        {
+            //arrange
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var aatfId = TestFixture.Create<Guid>();
+            var currentDate = new DateTime(2021, 01, 31);
+            var complianceYear = currentDate.Year;
+
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
+
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(canCreateEdit);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanCreateEdit.Should().Be(canCreateEdit);
+        }
+
+        [Fact]
+        public void Map_GivenAatfCreateEvidenceNotesAndInComplianceYear_CanCreateEditShouldBeTrue()
+        {
+            //arrange
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var aatfId = TestFixture.Create<Guid>();
+            var currentDate = new DateTime(2021, 01, 31);
+            var complianceYear = currentDate.Year;
+
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
+
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(true);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanCreateEdit.Should().Be(true);
+        }
+
+        public static IEnumerable<object[]> ClosedComplianceDates =>
+            new List<object[]>
+            {
+                new object[] { 2020, new DateTime(2021, 02, 1) },
+                new object[] { 2019, new DateTime(2021, 02, 1) },
+                new object[] { 2023, new DateTime(2021, 02, 1) }
+            };
+
+        [Theory]
+        [MemberData(nameof(ClosedComplianceDates))]
+        public void Map_GivenAatfCreateEvidenceNotesAndOutOfComplianceYear_CanCreateEditShouldBeSet(int complianceYear, DateTime currentDate)
+        {
+            //arrange
+            var aatfs = TestFixture.CreateMany<AatfData>().ToList();
+            var aatfId = TestFixture.Create<Guid>();
+
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfs, null, null, null, complianceYear, currentDate);
+
+            A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(A<List<AatfData>>.That.IsSameAs(aatfs), aatfId, complianceYear)).Returns(true);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanCreateEdit.Should().Be(false);
+        }
+
+        [Theory]
+        [MemberData(nameof(ClosedComplianceDates))]
+        public void Map_GivenOutOfComplianceYear_ComplianceYearClosedShouldBeTrue(int complianceYear, DateTime currentDate)
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, complianceYear, currentDate);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ComplianceYearClosed.Should().BeTrue();
+        }
+
+        public static IEnumerable<object[]> OpenComplianceDates =>
+            new List<object[]>
+            {
+                new object[] { 2020, new DateTime(2021, 01, 31) },
+                new object[] { 2020, new DateTime(2020, 12, 31) },
+                new object[] { 2020, new DateTime(2020, 1, 1) },
+            };
+
+        [Theory]
+        [MemberData(nameof(OpenComplianceDates))]
+        public void Map_GivenInComplianceYear_ComplianceYearClosedShouldBeFalse(int complianceYear, DateTime currentDate)
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, complianceYear, currentDate);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ComplianceYearClosed.Should().BeFalse();
         }
     }
 }
