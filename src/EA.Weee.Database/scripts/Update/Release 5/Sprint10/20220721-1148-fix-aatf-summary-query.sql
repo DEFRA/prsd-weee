@@ -1,5 +1,4 @@
-﻿USE [EA.Weee]
-GO
+﻿
 /****** Object:  StoredProcedure [Evidence].[getAatfEvidenceSummaryTotals]    Script Date: 21/07/2022 12:02:08 ******/
 SET ANSI_NULLS ON
 GO
