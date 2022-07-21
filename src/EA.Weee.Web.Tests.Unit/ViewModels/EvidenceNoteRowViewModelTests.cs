@@ -7,6 +7,7 @@
     using FluentAssertions;
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EvidenceNoteRowViewModelTests

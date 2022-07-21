@@ -8,6 +8,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Aatf;
     using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
