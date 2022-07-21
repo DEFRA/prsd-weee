@@ -25,7 +25,7 @@
                 result.Add(new OrganisationSchemeData
                 {
                      DisplayName = data.SchemeName,
-                     OrganisationId = data.OrganisationId
+                     Id = data.OrganisationId
                 });
             }
 

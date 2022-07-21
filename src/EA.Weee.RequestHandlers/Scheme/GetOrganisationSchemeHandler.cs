@@ -39,7 +39,6 @@
 
             var mappedSchemes = schemes.Where(s => s.SchemeStatus == SchemeStatus.Approved)
                 .Select(s => schemeOrganisationMap.Map(s))
-                .OrderBy(sd => sd.DisplayName)
                 .ToList();
 
             var mappedPbs = producerBalancingSchemeOrganisationMap.Map(pbs);
@@ -49,7 +48,7 @@
                 mappedSchemes.Add(mappedPbs);
             }
 
-            return mappedSchemes;
+            return mappedSchemes.OrderBy(m => m.DisplayName).ToList();
         }
     }
 }

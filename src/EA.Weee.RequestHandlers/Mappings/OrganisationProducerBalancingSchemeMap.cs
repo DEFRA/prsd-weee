@@ -18,7 +18,7 @@
             return new OrganisationSchemeData
             {
                 DisplayName = source.Organisation.Name,
-                OrganisationId = source.Organisation.Id
+                Id = source.Organisation.Id
             };
         }
     }

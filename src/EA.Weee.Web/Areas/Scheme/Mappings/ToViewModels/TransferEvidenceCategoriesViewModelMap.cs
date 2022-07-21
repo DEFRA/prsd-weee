@@ -24,8 +24,8 @@
 
             var model = MapBaseProperties(source);
 
-            var schemeData = mapper.Map<List<OrganisationSchemeData>>(source.SchemeData);
-            schemeData.RemoveAll(s => s.OrganisationId == source.OrganisationId);
+            var schemeData = source.RecipientData.ToList();
+            schemeData.RemoveAll(s => s.Id == source.OrganisationId);
             model.SchemasToDisplay = schemeData;
 
             if (source.ExistingTransferEvidenceNoteCategoriesViewModel != null)
@@ -37,7 +37,7 @@
             else
             {
                 model.OrganisationId = source.OrganisationId;
-                model.SelectedSchema = source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+                model.SelectedSchema = source.TransferEvidenceNoteData.RecipientOrganisationData.Id;
 
                 SetCategoryValues(source.TransferEvidenceNoteData.CategoryIds, model);
             }

@@ -2,12 +2,11 @@
 {
     using System;
 
+    [Serializable]
     public class OrganisationSchemeData
     {
-        public Guid OrganisationId { get; set; }
+        public Guid Id { get; set; }
 
         public string DisplayName { get; set; }
-
-        public bool WithPbsData { get; set; }
     }
 }
