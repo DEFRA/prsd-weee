@@ -57,7 +57,7 @@
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should()
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
-            result.RecipientId.Should().Be(source.NoteData.RecipientSchemeData.Id);
+            result.RecipientId.Should().Be(source.NoteData.RecipientOrganisationData.Id);
             result.StartDate.Should().Be(source.NoteData.StartDate);
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
@@ -137,12 +137,12 @@
             result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
         [Fact]
-        public void Map_GivenSourceSchemesContainRecipientId_SelectedSchemeNameShouldBeMapped()
+        public void Map_GivenSourceContainRecipientId_SelectedSchemeNameShouldBeMapped()
         {
             //arrange
             var source = fixture.Create<EditNoteMapTransfer>();
             source.ExistingModel = null;
-            var recipientId = source.NoteData.RecipientSchemeData.Id;
+            var recipientId = source.NoteData.RecipientOrganisationData.Id;
             source.Schemes[0].OrganisationId = recipientId;
            
             //act

@@ -33,6 +33,7 @@
         private readonly GetEvidenceNotesForTransferRequest request;
         private readonly Scheme scheme;
         private readonly Guid schemeId;
+        private readonly Guid organisationId;
 
         public GetEvidenceNotesForTransferRequestHandlerTests()
         {
@@ -45,7 +46,7 @@
             fixture.Create<Guid>();
             schemeId = fixture.Create<Guid>();
             scheme = A.Fake<Scheme>();
-            var organisationId = fixture.Create<Guid>();
+            organisationId = fixture.Create<Guid>();
 
             A.CallTo(() => scheme.Id).Returns(schemeId);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
@@ -131,7 +132,7 @@
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(schemeId, 
+                    evidenceDataAccess.GetNotesToTransfer(organisationId, 
                         A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, date.Year))
                 .MustHaveHappenedOnceExactly();
         }
@@ -140,10 +141,10 @@
         public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //arrange
-            var request = new GetEvidenceNotesForTransferRequest(fixture.Create<Guid>(), fixture.CreateMany<int>().ToList(),
+            var organisationId = fixture.Create<Guid>();
+            var request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<int>().ToList(),
                 fixture.CreateMany<Guid>().ToList());
             
-            A.CallTo(() => scheme.Id).Returns(schemeId);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
             var date = fixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
@@ -152,9 +153,8 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(schemeId, A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), date.Year))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
+                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), date.Year)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
