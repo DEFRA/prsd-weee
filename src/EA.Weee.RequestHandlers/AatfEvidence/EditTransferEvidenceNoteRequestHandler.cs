@@ -9,7 +9,6 @@
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
-    using Domain.Scheme;
     using Factories;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
@@ -51,10 +50,10 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Scheme>(request.RecipientId);
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientId);
             
             Condition.Requires(organisation).IsNotNull();
-            Condition.Requires(scheme).IsNotNull();
+            Condition.Requires(recipientOrganisation).IsNotNull();
 
             var note = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
 
@@ -67,7 +66,7 @@
                         t.SecondTonnage)).ToList();
 
                     await evidenceDataAccess.UpdateTransfer(note,
-                        scheme.Organisation,
+                        recipientOrganisation,
                         newNoteTonnages,
                         request.Status.ToDomainEnumeration<NoteStatus>(),
                         CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
