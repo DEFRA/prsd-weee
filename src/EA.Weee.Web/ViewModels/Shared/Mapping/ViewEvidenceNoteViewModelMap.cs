@@ -62,7 +62,8 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
+                RecipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName :
+                        addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                     source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
                     organisationAddress.Address1,
                     organisationAddress.Address2,

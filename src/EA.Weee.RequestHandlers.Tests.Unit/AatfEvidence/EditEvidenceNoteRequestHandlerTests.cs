@@ -32,6 +32,7 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Organisation recipientOrganisation;
@@ -44,6 +45,7 @@
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
 
             recipientScheme = A.Fake<Scheme>();
             organisation = A.Fake<Organisation>();
@@ -63,7 +65,7 @@
 
             request = Request();
 
-            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess, genericDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(request.Id)).Returns(note);
         }
@@ -74,7 +76,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess, genericDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -89,7 +91,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess, genericDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
