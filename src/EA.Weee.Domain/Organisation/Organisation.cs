@@ -189,5 +189,7 @@
                 return null;
             }
         }
+
+        public bool IsBalancingScheme => this.ProducerBalancingScheme != null;
     }
 }
