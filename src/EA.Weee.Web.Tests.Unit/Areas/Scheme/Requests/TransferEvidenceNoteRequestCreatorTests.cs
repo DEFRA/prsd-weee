@@ -78,7 +78,7 @@
 
             //assert
             request.CategoryIds.Should().BeEquivalentTo(selectedIds);
-            request.SchemeId.Should().Be(selectedScheme);
+            request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
         }
 
@@ -114,7 +114,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.SchemeId.Should().Be(schemeId);
+            result.RecipientId.Should().Be(schemeId);
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeEquivalentTo(categories);
             result.EvidenceNoteIds.Should().BeEquivalentTo(evidenceNoteIds);
