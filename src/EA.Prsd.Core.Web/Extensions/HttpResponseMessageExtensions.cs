@@ -33,21 +33,7 @@
                     }
                 };
 
-                var content = await httpResponseMessage.Content.ReadAsStringAsync();
-
                 return await httpResponseMessage.Content.ReadAsAsync<T>(formatters);
-            }
-
-            var ex = await CreateApiException(httpResponseMessage);
-            throw ex;
-        }
-
-        public static async Task<byte[]> CreateResponseByteArrayAsync(
-            this HttpResponseMessage httpResponseMessage)
-        {
-            if (httpResponseMessage.IsSuccessStatusCode)
-            {
-                return await httpResponseMessage.Content.ReadAsByteArrayAsync();
             }
 
             var ex = await CreateApiException(httpResponseMessage);
