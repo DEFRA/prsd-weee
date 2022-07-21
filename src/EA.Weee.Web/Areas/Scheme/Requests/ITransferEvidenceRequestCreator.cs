@@ -7,5 +7,8 @@
     {
         TransferEvidenceNoteRequest SelectCategoriesToRequest(TransferEvidenceNoteCategoriesViewModel viewModel);
         TransferEvidenceNoteRequest SelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel);
+
+        EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request,
+            TransferEvidenceTonnageViewModel viewModel);
     }
 }

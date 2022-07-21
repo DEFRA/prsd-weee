@@ -17,15 +17,13 @@
             this.evidenceDataAccess = evidenceDataAccess;
         }
 
-        public async Task Validate(List<TransferTonnageValue> transferValues)
+        public async Task Validate(List<TransferTonnageValue> transferValues, Guid? existingTransferNoteId  = null)
         {
             var existingNoteTonnage =
-                await evidenceDataAccess.GetTonnageByIds(transferValues.Select(t => t.TransferTonnageId)
-                    .ToList());
+                await evidenceDataAccess.GetTonnageByIds(transferValues.Select(t => t.Id).ToList());
 
             foreach (var noteTonnage in existingNoteTonnage)
             {
-                // can't 
                 if (!noteTonnage.Received.HasValue)
                 {
                     throw new InvalidOperationException($"Note tonnage with id {noteTonnage.Id} has null received");
@@ -33,9 +31,12 @@
 
                 var totalReceivedAvailable = 
                     noteTonnage.Received.Value - (noteTonnage.NoteTransferTonnage != null && noteTonnage.NoteTransferTonnage.Any() ? 
-                                                 noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && !nt.TransferNote.Status.Value.Equals(NoteStatus.Rejected.Value) && !nt.TransferNote.Status.Value.Equals(NoteStatus.Void.Value)).Sum(nt => nt.Received.Value) : 0);
+                                                 noteTonnage.NoteTransferTonnage.Where(nt => nt.Received.HasValue && 
+                                                     !nt.TransferNote.Status.Value.Equals(NoteStatus.Rejected.Value) && 
+                                                     !nt.TransferNote.Status.Value.Equals(NoteStatus.Void.Value) &&
+                                                     (!existingTransferNoteId.HasValue || nt.TransferNoteId != existingTransferNoteId.Value)).Sum(nt => nt.Received.Value) : 0);
                 var requestedTonnage =
-                    transferValues.First(t => t.TransferTonnageId.Equals(noteTonnage.Id));
+                    transferValues.First(t => t.Id == noteTonnage.Id);
 
                 if (requestedTonnage.FirstTonnage.HasValue && decimal
                         .Compare(requestedTonnage.FirstTonnage.Value, totalReceivedAvailable).Equals(1))

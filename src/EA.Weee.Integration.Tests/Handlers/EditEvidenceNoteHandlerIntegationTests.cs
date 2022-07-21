@@ -7,6 +7,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Aatf;
     using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;

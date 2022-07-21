@@ -23,6 +23,7 @@
     using Web.Extensions;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerReviewEvidenceNoteTests : SimpleUnitTestBase

@@ -6,6 +6,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Aatf;
     using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -22,6 +23,7 @@
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;

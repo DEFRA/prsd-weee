@@ -14,6 +14,7 @@
     using Prsd.Core.Helpers;
     using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EvidenceNoteViewModelTests

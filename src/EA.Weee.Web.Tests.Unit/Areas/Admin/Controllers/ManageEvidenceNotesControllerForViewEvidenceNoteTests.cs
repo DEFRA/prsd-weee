@@ -15,6 +15,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerForViewEvidenceNoteTests : ManageEvidenceNotesControllerTestsBase
