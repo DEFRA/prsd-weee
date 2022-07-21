@@ -775,7 +775,6 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\OutgoingTransfers.cshtml" />
-    <Content Include="Areas\Scheme\Views\TransferEvidence\EditTransferTonnage.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />

@@ -14,6 +14,7 @@
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewTransferNoteViewModelMapTests : SimpleUnitTestBase
