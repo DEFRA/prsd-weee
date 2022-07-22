@@ -10,7 +10,6 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Areas.Aatf.Comparers;
     using EA.Weee.Web.Constant;
     using Extensions;
     using Infrastructure;
@@ -21,10 +20,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -164,7 +163,7 @@
                     {
                         if (ex.ErrorData.ExceptionType == typeof(InvalidOperationException).FullName)
                         {
-                            ModelState.AddModelError("StartDate", "You cannot create evidence for the start date entered");
+                            ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
                         }
                         else
                         {
