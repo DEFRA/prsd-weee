@@ -18,6 +18,7 @@
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class CheckCanEditEvidenceAttributeTests : SimpleUnitTestBase

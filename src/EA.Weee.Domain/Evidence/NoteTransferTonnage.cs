@@ -32,5 +32,11 @@
         public virtual decimal? Received { get; private set; }
 
         public virtual decimal? Reused { get; private set; }
+
+        public void UpdateValues(decimal? received, decimal? reused)
+        {
+            Received = received;
+            Reused = reused;
+        }
     }
 }

@@ -18,6 +18,7 @@
     using FluentAssertions;
     using Mappings;
     using Prsd.Core.Mapper;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using NoteType = Domain.Evidence.NoteType;
     using Scheme = Domain.Scheme.Scheme;

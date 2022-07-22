@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core.DataHelpers
 {
     using System;
     using System.Collections;

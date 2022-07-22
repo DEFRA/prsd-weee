@@ -46,21 +46,20 @@
             authorization.EnsureSchemeAccess(scheme.Id);
 
             Guid? organisationId = null;
-            Guid? schemeId = scheme.Id;
+            Guid? recipientId = request.OrganisationId;
             
             if (request.TransferredOut)
             {
                 organisationId = request.OrganisationId;
-                schemeId = null;
+                recipientId = null;
             }
 
-            var filter = new NoteFilter(DateTime.Now.Year, int.MaxValue, 0)
+            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 0)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
-                SchemeId = schemeId,
+                RecipientId = recipientId,
                 OrganisationId = organisationId,
-                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear
+                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);

@@ -41,8 +41,8 @@
 
             if (aatf.FacilityType == FacilityType.Aatf)
             {
-                //if (WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, source.SystemDateTime)
-                if (approvalDateValid &&
+                if (WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, source.SystemDateTime) &&
+                    approvalDateValid &&
                     aatf.AatfStatus == AatfStatus.Approved)
                 {
                     canCreateEdit = true;

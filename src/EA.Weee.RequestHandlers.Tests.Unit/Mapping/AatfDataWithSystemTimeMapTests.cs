@@ -301,8 +301,7 @@
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
 
             //assert
-            //TODO: add this check back in for compliance year
-            result.CanCreateEditEvidence.Should().BeTrue();
+            result.CanCreateEditEvidence.Should().BeFalse();
         }
 
         [Theory]
@@ -331,8 +330,6 @@
         [MemberData(nameof(Dates))]
         public void Map_GivenAatfApprovalDateIsValidComplianceYearIsValidButIsCancelled_CanCreateEditEvidenceShouldBeFalse(DateTime currentDate, DateTime approvalDate)
         {
-            var aatfStatus = Enumeration.GetAll<AatfStatus>();
-
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
@@ -353,8 +350,6 @@
         [MemberData(nameof(Dates))]
         public void Map_GivenAatfApprovalDateIsValidComplianceYearIsValidAndIsApproved_CanCreateEditEvidenceShouldBeTrue(DateTime currentDate, DateTime approvalDate)
         {
-            var aatfStatus = Enumeration.GetAll<AatfStatus>();
-
             var aatfData = TestFixture.Build<AatfData>()
                 .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
