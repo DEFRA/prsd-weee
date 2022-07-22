@@ -146,5 +146,12 @@
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewObligationAndEvidenceSummary()
+        {
+            //GetSchemeObligationHandler 
+            return View();
+        }
     }
 }
