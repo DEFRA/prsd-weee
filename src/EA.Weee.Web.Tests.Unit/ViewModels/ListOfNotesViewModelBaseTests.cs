@@ -72,7 +72,8 @@
             testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => 
+                e.SequenceEqual(noteData.Results.ToList())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -87,7 +88,7 @@
                 TestFixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
             var result = testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>());
