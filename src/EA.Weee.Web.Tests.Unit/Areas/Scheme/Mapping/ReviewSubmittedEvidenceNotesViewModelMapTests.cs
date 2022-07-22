@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -41,7 +42,7 @@
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), null, "Test", fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), null, fixture.Create<SchemePublicInfo>(), fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -51,7 +52,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), "Test", fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), fixture.Create<SchemePublicInfo>(), fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -81,8 +82,8 @@
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+                notes,
+                fixture.Create<SchemePublicInfo>(), 
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -102,8 +103,8 @@
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+                notes,
+                fixture.Create<SchemePublicInfo>(), 
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -123,8 +124,8 @@
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+                notes,
+                fixture.Create<SchemePublicInfo>(), 
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -151,8 +152,8 @@
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
-                "Test", 
+                notes,
+                fixture.Create<SchemePublicInfo>(), 
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -171,11 +172,11 @@
         {
             //arrange
             var organisationId = fixture.Create<Guid>();
-            var schemeName = fixture.Create<string>();
+            var scheme = fixture.Create<SchemePublicInfo>();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
                 fixture.CreateMany<EvidenceNoteData>().ToList(),
-                schemeName,
+                scheme,
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -184,7 +185,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.SchemeName.Should().Be(schemeName);
+            result.Scheme.Should().Be(scheme);
         }
 
         [Fact]

@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
@@ -42,7 +43,7 @@
             //act
             var exception = Record.Exception(() => new TransferredOutEvidenceNotesViewModelMapTransfer(Guid.NewGuid(),
                 null,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>()));
 
@@ -56,7 +57,7 @@
             //act
             var exception = Record.Exception(() => new TransferredOutEvidenceNotesViewModelMapTransfer(Guid.Empty,
                 fixture.CreateMany<EvidenceNoteData>().ToList(),
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>()));
 
@@ -83,11 +84,11 @@
         {
             //arrange
             var organisationId = fixture.Create<Guid>();
-            var schemeName = fixture.Create<string>();
+            var scheme = fixture.Create<SchemePublicInfo>();
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 fixture.CreateMany<EvidenceNoteData>().ToList(),
-                schemeName,
+                scheme,
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -96,7 +97,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.SchemeName.Should().Be(schemeName);
+            result.Scheme.Should().Be(scheme);
         }
 
         [Fact]
@@ -114,7 +115,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -135,7 +136,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -156,7 +157,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -189,7 +190,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -292,7 +293,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
@@ -334,7 +335,7 @@
 
             var transfer = new TransferredOutEvidenceNotesViewModelMapTransfer(organisationId,
                 notes,
-                fixture.Create<string>(),
+                fixture.Create<SchemePublicInfo>(),
                 fixture.Create<DateTime>(),
                 fixture.Create<ManageEvidenceNoteViewModel>());
 
