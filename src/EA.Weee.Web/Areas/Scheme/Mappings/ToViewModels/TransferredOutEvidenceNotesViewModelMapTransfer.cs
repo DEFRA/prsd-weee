@@ -8,10 +8,10 @@
     public class TransferredOutEvidenceNotesViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
         public TransferredOutEvidenceNotesViewModelMapTransfer(Guid organisationId,
-            List<EvidenceNoteData> notes,
+            EvidenceNoteSearchDataResult noteData,
             string schemeName,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, notes, schemeName, currentDate, manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, noteData, schemeName, currentDate, manageEvidenceNoteViewModel)
         {
         }
     }

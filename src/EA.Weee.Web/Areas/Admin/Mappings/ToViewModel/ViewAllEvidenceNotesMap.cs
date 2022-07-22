@@ -1,29 +1,22 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
-    using EA.Weee.Web.ViewModels.Shared;
 
-    public class ViewAllEvidenceNotesMap : IMap<ViewAllEvidenceNotesMapModel, ViewAllEvidenceNotesViewModel>
+    public class ViewAllEvidenceNotesMap : ViewAllNotesMapBase<ViewAllEvidenceNotesViewModel>, IMap<ViewAllEvidenceNotesMapTransfer, ViewAllEvidenceNotesViewModel>
     {
-        protected readonly IMapper Mapper;
-
-        public ViewAllEvidenceNotesMap(IMapper mapper)
+        public ViewAllEvidenceNotesMap(IMapper mapper) : base(mapper)
         {
-            this.Mapper = mapper;
         }
 
-        public ViewAllEvidenceNotesViewModel Map(ViewAllEvidenceNotesMapModel source)
+        public ViewAllEvidenceNotesViewModel Map(ViewAllEvidenceNotesMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var viewAllEvidenceModel = new ViewAllEvidenceNotesViewModel();
-            viewAllEvidenceModel.EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(source.Notes);
-            viewAllEvidenceModel.ManageEvidenceNoteViewModel = source.ManageEvidenceNoteViewModel;
+            var model = CreateModel(source);
 
-            return viewAllEvidenceModel;
+            return model;
         }
     }
 }
