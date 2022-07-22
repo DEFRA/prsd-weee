@@ -336,6 +336,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapModel.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
@@ -343,6 +344,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Scheme\Attributes\ValidatePBSEvidenceNotesEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesController.cs" />
@@ -793,6 +795,7 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewEvidenceNoteTransfer.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\IndexNoAatf.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
+    <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
