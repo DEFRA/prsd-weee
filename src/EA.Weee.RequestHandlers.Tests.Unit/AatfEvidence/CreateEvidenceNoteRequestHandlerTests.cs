@@ -6,7 +6,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Aatf;
     using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
@@ -40,6 +39,9 @@
         private readonly Organisation recipientOrganisation;
         private readonly Aatf aatf;
         private readonly Guid userId;
+
+        private const string Error =
+            "You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year";
 
         public CreateEvidenceNoteRequestHandlerTests()
         {
@@ -425,7 +427,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -440,7 +442,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         public static IEnumerable<object[]> OutOfComplianceYear =>
@@ -465,7 +467,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -483,7 +485,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         private CreateEvidenceNoteRequest Request()

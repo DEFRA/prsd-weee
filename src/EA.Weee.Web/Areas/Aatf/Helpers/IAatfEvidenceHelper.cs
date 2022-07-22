@@ -7,5 +7,7 @@
     public interface IAatfEvidenceHelper
     {
         bool AatfCanEditCreateNotes(List<AatfData> aatfs, Guid aatfId, int complianceYear);
+
+        List<AatfData> GroupedValidAatfs(List<AatfData> aatfs);
     }
 }
