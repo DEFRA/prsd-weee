@@ -62,7 +62,8 @@
             allOtherNotesViewModelMap.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -116,7 +117,8 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -146,7 +148,8 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -176,7 +179,8 @@
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -205,7 +209,8 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);

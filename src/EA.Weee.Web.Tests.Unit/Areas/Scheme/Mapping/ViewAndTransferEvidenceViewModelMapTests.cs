@@ -94,7 +94,8 @@
             viewAndTransferEvidenceViewModelMap.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
