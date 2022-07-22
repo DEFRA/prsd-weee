@@ -361,9 +361,9 @@
             var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear));
 
             // assert
-            result.Should().BeOfType<List<EvidenceNoteData>>();
-            result.Count().Should().Be(evidenceNoteDatas.Count);
-
+            result.Should().BeOfType<EvidenceNoteSearchDataResult>();
+            result.NoteCount.Should().Be(evidenceNoteDatas.Count);
+            result.Results.ToList().Should().BeEquivalentTo(listOfEvidenceNotes.ListOfEvidenceNoteData);
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }

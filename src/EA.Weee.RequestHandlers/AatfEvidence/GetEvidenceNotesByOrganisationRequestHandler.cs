@@ -16,7 +16,7 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
@@ -34,7 +34,7 @@
             this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
@@ -54,7 +54,7 @@
                 recipientId = null;
             }
 
-            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 0)
+            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 1)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 RecipientId = recipientId,
@@ -64,7 +64,9 @@
 
             var notes = await noteDataAccess.GetAllNotes(filter);
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+
+            return new EvidenceNoteSearchDataResult(mappedResults, mappedResults.Count);
         }
     }
 }
