@@ -9,7 +9,5 @@
         public Guid OrganisationId { get; set; }
 
         public List<AatfData> AatfList { get; set; }
-
-        public DateTime EvidenceSiteSelectionStartDateFrom { get; set; }
     }
 }
