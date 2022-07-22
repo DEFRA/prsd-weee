@@ -47,7 +47,8 @@
 
         public EvidenceNoteDbSetup WithOrganisation(Guid organisationId)
         {
-            instance.UpdateOrganisation(organisationId);
+            ObjectInstantiator<Note>.SetProperty(o => o.Organisation, null, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.OrganisationId, organisationId, instance);
             return this;
         }
 

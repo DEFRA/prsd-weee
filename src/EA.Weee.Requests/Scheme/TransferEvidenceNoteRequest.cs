@@ -14,56 +14,56 @@
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId, 
+            Guid recipientId, 
             List<int> categoryIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             CategoryIds = categoryIds;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId,
+            Guid recipientId,
             List<int> categoryIds,
             List<Guid> evidenceNoteIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
             Condition.Requires(evidenceNoteIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId,
+            Guid recipientId,
             List<int> categoryIds,
             List<TransferTonnageValue> transferValues,
             List<Guid> evidenceNoteIds,
             Core.AatfEvidence.NoteStatus status)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
             Condition.Requires(transferValues).IsNotNull();
             Condition.Requires(evidenceNoteIds).IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             TransferValues = transferValues;
             Status = status;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
         }
 
-        public Guid SchemeId { get; set; } 
+        public Guid RecipientId { get; set; } 
 
         public List<int> CategoryIds { get; set; }
 

@@ -26,11 +26,11 @@
                 tonnageValues.Add(new TonnageValues(categoryValue.Id, categoryValue.CategoryId, received, reused));
             }
 
-            if (viewModel.ReceivedId != null)
+            if (viewModel.RecipientId != null)
             {
                 var request = (T)Activator.CreateInstance(typeof(T), viewModel.OrganisationId,
                     viewModel.AatfId,
-                    viewModel.ReceivedId.Value,
+                    viewModel.RecipientId.Value,
                     viewModel.StartDate,
                     viewModel.EndDate,
                     viewModel.WasteTypeValue,

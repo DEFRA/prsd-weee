@@ -108,11 +108,7 @@
         {
             //arrange
             var scheme = A.Fake<Scheme>();
-            var schemeId = fixture.Create<Guid>();
-
-            A.CallTo(() => scheme.Id).Returns(schemeId);
-            var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+            var status = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
 
@@ -121,7 +117,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
-                                                              e.SchemeId.Equals(schemeId) && 
+                                                              e.RecipientId == request.OrganisationId && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
                                                               e.ComplianceYear == request.ComplianceYear &&
@@ -151,7 +147,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.AatfId == null &&
                 e.ComplianceYear == request.ComplianceYear &&

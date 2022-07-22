@@ -47,6 +47,17 @@
                 SchemasToDisplay = await GetApprovedSchemes(pcsId)
             };
 
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                  SessionKeyConstant.TransferNoteKey);
+
+            if (transferRequest != null)
+            {
+                var categoryIds = transferRequest.CategoryIds;
+                model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
+                    .ForEach(c => c.Selected = true);
+                model.SelectedSchema = transferRequest.RecipientId;
+            }
+
             return this.View("TransferEvidenceNote", model);
         }
 
@@ -94,6 +105,12 @@
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
 
+                var evidenceNoteIds = transferRequest.EvidenceNoteIds;
+                if (evidenceNoteIds != null)
+                {
+                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+                }
+
                 var model =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
 
@@ -115,7 +132,7 @@
                     model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
 
                 var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.SchemeId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 
@@ -234,15 +251,15 @@
             }
         }
 
-        private async Task<List<SchemeData>> GetApprovedSchemes(Guid pcsId)
+        private async Task<List<OrganisationSchemeData>> GetApprovedSchemes(Guid pcsId)
         {
             using (var client = apiClient())
             {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemesExternal(false));
+                var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(false));
 
-                schemes.RemoveAll(s => s.OrganisationId.Equals(pcsId));
+                organisationSchemes.RemoveAll(s => s.Id.Equals(pcsId));
 
-                return schemes;
+                return organisationSchemes;
             }
         }
 

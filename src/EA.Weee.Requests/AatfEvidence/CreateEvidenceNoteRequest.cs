@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using Aatf;
     using Core.AatfEvidence;
-    using Prsd.Core;
 
     [Serializable]
     public class CreateEvidenceNoteRequest : EvidenceNoteBaseRequest
