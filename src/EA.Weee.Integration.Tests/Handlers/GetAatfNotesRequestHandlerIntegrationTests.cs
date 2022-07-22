@@ -95,21 +95,22 @@
 
             private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
             {
-                evidenceNoteData.Should().HaveCount(notesSet.Count);
+                evidenceNoteData.Results.Should().HaveCount(notesSet.Count);
+                evidenceNoteData.NoteCount.Should().Be(notesSet.Count);
             };
 
             private readonly It shouldHaveExpectedReferenceData = () =>
             {
                 foreach (var note1 in notesSet)
                 {
-                    var evidenceNote = evidenceNoteData.FirstOrDefault(n => n.Id.Equals(note1.Id));
+                    var evidenceNote = evidenceNoteData.Results.FirstOrDefault(n => n.Id.Equals(note1.Id));
                     evidenceNote.Should().NotBeNull();
                 }
             };
 
             private readonly It shouldHaveNotesInExpectedOrder = () =>
             {
-                evidenceNoteData.Select(e => e.Reference).Should().BeInDescendingOrder();
+                evidenceNoteData.Results.Select(e => e.Reference).Should().BeInDescendingOrder();
             };
         }
 
@@ -164,7 +165,7 @@
 
             private readonly It shouldReturnNoData = () =>
             {
-                evidenceNoteData.Should().BeNullOrEmpty();
+                evidenceNoteData.Results.Should().BeNullOrEmpty();
             };
         }
 
@@ -241,14 +242,15 @@
             
             private readonly It shouldHaveExpectedResultsCount = () =>
             {
-                evidenceNoteData.Should().HaveCount(allowedStatuses.Count);
+                evidenceNoteData.Results.Should().HaveCount(allowedStatuses.Count);
+                evidenceNoteData.NoteCount.Should().Be(allowedStatuses.Count);
             };
 
             private readonly It shouldHaveExpectedAllowedStatuses = () =>
             {
                 var allowedStatusesToArray = allowedStatuses.ToArray();
 
-                foreach (var note in evidenceNoteData)
+                foreach (var note in evidenceNoteData.Results)
                 {
                     note.Status.Should().BeOneOf(allowedStatusesToArray);  
                 }
@@ -349,20 +351,21 @@
             private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
             {
                 evidenceNoteData.Should().NotBeNull();
-                evidenceNoteData.Count.Should().Be(4);
+                evidenceNoteData.Results.Count.Should().Be(4);
+                evidenceNoteData.NoteCount.Should().Be(4);
             };
 
             private readonly It shouldHaveExpectedResultsCount = () =>
             {
-                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear).Should().Be(4);
-                evidenceNoteData.Count(n => n.ComplianceYear == SystemTime.UtcNow.AddYears(-1).Year).Should().Be(0);
+                evidenceNoteData.Results.Count(n => n.ComplianceYear == complianceYear).Should().Be(4);
+                evidenceNoteData.Results.Count(n => n.ComplianceYear == SystemTime.UtcNow.AddYears(-1).Year).Should().Be(0);
             };
 
             private readonly It shouldHaveExpectedAllowedStatuses = () =>
             {
                 var allowedStatusesToArray = allowedStatuses.ToArray();
 
-                foreach (var evidenceNote in evidenceNoteData)
+                foreach (var evidenceNote in evidenceNoteData.Results)
                 {
                     evidenceNote.Status.Should().BeOneOf(allowedStatusesToArray);
                 }
@@ -440,18 +443,18 @@
 
             private readonly It shouldHaveExpectedResultsCount = () =>
             {
-                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear).Should().Be(2);
-                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear - 1).Should().Be(0);
-                evidenceNoteData.Count(n => n.ComplianceYear == complianceYear + 1).Should().Be(0);
+                evidenceNoteData.Results.Count(n => n.ComplianceYear == complianceYear).Should().Be(2);
+                evidenceNoteData.Results.Count(n => n.ComplianceYear == complianceYear - 1).Should().Be(0);
+                evidenceNoteData.Results.Count(n => n.ComplianceYear == complianceYear + 1).Should().Be(0);
             };
         }
 
         public class GetAatfNotesRequestHandlerTestBase : WeeeContextSpecification
         {
-            protected static List<EvidenceNoteData> evidenceNoteData;
+            protected static EvidenceNoteSearchDataResult evidenceNoteData;
             protected static List<Note> notesSet;
             protected static List<NoteStatus> allowedStatuses;
-            protected static IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>> handler;
+            protected static IRequestHandler<GetAatfNotesRequest, EvidenceNoteSearchDataResult> handler;
             protected static Organisation organisation;
             protected static Scheme scheme;
             protected static Aatf aatf;
@@ -469,7 +472,7 @@
                 complianceYear = fixture.Create<int>();
                 notesSet = new List<Note>();
                 allowedStatuses = new List<NoteStatus> { NoteStatus.Approved };
-                handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>>();
+                handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, EvidenceNoteSearchDataResult>>();
             }
         }
     }

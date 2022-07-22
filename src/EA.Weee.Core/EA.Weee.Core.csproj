@@ -106,6 +106,8 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\AatfEvidenceSummaryData.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteDataBase.cs" />
+    <Compile Include="AatfEvidence\EvidenceNoteDataListResult.cs" />
+    <Compile Include="AatfEvidence\EvidenceNoteSearchDataResult.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValues.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceNoteData.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValue.cs" />
