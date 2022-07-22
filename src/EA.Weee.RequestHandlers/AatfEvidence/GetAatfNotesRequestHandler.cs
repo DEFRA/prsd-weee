@@ -42,7 +42,7 @@
                 OrganisationId = message.OrganisationId,
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
                 SearchRef = message.SearchRef,
-                SchemeId = message.RecipientId,
+                RecipientId = message.RecipientId,
                 WasteTypeId = (int?)message.WasteTypeId,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,

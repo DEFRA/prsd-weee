@@ -13,9 +13,10 @@
 
                 <section class="govuk-tabs__panel" id="allOtherNotes">
 
-                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", new RouteValueDictionary() { { "tab", Model.ActiveOverviewDisplayOption } }, FormMethod.Get))
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
+                        @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden"} )
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
                         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 

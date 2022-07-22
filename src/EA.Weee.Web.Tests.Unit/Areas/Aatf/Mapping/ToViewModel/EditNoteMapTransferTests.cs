@@ -38,7 +38,7 @@
         public void GivenEmptyOrganisationId_ArgumentExceptionExpected()
         {
             //arrange
-            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<SchemeData>(),
+            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
                 new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), null));
 
             //assert
@@ -49,7 +49,7 @@
         public void GivenEmptyAatfId_ArgumentExceptionExpected()
         {
             //arrange
-            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<SchemeData>(),
+            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
                 new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, null));
 
             //assert
@@ -60,7 +60,7 @@
         public void GivenValues_PropertiesShouldBeSet()
         {
             //arrange
-            var schemes = fixture.CreateMany<SchemeData>().ToList();
+            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
             var evidenceModel = fixture.Create<EditEvidenceNoteViewModel>();
             var organisationId = fixture.Create<Guid>();
             var aatfId = fixture.Create<Guid>();

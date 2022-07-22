@@ -12,7 +12,6 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core;
@@ -36,7 +35,7 @@
 
                 request = new EditEvidenceNoteRequest(existingNote.Id,
                     existingNote.Id,
-                    updatedScheme.Id,
+                    updatedRecipient.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),
@@ -76,7 +75,7 @@
 
                 request = new EditEvidenceNoteRequest(existingNote.Id,
                     existingNote.Id,
-                    updatedScheme.Id,
+                    updatedRecipient.Id,
                     DateTime.Now,
                     DateTime.Now.AddDays(1),
                     fixture.Create<WasteType>(),
@@ -121,7 +120,6 @@
             protected static IRequestHandler<EditEvidenceNoteRequest, Guid> handler;
             protected static EditEvidenceNoteRequest request;
             protected static Organisation updatedRecipient;
-            protected static Scheme updatedScheme;
             protected static Guid result;
             protected static Note existingNote;
             protected static Note updatedNote;
@@ -174,7 +172,7 @@
                 existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
 
                 updatedRecipient = OrganisationDbSetup.Init().Create();
-                updatedScheme = SchemeDbSetup.Init().WithOrganisation(updatedRecipient.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(updatedRecipient.Id).Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, existingNote.OrganisationId).Create();
 
                 noteTonnages = new List<TonnageValues>();

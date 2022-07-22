@@ -7,6 +7,7 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
+    using Core.Organisations;
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
@@ -22,11 +23,12 @@
     {
         private readonly IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper;
         private readonly TransferEvidenceCategoriesViewModelMap map;
+        private readonly IMapper mapper;
 
         public TransferEvidenceCategoriesViewModelMapTests()
         {
             var cache = A.Fake<IWeeeCache>();
-            var mapper = A.Fake<IMapper>();
+            mapper = A.Fake<IMapper>();
             transferNoteMapper = A.Fake<IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>>();
 
             map = new TransferEvidenceCategoriesViewModelMap(cache, mapper, transferNoteMapper);
@@ -79,19 +81,19 @@
             var result = map.Map(source);
 
             //assert
-            result.SelectedSchema.Should().Be(source.TransferEvidenceNoteData.RecipientSchemeData.Id);
+            result.SelectedSchema.Should().Be(source.TransferEvidenceNoteData.RecipientOrganisationData.Id);
         }
 
         [Fact]
-        public void Map_GivenSource_SchemeListShouldBeSetAndCurrentOrganisationRemovedFromList()
+        public void Map_GivenSource_RecipientListShouldBeSetAndCurrentOrganisationRemovedFromList()
         {
             //arrange
             var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>().Create();
             var organisationId = TestFixture.Create<Guid>();
-            var schemeData = TestFixture.CreateMany<SchemeData>(3).ToList();
-            schemeData.ElementAt(1).OrganisationId = organisationId;
-            
-            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, null);
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>(3).ToList();
+            recipientData.ElementAt(1).Id = organisationId;
+
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, null);
 
             //act
             var result = map.Map(transfer);
@@ -99,8 +101,7 @@
             //assert
             result.SchemasToDisplay.Count.Should().Be(2);
             result.SchemasToDisplay.Should().NotContain(s => s.Id == organisationId);
-            result.SchemasToDisplay.Should().Contain(s => s.Id == schemeData.ElementAt(0).Id);
-            result.SchemasToDisplay.Should().Contain(s => s.Id == schemeData.ElementAt(2).Id);
+            result.SchemasToDisplay.Should().Contain(s => s.Id == recipientData.ElementAt(0).Id);
         }
 
         [Fact]
@@ -108,7 +109,7 @@
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
             {
                 TestFixture
@@ -129,7 +130,7 @@
                 .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
                 .Create();
 
-            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, null);
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, null);
 
             //act
             var result = map.Map(transfer);
@@ -185,7 +186,7 @@
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
             {
                 TestFixture
@@ -223,7 +224,7 @@
                     }
                 }).Create();
 
-            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, existingModel);
+            var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, existingModel);
 
             //act
             var result = map.Map(transfer);
@@ -248,9 +249,9 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, schemeData, organisationId, existingModel);
+            return new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, existingModel);
         }
     }
 }

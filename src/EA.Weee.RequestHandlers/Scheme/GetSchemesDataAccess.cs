@@ -28,5 +28,10 @@
         {
             return await context.Schemes.Where(s => s.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<ProducerBalancingScheme> GetProducerBalancingScheme()
+        {
+            return await context.ProducerBalancingSchemes.FirstAsync();
+        }
     }
 }

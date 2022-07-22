@@ -11,6 +11,7 @@
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Helpers;
+    using Core.Organisations;
     using Core.Scheme;
     using Core.Tests.Unit.Helpers;
     using EA.Prsd.Core;
@@ -22,6 +23,7 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
+    using Web.Extensions;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
@@ -55,7 +57,7 @@
 
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab));
 
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -75,7 +77,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
         }
@@ -95,7 +97,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
@@ -113,7 +115,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
             A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, currentDate.Year,
                 SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
@@ -133,7 +135,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), null);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
             A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, complianceYear,
                 SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
@@ -148,7 +150,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
@@ -164,7 +166,7 @@
             var aatfId = Guid.NewGuid();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(SystemTime.UtcNow);
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId.Equals(organisationId)))).MustHaveHappened(1, Times.Exactly);
         }
@@ -185,7 +187,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -212,7 +214,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -240,7 +242,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), filter);
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), filter);
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -274,7 +276,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), viewModel);
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), viewModel);
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -308,7 +310,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), viewModel);
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), viewModel);
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -336,7 +338,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), filter);
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), filter);
 
             //assert
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(
@@ -356,7 +358,7 @@
             int complianceYear = 2018;
             ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), vm);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), vm);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -381,7 +383,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeByOrganisationId>._)).Returns(new SchemeData() { SchemeName = organisationName });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes));
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -395,7 +397,7 @@
             var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
             
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -413,7 +415,7 @@
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), filter);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), filter);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -440,7 +442,7 @@
                 .With(m => m.RecipientWasteStatusFilterViewModel, recipientWasteStatusFilter).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), viewModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -467,7 +469,7 @@
                 .With(m => m.SubmittedDatesFilterViewModel, submittedDatesFilter).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), viewModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -485,7 +487,7 @@
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), filter);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), filter);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -499,7 +501,7 @@
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), filter);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), filter);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -519,7 +521,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             //assert
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
@@ -541,7 +543,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), existingModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), existingModel);
 
             //assert
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
@@ -563,7 +565,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab));
 
             //assert
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
@@ -582,7 +584,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString(), existingModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), existingModel);
 
             //assert
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
@@ -604,7 +606,7 @@
                 A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)) as ViewResult;
 
             //assert
             var model = result.Model as AllOtherManageEvidenceNotesViewModel;
@@ -637,32 +639,57 @@
             var scheme8 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "ree").Create();
             var scheme9 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "fgg").Create();
 
-            // order by SchemeName -  bba, ccc, fgg, iioo, pppp, ree, trrr, vva, xxsss 
-            var schemeDataListOrdered = new List<SchemeData> { scheme2, scheme3, scheme9, scheme5, scheme6, scheme8, scheme4, scheme1, scheme7 };
+            var note1 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme1)
+                .With(x => x.RecipientOrganisationData, 
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note2 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme2)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note3 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme3)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note4 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme4)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note5 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme5)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note6 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme6)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note7 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme7)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note8 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme8)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
+            var note9 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme9)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
 
-            var note1 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme1).Create();
-            var note2 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme2).Create();
-            var note3 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme3).Create();
-            var note4 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme4).Create();
-            var note5 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme5).Create();
-            var note6 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme6).Create();
-            var note7 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme7).Create();
-            var note8 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme8).Create();
-            var note9 = Fixture.Build<EvidenceNoteData>().With(x => x.RecipientSchemeData, scheme9).Create();
-
-            var notes = new List<EvidenceNoteData> { note1, note2, note3, note4, note5, note6, note7, note8, note9 };
+            var notes = new List<EvidenceNoteData> { note2, note3, note9, note5, note6, note8, note4, note1, note7 };
+            var ordered = notes.CreateOrganisationSchemeDataList();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotes);
-            A.CallTo(() => SessionService.GetTransferSessionObject<List<SchemeData>>(ManageEvidenceController.Session,
-                  SessionKeyConstant.FilterRecipientNameKey)).Returns(schemeDataListOrdered);
+            A.CallTo(() => SessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(ManageEvidenceController.Session,
+                  SessionKeyConstant.FilterRecipientNameKey)).Returns(ordered);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), manageNoteViewModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), manageNoteViewModel);
 
             //assert
             A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(
-                A<RecipientWasteStatusFilterBase>.That.Matches(e => e.SchemeList.SequenceEqual(schemeDataListOrdered) &&
+                A<RecipientWasteStatusFilterBase>.That.Matches(e => e.RecipientList.SequenceEqual(ordered) &&
                 e.NoteStatus.ToInt().Equals(noteStatus.ToInt()) &&
                 e.ReceivedId.Value.Equals(recieved.Value) &&
                 e.WasteType.ToInt().Equals(wasteType.ToInt())))).MustHaveHappenedOnceExactly();
@@ -687,7 +714,7 @@
                 .Returns(allOtherNotes);
         
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(), manageNoteViewModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), manageNoteViewModel);
 
             //assert
             A.CallTo(() => Mapper.Map<SubmittedDatesFilterViewModel>(
@@ -699,26 +726,33 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredData_SessionSchemeDataShouldBeRetrieved()
         {
             // arrange
-            var schemeData1 = Fixture.Create<SchemeData>();
-            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData1).Create();
-            var schemeData2 = Fixture.Create<SchemeData>();
-            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData2).Create();
+            var scheme1 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "aaaa").Create();
+            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme1)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
 
-            var notes = new List<EvidenceNoteData>();
-            notes.Add(evidenceNoteData1);
-            notes.Add(evidenceNoteData2);
+            var scheme2 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "gggg").Create();
+            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme2)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
 
-            var schemeDataList = new List<SchemeData> { schemeData1, schemeData2 };
+            var notes = new List<EvidenceNoteData>
+            {
+                evidenceNoteData1,
+                evidenceNoteData2
+            };
 
             var allOtherNotesViewModel = Fixture.Create<AllOtherManageEvidenceNotesViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
-           A.CallTo(() => SessionService.GetTransferSessionObject<List<SchemeData>>(ManageEvidenceController.Session,
+           A.CallTo(() => SessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(ManageEvidenceController.Session,
                SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 
@@ -726,29 +760,47 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredData_SessionObjectShouldBeSet()
         {
             // arrange
-            var schemeData1 = Fixture.Build<SchemeData>().With(sc => sc.SchemeName, "aaaa").Create();
-            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData1).Create();
-            var schemeData2 = Fixture.Build<SchemeData>().With(sc => sc.SchemeName, "gggg").Create();
-            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>().With(sd => sd.RecipientSchemeData, schemeData2).Create();
+            var scheme1 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "aaaa").Create();
+            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme1)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
 
-            var notes = new List<EvidenceNoteData>();
-            notes.Add(evidenceNoteData1);
-            notes.Add(evidenceNoteData2);
+            var scheme2 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "gggg").Create();
+            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>()
+                .With(x => x.RecipientSchemeData, scheme2)
+                .With(x => x.RecipientOrganisationData,
+                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
 
-            var schemeDataList = new List<SchemeData> { schemeData1, schemeData2 };
+            var notes = new List<EvidenceNoteData>
+            {
+                evidenceNoteData1,
+                evidenceNoteData2
+            };
+
+            var schemeDataList = new List<OrganisationSchemeData> 
+            { 
+                new OrganisationSchemeData() { Id = evidenceNoteData1.RecipientOrganisationData.Id, DisplayName = scheme1.SchemeName },
+                new OrganisationSchemeData() { Id = evidenceNoteData2.RecipientOrganisationData.Id, DisplayName = scheme2.SchemeName }
+            };
 
             var allOtherNotesViewModel = Fixture.Create<AllOtherManageEvidenceNotesViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(notes);
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
           A.CallTo(() =>
-         SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<SchemeData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
-          A.CallTo(() =>
-         SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<SchemeData>>.That.IsSameSequenceAs(schemeDataList), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<OrganisationSchemeData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+          
+          A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, 
+                 A<List<OrganisationSchemeData>>.That.Matches(a => 
+                     a.Count == 2 &&
+                        a.ElementAt(0).Id == evidenceNoteData1.RecipientOrganisationData.Id && a.ElementAt(0).DisplayName.Equals(scheme1.SchemeName) &&
+                        a.ElementAt(1).Id == evidenceNoteData2.RecipientOrganisationData.Id && a.ElementAt(1).DisplayName.Equals(scheme2.SchemeName)), 
+                        SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -765,14 +817,14 @@
                   SessionKeyConstant.FilterRecipientNameKey)).Returns(schemeDataList);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
             A.CallTo(() =>
               SessionService.SetTransferSessionObject(ManageEvidenceController.Session, schemeDataList, SessionKeyConstant.FilterRecipientNameKey)).MustNotHaveHappened();
 
             A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(
-             A<RecipientWasteStatusFilterBase>.That.Matches(e => e.SchemeList.Count == 0 &&
+             A<RecipientWasteStatusFilterBase>.That.Matches(e => e.RecipientList.Count == 0 &&
              e.NoteStatus == null && e.ReceivedId == null && e.WasteType == null))).MustHaveHappenedOnceExactly();
         }
 
@@ -788,7 +840,7 @@
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
             A.CallTo(() =>
@@ -808,7 +860,7 @@
                 A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
             //assert
             var model = result.Model as EditDraftReturnedNotesViewModel;
@@ -823,7 +875,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var result = await ManageEvidenceController.Index(organisationId, aatfId, ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)) as ViewResult;
 
             result.ViewName.Should().Be("Overview/ViewAllOtherEvidenceOverview");
         }
@@ -835,7 +887,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
             result.ViewName.Should().Be("Overview/EditDraftReturnedNotesOverview");
         }
@@ -881,7 +933,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
 
-            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
             result.ViewName.Should().Be("Overview/EvidenceSummaryOverview");
         }
@@ -896,7 +948,7 @@
             var complianceYear = 2000;
             ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString(), vm);
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), vm);
 
             A.CallTo(() =>
                     WeeeClient.SendAsync(A<string>._,
@@ -917,7 +969,7 @@
                 WeeeClient.SendAsync(A<string>._,
                     A<GetAatfSummaryRequest>._)).Returns(summary);
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
                 e.AatfEvidenceSummaryData.Equals(summary) && e.AatfId.Equals(aatfId) &&
@@ -938,7 +990,7 @@
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
                 .Returns(evidenceNoteViewModel);
 
-            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
             var resultModel = (ManageEvidenceSummaryViewModel)result.Model;
             resultModel.Should().Be(model);

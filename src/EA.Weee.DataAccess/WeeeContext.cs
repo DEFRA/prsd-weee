@@ -83,6 +83,8 @@
 
         public virtual DbSet<PanArea> PanAreas { get; set; }
 
+        public virtual DbSet<ProducerBalancingScheme> ProducerBalancingSchemes { get; set; }
+
         /// <summary>
         /// Registered producers including items marked as removed.
         /// </summary>
