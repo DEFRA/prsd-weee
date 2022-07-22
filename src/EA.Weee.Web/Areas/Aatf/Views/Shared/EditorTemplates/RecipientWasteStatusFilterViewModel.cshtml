@@ -8,7 +8,7 @@
 <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-2">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
-        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.SchemeListSL,
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.RecipientList,
         string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
     </div>
 </div>

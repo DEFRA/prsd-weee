@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Aatf;
+    using Core.AatfReturn;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -18,7 +20,7 @@
     using Protocol = Domain.Evidence.Protocol;
     using WasteType = Domain.Evidence.WasteType;
 
-    public class CreateEvidenceNoteRequestHandler : IRequestHandler<CreateEvidenceNoteRequest, Guid>
+    public class CreateEvidenceNoteRequestHandler : SaveEvidenceNoteRequestBase, IRequestHandler<CreateEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -45,10 +47,15 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Domain.Scheme.Scheme>(message.RecipientId);
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(message.RecipientId);
 
-            Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an organisation with Id {message.OrganisationId}");
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Could not find an scheme with Id {message.RecipientId}");
+            Condition.Requires(organisation).IsNotNull($"Could not find an organisation with Id {message.OrganisationId}");
+            Condition.Requires(recipientOrganisation).IsNotNull($"Could not find a recipient organisation with Id {message.RecipientId}");
+
+            if (!recipientOrganisation.IsBalancingScheme)
+            {
+                Condition.Requires(recipientOrganisation.Scheme).IsNotNull($"Could not find an scheme for organisation with Id {message.RecipientId}");
+            }
 
             var currentDate = await systemDataAccess.GetSystemDateTime();
 
@@ -59,7 +66,9 @@
 
             Condition.Requires(complianceYearAatf)
                 .IsNotNull($"Aatf not found for compliance year {message.StartDate.Year} and aatf {message.AatfId}");
-            
+
+            AatfIsValidToSave(complianceYearAatf, currentDate);
+
             if (aatf.Organisation.Id != message.OrganisationId)
             {
                 throw new InvalidOperationException(
@@ -72,7 +81,7 @@
                 t.SecondTonnage));
 
             var evidenceNote = new Note(organisation,
-                scheme.Organisation,
+                recipientOrganisation,
                 message.StartDate,
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,

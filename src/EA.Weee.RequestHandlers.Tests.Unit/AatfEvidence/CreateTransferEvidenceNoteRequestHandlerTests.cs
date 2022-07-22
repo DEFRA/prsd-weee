@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Common;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Helpers;
     using Core.Tests.Unit.Helpers;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -23,7 +23,9 @@
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class CreateTransferEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
@@ -74,7 +76,7 @@
                 systemDataDataAccess);
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.SchemeId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
             A.CallTo(() => userContext.UserId).Returns(userId);
         }
 
@@ -187,10 +189,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndNoSchemeFound_ShowThrowArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndRecipientOrganisationFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns((Scheme)null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).ReturnsNextFromSequence(A.Fake<Organisation>(), null);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -206,7 +208,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => transferTonnagesValidator.Validate(request.TransferValues)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transferTonnagesValidator.Validate(request.TransferValues, null)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -226,7 +228,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Scheme>(request.SchemeId)).Returns(scheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
             A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(A<List<Guid>>._)).Returns(complianceYear);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
@@ -245,19 +247,12 @@
                 A.CallTo(() =>
                     evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
                         A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
-                            t2 => t2.NoteTonnageId.Equals(transferValue.TransferTonnageId) && 
+                            t2 => t2.NoteTonnageId.Equals(transferValue.Id) && 
                                   t2.Received.Equals(transferValue.FirstTonnage) &&
                                   t2.Reused.Equals(transferValue.SecondTonnage)).Equals(1)), A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
                     .MustHaveHappenedOnceExactly();
             }
 
-            foreach (var transferCategories in request.CategoryIds)
-            {
-                A.CallTo(() =>
-                        evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
-                            A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
-                    .MustHaveHappenedOnceExactly();
-            }
             SystemTime.Unfreeze();
         }
 
@@ -266,9 +261,12 @@
         {
             //arrange
             var transferNoteId = TestFixture.Create<Guid>();
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.Id).Returns(transferNoteId);
+
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
-                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(transferNoteId);
+                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(note);
 
             //act
             var result = await handler.HandleAsync(request);
@@ -294,13 +292,14 @@
         public async Task HandleAsync_GivenErrorDuringValidation_TransactionShouldBeRolledBack()
         {
             //arrange
-            A.CallTo(() => transferTonnagesValidator.Validate(A<List<TransferTonnageValue>>._)).ThrowsAsync(new Exception());
+            A.CallTo(() => transferTonnagesValidator.Validate(A<List<TransferTonnageValue>>._, null)).ThrowsAsync(new Exception());
                 
             //act
             await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
             //assert
             A.CallTo(() => transactionAdapter.Rollback(null)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionAdapter.Commit(null)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -316,6 +315,7 @@
 
             //assert
             A.CallTo(() => transactionAdapter.Rollback(null)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionAdapter.Commit(null)).MustNotHaveHappened();
         }
 
         private TransferEvidenceNoteRequest Request()

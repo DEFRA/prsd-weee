@@ -6,6 +6,7 @@
     using FluentAssertions;
     using System.Collections.Generic;
     using Core.Tests.Unit.Helpers;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewTransferEvidenceNoteTonnageDataViewModelTests

@@ -57,7 +57,7 @@
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should()
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
-            result.ReceivedId.Should().Be(source.NoteData.RecipientId);
+            result.RecipientId.Should().Be(source.NoteData.RecipientOrganisationData.Id);
             result.StartDate.Should().Be(source.NoteData.StartDate);
             result.EndDate.Should().Be(source.NoteData.EndDate);
             result.WasteTypeValue.Should().Be(source.NoteData.WasteType);
@@ -126,7 +126,7 @@
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"));
             result.WasteTypeList.Should()
                 .BeEquivalentTo(new SelectList(EnumHelper.GetValues(typeof(WasteType)), "Key", "Value"));
-            result.ReceivedId.Should().Be(source.ExistingModel.ReceivedId);
+            result.RecipientId.Should().Be(source.ExistingModel.RecipientId);
             result.StartDate.Should().Be(source.ExistingModel.StartDate);
             result.EndDate.Should().Be(source.ExistingModel.EndDate);
             result.WasteTypeValue.Should().Be(source.ExistingModel.WasteTypeValue);
@@ -137,19 +137,19 @@
             result.SelectedSchemeName.Should().BeNullOrEmpty();
         }
         [Fact]
-        public void Map_GivenSourceSchemesContainRecipientId_SelectedSchemeNameShouldBeMapped()
+        public void Map_GivenSourceContainRecipientId_SelectedSchemeNameShouldBeMapped()
         {
             //arrange
             var source = fixture.Create<EditNoteMapTransfer>();
             source.ExistingModel = null;
-            var recipientId = source.NoteData.RecipientId;
+            var recipientId = source.NoteData.RecipientOrganisationData.Id;
             source.Schemes[0].Id = recipientId;
            
             //act
             var result = map.Map(source);
 
             // assert
-            result.SelectedSchemeName.Should().Be(source.Schemes[0].SchemeNameDisplay);
+            result.SelectedSchemeName.Should().Be(source.Schemes[0].DisplayName);
         }
     }
 }

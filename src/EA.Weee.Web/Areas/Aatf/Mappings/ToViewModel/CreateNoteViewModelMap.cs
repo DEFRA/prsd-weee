@@ -29,7 +29,7 @@
                 model.EndDate = source.ExistingModel.EndDate;
                 model.WasteTypeValue = source.ExistingModel.WasteTypeValue;
                 model.ProtocolValue = source.ExistingModel.ProtocolValue;
-                model.ReceivedId = source.ExistingModel.ReceivedId;
+                model.RecipientId = source.ExistingModel.RecipientId;
             }
 
             return model;

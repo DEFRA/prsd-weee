@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
@@ -87,7 +88,8 @@
                         var availableReceived = evidenceTonnageData.AvailableReceived;
                         var availableReused = evidenceTonnageData.AvailableReused;
 
-                        var id = evidenceTonnageData.Id;
+                        var existingTonnageId = evidenceTonnageData.Id;
+                        var transferNoteTonnageId = Guid.Empty;
 
                         if (source.TransferAllTonnage)
                         {
@@ -123,16 +125,19 @@
                                     ? transferTonnageData.EvidenceTonnageData.TransferredReused.ToTonnageDisplay()
                                     : string.Empty;
 
-                                id = transferTonnageData.EvidenceTonnageData.Id;
+                                transferNoteTonnageId = transferTonnageData.EvidenceTonnageData.Id;
                             }
                         }
 
                         var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
-                            id,
+                            transferNoteTonnageId,
                             availableReceived,
                             availableReused,
                             receivedTonnage,
-                            reusedTonnage);
+                            reusedTonnage)
+                        {
+                            Id = existingTonnageId
+                        };
 
                         model.TransferCategoryValues.Add(tonnage);
                     }

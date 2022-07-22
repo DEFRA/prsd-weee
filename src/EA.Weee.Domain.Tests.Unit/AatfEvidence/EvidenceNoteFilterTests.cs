@@ -5,6 +5,7 @@
     using EA.Weee.Core.Tests.Unit.Helpers;
     using Evidence;
     using FluentAssertions;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EvidenceNoteFilterTests

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using Core.AatfEvidence;
@@ -17,13 +18,7 @@
 
         public ActionEnum Action { get; set; }
 
-        public bool Edit
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool Edit => ViewTransferNoteViewModel != null && ViewTransferNoteViewModel.EvidenceNoteId != Guid.Empty;
 
         public TransferEvidenceTonnageViewModel()
         {
