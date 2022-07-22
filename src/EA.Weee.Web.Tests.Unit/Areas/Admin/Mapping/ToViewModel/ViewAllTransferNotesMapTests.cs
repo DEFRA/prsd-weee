@@ -14,22 +14,22 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewAllEvidenceNotesMapTests : SimpleUnitTestBase
+    public class ViewAllTransferNotesMapTests : SimpleUnitTestBase
     {
-        private readonly ViewAllEvidenceNotesMap map;
+        private readonly ViewAllTransferNotesMap map;
         private readonly IMapper mapper;
 
-        public ViewAllEvidenceNotesMapTests()
+        public ViewAllTransferNotesMapTests()
         {
             mapper = A.Fake<IMapper>();
 
-            map = new ViewAllEvidenceNotesMap(mapper);
+            map = new ViewAllTransferNotesMap(mapper);
         }
 
         [Fact]
         public void ShouldBeDerivedFromViewAllEvidenceNotesMapBase()
         {
-            typeof(ViewAllEvidenceNotesMap).Should().BeDerivedFrom<ViewAllNotesMapBase<ViewAllEvidenceNotesViewModel>>();
+            typeof(ViewAllTransferNotesMap).Should().BeDerivedFrom<ViewAllNotesMapBase<ViewAllTransferNotesViewModel>>();
         }
 
         [Fact]
