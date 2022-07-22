@@ -125,7 +125,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
-    <Compile Include="Admin\GetAllNotesRequestHandler.cs" />
+    <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />

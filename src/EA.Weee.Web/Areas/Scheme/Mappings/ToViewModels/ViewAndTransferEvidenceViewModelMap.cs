@@ -17,11 +17,11 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel);
             model.OrganisationId = source.OrganisationId;
             model.SchemeName = source.SchemeName;
 
-            model.DisplayTransferButton = source.Notes.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
+            model.DisplayTransferButton = source.NoteData.Results.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
 
             return model;
         }
