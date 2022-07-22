@@ -290,9 +290,11 @@
         {
             //arrange
             var model = ValidModel();
+            var validationMessage = Fixture.Create<string>();
             var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
             {
-                ExceptionType = typeof(InvalidOperationException).FullName
+                ExceptionType = typeof(InvalidOperationException).FullName,
+                ExceptionMessage = validationMessage
             });
             A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
 
@@ -300,9 +302,9 @@
             await Record.ExceptionAsync(async () => await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId));
 
             //assert
-            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().Be("StartDate");
+            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().BeNullOrEmpty();
             ManageEvidenceController.ModelState.ElementAt(0).Value.Errors.ElementAt(0).ErrorMessage.Should()
-                .Be("You cannot create evidence for the start date entered");
+                .Be(validationMessage);
         }
 
         [Fact]
