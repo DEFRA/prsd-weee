@@ -110,7 +110,7 @@
         }
 
         [Fact]
-        public async Task GetAllNotes_GivenSchemeQuery_ShouldOnlyRetrieveEvidenceNotes()
+        public async Task GetAllNotes_GivenRecipientQuery_ShouldOnlyRetrieveEvidenceNotes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -118,8 +118,9 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-                context.Schemes.Add(scheme);
+                var recipientOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+                context.Schemes.Add(recipientScheme);
                 context.Organisations.Add(organisation1);
                 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, year: SystemTime.Now.Year);
@@ -128,11 +129,11 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var note1 = NoteCommon.CreateNote(database, organisation1, organisation1, aatf1, complianceYear: SystemTime.Now.Year);
+                var note1 = NoteCommon.CreateNote(database, organisation1, recipientOrganisation, aatf1, complianceYear: SystemTime.Now.Year);
                 
                 context.Notes.Add(note1);
 
-                var transferNote = NoteCommon.CreateTransferNote(database, organisation1, organisation1, complianceYear: SystemTime.Now.Year);
+                var transferNote = NoteCommon.CreateTransferNote(database, organisation1, recipientOrganisation, complianceYear: SystemTime.Now.Year);
 
                 context.Notes.Add(transferNote);
 
@@ -143,7 +144,7 @@
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     OrganisationId = organisation1.Id,
                     AllowedStatuses = new List<NoteStatus>() { NoteStatus.Draft },
-                    SchemeId = scheme.Id
+                    RecipientId = recipientOrganisation.Id
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
@@ -680,7 +681,7 @@
                 var filter = new NoteFilter(SystemTime.Now.Year)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
-                    SchemeId = schemeToMatch.Id,
+                    RecipientId = organisationToMatch.Id,
                     AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
                 };
 

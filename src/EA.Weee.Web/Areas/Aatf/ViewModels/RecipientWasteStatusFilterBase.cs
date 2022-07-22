@@ -7,7 +7,7 @@
 
     public class RecipientWasteStatusFilterBase
     {
-        public List<SchemeData> SchemeList { get; set; }
+        public List<OrganisationSchemeData> RecipientList { get; set; }
 
         public Guid? ReceivedId { get; set; }
 
@@ -15,9 +15,9 @@
 
         public NoteStatus? NoteStatus { get; set; }
 
-        public RecipientWasteStatusFilterBase(List<SchemeData> schemeList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus)
+        public RecipientWasteStatusFilterBase(List<OrganisationSchemeData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus)
         {
-            SchemeList = schemeList;
+            RecipientList = recipientList;
             ReceivedId = receivedId;
             WasteType = wasteType;
             NoteStatus = noteStatus;

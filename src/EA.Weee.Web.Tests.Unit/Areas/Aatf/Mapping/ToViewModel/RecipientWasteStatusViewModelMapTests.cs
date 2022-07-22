@@ -10,18 +10,15 @@
     using EA.Weee.Web.Areas.Aatf.Mappings;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using FluentAssertions;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class RecipientWasteStatusViewModelMapTests
+    public class RecipientWasteStatusViewModelMapTests : SimpleUnitTestBase
     {
         private readonly RecipientWasteStatusViewModelMap mapper;
 
-        private Fixture fixture;
-
         public RecipientWasteStatusViewModelMapTests()
         {
-            fixture = new Fixture();
-
             mapper = new RecipientWasteStatusViewModelMap();
         }
 
@@ -39,8 +36,10 @@
         public void Map_GivenSchemeDataIsNull_PropertiesShouldBeSet()
         {
             //arrange
-            var source = fixture.Build<RecipientWasteStatusFilterBase>().With(r => r.SchemeList, (List<SchemeData>)null).Create();
-            var emptyList = new List<SchemeData>();
+            var source = TestFixture.Build<RecipientWasteStatusFilterBase>()
+                .With(r => r.RecipientList, (List<OrganisationSchemeData>)null).Create();
+
+            var emptyList = new List<OrganisationSchemeData>();
             //act
             var model = mapper.Map(source);
 
@@ -49,7 +48,7 @@
             model.NoteStatusValue.Should().Be(source.NoteStatus);
             model.WasteTypeList.Should().BeEquivalentTo(GetWasteTypeValuesList());
             model.WasteTypeValue.Should().Be(source.WasteType);
-            model.SchemeListSL.Should().BeEquivalentTo(GetSchemeListDropDownForm(emptyList));
+            model.RecipientList.Should().BeEquivalentTo(GetSchemeListDropDownForm(emptyList));
             model.ReceivedId.Should().Be(source.ReceivedId);
         }
 
@@ -57,7 +56,7 @@
         public void Map_GivenSource_PropertiesShouldBeSet()
         {
             //arrange
-            var source = fixture.Create<RecipientWasteStatusFilterBase>();
+            var source = TestFixture.Create<RecipientWasteStatusFilterBase>();
 
             //act
             var model = mapper.Map(source);
@@ -67,10 +66,9 @@
             model.NoteStatusValue.Should().Be(source.NoteStatus);
             model.WasteTypeList.Should().BeEquivalentTo(GetWasteTypeValuesList());
             model.WasteTypeValue.Should().Be(source.WasteType);
-            model.SchemeListSL.Should().BeEquivalentTo(GetSchemeListDropDownForm(source.SchemeList));
+            model.RecipientList.Should().BeEquivalentTo(GetSchemeListDropDownForm(source.RecipientList));
             model.ReceivedId.Should().Be(source.ReceivedId);
         }
-
         private IEnumerable<SelectListItem> GetNoteStatusList()
         {
             var statuses = new Dictionary<int, string>
@@ -89,9 +87,9 @@
             return new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
         }
 
-        private IEnumerable<SelectListItem> GetSchemeListDropDownForm(IList<SchemeData> list)
+        private IEnumerable<SelectListItem> GetSchemeListDropDownForm(IList<OrganisationSchemeData> list)
         {
-            return new SelectList(list, "Id", "SchemeName");
+            return new SelectList(list, "Id", "DisplayName");
         }
     }
 }
