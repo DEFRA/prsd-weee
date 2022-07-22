@@ -124,7 +124,7 @@
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
                                                               e.NoteTypeFilter.Count == 1 && 
                                                               e.OrganisationId == null &&
-                                                              e.PageNumber == 0 &&
+                                                              e.PageNumber == 1 &&
                                                               e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
@@ -225,7 +225,8 @@
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Should().BeEquivalentTo(noteData);
+            result.Results.Should().BeEquivalentTo(noteData);
+            result.NoteCount.Should().Be(noteData.Count);
         }
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()

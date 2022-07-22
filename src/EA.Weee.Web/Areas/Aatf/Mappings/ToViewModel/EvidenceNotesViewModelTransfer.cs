@@ -12,24 +12,24 @@
 
         public Guid AatfId { get; protected set; }
 
-        public List<EvidenceNoteData> Notes { get; protected set; }
+        public EvidenceNoteSearchDataResult NoteData { get; protected set; }
 
         public DateTime CurrentDate { get; protected set; }
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; private set; }
 
         public EvidenceNotesViewModelTransfer(Guid organisationId, 
-            Guid aatfId, List<EvidenceNoteData> notes, 
+            Guid aatfId, EvidenceNoteSearchDataResult noteData, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Guard.ArgumentNotNull(() => notes, notes);
+            Guard.ArgumentNotNull(() => noteData, noteData);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
 
             OrganisationId = organisationId;
             AatfId = aatfId;
-            Notes = notes;
+            NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
         }

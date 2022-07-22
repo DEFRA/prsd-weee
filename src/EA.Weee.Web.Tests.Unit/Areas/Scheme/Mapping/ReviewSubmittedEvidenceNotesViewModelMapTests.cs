@@ -13,12 +13,12 @@
     using System.Linq;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMapTests
+    public class ReviewSubmittedEvidenceNotesViewModelMapTests : SimpleUnitTestBase
     {
         private readonly ReviewSubmittedEvidenceNotesViewModelMap reviewSubmittedEvidenceNotesViewModelMap;
-        private readonly Fixture fixture;
         private readonly IMapper mapper;
 
         public ReviewSubmittedEvidenceNotesViewModelMapTests()
@@ -26,8 +26,6 @@
             mapper = A.Fake<IMapper>();
 
             reviewSubmittedEvidenceNotesViewModelMap = new ReviewSubmittedEvidenceNotesViewModelMap(mapper);
-
-            fixture = new Fixture();
         }
 
         [Fact]
@@ -41,7 +39,7 @@
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), null, "Test", fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), null, "Test", TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -51,7 +49,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), "Test", fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.Empty, TestFixture.Create<EvidenceNoteSearchDataResult>(), "Test", TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -61,7 +59,7 @@
         public void Map_GivenSchemeNameIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), null, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => new ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid.NewGuid(), TestFixture.Create<EvidenceNoteSearchDataResult>(), null, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -71,41 +69,34 @@
         public void Map_GivenListOfEvidenceNotes_MapperShouldBeCalled()
         {
             //arrange
-            var notes = new List<EvidenceNoteData>
-            {
-                 fixture.Create<EvidenceNoteData>(),
-                 fixture.Create<EvidenceNoteData>(),
-                 fixture.Create<EvidenceNoteData>()
-            };
-
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
+                noteData, 
                 "Test", 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(noteData.Results)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public void Map_GivenAnEmptyListOfEvidenceNotes_MapperShouldNotBeCalled()
         {
             //arrange
-            var notes = new List<EvidenceNoteData>();
-
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var organisationId = Guid.NewGuid();
 
-            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
+            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
+                noteData, 
                 "Test", 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -118,15 +109,14 @@
         public void Map_GivenAnEmptyListOfEvidenceNotes_MustReturnAnEmptyModel()
         {
             //arrange
-            var notes = new List<EvidenceNoteData>();
-
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
+                noteData, 
                 "Test", 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -139,22 +129,21 @@
         public void Map_GivenListOfEvidenceNoteData_ShouldReturnMappedData()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
-                 fixture.Create<EvidenceNoteRowViewModel>(),
-                 fixture.Create<EvidenceNoteRowViewModel>(),
-                 fixture.Create<EvidenceNoteRowViewModel>()
+                 TestFixture.Create<EvidenceNoteRowViewModel>(),
+                 TestFixture.Create<EvidenceNoteRowViewModel>(),
+                 TestFixture.Create<EvidenceNoteRowViewModel>()
             };
 
             var organisationId = Guid.NewGuid();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, 
-                notes, 
+                noteData, 
                 "Test", 
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
             
@@ -170,14 +159,14 @@
         public void Map_GivenSchemeNameAndOrganisationId_PropertiesShouldBeSet()
         {
             //arrange
-            var organisationId = fixture.Create<Guid>();
-            var schemeName = fixture.Create<string>();
+            var organisationId = TestFixture.Create<Guid>();
+            var schemeName = TestFixture.Create<string>();
 
             var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
-                fixture.CreateMany<EvidenceNoteData>().ToList(),
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 schemeName,
-                fixture.Create<DateTime>(),
-                fixture.Create<ManageEvidenceNoteViewModel>());
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -191,12 +180,12 @@
         public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var model = fixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(notes, date, model);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -212,11 +201,11 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(notes, date, null);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(noteData, date, null);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -228,13 +217,13 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(2022, 1, 1);
-            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
             //act
-            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(notes, date, model);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -244,13 +233,13 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(2022, 1, 1);
-            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(notes, date, model);
+            var result = reviewSubmittedEvidenceNotesViewModelMap.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);

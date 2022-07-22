@@ -268,7 +268,7 @@
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
             List<AatfData> allAatfs, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
-            var resultAllNotes = new List<EvidenceNoteData>();
+            EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
             if (ModelState.IsValid)
             {
@@ -284,7 +284,7 @@
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel));
 
-            var schemeData = resultAllNotes.CreateOrganisationSchemeDataList();
+            var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
 
             if (schemeData.Any())
             {
