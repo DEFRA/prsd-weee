@@ -6,14 +6,11 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Aatf;
-    using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -40,7 +37,8 @@
         private readonly Organisation recipientOrganisation;
         private readonly Note note;
         private readonly Aatf aatf;
-
+        private const string Error =
+            "You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year";
         public EditEvidenceNoteRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -307,7 +305,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -321,7 +319,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         public static IEnumerable<object[]> OutOfComplianceYear =>
@@ -345,7 +343,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -362,7 +360,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         private void AssertTonnages(List<NoteTonnage> tonnageValues)

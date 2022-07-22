@@ -59,18 +59,10 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithSingleAatf_MapperShouldBeCalled()
+        public void Map_GivenSource_PropertiesShouldBeMapped()
         {
             //arrange
-            var aatfDataValid = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
-            var aatfDataInvalid1 = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Aatf).With(ad => ad.ComplianceYear, SystemTime.Now.AddYears(-3).Year).Create();
-            var aatfDataInvalid2 = TestFixture.Build<AatfData>().With(ad => ad.FacilityType, FacilityType.Ae).With(ad => ad.ComplianceYear, SystemTime.Now.Year).Create();
-
             var aatfDataList = new List<AatfData>();
-            aatfDataList.Add(aatfDataValid);
-            aatfDataList.Add(aatfDataInvalid1);
-            aatfDataList.Add(aatfDataInvalid2);
-
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, aatfDataList, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
@@ -81,7 +73,51 @@
             model.AatfName.Should().Be(source.AatfData.Name);
             model.OrganisationId.Should().Be(source.OrganisationId);
             model.AatfId.Should().Be(source.AatfId);
+        }
+
+        [Fact]
+        public void Map_GivenSource_AatfHelperShouldBeCalled()
+        {
+            //arrange
+            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+
+            //act
+            map.Map(source);
+
+            // assert 
+            A.CallTo(() => aatfEvidenceHelper.GroupedValidAatfs(source.Aatfs)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSingle_SingleAatfShouldBeTrue()
+        {
+            //arrange
+            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+
+            A.CallTo(() => aatfEvidenceHelper.GroupedValidAatfs(A<List<AatfData>>._))
+                .Returns(TestFixture.CreateMany<AatfData>(1).ToList());
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
             model.SingleAatf.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithMultipleAatfs_SingleAatfShouldBeFalse()
+        {
+            //arrange
+            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+
+            A.CallTo(() => aatfEvidenceHelper.GroupedValidAatfs(A<List<AatfData>>._))
+                .Returns(TestFixture.CreateMany<AatfData>().ToList());
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.SingleAatf.Should().BeFalse();
         }
 
         [Fact]
