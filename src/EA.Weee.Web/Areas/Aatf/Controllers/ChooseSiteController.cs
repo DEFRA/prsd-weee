@@ -83,8 +83,7 @@
                 return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
                 {
                     AatfList = allAatfsAndAes, 
-                    OrganisationId = organisationId, 
-                    EvidenceSiteSelectionStartDateFrom = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom
+                    OrganisationId = organisationId
                 });
             }
         }

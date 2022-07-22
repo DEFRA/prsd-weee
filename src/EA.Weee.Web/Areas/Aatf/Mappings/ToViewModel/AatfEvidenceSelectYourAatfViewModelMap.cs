@@ -4,12 +4,20 @@
     using System.Linq;
     using Core.AatfReturn;
     using CuttingEdge.Conditions;
+    using Helpers;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using ViewModels;
 
     public class AatfEvidenceSelectYourAatfViewModelMap : IMap<AatfEvidenceToSelectYourAatfViewModelMapTransfer, SelectYourAatfViewModel>
     {
+        private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+
+        public AatfEvidenceSelectYourAatfViewModelMap(IAatfEvidenceHelper aatfEvidenceHelper)
+        {
+            this.aatfEvidenceHelper = aatfEvidenceHelper;
+        }
+
         public SelectYourAatfViewModel Map(AatfEvidenceToSelectYourAatfViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
@@ -18,12 +26,7 @@
 
             if (source.AatfList != null)
             {
-                aatfList = source.AatfList
-                    .Where(a => a.EvidenceSiteDisplay && a.ApprovalDate.HasValue && a.ApprovalDate.Value.Date > source.EvidenceSiteSelectionStartDateFrom)
-                    .GroupBy(a => a.AatfId)
-                    .Select(a => a.OrderByDescending(a1 => a1.ComplianceYear).First())
-                    .OrderBy(a => a.Name)
-                    .ToList();
+                aatfList = aatfEvidenceHelper.GroupedValidAatfs(source.AatfList);
             }
 
             foreach (var aatfData in aatfList)
