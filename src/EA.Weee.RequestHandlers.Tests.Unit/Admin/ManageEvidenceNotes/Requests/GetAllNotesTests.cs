@@ -15,7 +15,7 @@
         public void GetAllNotes_Constructor_GivenNullAllowedStatusesList()
         {
             // act
-            var result = Record.Exception(() => new GetAllNotes(new List<NoteType>(), null));
+            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), null));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -25,7 +25,7 @@
         public void GetAllNotes_Constructor_GivenEmptyAllowedStatusesList()
         {
             // act
-            var result = Record.Exception(() => new GetAllNotes(new List<NoteType>(), new List<NoteStatus>()));
+            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), new List<NoteStatus>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -35,7 +35,7 @@
         public void GetAllNotes_Constructor_GivenEmptyNoteTypeFilter()
         {
             // act
-            var result = Record.Exception(() => new GetAllNotes(null, new List<NoteStatus>()));
+            var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -49,7 +49,7 @@
             var noteTypeFilter = new List<NoteType> { NoteType.Evidence };
 
             // act
-            var result = new GetAllNotes(noteTypeFilter, allowedStatuses);
+            var result = new GetAllNotesInternal(noteTypeFilter, allowedStatuses);
 
             // assert
             result.AllowedStatuses.Should().BeEquivalentTo(allowedStatuses);
