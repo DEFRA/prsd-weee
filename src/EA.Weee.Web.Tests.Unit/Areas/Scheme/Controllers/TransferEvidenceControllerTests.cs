@@ -181,20 +181,20 @@
         public async Task TransferEvidenceNoteGet_GivenSchemesList_ModelSchemesShouldBeSet()
         {
             // arrange
-            var schemeData = new List<SchemeData>()
+            var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                TestFixture.Create<SchemeData>(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
+                TestFixture.Create<OrganisationSchemeData>(),
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
 
             // act
             var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
-            model.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
-            model.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
+            model.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.Id != organisationId));
+            model.SchemasToDisplay.Should().NotContain(s => s.Id.Equals(organisationId));
         }
 
         [Fact]
@@ -204,8 +204,8 @@
             await transferEvidenceController.TransferEvidenceNote(organisationId);
 
             // assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>.That
-                .Matches(s => s.IncludeWithdrawn.Equals(false))))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>.That
+                .Matches(s => s.IncludePBS.Equals(false))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -306,7 +306,7 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(sh => sh.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(sh => sh.IncludePBS.Equals(false)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -316,12 +316,12 @@
             {
                 OrganisationId = organisationId
             };
-            var schemeData = new List<SchemeData>()
+            var schemeData = new List<OrganisationSchemeData>()
             {
-                TestFixture.Build<SchemeData>().With(s => s.OrganisationId, organisationId).Create(),
-                TestFixture.Create<SchemeData>(),
+                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
+                TestFixture.Create<OrganisationSchemeData>(),
             };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemeData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
             AddModelError();
 
             // act
@@ -329,8 +329,8 @@
             var updatedModel = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
-            updatedModel.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.OrganisationId != organisationId));
-            updatedModel.SchemasToDisplay.Should().NotContain(s => s.OrganisationId.Equals(organisationId));
+            updatedModel.SchemasToDisplay.Should().Equal(schemeData.Where(s => s.Id != organisationId));
+            updatedModel.SchemasToDisplay.Should().NotContain(s => s.Id.Equals(organisationId));
         }
 
         [Fact]

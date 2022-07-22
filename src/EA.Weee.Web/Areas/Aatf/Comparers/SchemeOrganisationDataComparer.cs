@@ -3,14 +3,14 @@
     using System.Collections.Generic;
     using EA.Weee.Core.Scheme;
 
-    public class SchemeDataComparer : IEqualityComparer<SchemeData>
+    public class SchemeOrganisationDataComparer : IEqualityComparer<OrganisationSchemeData>
     {
-        public bool Equals(SchemeData x, SchemeData y)
+        public bool Equals(OrganisationSchemeData x, OrganisationSchemeData y)
         {
             return x.Id == y.Id;
         }
 
-        public int GetHashCode(SchemeData obj)
+        public int GetHashCode(OrganisationSchemeData obj)
         {
             return obj.Id.GetHashCode();
         }

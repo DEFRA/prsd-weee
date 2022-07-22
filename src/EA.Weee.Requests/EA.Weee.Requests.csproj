@@ -180,6 +180,7 @@
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetOrganisationScheme.cs" />
     <Compile Include="Scheme\EditTransferEvidenceNoteRequest.cs" />
     <Compile Include="Scheme\GetSchemeByOrganisationId.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />

@@ -53,10 +53,10 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Scheme>(request.RecipientId);
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientId);
 
             Condition.Requires(organisation).IsNotNull();
-            Condition.Requires(scheme).IsNotNull();
+            Condition.Requires(recipientOrganisation).IsNotNull();
 
             using (var transaction = transactionAdapter.BeginTransaction())
             {
@@ -71,7 +71,7 @@
 
                     var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    note = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
+                    note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 

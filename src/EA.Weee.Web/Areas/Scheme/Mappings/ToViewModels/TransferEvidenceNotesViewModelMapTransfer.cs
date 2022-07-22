@@ -18,7 +18,7 @@
 
         public TransferEvidenceNoteData TransferEvidenceNoteData { get; }
 
-        public IList<SchemeData> SchemeData { get; set; }
+        public IList<OrganisationSchemeData> RecipientData { get; set; }
 
         public IList<int> Categories { get; }
 
@@ -58,17 +58,17 @@
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(TransferEvidenceNoteData transferNoteData,
-            IList<SchemeData> schemeData,
+            IList<OrganisationSchemeData> recipientData,
             Guid organisationId,
             TransferEvidenceNoteCategoriesViewModel existingModel)
         {
             Condition.Requires(transferNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeData).IsNotNull();
+            Condition.Requires(recipientData).IsNotNull();
 
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
-            SchemeData = schemeData;
+            RecipientData = recipientData;
             ExistingTransferEvidenceNoteCategoriesViewModel = existingModel;
         }
     }
