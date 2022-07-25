@@ -16,14 +16,14 @@
         {
         }
 
-        public T MapSchemeBase(List<EvidenceNoteData> notes,
+        public T MapSchemeBase(EvidenceNoteSearchDataResult noteData,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
             SchemePublicInfo scheme)
         {
-            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(noteData).IsNotNull();
 
-            var model = MapBase(notes, currentDate, manageEvidenceNoteViewModel);
+            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel);
             model.SchemeInfo = scheme;
             model.CanSchemeManageEvidence = scheme.Status != SchemeStatus.Withdrawn;
 

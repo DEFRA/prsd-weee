@@ -333,9 +333,10 @@
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllNotesMapBase.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
-    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapModel.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />

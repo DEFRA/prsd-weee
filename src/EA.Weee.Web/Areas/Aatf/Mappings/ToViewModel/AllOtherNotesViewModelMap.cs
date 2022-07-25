@@ -17,7 +17,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel);
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {

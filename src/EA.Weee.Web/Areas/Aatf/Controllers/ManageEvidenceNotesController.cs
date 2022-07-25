@@ -10,7 +10,6 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Areas.Aatf.Comparers;
     using EA.Weee.Web.Constant;
     using Extensions;
     using Infrastructure;
@@ -23,6 +22,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -152,9 +153,23 @@
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                    try
+                    {
+                        var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                        return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                    }
+                    catch (ApiException ex)
+                    {
+                        if (ex.ErrorData.ExceptionType == typeof(InvalidOperationException).FullName)
+                        {
+                            ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
@@ -268,7 +283,7 @@
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
             List<AatfData> allAatfs, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel)
         {
-            var resultAllNotes = new List<EvidenceNoteData>();
+            EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
             if (ModelState.IsValid)
             {
@@ -284,7 +299,7 @@
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel));
 
-            var schemeData = resultAllNotes.CreateOrganisationSchemeDataList();
+            var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
 
             if (schemeData.Any())
             {

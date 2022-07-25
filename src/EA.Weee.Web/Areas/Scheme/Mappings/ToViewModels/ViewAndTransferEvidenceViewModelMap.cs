@@ -17,9 +17,9 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapSchemeBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
+            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
             model.OrganisationId = source.OrganisationId;
-            model.DisplayTransferButton = source.Scheme.Status != SchemeStatus.Withdrawn && source.Notes.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
+            model.DisplayTransferButton = source.Scheme.Status != SchemeStatus.Withdrawn && source.NoteData.Results.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
 
             return model;
         }
