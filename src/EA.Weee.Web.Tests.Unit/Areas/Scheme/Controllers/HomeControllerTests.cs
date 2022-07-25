@@ -1172,8 +1172,9 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            // TODO - This is a place holder, please update to correct page once implemented
             routeValues["action"].Should().Be("Index");
+            routeValues["controller"].Should().Be("ChooseSite");
+            routeValues["area"].Should().Be("Aatf");
         }
 
         //GC ------------------------------
@@ -1655,9 +1656,12 @@
         [Fact]
         public async void PostChooseActivity_ManagePBSEvidenceNotes_RedirectsHoldingIndex()
         {
+            var organisationId = Guid.NewGuid();
+
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ManagePBSEvidenceNotes
+                SelectedValue = PcsAction.ManagePBSEvidenceNotes,
+                OrganisationId = organisationId
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -1665,7 +1669,8 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("Holding", routeValues["controller"]);
+            Assert.Equal("ManageTransferNotes", routeValues["controller"]);
+            Assert.Equal(organisationId, routeValues["pcsId"]);
         }
 
         [Fact]
