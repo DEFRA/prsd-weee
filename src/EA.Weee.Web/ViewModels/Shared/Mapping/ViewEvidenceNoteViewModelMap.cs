@@ -74,7 +74,8 @@
                 SchemeId = source.SchemeId,
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 SelectedComplianceYear = source.SelectedComplianceYear,
-                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence
+                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
+                RedirectTab = source.RedirectTab
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)

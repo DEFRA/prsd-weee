@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared.Mapping;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfNotesViewModelBase<ReviewSubmittedManageEvidenceNotesSchemeViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedManageEvidenceNotesSchemeViewModel>
+    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfSchemeNotesViewModelBase<ReviewSubmittedManageEvidenceNotesSchemeViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedManageEvidenceNotesSchemeViewModel>
     {
         public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper) : base(mapper)
         {
@@ -15,9 +16,8 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapSchemeBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
             model.OrganisationId = source.OrganisationId;
-            model.Scheme = source.Scheme;
 
             return model;
         }

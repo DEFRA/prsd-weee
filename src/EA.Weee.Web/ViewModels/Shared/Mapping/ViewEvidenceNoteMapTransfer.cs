@@ -24,5 +24,7 @@
             NoteStatus = noteStatus;
             IncludeAllCategories = true;
         }
+
+        public string RedirectTab { get; set; }
     }
 }
